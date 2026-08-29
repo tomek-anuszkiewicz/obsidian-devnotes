@@ -1,4 +1,4 @@
 workspace.json
 workspace-mobile.json
 workspace*.json
-cache/**
+cache/
