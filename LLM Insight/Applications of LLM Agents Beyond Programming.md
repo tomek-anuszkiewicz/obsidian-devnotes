@@ -1,3 +1,5 @@
+# Applications of LLM Agents Beyond Programming
+
 LLMs and agents can be useful far beyond code generation. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
 
 ## Potential use cases

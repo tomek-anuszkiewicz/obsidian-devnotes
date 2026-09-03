@@ -1,5 +1,7 @@
 When working with modern AI systems, it is useful to stop thinking only in terms of **models**.
 
+> For detailed engineering workflows, the self-healing feedback loop, and custom harness implementation, see: [[Agentic Coding Harness and Controlled Development Workflows]].
+
 A model such as GPT, Claude, or Gemini is only one component of a larger system. What increasingly determines the practical capabilities of an AI agent is the **agent harness** around the model.
 
 The harness defines how the model receives context, what tools it can use, how long it can work, whether it can operate in a loop, how it verifies its own work, and how it interacts with external systems.

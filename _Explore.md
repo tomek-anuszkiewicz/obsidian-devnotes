@@ -1,13 +1,14 @@
 
 use llm to add properies to my notes 
 use llm to organize my notes
-my notes under git
 ### control with voice
 general -  use voice to control my pc, or only vsc, dictastion would be also good, 
 
 ### text2speach
 i think i saw tools that you are talking and at the end whole text is structurized and formatted
 wisprflow
+superwhisper
+my llm, mcp, app
 can give voice commands to pc
 
 sterowanie przegladarka 
@@ -149,3 +150,23 @@ majac jakas strone zrobic jej dokumnetacje,
 zlecic analize kodu by wykryc ukryte przyciski etc, tez kodu js, nie tylko html
 zrobic zmiane w dokumentacji
 nakazac weryfikacje dokumentacji
+
+agent harness
+- log decyzyjny by zrozumiec jak dziala
+- kilka workflowow pracujact wspolnie i nawzajem na siebie wplywajacych
+
+process:
+- agent koduje
+- review na github
+- inni agenvi komentuja
+- ktos poprawia
+- decyzja ze jest ok 
+- brak konsensusu
+  
+agent samomodyfikujacy process
+swoje skille, rules.
+Albo prosciej: ma jakas baze plikowa, ktore aktualizuje
+
+cloud agents
+
+webmco

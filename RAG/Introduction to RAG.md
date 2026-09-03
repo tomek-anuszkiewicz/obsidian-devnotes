@@ -49,6 +49,27 @@ This makes RAG one of the main mechanisms of **context engineering** for agents.
 
 ---
 
+## Context Minimization: Why Not Just Dump Whole Files?
+
+Even with modern models offering context windows of 1M+ tokens, loading entire files or whole repositories into the prompt is often inefficient and detrimental:
+
+- **Targeted context over whole files**: Instead of pulling 10 entire 2,000-line source files or a 50-page architecture PDF, RAG selects only the specific 20 lines of logic, single class method, or relevant paragraph.
+- **Reducing "Lost in the Middle" and noise**: Language models reason significantly better when the prompt contains dense, high-signal information. Flooding context with thousands of lines of boilerplate, imports, and unrelated helper functions degrades reasoning and invites hallucinations.
+- **Latency and cost reduction**: Passing a 1,500-token prompt is substantially faster (time-to-first-token) and drastically cheaper than repeatedly transferring 100,000+ tokens across agent iterations.
+- **Headroom for agent loops**: In multi-step agent workflows, keeping retrieved fragments minimal leaves context budget open for reasoning chains, conversation history, and subsequent tool execution outputs.
+
+```text
+Naive Whole-File Ingestion:
+[ File A (1,500 lines) ] + [ File B (2,500 lines) ] + [ Architecture PDF (40 pages) ]
+→ Bloated context (50k+ tokens), high latency, attention dilution, noise
+
+RAG Precision Context:
+[ Function A (25 lines) ] + [ Relevant Type Interface (15 lines) ] + [ Spec Section 3.2 ]
+→ Compact context (<1k tokens), focused attention, fast response, low cost
+```
+
+---
+
 ## RAG Is More Than a Vector Database
 
 A common simplification is:
@@ -291,6 +312,8 @@ Preserving structure is often more useful than extracting plain text.
 Large documents normally cannot be retrieved as a single object.
 
 They are divided into smaller pieces called **chunks**.
+
+This is also what enables **context minimization**: by chunking documents into granular units, the system only pools the exact relevant snippet into the LLM's context window instead of dragging in the entire file.
 
 A naive system may simply split every N tokens:
 
