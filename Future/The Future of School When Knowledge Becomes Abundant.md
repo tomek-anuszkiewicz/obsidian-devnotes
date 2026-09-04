@@ -866,6 +866,53 @@ This may become one of the most important consequences of AI for education.
 
 ---
 
+# The Educational Lag: Modern Systems and Agent Orchestration
+
+There is a widening gap between what institutional schooling teaches and the actual operational reality of the modern world.
+
+Historically, school curricula change on generational timescales:
+
+```text
+technological reality:
+changes every 3–5 years
+        vs.
+institutional education:
+updates every 15–25 years
+```
+
+Students spend thousands of hours practicing manual calculations, formula drills, and factual recall that can be performed instantly by any handheld device.
+
+Meanwhile, almost no formal instruction is dedicated to the foundational systems that govern their daily existence:
+
+- how distributed clouds and authentication work;
+- how personal data, tracking, and algorithmic feeds shape behavior;
+- how to evaluate digital privacy and manage cryptographic identity;
+- **how to formulate, direct, and audit autonomous AI agents**.
+
+In an agent-dense world, the defining practical competence shifts from execution to **orchestration and critique**:
+
+```text
+industrial-era skill:
+learn the procedure → execute manually → get graded on compliance
+
+agent-era skill:
+formulate intent
+      ↓
+orchestrate agents and tools
+      ↓
+critique and verify outputs
+      ↓
+catch hallucinations and hidden assumptions
+      ↓
+assume accountability for the outcome
+```
+
+Treating AI merely as a cheating mechanism to be banned from homework reflects the old assumption that school exists to measure manual procedural compliance.
+
+Until education explicitly trains individuals to navigate clouds, platforms, and agent ecosystems, this literacy will remain largely confined to self-directed learners—widening the civilizational gap between those who can direct machine intelligence and those who are directed by it.
+
+---
+
 # The Central Transformation
 
 The old educational problem was approximately:
