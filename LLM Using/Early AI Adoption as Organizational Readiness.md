@@ -1,3 +1,17 @@
+---
+title: Early AI Adoption as Organizational Readiness
+tags:
+  - organizational-learning
+  - ai-adoption
+  - change-management
+  - readiness
+  - strategy
+  - innovation
+aliases:
+  - Organizational Readiness Through Early AI
+  - AI Adoption as Capability Building
+---
+
 ## Core Idea
 
 Companies that experimented with AI early may gain an advantage even if their first implementations were incomplete, unreliable, or never reached production.

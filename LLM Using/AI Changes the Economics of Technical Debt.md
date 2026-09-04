@@ -1,3 +1,17 @@
+---
+title: AI Changes the Economics of Technical Debt
+tags:
+  - technical-debt
+  - economics
+  - ai-agents
+  - software-engineering
+  - refactoring
+  - maintenance
+aliases:
+  - Technical Debt in the AI Era
+  - Economics of Automated Refactoring
+---
+
 ## Agents Can Reduce or Accelerate Technical Debt
 
 Agents can continuously:

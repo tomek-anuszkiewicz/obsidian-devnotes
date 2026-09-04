@@ -1,3 +1,17 @@
+---
+title: Proactive Software — From Reactive Systems to Autonomous Agents
+tags:
+  - proactive-agents
+  - autonomous-systems
+  - software-architecture
+  - ai-agents
+  - system-design
+  - user-experience
+aliases:
+  - Reactive to Proactive Software
+  - Autonomous Proactive Agents
+---
+
 Traditional software is mostly reactive.
 
 A user clicks a button, submits a form, calls an API, creates a ticket, or triggers some predefined event. The system then executes a known procedure and returns a result.

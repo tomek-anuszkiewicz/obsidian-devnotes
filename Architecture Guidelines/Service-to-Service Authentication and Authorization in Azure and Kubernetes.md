@@ -1,3 +1,18 @@
+---
+title: Service-to-Service Authentication and Authorization in Azure and Kubernetes
+tags:
+  - authentication
+  - authorization
+  - azure
+  - kubernetes
+  - security
+  - microservices
+  - mtls
+aliases:
+  - S2S Auth in Azure and K8s
+  - Service Authentication Patterns
+---
+
 ## Context
 
 A distributed system may contain services running in several environments:

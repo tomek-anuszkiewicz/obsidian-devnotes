@@ -1,3 +1,17 @@
+---
+title: AI Productivity Is Limited by the Delivery System
+tags:
+  - productivity
+  - software-engineering
+  - ci-cd
+  - delivery-pipelines
+  - bottlenecks
+  - toc
+aliases:
+  - Delivery System Limits on AI Productivity
+  - Theory of Constraints in AI Engineering
+---
+
 AI can significantly accelerate parts of software development, especially implementation. However, the business value of that acceleration depends on the speed of the entire delivery system.
 
 A company does not benefit merely because code is written faster.

@@ -1,3 +1,17 @@
+---
+title: How Context Narrows an AI's Solution Space
+tags:
+  - llm
+  - context-window
+  - prompt-engineering
+  - agent-behavior
+  - constraints
+  - solution-space
+aliases:
+  - Context Narrowing Effect
+  - Solution Space Pruning with Context
+---
+
 An AI system does not reason over every theoretically possible solution equally. Jurisdiction, language, culture, social norms, professional conventions, organizational constraints, and current law can narrow the effective solution space before detailed reasoning begins.
 
 ## 1. The Solution Space Is Narrowed by Jurisdiction, Culture, Language, and Local Norms

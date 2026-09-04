@@ -1,3 +1,17 @@
+---
+title: Designing APIs for LLM-Generated Integration Code
+tags:
+  - api-design
+  - ai-agents
+  - software-architecture
+  - integration
+  - developer-experience
+  - documentation
+aliases:
+  - Agent-Friendly API Design
+  - APIs for LLM Integrations
+---
+
 ## Goal
 
 When using an LLM coding agent, the goal is not necessarily for the agent to call an API directly.

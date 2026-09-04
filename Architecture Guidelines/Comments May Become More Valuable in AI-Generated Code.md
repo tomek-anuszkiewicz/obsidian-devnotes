@@ -1,3 +1,17 @@
+---
+title: Comments May Become More Valuable in AI-Generated Code
+tags:
+  - ai-agents
+  - software-engineering
+  - documentation
+  - code-review
+  - maintainability
+  - intent-specification
+aliases:
+  - Code Comments in AI Era
+  - Semantic Value of Comments in AI Code
+---
+
 The traditional rule for comments is often expressed as:
 
 > Good code should explain what it does. Comments should explain why.

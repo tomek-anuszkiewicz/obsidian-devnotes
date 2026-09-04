@@ -1,3 +1,17 @@
+---
+title: LLMs as a Code Review Team
+tags:
+  - code-review
+  - ai-agents
+  - software-engineering
+  - multi-agent
+  - quality-assurance
+  - testing
+aliases:
+  - Multi-Agent Code Review
+  - Continuous Engineering Verification with LLMs
+---
+
 LLMs can change code review from a mostly human, manually executed activity into a continuous system of specialized reviewers.
 
 The most useful model is not:

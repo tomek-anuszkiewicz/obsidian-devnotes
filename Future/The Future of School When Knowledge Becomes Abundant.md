@@ -1,3 +1,17 @@
+---
+title: The Future of School When Knowledge Becomes Abundant
+tags:
+  - education
+  - knowledge-management
+  - future-of-work
+  - critical-thinking
+  - learning-models
+  - mentorship
+aliases:
+  - Education in the Age of Abundant Knowledge
+  - Future of Schooling with AI
+---
+
 For most of history, education operated under a fundamental constraint:
 
 > Knowledge and access to good teachers were scarce.

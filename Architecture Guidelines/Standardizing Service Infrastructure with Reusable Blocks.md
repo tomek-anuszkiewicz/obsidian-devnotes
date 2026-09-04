@@ -1,3 +1,17 @@
+---
+title: Standardizing Service Infrastructure with Reusable Blocks
+tags:
+  - infrastructure
+  - microservices
+  - platform-engineering
+  - software-architecture
+  - cloud
+  - standardization
+aliases:
+  - Service Infrastructure Building Blocks
+  - Reusable Service Platform Blocks
+---
+
 ## Context
 
 As an organization, we repeatedly solve the same technical problems across many services.

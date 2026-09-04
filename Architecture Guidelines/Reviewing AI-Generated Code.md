@@ -1,3 +1,17 @@
+---
+title: Reviewing AI-Generated Code
+tags:
+  - code-review
+  - ai-agents
+  - software-engineering
+  - verification
+  - testing
+  - developer-experience
+aliases:
+  - AI Code Review Practices
+  - Verification of Agent Diffs
+---
+
 ## Human Attention Becomes the Critical Resource
 
 An agent can generate code faster than a human can honestly review it.

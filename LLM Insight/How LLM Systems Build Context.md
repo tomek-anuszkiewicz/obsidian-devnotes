@@ -1,3 +1,18 @@
+---
+title: How LLM Systems Build Context
+tags:
+  - llm
+  - context-window
+  - rag
+  - system-prompts
+  - retrieval
+  - prompt-engineering
+  - state-management
+aliases:
+  - LLM Context Construction
+  - Context Assembly Pipeline
+---
+
 A modern LLM system does not reason from the visible user prompt alone. Its effective context can be assembled from instructions, conversation history, memory, retrieved documents, web search, tools, APIs, and metadata.
 
 ## 1. The Model Does Not Start With an Empty Context

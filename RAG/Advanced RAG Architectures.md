@@ -1,3 +1,18 @@
+---
+title: Advanced RAG Architectures
+tags:
+  - rag
+  - ai-agents
+  - system-architecture
+  - graph-rag
+  - retrieval
+  - hybrid-search
+  - knowledge-graphs
+aliases:
+  - Advanced RAG Patterns
+  - Agentic and Graph RAG Architectures
+---
+
 # Advanced RAG Architectures
 
 This note explores modern architectural paradigms for Retrieval-Augmented Generation, ranging from Agentic RAG and Graph RAG to local deployment stacks and permission-aware enterprise security.

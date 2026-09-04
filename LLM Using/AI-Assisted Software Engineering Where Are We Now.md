@@ -1,7 +1,5 @@
 ---
-title: AI-Assisted Software Engineering â€” Where Are We Now?
-aliases:
-  - AI Coding Agents â€” Historical Perspective
+title: "AI-Assisted Software Engineering — Where Are We Now?"
 tags:
   - ai
   - llm
@@ -9,6 +7,10 @@ tags:
   - software-engineering
   - maintainability
   - agentic-workflows
+aliases:
+  - AI Coding Agents — Historical Perspective
+  - State of AI-Assisted Programming
+  - AI Coding Agents â€” Historical Perspective
 created: 2026-08-23
 status: evergreen
 ---

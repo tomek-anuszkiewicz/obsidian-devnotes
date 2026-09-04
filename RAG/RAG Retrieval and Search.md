@@ -1,3 +1,18 @@
+---
+title: RAG Retrieval and Search
+tags:
+  - rag
+  - retrieval
+  - vector-search
+  - hybrid-search
+  - reranking
+  - bm25
+  - semantic-search
+aliases:
+  - RAG Retrieval Mechanisms
+  - Hybrid Search and Reranking in RAG
+---
+
 # RAG Retrieval and Search
 
 This note covers the retrieval mechanics, search hybridity, reranking models, source authority resolution, and temporal versioning in a Retrieval-Augmented Generation (RAG) system.

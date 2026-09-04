@@ -1,3 +1,18 @@
+---
+title: Model Access and Execution Infrastructure
+tags:
+  - infrastructure
+  - cloud
+  - llm
+  - ai-agents
+  - latency
+  - cost-management
+  - security
+aliases:
+  - LLM Infrastructure Architecture
+  - Model Gateway and Execution Setup
+---
+
 Modern AI systems increasingly separate the **agent or application** from the **model that performs a given task**.
 
 A useful way to think about this ecosystem is to distinguish several layers: enterprise AI platforms, model gateways, inference providers, and local model runtimes.

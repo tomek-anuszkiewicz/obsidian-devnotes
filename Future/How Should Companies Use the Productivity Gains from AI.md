@@ -1,3 +1,17 @@
+---
+title: How Should Companies Use the Productivity Gains from AI
+tags:
+  - productivity
+  - economics
+  - strategy
+  - management
+  - innovation
+  - software-engineering
+aliases:
+  - Capitalizing on AI Productivity
+  - Resource Allocation with AI Gains
+---
+
 ## Productivity Incentives Matter
 
 If a team observes this pattern:

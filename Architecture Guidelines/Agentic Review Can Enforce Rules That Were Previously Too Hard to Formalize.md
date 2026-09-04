@@ -1,7 +1,19 @@
 ---
+title: Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize
 tags:
+  - ai-agents
+  - code-review
+  - software-engineering
+  - quality-assurance
+  - static-analysis
+  - compliance
   - review
+aliases:
+  - Natural-Language Rules as Executable Policies
+  - Agentic Review Rules
+  - Semantic Code Review
 ---
+
 Traditional software quality automation works best when a rule can be expressed precisely.
 
 For example:

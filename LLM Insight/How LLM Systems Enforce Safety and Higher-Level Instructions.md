@@ -1,3 +1,17 @@
+---
+title: How LLM Systems Enforce Safety and Higher-Level Instructions
+tags:
+  - safety
+  - llm
+  - alignment
+  - instruction-hierarchy
+  - guardrails
+  - system-prompts
+aliases:
+  - Safety Guardrails in LLMs
+  - Instruction Hierarchy and Policy Enforcement
+---
+
 Safety and higher-level constraints are not implemented in one place. They can come from trained behavior, instruction hierarchy, runtime policy, classifiers, evaluators, and tool restrictions.
 
 ## 1. Some Instructions Sit Above the User

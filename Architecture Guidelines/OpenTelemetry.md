@@ -1,3 +1,18 @@
+---
+title: OpenTelemetry — Architecture, Signals, and Collector
+tags:
+  - opentelemetry
+  - observability
+  - distributed-systems
+  - monitoring
+  - tracing
+  - microservices
+  - infrastructure
+aliases:
+  - OpenTelemetry Architecture
+  - OTel Signals and Collector
+---
+
 ## 1. What OpenTelemetry Is
 
 OpenTelemetry is a vendor-neutral observability framework.

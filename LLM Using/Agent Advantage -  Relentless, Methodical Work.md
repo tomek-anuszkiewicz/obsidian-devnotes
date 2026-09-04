@@ -1,3 +1,17 @@
+---
+title: Agent Advantage — Relentless, Methodical Work
+tags:
+  - ai-agents
+  - productivity
+  - automation
+  - methodical-execution
+  - developer-experience
+  - endurance
+aliases:
+  - Methodical Execution Advantage
+  - Relentless Agent Work
+---
+
 One of the most important advantages of software agents is not intelligence in the usual sense.
 
 It is persistence.

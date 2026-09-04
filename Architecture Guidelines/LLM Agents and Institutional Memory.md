@@ -2,10 +2,16 @@
 title: LLM Agents and Institutional Memory in Software Teams
 tags:
   - software-engineering
-  - llm-agents
+  - ai-agents
   - team-knowledge
-  - architecture
+  - software-architecture
   - code-review
+  - knowledge-management
+  - llm-agents
+  - architecture
+aliases:
+  - LLM Agents and Team Memory
+  - Institutional Knowledge Preservation
 ---
 
 # LLM Agents and Institutional Memory in Software Teams

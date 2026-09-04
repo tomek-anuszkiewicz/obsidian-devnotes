@@ -1,3 +1,17 @@
+---
+title: Introduction to Workflow Orchestration
+tags:
+  - orchestration
+  - distributed-systems
+  - software-architecture
+  - durable-execution
+  - microservices
+  - background-processing
+aliases:
+  - Workflow Orchestration Concepts
+  - Durable Execution and Orchestration
+---
+
 ## Core Idea
 
 A workflow orchestrator coordinates actions that together form a process.

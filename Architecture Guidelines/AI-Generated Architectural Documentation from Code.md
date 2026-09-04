@@ -1,3 +1,17 @@
+---
+title: AI-Generated Architectural Documentation from Code
+tags:
+  - ai-agents
+  - software-architecture
+  - documentation
+  - knowledge-management
+  - reverse-engineering
+  - code-review
+aliases:
+  - Architectural Documentation Generation
+  - Extracting Architecture from Code with LLMs
+---
+
 ## Idea
 
 LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code.

@@ -1,3 +1,17 @@
+---
+title: Designing Internal NuGet Packages as an Explicit, Composable Framework
+tags:
+  - dotnet
+  - nuget
+  - software-architecture
+  - framework-design
+  - modular-design
+  - maintainability
+aliases:
+  - Internal NuGet Framework Architecture
+  - Explicit Composable NuGet Packages
+---
+
 ## Core Idea
 
 Internal NuGet packages may collectively form a corporate framework.

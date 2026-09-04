@@ -1,3 +1,17 @@
+---
+title: Learning Coding Agents Through Failure-Driven Instructions
+tags:
+  - ai-agents
+  - agentic-coding
+  - continuous-improvement
+  - prompt-engineering
+  - knowledge-distillation
+  - software-engineering
+aliases:
+  - Failure-Driven Agent Learning
+  - Instruction Tuning from Coding Failures
+---
+
 ## Core Idea
 
 Instead of treating an agent instruction as a static prompt, treat it as a **versioned artifact that can be continuously improved based on agent failures**.

@@ -1,3 +1,17 @@
+---
+title: How Reasoning Models Explore and Evaluate Solutions
+tags:
+  - reasoning-models
+  - llm
+  - search-trees
+  - evaluation
+  - chain-of-thought
+  - self-correction
+aliases:
+  - Reasoning Model Search Strategies
+  - Solution Exploration and Verification in LLMs
+---
+
 Reasoning quality depends not only on whether a model can follow a promising path, but also on whether it explores enough alternatives, evaluates them well, and verifies the final choice.
 
 ## 1. Reasoning Itself Is Learned Behavior

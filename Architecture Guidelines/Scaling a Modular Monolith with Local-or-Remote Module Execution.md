@@ -1,3 +1,17 @@
+---
+title: Scaling a Modular Monolith with Local-or-Remote Module Execution
+tags:
+  - modular-monolith
+  - software-architecture
+  - microservices
+  - distributed-systems
+  - scalability
+  - dotnet
+aliases:
+  - Modular Monolith Scaling
+  - Local or Remote Module Execution
+---
+
 ## Core idea
 
 A modular monolith does not have to mean that every module must always run in every process.

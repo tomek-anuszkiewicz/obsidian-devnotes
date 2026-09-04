@@ -1,3 +1,17 @@
+---
+title: Improving AI Models — From Scaling to Agent-Generated Training Data
+tags:
+  - ai-scaling
+  - synthetic-data
+  - training-data
+  - model-training
+  - reinforcement-learning
+  - agent-generated-data
+aliases:
+  - Scaling Laws to Synthetic Data
+  - Agent-Generated Training Data
+---
+
 The historical improvement of AI models is often described as a simple consequence of larger models and more compute.
 
 That is increasingly incomplete.

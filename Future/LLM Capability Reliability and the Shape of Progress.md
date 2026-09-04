@@ -1,14 +1,16 @@
 ---
 title: LLM Capability, Reliability, and the Shape of Progress
-aliases:
-  - Where Are LLMs on the Progress Curve?
 tags:
   - ai
   - llm
-  - agents
+  - ai-agents
   - reliability
   - hallucinations
   - software-engineering
+  - agents
+aliases:
+  - "Where Are LLMs on the Progress Curve?"
+  - LLM Capability and Reliability S-Curve
 created: 2026-08-23
 ---
 

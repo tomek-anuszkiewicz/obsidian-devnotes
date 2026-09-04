@@ -3,14 +3,17 @@ title: Agentic Coding Harness and Controlled Development Workflows
 tags:
   - ai-agents
   - agentic-coding
+  - agentic-harness
+  - software-engineering
+  - testing
+  - mutation-testing
   - llm
   - codex
   - software-development
-  - testing
-  - mutation-testing
 aliases:
   - Agentic harness
   - Coding agent workflow
+  - Controlled Development Workflows
 ---
 
 # Agentic Coding Harness and Controlled Development Workflows

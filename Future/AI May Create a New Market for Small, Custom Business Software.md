@@ -1,3 +1,17 @@
+---
+title: AI May Create a New Market for Small, Custom Business Software
+tags:
+  - enterprise-software
+  - economics
+  - custom-software
+  - ai-agents
+  - smb
+  - software-markets
+aliases:
+  - Hyper-Custom Business Software
+  - Long Tail of Software Created by AI
+---
+
 AI may make custom software economically viable for small businesses that previously could not afford it.
 
 This does not necessarily mean building a complete standalone application.

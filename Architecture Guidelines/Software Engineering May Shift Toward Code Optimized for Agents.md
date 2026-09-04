@@ -1,3 +1,17 @@
+---
+title: Software Engineering May Shift Toward Code Optimized for Agents
+tags:
+  - software-engineering
+  - ai-agents
+  - software-architecture
+  - code-style
+  - maintainability
+  - developer-experience
+aliases:
+  - Agent-Optimized Codebases
+  - Designing Code for LLM Maintainers
+---
+
 As LLMs and coding agents generate a growing share of software, an important question emerges:
 
 > What does "good code" mean when humans are no longer its primary authors and maintainers?

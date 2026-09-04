@@ -1,3 +1,18 @@
+---
+title: Service-to-Service Communication — How Service A Should Call Service B
+tags:
+  - microservices
+  - distributed-systems
+  - api-design
+  - grpc
+  - rest-api
+  - messaging
+  - resilience
+aliases:
+  - Service-to-Service Communication
+  - Inter-Service Calling Patterns
+---
+
 ## Context
 
 Assume that Service A needs data or behavior owned by Service B.

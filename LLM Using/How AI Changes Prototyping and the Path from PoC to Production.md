@@ -1,3 +1,17 @@
+---
+title: How AI Changes Prototyping and the Path from PoC to Production
+tags:
+  - prototyping
+  - software-engineering
+  - poc-to-production
+  - ai-agents
+  - product-management
+  - iteration
+aliases:
+  - AI Prototyping Speed
+  - From PoC to Production with AI
+---
+
 Agents dramatically reduce the cost of answering technical and product questions.
 
 They can quickly:

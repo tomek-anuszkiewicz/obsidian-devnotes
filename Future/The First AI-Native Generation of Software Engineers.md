@@ -1,3 +1,17 @@
+---
+title: The First AI-Native Generation of Software Engineers
+tags:
+  - software-engineering
+  - future-of-work
+  - developer-experience
+  - education
+  - junior-developers
+  - skills
+aliases:
+  - AI-Native Developers
+  - Generational Shift in Software Engineering
+---
+
 Software development is currently in a transitional period.
 
 Many experienced engineers learned their profession before modern AI coding tools existed. They wrote code manually, debugged their own mistakes, learned frameworks through friction, and built judgment through years of direct practice.

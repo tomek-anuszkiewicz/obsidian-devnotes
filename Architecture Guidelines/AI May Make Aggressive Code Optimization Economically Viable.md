@@ -1,3 +1,17 @@
+---
+title: AI May Make Aggressive Code Optimization Economically Viable
+tags:
+  - ai-agents
+  - software-engineering
+  - performance
+  - code-optimization
+  - compilers
+  - economics
+aliases:
+  - Code Optimization with AI
+  - Economics of Aggressive Code Optimization
+---
+
 For decades, software engineering has often traded machine efficiency for human productivity.
 
 We accept:

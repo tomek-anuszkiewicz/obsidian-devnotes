@@ -1,7 +1,18 @@
 ---
+title: Agentic Software Development Workflows
 tags:
+  - ai-agents
+  - agentic-workflows
+  - software-engineering
+  - developer-experience
+  - automation
   - workflow
+aliases:
+  - Coding Agent Workflows
+  - Granularity of Agent Work
+  - Agentic Development Lifecycles
 ---
+
 AI coding agents can work with a repository in very different ways. The important distinction is not only **which agent or tool is used**, but **what workflow governs its behavior**.
 
 The same coding agent can act as a fast code generator, a test-driven implementer, a planner, a reviewer, a refactoring engine, or a semi-autonomous developer.

@@ -1,3 +1,17 @@
+---
+title: How AI Agents May Control Computers, Applications, and the Web
+tags:
+  - ai-agents
+  - computer-use
+  - gui-automation
+  - browser-agents
+  - api-design
+  - operating-systems
+aliases:
+  - Computer Use by AI Agents
+  - GUI and Web Automation by Agents
+---
+
 For decades, interacting with a computer has largely meant interacting with graphical user interfaces.
 
 Humans learned where to click:

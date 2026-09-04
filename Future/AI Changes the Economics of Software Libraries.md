@@ -1,3 +1,17 @@
+---
+title: AI Changes the Economics of Software Libraries
+tags:
+  - economics
+  - software-engineering
+  - open-source
+  - libraries
+  - ai-agents
+  - code-generation
+aliases:
+  - Economics of Software Libraries
+  - Build vs Buy vs Generate
+---
+
 AI code generation does not necessarily make software libraries obsolete.
 
 It changes the reason for using them.

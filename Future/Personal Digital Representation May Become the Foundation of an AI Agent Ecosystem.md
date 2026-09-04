@@ -1,3 +1,17 @@
+---
+title: Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem
+tags:
+  - digital-identity
+  - ai-agents
+  - personal-models
+  - privacy
+  - agent-ecosystem
+  - knowledge-management
+aliases:
+  - The Personal Model
+  - Digital Representation in Agent Ecosystems
+---
+
 Today, most AI assistants start almost from scratch.
 
 They may know:

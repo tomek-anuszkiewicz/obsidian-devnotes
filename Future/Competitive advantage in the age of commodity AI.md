@@ -1,3 +1,17 @@
+---
+title: Competitive Advantage in the Age of Commodity AI
+tags:
+  - economics
+  - strategy
+  - competitive-advantage
+  - commodity-ai
+  - proprietary-data
+  - business-models
+aliases:
+  - Commodity AI Moats
+  - Defensibility in the AI Era
+---
+
 As AI systems become broadly available, access to a strong model may stop being a meaningful competitive advantage on its own.
 
 If many companies use similar models trained on largely the same public internet data, then the default solutions suggested by those models will often be similar. AI is very good at reconstructing, combining, and adapting existing patterns, but if every company simply accepts its default suggestions, the resulting products and architectures may converge.

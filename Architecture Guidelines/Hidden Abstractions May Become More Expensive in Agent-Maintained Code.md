@@ -1,3 +1,17 @@
+---
+title: Hidden Abstractions May Become More Expensive in Agent-Maintained Code
+tags:
+  - software-architecture
+  - ai-agents
+  - abstraction
+  - code-maintainability
+  - simplicity
+  - software-engineering
+aliases:
+  - Cost of Hidden Abstractions with Agents
+  - Explicit vs Magic Abstractions in AI Era
+---
+
 Modern software engineering often tries to remove repetitive concerns from local code.
 
 Instead of explicitly writing validation, authorization, retries, transactions, logging, tracing, error mapping, and other infrastructure in every operation, we move them into reusable mechanisms such as:

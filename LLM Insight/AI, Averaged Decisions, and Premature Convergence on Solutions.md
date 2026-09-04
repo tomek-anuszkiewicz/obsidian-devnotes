@@ -1,3 +1,17 @@
+---
+title: AI, Averaged Decisions, and Premature Convergence on Solutions
+tags:
+  - llm
+  - reasoning-models
+  - decision-making
+  - exploration-vs-exploitation
+  - cognitive-bias
+  - consensus-seeking
+aliases:
+  - Premature Convergence in LLMs
+  - Averaged Solutions Problem
+---
+
 ## Introduction
 
 Large language models tend to produce answers that are complete, coherent, polished, and well justified.

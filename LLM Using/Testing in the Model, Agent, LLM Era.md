@@ -1,3 +1,17 @@
+---
+title: Testing in the Model, Agent, LLM Era
+tags:
+  - testing
+  - software-engineering
+  - ai-agents
+  - mutation-testing
+  - verification
+  - test-pyramid
+aliases:
+  - Software Testing in the AI Era
+  - Agent-Driven Test Strategies
+---
+
 The classical test pyramid is still useful, but it is no longer a complete description of how we should verify software in an agent-driven development process.
 
 Its core economic principle remains valid:

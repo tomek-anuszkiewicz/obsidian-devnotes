@@ -1,3 +1,17 @@
+---
+title: Designing Software Architecture with LLM Assistance
+tags:
+  - software-architecture
+  - system-design
+  - ai-agents
+  - llm
+  - decision-making
+  - tradeoff-analysis
+aliases:
+  - LLM-Assisted Software Architecture
+  - Architecture Exploration with AI
+---
+
 ## Core idea
 
 LLMs can significantly accelerate architectural exploration, but they are not reliable guarantees of completeness.

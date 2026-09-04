@@ -1,3 +1,17 @@
+---
+title: Fresh Contact With Reality May Become the Training Bottleneck
+tags:
+  - training-data
+  - synthetic-data
+  - model-training
+  - empiricism
+  - ai-scaling
+  - epistemology
+aliases:
+  - Reality Bottleneck in AI Training
+  - Contact with Reality vs Synthetic Loops
+---
+
 As language models consume more of the existing human knowledge corpus, the limiting resource for future training may gradually change.
 
 The problem may no longer be:

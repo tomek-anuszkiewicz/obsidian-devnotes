@@ -1,3 +1,17 @@
+---
+title: AI May Increase Product Ambition Instead of Reducing Team Size
+tags:
+  - future-of-work
+  - economics
+  - team-dynamics
+  - productivity
+  - product-management
+  - software-engineering
+aliases:
+  - Jevons Paradox in Software Engineering
+  - Product Ambition in AI Era
+---
+
 A common assumption about AI in software development is:
 
 > If every engineer becomes more productive, companies will need fewer engineers.

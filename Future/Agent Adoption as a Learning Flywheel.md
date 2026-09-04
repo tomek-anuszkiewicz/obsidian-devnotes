@@ -1,3 +1,16 @@
+---
+title: Agent Adoption as a Learning Flywheel
+tags:
+  - ai-agents
+  - agent-adoption
+  - organizational-learning
+  - feedback-loops
+  - flywheel-effect
+aliases:
+  - Agent Adoption Flywheel
+  - Organizational Learning with Agents
+---
+
 ## Core idea
 
 When people attempt to use an AI agent for a task that current models cannot perform reliably, those attempts may help make the task feasible for future models.

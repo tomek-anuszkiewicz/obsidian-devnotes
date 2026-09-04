@@ -1,3 +1,17 @@
+---
+title: AI May Replace Some Source Generators with Explicit Generated Code
+tags:
+  - ai-agents
+  - software-engineering
+  - source-generators
+  - dotnet
+  - code-generation
+  - maintainability
+aliases:
+  - Source Generators vs AI Code Generation
+  - Explicit Generated Code with AI
+---
+
 Source generation solves an important software engineering problem: it allows libraries to replace generic runtime mechanisms with specialized code generated at compile time.
 
 In C#, source generators are commonly used for areas such as:

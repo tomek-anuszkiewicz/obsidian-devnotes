@@ -1,3 +1,17 @@
+---
+title: AI Changes the Role and Training of Software Engineers
+tags:
+  - future-of-work
+  - software-engineering
+  - education
+  - developer-experience
+  - hiring
+  - skills
+aliases:
+  - Future Role of Software Engineers
+  - Software Engineering Training in AI Era
+---
+
 ## Junior Development Becomes a Structural Problem
 
 Agents automate many tasks traditionally assigned to juniors:

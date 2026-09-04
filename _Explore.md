@@ -1,3 +1,16 @@
+---
+title: Explore — Ideas, Research Backlog, and Tools
+tags:
+  - inbox
+  - ideas
+  - backlog
+  - tools
+  - scratchpad
+  - experiments
+aliases:
+  - Explore & Ideas
+  - Research Backlog
+---
 
 use llm to add properies to my notes 
 use llm to organize my notes

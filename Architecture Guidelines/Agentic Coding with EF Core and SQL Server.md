@@ -1,11 +1,17 @@
 ---
+title: Agentic Coding with EF Core and SQL Server
 tags:
-  - llm-agents
+  - ai-agents
   - software-architecture
   - dotnet
   - sql-server
   - entity-framework
   - testing
+  - database
+  - llm-agents
+aliases:
+  - EF Core with AI Agents
+  - SQL Server and Agentic Coding
 ---
 
 # Agentic Coding with EF Core and SQL Server

@@ -1,3 +1,17 @@
+---
+title: From AI-Assisted Teams to Cross-System Feature Ownership
+tags:
+  - software-engineering
+  - organizational-design
+  - feature-ownership
+  - ai-agents
+  - conways-law
+  - team-topologies
+aliases:
+  - Cross-System Feature Ownership
+  - End-to-End Ownership with Agents
+---
+
 AI-assisted software development is still evolving too quickly to support confident predictions about the final structure of engineering organizations.
 
 However, it is possible to separate three layers:

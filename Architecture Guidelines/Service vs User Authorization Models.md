@@ -1,3 +1,17 @@
+---
+title: Service vs User Authorization Models
+tags:
+  - authorization
+  - security
+  - microservices
+  - distributed-systems
+  - rbac
+  - oauth
+aliases:
+  - Service-to-Service vs User Auth
+  - Authorization Patterns in Microservices
+---
+
 # Service vs User Authorization Models
 
 In distributed microservice architectures, answering the question *"Is this request allowed?"* requires determining **which service owns the authorization rule** and **which identity is being authorized**.

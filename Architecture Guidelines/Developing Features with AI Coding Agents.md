@@ -1,3 +1,17 @@
+---
+title: Developing Features with AI Coding Agents
+tags:
+  - ai-agents
+  - software-engineering
+  - agentic-workflows
+  - feature-development
+  - testing
+  - code-review
+aliases:
+  - Feature Development with Agents
+  - End-to-End Agentic Feature Lifecycle
+---
+
 ## A Strong Workflow for Larger Features
 
 A useful process is:

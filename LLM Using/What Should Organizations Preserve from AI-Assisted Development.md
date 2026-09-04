@@ -1,3 +1,17 @@
+---
+title: What Should Organizations Preserve from AI-Assisted Development
+tags:
+  - knowledge-management
+  - software-engineering
+  - documentation
+  - decision-records
+  - institutional-memory
+  - traceability
+aliases:
+  - Preserving Decisions in AI Development
+  - Artifacts to Keep from Agentic Coding
+---
+
 ## Documentation Can Become a Process Output
 
 Agents can reduce the cost of maintaining business documentation.

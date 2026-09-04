@@ -1,3 +1,17 @@
+---
+title: AI May Break the Old Economic Model of the Open Web
+tags:
+  - open-web
+  - economics
+  - search
+  - content-monetization
+  - ai
+  - copyright
+aliases:
+  - Future of Open Web Under AI
+  - Collapse of Ad-Supported Web Model
+---
+
 Generative AI is changing more than search engines.
 
 It may undermine the economic model that supported a large part of the open web:

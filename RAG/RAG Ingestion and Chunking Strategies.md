@@ -1,3 +1,17 @@
+---
+title: RAG Ingestion and Chunking Strategies
+tags:
+  - rag
+  - chunking
+  - data-ingestion
+  - embeddings
+  - document-processing
+  - metadata-enrichment
+aliases:
+  - Chunking Strategies for RAG
+  - Data Ingestion Pipeline for RAG
+---
+
 # RAG Ingestion and Chunking Strategies
 
 This note details the data ingestion, document parsing, chunking, metadata enrichment, and embedding stages of a Retrieval-Augmented Generation (RAG) system. 

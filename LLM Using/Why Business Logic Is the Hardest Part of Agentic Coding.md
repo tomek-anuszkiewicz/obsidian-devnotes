@@ -1,3 +1,17 @@
+---
+title: Why Business Logic Is the Hardest Part of Agentic Coding
+tags:
+  - business-logic
+  - ai-agents
+  - software-engineering
+  - domain-driven-design
+  - specification
+  - requirements
+aliases:
+  - Hardness of Business Logic in Agentic Coding
+  - Domain Nuances vs Agent Capabilities
+---
+
 ## Business Logic Is Harder Than Technical Complexity
 
 An agent may easily generate:

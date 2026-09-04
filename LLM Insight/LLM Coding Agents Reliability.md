@@ -9,6 +9,7 @@ tags:
   - agentic-harness
 aliases:
   - Reliability of LLM coding agents
+  - Subtle Errors in Agentic Coding
 ---
 
 # LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors

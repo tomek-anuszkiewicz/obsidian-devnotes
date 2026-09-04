@@ -1,7 +1,5 @@
 ---
 title: AI-Era Software Engineering Recruitment
-aliases:
-  - Hiring Software Engineers in the Age of AI
 tags:
   - software-engineering
   - hiring
@@ -10,6 +8,9 @@ tags:
   - coding-agents
   - code-review
   - documentation
+aliases:
+  - Hiring Software Engineers in the Age of AI
+  - AI Recruitment Strategies
 status: evergreen
 created: 2026-08-23
 ---

@@ -1,3 +1,17 @@
+---
+title: The Most Valuable Software Training Data May Be Private
+tags:
+  - training-data
+  - proprietary-data
+  - software-engineering
+  - codebases
+  - git-history
+  - ai-moats
+aliases:
+  - Private Code as Premium Training Data
+  - Git History Value for LLM Training
+---
+
 Large language models learn from available data, but in software engineering there is an important limitation: much of the most valuable knowledge is not public.
 
 Public repositories contain enormous amounts of code, but code is mostly the **final artifact**.

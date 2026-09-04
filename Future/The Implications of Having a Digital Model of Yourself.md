@@ -1,3 +1,17 @@
+---
+title: The Implications of Having a Digital Model of Yourself
+tags:
+  - digital-identity
+  - personal-models
+  - privacy
+  - ethics
+  - ai-agents
+  - psychology
+aliases:
+  - Personal Digital Twin
+  - Implications of Self Digital Modeling
+---
+
 A sufficiently rich personal AI memory may eventually become something more important than a searchable archive of our lives.
 
 It may become a **digital model of the person**.

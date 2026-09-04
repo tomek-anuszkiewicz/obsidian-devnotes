@@ -1,3 +1,17 @@
+---
+title: Propagating User Context Between Services
+tags:
+  - distributed-systems
+  - microservices
+  - authentication
+  - authorization
+  - security
+  - context-propagation
+aliases:
+  - User Context Propagation
+  - Service Identity and End-User Identity
+---
+
 ## Context
 
 In distributed systems, Service A may receive a request initiated by a user and then call Service B.

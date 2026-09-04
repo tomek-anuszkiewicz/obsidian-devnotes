@@ -1,3 +1,17 @@
+---
+title: Introduction to RAG
+tags:
+  - rag
+  - llm
+  - retrieval
+  - vector-search
+  - knowledge-management
+  - system-architecture
+aliases:
+  - RAG Overview
+  - Fundamentals of Retrieval-Augmented Generation
+---
+
 ## What RAG Is
 
 **RAG — Retrieval-Augmented Generation** — is a pattern in which a language model does not answer only from its trained knowledge and current conversation context.

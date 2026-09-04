@@ -1,3 +1,17 @@
+---
+title: Programming Languages May Evolve Differently in the Age of AI
+tags:
+  - programming-languages
+  - language-design
+  - ai-agents
+  - type-systems
+  - compilers
+  - software-engineering
+aliases:
+  - AI-Era Programming Language Evolution
+  - Languages Designed for LLM Generation
+---
+
 Programming languages have historically evolved around human limitations.
 
 Their design has repeatedly tried to make programming:

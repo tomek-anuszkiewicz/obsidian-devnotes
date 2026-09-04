@@ -1,3 +1,17 @@
+---
+title: Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification
+tags:
+  - ai-agents
+  - software-engineering
+  - code-review
+  - debugging
+  - prompt-engineering
+  - refactoring
+aliases:
+  - Patch vs Regenerate vs Respecify
+  - Fixing AI-Generated Code
+---
+
 When reviewing AI-generated code, not every problem should be fixed at the code level.
 
 A useful question is:

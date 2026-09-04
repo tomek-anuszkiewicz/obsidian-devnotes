@@ -1,3 +1,17 @@
+---
+title: Finding Original Knowledge in an Internet Full of Repetition
+tags:
+  - open-web
+  - knowledge-discovery
+  - information-diet
+  - synthetic-data
+  - epistemology
+  - content-pollution
+aliases:
+  - Original Knowledge Scarcity
+  - Internet Model Collapse and Search
+---
+
 Large language models are usually described as systems trained on enormous amounts of text.
 
 But the amount of text is not the same as the amount of information.

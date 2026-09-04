@@ -1,3 +1,17 @@
+---
+title: New Developer Technologies May Need to Be Agent-Ready from Day One
+tags:
+  - developer-experience
+  - ai-agents
+  - tooling
+  - framework-design
+  - software-ecosystems
+  - api-design
+aliases:
+  - Agent-Ready Developer Tools
+  - Agent First Frameworks
+---
+
 The adoption of programming languages, libraries, frameworks, and language features has always depended on more than technical quality.
 
 A new technology must usually build:

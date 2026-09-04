@@ -1,3 +1,17 @@
+---
+title: Internal NuGet Packages vs Agent-Generated Code
+tags:
+  - dotnet
+  - nuget
+  - ai-agents
+  - code-generation
+  - software-architecture
+  - maintainability
+aliases:
+  - Shared Libraries vs Generated Code
+  - NuGet vs AI Generation
+---
+
 ## Core Question
 
 In the era of LLMs and coding agents, does it still make sense to maintain internal team or corporate NuGet packages?

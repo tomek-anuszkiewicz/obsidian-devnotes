@@ -1,3 +1,17 @@
+---
+title: Refactoring Legacy Systems with AI Agents
+tags:
+  - legacy-code
+  - refactoring
+  - ai-agents
+  - software-engineering
+  - migration
+  - testing
+aliases:
+  - Legacy Migration with Agents
+  - AI-Driven Code Modernization
+---
+
 ## Refactoring Legacy Code with Agents
 
 Agents are useful for legacy modernization, but broad instructions are dangerous.

@@ -1,3 +1,17 @@
+---
+title: Singularity Without AGI — The Civilizational Automation Loop
+tags:
+  - singularity
+  - automation
+  - future-of-work
+  - economics
+  - ai-systems
+  - feedback-loops
+aliases:
+  - Civilizational Automation Loop
+  - Narrow AI Singularity
+---
+
 The technological singularity is usually imagined as the moment when an artificial general intelligence becomes smarter than humans and begins rapidly improving itself.
 
 But there may be another path.

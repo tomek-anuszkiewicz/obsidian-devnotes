@@ -1,3 +1,17 @@
+---
+title: Multi-Agent Software Development
+tags:
+  - multi-agent
+  - ai-agents
+  - software-engineering
+  - orchestration
+  - team-collaboration
+  - agentic-workflows
+aliases:
+  - Multi-Agent Engineering Teams
+  - Collaborative Coding Agents
+---
+
 Modern agentic development is no longer limited to a single coding agent working in one loop. A new class of workflows is emerging around multiple agents working in parallel, sequentially, competitively, or as a coordinated team.
 
 This creates a new design problem: not only _what should an agent do_, but also _how many agents should be involved, how should work be divided, how independent should they be, and how should their outputs be validated and integrated_.

@@ -1,3 +1,17 @@
+---
+title: How Modern LLM Systems Build Context, Reason, and Stay Constrained
+tags:
+  - llm
+  - system-architecture
+  - reasoning-models
+  - context-window
+  - guardrails
+  - tool-use
+aliases:
+  - Modern LLM Architecture Overview
+  - Context, Reasoning, and Constraints Loop
+---
+
 # How Modern LLM Systems Build Context, Reason, and Stay Constrained
 
 A modern LLM system is not just a model that receives a question and immediately generates an answer.

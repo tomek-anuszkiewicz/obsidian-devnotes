@@ -1,3 +1,17 @@
+---
+title: Exploring Agent Harnesses
+tags:
+  - agentic-harness
+  - ai-agents
+  - software-engineering
+  - runtime-environment
+  - tooling
+  - sandboxing
+aliases:
+  - Agent Harness Architecture
+  - Agent Execution Environments
+---
+
 When working with modern AI systems, it is useful to stop thinking only in terms of **models**.
 
 > For detailed engineering workflows, the self-healing feedback loop, and custom harness implementation, see: [[Agentic Coding Harness and Controlled Development Workflows]].

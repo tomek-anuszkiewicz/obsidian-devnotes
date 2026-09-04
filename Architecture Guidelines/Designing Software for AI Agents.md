@@ -1,3 +1,17 @@
+---
+title: Designing Software for AI Agents
+tags:
+  - software-architecture
+  - system-design
+  - ai-agents
+  - agentic-coding
+  - modularity
+  - observability
+aliases:
+  - Agent-Oriented Software Design
+  - Building Software for AI Consumption
+---
+
 ## Agents Do Not Remove the Need for Architecture
 
 Good architecture becomes more important when agents can generate changes at high speed.

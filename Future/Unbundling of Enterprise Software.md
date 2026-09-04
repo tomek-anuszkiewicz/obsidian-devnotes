@@ -1,3 +1,17 @@
+---
+title: Unbundling of Enterprise Software
+tags:
+  - enterprise-software
+  - unbundling
+  - saas
+  - economics
+  - custom-software
+  - business-architecture
+aliases:
+  - Enterprise Software Disruption
+  - SaaS Unbundling by AI Agents
+---
+
 ERP and business intelligence are only two examples of a broader transformation in enterprise software.
 
 The common pattern is a separation between:

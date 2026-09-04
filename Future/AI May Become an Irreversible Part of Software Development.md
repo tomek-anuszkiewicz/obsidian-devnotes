@@ -1,3 +1,16 @@
+---
+title: AI May Become an Irreversible Part of Software Development
+tags:
+  - future-of-work
+  - software-engineering
+  - productivity
+  - industry-trends
+  - ai-adoption
+aliases:
+  - Irreversibility of AI in Software
+  - AI as Core Development Substrate
+---
+
 AI may begin as an optional productivity tool, but after a certain level of adoption it can become an integral part of how an organization operates.
 
 At that point, abandoning AI would no longer mean returning to the previous way of working.

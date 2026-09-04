@@ -1,3 +1,17 @@
+---
+title: Applications of LLM Agents Beyond Programming
+tags:
+  - ai-agents
+  - applications
+  - operations
+  - automation
+  - semantic-processing
+  - knowledge-work
+aliases:
+  - Non-Programming Agent Applications
+  - LLM Agents in Operations and Knowledge Work
+---
+
 # Applications of LLM Agents Beyond Programming
 
 LLMs and agents can be useful far beyond code generation. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.

@@ -6,6 +6,8 @@ tags:
   - llm
   - cloud
   - infrastructure
+  - software-engineering
+  - deployment
   - software-development
 aliases:
   - Agent deployment models

@@ -1,3 +1,17 @@
+---
+title: User Context in Asynchronous Systems
+tags:
+  - distributed-systems
+  - messaging
+  - event-driven
+  - context-propagation
+  - security
+  - asynchronous
+aliases:
+  - Async User Context
+  - Context Propagation in Message Queues
+---
+
 # User Context in Asynchronous Systems
 
 Propagating user identity and context through asynchronous message brokers (RabbitMQ, Azure Service Bus, Apache Kafka) requires fundamentally different patterns than synchronous HTTP calls.
