@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "autoApprove": true,
+    "allowCommands": [
+      "python",
+      "powershell",
+      "Get-Content",
+      "graphify",
+      "pip *",
+      "git *"
+    ]
+  }
+}
