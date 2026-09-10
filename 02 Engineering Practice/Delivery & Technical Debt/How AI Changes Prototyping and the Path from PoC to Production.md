@@ -52,63 +52,54 @@ The ability to cheaply reach a negative answer is extremely valuable.
 
 ---
 
-## Prototypes Will Still Reach Production
+## The Death of "PoC to Production": Strict Disposability of Exploratory Code
 
-Agents will not eliminate the phrase:
+In classical software development, teams accepted a fatalistic reality:
 
-> The PoC became production.
+> *The proof-of-concept inevitably becomes production.*
 
-They may make the problem worse because prototypes will look more complete:
+This occurred because human labor was expensive: after spending three months manually typing a prototype, engineering managers succumbed to the **sunk cost fallacy**, refusing to discard the code and pushing fragile hacks directly into production.
 
-- polished UI,
-    
-- working backend,
-    
-- basic tests,
-    
-- realistic data,
-    
-- professional structure.
-    
-
-The business may conclude that the system is nearly finished.
-
-A prototype may still lack:
-
-- security,
-    
-- concurrency handling,
-    
-- migrations,
-    
-- auditability,
-    
-- failure recovery,
-    
-- monitoring,
-    
-- backward compatibility,
-    
-- scalability,
-    
-- regulatory compliance.
-    
-
-Before starting, define one of two outcomes:
+In the agentic era, **this dynamic is obsolete. A PoC must NEVER become production.**
 
 ```text
-Disposable prototype:
-The implementation will be deleted after the experiment.
+Classical Paradigm (Manual Labor):
+3 Months of Human PoC ──► Sunk Cost Trap: "Too expensive to rewrite!" ──► PoC Shipped to Production (Years of Debt)
+
+Agentic Paradigm (Disposable Code):
+30-Minute Agentic PoC ──► Knowledge Crystallized into Markdown Specs ──► PROTOTYPE CODE DELETED TO ZERO
+                                                                                │
+                               ┌────────────────────────────────────────────────┘
+                               ▼
+Clean Production Synthesis (30 Min) under [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracles]] & Production Harness
 ```
 
-or:
+### 1. The Collapse of the Sunk Cost Trap
+When an agent can synthesize a functional prototype in 30 to 60 minutes on a scratch branch, the cost of the code is negligible (measured in pennies of API tokens).
+- There is zero human emotional attachment or defensive pride of authorship.
+- Throwing away an exploratory implementation carries no economic penalty.
+- The rational decision is to discard the scrap implementation the instant the technical question has been answered.
 
-```text
-Evolutionary prototype:
-The implementation may become production, so minimum production foundations apply immediately.
-```
+### 2. Knowledge Is the Deliverable; Code Is Scrap
+The only durable output of an exploratory prototype is **crystallized knowledge**:
+- *Did the third-party API support the required latency?*
+- *What subtle state transitions emerged under edge conditions?*
+- *What data shapes and schemas are truly necessary?*
 
-With cheaper implementation, it may become rational to preserve the lessons, contracts, tests, and benchmark results while discarding the prototype code and building the production version again.
+This knowledge must be recorded immediately in [[In-Flight Documentation as the Primary Framework for Coding Agents|Markdown living specifications]] and converted into [[Testing in the Model, Agent, LLM Era|deterministic test vectors]]. The prototype implementation itself is disposable scratchwork and must be deleted.
+
+### 3. The Asymmetry of Patching vs. Clean Synthesis
+Attempting to "harden" or "retrofit" a prototype into production readiness is an architectural trap:
+- Retrofitting authentication, distributed context propagation, [[OpenTelemetry|telemetry traces]], database transaction isolation, retry circuit breakers, and security audits into a prototype takes **substantially more time and cognitive effort** than generating code from scratch.
+- It breeds the **Frankenstein Intermediate Phase** (see [[Refactoring Legacy Systems with AI Agents]]), where defensive null-checks and glue adapters are layered over fundamentally unhardened scaffolding.
+- In contrast, instructing the agent to compile a brand-new production service from scratch—grounded in the Markdown specification, governed by corporate production templates, and verified by an ironclad test oracle—takes minutes and yields a clean, zero-compromise architecture.
+
+### 4. The Strict Architectural Invariant
+Organizations must enforce an unbreakable delivery rule:
+
+> **No code authored in an exploratory prototype branch may ever be merged into main or promoted to production.**
+
+Prototypes are disposable probes. Production software is a distinct, synthesized artifact built from first-principles specifications under strict production harness constraints.
 
 ---
 
