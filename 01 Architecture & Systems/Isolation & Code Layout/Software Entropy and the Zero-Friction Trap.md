@@ -65,7 +65,7 @@ An LLM has no physical hands, no cognitive fatigue, and no aversion to verbosity
 - **Speculative abstraction**: The agent will happily wrap a straightforward function in three layers of interfaces, builders, and adapters to satisfy generic "best practice" patterns seen during pretraining.
 - **Sprawling touchpoints**: Without strict guardrails, an agent attempting a single logical change will touch 15 files across multiple architectural layers, introducing subtle coupling and unintended side effects.
 
-The agent does not feel the **cognitive weight** of these decisions. The human maintainers, however, must still read, verify, debug, and live with the resulting codebase. When every prompt can introduce hundreds of lines of frictionless sprawl, a codebase can suffer catastrophic architectural rot in a matter of days.
+The agent does not feel the **cognitive weight** of these decisions. The human maintainers, however, must still read, verify, debug, and live with the resulting codebase. When every prompt can introduce hundreds of lines of frictionless sprawl, a codebase can suffer catastrophic architectural rot in a matter of days (as quantified by GitClear 2024 and codified in [[Negative Knowledge and Explicit Architectural Dissents|explicit architectural dissents]]).
 
 ---
 
@@ -184,6 +184,7 @@ For the broader analysis of how code style and repository conventions evolve whe
 
 ## Relationship to the Knowledge Graph
 
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: The formalization of the Dissent Firewall and empirical documentation of GitClear 2024 churn doubling.
 - **[[Designing Software for AI Agents]]**: The foundational design principles for building explicit, discoverable architectures that withstand agentic modification.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation templates to constrain zero-friction agent generation and preserve trajectory.
 - **[[AI Changes the Economics of Technical Debt]]**: How zero-friction code generation compounds architectural entropy unless bounded by mechanical isolation.

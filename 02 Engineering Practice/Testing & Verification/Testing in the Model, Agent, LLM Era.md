@@ -930,7 +930,7 @@ Because test suites cannot measure mechanical elegance or hardware empathy, **th
 ### 5. The Incompleteness of the Oracle: Hyrum's Law and Unconstrained State Spaces
 A vital engineering reality must temper the enthusiasm for disposable rewrites:
 
-> **No test oracle—even one encompassing 300,000 vectors—tests everything. An oracle tests strictly what its authors had the foresight or historical telemetry to anticipate.**
+> **No test oracle—even one encompassing 300,000 vectors—tests everything. An oracle tests strictly what its authors had the foresight or historical telemetry to anticipate (as formalized in the rejection of ephemeral disposable code under [[Negative Knowledge and Explicit Architectural Dissents]]).**
 
 Software systems operate in an effectively infinite state space. When an agent discards legacy code and synthesizes a new implementation from scratch under an oracle, two distinct failure modes emerge in the unconstrained state space:
 
@@ -969,6 +969,7 @@ Several principles summarize the shift.
 
 ## Relationship to the Knowledge Graph
 
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: The epistemology of formally rejecting disposable implementations and unverified test oracle assumptions.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of the self-healing loop where deterministic tests act as hard mechanical state gates.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living specifications that serve as executable blueprints for compiling disposable code.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Explains why test oracles and living specs represent enduring organizational assets, while concrete code is disposable.
