@@ -122,6 +122,19 @@ Organizations should treat:
 
 as valuable intellectual property rather than disposable telemetry.
 
+### Negative Trajectories and Rejection Logs as High-Value Training Data
+
+When organizations consider fine-tuning internal coding models or context-grounding their agents, they instinctively gather **successful outcomes**: merged pull requests, clean source code, and passing test suites.
+
+This is a fundamental sampling error. **Clean code presents only the destination, completely erasing the minefield navigated to reach it.**
+
+The most defensible organizational IP lies in **Negative Trajectories (Via Negativa)**:
+1. **Rejected Implementation Attempts**: The alternative architectures the agent generated that failed compiler checks, violated latency constraints, or deadlocked under load.
+2. **Human PR Rejection Rationales**: The exact review comments where senior human engineers rejected an agent's syntactically valid code because it violated unspoken business invariants, introduced operational debt, or ignored hardware cache locality.
+3. **Debug Trajectories and Heisenbug Retries**: The step-by-step reasoning steps where an agent wrestled with distributed race conditions before finding the minimal, correct fix.
+
+As explored in [[Negative Knowledge and Explicit Architectural Dissents]], training on positive outputs alone creates brittle, hallucinatory agents that repeatedly wander into known corporate traps. Incorporating negative trajectories transforms corporate memory from a naive repository of code into a **defensive epistemic firewall**.
+
 ---
 
 ## Training on Model-Generated Code Requires External Verification
@@ -189,3 +202,4 @@ It is:
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: How execution logs, mutation scores, and verification gates prevent autophagous model collapse.
 - **[[AI-Generated Architectural Documentation from Code]]**: Concrete patterns for maintaining living architectural decision records (ADRs) alongside code changes.
 - **[[Early AI Adoption as Organizational Readiness]]**: Why capturing internal decision processes early builds long-term capability moats.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How negative decision trajectories and explicit dissents form the most defensible organizational training data.
