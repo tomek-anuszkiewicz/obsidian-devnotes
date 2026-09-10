@@ -165,6 +165,14 @@ The agentic paradigm enforces a strict **two-phase discipline**:
 > **Phase 2: Evolutionary Modernization (Clean Extensions)**  
 > Only after the shadow system has successfully replaced the legacy system—and is protected by a massive, empirical test suite accumulated during the mirroring phase—does the team begin adding new features, deprecating old endpoints, or optimizing data models.
 
+### 5. The Zero-Semantic-Drift Baseline: The Discipline of the "Clean Refresh"
+The single greatest failure mode in legacy migrations is the instinct to "improve" business logic, re-architect data schemas, or clean up naming conventions during the initial port:
+- **Resisting the Siren Call of In-Flight Refactoring**: When an engineer or agent inspects legacy code, decades of accumulated cruft beg to be reorganized. Yielding to this impulse immediately conflates *migration errors* with *intentional behavioral changes*.
+- **The "Clean Refresh" (Nowe Stare)**: The architecture mandates complete semantic conservatism. The first iteration of the modernized service must be a faithful, pristine reimplementation of the existing legacy semantics—warts, peculiar sorting conventions, and idiosyncrasies included.
+- **Establishing the Shadow Twin Baseline**: The refreshed service is deployed immediately alongside the live legacy system in dark shadow mode. Before any architectural optimizations or algorithmic refactoring are permitted, the shadow twin must ingest mirrored live production traffic until empirical telemetry confirms **$0.000\%$ behavioral drift** across millions of real-world payloads.
+- **Negative Proof Resolution**: As established in [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]], functional specifications and unit tests cannot prove the absence of hidden side-effects or unexpected mutations. Running the "clean refresh" in shadow mode under production load serves as the empirical antidote, proving that no unstated invariants have been violated before the codebase undergoes progressive structural transformation within [[The 5-Layer System Stack for Agentic Software Engineering]].
+
+
 ---
 
 ## Mechanical Sympathy in Legacy Modernization: Enforcing Data-Oriented Design (DOD)
@@ -319,3 +327,6 @@ A critical finding from empirical studies of AI code generation (such as GitClea
 - **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Deciding when to patch local issues versus tearing down unmaintainable hybrid glue.
 - **[[Designing Software for AI Agents]]**: The target architectural patterns (flat 1:1 modules, explicit boundaries) used when refactoring monoliths.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Step-by-step harness loops for safely modernizing legacy systems without regressions.
+- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Explains why formal specifications cannot guarantee the absence of hidden side-effects, establishing the necessity of the zero-semantic-drift shadow baseline.
+- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The foundational system hierarchy framing where legacy refactoring harnesses interface between substrate efficiency and runtime telemetry.
+
