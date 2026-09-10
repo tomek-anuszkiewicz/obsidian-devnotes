@@ -12,9 +12,9 @@ aliases:
   - Research Backlog
 ---
 
-use llm to add properies to my notes 
-use llm to organize my notes
-### control with voice
+
+# remote control
+## control with voice
 general -  use voice to control my pc, or only vsc, dictastion would be also good, 
 
 ### text2speach
@@ -26,13 +26,6 @@ can give voice commands to pc
 
 sterowanie przegladarka 
 browser use
-
-### Graphify
-Gitnexus
-Test it on some project
-Try to talk about this project with Agent with/without it. Is it better
-Try to export it to Obsidian
-
 ### Open Claw Start
 I need to host it or run locally in docker
 But in general I need to connect it llm, directly or using open router
@@ -46,8 +39,6 @@ On youtube there are planty video explaining how to use it in daily churns
 
 Perplexity
 CodeRabbit
-
-
 
 rate limiting
 retry, circuit breaker, polly
@@ -68,10 +59,29 @@ write instruction about techniques agent should you to write more performant cod
 - static lambda 
 - regex
 - optimal logs
+- explicit specialized code instead of offline codegen/macros (The Death of the Code Generator) -> [[AI May Replace Some Source Generators with Explicit Generated Code]]
 
 write doc about general guidlines
 - define whether null is allowed in json
 - other
+- Software Entropy & The "Zero-Friction" Trap: mechanical isolation (1:1 file hierarchy, hard line limits like 800 lines, constrained touchpoints), agent refactoring vs human hacks, duplication as blast-radius protection, and the training paradox -> [[Software Entropy and the Zero-Friction Trap]]
+- Emergence & Latent Space Synthesis: how targeted practitioner prompts act as crystallization seeds in the model's latent manifold -> [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]
+- Training models on corporate data lakes: Jira, Slack, meeting recordings, code archaeology, Conway's law, and the corporate decay prior -> [[LLM Agents and Institutional Memory]]
+- Competitive advantage when code generation is cheap: leadership of questions vs tasks, forcing LLMs outside the Averaged Prior -> [[Competitive advantage in the age of commodity AI]]
+- The Cognitive Inversion of the Engineer: from "overthinker" to epistemic catalyst, death of sunk-cost design meetings (asynchronous agentic RFCs & counter-prototyping), and overcoming developer cynicism -> [[AI Changes the Role and Training of Software Engineers]]
+- The "Zero-Line Developer" Paradox: why building complex low-level systems without writing code demands deeper engineering mastery, the abstraction asymmetry between non-experts and engineers, and the barrier of unknown unknowns -> [[AI Changes the Role and Training of Software Engineers]]
+- The Legacy Dilemma: maintaining with agents (complexity masking trap) vs automated straightening (automated strangler fig rewrite) -> [[Refactoring Legacy Systems with AI Agents]]
+- Meta-Harnessing and Pattern Drift: how next-gen models will automate their own harnesses, rules, and subagent topologies -> [[Agentic Coding Harness and Controlled Development Workflows]]
+- Agent-First APIs & The Pretraining Bottleneck: why API authors must ship native MCP servers and executable Agent Skills (`SKILL.md`) instead of human-only Swagger docs -> [[Designing APIs for LLM-Generated Integration Code]]
+- Model Collapse vs. Verifiable Drift: how unverified synthetic code degrades neural networks (autophagous loop) and why deterministic verification gates (compilation, tests, mutation testing) are the only filter for evolutionary progress -> [[Agentic Coding Harness and Controlled Development Workflows]]
+- WebMCP & In-Browser Agent Tools: turning websites into zero-cost APIs via `navigator.modelContext`, revolutionizing E2E testability, and empowering personal cross-site agent orchestration -> [[WebMCP - Turning Web Applications into Agent-Native Toolkits]]
+- Unified Personal AI Subscriptions & Managed RAG: the convergence of consumer chat subscriptions, ambient personal cloud indexing (Drive/Gmail/Photos as zero-config RAG), and portable BYOB (Bring Your Own Brain) API keys powering third-party applications -> [[Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs]]
+- Vault-to-Vault Epistemic Diffing: how personal AI models will ingest external knowledge bases to filter repetition, extract novel insights, and highlight architectural contradictions for dialectical sparring -> [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]
+- When Software Can Be Cloned in a Week: the death of the implementation moat via automated scraping and agentic cloning, and where defensibility shifts (state, distribution, real-world friction, iteration velocity) -> [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week]]
+- LLMs in Runtime Decision Paths: embedding models into live production execution pipelines, conversational telemetry (eliminating the "dashboard stare" in Grafana), real-time security log triage, and consuming qualitative non-numeric business data -> [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]
+- Developer Satisfaction, Identity, and Burnout: the psychological transition from tactile coding to relentless cognitive vigilance, the asymmetric empathy trap ("one-way empathy" and the oblivious machine), the crisis of the syntactic craftsman, and new forms of vigilance burnout -> [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]
+- In-Flight Documentation as the Primary Framework: generating documentation concurrently during code creation, shifting scaffolding from code frameworks to documentation templates, imparting determinism to stochastic agent edits, and slashing token overhead -> [[In-Flight Documentation as the Primary Framework for Coding Agents]]
+- Constraint Saturation & Rule Oscillation: the whack-a-mole trap when accumulating too many guidelines/drivers, attention fragmentation in transformers, hierarchical constraint tiering, dynamic rule scoping, and harness circuit breakers -> [[Constraint Saturation and Rule Oscillation in Coding Agents]]
 
 rest api, graphql, grpc
 
@@ -176,10 +186,6 @@ process:
 - decyzja ze jest ok 
 - brak konsensusu
   
-agent samomodyfikujacy process
-swoje skille, rules.
-Albo prosciej: ma jakas baze plikowa, ktore aktualizuje
-
 cloud agents
 
-webmco
+webmcp
