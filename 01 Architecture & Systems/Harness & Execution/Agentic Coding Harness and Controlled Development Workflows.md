@@ -16,6 +16,9 @@ aliases:
   - Controlled Development Workflows
   - Meta-Harnessing and Pattern Drift
   - Autonomous Harness Synthesis in Next-Gen Models
+  - Steering Agents via Negative Boundaries
+  - Negative Bounding in Agent Workflows
+  - Bounding by Exclusion
 ---
 
 # Agentic Coding Harness and Controlled Development Workflows
@@ -932,6 +935,27 @@ Because the model cannot guarantee its own behavioral boundaries, the surroundin
 
 ---
 
+## Steering Agents via Negative Boundaries: Why Exclusion Beats Prescriptive Micromanagement
+
+A pervasive failure mode in harness and workflow design is **prescriptive over-specification**: attempting to prepare an exhaustive catalog of every permissible path, method, and tool invocation the agent may select.
+
+### The Leaky Nature of Affirmative Instructions
+As formalized in [[Negative Knowledge and Explicit Architectural Dissents]], purely affirmative instructions are fundamentally leaky:
+> **Telling an agent what it SHOULD do does not prevent it from doing it otherwise.**
+
+If an instruction states: *"Use the command pattern to handle this request"*, the model's probabilistic reasoning engine still feels completely licensed to introduce dynamic reflection, allocate heap buffers inside a performance-critical loop, or swallow unhandled exceptions—unless those specific anti-paths are explicitly forbidden. Affirmative guidance guides likelihood, but it leaves an unconstrained perimeter around the task.
+
+### The "Bounding by Exclusion" Pattern in Workflows
+Instead of suffocating the model with a rigid, 50-step micro-plan that collapses upon encountering the first unexpected edge case:
+1. **Grant Generative Freedom**: Allow the agent wide latitude to explore data structures, algorithm variants, and implementation idioms within the approved module scope.
+2. **Erect 2 to 3 Explicit Negative Fences**: Strictly carve out the catastrophic architectural anti-patterns (the "Forbidden Zones"):
+   - *Forbidden*: Do not add new external package dependencies.
+   - *Forbidden*: Do not mutate public contracts or database schemas without explicit human approval.
+   - *Forbidden*: Do not introduce heap allocations or blocking I/O calls inside synchronous message handlers.
+3. **The Result**: The agent’s reasoning engine remains unconstrained and agile across complex edge cases, while the architecture is rigidly insulated from technical decay and [[Constraint Saturation and Rule Oscillation in Coding Agents|rule oscillation]].
+
+---
+
 ## Final principles
 
 1. Use a ready-made harness before building a custom one.
@@ -945,10 +969,12 @@ Because the model cannot guarantee its own behavioral boundaries, the surroundin
 9. Restrict credentials, network access and production authority.
 10. Let agents prepare commits and draft PRs, but retain CI, branch protection and merge approval.
 11. Treat prompts and skills as probabilistic guides, but enforce safety with deterministic Git checkpoints and tool permission gates.
+12. Steer agents via negative bounding: grant broad implementation autonomy while strictly pruning 2 to 3 catastrophic failure paths (the forbidden zones).
 ---
 
 ## Relationship to the Knowledge Graph
 
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: The epistemological foundation of negative bounding, explaining why excluding catastrophic anti-paths outperforms prescriptive micromanagement.
 - **[[Agent Deployment and Execution Models]]**: Infrastructure environments where controlled agent harnesses operate.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Harness circuit breakers and constraint tiering to prevent multi-objective rule thrashing.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Converting runtime harness execution failures into permanent repository rules.
