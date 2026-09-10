@@ -146,6 +146,12 @@ To protect mental well-being and maintain productivity, engineers must actively 
 - When an agent becomes irritating, pedantic, or cyclically stubborn (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]), treat it not as an insubordinate coworker, but as a **misconfigured state machine**.
 - The only antidote for agentic irritation is cold, mechanical intervention: wipe the context window, rewrite the specification, clamp the temperature, enforce deterministic lint gates, or step away from the keyboard.
 
+### 5. Cold Indifference and Zero Skin in the Game: The Root of Vigilance Burnout
+The deepest psychological asymmetry between a human engineer and a coding agent is **the distribution of risk (Skin in the Game)**:
+- **The Human Carries Full Accountability**: If the system fails in production at 3:00 AM, the human engineer wakes up, faces furious stakeholders, and bears the personal and professional fallout.
+- **The Agent Has Total Indifference**: For the agent, generating 2,000 lines of brittle code or deleting critical state verification logic carries zero consequences. It is just another stochastic token completion. The agent experiences neither pride in a resilient system nor dread of a production outage.
+- **The Toll of Perpetual Vigilance**: Because the agent possesses zero biological fear of catastrophic failure, the human supervisor must maintain **unrelenting cognitive vigilance**. Supervising a tirelessly confident, completely indifferent entity that can generate subtle, production-destroying bugs in seconds is far more exhausting than writing code oneself.
+
 ---
 
 ## 5. The New Anatomy of Developer Burnout
