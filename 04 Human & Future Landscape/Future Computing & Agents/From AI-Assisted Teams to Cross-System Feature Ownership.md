@@ -14,7 +14,7 @@ aliases:
 
 AI-assisted software development is still evolving too quickly to support confident predictions about the final structure of engineering organizations.
 
-However, it is possible to separate three layers:
+However, as teams evolve from [[Multi-Agent Software Development|multi-agent development]] to organizational autonomy, it is possible to separate three layers:
 
 1. what already exists;
     
@@ -23,11 +23,11 @@ However, it is possible to separate three layers:
 3. what may emerge later as organizations adapt.
     
 
-The third layer remains speculation. It should be treated as a hypothesis rather than a prediction.
+The third layer remains speculation, but hints at how teams manage [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|developer satisfaction and team identity]]. It should be treated as a hypothesis rather than a prediction.
 
 ## What Exists Today
 
-Most organizations still use AI inside structures that were created before modern coding agents.
+Most organizations still use AI inside structures that were created before modern coding agents, even though [[AI Productivity Is Limited by the Delivery System|productivity is bounded by the delivery system]].
 
 Teams are commonly organized around:
 
@@ -44,7 +44,7 @@ Teams are commonly organized around:
 - bounded business domains.
     
 
-A feature that crosses several services usually crosses several teams.
+A feature that crosses several services usually crosses several teams, requiring clear contracts for [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]].
 
 Its delivery may require:
 

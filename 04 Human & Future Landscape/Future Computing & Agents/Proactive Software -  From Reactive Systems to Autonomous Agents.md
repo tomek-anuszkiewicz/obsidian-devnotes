@@ -14,9 +14,9 @@ aliases:
 
 Traditional software is mostly reactive.
 
-A user clicks a button, submits a form, calls an API, creates a ticket, or triggers some predefined event. The system then executes a known procedure and returns a result.
+A user clicks a button, submits a form, calls an API (designed as [[Designing APIs for LLM-Generated Integration Code|agent-native interfaces]]), creates a ticket, or triggers some predefined event. The system then executes a known procedure and returns a result.
 
-The dominant interaction model has historically looked like this:
+The dominant interaction model has historically looked like this, but as examined in [[How AI Agents May Control Computers, Applications, and the Web|how AI agents control computers and applications]], systems are shifting toward proactive autonomy:
 
 ```text
 human

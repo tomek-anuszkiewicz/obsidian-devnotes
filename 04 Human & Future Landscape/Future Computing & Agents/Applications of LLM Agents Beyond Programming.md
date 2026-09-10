@@ -14,11 +14,11 @@ aliases:
 
 # Applications of LLM Agents Beyond Programming
 
-LLMs and agents can be useful far beyond code generation. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
+LLMs and agents can be useful far beyond code generation, opening new vistas for [[Proactive Software -  From Reactive Systems to Autonomous Agents|proactive autonomous systems]]. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
 
 ## Potential use cases
 
-- **UI analysis and testing**
+- **UI analysis and testing** (demonstrating how [[How AI Agents May Control Computers, Applications, and the Web|AI agents control computers and web applications]])
     
     - Analyze screenshots and detect visual inconsistencies.
         
@@ -38,7 +38,7 @@ LLMs and agents can be useful far beyond code generation. Their strongest role i
         
     - Simulate different user personas and attempt to complete tasks through the UI.
         
-- **Browser-based agents**
+- **Browser-based agents** (leveraging interfaces like [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP]])
     
     - Give an agent access to a browser and let it explore the application directly.
         
@@ -49,7 +49,7 @@ LLMs and agents can be useful far beyond code generation. Their strongest role i
 
 ## Documentation generation and maintenance
 
-A browser-capable agent could:
+Operating within an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]], a browser-capable agent could:
 
 1. Open the application.
     

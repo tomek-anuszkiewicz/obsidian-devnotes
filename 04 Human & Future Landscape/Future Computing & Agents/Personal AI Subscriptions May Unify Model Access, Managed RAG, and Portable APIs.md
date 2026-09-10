@@ -25,9 +25,9 @@ This separation reflected early commercial packaging, but it created immense fri
 
 A significant shift is now underway—exemplified by offerings such as Google Gemini integrating API keys directly into consumer and workspace subscription tiers (such as Google One AI Premium). 
 
-In this emerging model, **a single personal subscription unifies frontier model compute, managed multimodal retrieval over personal cloud assets, and portable API credentials**.
+In this emerging model, **a single personal subscription unifies frontier model compute, managed multimodal retrieval over personal cloud assets, and portable API credentials**, providing the commercial rails for [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal digital representations]].
 
-This convergence fundamentally alters how third-party software is built, priced, and integrated with personal data.
+This convergence fundamentally alters how third-party software is built, priced, and integrated, facilitating [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|epistemic diffing and external knowledge synthesis]].
 
 ---
 
@@ -41,7 +41,7 @@ The unified subscription consolidates three previously fragmented capabilities i
 │                                                                        │
 │   ┌─────────────────────┐  ┌─────────────────────┐  ┌───────────────┐  │
 │   │   FRONTIER MODEL    │  │  MANAGED AMBIENT    │  │   PORTABLE    │  │
-│   │     INTERACTION     │  │     PERSONAL RAG    │  │   API KEYS    │  │
+│   │     INTERACTION     │  │  PERSONAL [[Introduction to RAG|RAG]]  │  │   API KEYS    │  │
 │   │                     │  │                     │  │               │  │
 │   │ Conversational UI   │  │ Auto-indexed Drive, │  │ Bring-Your-   │  │
 │   │ Multimodal reasoning│  │ Gmail, Photos, Docs │  │ Own-Brain     │  │

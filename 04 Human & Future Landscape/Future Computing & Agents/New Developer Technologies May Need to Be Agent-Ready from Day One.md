@@ -33,13 +33,15 @@ In the LLM era, another requirement may become equally important:
 
 > **Can current coding agents discover, understand, and correctly use the technology?**
 
-This may significantly change how new developer technologies are introduced.
+This makes [[Designing Software for AI Agents|designing software specifically for AI agents]] a primary survival trait for new libraries.
+
+This may significantly change how new developer technologies are introduced, compelling creators to ship [[Designing APIs for LLM-Generated Integration Code|agent-native interface bundles and skills]].
 
 ## AI May Reinforce Existing Technologies
 
 LLMs are naturally strongest in technologies that are already widely represented in their training data.
 
-A mature library may have:
+A mature library may benefit from widespread training data, while [[AI Changes the Economics of Software Libraries|AI changes the economics of software libraries]] overall:
 
 ```text
 millions of source-code examples

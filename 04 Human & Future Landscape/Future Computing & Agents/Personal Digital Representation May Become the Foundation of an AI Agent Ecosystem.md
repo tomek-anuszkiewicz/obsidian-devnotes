@@ -27,9 +27,9 @@ They may know:
 
 This is useful, but fundamentally limited.
 
-A much more important development may be the creation of a persistent **digital representation of a person**: a continuously updated model containing knowledge about their history, preferences, relationships, possessions, work, habits, decisions, goals, and interactions with the world.
+A much more important development may be the creation of a persistent **digital representation of a person**, carrying profound consequences analyzed in [[The Implications of Having a Digital Model of Yourself]]: a continuously updated model containing knowledge about their history, preferences, relationships, possessions, work, habits, decisions, goals, and interactions with the world.
 
-Instead of every agent independently trying to understand the user, many specialized agents could operate on top of the same personal knowledge layer.
+Instead of every agent independently trying to understand the user, many specialized agents (funded by [[Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs|unified personal subscriptions]]) could operate on top of the same personal knowledge layer, allowing users to [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|diff, reconcile, and challenge external knowledge]].
 
 The architecture could look roughly like:
 
@@ -38,7 +38,7 @@ life events and personal data
         ↓
 personal data layer
         ↓
-personal memory / lifelong RAG
+personal memory / lifelong [[Introduction to RAG|RAG]]
         ↓
 personal model
         ↓

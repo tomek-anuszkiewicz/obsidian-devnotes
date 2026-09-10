@@ -12,7 +12,7 @@ aliases:
   - Narrow AI Singularity
 ---
 
-The technological singularity is usually imagined as the moment when an artificial general intelligence becomes smarter than humans and begins rapidly improving itself.
+The technological singularity is usually imagined as the moment when an artificial general intelligence becomes smarter than humans and begins rapidly improving itself, but the [[Agent Adoption as a Learning Flywheel|agent adoption learning flywheel]] suggests a more distributed trajectory.
 
 But there may be another path.
 
@@ -24,7 +24,7 @@ The important transition would not necessarily be:
 
 It may instead be:
 
-> Humans stop being on the critical path of technological progress.
+> Humans stop being on the critical path of technological progress, though overall throughput remains bounded because [[AI Productivity Is Limited by the Delivery System|productivity is limited by the surrounding physical delivery system]].
 
 ---
 
@@ -38,9 +38,9 @@ model
 → writes tests
 → runs experiments
 → observes failures
-→ improves instructions
+→ improves instructions (via [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction learning]])
 → improves agent architecture
-→ generates training data
+→ generates training data (driving [[Improving AI Models - From Scaling to Agent-Generated Training Data|model improvement from agent-generated data]])
 → trains or selects better models
 → repeats
 ```

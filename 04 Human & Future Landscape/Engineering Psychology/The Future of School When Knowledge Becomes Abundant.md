@@ -16,7 +16,7 @@ For most of history, education operated under a fundamental constraint:
 
 > Knowledge and access to good teachers were scarce.
 
-Schools, universities, libraries and textbooks solved this problem by collecting knowledge and distributing it efficiently to large groups of people.
+Schools, universities, libraries and textbooks solved this problem by collecting knowledge, an ecosystem evolving toward [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal digital representations and lifelong models]].
 
 This naturally produced an educational model based on:
 
@@ -34,9 +34,9 @@ memorization and exercises
 exam
 ```
 
-Generative AI changes one of the assumptions underneath this system.
+Generative AI changes one of the assumptions underneath this system, echoing how [[AI Changes the Role and Training of Software Engineers|AI transforms the training of software engineers]].
 
-A student can increasingly have access to an individual tutor that can:
+A student can increasingly have access to an individual tutor (operating like [[Applications of LLM Agents Beyond Programming|LLM agents beyond programming]]) that can:
 
 - explain concepts repeatedly,
     

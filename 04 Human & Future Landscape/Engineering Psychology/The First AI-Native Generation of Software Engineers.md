@@ -18,9 +18,7 @@ Many experienced engineers learned their profession before modern AI coding tool
 
 They are now adopting AI on top of an already-developed mental model of software engineering.
 
-The next generation may be different.
-
-Some future engineers may begin their careers in an environment where agents write much of the code from the start. They may never experience a long period of working without AI assistance.
+The next generation may be different, creating a shift where [[AI Changes the Role and Training of Software Engineers|AI changes the role and training of software engineers]]. Some future engineers may begin their careers in an environment where agents write much of the code from the start. They may never experience a long period of working without AI assistance.
 
 This raises an important question:
 
@@ -28,7 +26,7 @@ This raises an important question:
 
 ## The Transitional Generation
 
-Today’s senior engineers are in a unique position.
+Today’s senior engineers are in a unique position, navigating [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|developer satisfaction and identity in the age of coding agents]].
 
 They can delegate implementation to agents while retaining experience gained through:
 
@@ -47,7 +45,7 @@ They can delegate implementation to agents while retaining experience gained thr
 - reviewing both good and bad code written by humans.
     
 
-This experience allows them to compare agent output against an internal model built before AI became part of the workflow.
+This experience allows them to compare agent output against an internal model built before AI became part of the workflow, directly influencing [[AI Era Software Engineering Recruitment|AI-era recruitment strategies]].
 
 Their value is not only that they can write code.
 

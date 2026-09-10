@@ -18,7 +18,7 @@ Historically, software development has operated under a central assumption:
 
 > The developer must anticipate every feature, host the necessary models and data, and hardcode every user flow into the interface.
 
-This model created the modern SaaS application:
+This model created the modern SaaS application, a dynamic currently challenged by the [[Unbundling of Enterprise Software|unbundling of enterprise software]]:
 
 ```text
 developer
@@ -34,13 +34,13 @@ user consumes fixed feature set
 
 If a user needs something outside the predefined feature set, they face a familiar dilemma: wait months for the developer to prioritize the request, build a fragile external workaround, or accept that the software cannot adapt to their life.
 
-AI agents, protocols like MCP (Model Context Protocol) and WebMCP, and on-device machine learning suggest another architecture:
+AI agents, protocols like [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP and the Model Context Protocol]], and on-device machine learning suggest another architecture:
 
 ```text
-application
-(provides core semantic primitives, domain validation, and exposed APIs)
+application (building upon [[Designing APIs for LLM-Generated Integration Code|APIs designed for agent integration]] and exposing core semantic primitives)
++
     +
-user's personal environment
+user's personal environment (anchored in [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal digital representations]])
 (supplies on-device models, personal data stores, and private context)
     +
 personal agent

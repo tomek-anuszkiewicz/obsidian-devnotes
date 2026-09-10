@@ -24,7 +24,7 @@ open application
 → click Save
 ```
 
-AI agents may gradually introduce another layer:
+AI agents may gradually introduce another layer, shifting paradigms from [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|fixed features to extensible primitives]]:
 
 ```text
 user intent
@@ -33,7 +33,7 @@ user intent
 → execution
 ```
 
-The important change is not voice recognition.
+The important change is not voice recognition; it is the emergence of agent-friendly protocols like [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP]] that let models invoke tools directly.
 
 Speech recognition has already been good enough for many years.
 
@@ -44,7 +44,7 @@ The missing piece has been the ability to translate:
 into:
 
 ```text
-understand the goal
+understand the goal (as explored in [[Proactive Software -  From Reactive Systems to Autonomous Agents|proactive software systems]])
 → discover available capabilities
 → create a plan
 → execute actions

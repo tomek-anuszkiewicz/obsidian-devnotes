@@ -245,3 +245,13 @@ With zero-cost code generation and unbounded curiosity comes a new danger: the t
 - **[[Software Entropy and the Zero-Friction Trap]]**: Highlights the need for mechanical isolation to prevent zero-friction sprawl.
 - **[[AI Changes the Economics of Technical Debt]]**: Explains how reduced typing friction reshapes technical debt repayment.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological shift from tactile coding flow to relentless supervisory vigilance and potential burnout.
+
+---
+
+## Related Notes
+
+- **[[The First AI-Native Generation of Software Engineers]]**: How junior engineers develop intuition when early tasks are automated by agents.
+- **[[AI Era Software Engineering Recruitment]]**: How hiring criteria shift from coding speed to system modeling, review, and verification.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Psychological impacts on engineering identity in agent-dominated workflows.
+- **[[AI Productivity Is Limited by the Delivery System]]**: Why training and productivity depend on end-to-end delivery pipelines.
+- **[[Testing in the Model, Agent, LLM Era]]**: Training engineers to build deterministic test oracles rather than writing manual boilerplate.

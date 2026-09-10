@@ -12,7 +12,7 @@ aliases:
   - Implications of Self Digital Modeling
 ---
 
-A sufficiently rich personal AI memory may eventually become something more important than a searchable archive of our lives.
+A sufficiently rich personal AI memory may eventually become something more important than a searchable archive of our lives, acting as the foundation for a [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal agent ecosystem]].
 
 It may become a **digital model of the person**.
 
@@ -128,7 +128,7 @@ A person may believe:
 
 > I work best under pressure.
 
-The model may observe:
+The model may observe patterns that enable [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|diffing and reconciling external knowledge against personal reality]]:
 
 > Your subjective productivity rises near deadlines, but your error rate also increases significantly.
 
@@ -192,7 +192,7 @@ It does not need perfect prediction to be useful.
 
 Even moderately accurate identification of recurring personal patterns may significantly improve decisions.
 
-The agent becomes less like a search engine and more like a **navigation system for possible futures**.
+The agent becomes less like a search engine and more like a **navigation system for possible futures**, transforming [[AI Era Software Engineering Recruitment|career matching and recruitment]].
 
 ---
 
@@ -512,7 +512,7 @@ The model therefore risks turning observations into identity.
 
 ---
 
-# Voluntary Sharing May Become Practically Mandatory
+# Voluntary Sharing May Become Practically Mandatory, fundamentally affecting [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|professional identity and personal agency]].
 
 One of the most important implications appears when personal models can be shared.
 

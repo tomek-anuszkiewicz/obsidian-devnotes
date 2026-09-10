@@ -326,3 +326,12 @@ The strongest candidate is therefore not simply the best programmer or the most 
 - [[Designing APIs for LLM-Generated Integration Code|Designing APIs for LLM-Assisted Code Generation]]
 - [[Applications of LLM Agents Beyond Programming]]
 
+---
+
+## Related Notes
+
+- **[[AI Changes the Role and Training of Software Engineers]]**: The evolving role of software engineers and junior apprenticeship in the agentic era.
+- **[[Reviewing AI-Generated Code]]**: Testing candidate code review skills on subtle, plausible agent-generated pull requests.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Evaluating how candidates direct and bound agentic workflows.
+- **[[The Implications of Having a Digital Model of Yourself]]**: Future implications of machine-readable personal models in recruitment and matching.
+- **[[Testing in the Model, Agent, LLM Era]]**: Shifting hiring assessments toward building comprehensive verification oracles.

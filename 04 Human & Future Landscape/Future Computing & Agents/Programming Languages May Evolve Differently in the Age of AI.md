@@ -12,7 +12,7 @@ aliases:
   - Languages Designed for LLM Generation
 ---
 
-Programming languages have historically evolved around human limitations.
+Programming languages have historically evolved around human limitations, but as [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering shifts toward code optimized for agents]], the trade-offs of language design change.
 
 Their design has repeatedly tried to make programming:
 
@@ -33,11 +33,11 @@ Their design has repeatedly tried to make programming:
 
 Features such as records, pattern matching, type inference, nullability annotations, async/await, immutability helpers, and improved syntax all reduce some combination of human effort and human error.
 
-The rise of LLM-based coding agents may change which of these goals matter most.
+The rise of LLM-based coding agents may change which of these goals matter most, explaining why [[AI May Replace Some Source Generators with Explicit Generated Code|AI replaces source generators with explicit code]].
 
 The central shift is simple:
 
-> AI greatly reduces the cost of writing code, but it does not eliminate the cost of ambiguity or incorrect assumptions.
+> AI greatly reduces the cost of writing code, but it does not eliminate the cost of ambiguity or incorrect assumptions—reinforcing the need for [[Testing in the Model, Agent, LLM Era|deterministic test oracles]].
 
 This may gradually change what we optimize programming languages for.
 

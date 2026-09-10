@@ -15,7 +15,7 @@ aliases:
 
 When people attempt to use an AI agent for a task that current models cannot perform reliably, those attempts may help make the task feasible for future models.
 
-The important shift is that future training data will increasingly contain not only:
+The important shift is that future training data will increasingly contain interaction data, showing how [[Improving AI Models - From Scaling to Agent-Generated Training Data|agent-generated data improves frontier models]]:
 
 - human-written code,
     
@@ -43,9 +43,9 @@ but also complete interaction trajectories:
 - and which final outcome was accepted.
     
 
-This creates a feedback loop between model adoption and model capability.
+This creates a feedback loop between model adoption and model capability, driving the [[Singularity Without AGI -  The Civilizational Automation Loop|civilizational automation loop]].
 
-> Today's unsuccessful attempts to use agents can become part of the infrastructure and training signal that makes tomorrow's agents successful.
+> Today's unsuccessful attempts to use agents can become part of the training signal that makes tomorrow's agents successful, connecting directly to [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction learning]].
 
 ---
 
