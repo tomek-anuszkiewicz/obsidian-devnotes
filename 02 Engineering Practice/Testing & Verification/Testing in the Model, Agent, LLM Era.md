@@ -1010,6 +1010,9 @@ The rise of ephemeral implementation code shifts the fundamental role of the hum
   4. Reviewing algorithmic invariants and topological boundaries.
   5. Governing the cognitive trade-offs between human readability and machine efficiency (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]).
 
+### 9. Neurosymbolic Verification and the Negative Proof Dilemma
+While interactive theorem provers (Lean 4, Coq) allow agents to mathematically prove that an implementation satisfies a formal proposition $Q$, formal proof alone does not guarantee system safety. Proving that an algorithm satisfies specification $P$ does not prove that it avoids hidden heap allocations, cache invalidation, or rogue side-effects—a reality formalized in [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma|the Negative Proof Dilemma]]. High-assurance verification demands pairing symbolic mathematical proof with empirical dynamic fuzzing and runtime telemetry.
+
 ---
 
 # Core Principles
@@ -1036,10 +1039,13 @@ Several principles summarize the shift.
 
 > **An ironclad test oracle guarantees functional equivalence, but only the human architect guarantees mechanical sympathy.**
 
+> **Formal mathematical proofs guarantee that a function fulfills proposition $Q$, but only dynamic empirical harnesses resolve [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma|The Negative Proof Dilemma]] by proving it executes no unmodeled physical harm.**
+
 ---
 
 ## Relationship to the Knowledge Graph
 
+- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Formalizes why mathematical proofs (Lean 4, Coq) fail to guarantee the absence of unmodeled side-effects, hidden allocations, or cache invalidation.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: The epistemology of formally rejecting disposable implementations and unverified test oracle assumptions.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of the self-healing loop where deterministic tests act as hard mechanical state gates.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, L1i instruction cache locality, and data-oriented layouts against LLM OOP bias.
