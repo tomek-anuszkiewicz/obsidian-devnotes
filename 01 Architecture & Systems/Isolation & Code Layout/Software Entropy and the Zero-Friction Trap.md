@@ -30,7 +30,7 @@ In traditional software development, codebases were passively protected by a hid
 
 An AI coding agent has **zero friction**. It feels no fatigue, encounters no typing resistance, and suffers no cognitive overload when introducing four wrapper layers, adding ten speculative fields to a data structure, or touching fifteen files across a repository in a single turn.
 
-Because the generative friction has dropped to zero, **software entropy accelerates exponentially** under agentic workflows unless the architecture imposes **strict, mechanical isolation**.
+Because the generative friction has dropped to zero, **software entropy accelerates exponentially** under agentic workflows unless bounded by explicit architectural guidelines (as outlined in [[Designing Software for AI Agents|agent-oriented software design]]) and enforced via [[Agentic Coding Harness and Controlled Development Workflows|controlled development harnesses]].
 
 ```text
 Classical Development:

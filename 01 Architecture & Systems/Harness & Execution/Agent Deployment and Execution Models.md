@@ -38,7 +38,7 @@ A useful decomposition is:
 
 These three components do not have to run in the same place.
 
-For example, a model may run in a provider cloud while the harness and tool execution run on a developer workstation. A cloud orchestrator may also control a self-hosted executor inside a private network.
+For example, a model may run in a provider cloud while the harness and tool execution run on a developer workstation. A cloud orchestrator may also control a self-hosted executor inside a private network, coordinating tasks via [[Introduction to Workflow Orchestration|workflow orchestration engines]] and specialized [[Exploring Agent Harnesses|execution harnesses]].
 
 The main deployment models are:
 

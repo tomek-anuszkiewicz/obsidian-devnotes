@@ -33,7 +33,7 @@ The most useful properties are:
 - predictable and discoverable behavior,
 - business concepts represented directly in code.
 
-The goal is not to design code specifically for one generation of models. The goal is to build systems that can be understood reliably by any new participant, human or agent.
+The goal is not to design code specifically for one generation of models. As examined in [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering for agent readability]], the goal is to build systems that can be understood reliably by any new participant, human or agent.
 
 These are design heuristics rather than proven laws of agent behavior. Their value depends on the system, team, and operational context.
 
@@ -56,7 +56,7 @@ await transaction.Execute(async () =>
 });
 ```
 
-This style is helpful when the ordering and scope of these operations are important to the business behavior. It is not automatically better than middleware, filters, decorators, or pipelines.
+This style is helpful when the ordering and scope of these operations are important to the business behavior, avoiding [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|costly hidden abstractions]] such as implicit interceptors or runtime magic. It is not automatically better than middleware, filters, decorators, or pipelines.
 
 Centralized behavior can reduce duplication and make a system more consistent. For example, global exception handling may map known domain failures to HTTP responses while handlers allow unexpected exceptions to propagate. An agent can often continue this convention by inspecting neighboring handlers, tests, application registration, and middleware configuration. Repeating the same exception handling in every endpoint would make the system less consistent, not more explicit.
 

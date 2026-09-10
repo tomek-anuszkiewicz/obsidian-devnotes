@@ -20,11 +20,11 @@ aliases:
 
 For decades, the web has been designed around a fundamental assumption: **the consumer of a web page is a human being operating a mouse and keyboard in front of a graphical viewport**.
 
-When AI agents arrived, the industry’s initial reaction was to force agents to act like humans through **Vision-Based Computer Use** (taking screenshots, estimating $(x, y)$ pixel coordinates, and synthesizing DOM mouse clicks). While impressive as a generic fallback, vision-based computer use is slow, expensive, and fragile.
+When AI agents arrived, the industry’s initial reaction was to force agents to act like humans through **Vision-Based Computer Use** (taking screenshots, estimating $(x, y)$ pixel coordinates, and synthesizing DOM mouse clicks), as analyzed in [[How AI Agents May Control Computers, Applications, and the Web|computer-use architectures]]. While impressive as a generic fallback, vision-based computer use is slow, expensive, and fragile.
 
 **WebMCP (Web Model Context Protocol)**—spearheaded within the W3C Web Machine Learning Community Group via browser-native proposals like `navigator.modelContext`—inverts this paradigm. 
 
-Instead of treating web applications as visual screens to be scraped, WebMCP allows web applications to **expose their capabilities directly as structured, discoverable tools within the browser runtime**.
+Instead of treating web applications as visual screens to be scraped, WebMCP allows web applications to **expose their capabilities directly as structured, discoverable tools within the browser runtime**, reflecting how [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|applications shift from fixed features to agent-extensible primitives]].
 
 ```text
 Traditional Web:
@@ -185,7 +185,7 @@ Traditional APIs are relatively straightforward to control and protect:
 
 ---
 
-## Relationship to the Agentic Knowledge Graph
+## Relationship to the Knowledge Graph
 
 - **[[Designing APIs for LLM-Generated Integration Code]]**: WebMCP extends client-side API design directly into the browser DOM, eliminating the boundary between web UI and API.
 - **[[How AI Agents May Control Computers, Applications, and the Web]]**: Details the progression from brittle vision GUI automation to native semantic protocols.

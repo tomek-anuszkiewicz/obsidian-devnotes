@@ -41,7 +41,7 @@ Agent Harness
       Model
 ```
 
-The model is therefore becoming increasingly interchangeable. The same underlying task can potentially be executed using Claude, GPT, Gemini, or another model while keeping much of the surrounding infrastructure unchanged.
+The model is therefore becoming increasingly interchangeable across [[Agent Deployment and Execution Models|local, managed, and hybrid deployment tiers]] while keeping much of the surrounding infrastructure unchanged.
 
 ## What an Agent Harness Provides
 
@@ -534,7 +534,7 @@ agent runtime
 multi-agent environment
 ```
 
-The interesting question is no longer merely how well an LLM can write code.
+As detailed in [[Multi-Agent Software Development|multi-agent execution topologies]], the interesting question is no longer merely how well an LLM can write code.
 
 The more important question may become:
 
