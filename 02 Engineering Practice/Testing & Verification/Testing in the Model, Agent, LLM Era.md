@@ -13,6 +13,10 @@ aliases:
   - Disposable Implementation vs Ironclad Test Oracle
   - Ephemeral Code and Test Oracles
   - The Limits of Test Oracles: Mechanical Sympathy
+  - The Dual-Steering Architecture
+  - The Frozen Oracle Rule
+  - The Frictionless Rewrite
+  - Semantic Specs vs Rigid Deterministic Oracles
 ---
 
 The classical test pyramid is still useful, but it is no longer a complete description of how we should verify software in an agent-driven development process.
