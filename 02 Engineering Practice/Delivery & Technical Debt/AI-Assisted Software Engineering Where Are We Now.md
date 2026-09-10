@@ -368,3 +368,13 @@ The central shift can be summarized as:
 - **[[Software Engineering May Shift Toward Code Optimized for Agents|Software Engineering with LLM Agents]]**: How programming paradigms and code structures evolve when agents maintain code.
 - **[[Competitive advantage in the age of commodity AI]]**: Why advantage shifts from code generation to problem formulation and feedback loops.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The psychological and structural evolution of engineering roles in the agentic era.
+
+---
+
+## Related Notes
+
+- **[[AI Productivity Is Limited by the Delivery System]]**: Why delivery speed depends on end-to-end organizational throughput rather than code generation alone.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical frameworks for moving beyond autocomplete into bounded, reviewable agent executions.
+- **[[Early AI Adoption as Organizational Readiness]]**: How early experimentation builds structural capabilities before advanced models arrive.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Managing code sprawl and architectural drift when generation friction approaches zero.
+- **[[Testing in the Model, Agent, LLM Era]]**: Shifting engineering responsibility from writing code to building deterministic verification oracles.

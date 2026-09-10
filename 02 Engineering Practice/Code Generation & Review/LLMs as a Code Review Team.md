@@ -20,17 +20,15 @@ The most useful model is not:
 
 A more interesting model is:
 
-> A team of specialized agents continuously examines changes, forms hypotheses about potential problems, and uses deterministic tools to verify them.
+> A team of specialized agents continuously examines changes, forms hypotheses about potential problems, and uses deterministic tools to verify them—realizing the vision of [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize|agentic review enforcing complex semantic rules]].
 
-The role of humans then shifts toward reviewing important findings, resolving ambiguity, making architectural decisions, and accepting responsibility for the final change.
+The role of humans then shifts toward [[Reviewing AI-Generated Code|reviewing high-risk findings]] and preventing [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
 ---
 
 ## The Most Important Property May Be Relentlessness
 
-One of the biggest advantages of an automated reviewer is not intelligence.
-
-It is relentlessness.
+One of the biggest advantages of an automated reviewer is not intelligence; it is the [[Agent Advantage -  Relentless, Methodical Work|relentless, methodical stamina of agents]] that never tires.
 
 A human reviewer gets tired.
 
@@ -51,7 +49,7 @@ An agent does not care that:
 
 It can apply the same procedure every time.
 
-This makes agents especially useful for review work that is:
+This makes agents especially useful for review work within an [[Agentic Coding Harness and Controlled Development Workflows|automated delivery harness]], particularly when work is:
 
 - repetitive;
     

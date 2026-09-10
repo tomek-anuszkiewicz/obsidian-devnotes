@@ -14,7 +14,7 @@ aliases:
   - Semantic Code Review
 ---
 
-Traditional software quality automation works best when a rule can be expressed precisely.
+Traditional software quality automation works best when a rule can be expressed precisely, providing the deterministic baseline for [[Testing in the Model, Agent, LLM Era|testing in the model era]].
 
 For example:
 
@@ -42,15 +42,13 @@ Such rules can be encoded as:
 - CI checks.
     
 
-This remains extremely valuable.
+This remains extremely valuable, especially when [[Reviewing AI-Generated Code|reviewing AI-generated code]] for subtle structural drift.
 
-However, a large part of software engineering has never fit comfortably into this model.
-
-Many important rules are not difficult because developers do not understand them.
+Many important rules are not difficult because developers do not understand them; rather, without active [[Agent Advantage -  Relentless, Methodical Work|relentless agentic enforcement]], human vigilance decays over time.
 
 They are difficult because they are expensive or nearly impossible to formalize.
 
-LLM-based review agents may automate part of this previously human-only layer.
+LLM-based review agents, operating as [[LLMs as a Code Review Team|a collaborative code review team]], may automate part of this previously human-only layer.
 
 ---
 

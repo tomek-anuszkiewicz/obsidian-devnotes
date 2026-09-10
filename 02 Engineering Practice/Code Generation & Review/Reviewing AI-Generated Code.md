@@ -14,7 +14,7 @@ aliases:
 
 ## Human Attention Becomes the Critical Resource
 
-An agent can generate code faster than a human can honestly review it.
+An agent can generate code faster than a human can honestly review it, dramatically increasing the risk of [[Software Entropy and the Zero-Friction Trap|software entropy and frictionless code sprawl]].
 
 The danger is the illusion of understanding:
 
@@ -31,7 +31,7 @@ The danger is the illusion of understanding:
 
 The reviewer may scan the diff without reconstructing the actual behavior.
 
-Review should therefore be organized around risk rather than file order.
+Review should therefore be organized around risk rather than file order, recognizing that [[Why Business Logic Is the Hardest Part of Agentic Coding|business logic is the hardest part of agentic coding]] and cannot be verified by surface-level syntax checks.
 
 Review first:
 
@@ -64,7 +64,7 @@ If they cannot, they probably have not understood the change sufficiently.
 
 The greatest operational failure mode in an agent-assisted team is **the illusion that green tests eliminate the need to understand how the code works**.
 
-When an agent produces a clean 300-line implementation, all unit tests pass, and the PR description sounds authoritative, reviewers face immense temptation to skim the diff and approve. This treats the code as an opaque black box.
+When an agent produces a clean 300-line implementation, all unit tests pass, and the PR description sounds authoritative, reviewers face immense temptation to skim the diff and approve, forgetting that [[Testing in the Model, Agent, LLM Era|test oracles can suffer from incomplete specification]]. This treats the code as an opaque black box, which can be mitigated by deploying [[LLMs as a Code Review Team|specialized agent review teams]] to challenge assumptions.
 
 ### When the Agent Hits the Insolubility Horizon
 Inevitably, every production system encounters failure modes that exceed an agent's reasoning capability:

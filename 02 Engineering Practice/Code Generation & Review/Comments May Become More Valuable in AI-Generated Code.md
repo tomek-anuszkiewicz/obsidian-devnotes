@@ -16,9 +16,9 @@ The traditional rule for comments is often expressed as:
 
 > Good code should explain what it does. Comments should explain why.
 
-This distinction may become even more important in software increasingly written and modified by AI agents.
+This distinction may become even more important in software increasingly written and modified by AI agents, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
-An agent can usually reconstruct the mechanics of code very well. It does not need comments that merely repeat the implementation.
+An agent can usually reconstruct the mechanics of code very well, but when [[Reviewing AI-Generated Code|reviewing AI-generated code]], comments serve as human intent anchors that prevent [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
 For example:
 
@@ -40,9 +40,7 @@ A much more valuable comment would be:
 // Do not replace this with the standard hotel cancellation policy.
 ```
 
-The code explains the mechanism.
-
-The comment preserves information that cannot easily be reconstructed from the implementation:
+The code explains the mechanism. As highlighted in [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]], the comment preserves information that cannot easily be reconstructed from the implementation:
 
 - why the rule exists;
     
@@ -57,7 +55,7 @@ The comment preserves information that cannot easily be reconstructed from the i
 
 ## Code Is Self-Documenting Syntactically, Not Semantically
 
-Well-written code can communicate structure and behavior.
+Well-written code can communicate structure and behavior, transforming comments into [[In-Flight Documentation as the Primary Framework for Coding Agents|executable in-flight documentation for coding agents]].
 
 For example:
 

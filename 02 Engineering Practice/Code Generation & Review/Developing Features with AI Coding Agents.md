@@ -14,24 +14,24 @@ aliases:
 
 ## A Strong Workflow for Larger Features
 
-A useful process is:
+Within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], a useful process is:
 
 ```text
 repository analysis
 → behavioral specification
 → examples and decision tables
-→ acceptance tests
+→ acceptance tests (anchoring the feature in [[Testing in the Model, Agent, LLM Era|deterministic test oracles]])
 → human review
 → implementation of one vertical slice
 → architectural review
 → full implementation
-→ independent skeptical review
-→ documentation update
+→ independent skeptical review (conducted via [[Reviewing AI-Generated Code|disciplined code review]])
+→ documentation update (capturing [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]])
 ```
 
 ### Step 1: Repository Analysis
 
-The agent should first locate:
+Before modifying files, the agent should first locate existing constraints, remembering that [[Why Business Logic Is the Hardest Part of Agentic Coding|business logic is the hardest part of agentic coding]]:
 
 - existing business flows,
     

@@ -14,9 +14,9 @@ aliases:
 
 ## Idea
 
-LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code.
+LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code—a vital tool when [[Refactoring Legacy Systems with AI Agents|refactoring legacy systems with AI agents]].
 
-This is especially useful for:
+This is especially useful for preserving [[LLM Agents and Institutional Memory|institutional memory in software teams]] and managing systems with:
 
 - legacy systems created before widespread AI adoption,
     
@@ -29,7 +29,7 @@ This is especially useful for:
 
 The goal is not merely to generate class or method descriptions.
 
-The more valuable goal is to create a **semantic model of the system** that explains:
+The more valuable goal is to create a **semantic model of the system** (serving as [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation for coding agents]]) that explains:
 
 - what components exist,
     
@@ -52,7 +52,7 @@ The more valuable goal is to create a **semantic model of the system** that expl
 
 # Code as a Source of Architectural Knowledge
 
-Existing source code contains a large amount of architectural information, but that information is often distributed across many files.
+Existing source code contains a large amount of architectural information, helping clarify [[What Should Organizations Preserve from AI-Assisted Development|what organizations should preserve from AI-assisted development]].
 
 A developer may need to inspect:
 

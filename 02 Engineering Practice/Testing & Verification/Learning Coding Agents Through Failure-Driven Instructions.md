@@ -14,9 +14,9 @@ aliases:
 
 ## Core Idea
 
-Instead of treating an agent instruction as a static prompt, treat it as a **versioned artifact that can be continuously improved based on agent failures**.
+Instead of treating an agent instruction as a static prompt, treat it as a **versioned artifact that can be continuously improved based on agent failures**, forming the basis of [[Constraint Saturation and Rule Oscillation in Coding Agents|governing instruction saturation]].
 
-The goal is not merely to make the agent eventually produce correct code.
+Within a controlled [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], the goal is not merely to make the agent eventually produce correct code.
 
 The more interesting goal is:
 
@@ -28,7 +28,7 @@ This creates two nested optimization loops.
 
 ## 1. Inner Loop: Improve the Code
 
-The normal coding-agent loop looks like this:
+As examined in [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification|correcting AI-generated code]], the normal coding-agent loop looks like this:
 
 ```text
 task
@@ -46,7 +46,7 @@ agent fixes code
 success
 ```
 
-This is already realistic today because software provides unusually strong automated feedback:
+This is already realistic today because software provides unusually strong automated feedback through [[Testing in the Model, Agent, LLM Era|deterministic test oracles]]:
 
 - compiler errors
     

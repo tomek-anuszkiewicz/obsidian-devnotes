@@ -18,7 +18,7 @@ aliases:
 
 ## Thesis
 
-Coding agents change the economics of choosing between EF Core, handwritten SQL, and database-side code.
+Coding agents change the economics of choosing between EF Core, handwritten SQL, and database-side code, directly impacting how teams manage [[AI Changes the Economics of Technical Debt|technical debt in data access layers]].
 
 Historically, handwritten SQL, result DTOs, mappers, stored procedures, and their tests created enough repetitive work that teams often preferred an ORM even when direct SQL would provide better control. An agent can generate and update much of this mechanical code cheaply. This makes a SQL-heavy approach more practical, but it does not make it automatically safer or architecturally superior.
 
@@ -28,11 +28,11 @@ The main question is no longer whether an agent can write SQL and map a result s
 - How is schema compatibility verified?
 - Where should business logic live?
 - How do we verify semantics, concurrency, and performance?
-- Can humans still understand and review the resulting system?
+- Can humans still understand and review the resulting system when [[Reviewing AI-Generated Code|reviewing AI-generated code]]?
 
 ## An Agent Can Easily Generate the Mapping Layer
 
-Given a schema and a query, an agent can generate:
+Given a schema and a query, an agent operating in an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]] can generate:
 
 1. parameterized SQL;
 2. command execution code;
@@ -40,7 +40,7 @@ Given a schema and a query, an agent can generate:
 4. `DbDataReader` mapping or Dapper integration;
 5. integration and contract tests.
 
-Repetitive mapping code is not difficult for an agent. In fact, agents are less discouraged than humans by mechanical code. This reduces the cost of explicit implementations, but generated code still needs deterministic verification.
+Repetitive mapping code is not difficult for an agent. In fact, agents are less discouraged than humans by mechanical code. This reduces the cost of explicit implementations, but generated code still needs deterministic verification through [[Testing in the Model, Agent, LLM Era|rigid test oracles and database integration suites]].
 
 ## The Real Problem Is Contract Consistency
 

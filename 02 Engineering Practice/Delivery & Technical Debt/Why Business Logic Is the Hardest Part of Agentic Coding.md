@@ -14,7 +14,7 @@ aliases:
 
 ## Business Logic Is Harder Than Technical Complexity
 
-An agent may easily generate:
+Within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], an agent may easily generate:
 
 - a concurrent processing pipeline,
     
@@ -33,7 +33,7 @@ An agent may easily generate:
 
 At the same time, it may misunderstand a short business condition.
 
-Technical code can be syntactically complex but semantically familiar. Business logic may consist of several `if` statements while depending on hidden concepts, historical exceptions, regulatory rules, and organization-specific meaning.
+Technical code can be syntactically complex but semantically familiar. Business logic may consist of several `if` statements while depending on hidden concepts, historical exceptions, regulatory rules, and organization-specific meaning, making comments critical as explored in [[Comments May Become More Valuable in AI-Generated Code|comments in AI-generated code]].
 
 For example, the agent may incorrectly assume that:
 
@@ -43,7 +43,7 @@ PaymentStatus.Paid
 
 means a payment has been finally settled, while in the actual business it only means that the payment was authorized.
 
-The most dangerous output is not code that obviously fails. It is code that is:
+The most dangerous output is not code that obviously fails, which makes [[Reviewing AI-Generated Code|reviewing AI-generated code]] for subtle domain hallucinations essential. It is code that is:
 
 - professionally structured,
     
@@ -60,7 +60,7 @@ The most dangerous output is not code that obviously fails. It is code that is:
 
 ## Separate Business Decisions from Technical Execution
 
-Business rules should be isolated into small, explicit decision components:
+To protect against [[Software Entropy and the Zero-Friction Trap|software entropy]], business rules should be isolated into small, explicit decision components:
 
 ```csharp
 public CancellationDecision CanCancel(

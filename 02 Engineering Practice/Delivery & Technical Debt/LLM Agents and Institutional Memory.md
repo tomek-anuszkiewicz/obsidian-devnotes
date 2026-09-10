@@ -21,14 +21,14 @@ aliases:
 
 ## Core idea
 
-An LLM agent with access to the codebase, documentation, tickets, commit history, and a good RAG system can make a complex project much easier to navigate. However, this is not the same as preserving institutional knowledge or maintaining a shared understanding of the system.
+An LLM agent with access to the codebase, documentation, tickets, commit history, and a good RAG system can make a complex project much easier to navigate. However, as analyzed in [[What Should Organizations Preserve from AI-Assisted Development|what organizations should preserve from AI-assisted development]], this is not the same as preserving institutional knowledge or maintaining a shared understanding of the system.
 
 There is an important distinction between:
 
 - **being able to retrieve an answer**, and
-- **having a shared mental model of the system**.
+- **having a shared mental model of the system** (the absence of which creates the cognitive alienation described in [[Reviewing AI-Generated Code|the intractable bug trap]]).
 
-Agents are very effective at the first. A healthy engineering team still needs to deliberately maintain the second.
+Agents are very effective at the first. A healthy engineering team still needs to deliberately maintain the second to prevent [[Software Entropy and the Zero-Friction Trap|software entropy and team alienation]].
 
 ## Team size and knowledge redundancy
 
@@ -43,7 +43,7 @@ There is no universally correct team size, but for one coherent product or techn
 
 The more important measure is the **bus factor**. Every important domain or subsystem should be understood by at least two or three people.
 
-Understanding means more than knowing which files to modify. Those people should be able to:
+Understanding means more than knowing which files to modify; it requires documenting decisions via [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]] and preserving architectural intent. Those people should be able to:
 
 - explain why the system behaves as it does;
 - predict the consequences of a change;

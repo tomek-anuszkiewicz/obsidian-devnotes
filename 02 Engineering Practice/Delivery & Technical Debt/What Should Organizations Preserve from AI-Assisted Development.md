@@ -14,7 +14,7 @@ aliases:
 
 ## Documentation Can Become a Process Output
 
-Agents can reduce the cost of maintaining business documentation.
+Agents can reduce the cost of maintaining business documentation, helping safeguard [[LLM Agents and Institutional Memory|institutional memory in software teams]].
 
 For each feature, an agent can update:
 
@@ -35,7 +35,7 @@ For each feature, an agent can update:
 - known limitations.
     
 
-A useful Business Decision Record structure is:
+Because [[Why Business Logic Is the Hardest Part of Agentic Coding|business logic is the hardest part of agentic coding]], a useful Business Decision Record structure is:
 
 ```markdown
 # BDR-XXX: Decision title
@@ -56,10 +56,10 @@ Why was this behavior selected?
 What systems, processes, or data does it affect?
 
 ## References
-Code, tests, tickets, and previous decisions.
+Code, tests (anchoring [[Testing in the Model, Agent, LLM Era|deterministic test oracles]]), tickets, and previous decisions.
 ```
 
-The human does not need to write everything from a blank page. The human verifies whether the generated record is accurate.
+The human does not need to write everything from a blank page. The human verifies whether the generated record is accurate, integrating it directly into [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation for coding agents]].
 
 The agent must distinguish between:
 

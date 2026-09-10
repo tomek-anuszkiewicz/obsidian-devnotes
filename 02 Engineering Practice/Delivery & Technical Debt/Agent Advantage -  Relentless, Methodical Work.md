@@ -14,11 +14,9 @@ aliases:
 
 One of the most important advantages of software agents is not intelligence in the usual sense.
 
-It is persistence.
+It is persistence, making agents ideal participants in an [[LLMs as a Code Review Team|automated code review team]]. An agent does not become bored, tired, impatient, embarrassed by repetitive work, or tempted to skip an inconvenient step. It can execute a long checklist with the same level of attention at the beginning and at the end.
 
-An agent does not become bored, tired, impatient, embarrassed by repetitive work, or tempted to skip an inconvenient step. It can execute a long checklist with the same level of attention at the beginning and at the end.
-
-This creates value in areas where humans often know what should be done but do not complete the work systematically.
+This creates value in areas where humans often know what should be done but do not complete the work systematically, such as [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize|enforcing semantic architectural rules]].
 
 ## The Problem Is Often Not Knowledge
 
@@ -51,7 +49,7 @@ Teams usually know that they should:
 
 The problem is that each additional step has a small cost.
 
-Individually, every skipped step feels harmless. Together, they determine whether a change is robust or fragile.
+Individually, every skipped step feels harmless. Together, they accelerate [[Software Entropy and the Zero-Friction Trap|software entropy and technical decay]].
 
 Humans naturally optimize effort. We focus on the main path, visible progress, and urgent delivery. We become less careful when work is repetitive, distributed, or difficult to finish in one sitting.
 
@@ -63,7 +61,7 @@ It does not need motivation to perform the twentieth nearly identical check.
 
 Historically, many good engineering practices were considered too expensive.
 
-A team might agree that a migration should be divided into five safe deployments, but preparing all five pull requests, tests, documentation, telemetry, and cleanup work would take too much time.
+A team might agree that a migration should be divided into five safe deployments, an approach formalized in [[Refactoring Legacy Systems with AI Agents|refactoring legacy systems via shadow-twin patterns]]. but preparing all five pull requests, tests, documentation, telemetry, and cleanup work would take too much time.
 
 As a result, the team accepts a riskier shortcut.
 

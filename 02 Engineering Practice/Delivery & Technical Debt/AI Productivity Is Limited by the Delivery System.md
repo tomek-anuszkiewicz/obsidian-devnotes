@@ -14,7 +14,7 @@ aliases:
 
 AI can significantly accelerate parts of software development, especially implementation. However, the business value of that acceleration depends on the speed of the entire delivery system.
 
-A company does not benefit merely because code is written faster.
+A company does not benefit merely because code is written faster; as demonstrated in [[Early AI Adoption as Organizational Readiness|early organizational readiness]], value depends on the entire delivery lifecycle.
 
 It benefits when a change can move quickly through the full loop:
 
@@ -29,7 +29,7 @@ idea
 → correction
 ```
 
-If implementation becomes faster but the rest of the loop remains unchanged, the total improvement may be small.
+If implementation becomes faster but the rest of the loop remains unchanged, the total improvement may be small, shifting the economic equation of [[AI Changes the Economics of Technical Debt|technical debt accumulation]].
 
 ## Local Acceleration vs System Throughput
 
@@ -45,7 +45,7 @@ The implementation step becomes noticeably faster, but the total feature deliver
 
 This is an application of Amdahl's law: the maximum acceleration of a system is limited by the part that remains unchanged.
 
-Even perfect automation of implementation cannot produce dramatic results when most time is spent on:
+Even perfect automation within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]] cannot produce dramatic results when most time is spent on:
 
 - requirements clarification;
     
@@ -59,7 +59,7 @@ Even perfect automation of implementation cannot produce dramatic results when m
     
 - deployment windows;
     
-- operational verification;
+- operational verification and standardized telemetry (as seen in [[OpenTelemetry]]);
     
 - organizational decision-making.
     

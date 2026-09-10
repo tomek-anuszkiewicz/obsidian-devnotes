@@ -14,11 +14,11 @@ aliases:
 
 ## Core Idea
 
-Companies that experimented with AI early may gain an advantage even if their first implementations were incomplete, unreliable, or never reached production.
+Companies that experimented with AI early may gain an advantage even if their first implementations were incomplete, unreliable, or never reached production, because [[AI Productivity Is Limited by the Delivery System|AI productivity is fundamentally limited by organizational delivery systems]].
 
-The advantage does not necessarily come from the immediate business value of those early systems. It comes from learning what AI adoption actually requires.
+The advantage does not necessarily come from the immediate business value of those early systems. It comes from understanding [[What Should Organizations Preserve from AI-Assisted Development|what organizations must preserve from AI development]].
 
-Early experiments help an organization understand:
+Early experiments help an organization understand how to preserve [[LLM Agents and Institutional Memory|institutional memory in software teams]]:
 
 - where AI is useful,
     
@@ -62,7 +62,7 @@ The real problems may be:
 
 Discovering these barriers early creates useful organizational knowledge.
 
-A company may begin improving its systems before AI becomes capable enough to use them fully.
+A company may begin improving its systems before AI becomes capable enough to use them fully, preparing repositories with [[Agentic Coding Harness and Controlled Development Workflows|controlled agentic harnesses]].
 
 ## The Real Advantage Is Not Prompting Skill
 

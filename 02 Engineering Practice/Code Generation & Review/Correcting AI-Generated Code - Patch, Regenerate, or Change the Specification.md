@@ -18,13 +18,13 @@ A useful question is:
 
 > Is the implementation wrong, or is the source of the implementation wrong?
 
-This distinction becomes increasingly important in agentic development, because code is no longer always the primary artifact. It may instead be an output derived from specifications, architectural decisions, coding rules, tests, and generation instructions.
+This distinction becomes increasingly important in agentic development, because code is no longer always the primary artifact—it is an ephemeral synthesis guided by an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]]. It may instead be an output derived from specifications, architectural decisions, coding rules, tests, and generation instructions.
 
 A correction strategy should therefore depend on where the defect originates.
 
 ## 1. Local implementation defects
 
-If the specification, architecture, and intended behavior are correct, but the implementation is locally wrong, the cheapest solution is usually to patch the code.
+If the specification, architecture, and intended behavior are correct, but the implementation is locally wrong, the cheapest solution is usually to patch the code, adhering to [[How AI Changes Prototyping and the Path from PoC to Production|clean separation between disposable scrap and production code]].
 
 Examples:
 
@@ -45,13 +45,13 @@ Examples:
 
 There is usually little value in regenerating an entire feature because of a local defect.
 
-The agent can receive a targeted correction instruction and modify only the affected area.
+The agent can receive a targeted correction instruction, utilizing [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction updates]] to permanently eliminate recurring defects.
 
 This is the normal case for an automated repair loop.
 
 ## 2. Systematic generation defects
 
-Sometimes the code is technically correct, but the model repeatedly generates patterns that are undesirable.
+Sometimes the code is technically correct, but the model repeatedly generates patterns that are undesirable, driving [[Software Entropy and the Zero-Friction Trap|software entropy and architectural drift]].
 
 For example:
 
