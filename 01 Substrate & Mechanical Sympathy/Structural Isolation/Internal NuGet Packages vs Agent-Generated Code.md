@@ -542,7 +542,19 @@ A useful decision model is:
 - strict audit and governance are required,
     
 - the organization needs one live version rather than many deployed package versions.
-    
+
+### Architectural Trade-Off Matrix
+
+| Architectural Vector | Shared NuGet Package | Locally Generated Code (Agent 1:1) | Service API (Runtime RPC) | Conformance Test Suite |
+| :--- | :--- | :--- | :--- | :--- |
+| **Blast Radius Isolation** | Low (Package upgrade regression cascades) | High (Zero shared runtime dependencies) | Moderate (Network failures, cascading latency) | Maximum (Tests evaluate, never execute in prod) |
+| **Initial Implementation Velocity** | Slow (Build pipeline, packaging, release cycles) | Fast (Agent synthesizes 1:1 code in seconds) | Moderate (Infrastructure, deployment, routing) | Fast (Author test scenarios once) |
+| **Auditability & Compliance** | High (Single audited binary artifact) | Low/Moderate (Must scan all repositories) | Maximum (Single live inspection point) | High (Pass/fail gate in every CI pipeline) |
+| **Upgrade & Rollout Friction** | High (Multi-repo dependency upgrade PRs) | High (Requires agentic batch refactoring) | Instantaneous (Single central deployment) | Low (Update test package in CI) |
+| **Runtime Performance** | Maximum (In-process memory call, zero network hop) | Maximum (In-process memory call, zero hop) | Lower (Network serialization, socket latency) | N/A (Build/CI time only) |
+| **Cross-Language Interop** | Zero (.NET ecosystem only) | Low (Per-language agent generation) | Maximum (HTTP/gRPC standard protocol) | High (Generic HTTP/JSON contract runners) |
+| **Risk of Hidden Abstraction** | High (Deep extension methods, framework magic) | Low (All logic explicit in local service code) | Low (Black-box API contract) | Zero (Defines expectations, not internals) |
+| **Recommended Domain** | Security tokens, cryptography, OTel exporters | DTO mappers, CRUD handlers, validation rules | Shared ledgers, pricing engines, billing state | API schemas, security policies, latency limits |
 
 ---
 
