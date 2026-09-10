@@ -13,9 +13,9 @@ aliases:
 
 AI may begin as an optional productivity tool, but after a certain level of adoption it can become an integral part of how an organization operates.
 
-At that point, abandoning AI would no longer mean returning to the previous way of working.
+At that point, abandoning AI would no longer mean returning to the previous way of working, because [[AI Productivity Is Limited by the Delivery System|the entire delivery system]] has adapted to agentic throughput.
 
-It would mean rebuilding capabilities that the organization has already removed, changed, or allowed to disappear.
+It would mean rebuilding capabilities that the organization has already allowed to disappear, raising urgent questions about [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|developer satisfaction, identity, and burnout]].
 
 This process may already be beginning.
 
@@ -36,9 +36,7 @@ At first, AI is used selectively:
 - assisting with migrations.
     
 
-The organization can still function without it.
-
-Later, workflows are redesigned around its availability:
+The organization can still function without it. Later, workflows are redesigned around its availability, embedding teams into an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]]:
 
 - teams become smaller;
     
@@ -48,7 +46,7 @@ Later, workflows are redesigned around its availability:
     
 - more repositories can be handled by fewer people;
     
-- documentation is created and consumed through agents;
+- documentation is created and consumed through agents as [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight context]];
     
 - routine analysis is delegated;
     

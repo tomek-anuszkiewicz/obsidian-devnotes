@@ -14,11 +14,11 @@ aliases:
 
 Large language models learn from available data, but in software engineering there is an important limitation: much of the most valuable knowledge is not public.
 
-Public repositories contain enormous amounts of code, but code is mostly the **final artifact**.
+Public repositories contain enormous amounts of code, but code is mostly the final artifact, making [[Competitive advantage in the age of commodity AI|competitive advantage depend on private telemetry and reasoning traces]].
 
-Inside companies, there is a much richer record of how software was actually created.
+Inside companies, there is a much richer record of how software was actually created, capturing [[LLM Agents and Institutional Memory|institutional memory]] that public git trees discard.
 
-A typical development history may contain:
+Because [[What Should Organizations Preserve from AI-Assisted Development|organizations must preserve decision rationales]], a typical development history may contain:
 
 ```text
 business requirement
@@ -34,9 +34,7 @@ business requirement
 → final implementation
 ```
 
-This is not merely code.
-
-It is a record of **how an organization reasoned its way toward a working solution**.
+This is not merely code; it is a record of **how an organization reasoned its way toward a working solution**, providing the [[Fresh Contact With Reality May Become the Training Bottleneck|fresh contact with reality]] that synthetic models lack.
 
 ## The History of Code May Be More Valuable Than the Code
 

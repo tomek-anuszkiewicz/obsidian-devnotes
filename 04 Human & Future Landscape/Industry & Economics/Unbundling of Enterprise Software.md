@@ -14,7 +14,7 @@ aliases:
 
 ERP and business intelligence are only two examples of a broader transformation in enterprise software.
 
-The common pattern is a separation between:
+The common pattern separates durable systems from dynamic frontends, creating opportunities for [[AI May Create a New Market for Small, Custom Business Software|small custom business software]]:
 
 - durable systems of record;
     
@@ -22,14 +22,14 @@ The common pattern is a separation between:
     
 - analytical and operational capabilities;
     
-- workflow orchestration;
+- [[Introduction to Workflow Orchestration|workflow orchestration]];
     
 - user interfaces generated for a specific task.
     
 
-AI may reduce the importance of large, permanently configured applications without eliminating the systems that store data, enforce policy, and execute transactions.
+AI may reduce the importance of large, permanently configured applications, shifting architectures toward [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]].
 
-The future may be less about replacing every enterprise platform and more about changing how these platforms are composed and used.
+The future may be less about replacing every enterprise platform and more about composability, proving why [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week|static software is no longer a defensive moat]].
 
 ## The Current Enterprise Software Model
 

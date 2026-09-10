@@ -14,15 +14,13 @@ aliases:
 
 As language models consume more of the existing human knowledge corpus, the limiting resource for future training may gradually change.
 
-The problem may no longer be:
-
-> How do we obtain more tokens?
+The problem may no longer be token volume, but how systems maintain contact with real-world environments as [[AI May Break the Old Economic Model of the Open Web|the open web model erodes]]. Specifically:
 
 It may become:
 
 > How do we obtain genuinely new information that previous models could not already reconstruct?
 
-The Internet can continue producing enormous quantities of text while adding relatively little new knowledge.
+The Internet can continue producing enormous quantities of text while adding relatively little new knowledge, highlighting the difficulty of [[Finding Original Knowledge in an Internet Full of Repetition|finding original knowledge in an internet of repetition]].
 
 Especially as AI-generated content becomes common, a growing fraction of new text may follow a loop such as:
 
@@ -39,7 +37,7 @@ The number of tokens grows.
 
 The amount of independent information does not necessarily grow at the same rate.
 
-This suggests that **fresh contact with reality** may become one of the scarce resources in model training.
+This suggests that **fresh contact with reality** becomes the primary differentiator, determining [[Competitive advantage in the age of commodity AI|competitive advantage in the age of commodity AI]].
 
 ---
 

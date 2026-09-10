@@ -16,7 +16,7 @@ Large language models are usually described as systems trained on enormous amoun
 
 But the amount of text is not the same as the amount of information.
 
-A large part of the Internet consists of:
+A large part of the Internet consists of recycled summaries, which explains why [[The Most Valuable Software Training Data May Be Private|the most valuable training data is locked in private repositories]]:
 
 - repetitions,
     
@@ -33,9 +33,9 @@ A large part of the Internet consists of:
 - increasingly AI-generated recombinations of existing knowledge.
     
 
-This suggests an interesting possibility:
+As web referral traffic collapses under [[AI May Break the Old Economic Model of the Open Web|the broken economics of the open web]], this suggests an interesting possibility:
 
-> Future training systems may need to identify not merely high-quality text, but information that is genuinely new.
+> Future training systems may need to identify not merely high-quality text, but information that is genuinely new—a challenge that mirrors [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|how personal AI models diff and filter external knowledge]].
 
 The important distinction is between **text novelty** and **information novelty**.
 

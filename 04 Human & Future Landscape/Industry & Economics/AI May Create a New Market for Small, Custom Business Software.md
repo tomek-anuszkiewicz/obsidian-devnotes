@@ -14,7 +14,7 @@ aliases:
 
 AI may make custom software economically viable for small businesses that previously could not afford it.
 
-This does not necessarily mean building a complete standalone application.
+This does not necessarily mean building a complete standalone application; rather, it shifts products from [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|fixed features to agent-extensible primitives]].
 
 In many cases, the useful solution may be much smaller:
 
@@ -35,13 +35,11 @@ In many cases, the useful solution may be much smaller:
 - a daily summary of exceptions requiring attention.
     
 
-The key opportunity is not always a new application.
-
-It may be the ability to adapt the tools a business already uses.
+The key opportunity is not always a new application; it is often adapting existing tools, a shift driven by [[AI May Increase Product Ambition Instead of Reducing Team Size|expanding product ambition in small teams]].
 
 ## The Small-Business Software Gap
 
-Small businesses often operate through a mixture of:
+Small businesses often operate through a mixture of tools that can now be unified via [[Applications of LLM Agents Beyond Programming|LLM agents beyond programming]]:
 
 - spreadsheets;
     

@@ -14,7 +14,7 @@ aliases:
   - Forcing LLMs Outside Established Schemas
 ---
 
-As AI systems become broadly available, access to a strong model may stop being a meaningful competitive advantage on its own.
+As AI systems become broadly available, access to a strong model stops being a differentiator, as seen when [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week|software can be cloned in a week]].
 
 If many companies use similar models trained on largely the same public internet data, then the default solutions suggested by those models will often be similar. AI is very good at reconstructing, combining, and adapting existing patterns, but if every company simply accepts its default suggestions, the resulting products and architectures may converge.
 
@@ -24,11 +24,13 @@ This does not mean that competitive advantage disappears. It means that it moves
 
 Historically, innovation was often associated with inventing a novel solution that competitors did not have.
 
-In an AI-heavy environment, merely knowing how to solve a problem may become cheaper and more widely available. The more important question becomes:
+In an AI-heavy environment, merely knowing how to solve a problem becomes cheaper, meaning that [[The Most Valuable Software Training Data May Be Private|the most valuable domain training data remains private]]. The more important question becomes:
 
 > Who can turn a solution into a working system faster, cheaper, at larger scale, and with better feedback from reality?
 
-A company may therefore outperform competitors even without having fundamentally more original ideas.
+This makes [[Fresh Contact With Reality May Become the Training Bottleneck|maintaining fresh contact with reality]] and owning proprietary operational feedback loops the true moat.
+
+A company may outperform competitors through execution speed, relying on [[Agentic Coding Harness and Controlled Development Workflows|controlled agentic delivery harnesses]] to out-iterate rivals.
 
 Its advantage may come from:
 

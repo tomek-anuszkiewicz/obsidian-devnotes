@@ -14,7 +14,7 @@ aliases:
 
 Generative AI is changing more than search engines.
 
-It may undermine the economic model that supported a large part of the open web:
+It may undermine the economic model that supported the open web, accelerating the [[Unbundling of Enterprise Software|unbundling of content and software]]:
 
 ```text
 creator produces content
@@ -29,14 +29,14 @@ The emerging model increasingly looks like:
 ```text
 creator produces content
 → AI system reads it
-→ AI synthesizes the answer
+→ AI synthesizes the answer (drawing on [[Finding Original Knowledge in an Internet Full of Repetition|filtering for original knowledge]])
 → user receives the answer directly
 → original source may never receive the visit
 ```
 
 This creates a fundamental tension.
 
-AI becomes more useful because it can consume and synthesize the web, but by doing so it may weaken the incentives for people to keep producing the information on which future AI systems depend.
+AI becomes more useful because it can consume and synthesize the web, but by doing so it may weaken the incentives for people to produce content, threatening [[Fresh Contact With Reality May Become the Training Bottleneck|fresh contact with reality as a training bottleneck]].
 
 ---
 
@@ -44,7 +44,7 @@ AI becomes more useful because it can consume and synthesize the web, but by doi
 
 It is possible for Google Search to remain commercially successful while websites depending on Google traffic decline.
 
-AI summaries increasingly answer queries directly.
+AI summaries increasingly answer queries directly, while browser-level interfaces evolve via [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP and agent-native web protocols]].
 
 Instead of:
 

@@ -19,11 +19,13 @@ If a team observes this pattern:
 ```text
 We doubled productivity with AI.
 The company removed half the team.
+
+This dynamic threatens organizational readiness as explored in [[Early AI Adoption as Organizational Readiness|early AI adoption]].
 ```
 
 the rational response is to stop revealing productivity improvements.
 
-People may:
+People may resist adoption unless incentives align, which is why [[AI May Increase Product Ambition Instead of Reducing Team Size|product ambition should expand rather than reducing team size]]:
 
 - hide useful automation,
     
@@ -38,9 +40,9 @@ People may:
 - protect individual knowledge as job security.
     
 
-The organization needs a credible productivity dividend.
+The organization needs a credible productivity dividend, directly addressing the risks of [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|developer alienation, identity loss, and burnout]].
 
-Benefits may be distributed toward:
+Benefits may be distributed toward exploring new domains like [[AI May Create a New Market for Small, Custom Business Software|small custom business software]] and:
 
 - new products,
     

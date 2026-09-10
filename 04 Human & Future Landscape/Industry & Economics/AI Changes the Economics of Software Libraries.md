@@ -20,17 +20,17 @@ Historically, one of the strongest arguments for a library was simple:
 
 > I do not want to write this code myself.
 
-If an agent can generate hundreds or even thousands of lines of local code cheaply, that argument becomes much weaker.
+If an agent can generate hundreds or even thousands of lines of local code cheaply, that argument becomes much weaker, altering the balance between [[Internal NuGet Packages vs Agent-Generated Code|internal packages vs agent-generated code]].
 
 The more important question becomes:
 
 > Do we want to own and maintain this implementation ourselves?
 
-This may significantly reshape the software library ecosystem.
+This directly influences how organizations manage [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal libraries as composable frameworks]] and reshape the software ecosystem.
 
 ## Libraries That Mainly Save Typing Are Under Pressure
 
-Some libraries exist primarily to reduce boilerplate.
+Some libraries exist primarily to reduce boilerplate, but when code is disposable, maintaining external dependencies can silently compound [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
 Examples may include:
 

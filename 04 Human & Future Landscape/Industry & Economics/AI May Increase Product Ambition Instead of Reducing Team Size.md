@@ -18,7 +18,7 @@ A common assumption about AI in software development is:
 
 This will probably be true in some parts of the market.
 
-A small team will be able to build products that previously required much more time, capital, and specialized labor. Standard applications, internal tools, integrations, prototypes, and conventional business systems may require substantially fewer people.
+A small team will be able to build products that previously required extensive capital, unlocking a new market for [[AI May Create a New Market for Small, Custom Business Software|small, custom business software]]. Standard applications, internal tools, integrations, prototypes, and conventional business systems may require substantially fewer people.
 
 But a simple model is incomplete:
 
@@ -37,15 +37,15 @@ many more economically viable projects
 more ambitious products
 ```
 
-AI may reduce the amount of labor required per unit of functionality while simultaneously increasing the total amount of software organizations want to create.
+AI may reduce the amount of labor required per unit of functionality while simultaneously increasing product ambition, proving that [[AI Productivity Is Limited by the Delivery System|delivery systems bound organizational output]] rather than sheer typing speed.
 
-The important question is therefore not only:
+As teams scale their scope, protecting against [[Software Entropy and the Zero-Friction Trap|software entropy]] becomes the defining architectural challenge. The important question is therefore not only:
 
 > How many people will be required to build today's software?
 
 It is also:
 
-> What software becomes worth building once development becomes dramatically cheaper?
+> What software becomes worth building once development becomes dramatically cheaper, and how should companies handle this when deciding [[How Should Companies Use the Productivity Gains from AI|how to reinvest productivity dividends]]?
 
 ---
 
