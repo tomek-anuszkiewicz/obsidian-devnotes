@@ -16,6 +16,9 @@ aliases:
   - The Ephemeral Code Fallacy
   - State of Permanent Prototype V1
   - The Ship of Theseus Maintenance Crisis
+  - Steering Agents via Negative Bounding
+  - Bounding by Exclusion vs Prescriptive Micromanagement
+  - The Leaky Nature of Affirmative Instructions
 ---
 
 # Negative Knowledge and Explicit Architectural Dissents
@@ -53,7 +56,51 @@ As established in [[How Personal AI Models Will Diff, Reconcile, and Challenge E
 
 ---
 
-## 2. Case Study I: The "Ephemeral Code" Fallacy & The Test Oracle Trap
+## 2. Steering Agents via Negative Bounding: Freedom Within Forbidden Fences
+
+A fundamental operational discovery in agentic system steering is the **structural weakness of purely affirmative instructions**:
+
+> **Telling an agent what it SHOULD do does NOT prevent it from doing it otherwise.**
+
+### The Leaky Nature of Affirmative Guidance
+When an engineer prompts an agent affirmatively (*"Implement this service using the repository pattern with clean domain interfaces"*), the instruction leaves an effectively infinite unconstrained perimeter around the task:
+- In the probabilistic latent space of an LLM, positive examples and recommendations do not create negative boundaries.
+- The model does not interpret *"Use clean domain interfaces"* as *"Do NOT allocate memory inside the per-request hot loop, do NOT introduce dynamic reflection, and do NOT import heavy ORM dependencies."*
+- Unless an explicit negative barrier is erected, the agent feels entirely licensed to innovate, blend in familiar training corpus anti-patterns, or solve local errors by introducing unvetted external libraries.
+
+### The Micromanagement Trap vs. Bounding by Exclusion
+When teams observe this probabilistic drift, their instinctive reaction is often **prescriptive micromanagement**:
+- Attempting to pre-compute and script every permissible step, enumerate every allowed method signature, and strictly define the exact "golden path."
+- This prescriptive approach inevitably backfires:
+  1. **Prompt & Context Bloat**: Consumes hundreds of tokens on obvious boilerplate.
+  2. **Rule Oscillation & Saturation**: As documented in [[Constraint Saturation and Rule Oscillation in Coding Agents]], models overwhelmed by dense positive rules experience cognitive thrashing.
+  3. **Crippled Reasoning**: It destroys the primary advantage of frontier models—their ability to reason creatively across novel edge cases and synthesize elegant implementations.
+
+### The Negative Bounding Principle (Via Negativa in Agent Steering)
+The vastly more effective, high-leverage architectural protocol is **Bounding by Exclusion**:
+- Instead of preparing an exhaustive, rigid set of allowed paths, grant the agent **wide operational autonomy**,
+- But **strictly eliminate 2 to 3 disastrous anti-paths** (the "Forbidden Zones" / "Non-Goals"):
+
+$$	ext{Safe Search Space} = 	ext{Generative Autonomy} \setminus \{ 	ext{Catastrophic Anti-Path}_1, 	ext{Catastrophic Anti-Path}_2, 	ext{Catastrophic Anti-Path}_3 \}$$
+
+```text
+PRESCRIPTIVE MICROMANAGEMENT (Brittle & Bloated):
+"Step 1: Use Class A. Step 2: Call Method B. Step 3: Implement Interface C using strictly Pattern D..."
+→ Fails on edge cases; saturates context; model suffocates.
+
+NEGATIVE BOUNDING (Robust & High-Leverage):
+"You have complete autonomy in how you structure this module to pass the tests, BUT:
+ 1. FORBIDDEN: Do not allocate heap memory or perform boxing inside the inner decode loop.
+ 2. FORBIDDEN: Do not add any new external package dependencies.
+ 3. FORBIDDEN: Do not swallow exceptions or emit unbounded retry loops."
+→ Agent reasons freely across optimal solutions within a guaranteed safe convex hull.
+```
+
+By explicitly pruning the catastrophic failure modes, the software architect defines the **convex hull of the safe solution space**. The agent is free to explore, optimize, and adapt within those negative fences, while the system is protected against predictable architectural decay.
+
+---
+
+## 3. Case Study I: The "Ephemeral Code" Fallacy & The Test Oracle Trap
 
 A prominent thesis in modern AI-assisted engineering argues that code is becoming completely disposable:
 
@@ -88,7 +135,7 @@ This is epistemologically false. As explored in [[Testing in the Model, Agent, L
 
 ---
 
-## 3. The Maintenance Crisis: The Ship of Theseus & On-Call Alienation
+## 4. The Maintenance Crisis: The Ship of Theseus & On-Call Alienation
 
 The most dangerous cost of treating implementation code as disposable is the **destruction of human mental models**.
 
@@ -117,7 +164,7 @@ Instant LLM Generation → Skip Shared Refactoring → Double Code Churn (+81% D
 
 ---
 
-## 4. Case Study II: Mechanical Sympathy vs. The I-Cache Thrashing Trap
+## 5. Case Study II: Mechanical Sympathy vs. The I-Cache Thrashing Trap
 
 A common failure mode of AI-generated architectures is confusing **data cache efficiency** with **instruction cache efficiency**.
 
@@ -159,7 +206,7 @@ Without human mechanical sympathy and an explicit Architectural Dissent record, 
 
 ---
 
-## 5. Formalizing the Architectural Dissent Record (ADR-)
+## 6. Formalizing the Architectural Dissent Record (ADR-)
 
 To institutionalize negative knowledge, engineering repositories should complement standard Architectural Decision Records (ADRs) with **Architectural Dissent Records (ADR-)**.
 
@@ -198,7 +245,7 @@ This dissent may ONLY be reopened if:
 
 ---
 
-## 6. Summary
+## 7. Summary
 
 1. **Architecture is Defined by its Refusals**: Affirmative patterns ($K^+$) only tell half the story. Negative knowledge ($K^-$) prevents systems from repeating expensive, previously debunked architectural failures.
 2. **Defeating the LLM Status-Quo Bias**: LLMs naturally defend status-quo fads and propose popular abstractions regardless of mechanical fit. Explicit negative knowledge equips agents with a Dissent Firewall.
@@ -211,6 +258,9 @@ This dissent may ONLY be reopened if:
 
 ## Relationship to the Knowledge Graph
 
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of negative bounding, where harnesses enforce forbidden zones rather than prescriptive micromanagement.
+- **[[How Context Narrows an AI's Solution Space]]**: Explores the theoretical and mathematical mechanisms of solution space pruning through negative constraints.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why negative bounding prevents prompt bloat and eliminates rule oscillation.
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Integrates negative knowledge ($K^-$) as the foundational Dissent Firewall in the Tri-State Epistemic Filter.
 - **[[Testing in the Model, Agent, LLM Era]]**: Explains the limitations of automated test oracles when validating non-functional hardware sympathy and subtle regressions.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Details how zero-friction generative churn destroys architecture unless mechanically bounded by strict constraints.
