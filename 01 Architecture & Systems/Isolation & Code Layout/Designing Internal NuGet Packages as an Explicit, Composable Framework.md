@@ -14,11 +14,11 @@ aliases:
 
 ## Core Idea
 
-Internal NuGet packages may collectively form a corporate framework.
+Internal NuGet packages may collectively form a corporate framework, bringing up the core architectural choice between [[Internal NuGet Packages vs Agent-Generated Code|internal NuGet packages vs agent-generated code]].
 
 That is not inherently a problem.
 
-The problem begins when the framework:
+The problem begins when the framework introduces [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions that become expensive in agent-maintained code]]:
 
 - hides application configuration,
     
@@ -35,9 +35,9 @@ The problem begins when the framework:
 - grows so complex that nobody feels safe changing it.
     
 
-A good internal framework should provide **modular building blocks** that are explicitly selected, configured, and composed by the consuming application.
+A good internal framework should provide **modular building blocks** (as advocated in [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]]) that are explicitly selected, configured, and composed by the consuming application.
 
-The application should remain the owner of its runtime configuration.
+The application should remain the owner of its runtime configuration, reflecting how [[AI Changes the Economics of Software Libraries|AI changes the economics of software libraries]].
 
 ---
 

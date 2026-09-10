@@ -51,11 +51,11 @@ These services may need to call:
 
 The main design question is not only:
 
-> Can Service A reach Service B?
+> Can Service A reach Service B (governed by [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]])?
 
 It is also:
 
-- Can B prove that the caller is A?
+- Can B prove that the caller is A (establishing clear [[Service vs User Authorization Models|service vs user authorization models]])?
     
 - Is A allowed to perform this operation?
     
@@ -67,6 +67,8 @@ It is also:
     
 - Who maintains the identity and authorization infrastructure?
     
+- How is caller context preserved across boundaries (see [[Propagating User Context Between Services|propagating user context between services]] and [[User Context in Asynchronous Systems|user context in asynchronous systems]])?
+    
 
 No single technology solves all of these concerns.
 
@@ -74,7 +76,7 @@ No single technology solves all of these concerns.
 
 ## Separate the Security Layers
 
-For every service-to-service interaction, distinguish the following layers.
+For every service-to-service interaction, whether delivered via independent microservices or standardized components in [[Standardizing Service Infrastructure with Reusable Blocks|reusable infrastructure blocks]], distinguish the following layers.
 
 ### Connectivity
 

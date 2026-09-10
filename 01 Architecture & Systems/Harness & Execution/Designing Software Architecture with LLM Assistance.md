@@ -14,13 +14,13 @@ aliases:
 
 ## Core idea
 
-LLMs can significantly accelerate architectural exploration, but they are not reliable guarantees of completeness.
+LLMs can significantly accelerate architectural exploration, but when [[Designing Software for AI Agents|designing software for AI agents]], they are not reliable guarantees of completeness.
 
 They are good at:
 
 - exploring unfamiliar technologies,
     
-- generating design alternatives,
+- generating design alternatives through [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight|latent space synthesis]],
     
 - extracting constraints from available context,
     
@@ -48,7 +48,7 @@ They are weaker at:
 
 The main risk is not only hallucination.
 
-A more subtle risk is that the model fills missing information with a plausible, typical scenario. The result may be coherent and professionally justified, even though it depends on assumptions that were never confirmed.
+A more subtle risk is that the model fills missing information with a plausible, typical scenario, leading to [[AI, Averaged Decisions, and Premature Convergence on Solutions|premature convergence on averaged decisions]]. The result may be coherent and professionally justified, even though it depends on assumptions that were never confirmed.
 
 This creates an illusion of completeness.
 

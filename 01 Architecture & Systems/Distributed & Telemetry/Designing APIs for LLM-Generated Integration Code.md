@@ -16,7 +16,7 @@ aliases:
 
 ## Goal
 
-When using an LLM coding agent, the goal is not necessarily for the agent to call an API directly.
+When using an LLM coding agent within an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]], the goal is not necessarily for the agent to call an API directly.
 
 Instead, the agent should be able to:
 
@@ -70,7 +70,7 @@ Internal APIs may:
 
 ### External APIs
 
-External APIs should:
+External APIs (governing [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]]) should:
 
 - provide stable contracts,
     
@@ -83,7 +83,7 @@ External APIs should:
 - use terminology meaningful to consumers.
     
 
-This distinction becomes even more important for LLM-generated code.
+This distinction becomes even more important when [[Designing Software for AI Agents|designing software for AI agents]] and LLM-generated code.
 
 The easier it is to understand the business meaning of an operation, the easier it is for an agent to select it correctly.
 
@@ -538,7 +538,7 @@ Transport details should remain underneath it.
 
 In the agentic era, documenting an API solely for human developers reading HTML in browser tabs is obsolete. When an enterprise or public platform exposes services, the primary consumers are increasingly **autonomous coding agents and LLM orchestration loops**.
 
-Platform creators should ship an **Agent-Native Interface Bundle**:
+Platform creators should ship an **Agent-Native Interface Bundle** (a pattern closely aligned with [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP and agent-native toolkits]]):
 
 ```text
 Traditional API Publishing:

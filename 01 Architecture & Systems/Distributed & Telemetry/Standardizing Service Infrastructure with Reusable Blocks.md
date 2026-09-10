@@ -14,7 +14,7 @@ aliases:
 
 ## Context
 
-As an organization, we repeatedly solve the same technical problems across many services.
+As an organization, we repeatedly solve the same technical problems across many services, requiring disciplined patterns for [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]].
 
 Examples include:
 
@@ -45,7 +45,7 @@ Examples include:
 - deployment configuration.
     
 
-At the same time, some of these capabilities should not merely look similar.
+At the same time, whether services run as independent microservices or modules in a [[Scaling a Modular Monolith with Local-or-Remote Module Execution|modular monolith]], some of these capabilities should not merely look similar.
 
 They should work consistently across the entire organization.
 
@@ -263,7 +263,7 @@ Anything outside the common path becomes disproportionately difficult.
 
 ## A Framework Is Not Inherently Bad
 
-The problem is not that internal NuGet packages collectively form a framework.
+The problem is not that [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal NuGet packages]] collectively form a framework.
 
 A framework can be useful when it provides:
 

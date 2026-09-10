@@ -13,7 +13,7 @@ aliases:
   - Model Gateway and Execution Setup
 ---
 
-Modern AI systems increasingly separate the **agent or application** from the **model that performs a given task**.
+Modern AI systems increasingly separate the **agent or application** from the **model that performs a given task**, a core principle of [[Agent Deployment and Execution Models|agent deployment and execution models]].
 
 A useful way to think about this ecosystem is to distinguish several layers: enterprise AI platforms, model gateways, inference providers, and local model runtimes.
 
@@ -48,14 +48,14 @@ They typically combine:
     
 - prompt management,
     
-- agent orchestration,
+- agent and [[Introduction to Workflow Orchestration|workflow orchestration]],
     
 - governance and enterprise security.
     
 
-Their role is similar to a cloud platform for AI applications.
+Their role is similar to a cloud platform for AI applications, supporting both single agents and [[Multi-Agent Software Development|multi-agent software development systems]].
 
-An organization may therefore avoid integrating separately with every model provider. Instead, applications interact with an internal AI platform, while the platform decides which available models and services are used underneath.
+An organization may therefore avoid integrating separately with every model provider, allowing teams to plug varied runtimes into a unified [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]] (as discussed in [[Exploring Agent Harnesses|exploring agent harnesses]]). Instead, applications interact with an internal AI platform, while the platform decides which available models and services are used underneath.
 
 Conceptually:
 

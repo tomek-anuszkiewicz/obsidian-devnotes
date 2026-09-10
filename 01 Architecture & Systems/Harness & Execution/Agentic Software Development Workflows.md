@@ -13,11 +13,11 @@ aliases:
   - Agentic Development Lifecycles
 ---
 
-AI coding agents can work with a repository in very different ways. The important distinction is not only **which agent or tool is used**, but **what workflow governs its behavior**.
+AI coding agents can work with a repository in very different ways, operating most reliably when guided by a structured [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]]. The important distinction is not only **which agent or tool is used**, but **what workflow governs its behavior**.
 
-The same coding agent can act as a fast code generator, a test-driven implementer, a planner, a reviewer, a refactoring engine, or a semi-autonomous developer.
+The same coding agent can act as a fast code generator, a test-driven implementer, a planner, a reviewer (operating within [[LLMs as a Code Review Team|a multi-model code review team]]), a refactoring engine, or a semi-autonomous developer.
 
-A useful way to think about agentic software development is therefore as a collection of composable workflows.
+A useful way to think about agentic software development is therefore as a collection of composable workflows, particularly when [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
 ---
 
@@ -50,7 +50,7 @@ This approach is useful for:
 - learning and exploration.
     
 
-Its main weakness is that missing requirements are silently filled in by the model.
+Its main weakness is that missing requirements are silently filled in by the model, reinforcing why [[Testing in the Model, Agent, LLM Era|testing in the model era]] demands rigid, deterministic oracles rather than loose prompt expectations.
 
 The agent may decide:
 

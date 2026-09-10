@@ -14,7 +14,7 @@ aliases:
 
 ## Core idea
 
-A modular monolith does not have to mean that every module must always run in every process.
+A modular monolith does not have to mean that every module must always run in every process; rather, it can serve as an evolutionary bridge to [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]].
 
 It is possible to keep:
 
@@ -29,7 +29,7 @@ It is possible to keep:
 
 while allowing selected modules or workloads to run in separate deployment units and scale independently.
 
-A useful architecture is based on a **local-or-remote command dispatcher**:
+A useful architecture is based on a **local-or-remote command dispatcher**, which aligns with [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]]:
 
 ```text
 Module A sends a command to Module B.
@@ -44,14 +44,14 @@ If Module B is not available locally:
     return the result if needed.
 ```
 
-From the caller’s perspective, the invocation may look similar:
+From the caller’s perspective, the invocation may look similar, while unified telemetry across local and remote calls is captured via [[OpenTelemetry]]:
 
 ```csharp
 var result = await commandBus.InvokeAsync<ReserveInventoryResult>(
     new ReserveInventory(orderId, items));
 ```
 
-The runtime decides whether the handler is local or remote.
+The runtime decides whether the handler is local or remote, relying on [[Propagating User Context Between Services|propagating user context between services]] when crossing process boundaries.
 
 This pattern may be described as:
 

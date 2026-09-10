@@ -16,11 +16,11 @@ As LLMs and coding agents generate a growing share of software, an important que
 
 > What does "good code" mean when humans are no longer its primary authors and maintainers?
 
-This may affect not only how code is generated, but also architecture, documentation, team habits, code review, and the long-term evolution of software systems.
+This may affect not only how code is generated, but also architecture—driving the need for [[Designing Software for AI Agents|designing software specifically for AI agents]]—as well as team habits, code review, and the long-term evolution of software systems.
 
 ## What an LLM Generates Without Guidelines
 
-If an LLM receives no project-specific guidance, it does not search for an objectively optimal solution.
+If an LLM receives no project-specific guidance, it does not search for an objectively optimal solution; this makes [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]] critical for anchoring model behavior.
 
 A better mental model is:
 
@@ -54,11 +54,11 @@ This is not necessarily because these choices are universally best.
 
 They are simply strong defaults available to the model.
 
-Without additional context, asking an agent to implement something effectively means:
+Without additional context, asking an agent to implement something effectively means navigating opaque indirections, proving why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]. Specifically:
 
 > Use your existing priors and fill in the missing architectural decisions yourself.
 
-This is important because the model may produce something locally reasonable while violating assumptions that exist only inside the organization.
+This is important because the model may produce something locally reasonable while violating assumptions that exist only inside the organization, rapidly exacerbating [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
 ## Mainstream Code Has a Built-In Advantage
 

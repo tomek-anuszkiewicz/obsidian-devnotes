@@ -21,7 +21,7 @@ We accept:
 
 - abstraction layers,
     
-- reflection,
+- reflection (or complex meta-tooling where [[AI May Replace Some Source Generators with Explicit Generated Code|AI replaces source generators with explicit code]]),
     
 - generic frameworks,
     
@@ -42,13 +42,13 @@ We accept:
 
 because they make software easier for humans to write, understand, extend, and maintain.
 
-The resulting code is often less efficient than a highly specialized implementation, but the engineering cost of maintaining that specialization usually outweighs the infrastructure savings.
+The resulting code is often less efficient than a highly specialized implementation, but the engineering cost of maintaining that specialization usually outweighs the infrastructure savings—provided developers control [[Software Entropy and the Zero-Friction Trap|software entropy and the zero-friction trap]].
 
-AI agents may change this tradeoff.
+AI agents may change this tradeoff, especially as [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering shifts toward code optimized for agents]].
 
 ## Optimization Becomes Cheaper When the Agent Does the Work
 
-Traditional performance optimization is expensive.
+Traditional performance optimization is expensive, but when paired with rock-solid verification from [[Testing in the Model, Agent, LLM Era|deterministic test oracles in the agent era]], agents can optimize aggressively with complete functional safety.
 
 A developer must:
 

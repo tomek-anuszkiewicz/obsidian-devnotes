@@ -15,7 +15,7 @@ aliases:
 
 ## 1. What OpenTelemetry Is
 
-OpenTelemetry is a vendor-neutral observability framework.
+OpenTelemetry is a vendor-neutral observability framework that serves as a cornerstone for [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]].
 
 It standardizes how applications and infrastructure:
 
@@ -23,14 +23,14 @@ It standardizes how applications and infrastructure:
     
 - describe telemetry,
     
-- propagate tracing context,
+- propagate tracing context across [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service boundaries]],
     
 - transport telemetry,
     
 - process telemetry before it reaches a backend.
     
 
-It is not primarily a database, dashboard, or observability backend.
+It is not primarily a database, dashboard, or observability backend; rather, it provides the telemetry telemetry substrate required because [[AI Productivity Is Limited by the Delivery System|AI productivity is limited by the surrounding delivery system]].
 
 A useful mental model is:
 
@@ -115,7 +115,7 @@ OTel Collector
 Observability provider
 ```
 
-This means OpenTelemetry creates an interoperability layer between observability components.
+This means OpenTelemetry creates an interoperability layer between observability components, which is vital whether telemetry spans distributed microservices or modules in a [[Scaling a Modular Monolith with Local-or-Remote Module Execution|modular monolith]].
 
 A system can therefore accept many kinds of telemetry:
 

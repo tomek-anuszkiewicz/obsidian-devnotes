@@ -15,7 +15,7 @@ aliases:
 
 ## Context
 
-Assume that Service A needs data or behavior owned by Service B.
+Assume that Service A needs data or behavior owned by Service B. Secure interactions require both communication protocol design and [[Service-to-Service Authentication and Authorization in Azure and Kubernetes|service-to-service authentication and authorization]].
 
 The technical problem may look simple:
 
@@ -48,7 +48,7 @@ A convenient client library can reduce boilerplate, but it can also introduce st
 
 The goal should be:
 
-> Make the integration easy to use without making the remote call look like a local, infallible method.
+> Make the integration easy to use without making the remote call look like a local, infallible method—a distinction critical when evaluating microservices vs a [[Scaling a Modular Monolith with Local-or-Remote Module Execution|modular monolith with local-or-remote module execution]].
 
 ---
 
@@ -58,7 +58,7 @@ A useful high-level division is:
 
 > Service B owns the public API contract.  
 > Service A owns how that contract is used inside Service A.  
-> The platform owns cross-cutting communication standards.
+> The platform owns cross-cutting communication standards, establishing shared conventions for [[Propagating User Context Between Services|propagating user context between services]].
 
 More specifically:
 
@@ -74,7 +74,7 @@ More specifically:
     
 - API documentation,
     
-- OpenAPI specification,
+- OpenAPI specification (which provides the source of truth when [[Designing APIs for LLM-Generated Integration Code|designing APIs for LLM-generated integration code]]),
     
 - backward compatibility of the public API,
     

@@ -14,7 +14,7 @@ aliases:
 
 ## Core Question
 
-In the era of LLMs and coding agents, does it still make sense to maintain internal team or corporate NuGet packages?
+In the era of LLMs and coding agents, does it still make sense to maintain internal team or corporate NuGet packages, or should we favor [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal packages designed as explicit composable frameworks]]?
 
 A possible alternative is:
 
@@ -27,7 +27,7 @@ A possible alternative is:
 - validate the result using independent conformance tests.
     
 
-The answer depends on whether the organization needs a **shared implementation** or only a **shared standard**.
+The answer depends on whether the organization needs a **shared implementation** or only a **shared standard**, particularly for [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]].
 
 ---
 
@@ -50,9 +50,9 @@ Internal packages have usually been created to provide:
 7. Enforcement of organizational conventions
     
 
-LLMs significantly reduce the cost of writing repetitive code. This weakens the argument that code should be packaged only because developers do not want to write it repeatedly.
+LLMs significantly reduce the cost of writing repetitive code. This weakens the argument that code should be packaged only because developers do not want to write it repeatedly, demonstrating how [[AI Changes the Economics of Software Libraries|AI changes the economics of software libraries]].
 
-However, agents do not automatically solve versioning, rollout, ownership, or consistency problems.
+However, agents do not automatically solve versioning, rollout, ownership, or consistency problems, and careless generation can quickly trigger [[Software Entropy and the Zero-Friction Trap|software entropy and the zero-friction trap]].
 
 ---
 

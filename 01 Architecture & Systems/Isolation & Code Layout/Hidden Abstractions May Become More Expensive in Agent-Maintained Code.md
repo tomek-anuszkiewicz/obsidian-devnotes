@@ -14,7 +14,7 @@ aliases:
 
 Modern software engineering often tries to remove repetitive concerns from local code.
 
-Instead of explicitly writing validation, authorization, retries, transactions, logging, tracing, error mapping, and other infrastructure in every operation, we move them into reusable mechanisms such as:
+When [[Designing Software for AI Agents|designing software for AI agents]], the conventional instinct is to hide plumbing. Instead of explicitly writing validation, authorization, retries, transactions, logging, tracing, error mapping, and other infrastructure in every operation, we move them into reusable mechanisms such as:
 
 - middleware,
     
@@ -41,7 +41,7 @@ Instead of explicitly writing validation, authorization, retries, transactions, 
 - ambient context.
     
 
-This can make individual methods extremely small.
+This can make individual methods extremely small, but it silently compounds [[Software Entropy and the Zero-Friction Trap|software entropy]] when agents fail to infer ambient middleware pipelines.
 
 For example:
 
@@ -52,9 +52,9 @@ public Task<Response> GetOrder(GetOrderRequest request)
 }
 ```
 
-The method appears simple.
+The method appears simple, but as [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering shifts toward code optimized for agents]], explicit clarity trumps magic indirection.
 
-However, the actual execution may look more like:
+However, the actual execution may look more like a hidden pipeline—a problem that can be avoided where [[AI May Replace Some Source Generators with Explicit Generated Code|AI replaces source generators and magic macros with explicit code]]:
 
 ```text
 HTTP request

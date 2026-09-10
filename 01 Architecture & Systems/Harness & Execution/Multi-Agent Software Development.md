@@ -14,7 +14,7 @@ aliases:
 
 Modern agentic development is no longer limited to a single coding agent working in one loop. A new class of workflows is emerging around multiple agents working in parallel, sequentially, competitively, or as a coordinated team.
 
-This creates a new design problem: not only _what should an agent do_, but also _how many agents should be involved, how should work be divided, how independent should they be, and how should their outputs be validated and integrated_.
+This creates a new design problem: not only _what should an agent do_, but also _how many agents should be involved, how should work be divided, how independent should they be, and how should their outputs be validated and integrated_—questions central to both [[Introduction to Workflow Orchestration|workflow orchestration]] and building an [[LLMs as a Code Review Team|automated code review team]].
 
 ## 1. From One Agent to Many Agents
 
@@ -38,7 +38,7 @@ Human
 └── Agent D
 ```
 
-In this model, the human is still the orchestrator.
+In this model, the human is still the orchestrator operating within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]].
 
 The developer decides:
 
@@ -55,7 +55,7 @@ The developer decides:
 - how conflicts are resolved.
     
 
-This is often the easiest way to experiment with multi-agent development because it requires almost no dedicated orchestration infrastructure.
+This is often the easiest way to experiment with multi-agent development because it requires almost no dedicated infrastructure beyond standard [[Agent Deployment and Execution Models|agent deployment and execution models]] (or custom environments evaluated in [[Exploring Agent Harnesses|exploring agent harnesses]]).
 
 ## 2. Multiple Independent Sessions
 

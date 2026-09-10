@@ -32,23 +32,23 @@ To avoid writing hundreds of repetitive lines, developers built an entire second
 - **Custom standalone codegen scripts** (Python, Perl, Node, or Bash scripts parsing CSV/JSON/spec files to emit code),
 - **DSL and template engines** (T4 templates, Jinja, custom AST emitters).
 
-In the era of LLMs and agentic coding, **this entire meta-layer is rapidly becoming obsolete**. 
+In the era of LLMs and agentic coding, **this entire meta-layer is rapidly becoming obsolete** as [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering shifts toward code optimized for agents]]. 
 
-LLMs can directly output complete, exhaustive, highly optimized, and explicit code directly from specifications, schemas, or requirements. What used to require maintaining a custom generator program or fighting macro expansions can now be generated directly into clean, ordinary code.
+LLMs can directly output complete, exhaustive, highly optimized, and explicit code directly from specifications, schemas, or requirements, showing how [[AI May Make Aggressive Code Optimization Economically Viable|AI makes aggressive code optimization economically viable]]. What used to require maintaining a custom generator program or fighting macro expansions can now be generated directly into clean, ordinary code.
 
 ```text
 Traditional approach:
 requirements / spec → complex generator script or macro engine → generated code → build / debug friction
 
 Agentic approach:
-requirements / spec + tests + LLM agent → explicit, readable, fully debuggable code
+requirements / spec + tests + LLM agent → explicit, readable, fully debuggable code that resists [[Software Entropy and the Zero-Friction Trap|software entropy]]
 ```
 
 ---
 
 ## The Real Cost of the "Codegen Meta-Layer"
 
-Writing a code generator or a complex macro system was never free. It introduced a parasitic maintenance burden:
+Writing a code generator or a complex macro system was never free. It introduced a parasitic maintenance burden, illustrating how [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]:
 
 1. **You maintained two codebases instead of one**: the application code AND the generator program / macro engine.
 2. **Brittle build pipelines**: build steps depended on external script runners (Python, Node), compiler plugins, or pre-build hooks.

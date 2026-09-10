@@ -14,7 +14,7 @@ aliases:
 
 ## Core Idea
 
-A workflow orchestrator coordinates actions that together form a process.
+A workflow orchestrator coordinates actions that together form a process, serving as the operational infrastructure beneath an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]].
 
 It decides:
 
@@ -48,13 +48,13 @@ Workflow orchestrator:
 knows when, why, and in what order operations should happen
 
 LLM:
-helps with decisions that require interpretation
+helps with decisions that require interpretation across [[Multi-Agent Software Development|multi-agent software development]]
 
 Observability:
 shows what happened and why
 ```
 
-These responsibilities can exist in the same application, but they represent different architectural concerns.
+These responsibilities can exist in the same application, but they represent different architectural concerns across [[Agent Deployment and Execution Models|agent deployment and execution models]] and [[Exploring Agent Harnesses|exploring agent harnesses]].
 
 ---
 
