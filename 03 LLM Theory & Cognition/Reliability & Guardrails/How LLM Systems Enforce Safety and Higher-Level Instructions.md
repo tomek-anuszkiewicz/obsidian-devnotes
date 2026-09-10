@@ -16,7 +16,7 @@ Safety and higher-level constraints are not implemented in one place. They can c
 
 ## 1. Some Instructions Sit Above the User
 
-Another source of context consists of instructions that the user is not supposed to override.
+Another source of context consists of instructions that the user is not supposed to override, forming an authoritative layer in [[How LLM Systems Build Context|how LLM systems assemble context]].
 
 Examples include rules concerning:
 
@@ -42,9 +42,9 @@ user instructions
 retrieved content
 ```
 
-A user can ask the model to behave differently, but lower-level instructions should not override higher-level rules.
+A user can ask the model to behave differently, but lower-level instructions should not override higher-level rules; attempting to stack too many contradictory constraints triggers [[Constraint Saturation and Rule Oscillation in Coding Agents|constraint saturation and rule oscillation]].
 
-These instructions are "immutable" from the user's perspective, although they are not necessarily literally embedded as immutable code inside the neural network.
+These instructions are "immutable" from the user's perspective, functioning as operational guardrails within [[How Modern LLM Systems Build Context, Reason, and Stay Constrained|modern constrained reasoning architectures]].
 
 ---
 

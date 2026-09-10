@@ -291,3 +291,12 @@ The model supplies capability. The [[Agentic Coding Harness and Controlled Devel
 - [OpenAI — Why Language Models Hallucinate](https://openai.com/index/why-language-models-hallucinate/)
 - [OpenAI — Introducing GPT-5.2](https://openai.com/index/introducing-gpt-5-2/)
 
+---
+
+## Related Notes
+
+- **[[LLM Coding Agents Reliability]]**: Evaluating the practical reliability frontier and error modes of coding agents.
+- **[[How Reasoning Models Explore and Evaluate Solutions]]**: How test-time compute and search heuristics shape advanced model capabilities.
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: The shift from brute parameter scaling to high-quality synthetic and agentic data.
+- **[[AI Productivity Is Limited by the Delivery System]]**: Why model capability gains do not translate to business throughput without delivery infrastructure.
+- **[[Testing in the Model, Agent, LLM Era]]**: How non-deterministic model progress necessitates rigid deterministic verification oracles.

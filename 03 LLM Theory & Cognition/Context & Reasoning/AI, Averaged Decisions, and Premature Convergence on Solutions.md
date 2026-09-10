@@ -14,17 +14,15 @@ aliases:
 
 ## Introduction
 
-Large language models tend to produce answers that are complete, coherent, polished, and well justified.
+Large language models tend to produce answers that are complete, coherent, polished, and well justified, but in software engineering this frequently leads to [[Designing Software Architecture with LLM Assistance|superficial architectural completeness]].
 
 This is useful, but it creates an important risk.
 
 When a problem is underspecified, the model often does not stop and expose the missing information. Instead, it fills in the gaps and produces a complete solution.
 
-At the same time, when asked to solve a problem, the model may immediately converge on a small set of conventional solutions rather than systematically exploring the full solution space.
+At the same time, when asked to solve a problem, the model may immediately converge on a small set of conventional solutions rather than systematically exploring the full solution space, a phenomenon directly examined in [[How Context Narrows an AI's Solution Space|how context narrows an AI's solution space]].
 
-These are two sides of the same broader problem:
-
-**AI is very good at completing incomplete problems, but completion is not the same as discovering the best decision or the best solution for a particular company.**
+These are two sides of the same broader problem. As detailed in [[How Reasoning Models Explore and Evaluate Solutions|how reasoning models explore and evaluate solutions]], **AI is very good at completing incomplete problems, but completion is not the same as discovering the best decision or the best solution for a particular company.**
 
 ---
 
@@ -53,7 +51,7 @@ For example:
 - How should this feature support the company's broader strategy?
     
 
-If people analyzed the problem themselves or discussed it during a meeting, these questions would often emerge naturally.
+If people analyzed the problem themselves or discussed it during a meeting, these questions would emerge naturally, or they can be unlocked when [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight|targeted prompts force latent space synthesis]].
 
 The initial requirement A would gradually become a more precise requirement B.
 

@@ -13,22 +13,22 @@ aliases:
   - Context Assembly Pipeline
 ---
 
-A modern LLM system does not reason from the visible user prompt alone. Its effective context can be assembled from instructions, conversation history, memory, retrieved documents, web search, tools, APIs, and metadata.
+A modern LLM system does not reason from the visible user prompt alone. As synthesized in [[How Modern LLM Systems Build Context, Reason, and Stay Constrained|how modern LLM systems build context, reason, and stay constrained]], effective context is assembled from instructions, conversation history, memory, retrieved documents, web search, tools, APIs, and metadata.
 
 ## 1. The Model Does Not Start With an Empty Context
 
-When a user asks a question, the model may receive substantially more information than the visible prompt.
+When a user asks a question, the model may receive substantially more information than the visible prompt, illustrating [[How Context Narrows an AI's Solution Space|how context narrows the effective solution space]].
 
 The effective context may include:
 
 ```text
-- platform and system instructions
+- platform and system instructions (governed by [[How LLM Systems Enforce Safety and Higher-Level Instructions|higher-level safety instructions]])
 - developer or application instructions
 - the current user request
 - previous messages in the conversation
 - selected memories about the user
 - relevant information from previous conversations
-- retrieved documents
+- retrieved documents (powered by [[Introduction to RAG|retrieval-augmented generation (RAG)]])
 - web search results
 - tool outputs and API responses
 - current metadata such as time or environment

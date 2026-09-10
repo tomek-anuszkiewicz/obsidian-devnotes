@@ -16,14 +16,14 @@ Reasoning quality depends not only on whether a model can follow a promising pat
 
 ## 1. Reasoning Itself Is Learned Behavior
 
-Planning, decomposing a problem, checking assumptions, exploring alternatives, and backtracking are not necessarily hard-coded algorithms.
+Planning, decomposing a problem, checking assumptions, exploring alternatives, and backtracking are not hard-coded algorithms; as explored in [[How Modern LLM Systems Build Context, Reason, and Stay Constrained|how modern LLMs build context and reason]], they represent learned cognitive behaviors.
 
-They can emerge through training.
+They can emerge through training, forming the basis of [[Improving AI Models - From Scaling to Agent-Generated Training Data|agent-generated reasoning data and test-time compute]].
 
 The model may learn patterns such as:
 
 ```text
-understand problem
+understand problem (drawing on [[How Context Narrows an AI's Solution Space|context constraints]])
 → identify unknowns
 → decompose problem
 → generate hypotheses
@@ -39,7 +39,7 @@ because training rewarded reasoning patterns that produced better outcomes.
 
 ## 2. Training Can Explore Multiple Reasoning Paths
 
-For a single problem, training may generate multiple candidate trajectories:
+When exploring alternatives, models must balance creative hypothesis generation against [[AI, Averaged Decisions, and Premature Convergence on Solutions|premature convergence on averaged solutions]]. For a single problem, training may generate multiple candidate trajectories:
 
 ```text
 problem

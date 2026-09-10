@@ -14,9 +14,7 @@ aliases:
 
 The historical improvement of AI models is often described as a simple consequence of larger models and more compute.
 
-That is increasingly incomplete.
-
-Progress has come from several successive layers:
+That is increasingly incomplete. As analyzed in [[LLM Capability Reliability and the Shape of Progress|the shape of LLM progress]], progress has come from several successive layers:
 
 ```text
 more parameters + more data + more compute
@@ -32,7 +30,7 @@ tool use and agent environments
 feedback from real-world AI work
 ```
 
-The next generation of models may therefore improve not only because they are larger, but because the entire training loop is becoming richer.
+The next generation of models may improve not only because they are larger, but because training loops incorporate [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight|latent space synthesis and emergent capabilities]].
 
 ## The First Phase Was Mostly Scaling
 

@@ -16,9 +16,9 @@ An AI system does not reason over every theoretically possible solution equally.
 
 ## 1. The Solution Space Is Narrowed by Jurisdiction, Culture, Language, and Local Norms
 
-A model does not reason over every theoretically possible solution equally.
+A model does not reason over every theoretically possible solution equally; rather, as shown in [[How LLM Systems Build Context|how LLM systems build context]], instructions and memory actively filter candidate trajectories.
 
-Before reasoning, the effective solution space is often narrowed by contextual factors such as:
+Before reasoning, the effective solution space is often narrowed by contextual factors (which determine how [[How Reasoning Models Explore and Evaluate Solutions|reasoning models evaluate candidate solutions]]):
 
 ```text
 - country and jurisdiction
@@ -30,7 +30,7 @@ Before reasoning, the effective solution space is often narrowed by contextual f
 - industry standards
 ```
 
-This narrowing is often necessary.
+This narrowing is often necessary, but when applied too aggressively it leads to [[AI, Averaged Decisions, and Premature Convergence on Solutions|premature convergence on averaged solutions]].
 
 For example, if a user asks for legal advice in Poland, the agent should not reason over a generic mixture of Polish, US, German, and UK law.
 

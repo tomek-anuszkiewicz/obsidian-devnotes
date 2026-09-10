@@ -19,8 +19,8 @@ aliases:
 
 ## The Paradox of Rule Accumulation
 
-As development teams mature their agentic setups, there is an intuitive instinct to solve agent mistakes by adding more guidelines:
-- Repository system rules (`.agents/rules/*.md`),
+As development teams mature their setups within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], there is an intuitive instinct to solve agent mistakes by adding more guidelines:
+- Repository system rules and [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction files]],
 - Specialized domain skills (`SKILL.md`),
 - Automated static analysis and linting checks,
 - Architectural driver checklists (e.g., zero heap allocation, strict immutability, 1:1 file hierarchies, hard line caps),
@@ -28,12 +28,12 @@ As development teams mature their agentic setups, there is an intuitive instinct
 
 Initially, adding guidelines improves consistency. But past a critical threshold, **adding more rules actively degrades agent performance and reliability**.
 
-Instead of producing clean code, the agent falls into the **Constraint Oscillation Trap** (also known as *Rule Thrashing* or *Whack-a-Mole Engineering*):
+Instead of producing clean code, the agent falls into the **Constraint Oscillation Trap** (also known as *Rule Thrashing* or *Whack-a-Mole Engineering*), which degrades [[LLM Coding Agents Reliability|coding agent reliability]] to near zero.
 1. The agent refactors code to satisfy **Driver A** (e.g., inlining a routine for zero-allocation performance).
 2. It discovers or is notified that the change violates **Driver B** (e.g., a hard 500-line limit or single-responsibility rule).
 3. It refactors to satisfy **Driver B**, which inadvertently violates **Driver C** (e.g., architectural boundary or interface immutability).
 4. It patches **Driver C**, re-triggering the violation of **Driver A**.
-5. The agent enters an infinite loop, burning tokens while thrashing back and forth between competing constraints.
+5. The agent enters an infinite loop, burning tokens while thrashing back and forth between competing constraints, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy and codebase instability]].
 
 ```text
 THE RULE THRASHING CYCLE (Whack-a-Mole):
