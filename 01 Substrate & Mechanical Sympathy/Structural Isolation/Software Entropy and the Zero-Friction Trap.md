@@ -167,6 +167,28 @@ For the broader analysis of how code style and repository conventions evolve whe
 
 ---
 
+## The Irreversible Dependency Trap: Cognitive Outsourcing and the Incomprehensibility Crisis
+
+A catastrophic systemic vulnerability emerges when organizations rely entirely on LLMs for code generation without enforcing human architectural steering or deterministic verification:
+
+### 1. The Ghost Ship Codebase (Irreversible Cognitive Outsourcing)
+When an enterprise allows models to rapidly churn out tens of thousands of lines of unverified code:
+- **Loss of the Mental Topology**: Human engineers lose the ability to hold the system's causal graph in working memory. The codebase becomes a "Ghost Ship"—running autonomously in production, but with no living human understanding its internal state transitions.
+- **The Maintenance Monopoly**: Because humans can no longer comprehend the aggregate interaction dynamics, **only an LLM can maintain or modify the code**. The enterprise enters an irreversible state of cognitive dependency on external foundation model providers.
+
+### 2. Compounding Synthetic Entropy and the Great Collapse Point
+Because stochastic models optimize for local semantic plausibility rather than global architectural invariants:
+- Over successive iterations, subtle hallucinations, redundant intermediate layers, leaky abstractions, and hidden state mutations compound silently beneath the surface.
+- Eventually, the system encounters **The Great Collapse Point**: an edge-case concurrency collision, distributed state corruption, or cascading failure that halts production.
+
+### 3. The "Next-Gen Frontier Model or Bankruptcy" Dilemma
+When this structural collapse occurs, the organization faces a terrifying deadlock:
+- **Humans cannot repair it**: The mental model has been completely outsourced; tracing an emergent failure across 200 interconnected synthetic files exceeds human cognitive capacity.
+- **Current models cannot repair it**: When fed the tangled codebase, the LLM's context window becomes saturated by the contradictory complexity and hallucination attractors of its own past outputs.
+- **The Outcome**: The enterprise is trapped waiting for a hypothetical frontier model (e.g., "ChatGPT-7") capable of resolving the mess. If that model does not arrive or fails to untangle the knot, the codebase suffers **total insolvency ("kaplica")**—the software asset must be written off completely and rebuilt from scratch.
+
+---
+
 ## Shifting from Soft Discipline to Hard Enclosure
 
 | Dimension | Classical Human Discipline | Unconstrained Agent (Trap) | Mechanically Isolated Agent (Solution) |
