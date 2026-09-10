@@ -12,6 +12,21 @@ aliases:
   - Research Backlog
 ---
 
+# The 5-Layer System Stack & The 7 Canonical Hubs
+
+The vault's knowledge graph is structured across **The 5-Layer System Stack for Agentic Software Engineering**, anchored by **7 Canonical Hub Notes (Single Sources of Truth)**:
+
+* **Charter**: [[The 5-Layer System Stack for Agentic Software Engineering]]
+
+| Layer | Focus Domain | Canonical Hub Note | Core Epistemological Mission |
+| :--- | :--- | :--- | :--- |
+| **Layer 1** | Substrate & Mechanical Sympathy | [[Software Engineering May Shift Toward Code Optimized for Agents]] | L1i cache density, 1:1 operation isolation, flat dispatch over dynamic OOP |
+| **Layer 2** | Harness, Governance & Verification | [[Agentic Coding Harness and Controlled Development Workflows]]<br>[[Testing in the Model, Agent, LLM Era]] | Deterministic test oracles, controlled state machines, negative proof dilemma |
+| **Layer 3** | Runtime Mesh & Observability | [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] | Conversational telemetry, OpenTelemetry spans, autonomous canary probes |
+| **Layer 4** | Model Cognition & Latent Space | [[Retrieval-Augmented Generation and Context Architecture]] | Context window compaction, hybrid retrieval, solution space bounding |
+| **Layer 5** | Operator Psychology & Macro-Economics | [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]<br>[[Competitive advantage in the age of commodity AI]] | The invariant director, deliberate coaching, software commoditization & moats |
+
+---
 
 # remote control
 ## control with voice
