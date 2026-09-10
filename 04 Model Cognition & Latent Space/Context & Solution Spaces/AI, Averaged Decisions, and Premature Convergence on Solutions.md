@@ -728,3 +728,4 @@ Therefore, the first answer produced by an LLM should often be treated as:
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted practitioner prompts act as crystallization seeds to force models outside the averaged prior.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Details the *Frankenstein Intermediate Phase* where LLMs anchor on legacy git history and rationalize flawed hybrid complexity.
 - **[[AI Changes the Role and Training of Software Engineers]]**: Explains why senior engineers must lead by framing non-obvious questions rather than accepting default proposals.
+- **[[Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems]]**: Analyzes how models substitute aggregate statistical proxies for causal reality, committing the ecological fallacy and trapping decision pipelines in self-fulfilling feedback loops.
