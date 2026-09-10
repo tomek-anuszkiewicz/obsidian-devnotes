@@ -912,6 +912,20 @@ An agent can generate an implementation that passes 300,000 unit vectors with ze
 
 Because test suites cannot measure mechanical elegance or hardware empathy, **the human software architect remains the sole, irreplaceable guardian against performance degradation**. Reviewing generated code is not about checking basic functionality—the oracle handles that—it is about verifying algorithmic fitness, hardware empathy, and architectural durability.
 
+### 5. The Incompleteness of the Oracle: Hyrum's Law and Unconstrained State Spaces
+A vital engineering reality must temper the enthusiasm for disposable rewrites:
+
+> **No test oracle—even one encompassing 300,000 vectors—tests everything. An oracle tests strictly what its authors had the foresight or historical telemetry to anticipate.**
+
+Software systems operate in an effectively infinite state space. When an agent discards legacy code and synthesizes a new implementation from scratch under an oracle, two distinct failure modes emerge in the unconstrained state space:
+
+1. **Undocumented Semantic Drift (Hyrum's Law)**:
+   According to Hyrum's Law, with a sufficient number of consumers, every observable behavior of a system (ordering of returned collections, exact whitespace formatting, timing differences, internal exception types) will be depended upon by someone. If a legacy quirk was never captured in the test oracle, the agent’s freshly generated code will silently implement the standard or idiomatic behavior instead. To the test oracle, the suite is 100% green; to downstream systems in production, the rewrite introduces a catastrophic breaking change.
+2. **Emergent Novel Behaviors (Accidental State Inventions)**:
+   In execution paths that are unconstrained by test assertions, an agent does not leave a vacuum—it generates code based on its pre-trained statistical priors. Consequently, the rewrite may introduce **entirely new behaviors, fallback paths, or default states that never existed in the legacy system**. Because these paths were never exercised by tests, they pass silently into production as unverified emergent features.
+3. **The Countermeasure: Pairing Oracles with Differential Shadowing**:
+   A static test oracle, no matter how exhaustive, is a necessary but insufficient condition for safe rewrites. It must be actively complemented by **Live Traffic Mirroring and Autonomous Differential Repair** (see [[Refactoring Legacy Systems with AI Agents]]). Only by running the rewritten service as a shadow twin against live production traffic can the unwritten, unpredicted behaviors be captured, converted into new test vectors, and healed before live cutover.
+
 ---
 
 # Core Principles
