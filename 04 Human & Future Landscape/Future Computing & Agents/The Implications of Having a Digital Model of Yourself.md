@@ -1421,7 +1421,7 @@ It helps find:
 - recurring mistakes worth correcting.
     
 
-It can reveal patterns invisible to human memory and provide personalized advice based on actual history rather than generic rules.
+It can reveal patterns invisible to human memory—functioning as [[The AI Agent as a Personal Behavioral and Communication Coach|an objective behavioral and communication coach]]—and provide personalized advice based on actual history rather than generic rules.
 
 But the same model can become an unprecedented mechanism of evaluation and social control if other institutions gain unrestricted access to it.
 
@@ -1434,6 +1434,7 @@ The difference may depend less on how intelligent the model becomes and more on 
 
 ## Relationship to the Knowledge Graph
 
+- **[[The AI Agent as a Personal Behavioral and Communication Coach]]**: Using personal conversational telemetry to construct an objective feedback loop for deliberate practice.
 - **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]**: Architectural implementation and context retrieval patterns for personal digital replicas.
 - **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: Granting personal agent models autonomous agency to negotiate and transact on behalf of their users.
 - **[[The Most Valuable Software Training Data May Be Private]]**: The sensitive privacy, security, and IP governance questions surrounding personal operational histories.

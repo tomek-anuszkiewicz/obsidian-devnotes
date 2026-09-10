@@ -305,7 +305,7 @@ Software-engineering recruitment should increasingly resemble a compressed simul
 4. design a bounded solution;
 5. use AI selectively;
 6. verify behavior and review the diff;
-7. communicate and document the decision;
+7. communicate and document the decision (leveraging [[The AI Agent as a Personal Behavioral and Communication Coach|deliberate communication coaching]] for interview and team alignment);
 8. remain accountable for the result.
 
 The dangerous engineer in the AI era is not necessarily someone who writes code slowly. It is someone who can produce and approve large amounts of convincing code without understanding it.
@@ -330,6 +330,7 @@ The strongest candidate is therefore not simply the best programmer or the most 
 
 ## Related Notes
 
+- **[[The AI Agent as a Personal Behavioral and Communication Coach]]**: Deliberate practice, micro-scenario simulation, and post-mortem deconstruction of interview performance.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The evolving role of software engineers and junior apprenticeship in the agentic era.
 - **[[Reviewing AI-Generated Code]]**: Testing candidate code review skills on subtle, plausible agent-generated pull requests.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Evaluating how candidates direct and bound agentic workflows.
