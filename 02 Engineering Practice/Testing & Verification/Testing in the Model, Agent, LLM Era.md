@@ -900,6 +900,21 @@ The pairing of **Living Markdown Specs** and an **Ironclad Test Oracle** complet
 - When a module rots, accumulates architectural entropy, or needs to transition to a new paradigm (e.g., from an OOP abstraction to a zero-allocation, cache-aligned data layout), developers do not waste weeks delicately patching legacy lines.
 - The engineer instructs the agent to delete the implementation and **regenerate the entire module from scratch in minutes**. The ironclad test oracle provides the instant, deterministic safety net that guarantees bit-for-bit functional equivalence across all edge cases.
 
+#### Strategic Epochal Rewrites vs. Hyperactive Churn: Escaping the "Ship of Theseus" Trap
+A vital distinction must be drawn regarding the frequency and purpose of code disposability:
+
+> **"Disposable code" does NOT mean regenerating production modules on a monthly or bi-weekly whim.**
+
+Studies of undisciplined AI code generation (such as GitClear's 2024 analysis across hundreds of millions of lines) reveal a real pathology: developers using AI to churn through throwaway code, resulting in doubled churn rates, an 81% surge in code duplication, and teams trapped in a "permanent V1 prototype" cycle. This creates the nightmare of **team alienation (the Ship of Theseus dilemma)**: during a 3:00 AM production outage, an on-call engineer is forced to debug an alien codebase synthesized 48 hours earlier that nobody on the team deeply understands.
+
+The disciplined agentic paradigm operates on the opposite principle:
+1. **Day-to-Day Stability and Comprehension**: Under normal conditions, production code remains stable, carefully maintained, and deeply understood by the engineering team. Changes are localized, incremental, and bound by strict 1:1 file isolation (see [[Software Entropy and the Zero-Friction Trap]]).
+2. **Epochal Modernization (When Necessity Compels)**: Code disposability is an architectural escape valve reserved for **major inflection points that occur every few years**:
+   - When a subsystem reaches a fundamental throughput or concurrency ceiling,
+   - When a major architectural shift is mandated (e.g., migrating from synchronous blocking I/O to asynchronous event streaming, or from bloated OOP layers to flat, zero-allocation data-oriented layouts),
+   - When legacy technical debt and deprecated framework versions would require 18 months of tedious manual patching to unwind.
+3. **Mental Continuity Anchored in Living Specs**: Because the team continuously maintains the **Living Markdown Specifications**, the team’s mental model never evaporates during an epochal rewrite. The architecture, domain invariants, and operational boundaries remain stable and familiar—only the concrete syntax is refreshed to match modern host realities.
+
 ### 4. Why Human Review Remains Non-Delegable: The Limits of the Oracle
 While an ironclad test oracle guarantees functional correctness, it creates a dangerous blind spot if developers rely on it exclusively:
 
