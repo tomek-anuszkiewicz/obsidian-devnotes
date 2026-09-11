@@ -19,6 +19,23 @@ aliases:
 
 # LLM Agents and Institutional Memory in Software Teams
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Retrieval-Augmented Generation (RAG) and coding agents are not institutional memory; they provide **information accessibility, not shared understanding**. While an agent can instantaneously retrieve *where* a function is defined, it cannot determine whether that implementation was a deliberate business invariant, an obsolete workaround, or an unaddressed bug.  
+> - **The Complexity Masking Trap**: By lowering the immediate friction of navigating chaotic codebases, agents eliminate the natural economic pressure to simplify architecture. This breeds a catastrophic organizational condition: *"No human understands the architecture, but everyone continues modifying it with an agent."*
+> - **Code Archaeology vs Open-Source Idealism**: Training or fine-tuning models on internal corporate archives (Git commits, Jira tickets, Slack debates, meeting recordings) bridges the gap to Conway's Law and historical intent—uncovering why strange edge cases exist.
+> - **The Corporate Decay Prior (Poisoning by Mediocrity)**: Uncurated ingestion of internal enterprise archives risks baking decades of rushed tech debt, hollow test assertions, and cynical workarounds directly into model weights as the default generative standard.
+
+### Comparative Matrix: Organizational Knowledge Preservation Paradigms
+
+| Knowledge Layer | Retrieval & Processing Mechanism | Awareness of Historical Intent ("Why") | Bus Factor Resilience | Economic Impact on Complexity | Primary Vulnerability & Failure Mode |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Traditional Human Institutional Memory** | Shared mental models maintained via pairing, PR reviews, and ADRs. | **Deep & Qualitative**: Understands business politics, rejected alternatives, and future strategy. | Fragile: Dependent on key personnel; devastating when senior architects depart. | Active: Humans experience physical friction and champion simplification/refactoring. | Knowledge silos, human turnover, memory decay over time. |
+| **Vector RAG over Code & Docs** | Semantic similarity search over indexed repositories, Confluence, and tickets. | **Superficial**: Answers *what* the code does and *where* symbols live; blind to current business intent. | High accessibility, low comprehension: Anyone can find files, but no one understands implications. | **Masks Complexity**: Tolerates architectural sprawl because agents make navigation cheap. | Retains and quotes outdated documents; confuses obsolete workarounds with business requirements. |
+| **Enterprise-Trained Agent Archaeology (Recommended with Curation)** | Model fine-tuned on curated Git histories, post-mortems, and technical decision logs. | **Contextual & Empirical**: Correlates strange code branches with historical incidents and team boundaries. | **Maximum**: Institutional memory is codified and queryable across the organization. | High: Acts as a diagnostic mirror exposing divergence between formal architecture and daily practice. | **Corporate Decay Prior**: Normalizing historical bad habits unless training data is aggressively curated. |
+
+---
+
 ## Core idea
 
 An LLM agent with access to the codebase, documentation, tickets, commit history, and a good RAG system can make a complex project much easier to navigate. However, as analyzed in [[What Should Organizations Preserve from AI-Assisted Development|what organizations should preserve from AI-assisted development]], this is not the same as preserving institutional knowledge or maintaining a shared understanding of the system.
@@ -195,7 +212,7 @@ By ingesting meeting transcripts, team structures, and cross-team PR comments, t
 - Why an awkward intermediate message broker was introduced,
 - Which teams own which data domains in practice, regardless of official org charts.
 
-### 3. The Threat: The "Corporate Decay Prior" (Zatrucie Przeciętnością)
+### 3. The Threat: The "Corporate Decay Prior" (Poisoning by Mediocrity)
 Training or fine-tuning models on internal corporate data introduces a grave architectural risk: **the model inherits and normalizes the company's worst technical debt**.
 
 - **Degraded defaults**: If 80% of an enterprise codebase consists of rushed, copy-pasted legacy code from 2012, the model's baseline will shift toward that standard.
