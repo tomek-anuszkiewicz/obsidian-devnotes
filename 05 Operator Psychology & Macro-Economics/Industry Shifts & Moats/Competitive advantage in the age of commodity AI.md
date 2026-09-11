@@ -458,3 +458,5 @@ And a company's accumulated history — its code, decisions, incidents, experime
 - **[[The Most Valuable Software Training Data May Be Private]]**: Private corporate memory as the only defensible differentiator against public model parity.
 - **[[LLM Agents and Institutional Memory]]**: How captured organizational context prevents commoditized reasoning failures.
 - **[[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week]]**: How the rapid agentic cloning of web apps dissolves implementation moats and shifts value to distribution, state, and real-world friction.
+- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: How organizational complexity and centralized roadmaps destroy the agility needed to exploit commodity AI advantages.
+
