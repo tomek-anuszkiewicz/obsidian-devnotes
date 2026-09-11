@@ -12,6 +12,26 @@ aliases:
   - Build vs Buy vs Generate
 ---
 
+# AI Changes the Economics of Software Libraries
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> For decades, the primary justification for pulling in an external open-source library was simple: *"I do not want to spend two weeks typing this code manually."* When AI coding agents reduce the marginal cost of code authoring to near zero, this fundamental economic calculation inverts.
+> - **The Collapse of "Convenience" Libraries**: Libraries that exist merely to reduce syntactic boilerplate (mapping utilities, fluent builders, trivial wrappers, result types) transform from productivity boosters into **liability taxes**—introducing supply-chain risk, dependency conflicts, and version lock-in.
+> - **The Enduring Moat: Hard Algorithmic Domain Truth**: Libraries survive and thrive only when they encapsulate deep domain physics, battle-tested cryptographic primitives, hardware-accelerated kernels, complex network protocol state machines, or formal regulatory compliance where local reinvention carries unacceptable liability.
+
+### Comparative Matrix: The Economic Re-Evaluation of Software Libraries
+
+| Dimension | Boilerplate & Convenience Libraries | Mid-Tier Utility Packages | Deep-Domain & Hard Substrate Libraries |
+| :--- | :--- | :--- | :--- |
+| **Pre-AI Rationale** | High adoption: Saved developers dozens of hours writing mechanical glue code. | Moderate adoption: Standardized team patterns across multiple services. | Mandatory adoption: Impossible or reckless to implement independently. |
+| **Agentic Era Viability** | **Rapidly Obsolete**: Generated inline as explicit, zero-dependency, local domain code. | **Heavy Scrutiny**: Kept only if cross-service protocol contracts require strict runtime parity. | **Indispensable**: Cryptographic engines, SQLite engines, AV1 codecs, TLS stacks. |
+| **Dependency Tax vs. Benefit** | **Negative ROI**: Supply-chain vulnerabilities and framework upgrade breaking changes exceed value. | **Neutral/Fragile ROI**: High blast-radius when version drift fractures microservices. | **Massively Positive ROI**: Hundreds of person-years of edge-case hardening in physical reality. |
+| **Agent Interaction** | Agent writes custom, unrolled, compiler-friendly local implementation in 3 seconds. | Agent writes integration glue around package APIs. | Agent generates safe, typed FFI/IPC bindings against the rock-solid C/Rust kernel. |
+| **Maintenance Burden** | Zero external maintenance; localized blast radius. | Continuous dependency updating and semantic version bump churn. | Isolated to stable vendor patch releases and security advisories. |
+
+---
+
 AI code generation does not necessarily make software libraries obsolete.
 
 It changes the reason for using them.
