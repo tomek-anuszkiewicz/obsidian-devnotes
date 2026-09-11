@@ -12,6 +12,26 @@ aliases:
   - SaaS Unbundling by AI Agents
 ---
 
+# Unbundling of Enterprise Software
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> For twenty years, enterprise software was sold as a monolithic bundle: database schemas, transaction engines, role-based access control, workflow orchestration, and clunky web forms all packaged together into a multi-million-dollar annual SaaS license. Generative AI and autonomous agents **unbundle the enterprise stack**, severing the UI and workflow layers from the underlying systems of record.
+> - **The Death of the Fixed SaaS Interface**: Humans and agents no longer need to navigate hundreds of confusing enterprise dropdowns and static forms. Lightweight, ephemeral UIs and task-specific workflows are synthesized on demand by agents interacting directly with headless APIs.
+> - **The Durable Fortress**: Enterprise software vendors lose their monopoly over workflow orchestration and presentation; their only defensible moat shrinks to **authoritative systems of record, data consistency guarantees, and regulatory auditing**.
+
+### Comparative Matrix: The Unbundling of Enterprise Software Stacks
+
+| Stack Layer | Bundled Enterprise SaaS Era (Salesforce, SAP, Workday) | Unbundled Agentic Era (Post-2025) |
+| :--- | :--- | :--- |
+| **Presentation & UI** | Monolithic, rigid web dashboards; complex training required. | **Ephemeral & On-Demand**: Custom, dynamic task interfaces synthesized by agents in seconds. |
+| **Workflow & Orchestration** | Rigid, vendor-locked workflow builders and trigger rules. | **Autonomous Multi-Agent Meshes**: Cross-system reasoning, decisioning, and exception handling. |
+| **Integration Glue** | Expensive enterprise service buses (ESB) and brittle certified connectors. | **Natural Language API Discovery**: Agents query OpenAPI/WebMCP specs and write zero-dependency integration glue. |
+| **System of Record (SoR)** | Proprietary relational database bundled deep inside the vendor's cloud. | **Headless Data & State Engine**: The only surviving moat; provides ACID compliance and compliance custody. |
+| **Pricing Model** | \$150–\$350 per seat per month (paying for unused UI features). | **Consumption & Utility**: Paying for raw API compute, data storage, and compliance guarantees. |
+
+---
+
 ERP and business intelligence are only two examples of a broader transformation in enterprise software.
 
 The common pattern separates durable systems from dynamic frontends, creating opportunities for [[AI May Create a New Market for Small, Custom Business Software|small custom business software]]:
