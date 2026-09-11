@@ -255,13 +255,27 @@ A subtle yet hazardous failure mode in agentic code review occurs when a human r
 ### Human Review Could Accidentally Degrade Agent-Friendliness
 If a human reviewer forces the agent to compress explicit, isolated code into an intricate, generic abstraction, they may satisfy their aesthetic preference while **severely impairing future agent maintainability**. The next agent entering that module will struggle with the newly introduced indirection.
 
-### Review Shifts Toward Consequences
-Modern code review moves away from line-by-line syntax policing toward evaluating **architectural invariants and consequences**:
+### Review Shifts Toward Consequences & The Preservation of the Human Mental Model
+Modern code review moves away from line-by-line syntax policing toward evaluating **architectural invariants, consequences, and cognitive synchronization**:
 - Does this change preserve mechanical isolation and boundary contracts?
 - Can future agents safely modify this subsystem without hidden side effects?
 - Are executable tests sufficient to strictly constrain future automated refactorings?
 
-Human review becomes the boundary where human strategic intent is reconciled with software engineered for automated machines.
+#### Why the Reviewer Must Maintain System Knowledge
+A foundational question emerges: *If agents write, refactor, and test the code, why must the human reviewer still maintain a high-level model of the system in their head?*
+
+Code review is not merely an approval gate; it is **the mandatory cognitive synchronization ritual** where the human engineer continuously constructs, refreshes, and internalizes their mental model of the system:
+
+1. **The Ultimate Circuit Breaker (The Insolubility Horizon)**:
+   Autonomous agents excel at localized, bounded tasks, but suffer cognitive thrashing when confronted with distributed race conditions, multi-system cascading failures, or contradictory business requirements. When a critical production outage exceeds the model's reasoning horizon, the agent cannot resolve it. If human engineers have not maintained an active mental model of the system's topology, state lifecycles, and failure boundaries, the organization faces **total systemic paralysis**—humans cannot intervene in a codebase they do not understand (see [[Reviewing AI-Generated Code]]).
+
+2. **Preventing the "Alien Codebase" Crisis (The Ship of Theseus)**:
+   If code is generated and merged without human cognitive absorption, the codebase gradually transforms into an alien artifact. By using review to track *why* changes were made, *how* state flows, and *which* invariants govern the module, the engineer maintains intellectual stewardship over the software.
+
+3. **Strategic Intent vs. Mechanical Plausibility**:
+   An agent optimizes for local, statistical plausibility. Only a human holding the global mental model can evaluate whether a change aligns with long-term strategic intent, regulatory boundaries, and systemic risk tolerances.
+
+Human review is the boundary where human strategic intent and emergency stewardship are reconciled with software engineered for automated machines.
 
 ---
 
