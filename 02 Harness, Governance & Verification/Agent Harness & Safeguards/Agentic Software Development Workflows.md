@@ -60,7 +60,7 @@ Prompt → Code      Feature → Diff     Plan → Gate → Code    Test → Fre
 ### 1. Vibe Coding (Rapid Exploratory Probing)
 - **Loop**: `Prompt → Direct Code Edit → Run → Ad-hoc Fix`
 - **Utility**: Excellent for 30-minute disposable proof-of-concept spikes, exploring unfamiliar libraries, and rapid prototyping (see [[How AI Changes Prototyping and the Path from PoC to Production]]).
-- **Failure Mode**: The model silently invents business logic and edge-case behaviors. In multi-tenant enterprise code, vibe coding triggers the "Permanent Prototype V1" trap.
+- **Failure Mode**: The model silently invents business logic and edge-case behaviors. In complex stateful systems (e.g. execution kernels, dispatch loops, financial ledgers), vibe coding collapses almost immediately because prompt-and-pray cannot enforce state machine invariants (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]). In enterprise environments, it triggers the "Permanent Prototype V1" trap.
 
 ### 2. Feature-by-Feature (Bounded Vertical Slices)
 - **Loop**: `Feature Spec → 1:1 Implementation → Targeted Tests → Atomic PR`
@@ -106,4 +106,5 @@ The system succeeds not because the model is infallible, but because the **workf
 - **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How review workflows enforce subtle organizational and architectural standards.
 - **[[LLMs as a Code Review Team]]**: Multi-agent adversarial review teams that stress-test code before merge.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Explaining when to use unstructured vibe coding (disposable probes) versus rigorous harnesses (production synthesis).
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight markdown blueprints and contracts to prevent vibe coding collapse on stateful systems.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Demonstrating that workflow gains collapse without automated CI/CD verification infrastructure.
