@@ -12,6 +12,24 @@ aliases:
   - Averaged Solutions Problem
 ---
 
+# AI, Averaged Decisions, and Premature Convergence on Solutions
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Large Language Models naturally optimize for statistical plausibility across their general pre-training distribution. When presented with underspecified requirements, an LLM will rarely pause to expose ambiguities; instead, it silently fills conceptual gaps with conventional defaults disguised as technical implementation details:
+> $$\text{Underspecified Requirements} + \text{Capable Model} = \text{Invisible Strategic Decisions Made by AI}$$
+> This produces **premature convergence on the market average**—a solution that is coherent, polished, and technically plausible, yet strategically undifferentiated. Counteracting premature convergence requires shifting the agent's interaction model from **Answer Oracle** (`Question -> Complete Answer`) to **Exploratory Engine** (`Question -> Decomposition -> Missing Invariants -> Multi-Path Divergence -> Trade-Off Matrix -> Human Selection`).
+
+### Paradigm Comparison: Solution Discovery Dynamics
+
+| Interaction Paradigm | Exploration Mechanism | Treatment of Underspecified Gaps | Convergence Timing | Strategic Differentiation & Moats | Failure Modes & Cognitive Risks |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Naive Direct Generation (`Prompt -> Answer`)** | Greedy single-path sampling along highest probability tokens. | Silently invents assumptions; masks business decisions as technical code. | **Immediate / Premature**: Collapses on standard industry tropes. | **Zero / Negative**: Commoditizes the product to the public training distribution average. | *Illusion of completeness*, hidden lock-in to conventional boilerplate, unexamined trade-offs. |
+| **Iterative Chat Refinement (`Back-and-Forth`)** | Local hill-climbing; anchors heavily on the first generated artifact. | Fixes local bugs but retains initial structural assumptions. | **Biased**: Anchors on original solution class; local optima only. | **Low**: Minor ergonomic tweaks on top of conventional architecture. | *Attractor lock-in*, rationalizing legacy design, creeping technical debt. |
+| **Multi-Path Divergence & Explicit Authority Boundaries** | Tree search across orthogonal solution classes (e.g., event-driven vs direct pull vs offline batch). | Halts on underspecification; actively extracts missing invariants and flags human authority limits. | **Deferred**: Explores the boundary of the search space before selection. | **High**: Grounded in unique proprietary domain context and deliberate strategic trade-offs. | Higher initial token cost and human review overhead; requires high epistemic discipline. |
+
+---
+
 ## Introduction
 
 Large language models tend to produce answers that are complete, coherent, polished, and well justified, but in software engineering this frequently leads to [[Designing Software Architecture with LLM Assistance|superficial architectural completeness]].
