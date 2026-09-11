@@ -15,6 +15,8 @@ aliases:
   - Documentation as Code for the Agent
   - Markdown as the Highest-Level Source Code
   - Documentation as AI Compiler Input
+  - Two-Stage Agentic Compilation Pipeline
+  - Source Code as Intermediate Representation
   - The Triad of Specs Oracles and Human Sympathy
   - Escaping the 4GL and CASE Trap
   - The Compiler-less Language Paradox
@@ -43,22 +45,31 @@ The transition to agentic engineering redefines the very definition and purpose 
 
 ```text
 TRADITIONAL COMPILATION:
-High-Level Source Code ──► Deterministic Compiler / Type Checker ──► Machine Binary / Bytecode
+Source Code ──► Deterministic Compiler / Type Checker ──► Executable Binary / Machine Code
 
-AGENTIC COMPILATION:
-Markdown Design Specification ──► LLM Reasoning Engine (AI Compiler) ──► Verified Implementation Code
+AGENTIC COMPILATION (TWO-STAGE PIPELINE):
+Markdown Specification ──► LLM Reasoning Engine ──► Source Code ──► Deterministic Compiler ──► Executable Binary
+[High-Level Intent]        [Front-End AI Compiler]   [Intermediate  [Back-End Toolchain]       [Physical Target]
+                                                     Artifact / IR]
 ```
 
 In this operational model:
 
-1. **Writing for the AI Compiler**:
-   Engineers do not author documentation for human casual browsing—they write it as **precise, mechanically exact input for the AI compiler**. The Markdown design document serves as the formal, executable high-level specification.
+1. **Source Code as an Intermediate Representation (IR)**:
+   In traditional engineering, source code sat at the very apex of the pipeline as the primary human-authored input. In agentic engineering, source code shifts to the middle of the pipeline: it becomes a machine-synthesized, human-auditable **intermediate representation (IR)** emitted by the front-end reasoning engine and consumed by the deterministic back-end compiler.
    
-2. **The Direct Correlation Between Documentation Rigor and Code Fidelity**:
-   The richer, more structurally rigorous, and more physically and mathematically accurate the Markdown documentation, the higher the fidelity, resilience, and runtime performance of the generated code. When the document explicitly defines operational limits, state invariants, concurrency boundaries, and failure cascades, the LLM reasoning engine translates those exact constraints into optimized, production-grade systems code.
+2. **The Two-Stage Agentic Compilation Pipeline**:
+   - **Stage 1 (Semantic Front-End Compilation)**: The LLM reasoning engine parses structured Markdown design specifications, domain contracts, and operational invariants, compiling high-level architectural intent into syntactically valid source code.
+   - **Stage 2 (Deterministic Back-End Compilation)**: Traditional deterministic compilers, type checkers, and test oracles ingest the generated source code, performing static verification, type inference, memory layout optimization, and emitting the final executable binary, bytecode, or runtime package.
 
-3. **Documentation as the Canonical Source of Truth**:
-   When system behavior or business logic must evolve, the engineer does not wade through thousands of lines of syntactic boilerplate. They update the high-level Markdown specification and re-compile the subsystem through the agent. The generated code is merely the transient, downstream manifestation of the architectural document.
+3. **Writing for the AI Front-End Compiler**:
+   Engineers author documentation not as passive human prose, but as **precise, mechanically exact input for the front-end AI compiler**. The Markdown design specification is the true canonical source code of the system.
+   
+4. **The Direct Correlation Between Specification Rigor and Binary Fidelity**:
+   The richer, more structurally rigorous, and more physically and mathematically accurate the Markdown documentation, the higher the fidelity, resilience, and runtime performance of both the intermediate source code and the final compiled binary. When the document explicitly defines operational limits, state invariants, concurrency boundaries, and failure cascades, the LLM reasoning engine translates those exact constraints into optimized, production-grade systems code.
+
+5. **Documentation as the Canonical Source of Truth**:
+   When system behavior or business logic must evolve, the engineer does not wade through thousands of lines of syntactic boilerplate. They update the high-level Markdown specification and re-compile the subsystem through the agent. The generated source code is merely the transient intermediate representation, and the binary is the final runtime artifact.
 
 ### Escaping the 4GL / Executable UML Trap: The Triad of Specs, Oracles, and Human Sympathy
 
@@ -89,10 +100,15 @@ The modern agentic paradigm does not repeat this failure because it does not att
 │                         └──────────────┬───────────────┘               │
 │                                        ▼                               │
 │                         LLM REASONING & SYNTHESIS                      │
-│                         (Pretrained compiler idioms)                   │
+│                       (Front-end semantic compiler)                    │
 │                                        │                               │
 │                                        ▼                               │
-│                         DURABLE PRODUCTION SYSTEMS CODE                │
+│                            INTERMEDIATE SOURCE CODE                    │
+│                    (Auditable intermediate representation)             │
+│                                        │                               │
+│                                        ▼                               │
+│                        DETERMINISTIC COMPILER & RUNTIME                │
+│                       (Verified machine binary / bytecode)             │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
