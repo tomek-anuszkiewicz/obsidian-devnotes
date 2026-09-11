@@ -12,6 +12,26 @@ aliases:
   - Agent-Generated Training Data
 ---
 
+# Improving AI Models — From Scaling to Agent-Generated Training Data
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Frontier AI model capability is no longer driven primarily by raw pre-training parameter and dataset scaling ($N \times D \times C$). As public web scrapings approach exhaustion, the primary driver of performance has shifted to **multi-curve compounding**:
+> 1. **Test-Time Compute Scaling**: Allocating variable inference compute to explore solution trees, verify intermediate steps, and self-correct before emitting tokens.
+> 2. **Deterministic Synthetically Verified Data**: Using mechanical ground-truth oracles (compilers, unit tests, formal verification engines) to generate and filter massive synthetic reasoning corpora without model collapse.
+> 3. **Agent Trajectory Learning**: Training models on the entire *problem-solving arc* (`Goal -> Action -> Failure -> Diagnostic -> Correction -> Pass`) rather than static final code snippets. The learning signal shifts from *"what does good code look like?"* to *"how does an engineer navigate ambiguity to produce a verified system?"*
+
+### Comparative Matrix: AI Capability Scaling Paradigms
+
+| Scaling Paradigm | Primary Compute Phase | Core Training Signal & Data Source | Verifier / Ground Truth Engine | Epistemic Paradigm | Limiting Bottleneck |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Pre-Training Scaling Laws (Chinchilla)** | Training Time: Massive GPU clusters for next-token prediction. | Public web text, books, open-source repositories. | Statistical likelihood over static public discourse. | **Passive Ingestion**: Learns syntactic and semantic patterns of existing artifacts. | Web data exhaustion; low signal-to-noise ratio; diminishing returns on raw parameter scale. |
+| **Instruction Tuning & RLHF / DPO** | Post-Training: Alignment on human preferences. | Human-annotated demonstration prompts and pairwise preference rankings. | Subjective human preference rubrics. | **Behavioral Compliance**: Learns politeness, instruction adherence, and format structure. | Human annotator fatigue; sycophancy; superficial plausibility over mechanical correctness. |
+| **Test-Time Inference Compute (Reasoning Models)** | Inference Time: Dynamic token generation for internal chain-of-thought. | Problem specifications, mathematical constraints, unit test criteria. | Process Reward Models (PRMs) and internal verifiers. | **Deliberative Search**: Explores alternative hypotheses and backtracks on contradictions. | Inference latency and token cost per query; search-space pruning traps. |
+| **Agent Trajectory Reinforcement Learning (Recommended)** | Hybrid: Continuous fine-tuning on verified execution traces. | Real-world engineering environments: Git diffs, compiler error logs, CI/CD telemetry. | **Mechanical Oracles**: Compilers, test suites, static analyzers, and runtime telemetry. | **Active Evolutionary Epistemology**: Learns how to diagnose failures and recover from mistakes. | Access to private domain codebases; sandbox virtualization and execution harness complexity. |
+
+---
+
 The historical improvement of AI models is often described as a simple consequence of larger models and more compute.
 
 That is increasingly incomplete. As analyzed in [[LLM Capability Reliability and the Shape of Progress|the shape of LLM progress]], progress has come from several successive layers:
