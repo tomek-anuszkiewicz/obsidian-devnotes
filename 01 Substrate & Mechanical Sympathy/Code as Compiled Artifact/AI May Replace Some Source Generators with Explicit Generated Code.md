@@ -74,15 +74,14 @@ LLMs break this trap completely. An agent does not need an intermediate templati
 
 A classic example of where developers historically relied heavily on code generators or macro systems is **hardware and CPU emulation** (e.g., 6502, Z80, ARM, RISC-V, Game Boy, custom hardware chips) as well as **binary protocol decoders**:
 
-### The Historical Problem: Survival Over Maintainability
+### The Historical Problem: The Combinatorial Nightmare of Scale and Manual Maintenance
 
 Emulating a CPU or decoding complex binary protocols requires handling thousands—or even tens of thousands—of instruction permutations when combining opcode variants, operand widths, addressing modes, condition codes, ALU status flag calculations, and cycle timings.
 
-Historically, developers faced two brutal constraints:
-1. **Host Performance Margins (1990s)**: Host CPUs were often only $\approx 10\times$ faster than emulated targets. Developers could not afford runtime indirection, function pointer lookups, dynamic dispatch, or generic abstractions.
-2. **The Maintenance Nightmare of Scale**: With tens of thousands of instruction variants, authoring code manually without a generator was an existential trap. If a subtle ALU flag bug was discovered, an addressing calculation needed adjustment, or an architectural abstraction shifted, a developer without a generator would have to **manually modify code across tens of thousands of locations**—a week-long, error-prone ordeal almost guaranteed to introduce new regressions.
+Both an LLM and a macro or generator script can emit equally performant, zero-overhead machine code. Macros and code generators were **never chosen because they produced faster code than explicit code**—they were adopted purely as a defensive shield against the **human maintenance bottleneck**:
+- **The Maintenance Nightmare of Scale**: With tens of thousands of instruction variants, authoring and maintaining code manually was an existential trap. If a subtle ALU flag bug was discovered, an addressing calculation needed adjustment, or an architectural abstraction shifted, a developer without a generator would have to **manually modify code across tens of thousands of locations**—a week-long, error-prone ordeal almost guaranteed to introduce new regressions.
 
-To survive, developers turned to:
+To avoid this maintenance paralysis, developers turned to generative metaprogramming:
 - **Monstrous nested `#define` macros**: massive macro cascades and X-macros expanding opcodes at compile time.
 - **Offline Python, Perl, or Bash scripts**: dumping 100,000+ lines of repetitive, boilerplate C code directly into the build.
 - **Modern Template Metaprogramming (C++ Templates & Rust Const Generics)**: In modern C++ and Rust, developers frequently replace preprocessor macros with template metaprogramming and non-type template parameters / const generics (passing opcodes, modes, and register sizes as compile-time constants). While type-safe, **it produces the exact same fundamental compromise**:
@@ -91,7 +90,7 @@ To survive, developers turned to:
   - Compiler errors become impenetrable, multi-page diagnostic dumps.
   - Stepping through template instantiations in a debugger remains cumbersome and opaque.
 
-This was an existential compromise: it **traded away readability, IDE tooling, and maintainability purely for survival**. The generator scripts, nested macros, and heavy compile-time templates were not chosen because they were elegant; they were chosen because humans could not manually maintain tens of thousands of specialized routines without tooling assistance.
+This was an existential compromise: it **traded away readability, IDE tooling, and clean debuggability purely to escape manual maintenance**. The generator scripts, nested macros, and heavy compile-time templates were not chosen because they were elegant; they were chosen because humans could not manually maintain tens of thousands of specialized routines without automation.
 
 ### The AI Paradigm Shift: The Death of the Code Generator, Macros, and Template Bloat
 In the agentic era, **LLMs eliminate the need for offline code generators, opaque macros, or template acrobatics**:
@@ -237,7 +236,7 @@ If the specification changes:
 
 ## Summary
 
-1. **The Death of the Code Generator & C Preprocessor Macros**: Source generators, offline codegen scripts (Python/Perl), and complex macro cascades were historical workarounds for human typing limits and tight hardware margins (e.g. 1990s CPU emulation, where host CPUs were only $\approx 10\times$ faster than emulated hardware, forcing developers to dump 100,000 lines of repetitive C purely for survival).
+1. **The Death of the Code Generator & C Preprocessor Macros**: Source generators, offline codegen scripts (Python/Perl), complex macro cascades, and heavy template metaprogramming were historical workarounds for human typing and maintenance limits when facing combinatorial scale (e.g. CPU emulation with tens of thousands of instruction variants). Because both macros and LLMs can produce equally performant machine code, macros were never about runtime performance advantages—they were adopted purely as defensive armor against manual maintenance paralysis.
 2. **The AI Paradigm Shift**: LLM coding agents eliminate the need for offline code generators or opaque macros. The agent authors explicit, self-documenting, specialized functions directly. Instead of maintaining a complex generator script, the engineer instructs the agent to generate and refactor clean, direct code.
 3. **In domains like emulator development, protocol decoders, DTO mapping, and mechanical transformations**, writing standalone generator programs is no longer justified.
 4. **Explicit code committed to the repository** is easier to debug, faster to compile, simpler for other agents to reason about, and free from the brittle friction of custom generative build tools.
