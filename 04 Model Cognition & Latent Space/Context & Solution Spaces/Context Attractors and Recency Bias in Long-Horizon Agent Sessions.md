@@ -17,19 +17,46 @@ aliases:
 
 # Context Attractors and Recency Bias in Long-Horizon Agent Sessions
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Attention Gravity and Context Attractor Dynamics
 > In extended multi-turn agent sessions, the self-attention mechanism ($\text{softmax}(QK^T / \sqrt{d_k})V$) produces an emergent cognitive failure mode known as **Attention Gravity**. As specific motifs are repeatedly debated and cited, their token representations saturate the Key-Value (KV) cache. Subsequent query vectors ($Q$) are irresistibly pulled toward these high-density keys ($K$), transforming the motif into a **Context Attractor** that the agent treats as a universal explanation for every subsequent unrelated problem.  
 > Paradoxically, **automated conversation compaction worsens this attractor**: recursive summarizers extract the dominant motif due to its sheer prominence and promote it to an explicit system-prompt invariant. Preventing cognitive monoculture requires **atomic turn-bounded sessions (the 15-Turn Strike Team)**, **hard session resets via committed markdown artifacts**, and **simple FIFO window pruning** over recursive synthetic summarization.
 
-### Comparative Matrix: Long-Horizon Context Management Strategies
+```text
++----------------------------------------------------------------------------------------------------+
+|               ATTENTION GRAVITY & CONTEXT ATTRACTOR DYNAMICS                                       |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  EARLY MULTI-TURN SESSION (Balanced Attention & Broad Latent Sampling)                             |
+|  [Hardware Substrate] ───────► [Test Oracles] ───────► [Service Mesh] ───────► [Human Factors]     |
+|                                                                                                    |
+|  ~~~~~~~~~~~~~~~~~~~~~~~~ ATTENTION WEIGHT ACCUMULATION (50+ TURNS) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
+|                                                                                                    |
+|  LATE UNBOUNDED SESSION (The Context Attractor Singularity)                                        |
+|  All Incoming Queries                     +───────────────────────────────+                         |
+|  - System Architecture                    |       CONTEXT ATTRACTOR       |                         |
+|  - Recruitment & Team Dynamics  ───────►  |  (e.g., "L1i Cache Thrashing" │ ──────► Monothematic    |
+|  - Operational Telemetry                  |   or "Zero-Semantic Drift")   |         Diagnosis       |
+|  - Strategic Moats                        +───────────────────────────────+                         |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Context Strategy | Session Topology & Lifecycle | Attractor Formation Risk | Compaction Distortion | Epistemic Agility & Skepticism | Recommended Use Cases |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Monolithic Long-Horizon Session (100+ Turns)** | Single unbounded thread accumulating all turns. | **Extreme**: Self-attention locks onto dominant recurring tokens; mono-thematic diagnosis. | High memory pressure; eventual out-of-memory or context exhaustion. | **Severely degraded**: Agent rationalizes all new problems through the attractor lens. | Open-ended brainstorming where continuity matters more than objective accuracy. |
-| **Automated LLM Compaction / Recursive Summaries** | Background summarizer compresses history into synthetic system prompt context. | **Amplified**: Summarizer selects prominent attractor and codifies it as immutable ground truth. | **High semantic drift**: Nuance and dissent stripped away; dogmatic axioms remain. | **Low**: Model echoes its own compressed assumptions with false confidence. | Generic customer support bots; not recommended for high-stakes software architecture. |
-| **FIFO Sliding Window (Hard Head/Tail Truncation)** | Oldest turns dropped raw without summarization; active prompt and files preserved. | **Low**: Physical removal of early tokens purges the KV cache anchor weight. | **Zero synthetic distortion**: Eliminates hallucinatory summary inflation. | **Moderate**: Retains local focus; loses historical long-arc context. | Continuous coding sessions where active file state represents ground truth. |
-| **Atomic Strike Teams (15-Turn Hard Reset) (Recommended)** | Short, task-scoped burst $\to$ distill to Git-tracked artifact $\to$ hard reset into fresh session. | **Near Zero**: Conversation history never reaches the density required for gravitational collapse. | **None**: Distilled artifacts are reviewed and edited by the human operator. | **Maximum**: Each new session starts with a clean slate, evaluated against fresh code and explicit invariants. | **Mission-critical architecture, formal refactoring, complex system design.** |
+## Executive Summary & Core Architectural Invariants
+
+1. **The Law of Attention Gravity**:
+   In extended multi-turn LLM sessions, repeated discussion of a concept saturates the Key-Value (KV) cache. Under self-attention ($\text{softmax}(QK^T / \sqrt{d_k})V$), subsequent queries ($Q$) are mathematically pulled toward high-density attractor keys ($K$), causing the model to interpret completely unrelated problems through the lens of that dominant motif.
+
+2. **The Compaction Amplification Paradox**:
+   Automated conversation summarization frequently aggravates context attractors rather than relieving them. Recursive summarizers treat the high-frequency attractor as the primary signal of the conversation, promoting it to an authoritative ground-truth invariant in the synthetic system prompt while discarding nuanced dissenting context.
+
+3. **Cognitive Monoculture and Persuasive Rationalization**:
+   Once captured by a context attractor, an agent does not produce incoherent output; it generates articulate, persuasive, and plausible pseudo-explanations that force new domain questions into the attractor's schema, creating a dangerous illusion of profound lateral thinking.
+
+4. **The 15-Turn Atomic Strike Team Standard**:
+   High-stakes architectural pair-programming must reject unbounded multi-day chat sessions in favor of short, task-scoped bursts (5–15 turns). Breakthrough insights must be distilled into Git-tracked markdown artifacts, followed by an immediate hard session reset that clears conversational KV cache gravity.
+
+5. **FIFO Head-Truncation Over Recursive Summarization**:
+   When working within an active coding harness, unsummarized FIFO sliding window truncation (dropping the oldest conversational turns raw while preserving active files and instructions) maintains superior epistemic agility compared to LLM-generated historical summaries.
 
 ---
 
@@ -43,20 +70,6 @@ In prolonged, multi-turn architectural dialogues and agentic pair-programming se
 However, as a session expands across hundreds of turns and tens of thousands of tokens, **the self-attention mechanism begins to distort the reasoning manifold**. 
 
 Rather than maintaining a balanced, multi-perspective view of the problem space, the model succumbs to **Attention Gravity**: it locks onto specific salient motifs that appeared repeatedly in recent turns and begins treating them as universal explanations for every subsequent problem. This phenomenon is the **Context Attractor**.
-
-```text
-Early Conversation (Diverse Exploration):
-[Hardware Substrate] ──► [Test Oracles] ──► [Service Mesh] ──► [Operator Ergonomics]
-                                     │
-                 (Attention Weight Accumulation over 50+ Turns)
-                                     ▼
-Late Conversation (The Context Attractor Singularity):
-                     ┌───────────────────────────────┐
-All Prompts          │       CONTEXT ATTRACTOR       │
-(Recruitment,  ────► │  (e.g., "L1i Cache Thrashing" │ ────► Monothematic Diagnosis
- Telemetry, Media,   │   or "Zero-Semantic Drift")   │       (Hyper-Fixation)
- Architecture)       └───────────────────────────────┘
-```
 
 ---
 
