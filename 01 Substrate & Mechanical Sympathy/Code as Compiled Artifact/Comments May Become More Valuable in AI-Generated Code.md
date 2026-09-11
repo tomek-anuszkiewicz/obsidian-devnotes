@@ -23,24 +23,42 @@ In the era of autonomous AI coding agents, code comments undergo a radical funct
 
 ```text
 HISTORICAL HUMAN PARADIGM:
-  "Good code is self-documenting."
+  "Good code is self-documenting; the 'why' belongs in commit messages."
   Result: Comments explaining syntax are banned; business intent is exiled
-          to Jira tickets, Slack threads, and unwritten tribal memory.
+          to Git history, Jira tickets, Slack threads, and unwritten tribal memory.
 
 AGENTIC PARADIGM:
   Descriptive comments (what the code does) = ZERO VALUE (Agents reconstruct syntax instantly).
   Decisional comments (why the code was built this way) = MAXIMUM VALUE.
   Result: Comments are the ONLY organizational artifacts guaranteed to physically enter
-          the agent's working context window alongside the code being modified.
+          the agent's working context window alongside the code being modified without
+          costly, speculative external tool calls.
 ```
 
-When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. 
+When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. Nor will an agent proactively run `git blame` or inspect commit histories for every routine it modifies.
 
 However, **any comment physically placed next to the implementation is guaranteed to be ingested into the model's context window**. Comments therefore act as a microscopic, zero-latency semantic cache—anchoring human architectural intent directly at the point of mutation, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
 ### The Decisional Inversion:
 1. **The Death of Descriptive Comments**: Explaining *how* an algorithm steps through an array or formats an output is pure token noise. Foundation models parse syntactic control flow effortlessly.
 2. **The Sovereign Value of Decisional Constraints**: Inline annotations that explain *why* an unusual business rule exists, *which* contract mandated it, and *what* intuitive simplifications are strictly prohibited represent the most valuable intellectual property in the repository.
+
+---
+
+## The Git History Fallacy: Why VCS Cannot Replace Inline Decisional Anchors
+
+In traditional software engineering culture, developers often push back against comments by appealing to version control: *"If you want to understand why this line was written, check `git blame` and the commit message."*
+
+While a deliberate human engineer might occasionally use `git blame` during deep investigation, relying on version control as an agent context mechanism completely collapses in practice due to four architectural dynamics:
+
+1. **The Epistemic Blindspot (Zero Proactive Doubt)**:
+   An agent only invokes tools like `git blame`, `git log -S`, or commit explorers during **forensic debugging** after a test or build has already failed. When an agent performs routine feature work, refactoring sweeps, or deduplication passes, it experiences **high completion confidence**. Seeing a redundant-looking guard or historical quirk, the model assumes the code is simply clumsy or dead—it experiences zero epistemic doubt to pause, suspect hidden context, and run a speculative `git blame` check.
+2. **Context Latency and Tool-Call Multiplication**:
+   Checking Git history is an external, tool-mediated operation. If an agent were instructed to inspect `git blame` for every function or line it intends to touch, the execution loop would instantly collapse under a deluge of tool round-trips (`git blame` $\rightarrow$ `git log` $\rightarrow$ `git show <hash>`), exploding token budgets and latency by orders of magnitude.
+3. **Provenance Decay and Blame Erosion**:
+   `git blame` is fragile. Automated style formatting passes, import reorderings, file renames, and prior agent cleanup sweeps frequently overwrite the surface commit line with cosmetic commits (`style: format with linter`). Digging multiple commits deep to discover the original domain decision requires recursive archaeological git navigation that agents cannot practically conduct on the fly.
+4. **Preventative Guardrail vs. Forensic Autopsy**:
+   Version control is fundamentally **forensic**—an autopsy instrument designed to investigate *how something broke after the fact*. Decisional comments are **preventative**—they reside physically inside the token stream, immediately intercepting the model's autoregressive generation *before* the invalid refactoring is written.
 
 ---
 
@@ -117,8 +135,8 @@ Comments do not replace system-level documentation or architectural decision rec
 │ 1. SYSTEM SPECIFICATIONS                                    │
 │    High-level user requirements, business goals, contracts. │
 ├─────────────────────────────────────────────────────────────┤
-│ 2. ARCHITECTURAL DECISION RECORDS (ADRs)                    │
-│    System-wide trade-offs, technology choices, boundaries.  │
+│ 2. ARCHITECTURAL DECISION RECORDS (ADRs) & REPO HISTORY     │
+│    System-wide trade-offs, technology choices, commit logs. │
 ├─────────────────────────────────────────────────────────────┤
 │ 3. DECISIONAL ANCHOR COMMENTS                               │
 │    Local intent, negative knowledge, non-obvious invariants.│
@@ -128,7 +146,7 @@ Comments do not replace system-level documentation or architectural decision rec
 └─────────────────────────────────────────────────────────────┘
 ```
 
-An agent performing a small bugfix in three years will likely never be passed the full ADR repository. It **will** receive Tier 3 and Tier 4. 
+An agent performing a small bugfix in three years will likely never be passed the full ADR repository or traverse the Git commit graph for every modified line. It **will** receive Tier 3 and Tier 4 directly in its working context window. 
 
 ---
 
@@ -153,17 +171,19 @@ The code satisfies immediate execution; the decisional comments protect future a
 
 ## Summary Principles
 
-1. **Comments are Context Retrieval Anchors**: Inline comments are the only knowledge artifacts guaranteed to enter the model's context window alongside the code.
+1. **Comments are Context Retrieval Anchors**: Inline comments are the only knowledge artifacts guaranteed to enter the model's context window alongside the code without requiring external tool calls.
 2. **Ban Descriptive Comments**: Never write comments explaining *how* syntax works; agents parse control flow effortlessly.
 3. **Mandate Decisional & Invariant Comments**: Explain *why* code violates common intuition and *which* requirements shaped it.
-4. **Fence Invariants with Negative Knowledge**: Explicitly warn against seemingly obvious simplifications that would break domain rules.
-5. **Protect Future Agent Trajectories**: Treat high-signal comments as long-term context engineering for subsequent automated refactoring turns.
+4. **The Git History Fallacy**: Version control history is forensic and tool-mediated; an agent will never proactively run `git blame` on every line during routine mutation turns.
+5. **Fence Invariants with Negative Knowledge**: Explicitly warn against seemingly obvious simplifications that would break domain rules.
+6. **Protect Future Agent Trajectories**: Treat high-signal comments as long-term context engineering for subsequent automated refactoring turns.
 
 ---
 
 ## Related Notes
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Explains why comments must capture the "why" of intentional non-standard business rules.
+- **[[Retrieval-Augmented Generation and Context Architecture]]**: Contrasts multi-hop tool-based retrieval (Git blame, issue tracking) with zero-latency co-located context injection.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing Business Decision Records (BDRs) and architectural guardrails alongside code.
 - **[[AI-Generated Architectural Documentation from Code]]**: How semantic code comments feed living architectural models and agent context.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation cards and semantic blueprints as deterministic agent frameworks.
