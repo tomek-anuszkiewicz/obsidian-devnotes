@@ -96,6 +96,8 @@ Agents operate under an entirely inverted set of economic and cognitive constrai
 
 However, because models are pre-trained on open-source repositories, their default statistical prior is to emulate human compromises: creating speculative interfaces, unnecessary wrappers, and centralized abstractions. Without explicit architectural guidelines, agents instinctively write code optimized for human typing rather than agentic reliability.
 
+Paradoxically, being trained primarily on open-source repositories is almost a fortunate grace period. If training corpora had been heavily saturated with legacy corporate enterprise systems, the statistical priors would be catastrophically worse: models would reflexively replicate bureaucratic class hierarchies, factory-of-factories boilerplate, reflection-heavy configuration magic, and speculative indirection engineered for corporate org-charts rather than execution clarity. As flawed as open-source human code is under agentic constraints, it remains far lighter than the enterprise labyrinth that agents encounter when tasked with [[Refactoring Legacy Systems with AI Agents|refactoring legacy enterprise systems]].
+
 ---
 
 ## Model Prior Probabilities & Context Infrastructure
@@ -243,4 +245,5 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
+- **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
 - **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for substrate performance.
