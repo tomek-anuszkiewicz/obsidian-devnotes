@@ -231,6 +231,27 @@ Reviewers frequently reject pull requests over these cosmetic deviations, claimi
 2. **Explicitness vs. Mental Drag**: Human engineers rely on compiler defaults and shorthand syntax because humans dread typing boilerplate. For an autonomous agent, generating 10 explicit lines costs zero effort, and reading explicit mechanics eliminates ambiguity for the next agent that touches the module.
 3. **Wasted High-Leverage Bandwidth**: When human reviewers spend their finite cognitive attention policing harmless syntactic explicitness or cosmetic formatting quirks (which automated linters solve deterministically), they neglect the true high-risk boundaries: domain state machines, concurrency locks, and invariant violations (see [[Reviewing AI-Generated Code]]).
 
+### Forcing Agents Off-Distribution: The Compounding Hallucination Risk of Local Review Mandates
+A subtle yet hazardous failure mode in agentic code review occurs when a human reviewer forces the agent to adopt a localized, bespoke pattern that departs from the model's natural statistical priors:
+
+1. **The High-Probability Manifold**:
+   An LLM coding agent generates code by sampling from dense regions of its learned probability distribution ($P(\text{code} \mid \text{context, priors})$). When guided by general training corpora, framework documentation, and repository conventions, the agent emits solutions sitting firmly at the peak of its probability manifold—code that is predictable, well-supported by statistical evidence, and stable to modify.
+
+2. **Off-Distribution Displacement Through Ad-Hoc Review**:
+   During code review, a human reviewer frequently rejects this high-probability baseline, enforcing an isolated, localized preference: *"Don't use the standard approach here; rewrite this service using our bespoke abstraction / this local convention."* By triggering the agent to abandon its natural prior, the reviewer pushes the solution into the **sparse tails of the probability distribution**. The agent complies, but the resulting code sits in a low-density pocket of latent space.
+
+3. **Downstream Hallucination Cascades in Future Iterations**:
+   When the next agent enters the module weeks later to implement a feature or perform a refactoring, it encounters **competing, contradictory contextual evidence** (worsening [[#Team Habits as Context Infrastructure & The Threat of "Context Debt"|Context Debt]]):
+   - The broad repository and the model's foundation weights pull toward the global standard prior.
+   - The local file contains a bespoke, low-probability anomaly.
+   - Operating in a low-density region with sparse training support, the agent's uncertainty spikes. Forced to extrapolate how this localized anomaly should interact with new requirements, the agent is far more likely to **generate increasingly improbable, hallucinatory solutions**—inventing non-existent APIs, breaking unexpressed domain invariants, and compounding architectural decay (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]).
+
+4. **The Architectural Mandate: Global Uniformity Over Local Whims**:
+   If a system genuinely requires an architecture that departs from mainstream or model-preferred conventions, that deviation must never be introduced as an ad-hoc whim in a single PR review. Deviations must be:
+   - Formally codified in centralized [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]],
+   - Reinforced with repository-wide reference implementations,
+   - Enforced globally and uniformly so the bespoke pattern establishes its own dense, high-probability manifold across the entire codebase.
+
 ### Human Review Could Accidentally Degrade Agent-Friendliness
 If a human reviewer forces the agent to compress explicit, isolated code into an intricate, generic abstraction, they may satisfy their aesthetic preference while **severely impairing future agent maintainability**. The next agent entering that module will struggle with the newly introduced indirection.
 
@@ -255,4 +276,5 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
 - **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and bikeshedding to verifying state invariants and failure boundaries.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes the probabilistic dynamics of model priors and how forcing agents off-distribution creates downstream hallucination risks.
 - **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for substrate performance.
