@@ -10,20 +10,99 @@ tags:
 aliases:
   - Agent-Optimized Codebases
   - Designing Code for LLM Maintainers
+  - Source Code as Machine-Maintained Artifact
+  - The Deeper Shift in Software Engineering
 ---
 
-As LLMs and coding agents generate a growing share of software, an important question emerges:
+# Software Engineering May Shift Toward Code Optimized for Agents
 
-> What does "good code" mean when humans are no longer its primary authors and maintainers?
+## The Core Question & The Foundational Paradigm Shift
 
-This may affect not only how code is generated, but also architecture—driving the need for [[Designing Software for AI Agents|designing software specifically for AI agents]]—as well as team habits, code review, and the long-term evolution of software systems.
+As LLMs and coding agents generate an accelerating share of enterprise software, a profound architectural question emerges:
 
-## What an LLM Generates Without Guidelines
+> **What does "good code" mean when humans are no longer its primary authors and maintainers?**
 
+Historically, software engineering evolved around human biological constraints. The traditional development lifecycle was strictly human-centric:
+
+```text
+Traditional Model:
+human writes → human reads → human modifies
+```
+
+In the agentic era, an increasingly dominant operational model takes its place:
+
+```text
+Agentic Model:
+human specifies → agent writes → human validates → agent modifies
+```
+
+If this model becomes the standard, source code must certainly remain auditable and understandable to humans. **However, it no longer needs to be optimized primarily for the physical experience of manually typing and editing every line.**
+
+In a limited sense, this resembles how developers treat high-level intermediate representation or compiler-generated artifacts: we do not manually rewrite compiler outputs simply because they contain repetitive branches. While source code will not become opaque bytecode, it is shifting toward a new status:
+
+> **Human-auditable, but primarily machine-produced and machine-modified.**
+
+---
+
+## The Emerging Design Goal & The Deeper Shift
+
+The future optimization target for software architecture is no longer exclusively:
+
+```text
+human readability + human typing efficiency
+```
+
+Instead, the true design goal of modern codebases becomes:
+
+```text
+human understanding
++ agent understanding
++ agent modification
++ predictable future generation
+```
+
+A foundational architectural principle emerges:
+
+> **Generate code optimized for machines to evolve, while keeping its intent transparently auditable by humans.**
+
+This does not justify arbitrary, bloated complexity. Rather, it indicates that traditional aesthetic preferences—such as extreme brevity, clever one-liners, and dense macro-abstractions—are becoming obsolete, while **explicitness, structural regularity, semantic locality, and machine-legible architecture** become paramount.
+
+### The Deeper Shift
+The most transformative impact of coding agents is not merely that software can be written faster. It is that we are systematically re-evaluating:
+- What constitutes "good" source code,
+- Which abstractions justify their weight,
+- How much localized duplication we tolerate to protect blast radius,
+- How architecture and rules are documented,
+- What human code reviewers optimize for,
+- And ultimately, **who source code is designed for**.
+
+---
+
+## The Training Paradox: Agents Must Code Differently Than the Humans Who Trained Them
+
+This shift exposes a fundamental contradiction in agentic software engineering:
+
+> **Agents should program differently than humans, but they were trained almost exclusively on code written by humans.**
+
+Human code was shaped by human physical and cognitive limits:
+- **Typing fatigue and mental drag**: Humans invented deep inheritance hierarchies, reflection-based frameworks, and generic wrappers largely to spare themselves typing repetitive code.
+- **Fear of manual duplication**: Humans dogmatized DRY (Don't Repeat Yourself) because humans forget to update multiple copies and dread tedious manual synchronization.
+
+Agents operate under an entirely inverted set of economic and cognitive constraints:
+- **Zero typing fatigue**: An agent generates 100 explicit lines as effortlessly as one.
+- **Vulnerability to hidden magic**: Agents are easily confused by deep runtime indirection, convention-over-configuration magic, and ambient state.
+- **Superiority of flat, explicit code**: Optimal agent-native code is **explicit, flat, locally duplicated, and mechanically isolated** (e.g. 1:1 file-to-operation hierarchy with strict line limits).
+
+However, because models are pre-trained on open-source repositories, their default statistical prior is to emulate human compromises: creating speculative interfaces, unnecessary wrappers, and centralized abstractions. Without explicit architectural guidelines, agents instinctively write code optimized for human typing rather than agentic reliability.
+
+---
+
+## Model Prior Probabilities & Context Infrastructure
+
+### What an LLM Generates Without Guidelines
 If an LLM receives no project-specific guidance, it does not search for an objectively optimal solution; this makes [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]] critical for anchoring model behavior.
 
-A better mental model is:
-
+A realistic mental model of agent output is:
 ```text
 common training patterns
 + framework conventions
@@ -33,170 +112,12 @@ common training patterns
 → generated solution
 ```
 
-The result will often resemble a mainstream, idiomatic, broadly accepted solution.
+The result will naturally reflect mainstream, idiomatic patterns (e.g., standard DI, async/await, EF Core, controllers, standard DTOs). Without explicit project guidelines, asking an agent to implement a feature forces it to navigate opaque indirections, proving why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]: the agent must guess missing architectural decisions using its training priors, often violating organization-specific constraints and worsening [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
-For example, when asked to implement a feature in ASP.NET Core, the model may naturally prefer familiar patterns such as:
+### Mainstream Code vs. Agent-Friendly Code
+Mainstream architectures enjoy a built-in advantage: models have encountered them millions of times during training. 
 
-- dependency injection,
-    
-- async/await,
-    
-- EF Core,
-    
-- controllers or Minimal APIs,
-    
-- standard DTOs,
-    
-- common validation approaches.
-    
-
-This is not necessarily because these choices are universally best.
-
-They are simply strong defaults available to the model.
-
-Without additional context, asking an agent to implement something effectively means navigating opaque indirections, proving why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]. Specifically:
-
-> Use your existing priors and fill in the missing architectural decisions yourself.
-
-This is important because the model may produce something locally reasonable while violating assumptions that exist only inside the organization, rapidly exacerbating [[Software Entropy and the Zero-Friction Trap|software entropy]].
-
-## Mainstream Code Has a Built-In Advantage
-
-Consider two systems.
-
-System A uses common patterns.
-
-System B uses unusual internal libraries, custom infrastructure, and organization-specific conventions.
-
-An agent may successfully generate code for either system if it receives good instructions.
-
-However, there is an asymmetry when the code must later be analyzed or modified.
-
-For a mainstream system:
-
-```text
-existing code
-+ model's prior knowledge
-→ substantial understanding
-```
-
-For a highly custom system:
-
-```text
-existing code
-+ weak prior knowledge
-→ incomplete understanding
-```
-
-The model can often infer the purpose of standard patterns because it has encountered similar structures many times.
-
-With custom infrastructure, it may see what the code does without understanding why the architecture exists.
-
-## The Training Paradox: Agents Must Code Differently Than the Humans Who Trained Them
-
-This creates a fundamental contradiction:
-
-> **Agents should program differently than humans, but they were trained almost exclusively on code written by humans.**
-
-Human code was molded by human biological constraints:
-- **Typing fatigue and mental drag**: Humans invented complex inheritance trees, meta-programming, and generic framework layers largely to avoid typing repetitive code.
-- **Fear of duplication**: Humans dogmatized DRY because humans forget to update multiple copies and hate repetitive maintenance.
-
-Agents operate under entirely different economics:
-- Zero typing fatigue, instant search and mass-refactoring, but severe vulnerability to deep indirection, magic conventions, and hidden side effects.
-- Optimal agent-native code is **explicit, flat, locally duplicated, and mechanically isolated** (e.g. 1:1 file-to-operation hierarchy with hard line limits).
-
-However, because models are pre-trained on human repositories, their default prior is to emulate human patterns: creating speculative interfaces, unnecessary wrappers, and centralized abstractions. Without explicit architectural guidelines and mechanical constraints, agents naturally fall into the trap of writing code optimized for human typing rather than agentic reliability.
-
-## Guidelines Are Not Only Generation Instructions
-
-This leads to an important conclusion:
-
-> Guidelines can influence how future agents interpret existing code, not only how they generate new code.
-
-Suppose an organization has a custom operation runner:
-
-```csharp
-await operation.ExecuteAsync(
-    context,
-    policy: Policies.CustomerMutation);
-```
-
-The agent may observe that this pattern is common.
-
-But it may not know that the call also establishes:
-
-```text
-authorization
-+ transaction boundaries
-+ tenant context
-+ auditing
-+ event publication
-+ retry behavior
-```
-
-Without that knowledge, it may eventually bypass the abstraction and call the database directly.
-
-A guideline such as:
-
-```text
-All business mutations must execute through OperationRunner.
-
-OperationRunner establishes authorization, transaction boundaries,
-tenant context, auditing and event publication.
-
-Direct persistence from application code is forbidden.
-```
-
-changes more than generation behavior.
-
-It changes the agent's interpretation of the surrounding code.
-
-Something that previously looked like unnecessary ceremony now becomes an architectural invariant.
-
-## Guidelines Can Shape the Future Evolution of the System
-
-This means architectural instructions may become part of the system itself.
-
-Traditionally, documentation often described:
-
-> How we write software here.
-
-For agents it can additionally mean:
-
-> How future agents should interpret and evolve this software.
-
-Source code explains the current state.
-
-Guidelines explain the intended direction.
-
-Rationale explains how to generalize the rule when a new situation appears.
-
-A particularly useful format may therefore be:
-
-```text
-We optimize for X because Y.
-
-Therefore prefer A over B.
-
-Exception: C.
-```
-
-rather than only:
-
-```text
-DO A.
-DON'T DO B.
-```
-
-The rationale gives the agent enough semantic context to reason about cases that were not explicitly documented.
-
-## Agent-Friendly Does Not Mean Mainstream
-
-A custom architecture is not necessarily bad for agents.
-
-The more important distinction may be:
-
+However, **agent-friendly does not necessarily mean mainstream**:
 ```text
 regular vs irregular
 explicit vs implicit
@@ -204,147 +125,75 @@ documented vs tribal
 predictable vs exception-heavy
 ```
 
-A highly unusual architecture can still be easy for agents if it has:
+A highly bespoke architecture can be exceptionally easy for agents to navigate if it possesses:
+- Stable architectural rules,
+- Consistent folder structure and naming,
+- Clear, isolated service boundaries,
+- Canonical, explicit reference examples,
+- Minimal undocumented exceptions.
 
-- stable rules,
-    
-- consistent structure,
-    
-- clear boundaries,
-    
-- canonical examples,
-    
-- explicit rationale,
-    
-- few undocumented exceptions.
-    
+> **Rule**: Agent-friendly code is not code that blindly copies mainstream tutorials; it is code whose rules are easily inferable and remain strictly consistent.
 
-Conversely, a mainstream architecture can become difficult if years of inconsistent changes create multiple competing patterns.
+### Team Habits as Context Infrastructure & The Threat of "Context Debt"
+Agents absorb local development culture directly from the repository AST. If a team consistently enforces explicit dependencies, flat handlers, and uniform error patterns, the repository becomes an unambiguous learning signal.
 
-A useful principle is:
-
-> Agent-friendly code is not necessarily standard code. It is code whose rules are easy to infer and remain stable.
-
-## Team Habits Become Part of the Model Context
-
-Formal guidelines are only one source of information.
-
-Agents also learn the local development culture from the repository itself.
-
-In practice, their effective context may be:
+If the codebase contains multiple competing styles, historical layers, and undocumented exceptions, the agent receives conflicting evidence. The organization accumulates:
 
 ```text
-formal guidelines
-+ existing code
-+ naming conventions
-+ folder structure
-+ repeated architectural decisions
-+ tests
-+ examples
-+ review outcomes
-→ local programming culture
+Context Debt (Agent Comprehension Debt)
 ```
 
-This makes team habits extremely important.
+A system may run flawlessly in production while being impossible for agents to safely modify because critical rules exist only as tribal knowledge in senior developers' heads (e.g., *"Never invoke Service X during transaction Y"*). In an agentic environment, architectural knowledge must be reified as repository-accessible context.
 
-If a team consistently prefers:
+---
 
-- explicit dependencies,
-    
-- simple methods,
-    
-- stable module boundaries,
-    
-- similar solutions for similar problems,
-    
-- limited hidden behavior,
-    
+## Re-Evaluating Traditional Software Engineering Best Practices
 
-the repository becomes easy to extrapolate from.
+Many traditional software engineering tenets were designed to minimize human authoring friction. In the agentic era, they require radical re-evaluation:
 
-If instead the project contains:
-
+### 1. More Code May No Longer Mean More Maintenance Cost
+Historically, lines of code directly correlated with maintenance expense:
 ```text
-multiple ways of solving the same problem
-+ historical layers
-+ ad-hoc abstractions
-+ undocumented exceptions
-+ old and new styles mixed together
+Old Model:
+more code → more manual typing → more code to read → more human maintenance → higher cost
 ```
 
-the agent receives contradictory evidence.
-
-The problem is no longer simply that the AI is weak.
-
-The repository itself does not clearly answer:
-
-> How should software be written here?
-
-## A New Form of Context Debt
-
-This suggests a new type of technical debt.
-
-Beyond code debt and documentation debt, organizations may accumulate:
-
+With agents, the relationship inverts:
 ```text
-context debt
+Agentic Model:
+more explicit code → negligible generation cost → easier local reasoning → safe automated modification
 ```
 
-or:
+This does not justify uncontrolled sprawl. But it gives **localized duplication** three decisive architectural advantages:
+1. **Guaranteed Minimal Blast Radius**: When logic is duplicated locally inside each operation rather than shared through a fragile common abstraction, modifying Operation A physically cannot break Operation B.
+2. **Effortless Synchronization**: LLM agents can search the entire repository, identify semantic duplicates in seconds, and update them consistently across dozens of files.
+3. **Zero Cognitive Drag**: Generating or modifying 10 specialized, self-contained implementations costs an agent no more effort than modifying a single shared framework.
 
+Instead of asking *"Is this duplicated?"*, architects must ask:
+> **"Does this duplication create unmanageable synchronization risk, or does it safely isolate the blast radius?"**
+
+### 2. Replacing "DRY at All Costs" with Semantic Isolation
+The traditional reflex:
 ```text
-agent comprehension debt
+see pattern 3 times → construct generic framework abstraction
 ```
-
-A system may work perfectly while being difficult for agents to modify because important meaning exists only in the heads of experienced employees.
-
-For example:
-
+is replaced by:
 ```text
-Never call X from Y.
+see pattern 3 times → evaluate synchronization risk → abstract ONLY if it eliminates semantic complexity
 ```
+The result is more explicit loops, direct control flow, specialized local queries, and fewer generic runtime frameworks.
 
-If this rule survives only as tribal knowledge, an agent entering the repository has no reliable way to discover it.
-
-In an agent-heavy environment, architecture knowledge may increasingly need to exist as repository-accessible context.
-
-## Humans May Need to Adapt to Agent-Generated Code
-
-An even deeper possibility is that the agent should not always adapt to human coding preferences.
-
-Humans may need to adapt some of their expectations to code that is easier for agents to generate, analyze, and modify.
-
-Traditional software engineering evolved around human limitations.
-
-Humans benefit from:
-
-- fewer lines of code,
-    
-- reduced repetition,
-    
-- abstractions that compress recurring behavior,
-    
-- familiar idioms,
-    
-- structures that reduce manual editing.
-    
-
-Agents have a different cost model.
-
-Generating another 100 explicit lines may be almost free.
-
-As a result, an agent may sometimes prefer code that humans consider verbose.
-
-For example:
+### 3. Humans Adapting to Agent-Generated Explicitness
+Humans naturally prefer compact, dense code (e.g. nested LINQ one-liners or generic middleware filters). An agent often produces 25 lines of explicit `foreach`, in-place validation checks, and direct assignments:
 
 ```csharp
+// Agent-preferred explicit flow: local semantics, instant debugger stepping, easy instrumentation
 foreach (var order in orders)
 {
     if (!IsEligible(order))
         continue;
 
     var normalized = Normalize(order);
-
     if (normalized.Amount <= 0)
         continue;
 
@@ -352,378 +201,45 @@ foreach (var order in orders)
 }
 ```
 
-instead of a compact LINQ pipeline.
+From a traditional aesthetic viewpoint, this looks verbose. From an agentic viewpoint, it provides **explicit control flow, transparent local semantics, instant breakpoint targeting, and trivial future automated modification**.
 
-Or it may place 20 lines of validation directly at the beginning of a function instead of hiding them behind a generic validator.
+---
 
-From a traditional human perspective, this may look repetitive or unsophisticated.
+## The Evolution of Code Review: The Meeting Point of Two Worlds
 
-From an agent perspective, the benefits may include:
+Code review becomes the critical friction boundary where two distinct paradigms collide:
 
-- explicit control flow,
-    
-- local semantics,
-    
-- easy insertion of new conditions,
-    
-- simpler debugging,
-    
-- simpler instrumentation,
-    
-- fewer hidden abstractions,
-    
-- easier automated transformation.
-    
+| Dimension | The Agent Optimizes For | The Human Reviewer Instinctively Wants |
+| :--- | :--- | :--- |
+| **Code Density** | Local explicitness, unrolled paths | Brevity, conciseness, one-liners |
+| **Coupling** | Zero shared state, isolated blast radius | DRY, unified generic abstractions |
+| **Idioms** | Predictable, straightforward control flow | Clever language idioms, syntactic sugar |
+| **Execution** | Machine legibility, fast JIT inlining | Human reading comfort and aesthetic elegance |
 
-## More Code May No Longer Mean More Maintenance Cost
+### "Not Optimal" Must Mean Something Concrete
+When a human reviewer claims agent-generated code is "not optimal," they must distinguish between genuine technical defects and subjective stylistic preferences:
+- **Genuine Defects**: $O(n^2)$ algorithmic complexity, memory leaks, unindexed queries, broken authorization checks, missing transaction rollbacks.
+- **Subjective Discomfort**: *"This could be written in three lines using a LINQ aggregate."*
 
-Historically, an approximate relationship existed:
+### Human Review Could Accidentally Degrade Agent-Friendliness
+If a human reviewer forces the agent to compress explicit, isolated code into an intricate, generic abstraction, they may satisfy their aesthetic preference while **severely impairing future agent maintainability**. The next agent entering that module will struggle with the newly introduced indirection.
 
-```text
-more code
-→ more typing
-→ more code to read
-→ more manual maintenance
-→ higher cost
-```
+### Review Shifts Toward Consequences
+Modern code review moves away from line-by-line syntax policing toward evaluating **architectural invariants and consequences**:
+- Does this change preserve mechanical isolation and boundary contracts?
+- Can future agents safely modify this subsystem without hidden side effects?
+- Are executable tests sufficient to strictly constrain future automated refactorings?
 
-Agentic development weakens this relationship.
+Human review becomes the boundary where human strategic intent is reconciled with software engineered for automated machines.
 
-Sometimes the new relationship may be closer to:
-
-```text
-more explicit code
-→ negligible generation cost
-→ easier local reasoning
-→ easier automated modification
-```
-
-This does not mean duplication becomes free.
-
-If a business rule is copied into 100 places and later must change consistently, the duplication still creates risk.
-
-However, duplication in the agentic era gains three decisive architectural advantages:
-1. **Guaranteed minimal blast radius**: When logic is duplicated locally inside each operation rather than shared via a fragile common abstraction, modifying Operation A physically cannot break Operation B.
-2. **Effortless synchronization**: LLM agents can search the entire repository, identify all semantic duplicates in seconds, and update them consistently.
-3. **No typing or cognitive drag**: Generating or modifying 10 specialized, self-contained implementations costs an agent no more effort than modifying a single shared framework.
-
-Instead of asking:
-
-> Is this duplicated?
-
-we now ask:
-
-> Does this duplication create unmanageable synchronization risk, or does it safely isolate the blast radius?
-
-In many cases, **isolated blast radius is vastly superior to the hidden coupling of shared abstractions.**
-
-## Some Traditional Best Practices May Need Re-Evaluation
-
-Many engineering practices were optimized partly for human authoring cost.
-
-For example:
-
-```text
-DRY at all costs
-```
-
-may become something closer to:
-
-```text
-avoid dangerous semantic duplication,
-but prefer local explicitness when abstraction creates hidden behavior
-```
-
-Likewise, a team that historically created a shared abstraction after seeing the same code three times may reconsider.
-
-Instead of:
-
-```text
-repeat three times
-→ create framework
-```
-
-the future workflow may be:
-
-```text
-repeat three times
-→ ask whether the duplication creates real synchronization risk
-→ abstract only if the abstraction reduces semantic complexity
-```
-
-This could lead to more:
-
-- generated inline code,
-    
-- explicit loops,
-    
-- direct control flow,
-    
-- specialized implementations,
-    
-- fewer generic frameworks,
-    
-- fewer reflection-heavy abstractions.
-    
-
-The source code may become larger while remaining easier for agents to evolve.
-
-## Human Review Becomes the Meeting Point of Two Worlds
-
-This creates tension during code review.
-
-The agent may implicitly optimize for:
-
-```text
-correctness
-local explicitness
-predictability
-easy transformation
-low hidden coupling
-performance
-```
-
-while the human reviewer may instinctively optimize for:
-
-```text
-brevity
-elegance
-familiar idioms
-low visible duplication
-abstraction
-human reading comfort
-```
-
-These priorities overlap, but they are not identical.
-
-This explains a common modern reaction to AI-generated code:
-
-> This is bad code. I could write it better.
-
-Sometimes that is true.
-
-The generated code may genuinely contain:
-
-- poor complexity,
-    
-- unnecessary allocations,
-    
-- excessive I/O,
-    
-- security problems,
-    
-- incorrect concurrency,
-    
-- duplicated business rules,
-    
-- architectural violations.
-    
-
-But sometimes "better" only means:
-
-```text
-shorter
-more idiomatic
-more abstract
-closer to how I personally write code
-```
-
-That distinction becomes increasingly important.
-
-## "Not Optimal" Must Mean Something Concrete
-
-When reviewing agent-generated code, saying that something is "not optimal" is insufficient.
-
-The question should be:
-
-> Not optimal according to which objective?
-
-Real problems remain real:
-
-- O(n²) where O(n) is practical,
-    
-- unnecessary database round trips,
-    
-- excessive allocations on a hot path,
-    
-- broken authorization boundaries,
-    
-- inconsistent business behavior,
-    
-- hidden coupling,
-    
-- difficult migrations,
-    
-- unpredictable side effects.
-    
-
-But objections such as:
-
-```text
-20 lines instead of 8
-foreach instead of LINQ
-explicit validation instead of a fluent framework
-local implementation instead of generic abstraction
-```
-
-need additional justification.
-
-They may still be wrong choices.
-
-But they are not automatically wrong merely because an experienced human would have written something more compact.
-
-## Human Review Could Accidentally Reduce Agent-Friendliness
-
-There is a particularly interesting failure mode:
-
-```text
-agent generates explicit code
-↓
-human reviewer sees duplication
-↓
-human extracts abstraction
-↓
-future agent must understand abstraction
-↓
-more hidden semantics appear
-↓
-system becomes harder for agents to modify
-```
-
-The human reviewer may believe they improved the code according to traditional standards while actually increasing the semantic distance between visible code and runtime behavior.
-
-This does not mean abstractions are bad.
-
-It means abstractions need to justify themselves through actual reduction of complexity, not merely reduction of line count.
-
-## Code Review May Shift Toward Consequences
-
-A future review may ask less often:
-
-> Would I personally write it this way?
-
-and more often:
-
-- Is the behavior correct?
-    
-- Are the invariants preserved?
-    
-- Are security boundaries respected?
-    
-- Are side effects obvious?
-    
-- Is data flow understandable?
-    
-- Does duplication create synchronization risk?
-    
-- Does the abstraction genuinely simplify reasoning?
-    
-- Can future agents safely modify this area?
-    
-- Are tests sufficient to constrain future transformations?
-    
-
-This moves review from style policing toward verification of intent and consequences.
-
-## Source Code May No Longer Be Primarily for Human Authors
-
-The traditional model is:
-
-```text
-human writes
-→ human reads
-→ human modifies
-```
-
-An increasingly common future model may be:
-
-```text
-human specifies
-→ agent writes
-→ human validates
-→ agent modifies
-```
-
-If this becomes dominant, source code still needs to remain understandable to humans.
-
-But it may no longer need to be optimized primarily for the experience of manually writing and editing every line.
-
-This resembles, in a limited way, how developers already treat compiler-generated output.
-
-We do not manually rewrite generated IL because it is aesthetically unpleasant.
-
-Its purpose is different.
-
-Source code will not become machine code, but part of it may gradually move in the same direction:
-
-> human-auditable, but primarily machine-produced and machine-modified.
-
-## The Emerging Design Goal
-
-The future optimization target may therefore become:
-
-```text
-human understanding
-+ agent understanding
-+ agent modification
-+ predictable future generation
-```
-
-rather than exclusively:
-
-```text
-human readability
-+ human typing efficiency
-```
-
-A useful principle may be:
-
-> Generate code optimized for machines to evolve, while keeping its intent auditable by humans.
-
-This does not justify arbitrary generated complexity.
-
-It suggests that some traditional aesthetic preferences may become less important, while explicitness, regularity, semantic locality, and machine-legible architecture become more important.
-
-## The Deeper Shift
-
-The largest change brought by coding agents may not be that software can be written faster.
-
-It may be that we gradually change:
-
-- what we consider good source code,
-    
-- which abstractions we create,
-    
-- how much duplication we tolerate,
-    
-- how architecture is documented,
-    
-- how teams establish conventions,
-    
-- what code reviewers optimize for,
-    
-- and ultimately who source code is designed for.
-    
-
-In this world, guidelines are not merely style rules.
-
-They are part of the mechanism that shapes future software evolution.
-
-Team habits are not merely culture.
-
-They become training signals available inside the repository.
-
-And human review is not simply a final aesthetic check.
-
-It becomes the boundary where human intent is reconciled with code increasingly optimized for machine generation and machine modification.
 ---
 
 ## Relationship to the Knowledge Graph
 
-- **[[Designing Software for AI Agents]]**: Core heuristics for architecting software for agent discoverability and deterministic verification.
+- **[[Designing Software for AI Agents]]**: Core heuristics for architecting software for agent discoverability, flat structures, and deterministic verification.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
 - **[[Software Entropy and the Zero-Friction Trap]]**: The emergence of agent-native defaults (flat 1:1 hierarchy, localized duplication) to combat entropy.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why non-local, implicit behaviors become technical liabilities in agentic repos.
-- **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Replacing complex offline code generators with explicit, agent-maintained source code.
-- **[[Comments May Become More Valuable in AI-Generated Code]]**: How explanatory comments protect intentional non-standard business logic from agentic flattening.
-- **[[AI Changes the Role and Training of Software Engineers]]**: The cognitive inversion and new role of engineers as architects and verification controllers.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
+- **[[Internal NuGet Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
+- **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for substrate performance.
