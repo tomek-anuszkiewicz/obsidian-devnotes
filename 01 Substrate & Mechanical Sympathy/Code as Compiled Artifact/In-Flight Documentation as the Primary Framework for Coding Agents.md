@@ -74,6 +74,9 @@ In this operational model:
 5. **Documentation as the Canonical Source of Truth**:
    When system behavior or business logic must evolve, the engineer does not wade through thousands of lines of syntactic boilerplate. They update the high-level Markdown specification and re-compile the subsystem through the agent. The generated source code is merely the transient intermediate representation, and the binary is the final runtime artifact.
 
+6. **The Dual-Audience Epistemic Compression Layer**:
+   While living documentation serves as machine-actionable input for the front-end AI compiler, it simultaneously serves as the **human engineer's primary cognitive compression layer**. In a development lifecycle where engineers no longer acquire a mental model through tactile typing, reading and calibrating concise in-flight documentation—paired with adversarial [[Reviewing AI-Generated Code|code review]]—is the primary mechanism by which humans learn the system, maintain situational awareness, and avoid the "Alien Codebase" crisis (see [[AI Changes the Role and Training of Software Engineers]]).
+
 ### Escaping the 4GL / Executable UML Trap: Specifications, Verification Oracles, and Human Stewardship
 
 A natural, well-founded historical skepticism frequently challenges the concept of in-flight documentation:  
@@ -331,6 +334,8 @@ Such cards act as executable specifications for future agent modifications.
 
 - **[[Testing in the Model, Agent, LLM Era]]**: Foundational hub establishing the ironclad test oracle as the hard deterministic anchor bounding Markdown intent in the agentic triad.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart exploring how code organization, explicit boundaries, and local blast radius adapt when LLMs become the primary authors.
+- **[[Reviewing AI-Generated Code]]**: How human code review couples with living documentation as the twin vehicles for human knowledge acquisition and mental model maintenance.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Explains the shift from tactile coding to specification calibration and adversarial review as the primary engineering discipline.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Explains why Markdown specifications suffer from probabilistic drift without rigid deterministic test bounds.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Living specifications as the primary blueprints for strangler-fig modernizations and escaping the Frankenstein intermediate phase.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Formally codifying architectural rejections and dissents within in-flight specifications to prevent recurrent fads.
