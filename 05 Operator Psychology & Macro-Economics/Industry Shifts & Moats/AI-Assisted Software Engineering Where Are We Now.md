@@ -102,7 +102,7 @@ The 2025 DORA research describes AI primarily as an **amplifier** of an organiza
 
 ### Early web adoption
 
-In terms of maturity, the present moment resembles the web around 1995â€“2000:
+In terms of maturity, the present moment resembles the web around 1995–2000:
 
 - adoption is rapid and the capability is clearly real;
 - many organizations feel forced to participate;
@@ -112,6 +112,15 @@ In terms of maturity, the present moment resembles the web around 1995â€“20
 - early practices will later look primitive.
 
 This analogy does **not** imply that progress will follow the same timeline. LLM tooling changes much faster than earlier infrastructure technologies.
+
+### The Pre-Paradigmatic Vacuum: Absence of Canonical Literature and Model Training Bias
+
+Software engineering historically relies on decades of consolidated empirical literature: foundational treatises like *Design Patterns* (Gang of Four), *Refactoring* (Fowler), and *Designing Data-Intensive Applications* (Kleppmann) provided shared vocabulary and time-tested trade-offs.
+
+In the agentic era, engineering currently operates in a **pre-paradigmatic vacuum**:
+1. **Absence of Canonical Textbooks**: No multi-year longitudinal studies exist proving which repository architectures survive thousands of autonomous agent refactorings over a 5-year lifecycle.
+2. **The Training Paradox**: Frontier LLMs were trained on historical open-source repositories authored under human biological constraints (typing fatigue, DRY zealotry, deep inheritance trees, runtime reflection). Consequently, the models do not possess agent-native architecture in their statistical priors; left unguided, they instinctively default to obsolete human compromises that hinder their own reasoning (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
+3. **The Living Field Log**: Practitioners on the technological frontier cannot wait for academic consensus or authoritative textbooks. They are forced to construct their own empirical field literature—codifying what survives contact with hard production reality and discarding theoretical fads into living knowledge repositories (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
 
 ## 2. At what stage are we now?
 
@@ -409,3 +418,4 @@ The central shift can be summarized as:
 - **[[Early AI Adoption as Organizational Readiness]]**: How early experimentation builds structural capabilities before advanced models arrive.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Managing code sprawl and architectural drift when generation friction approaches zero.
 - **[[Testing in the Model, Agent, LLM Era]]**: Shifting engineering responsibility from writing code to building deterministic verification oracles.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight markdown blueprints and contracts to establish living empirical field literature.
