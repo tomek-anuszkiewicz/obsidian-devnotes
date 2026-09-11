@@ -10,140 +10,115 @@ tags:
 aliases:
   - Shared Libraries vs Generated Code
   - NuGet vs AI Generation
+  - Reusable Implementation vs Repeatable Instruction
+  - Internal Packages in the AI Era
 ---
 
-## Core Question
+# Internal NuGet Packages vs Agent-Generated Code
 
-In the era of LLMs and coding agents, does it still make sense to maintain internal team or corporate NuGet packages, or should we favor [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal packages designed as explicit composable frameworks]]?
+## Core Question & The Fundamental Mental Model
 
-A possible alternative is:
+In the era of LLMs and coding agents, does it still make sense to maintain large internal corporate NuGet packages, or should organizations favor [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal packages designed as explicit composable frameworks]] alongside locally generated code?
 
-- describe how a feature should behave,
-    
-- provide implementation guidelines and examples,
-    
-- let an agent generate the implementation inside each application,
-    
-- validate the result using independent conformance tests.
-    
+Internal NuGet packages should **no longer be the default answer to repeated code**. The foundational architectural question is:
 
-The answer depends on whether the organization needs a **shared implementation** or only a **shared standard**, particularly for [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]].
+> **"Is this a reusable implementation, or merely a repeatable instruction?"**
 
----
+- If it is a **repeatable instruction**, an agent can generate and maintain the explicit code locally inside each service.
+- If correctness can be described externally, **conformance tests** can validate the implementation deterministically.
+- If one exact implementation must be audited, trusted, and maintained centrally, a **package or service API** is still the superior abstraction.
 
-## Traditional Reasons for Internal NuGet Packages
+### The Practical Triad
 
-Internal packages have usually been created to provide:
+A simple, powerful heuristic governs the boundary:
 
-1. Code reuse
-    
-2. Consistent implementation across applications
-    
-3. Centralized bug fixes
-    
-4. Shared infrastructure abstractions
-    
-5. Standard project structure
-    
-6. Reduced boilerplate
-    
-7. Enforcement of organizational conventions
-    
-
-LLMs significantly reduce the cost of writing repetitive code. This weakens the argument that code should be packaged only because developers do not want to write it repeatedly, demonstrating how [[AI Changes the Economics of Software Libraries|AI changes the economics of software libraries]].
-
-However, agents do not automatically solve versioning, rollout, ownership, or consistency problems, and careless generation can quickly trigger [[Software Entropy and the Zero-Friction Trap|software entropy and the zero-friction trap]].
+> 1. **Use a Package** when the organization needs **one implementation** (e.g. cryptography, token validation, telemetry wire formats).  
+> 2. **Use Instructions & Conformance Tests** when the organization needs **one standard** (e.g. endpoint structure, validation style, DTO mapping).  
+> 3. **Use a Service** when the organization needs **one centrally controlled live behavior** (e.g. shared pricing ledgers, canonical fee calculation, billing state).
 
 ---
 
-## Two Different Requirements
+## Architectural Trade-Off Matrix
 
-The most important distinction is between these two goals.
+Before deciding whether to create a package or prompt an agent, evaluate the core engineering trade-offs:
 
-### Shared coding convention
+| Architectural Vector | Shared NuGet Package | Locally Generated Code (Agent 1:1) | Service API (Runtime RPC) | Conformance Test Suite |
+| :--- | :--- | :--- | :--- | :--- |
+| **Blast Radius Isolation** | Low (Package upgrade regression cascades) | **High** (Zero shared runtime dependencies) | Moderate (Network failures, cascading latency) | **Maximum** (Tests evaluate, never execute in prod) |
+| **Initial Implementation Velocity** | Slow (Build pipeline, packaging, release cycles) | **Fast** (Agent synthesizes 1:1 code in seconds) | Moderate (Infrastructure, deployment, routing) | Fast (Author test scenarios once) |
+| **Auditability & Compliance** | High (Single audited binary artifact) | Moderate (Must scan all repositories) | **Maximum** (Single live inspection point) | High (Pass/fail gate in every CI pipeline) |
+| **Upgrade & Rollout Friction** | High (Multi-repo dependency upgrade PRs) | Moderate/High (Requires agentic batch refactoring) | **Instantaneous** (Single central deployment) | **Low** (Update test package in CI) |
+| **Runtime Performance** | **Maximum** (In-process memory call, zero network hop) | **Maximum** (In-process memory call, zero hop) | Lower (Network serialization, socket latency) | N/A (Build/CI time only) |
+| **Cross-Language Interop** | Zero (.NET ecosystem only) | Low (Per-language agent generation) | **Maximum** (HTTP/gRPC standard protocol) | High (Generic HTTP/JSON contract runners) |
+| **Risk of Hidden Abstraction** | High (Deep extension methods, framework magic) | **Low** (All logic explicit in local service code) | Low (Black-box API contract) | **Zero** (Defines expectations, not internals) |
+| **Recommended Domain** | Security tokens, cryptography, OTel exporters | DTO mappers, CRUD handlers, validation rules | Shared ledgers, pricing engines, billing state | API schemas, security policies, latency limits |
 
-> Every application should implement a feature in a similar way.
+---
+
+## The Economic Shift: Why Cheap Code Changes Package Strategy
+
+Internal packages were traditionally created for several core reasons:
+1. Code reuse,
+2. Consistent implementation across applications,
+3. Centralized bug fixes,
+4. Shared infrastructure abstractions,
+5. Standard project structure,
+6. Reduced developer boilerplate typing,
+7. Enforcement of organizational conventions.
+
+LLMs fundamentally alter this equation by reducing the mechanical cost of producing code to near zero, illustrating how [[AI Changes the Economics of Software Libraries|AI changes the economics of software libraries]]. This severely weakens the historical argument: *"We must package this because writing it across ten microservices is too tedious."*
+
+However, **agents do not automatically solve organizational coordination, ownership, versioning, or auditing**. Blindly generating unconstrained code across hundreds of repositories quickly triggers [[Software Entropy and the Zero-Friction Trap|software entropy and the zero-friction trap]]. 
+
+Therefore, agents will eliminate packages whose sole purpose was **boilerplate avoidance**, while reinforcing packages whose purpose is to provide a **trusted, auditable runtime implementation**.
+
+---
+
+## Two Distinct Requirements: Convention vs. Runtime Behavior
+
+To avoid building bloated internal frameworks, architects must strictly distinguish between two fundamentally different organizational requirements:
+
+### 1. Shared Coding Convention
+> *"Every application should implement a feature in a similar way."*
 
 Examples:
+- Endpoint URI and routing structure,
+- Validation style and error response format,
+- DTO mapping conventions,
+- CQRS/Handler directory organization,
+- Naming conventions and logging formats,
+- Dependency injection registration structure.
 
-- endpoint structure,
-    
-- validation style,
-    
-- mapping conventions,
-    
-- handler organization,
-    
-- naming conventions,
-    
-- error response format,
-    
-- logging conventions,
-    
-- dependency registration.
-    
+For this requirement, **a shared runtime binary package is an anti-pattern**. It introduces unnecessary coupling and version lock-in.
 
-For this type of requirement, a shared runtime package may be unnecessary.
+The superior agent-native approach is a combination of:
+- Written implementation instructions (living architectural specs),
+- Reference implementations,
+- Agent instruction prompts,
+- Roslyn analyzers and architecture fitness tests (ArchUnit),
+- Conformance test suites.
 
-A combination of the following may be better:
+The implementation remains 100% local, explicit, and independently evolvable within each service.
 
-- written implementation instructions,
-    
-- reference implementations,
-    
-- agent prompts,
-    
-- architecture tests,
-    
-- Roslyn analyzers,
-    
-- source templates,
-    
-- conformance tests.
-    
-
-The implementation can remain local to each application.
-
-### Shared runtime behavior
-
-> Every application must execute the same trusted implementation.
+### 2. Shared Runtime Behavior
+> *"Every application must execute the exact same trusted, certified implementation."*
 
 Examples:
+- Authentication, token validation, and signature verification,
+- Cryptographic hashing and key management,
+- Internal request signing and mTLS configuration,
+- Audit logging pipelines and security telemetry,
+- Distributed trace-context propagation (W3C TraceContext headers),
+- Critical retry, circuit breaker, and timeout policies,
+- Canonical business calculations that legally must remain identical across the enterprise.
 
-- authentication and authorization logic,
-    
-- token validation,
-    
-- cryptography,
-    
-- request signing,
-    
-- audit logging,
-    
-- trace-context propagation,
-    
-- service discovery,
-    
-- protocol serialization,
-    
-- internal API clients,
-    
-- critical retry and timeout behavior,
-    
-- shared business calculations that must remain identical.
-    
-
-In these cases, an internal NuGet package still provides real value.
-
-The goal is not merely to avoid rewriting code. The goal is to preserve one implementation, one ownership model, and one place where a defect can be fixed.
+In these cases, **an internal NuGet package provides massive real value**. The goal is not avoiding boilerplate; the goal is preserving **one certified implementation, one clear security boundary, and one place where a critical vulnerability can be patched**.
 
 ---
 
-## Instruction-Driven Code Generation
+## The New Mechanics: Instruction-Driven Generation & Executable Specifications
 
-Instead of providing a large internal framework, an organization can define an implementation contract.
-
-For example:
+Instead of shipping a sprawling, opinionated enterprise framework, the platform team provides an **Implementation Contract**:
 
 ```text
 /engineering-guidelines
@@ -163,543 +138,170 @@ For example:
   ObservabilityContractTests
 ```
 
-An agent could receive an instruction such as:
-
+An agent can receive an instruction such as:
 ```text
-Implement this feature according to engineering-guidelines/api-endpoints.md.
-
-Use the reference implementation only as an example.
-
-Keep the implementation local to this service.
-
-The result must pass the Company.ApiConformanceTests package.
+Implement this endpoint according to engineering-guidelines/api-endpoints.md.
+Use reference-implementations/SampleEndpoint only as structural inspiration.
+Keep all code local and explicit to this service.
+The resulting endpoint must pass the Company.ApiConformanceTests suite.
 ```
 
-This approach treats implementation instructions as a form of source material for the agent.
+### Executable Specifications Over Ambiguous Prose
+Written markdown guidelines alone are insufficient because natural language is inherently underspecified and interpreted probabilistically by LLMs.
 
-The application owns the generated code, while the organization owns the specification and verification rules.
+Independent **conformance test suites** act as an unambiguous, executable organizational specification:
+- Error responses strictly adhere to `RFC 7807 ProblemDetails`,
+- Correlation IDs are properly extracted and forwarded in outgoing headers,
+- Unauthorized requests return HTTP 401/403 with zero information leakage,
+- Sensitive fields (passwords, tokens) are never emitted into log streams,
+- Idempotency keys are respected on retried commands.
 
----
-
-## Executable Specifications
-
-Written instructions alone are not sufficient.
-
-Natural-language documents are often:
-
-- ambiguous,
-    
-- incomplete,
-    
-- outdated,
-    
-- interpreted differently by different agents,
-    
-- difficult to enforce during later modifications.
-    
-
-Independent tests can act as an executable organizational specification.
-
-Examples of behaviors that can be validated:
-
-- error responses use the required schema,
-    
-- correlation identifiers are propagated,
-    
-- unauthorized requests are rejected correctly,
-    
-- sensitive data is not returned in errors,
-    
-- idempotency rules are respected,
-    
-- transient failures are retried,
-    
-- timeout limits are applied,
-    
-- OpenAPI documents contain required metadata,
-    
-- audit events are produced,
-    
-- logs contain required contextual fields.
-    
-
-The tests should verify behavior rather than implementation details.
-
-Bad test:
+#### Verifying Behavior, Not Implementation Details
+The test suite must verify external behavioral contracts, never internal class hierarchies:
 
 ```csharp
+// Anti-Pattern: Enforcing rigid class coupling
 service.Should().BeOfType<CompanyRetryHandler>();
+
+// Correct: Enforcing behavioral compliance
+await AssertRetriesTransientFailureAsync(client, expectedAttempts: 3);
 ```
 
-Better test:
-
-```csharp
-await AssertRetriesTransientFailureAsync(
-    client,
-    expectedAttempts: 3);
-```
-
-The first test forces a particular internal class.
-
-The second test verifies the required behavior and allows each application to choose an appropriate implementation.
+The first test forces every application into a shared framework class. The second verifies the required resilience behavior while allowing each application to choose an implementation optimized for its local architecture.
 
 ---
 
-## Arbitrary Tests as an External Constraint
+## Case Study: Entity Framework as an Example of the Same Shift
 
-A useful model is to maintain a package containing only tests, test fixtures, or certification scenarios.
+Entity Framework (EF Core) illustrates the broader consequence of cheap agent-generated code.
 
-For example:
-
-```text
-Company.ApiConformanceTests
-Company.SecurityConformanceTests
-Company.ObservabilityConformanceTests
-```
-
-The application does not necessarily reference a shared production library.
-
-Instead, its implementation is evaluated against an externally defined test suite.
-
-This creates a separation between:
-
-- the implementation owned by the application,
-    
-- the behavior required by the organization.
-    
-
-An agent can freely generate or modify the implementation as long as the conformance tests continue to pass.
-
-This model resembles protocol compatibility testing more than traditional code reuse.
-
----
-
-## Advantages of Local Agent-Generated Implementations
-
-### Easier local customization
-
-The implementation can match the architecture and constraints of the application instead of forcing every service through one corporate abstraction.
-
-### Less framework coupling
-
-Applications are not tied to a large internal framework that may become difficult to evolve.
-
-### More explicit code
-
-Business and infrastructure behavior remains visible inside the application.
-
-Developers and agents can inspect the complete execution path without navigating through multiple package layers.
-
-### Independent evolution
-
-Different applications can adopt new approaches without waiting for a shared package release.
-
-### Easier removal
-
-Generated local code can be refactored or deleted without dealing with a framework dependency.
-
-### Reduced pressure to create premature abstractions
-
-A pattern does not have to become a reusable package immediately.
-
-The organization can first document and validate the pattern and only package it when a genuinely stable abstraction emerges.
-
----
-
-## Entity Framework as an Example of the Same Shift
-
-Entity Framework illustrates a broader consequence of cheap agent-generated code.
-
-An ORM is valuable partly because it allows developers to express data access with relatively little application code. An agent does not have the same cost constraint. It can generate a dedicated SQL query, execute it through a lower-level database API, and map the result explicitly into the exact structure required by the operation.
-
-Instead of:
+Historically, Object-Relational Mappers (ORMs) were adopted largely because humans hated writing tedious data-access code, mapping `SqlDataReader` columns, and managing parameter collections:
 
 ```text
-LINQ query
-→ Entity Framework
-→ query translation
-→ generated SQL
-→ materialization
+Traditional ORM Pipeline:
+LINQ query → Entity Framework → query translation → generated SQL → materialization
 ```
 
-an application may increasingly contain:
+In the agentic era, an agent does not suffer from typing fatigue. It can generate a specialized SQL query, execute it via raw ADO.NET / Dapper, and map the columns directly into specialized records:
 
 ```text
-request
-→ specialized SQL
-→ data reader
-→ explicit mapping
-→ response
+Agent-Generated Data Pipeline:
+request → specialized SQL → data reader → explicit 1:1 mapping → response
 ```
 
-This produces more local code, but it may also provide:
+This produces more local code, but it also delivers:
+- 100% predictable, tuned SQL without surprise Cartesian explosions or unexpected `N+1` queries,
+- Zero unneeded columns or joins,
+- Zero hidden change-tracking overhead or memory retention,
+- Instant debugger stepping and transparent execution paths.
 
-- more predictable SQL,
-- fewer unnecessary columns and joins,
-- no accidental tracking,
-- less ORM-specific runtime behavior,
-- easier performance analysis,
-- a more explicit execution path,
-- mapping specialized for the exact result shape.
-
-The generated implementation can approach an almost inline data pipeline: the query and mapping exist specifically for one use case rather than being expressed through a general-purpose object-relational abstraction.
-
-The trade-off is that the application now owns more database-access code. Schema changes, provider differences, transaction handling, retries, parameterization, and mapping correctness must still be handled reliably.
-
-Therefore, the important question is not whether an agent *can* replace Entity Framework. It is whether the ORM provides enough value beyond reducing the amount of code that must be written.
-
-In many applications, Entity Framework will remain useful because it provides a mature unit-of-work model, change tracking, migrations, relationship management, provider abstraction, and a well-understood programming model. But for performance-sensitive reads, narrow handlers, reporting queries, or simple CRUD operations, agents may make explicit SQL and generated mapping economically attractive even when a developer would previously have chosen an ORM mainly to avoid boilerplate.
-
-This is the same general pattern as with internal libraries:
-
+> **The General Architectural Principle**:  
 > When writing code becomes cheap, abstractions must justify themselves by more than the number of lines they eliminate.
 
----
-
-## Risks of Generated Local Implementations
-
-### Multiple sources of truth
-
-If twenty services contain generated copies of similar logic, there are twenty implementations to inspect and maintain.
-
-### Uneven adoption of fixes
-
-A security or reliability fix may be applied in some repositories but not others.
-
-### Local divergence
-
-Teams may modify generated code in incompatible ways.
-
-### Repeated review cost
-
-Even when an agent writes the implementation, humans may still need to review the same type of code in many repositories.
-
-### Complex migrations
-
-A global behavioral change may require multiple pull requests, deployments, and compatibility phases.
-
-### False confidence from tests
-
-Tests validate only the behavior they cover.
-
-An implementation may pass all conformance tests while still containing:
-
-- performance problems,
-    
-- resource leaks,
-    
-- race conditions,
-    
-- unsafe defaults,
-    
-- maintainability problems,
-    
-- untested security weaknesses.
-    
-
-Tests do not remove the need for architecture and code review.
+Entity Framework remains valuable for complex domain state mutations, transactional units of work, and schema migrations. But for high-throughput reads, reporting queries, or discrete microservice handlers, agents make explicit SQL and generated mapping economically superior.
 
 ---
 
-## Advantages of Internal NuGet Packages
+## Comparative Analysis: When to Use Each Approach
 
-### One implementation
+### 1. When to Use a NuGet Package
+- All consumers use the .NET runtime,
+- Logic must execute in-process for maximum microsecond latency,
+- High-performance, zero-allocation memory pipelines are required,
+- Offline execution is necessary (cannot make network calls to a service),
+- The implementation is stable and changes infrequently,
+- Audited, single-source security or protocol verification is legally required,
+- Updates can be distributed asynchronously through standard package dependency managers.
 
-Critical behavior exists in one place.
+### 2. When to Use Generated Local Code
+- The code is structural, repetitive, or glue logic (DTOs, mappers, CRUD handlers),
+- Local service customization is expected or desirable,
+- Minor implementation variations across services do not harm system integrity,
+- Behavior can be fully certified by an external test suite,
+- The code is self-contained and easily understood by any developer or subsequent agent,
+- Creating an abstraction would hide critical execution flow or introduce premature complexity.
 
-### Centralized fixes
-
-A defect can be corrected in the package and distributed through dependency updates.
-
-### Clear ownership
-
-A team can be responsible for the component and its lifecycle.
-
-### Auditable behavior
-
-Security-sensitive and protocol-sensitive code can be reviewed and certified centrally.
-
-### Lower implementation variance
-
-Applications are less likely to accidentally implement slightly different versions of the same mechanism.
-
-### Stable contracts
-
-A package can provide a well-defined API that remains stable while its internal implementation changes.
+### 3. When to Use a Service API
+- Behavior must be updated centrally with **instantaneous global effect** (zero client redeployments),
+- Calling applications span multiple languages and tech stacks (.NET, Node, Python, Go),
+- Logic depends on centralized, authoritative transactional state (e.g. inventory ledger, payment gateway),
+- Strict auditing, access control, and rate-limiting must be enforced at a single physical gateway,
+- The organization cannot tolerate version fragmentation across deployed binaries.
 
 ---
 
-## Risks of Internal NuGet Packages
+## Risks of Each Strategy
 
-### Hidden complexity
+### Risks of Internal NuGet Packages
+1. **Hidden Complexity ("The Extension Method Trap")**:
+   ```csharp
+   services.AddCompanyPlatform();
+   ```
+   A single magical extension method secretly registers dozens of interceptors, policies, background workers, and middleware, making local execution impossible to trace.
+2. **Version Fragmentation**: Service A runs v1.2, Service B runs v2.4, and Service C runs v3.1. The organization has the illusion of a shared library, but in production, it runs dozens of incompatible implementations.
+3. **Dependency Hell & Lock-in**: Shared packages drag in transitive dependencies (e.g. specific versions of Newtonsoft.Json, Polly, or gRPC) that block consuming services from upgrading their own dependencies.
+4. **Accidental Domain Centralization**: Shared libraries become a dumping ground for half-baked business rules that belong inside specific domain services.
 
-Important behavior may be buried behind extension methods and framework conventions.
+### Risks of Local Agent-Generated Code
+1. **Multiple Sources of Truth**: 20 services contain 20 copies of similar logic; discovering where a bug lives requires multi-repo scanning.
+2. **Uneven Security Patching**: When an algorithm flaw is discovered, an agent must be dispatched to patch and PR all 20 repositories, risking that neglected repositories remain vulnerable.
+3. **Local Divergence**: Teams instruct agents to tweak local code over time, gradually drifting away from the original organizational standard.
+4. **False Confidence from Conformance Tests**: Tests only validate what they explicitly assert. Generated local code may pass all tests while introducing subtle thread-safety bugs, memory leaks, or unoptimized query patterns.
 
-```csharp
-services.AddCompanyPlatform();
+---
+
+## The Architectural Solution: A 3-Layer Hybrid Model
+
+The most resilient enterprise architecture in the agentic era is a **3-Layer Hybrid Model**:
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 1: Minimal Shared Runtime (Internal NuGet)            │
+│ Core crypto, auth tokens, telemetry wire formats, protocol  │
+├─────────────────────────────────────────────────────────────┤
+│ LAYER 2: Executable Organizational Standards (Tests & Specs)│
+│ Conformance test packages, OpenAPI contracts, Roslyn rules  │
+├─────────────────────────────────────────────────────────────┤
+│ LAYER 3: Locally Generated Application Code (Agent 1:1)     │
+│ Endpoints, DTO projections, specialized queries, validators │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-This may register dozens of services, policies, handlers, and background processes that are difficult to discover.
+### Layer 1: Minimal Shared Runtime Packages
+- Contains only code that **cannot safely be duplicated**: cryptographic signing, OpenTelemetry exporters, security token validation, proprietary network protocols.
+- Zero business logic, zero opinions on controller structure, zero heavy frameworks.
 
-### Excessive abstraction
+### Layer 2: Executable Organizational Standards
+- The organization ships NuGet packages containing **only test fixtures, conformance assertions, and analyzers**:
+  ```text
+  Company.ApiConformanceTests
+  Company.SecurityConformanceTests
+  ```
+- Consuming applications reference these test packages in their test projects, never in production runtime dependencies.
 
-Packages often become internal frameworks that attempt to support every possible application.
-
-### Version fragmentation
-
-Different services may use different package versions, so a central package does not automatically guarantee one production behavior.
-
-### Slow organizational change
-
-A package change may require coordination across many teams and repositories.
-
-### Dependency coupling
-
-Applications may be forced to adopt unrelated dependencies or architectural decisions.
-
-### Accidental business logic centralization
-
-Shared packages may gradually absorb business rules that should belong to specific domains.
+### Layer 3: Locally Generated Application Code
+- Agents author explicit, tailored endpoints, validation rules, and data queries inside each microservice.
+- Local code complies with Layer 2 test suites and consumes Layer 1 primitives where certified execution is required.
 
 ---
 
-## Business Logic Should Usually Not Be Hidden in Shared Packages
+## Architectural Decision Checklist
 
-A corporate package should not become a place for unrelated business behavior.
+Before creating or maintaining an internal package, run through these six questions:
 
-Business logic usually belongs in the application or domain that owns it.
+1. **Is the requirement an identical implementation or merely a shared convention?**  
+   $\rightarrow$ If convention: Use instructions and conformance tests.
+2. **Does the logic change frequently or require immediate global rollout?**  
+   $\rightarrow$ If yes: Deploy as a Service API, not a package.
+3. **Does the code contain proprietary or regulated business calculations?**  
+   $\rightarrow$ If yes: Keep in the owning domain service, not a generic package.
+4. **Can correctness be validated externally through behavioral assertions?**  
+   $\rightarrow$ If yes: Generate local code and enforce with a test suite.
+5. **Does the package introduce heavy transitive dependencies or hidden startup magic?**  
+   $\rightarrow$ If yes: Refactor into explicit, modular composable blocks or local code.
+6. **What is the blast radius if an update introduces a subtle bug?**  
+   $\rightarrow$ If package upgrades risk breaking 50 services at once, consider isolated local implementations.
 
-A package may make sense when the business concept itself is genuinely shared and centrally governed, for example:
-
-- a company-wide tax calculation,
-    
-- a regulated fee calculation,
-    
-- a shared risk-scoring algorithm,
-    
-- a canonical identity-matching algorithm.
-    
-
-Even then, it may be better to expose the capability through a service API rather than distribute the algorithm as a package, especially when:
-
-- updates must take effect immediately,
-    
-- the implementation depends on frequently changing data,
-    
-- auditability is important,
-    
-- multiple technology stacks consume it.
-    
-
----
-
-## NuGet Package, Generated Code, or Service API
-
-A useful decision model is:
-
-### Use a NuGet package when
-
-- all consumers use .NET,
-    
-- the logic should execute locally,
-    
-- runtime performance matters,
-    
-- offline execution is required,
-    
-- the implementation is stable,
-    
-- one reviewed implementation is valuable,
-    
-- updates can be distributed through package upgrades.
-    
-
-### Use generated local code when
-
-- the code is mostly structural or repetitive,
-    
-- local customization is expected,
-    
-- implementation differences are acceptable,
-    
-- behavior can be validated externally,
-    
-- the code is easy to understand and review,
-    
-- the abstraction would otherwise hide too much.
-    
-
-### Use a service API when
-
-- behavior must be changed centrally,
-    
-- consumers use multiple technology stacks,
-    
-- the logic depends on centralized state or data,
-    
-- immediate rollout is important,
-    
-- strict audit and governance are required,
-    
-- the organization needs one live version rather than many deployed package versions.
-
-### Architectural Trade-Off Matrix
-
-| Architectural Vector | Shared NuGet Package | Locally Generated Code (Agent 1:1) | Service API (Runtime RPC) | Conformance Test Suite |
-| :--- | :--- | :--- | :--- | :--- |
-| **Blast Radius Isolation** | Low (Package upgrade regression cascades) | High (Zero shared runtime dependencies) | Moderate (Network failures, cascading latency) | Maximum (Tests evaluate, never execute in prod) |
-| **Initial Implementation Velocity** | Slow (Build pipeline, packaging, release cycles) | Fast (Agent synthesizes 1:1 code in seconds) | Moderate (Infrastructure, deployment, routing) | Fast (Author test scenarios once) |
-| **Auditability & Compliance** | High (Single audited binary artifact) | Low/Moderate (Must scan all repositories) | Maximum (Single live inspection point) | High (Pass/fail gate in every CI pipeline) |
-| **Upgrade & Rollout Friction** | High (Multi-repo dependency upgrade PRs) | High (Requires agentic batch refactoring) | Instantaneous (Single central deployment) | Low (Update test package in CI) |
-| **Runtime Performance** | Maximum (In-process memory call, zero network hop) | Maximum (In-process memory call, zero hop) | Lower (Network serialization, socket latency) | N/A (Build/CI time only) |
-| **Cross-Language Interop** | Zero (.NET ecosystem only) | Low (Per-language agent generation) | Maximum (HTTP/gRPC standard protocol) | High (Generic HTTP/JSON contract runners) |
-| **Risk of Hidden Abstraction** | High (Deep extension methods, framework magic) | Low (All logic explicit in local service code) | Low (Black-box API contract) | Zero (Defines expectations, not internals) |
-| **Recommended Domain** | Security tokens, cryptography, OTel exporters | DTO mappers, CRUD handlers, validation rules | Shared ledgers, pricing engines, billing state | API schemas, security policies, latency limits |
-
----
-
-## A Hybrid Model
-
-The likely future model is not the complete removal of internal packages.
-
-It is a smaller set of carefully selected runtime packages combined with executable standards and agent-generated application code.
-
-### Layer 1: Small shared runtime
-
-Use NuGet packages for:
-
-- security primitives,
-    
-- telemetry foundations,
-    
-- protocol clients,
-    
-- stable contracts,
-    
-- critical algorithms,
-    
-- low-level infrastructure integrations.
-    
-
-### Layer 2: Executable organizational standards
-
-Use:
-
-- conformance tests,
-    
-- architecture tests,
-    
-- analyzers,
-    
-- CI policies,
-    
-- security scanning,
-    
-- compatibility test suites.
-    
-
-### Layer 3: Locally generated code
-
-Generate:
-
-- endpoints,
-    
-- handlers,
-    
-- validators,
-    
-- mapping code,
-    
-- application-specific adapters,
-    
-- dependency registration,
-    
-- configuration,
-    
-- boilerplate integrations.
-    
-
-This model avoids building a large corporate framework while still preserving consistency where consistency matters.
-
----
-
-## Decision Questions
-
-Before creating an internal NuGet package, ask:
-
-1. Do we need one implementation or only one expected behavior?
-    
-2. Must every application execute exactly the same code?
-    
-3. Is local customization desirable or dangerous?
-    
-4. Does a fix need to be applied centrally?
-    
-5. Can the requirement be verified through black-box tests?
-    
-6. Is the proposed package mainly eliminating boilerplate?
-    
-7. Would generated code be easier to understand than the abstraction?
-    
-8. Will the package hide business behavior?
-    
-9. How will version upgrades be enforced?
-    
-10. What happens when one application cannot upgrade?
-    
-11. Would a service API provide better central control?
-    
-12. Is the abstraction already stable, or are we packaging it prematurely?
-    
-
----
-
-## Practical Rule
-
-A useful rule is:
-
-> Use a package when the organization needs one implementation.  
-> Use instructions and conformance tests when the organization needs one standard.  
-> Use a service when the organization needs one centrally controlled live behavior.
-
-LLMs reduce the cost of producing code.
-
-They do not eliminate:
-
-- coordination,
-    
-- ownership,
-    
-- rollout,
-    
-- compatibility,
-    
-- versioning,
-    
-- auditing,
-    
-- maintenance.
-    
-
-Therefore, agents will probably reduce the number of internal NuGet packages whose main purpose is boilerplate reuse.
-
-They will not eliminate packages whose purpose is to provide a trusted, shared runtime implementation.
-
----
-
-## Mental Model
-
-Internal NuGet packages should no longer be the default answer to repeated code.
-
-The first question should be:
-
-> Is this a reusable implementation, or merely a repeatable instruction?
-
-If it is a repeatable instruction, an agent can generate the code.
-
-If correctness can be described externally, conformance tests can validate it.
-
-If one exact implementation must be trusted and maintained centrally, a package or service is still the better abstraction.
 ---
 
 ## Relationship to the Knowledge Graph
