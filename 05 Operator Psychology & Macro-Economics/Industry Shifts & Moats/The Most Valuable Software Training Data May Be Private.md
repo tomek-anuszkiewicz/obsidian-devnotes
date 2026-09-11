@@ -12,6 +12,26 @@ aliases:
   - Git History Value for LLM Training
 ---
 
+# The Most Valuable Software Training Data May Be Private
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Public open-source codebases represent only the **sterilized, survivorship-biased final artifact** of software development: clean, polished commits that systematically conceal the true epistemic signal—the dead ends, incorrect assumptions, code review arguments, production incident post-mortems, and iterative bug fixes.
+> - **The Value of the Discarded Journey**: The most valuable training data for frontier reasoning models is locked inside private corporate vaults: linear commit sequences, failed CI/CD pipeline runs, pull request review debates, and root-cause post-mortems.
+> - **Learning the Process of Reasoning**: Models trained only on finished code learn *what* syntax to generate, but remain blind to *how* to diagnose race conditions, recover from flawed assumptions, and reason through edge-case trade-offs.
+
+### Comparative Matrix: Public Open-Source vs. Private Operational Repositories
+
+| Dimension | Public Open-Source Repositories (GitHub Scrapes) | Private Enterprise Codebases & Operational Archives |
+| :--- | :--- | :--- |
+| **Epistemic Nature** | Sanitized end-state; squashed commits; single "correct" syntax snapshot. | **Full Trajectory**: Failed PRs, heated review dissents, rollbacks, and hotfixes. |
+| **Domain Context** | Generic algorithms, toy frameworks, and library implementations. | **Dense Business Physics**: Hard regulatory rules, legacy invariants, real financial reconciliations. |
+| **Failure Telemetry** | Hidden: Failed unit tests and build crashes are rarely preserved in git history. | **Exposed**: CI/CD failure logs, flaky test diagnostics, production crash traces. |
+| **Reasoning Visibility** | Low: Commit messages are often terse ("fix bug", "update docs"). | **Deeply Linked**: Jira tickets, Slack architectural debates, incident post-mortems. |
+| **Model Training Impact** | Teaches syntax generation and standard architectural patterns. | **Teaches Diagnostic Reasoning**: Teaches models how to recover when an initial hypothesis fails. |
+
+---
+
 Large language models learn from available data, but in software engineering there is an important limitation: much of the most valuable knowledge is not public.
 
 Public repositories contain enormous amounts of code, but code is mostly the final artifact, making [[Competitive advantage in the age of commodity AI|competitive advantage depend on private telemetry and reasoning traces]].
@@ -40,7 +60,7 @@ This is not merely code; it is a record of **how an organization reasoned its wa
 
 Consider two possible training datasets.
 
-The first contains millions of correct C# methods.
+The first contains millions of syntactically correct, isolated functions and methods.
 
 The second contains examples such as:
 
