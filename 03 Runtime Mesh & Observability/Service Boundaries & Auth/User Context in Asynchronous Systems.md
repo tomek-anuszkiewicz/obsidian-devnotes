@@ -14,9 +14,22 @@ aliases:
 
 # User Context in Asynchronous Systems
 
-Propagating user identity and context through asynchronous message brokers (RabbitMQ, Azure Service Bus, Apache Kafka) requires fundamentally different patterns than synchronous HTTP calls.
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Asynchronous messaging breaks the temporal and security assumptions of synchronous HTTP. Passing live bearer tokens across message brokers introduces catastrophic security and operational failure modes: **token expiration during queue lag**, **credential leakage in broker logs and Dead Letter Queues (DLQs)**, and **replay vulnerabilities**.  
+> The correct architectural pattern decouples **identity assertion** from **authorization mechanics**:
+> 1. **Zero Live Tokens**: Enqueue lean, immutable audit context (`initiatedByUserId`, `tenantId`, `correlationId`) inside an execution envelope without credentials.
+> 2. **Explicit Authorization Timing**: Choose between *Acceptance-Time* (producer pre-authorizes command before enqueueing) and *Execution-Time* (consumer re-evaluates permissions against current state).
+> 3. **Strict Command vs Event Distinction**: Commands carry intent and require authorization; Domain Events represent immutable historical facts where user context is strictly informational audit metadata.
 
-This document details asynchronous context propagation, message contracts, and authorization timing. It is an atomic guideline complementing [[Propagating User Context Between Services]] and [[Service vs User Authorization Models]].
+### Architectural Context & Authorization Matrix
+
+| Architectural Pattern | Trust & Security Boundary | Token Lifetime vs Queue Lag | Operational Complexity | Failure & Revocation Handling | Recommended Use Cases |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Direct Token Forwarding (Anti-Pattern)** | Broken: Raw bearer credentials persisted in queue storage and DLQs. | High failure risk: Tokens expire during consumer backpressure or outages. | Low initially, extreme operational debt during failures. | Revoked sessions cannot stop in-flight messages; expired tokens cause spurious DLQ poison messages. | **Never recommended** for asynchronous brokers. |
+| **Pre-Authorization (Acceptance-Time)** | High: Edge/Producer validates user rights; bus carries trusted, accepted commands. | Independent: Zero token dependency in queue; messages remain valid across retries. | Low: Consumers rely on broker mTLS/producer trust and process commands directly. | State changes after enqueueing are ignored; command represents an accepted obligation. | Standard business workflows (e.g., `PlaceOrder`, `SendNotification`, batch intake). |
+| **Post-Authorization (Execution-Time)** | Strict: Consumer re-verifies user permissions against authoritative store upon dequeuing. | Independent: Context envelope contains `initiatedByUserId`; rights checked dynamically. | Moderate: Requires consumer access to identity/permission directory. | Dynamic: Revoked user roles or terminated accounts immediately abort execution at consumer. | High-latency, scheduled, or high-privilege operations (e.g., `PurgeDatabase`, financial settlements). |
+| **Domain Event Metadata** | Informational: Facts cannot be denied or authorized; event is immutable history. | Zero dependency: Historical context only. | Minimal: Header or envelope context logging. | Facts cannot be rolled back; consumers handle idempotently. | Event-driven choreography, read-model projections, audit trails. |
 
 ---
 
@@ -79,22 +92,23 @@ Instead of security credentials, pass a lean, strongly-typed **execution context
 }
 ```
 
-In .NET / C#, model this using immutable records:
+In language-agnostic pseudo-code, model this contract using immutable record structures:
 
-```csharp
-public sealed record MessageEnvelope<T>(
-    T Payload,
-    MessageContext Context);
+```text
+record MessageEnvelope<T>:
+    payload: T
+    context: MessageContext
 
-public sealed record MessageContext(
-    string ProducerService,
-    string? InitiatedByUserId,
-    string? TenantId,
-    string CorrelationId,
-    DateTimeOffset EnqueuedAt);
+record MessageContext:
+    producerService: String
+    initiatedByUserId: Optional<String>
+    tenantId: Optional<String>
+    correlationId: String
+    causationId: String
+    enqueuedAt: Timestamp
 ```
 
-The consuming service authenticates to the broker using its own machine identity (e.g. Managed Identity or mTLS) and verifies the producer service via message signatures or broker-level topic permissions.
+The consuming service authenticates to the broker using its own machine identity (e.g. platform-managed identities or mTLS certificates) and verifies the producer service via message signatures or broker-level topic ACL permissions.
 
 ---
 
