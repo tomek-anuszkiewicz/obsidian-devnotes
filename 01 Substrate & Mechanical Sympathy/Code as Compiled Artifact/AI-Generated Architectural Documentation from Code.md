@@ -159,16 +159,30 @@ Instead of repeatedly reconstructing the same system model from raw code, agents
 
 This may improve:
 
-- reasoning quality,
-    
-- task completion speed,
-    
-- context efficiency,
-    
-- consistency between agent sessions.
-    
+### 1. Token Usage and Inference Economics
+- **Amortizing the Reconnaissance Tax**: Without high-level summaries, agents spend dozens of tool calls reading raw source files (controllers, services, repositories, configurations) simply to map the mutation surface. Architectural documentation collapses thousands of lines of raw code into compact topological summaries (such as Operation Cards or Module Specs), amortizing the cognitive reconstruction cost across every subsequent agent interaction.
+- **Reducing Turn-Count Multipliers**: In iterative agentic tool loops, each conversational turn re-submits previous history plus new tool outputs. Slashing exploratory reconnaissance calls directly prevents exponential context accumulation, drastically reducing cumulative prompt token consumption.
+- **Hardware-Level Prompt and KV-Cache Alignment**: Static, highly standardized semantic documentation modules serve as invariant prompt prefixes. Modern inference providers can leverage KV-cache reuse on these deterministic prefixes, yielding significant latency and cost discounts compared to volatile, dynamically queried code snippets.
 
-For very large repositories, this can be particularly important.
+### 2. Attention Density and Signal-to-Noise Ratio
+- **Preventing "Lost-in-the-Middle" Attention Dilution**: Raw source code is dominated by syntactic ceremony—boilerplate, imports, type declarations, serialization annotations, and low-level loop mechanics. As formalized in [[Retrieval-Augmented Generation and Context Architecture]], injecting raw files dilutes transformer self-attention. A semantic cache isolates pure relational invariants, state boundaries, and data ownership contracts, maximizing token attention density.
+- **Preserving Context Window Headroom for Complex Reasoning**: By loading high-density semantic abstractions instead of raw file trees, agents retain maximum context capacity for multi-step reasoning, execution traces, diff generation, and compiler error triage, directly raising the complexity ceiling of solvable tasks (see [[How LLM Systems Build Context]]).
+- **Eliminating Premature Context Window Compaction**: When agents exhaust their context windows during exploratory code reading, session compaction or sliding-window truncation is triggered. Compaction frequently discards subtle architectural constraints. A semantic cache keeps working memory lean, bypassing compaction loss.
+
+### 3. Latency and Cold-Start Velocity
+- **Zero-Turn Cold Start (Time-to-First-Mutation)**: Bypassing the exploratory search phase enables the agent to transition immediately from problem statement to implementation. The agent skips blind grep-and-read cycles and navigates directly to the target component.
+- **Minimizing Cognitive Trajectory Variance**: Without an architectural map, agents frequently explore irrelevant code paths, rabbit-holing into downstream libraries or legacy adapters. A semantic cache provides a deterministic topological index, bounding the search space.
+
+### 4. Multi-Agent and Cross-Session Cohesion
+- **Shared Ontological Baseline Across Agent Swarms**: When multiple subagents work in parallel (e.g., frontend, backend, migrations, integration tests), a shared semantic cache ensures that every worker shares an identical mental model of domain boundaries and interface contracts. Without this shared cache, independent agents construct divergent, conflicting abstractions.
+- **Defending Invariants Against Status-Quo Rationalization**: Raw code often contains historical cruft and accidental coupling. LLMs naturally pattern-match against existing code smells and reproduce them. A canonical semantic cache explicitly documents non-negotiable architectural invariants (e.g., *"Module A must never directly access Module B's database"*), anchoring autonomous mutations to intended design rather than legacy entropy.
+- **Cross-Session Determinism**: Successive agent sessions remain architecturally aligned over days or weeks, preventing the architectural drift that occurs when different models or prompts reconstruct system intent differently.
+
+### 5. Architectural Invariant Auditing and Drift Detection
+- **Cache Misses as Architectural Signals**: When an agent attempts an implementation that cannot be resolved against the semantic cache—or when a proposed change violates a cached constraint—it indicates architectural novelty or boundary drift.
+- **Automated Cache Invalidation**: Treating documentation as a cache establishes a clean invalidation lifecycle: when code mutations alter symbols or call graphs, CI pipelines invalidate and recompile the affected semantic documentation slices, maintaining a zero-drift living architecture.
+
+For very large repositories, operating documentation as a semantic cache is not merely an ergonomic convenience—it is an absolute economic necessity that directly dictates the feasibility and cost-effectiveness of autonomous software engineering.
 
 ---
 
@@ -1104,6 +1118,8 @@ It is a **living semantic model of the software system** that can be consumed by
 
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: How decision-focused comments form the raw semantic material for living architectural docs.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating documentation concurrently during development as a deterministic blueprint and token-efficient framework.
+- **[[Retrieval-Augmented Generation and Context Architecture]]**: Context minimization and attention density mechanics underlying semantic caching.
+- **[[How LLM Systems Build Context]]**: Engineering working memory and context headroom for coding agent decision loops.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Preserving decision traces and architectural rationale as strategic intellectual property.
 - **[[LLM Agents and Institutional Memory]]**: Connecting living documentation to corporate history and onboarding workflows.
 - **[[Designing Software for AI Agents]]**: Structuring code to make semantic extraction and architectural diagrams reliable.
