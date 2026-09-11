@@ -166,12 +166,12 @@ To an outside observer, this creates a seductive and dangerous fallacy:
 This is fundamentally false. While the syntax barrier has collapsed to zero, the cognitive and epistemic barrier has actually risen:
 
 1. **The Asymmetry of the Abstraction Level**:
-   - A non-technical creator operates at a superficial, macro-level abstraction: *"Build me a system emulator / virtual machine."* The agent will dutifully comply, but it will converge on the **averaged prior**—a naive, toy implementation that handles happy paths but lacks cycle accuracy, bus timing, edge-case flag handling, and robust memory boundaries.
-   - An experienced engineer operates at the **mechanistic / structural level**: decomposing the architecture into granular, isolated vertical primitives, enforcing strict state transition invariants, separating execution from rendering, and building deterministic test harnesses.
+   - A non-technical creator operates at a superficial, macro-level abstraction: *"Build me a high-performance transactional engine / distributed state machine."* The agent will dutifully comply, but it will converge on the **averaged prior**—a naive, toy implementation that handles happy paths but lacks crash recovery semantics, lock-free concurrency, memory alignment, and robust transaction isolation boundaries.
+   - An experienced engineer operates at the **mechanistic / structural level**: decomposing the architecture into granular, isolated vertical primitives, enforcing strict state transition invariants, separating execution from telemetry, and building deterministic test harnesses.
 
 2. **The "Unknown Unknowns" Barrier (The Inability to Ask)**:
    - As established in agentic practice, **an LLM will never volunteer non-obvious, critical architectural details unless prompted with the right questions**.
-   - If a creator does not know that pipeline hazards, bus alignment penalties, subtle hardware status flags, or race conditions exist, **they cannot ask the agent to account for them**. And because the model operates on statistical likelihood rather than proactive domain inquiry, it will omit them in silence. You cannot prompt for what you cannot conceive.
+   - If a creator does not know that write-ahead log flush semantics, memory-order barriers, phantom read anomalies, or distributed split-brain conditions exist, **they cannot ask the agent to account for them**. And because the model operates on statistical likelihood rather than proactive domain inquiry, it will omit them in silence. You cannot prompt for what you cannot conceive.
 
 3. **The Invisible Labor of Ground-Truth Curation**:
    - In complex systems, the hardest work takes place *before* code generation. The engineer must convert raw, messy, and often conflicting technical specifications into clean, structured, machine-actionable Markdown documentation.
