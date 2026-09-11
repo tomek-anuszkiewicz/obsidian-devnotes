@@ -291,15 +291,14 @@ In-flight documentation ensures **directional alignment**:
 
 An effective in-flight documentation card does not replicate code verbatim; it captures **intent, constraints, and boundaries**:
 
-```markdown
-### Component / Operation: ProcessPaymentSettlement
+### Component / Operation: `ProcessPaymentSettlement`
 
 **Purpose**: Orchestrates payment settlement against external gateways and posts journal entries.
 
 **Boundary Invariants**:
-- Idempotent: Can be retried safely with the same `TransactionId`.
-- No direct database writes to Ledger tables (must publish `SettlementCompleted` event).
-- External PSP timeout ceiling: 5000ms.
+- **Idempotent**: Can be retried safely with the same `TransactionId`.
+- **No direct database writes** to Ledger tables (must publish `SettlementCompleted` event).
+- **External PSP timeout ceiling**: 5000ms.
 
 **File Touchpoints**:
 - Orchestration: `billing/settlement_coordinator`
@@ -311,9 +310,8 @@ An effective in-flight documentation card does not replicate code verbatim; it c
 - Forbidden: User context store, Cart repository.
 
 **Failure Handling**:
-- Timeout -> Mark state as `PendingReconciliation`, emit operational telemetry alert.
-- Validation error -> Immediate terminal abort with `DomainValidationException`.
-```
+- Timeout $\rightarrow$ Mark state as `PendingReconciliation`, emit operational telemetry alert.
+- Validation error $\rightarrow$ Immediate terminal abort with `DomainValidationException`.
 
 Such cards act as executable specifications for future agent modifications.
 
