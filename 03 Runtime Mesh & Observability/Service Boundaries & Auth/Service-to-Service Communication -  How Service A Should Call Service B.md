@@ -13,6 +13,22 @@ aliases:
   - Inter-Service Calling Patterns
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Inter-Service Calling Strategies & Contract Ownership
+> In distributed microservice systems, inter-service communication must balance developer velocity against architectural autonomy:
+> $$\text{Inter-Service Coupling} = f(\text{Contract Ownership}, \text{Transport Abstraction}, \text{Error Translation}, \text{Resilience Policies})$$
+> Convenient client libraries often become architectural traps: they hide remote network failures beneath local-call illusions, leak upstream transport schemas directly into downstream domain logic, and couple release cadences across service boundaries. 
+> Resilient architectures enforce a strict division of responsibility: **Service B owns the public wire contract (OpenAPI/IDL)**; **Service A owns its internal port/interface, error translation, and retry/timeout budget**; and the **underlying platform owns cross-cutting telemetry, mTLS, and context propagation**.
+
+| Calling Strategy | Contract & Artifact | Coupling Degree | Schema Drift Detection | Best-Fit Scenario |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Shared Contract Package** | Passive DTO package (NuGet/npm/crates) | Moderate (coupled to package release cycle) | Compile-time in same language ecosystem | Homogeneous stacks with high internal trust |
+| **2. Official Client SDK** | Provider-maintained client library | High (embeds transport & dependency choices) | Compile-time against SDK interface | Complex third-party or enterprise platform APIs |
+| **3. Consumer-Generated Client** | Auto-generated SDK from OpenAPI/IDL | Low (generated locally via Kiota/buf) | Build-time schema validation | Heterogeneous polyglot microservice meshes |
+| **4. Local Scoped Adapter** | Hand-crafted minimal HTTP/gRPC client | Lowest (depends only on consumed fields) | Runtime or contract testing | Consuming 1–2 endpoints from an expansive API |
+| **5. Declarative RPC Client** | Interface mapped to HTTP annotations | Low boilerplate, high risk of local-call illusion | Compile-time interface types | Internal CRUD utilities with strict network timeouts |
+
+---
+
 ## Context
 
 Assume that Service A needs data or behavior owned by Service B. Secure interactions require both communication protocol design and [[Service-to-Service Authentication and Authorization in Azure and Kubernetes|service-to-service authentication and authorization]].
@@ -127,21 +143,23 @@ This division prevents the Service B client from becoming a hidden application f
 
 ---
 
-## Option 1: Service B Publishes a Contracts NuGet
+## Option 1: Service B Publishes a Shared Contract Package
 
-Service B publishes a package such as:
+Service B publishes a lightweight, passive contract package (e.g., via a package registry or shared module repository):
 
 ```text
 ServiceB.Contracts
 ```
 
-It contains request and response DTOs:
+It contains request and response Data Transfer Objects (DTOs):
 
-```csharp
-public sealed record GetCustomerResponse(
-    string Id,
-    string Name,
-    string Status);
+```text
+// Passive, immutable DTO schema
+record GetCustomerResponse {
+    id: string,
+    name: string,
+    status: string
+}
 ```
 
 Service A references the package and uses the shared types.
@@ -152,7 +170,7 @@ Service A references the package and uses the shared types.
     
 - compile-time type safety,
     
-- easy distribution in a .NET-only environment,
+- easy distribution in a homogeneous language environment,
     
 - reduced manual duplication,
     
@@ -195,18 +213,16 @@ Avoid models containing:
 
 Bad:
 
-```csharp
-public sealed class Customer
-{
-    public string Status { get; set; }
+```text
+// Bad: Leaking domain behavior and validation into a transport DTO
+class Customer {
+    status: string;
 
-    public bool CanPlaceOrder()
-    {
+    canPlaceOrder(): boolean {
         // Business behavior from Service B
     }
 
-    public void Validate()
-    {
+    validate(): void {
         // Validation owned by Service B
     }
 }
@@ -214,38 +230,41 @@ public sealed class Customer
 
 Better:
 
-```csharp
-public sealed record CustomerResponse(
-    string Id,
-    string Status);
+```text
+// Better: Passive, immutable transport DTO
+record CustomerResponse {
+    id: string,
+    status: string
+}
 ```
 
 A contracts package should describe messages, not export the internal domain model of Service B.
 
 ---
 
-## Option 2: Service B Publishes a Full Client NuGet
+## Option 2: Service B Publishes an Official Client SDK
 
-Service B publishes:
+Service B publishes an official client library:
 
 ```text
 ServiceB.Client
 ```
 
-Service A registers it:
+Service A registers it via its dependency injection or configuration container:
 
-```csharp
-services.AddServiceBClient(options =>
-{
-    options.BaseAddress = configuration["ServiceB:BaseAddress"];
+```text
+// Client registration in application composition root
+registerClient(ServiceBClient, {
+    baseAddress: config.get("ServiceB:BaseAddress")
 });
 ```
 
 Application code receives an interface:
 
-```csharp
-public sealed class Handler(IServiceBClient serviceBClient)
-{
+```text
+// Application handler receives client interface
+class OrderHandler(serviceBClient: ServiceBClient) {
+    // Executes application use case
 }
 ```
 
@@ -386,31 +405,23 @@ Infrastructure
 
 Business code should not depend directly on generated DTOs.
 
-```csharp
-public interface ICustomerRiskProvider
-{
-    Task<RiskLevel> GetRiskAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken);
+```text
+// Domain port owned by Service A
+interface CustomerRiskProvider {
+    getRisk(customerId: CustomerId, context: ExecutionContext): Promise<RiskLevel>;
 }
 ```
 
 The adapter uses the generated client:
 
-```csharp
-internal sealed class ServiceBCustomerRiskProvider(
-    ServiceBGeneratedClient client)
-    : ICustomerRiskProvider
-{
-    public async Task<RiskLevel> GetRiskAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken)
-    {
-        var response = await client.GetCustomerAsync(
-            customerId.Value,
-            cancellationToken);
+```text
+// Infrastructure adapter translating generated models to domain concepts
+class ServiceBCustomerRiskAdapter implements CustomerRiskProvider {
+    constructor(private client: ServiceBGeneratedClient) {}
 
-        return Map(response);
+    async getRisk(customerId: CustomerId, context: ExecutionContext): Promise<RiskLevel> {
+        const response = await this.client.getCustomer(customerId.value, context);
+        return mapToRiskLevel(response);
     }
 }
 ```
@@ -423,49 +434,34 @@ The generated code remains replaceable and isolated.
 
 If Service A needs only one endpoint and a few fields, a small local adapter may be simpler than a full SDK.
 
-```csharp
-public interface ICustomerStatusProvider
-{
-    Task<CustomerStatus?> FindAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken);
+```text
+// Port owned by Service A
+interface CustomerStatusProvider {
+    findStatus(customerId: CustomerId, context: ExecutionContext): Promise<CustomerStatus | null>;
 }
 ```
 
 Implementation:
 
-```csharp
-internal sealed class ServiceBCustomerStatusProvider(
-    HttpClient httpClient)
-    : ICustomerStatusProvider
-{
-    public async Task<CustomerStatus?> FindAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken)
-    {
-        using var response = await httpClient.GetAsync(
-            $"/customers/{customerId.Value}/status",
-            cancellationToken);
+```text
+// Minimal local adapter calling external HTTP endpoint
+class ServiceBCustomerStatusAdapter implements CustomerStatusProvider {
+    constructor(private httpClient: HttpClient) {}
 
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
+    async findStatus(customerId: CustomerId, context: ExecutionContext): Promise<CustomerStatus | null> {
+        const response = await this.httpClient.get(
+            `/customers/${customerId.value}/status`,
+            context
+        );
+
+        if (response.status === 404) {
             return null;
         }
 
-        response.EnsureSuccessStatusCode();
-
-        var dto = await response.Content
-            .ReadFromJsonAsync<ServiceBResponse>(
-                cancellationToken: cancellationToken);
-
-        return new CustomerStatus(
-            dto!.Code,
-            dto.IsActive);
+        response.ensureSuccess();
+        const dto = await response.json();
+        return new CustomerStatus(dto.code, dto.isActive);
     }
-
-    private sealed record ServiceBResponse(
-        string Code,
-        bool IsActive);
 }
 ```
 
@@ -516,15 +512,13 @@ This approach works well when:
 
 ## Option 5: Service B Publishes an RPC-Like Interface
 
-Libraries can create an HTTP client from an interface:
+Frameworks (e.g. declarative HTTP clients) can create an HTTP client from an annotated interface definition:
 
-```csharp
-public interface IServiceBApi
-{
-    [Get("/customers/{id}")]
-    Task<CustomerResponse> GetCustomerAsync(
-        string id,
-        CancellationToken cancellationToken);
+```text
+// Declarative RPC-style interface definition
+interface ServiceBApi {
+    @Get("/customers/{id}")
+    getCustomer(id: string, context: ExecutionContext): Promise<CustomerResponse>;
 }
 ```
 
@@ -547,8 +541,8 @@ Service A requests the interface from dependency injection and calls it like a l
 
 This code:
 
-```csharp
-await serviceBApi.GetCustomerAsync(id, cancellationToken);
+```text
+await serviceBApi.getCustomer(id, context);
 ```
 
 looks like an ordinary method call.
@@ -578,12 +572,10 @@ The RPC-like interface should normally remain inside the infrastructure layer.
 
 Application code should depend on an interface owned by Service A:
 
-```csharp
-public interface ICustomerRiskProvider
-{
-    Task<RiskLevel> GetRiskAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken);
+```text
+// Port owned by Service A
+interface CustomerRiskProvider {
+    getRisk(customerId: CustomerId, context: ExecutionContext): Promise<RiskLevel>;
 }
 ```
 
@@ -601,14 +593,14 @@ These are not necessarily the same abstraction.
 
 Service B may expose:
 
-```csharp
-IServiceBApi.GetCustomerAsync(...)
+```text
+ServiceBApi.getCustomer(...)
 ```
 
 Service A may need:
 
-```csharp
-ICustomerEligibilitySource.GetEligibilityAsync(...)
+```text
+CustomerEligibilitySource.getEligibility(...)
 ```
 
 The second interface is better for A because it describes why A needs the dependency.
@@ -736,7 +728,8 @@ customer_not_found → create a new customer
 
 Therefore, a Service B client should not automatically map all errors into application-specific exceptions such as:
 
-```csharp
+```text
+// Anti-pattern: upstream client throwing downstream domain exceptions
 throw new CustomerMissingFromOrderException();
 ```
 
@@ -744,12 +737,14 @@ That exception belongs to A.
 
 A transport client may expose:
 
-```csharp
-public sealed record ServiceBError(
-    string Code,
-    HttpStatusCode StatusCode,
-    string? Message,
-    string? TraceId);
+```text
+// Strongly typed transport error schema
+record ServiceBError {
+    code: string,
+    statusCode: int,
+    message?: string,
+    traceId?: string
+}
 ```
 
 The adapter in A performs the final mapping.
@@ -852,27 +847,19 @@ Therefore:
 
 For example:
 
-```csharp
-services
-    .AddHttpClient<IServiceBTransportClient, ServiceBTransportClient>(
-        client =>
-        {
-            client.BaseAddress = configuration.GetServiceUri("ServiceB");
-        })
-    .AddStandardHttpTelemetry()
-    .AddResilienceHandler(
-        "service-b-order-validation",
-        pipeline =>
-        {
-            pipeline.AddTimeout(
-                TimeSpan.FromSeconds(2));
-
-            pipeline.AddRetry(
-                new HttpRetryStrategyOptions
-                {
-                    MaxRetryAttempts = 1
-                });
-        });
+```text
+// Explicit resilience policy configuration in Service A
+configureHttpClient("ServiceBClient", {
+    baseAddress: config.getServiceUri("ServiceB"),
+    telemetry: StandardTelemetryProfile,
+    resilience: {
+        timeout: 2000, // 2 seconds
+        retry: {
+            maxAttempts: 1,
+            retryableStatusCodes: [502, 503, 504]
+        }
+    }
+});
 ```
 
 The policy remains visible to A.
@@ -1068,23 +1055,24 @@ Consumer code should avoid assuming that all possible values are permanently kno
 
 Bad:
 
-```csharp
-return response.Status switch
-{
+```text
+// Bad: Exhaustive enum assumption that breaks on additive upstream values
+match (response.status) {
     CustomerStatus.Active => true,
     CustomerStatus.Inactive => false
-};
+    // Throws deserialization exception or runtime panic on new enum values
+}
 ```
 
 Better:
 
-```csharp
-return response.Status switch
-{
+```text
+// Better: Tolerant matching with explicit unknown fallback
+match (response.status) {
     "active" => Eligibility.Allowed,
     "inactive" => Eligibility.Denied,
-    _ => Eligibility.Unknown
-};
+    _ => Eligibility.Unknown // Safe fallback for unmodeled future states
+}
 ```
 
 The correct fallback depends on the business risk.
@@ -1169,14 +1157,16 @@ Human-readable messages should not be used as stable programmatic identifiers.
 
 Bad:
 
-```csharp
-if (error.Message == "Customer was not found")
+```text
+// Bad: Fragile matching against human text
+if (error.message == "Customer was not found")
 ```
 
 Better:
 
-```csharp
-if (error.Code == "customer_not_found")
+```text
+// Better: Matching against machine-readable code
+if (error.code == "customer_not_found")
 ```
 
 ---
@@ -1380,10 +1370,12 @@ Suppose B returns:
 
 A may only need:
 
-```csharp
-private sealed record ServiceBResponse(
-    string Id,
-    string Status);
+```text
+// Consuming only the minimal required subset
+record ServiceBResponse {
+    id: string,
+    status: string
+}
 ```
 
 Most JSON serializers can ignore additional fields.
@@ -1513,41 +1505,41 @@ Infrastructure
 
 Application interface:
 
-```csharp
-public interface ICustomerEligibilitySource
-{
-    Task<CustomerEligibility> GetAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken);
+```text
+// Port owned by Service A
+interface CustomerEligibilitySource {
+    getEligibility(
+        customerId: CustomerId,
+        context: ExecutionContext
+    ): Promise<CustomerEligibility>;
 }
 ```
 
 Adapter:
 
-```csharp
-internal sealed class ServiceBCustomerEligibilitySource(
-    IServiceBTransportClient client)
-    : ICustomerEligibilitySource
-{
-    public async Task<CustomerEligibility> GetAsync(
-        CustomerId customerId,
-        CancellationToken cancellationToken)
-    {
-        var response = await client.GetCustomerAsync(
-            customerId.Value,
-            cancellationToken);
+```text
+// Infrastructure adapter in Service A translating external responses to domain types
+class ServiceBCCustomerEligibilityAdapter implements CustomerEligibilitySource {
+    constructor(private client: ServiceBTransportClient) {}
 
-        return response switch
-        {
-            { IsSuccess: true } =>
-                Map(response.Value),
+    async getEligibility(
+        customerId: CustomerId,
+        context: ExecutionContext
+    ): Promise<CustomerEligibility> {
+        const response = await this.client.getCustomer(
+            customerId.value,
+            context
+        );
 
-            { Error.Code: "customer_not_found" } =>
-                CustomerEligibility.NotAvailable,
+        if (response.isSuccess) {
+            return mapToEligibility(response.value);
+        }
 
-            _ =>
-                throw MapUnexpectedFailure(response.Error)
-        };
+        if (response.error?.code === "customer_not_found") {
+            return CustomerEligibility.NotAvailable;
+        }
+
+        throw mapUnexpectedFailure(response.error);
     }
 }
 ```
