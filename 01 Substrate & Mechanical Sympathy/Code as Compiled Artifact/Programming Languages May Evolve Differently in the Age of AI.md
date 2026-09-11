@@ -7,7 +7,7 @@ tags:
   - type-systems
   - compilers
   - software-engineering
-  - mechanical-sympathy
+  - hardware-awareness
 aliases:
   - AI-Era Programming Language Evolution
   - Languages Designed for LLM Generation
