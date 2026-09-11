@@ -17,20 +17,51 @@ aliases:
 
 # Constraint Saturation and Rule Oscillation in Coding Agents
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Attention Capacity Limits and Rule Oscillation in Coding Agents
 > System prompts and agent rulebooks are subject to strict attention capacity limits. Appending guidelines to patch past agent mistakes follows an exponential decay curve: if an agent satisfies each independent rule with probability $p=0.95$, its probability of simultaneously obeying $M=30$ rules plummets to $0.95^{30} \approx 21.4\%$:
 > $$P(\text{Full Compliance}) = \prod_{i=1}^M p_i \approx p^M$$
 > Beyond a critical threshold, adding rules triggers **Constraint Oscillation (Rule Thrashing / Whack-a-Mole Engineering)**: the agent refactors to satisfy Rule $A$, inadvertently violates Rule $B$, patches $B$ only to violate $C$, and loops indefinitely. Eliminating rule thrashing requires **Lexicographical Constraint Tiering** (correctness > domain invariants > operational budgets > style), **Sequential Single-Objective Passes**, and **offloading formatting and mechanical invariants to deterministic compilers and linters**.
 
-### Comparative Matrix: Agent Rule Governance Paradigms
+```text
++----------------------------------------------------------------------------------------------------+
+|               CONSTRAINT SATURATION & THE RULE THRASHING CYCLE                                     |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  THE WHACK-A-MOLE OSCILLATION LOOP (Attention Displacement)                                        |
+|                                                                                                    |
+|            ┌───────────────────────────────────────────────────────────┐                           |
+|            │                                                           │                           |
+|            ▼                                                           │                           |
+|  [Agent applies Driver A] ──► [Violates Driver B]                      │                           |
+|            ▲                             │                             │                           |
+|            │                             ▼                             │                           |
+|  [Re-violates Driver A] ◄── [Violates Driver C] ◄── [Agent fixes for Driver B]                     |
+|                                                                                                    |
+|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HARNESS-LEVEL MITIGATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
+|                                                                                                    |
+|  1. Lexicographical Tiering: Tier 1 (Correctness) > Tier 2 (Boundary) > Tier 3 (Perf) > Tier 4     |
+|  2. Sequential Passes: Pass 1: Semantic Logic ──► Pass 2: Refinement ──► Pass 3: Tool Compliance   |
+|  3. Mechanical Offloading: Offload formatting, import sorting, and linting to deterministic tools   |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Governance Paradigm | Ingestion Topology | Multi-Rule Compliance Probability ($M=25$) | Attention Fragmentation & Thrashing Risk | Token Burn & Compute Efficiency | Primary Bottleneck & Failure Mode |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Monolithic Flat Rulebook (`All Rules in Prompt`)** | All architectural, style, security, and performance rules injected simultaneously. | **Critical Failure ($\approx 27\%$)**: Inevitably violates at least one constraint every turn. | **Extreme**: Enters infinite Whack-a-Mole oscillation loops between competing rules. | Low initial token setup, but catastrophic retry waste during thrashing loops. | Attention slippage; local myopic patches breaking distant invariants. |
-| **Dynamic Just-In-Time Rule Scoping** | Context-aware router injects only rules relevant to the active file/task. | Moderate ($\approx 75\%$): Evaluates only 3–5 active rules per subtask. | Low: Context window remains lean and focused on local invariants. | Efficient: Minimal prompt overhead per step. | Router classification errors; failing to inject a cross-cutting rule when needed. |
-| **Sequential Multi-Pass Pipeline** | Decomposed stages: Semantics $\to$ Optimization $\to$ Compliance. | **High ($\approx 90\%$)**: Agent evaluates only one objective per pass. | **Near Zero**: Eliminates conflicting multi-objective trade-offs within a single turn. | Predictable: Higher baseline inference cost, but zero infinite thrashing loops. | Intermediate phase state serialization; requires well-defined test harnesses between passes. |
-| **Mechanically Offloaded Harness (Recommended)** | LLM handles semantic logic; deterministic formatters/linters enforce style and mechanical rules. | **Maximum ($\approx 95\%+$)**: Prompt retains only semantic and architectural invariants. | **Zero for Mechanical Rules**: Compilers and formatters enforce invariants deterministically. | **Optimal**: Zero tokens wasted having LLMs format whitespace, sort imports, or check lint rules. | Requires upfront CI tooling setup and custom linter/architecture test rules. |
+## Executive Summary & Core Architectural Invariants
+
+1. **The Law of Exponential Compliance Decay**:
+   If an agent satisfies each independent rule with probability $p=0.95$, its compound probability of simultaneously obeying $M=25$ rules drops to $p^M \approx 27.7\%$. Adding rules to patch every historical mistake inevitably guarantees that the agent violates at least one constraint on every turn.
+
+2. **Attention Displacement and Rule Thrashing**:
+   Transformers possess finite attention capacity. Focusing on a complex local constraint (e.g., zero-allocation memory layouts) mathematically displaces attention from distant guidelines. When corrected for violating Rule $B$, the model myopically optimizes for $B$ at the expense of previously satisfied Rule $A$, causing infinite Whack-a-Mole oscillation.
+
+3. **Lexicographical Constraint Tiering**:
+   System rules must be prioritized into strict, non-negotiable tiers (Tier 1: Functional Correctness > Tier 2: Domain Boundaries > Tier 3: Performance Budgets > Tier 4: Cosmetic Formatting). Agents must be explicitly instructed never to sacrifice Tier 1 correctness or Tier 2 boundaries to satisfy Tier 4 conventions.
+
+4. **Single-Objective Sequential Passes Over Monolithic Generation**:
+   Attempting to generate code that is simultaneously functionally complete, memory-optimized, styled, and documented in a single turn exceeds cognitive limits. Production workflows decompose execution into sequential passes: Semantic Logic $\to$ Optimization $\to$ Mechanical Compliance.
+
+5. **Deterministic Mechanical Offloading**:
+   Rules that can be checked by mechanical compilers, AST formatters, or static analysis tools (linting, line limits, import sorting) must be eliminated from system prompts. Natural language instructions must be reserved exclusively for semantic, contextual architectural invariants.
 
 ---
 
@@ -45,23 +76,12 @@ As development teams mature their setups within an [[Agentic Coding Harness and 
 
 Initially, adding guidelines improves consistency. But past a critical threshold, **adding more rules actively degrades agent performance and reliability**.
 
-Instead of producing clean code, the agent falls into the **Constraint Oscillation Trap** (also known as *Rule Thrashing* or *Whack-a-Mole Engineering*), which degrades [[LLM Coding Agents Reliability|coding agent reliability]] to near zero.
+Instead of producing clean code, the agent falls into the **Constraint Oscillation Trap** (also known as *Rule Thrashing* or *Whack-a-Mole Engineering*), which degrades [[LLM Coding Agents Reliability|coding agent reliability]] to near zero:
 1. The agent refactors code to satisfy **Driver A** (e.g., inlining a routine for zero-allocation performance).
 2. It discovers or is notified that the change violates **Driver B** (e.g., a hard 500-line limit or single-responsibility rule).
 3. It refactors to satisfy **Driver B**, which inadvertently violates **Driver C** (e.g., architectural boundary or interface immutability).
 4. It patches **Driver C**, re-triggering the violation of **Driver A**.
 5. The agent enters an infinite loop, burning tokens while thrashing back and forth between competing constraints, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy and codebase instability]].
-
-```text
-THE RULE THRASHING CYCLE (Whack-a-Mole):
-          ┌───────────────────────────────────────────────────────────┐
-          │                                                           │
-          ▼                                                           │
-[Agent applies Driver A] ──► [Violates Driver B]                      │
-          ▲                             │                             │
-          │                             ▼                             │
-[Re-violates Driver A] ◄── [Violates Driver C] ◄── [Agent fixes for Driver B]
-```
 
 ---
 
