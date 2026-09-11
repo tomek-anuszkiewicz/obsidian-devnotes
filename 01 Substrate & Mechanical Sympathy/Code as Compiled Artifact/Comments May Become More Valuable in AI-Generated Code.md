@@ -7,328 +7,173 @@ tags:
   - code-review
   - maintainability
   - intent-specification
+  - mechanical-sympathy
 aliases:
   - Code Comments in AI Era
   - Semantic Value of Comments in AI Code
+  - Comments as Local Context Retrieval
+  - Negative Knowledge Comments in Agentic Code
 ---
 
-The traditional rule for comments is often expressed as:
+# Comments May Become More Valuable in AI-Generated Code
 
-> Good code should explain what it does. Comments should explain why.
+## The Core Thesis: Comments as Physical Local Context Retrieval
 
-This distinction may become even more important in software increasingly written and modified by AI agents, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
-
-An agent can usually reconstruct the mechanics of code very well, but when [[Reviewing AI-Generated Code|reviewing AI-generated code]], comments serve as human intent anchors that prevent [[Software Entropy and the Zero-Friction Trap|software entropy]].
-
-For example:
-
-```csharp
-// Charge 50% if booking starts in less than 3 days.
-if (booking.StartDate < DateTime.UtcNow.AddDays(3))
-{
-    cancellationFee = booking.TotalPrice * 0.5m;
-}
-```
-
-The comment adds almost no information.
-
-A much more valuable comment would be:
-
-```csharp
-// Cancellations within 72 hours are charged 50% because the supplier
-// no longer refunds us after this point.
-// Do not replace this with the standard hotel cancellation policy.
-```
-
-The code explains the mechanism. As highlighted in [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]], the comment preserves information that cannot easily be reconstructed from the implementation:
-
-- why the rule exists;
-    
-- where it comes from;
-    
-- whether it is intentional;
-    
-- which business constraint it represents;
-    
-- what apparently reasonable changes would be incorrect.
-    
-
-## Code Is Self-Documenting Syntactically, Not Semantically
-
-Well-written code can communicate structure and behavior, transforming comments into [[In-Flight Documentation as the Primary Framework for Coding Agents|executable in-flight documentation for coding agents]].
-
-For example:
-
-```csharp
-ApplyNonRefundableSupplierCancellationFee();
-```
-
-This is much better than an obscure method name, but it still does not explain:
-
-- why this supplier is treated differently;
-    
-- whether the behavior comes from a contract;
-    
-- whether it is temporary;
-    
-- which products it applies to;
-    
-- whether another similar rule should be reused;
-    
-- what assumptions the implementation depends on.
-    
-
-Historically, much of this knowledge lived outside the code:
-
-- in developers' heads;
-    
-- Jira tickets;
-    
-- Slack conversations;
-    
-- meetings;
-    
-- old specifications;
-    
-- architecture documents.
-    
-
-Future agents modifying the code may never see any of those sources.
-
-A comment located next to the implementation has a major advantage:
-
-> It is very likely to enter the agent's context whenever the relevant code enters the context.
-
-## Comments Can Act as Local Context Retrieval
-
-Suppose an agent receives a task:
-
-> Add partial cancellation support.
-
-It retrieves the classes responsible for cancellations.
-
-Any comments located inside those classes are naturally retrieved together with the implementation.
-
-This makes comments a kind of very small, highly localized knowledge base.
-
-They do not require the agent to know:
-
-- that an ADR exists;
-    
-- which specification describes the rule;
-    
-- which ticket introduced it;
-    
-- what search query to use;
-    
-- which meeting contained the relevant discussion.
-    
-
-The knowledge is physically attached to the place where it matters.
-
-This may make carefully written comments one of the most reliable forms of context delivery for future coding agents.
-
-## Documentation Layers Still Have Different Roles
-
-Comments should not replace specifications or architectural documentation.
-
-Instead, the different layers can complement each other:
+In the era of autonomous AI coding agents, code comments undergo a radical functional transformation: **from passive human reading aids to high-priority, physically co-located context injection anchors**.
 
 ```text
-Specification
-    ↓
-describes desired behavior and requirements
+HISTORICAL HUMAN PARADIGM:
+  "Good code is self-documenting."
+  Result: Comments explaining syntax are banned; business intent is exiled
+          to Jira tickets, Slack threads, and unwritten tribal memory.
 
-Architecture docs / ADRs
-    ↓
-describe system-wide decisions and trade-offs
-
-Business comments
-    ↓
-preserve local intent, constraints and exceptions
-
-Code
-    ↓
-contains the executable implementation
+AGENTIC PARADIGM:
+  Descriptive comments (what the code does) = ZERO VALUE (Agents reconstruct syntax instantly).
+  Decisional comments (why the code was built this way) = MAXIMUM VALUE.
+  Result: Comments are the ONLY organizational artifacts guaranteed to physically enter
+          the agent's working context window alongside the code being modified.
 ```
 
-During the initial implementation, an agent may have access to the complete specification.
+When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. 
 
-Several years later, another agent may receive only a small portion of the repository while working on an unrelated change.
+However, **any comment physically placed next to the implementation is guaranteed to be ingested into the model's context window**. Comments therefore act as a microscopic, zero-latency semantic cache—anchoring human architectural intent directly at the point of mutation, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
-The original specification may not enter its context at all.
+### The Decisional Inversion:
+1. **The Death of Descriptive Comments**: Explaining *how* an algorithm steps through an array or formats an output is pure token noise. Foundation models parse syntactic control flow effortlessly.
+2. **The Sovereign Value of Decisional Constraints**: Inline annotations that explain *why* an unusual business rule exists, *which* contract mandated it, and *what* intuitive simplifications are strictly prohibited represent the most valuable intellectual property in the repository.
 
-A nearby comment probably will.
-
-## Negative Knowledge May Be Especially Valuable
-
-Some of the most useful comments may describe what must **not** be done.
-
-For example:
-
-```csharp
-// Do not calculate this from Payment.Amount.
-// Legacy bookings may already contain the agency margin there.
-```
-
-Or:
-
-```csharp
-// This check looks redundant, but some suppliers occasionally send
-// the same reservation with different external IDs.
-```
-
-Or:
-
-```csharp
-// Intentionally executed before availability validation.
-// Sales requires the original quoted price to remain available
-// even when availability subsequently fails.
-```
-
-This is negative knowledge:
-
-> A seemingly obvious implementation or refactoring is incorrect.
-
-Such knowledge may be particularly important for agents.
-
-An agent performing a local refactoring may see:
-
-```text
-strange condition
-→ appears redundant
-→ simplify it
-```
-
-A good comment changes the reasoning to:
-
-```text
-strange condition
-→ explicitly intentional
-→ represents a business constraint
-→ preserve unless the requirement itself changes
-```
-
-## Clean Code Does Not Eliminate Business Context
-
-The argument that "good code should not require comments" is reasonable when applied to comments describing mechanics.
-
-Comments such as:
-
-```csharp
-// Iterate through users.
-```
-
-are usually unnecessary.
-
-But business rationale cannot always be encoded through better naming or cleaner abstractions.
-
-A method called:
-
-```csharp
-IsEligibleForLegacyCancellationCompensation()
-```
-
-still does not explain why legacy cancellation compensation exists.
-
-The useful distinction may therefore become:
-
-> Minimize comments explaining implementation.
-
-> Maximize comments preserving intent, business meaning, invariants, constraints, exceptions and non-obvious decisions.
-
-## Agents Can Produce Their Own Future Context
-
-There is another important consequence.
-
-When an agent implements a feature, it already has the specification in its context.
-
-Instead of converting that specification only into executable code, it can also preserve the parts of the specification that future developers or agents will need.
-
-A useful instruction could be:
-
-> Whenever the implementation encodes a non-obvious business rule, invariant, exception or constraint that cannot be reconstructed from the code itself, preserve that information as a concise comment near the relevant code.
-
-The process then becomes:
-
-```text
-task specification
-       │
-       ▼
-     agent
-    /     \
-   ▼       ▼
-code     durable intent
-         comments
-```
-
-The code is the executable result of the specification.
-
-The comments preserve selected parts of its semantics.
-
-## Comments May Become Part of Designing Code for Agents
-
-Traditionally, comments were primarily written for human maintainers.
-
-In agent-heavy development, another audience appears:
-
-> the future model receiving a limited slice of the repository as context.
-
-This changes how comments can be evaluated.
-
-The question is no longer only:
-
-> Will another developer understand this?
-
-It also becomes:
-
-> If an agent sees only this file two years from now, what important information could it incorrectly infer?
-
-Comments can protect against those incorrect inferences.
-
-This suggests that codebases optimized for agentic development may intentionally preserve more business context next to the implementation.
-
-Not more comments in general.
-
-Better comments.
-
-Especially comments explaining:
-
-- why a rule exists;
-    
-- which business concept it represents;
-    
-- which invariant must remain true;
-    
-- why an unusual implementation is intentional;
-    
-- which tempting simplification would be wrong;
-    
-- which external constraint shaped the implementation;
-    
-- which assumptions future changes must preserve.
-    
-
-In this sense, comments may become part of **context engineering for future coding agents** rather than merely an aid to human readability.
-
-## Redefining Low-Level and Architectural Documentation
-
-The ability of LLMs to analyze code and explain its mechanics on demand accelerates two major shifts:
-
-1. **Obsolescence of Low-Level Comments and Descriptive Docs:**
-   - Comments explaining *how* a function works or what steps it takes are now pure noise.
-   - Broad architectural documentation that merely describes component relationships or data flows is easily reconstructed on the fly by an agent analyzing the codebase.
-
-2. **From Structural Documentation to Decision Records:**
-   - Documentation shifts almost entirely from *descriptive* (what exists) to *decisional* (why it was built this way).
-   - High-level architecture docs remain valuable only as **guardrails and trade-offs** (e.g., ADRs, system constraints, performance budgets) that prevent agents from making architectural refactorings that break unstated non-functional requirements.
 ---
 
-## Relationship to the Knowledge Graph
+## Code is Syntactically Self-Documenting, Never Semantically
+
+Even the cleanest, most idiomatic code cannot express business intent or historical constraints through naming alone:
+
+```text
+// CLEAN CODE (Syntactically obvious, semantically ambiguous):
+apply_non_refundable_supplier_cancellation_fee(booking)
+```
+
+While clean, this signature fails to answer critical questions:
+- *Why is this specific supplier exempt from standard cancellation policies?*
+- *Is this behavior legally mandated by contract, or a temporary sales promotion?*
+- *What unstated operational assumption breaks if an agent replaces this with standard hotel policy?*
+
+### The Contrast in Comment Value:
+
+```text
+POOR COMMENT (Pure Noise / Mechanics Repetition):
+// Charge 50% if booking starts in less than 3 days
+if booking.start_date < clock.now() + 72.hours:
+    fee = booking.total_price * 0.50
+
+HIGH-VALUE DECISIONAL ANCHOR (Essential Context Protection):
+// DOMAIN INVARIANT:
+// Cancellations within 72 hours incur a 50% charge because Supplier X 
+// refuses wholesale refunds beyond this threshold under Contract Schedule B.
+// DO NOT refactor or consolidate this with the standard hotel cancellation policy.
+if booking.start_date < clock.now() + 72.hours:
+    fee = booking.total_price * 0.50
+```
+
+The high-value comment preserves context that cannot be derived from syntax. As detailed in [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]], it actively protects intentional edge cases from being erased during automated refactorings.
+
+---
+
+## Negative Knowledge Comments: Fencing Off Intuitive Traps
+
+When coding agents perform codebase-wide refactoring sweeps, their pretraining priors push them toward aggressive simplification and deduplication. If a condition looks strange or redundant, an unconstrained agent will naturally delete or "streamline" it.
+
+To counteract this, modern codebases must utilize **Negative Knowledge Comments**—explicitly declaring what must *never* be done:
+
+```text
+// NEGATIVE KNOWLEDGE GUARD:
+// Do not compute this total from payment.amount.
+// Historical bookings imported prior to Q3 2025 already embed agency margins
+// inside the gross amount; using payment.amount will cause double-counting.
+net_total = calculate_historical_margin(booking)
+```
+
+```text
+// CONCURRENCY GUARD:
+// This check appears redundant with the database constraint, but upstream 
+// inventory providers intermittently emit duplicate webhook events across 
+// separate HTTP connections within 5ms windows. Keep in-memory deduplication active.
+if idempotency_cache.contains(event.id):
+    return Result.ALREADY_PROCESSED
+```
+
+### The Agentic Reasoning Inversion:
+- **Without Comment**: An agent detects a seemingly redundant check $\rightarrow$ classifies it as dead code $\rightarrow$ deletes it $\rightarrow$ reintroduces a race condition.
+- **With Negative Comment**: An agent detects the check $\rightarrow$ reads the explicit warning $\rightarrow$ recognizes an intentional domain constraint $\rightarrow$ preserves the invariant.
+
+---
+
+## The 4-Tier Documentation Architecture
+
+Comments do not replace system-level documentation or architectural decision records (ADRs); they occupy the innermost operational tier:
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ 1. SYSTEM SPECIFICATIONS                                    │
+│    High-level user requirements, business goals, contracts. │
+├─────────────────────────────────────────────────────────────┤
+│ 2. ARCHITECTURAL DECISION RECORDS (ADRs)                    │
+│    System-wide trade-offs, technology choices, boundaries.  │
+├─────────────────────────────────────────────────────────────┤
+│ 3. DECISIONAL ANCHOR COMMENTS                               │
+│    Local intent, negative knowledge, non-obvious invariants.│
+├─────────────────────────────────────────────────────────────┤
+│ 4. SOURCE CODE                                              │
+│    The executable compilation target.                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+An agent performing a small bugfix in three years will likely never be passed the full ADR repository. It **will** receive Tier 3 and Tier 4. 
+
+---
+
+## Context Engineering for Future Agents
+
+When instructing agents to implement features, engineering teams should mandate that agents author their own future context:
+
+> **The Agentic Invariant Instruction:**  
+> *"Whenever implementing a non-obvious business rule, historical exception, or negative constraint that cannot be reconstructed purely from the code syntax, write a concise decisional comment directly above the implementation explaining WHY it must remain that way."*
+
+This creates a self-reinforcing documentation loop:
+```text
+Task Specification ──► Active Coding Agent ──► [Executable Code + Decisional Comments]
+                                                              │
+                                                              ▼
+                                               Future Agent Context (Preserved Intent)
+```
+
+The code satisfies immediate execution; the decisional comments protect future autonomous maintenance cycles from cognitive decay.
+
+---
+
+## Summary Principles
+
+1. **Comments are Context Retrieval Anchors**: Inline comments are the only knowledge artifacts guaranteed to enter the model's context window alongside the code.
+2. **Ban Descriptive Comments**: Never write comments explaining *how* syntax works; agents parse control flow effortlessly.
+3. **Mandate Decisional & Invariant Comments**: Explain *why* code violates common intuition and *which* requirements shaped it.
+4. **Fence Invariants with Negative Knowledge**: Explicitly warn against seemingly obvious simplifications that would break domain rules.
+5. **Protect Future Agent Trajectories**: Treat high-signal comments as long-term context engineering for subsequent automated refactoring turns.
+
+---
+
+## Related Notes
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Explains why comments must capture the "why" of intentional non-standard business rules.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing Business Decision Records (BDRs) and architectural guardrails alongside code.
 - **[[AI-Generated Architectural Documentation from Code]]**: How semantic code comments feed living architectural models and agent context.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation cards and semantic blueprints as deterministic agent frameworks.
 - **[[Designing Software for AI Agents]]**: Protecting domain subtleties from being accidentally refactored away by coding agents.
+
+---
+
+## Relationship to the Knowledge Graph
+
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: The shift from descriptive comments to decisional constraints.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Using negative comments to stop zero-friction agents from over-simplifying critical edge cases.
+- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Anchoring decisional comments in Layer 1 (Code as Compiled Artifact) and Layer 4 (Model Context).
+- **[[LLM Agents and Institutional Memory]]**: Preserving corporate tribal knowledge directly inside executable files.
