@@ -186,6 +186,25 @@ For very large repositories, operating documentation as a semantic cache is not 
 
 ---
 
+# Why Good Tests Alone Are Insufficient for Maintenance
+
+A common counterargument in agentic software engineering suggests that comprehensive test suites might render architectural documentation redundant:
+
+> *"If a repository has exhaustive, deterministic tests that verify every requirement, why do we need high-level architectural documentation?"*
+
+While comprehensive test suites are indispensable—serving as [[Testing in the Model, Agent, LLM Era|the ironclad verification oracle]] for autonomous development—there is a fundamental operational asymmetry between **creation/rewriting** and **ongoing maintenance**:
+
+* **Tests are sufficient for rewriting and greenfield synthesis**: When an agent regenerates a self-contained module from scratch against an established contract, the test suite acts as an automated black-box acceptance oracle. The agent can treat the implementation as disposable scrap, iterating until the test runner yields zero exit codes.
+* **Tests are insufficient for ongoing system maintenance and evolution**:
+  1. **Verification vs. Navigation**: Tests answer whether a specific input produces a known output (`actual == expected`). They cannot answer *where* a new capability belongs, *which* service owns an aggregate, or *how* cross-boundary workflows communicate.
+  2. **Blindness to Architectural Drift**: A test suite will happily pass even if an agent introduces catastrophic architectural coupling—such as bypassing domain services to query an adjacent module's database directly or duplicating business logic inside an ingress controller. Tests verify local behavior, not structural boundaries.
+  3. **Absence of Tests for Novel Capabilities**: Maintenance primarily involves extending systems with features that have no pre-existing tests. Without architectural documentation, agents design new flows in a vacuum, relying on unstructured guesswork.
+  4. **The Trial-and-Error Token Tax**: Relying on tests as the sole navigation mechanism forces agents into expensive guess-and-check loops (mutate $\to$ fail test $\to$ read trace $\to$ retry), rapidly exhausting context windows and token budgets. Architectural documentation provides the topological map that enables **First-Pass Success**.
+
+For a comprehensive exploration of this dynamic, see [[Tests Are for Verification, Not Architectural Navigation]].
+
+---
+
 # Useful Levels of Generated Documentation
 
 Generated documentation should exist at several levels.
@@ -1145,6 +1164,8 @@ It is a **living semantic model of the software system** that can be consumed by
 
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: How decision-focused comments form the raw semantic material for living architectural docs.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating documentation concurrently during development as a deterministic blueprint and token-efficient framework.
+- **[[Tests Are for Verification, Not Architectural Navigation]]**: Why test suites serve as verification oracles for rewrites but fail as navigational maps for ongoing maintenance.
+- **[[Testing in the Model, Agent, LLM Era]]**: The canonical Layer 2 hub establishing test oracles and disposable implementation economics.
 - **[[Retrieval-Augmented Generation and Context Architecture]]**: Context minimization and attention density mechanics underlying semantic caching.
 - **[[How LLM Systems Build Context]]**: Engineering working memory and context headroom for coding agent decision loops.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Preserving decision traces and architectural rationale as strategic intellectual property.
