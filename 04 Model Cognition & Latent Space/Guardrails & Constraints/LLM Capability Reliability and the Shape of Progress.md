@@ -16,6 +16,25 @@ created: 2026-08-23
 
 # LLM Capability, Reliability, and the Shape of Progress
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> **Model capability is fundamentally distinct from system reliability**. While single-attempt benchmark scores (SWE-bench Verified) and autonomous task horizons (METR 50% success limits) advance rapidly, real-world operational dependability advances along a much flatter curve.  
+> - **The Exponential Compounding Trap**: In multi-step autonomous execution, unmitigated per-step error rates compound exponentially. An agent operating at $95\%$ accuracy per step has only a $36\%$ probability of successfully completing a 20-step task:
+>   $$P(\text{End-to-End Success}) = p^N \quad \implies \quad 0.95^{20} \approx 35.8\%$$
+> - **The Soft Hallucination Threat**: As models scale, obvious failures vanish and are replaced by *soft hallucinations*—subtle, highly persuasive logic errors, inverted business invariants, and nonexistent API flags wrapped in pristine syntax.
+> - **The Harness Axiom**: Production reliability will never be delivered by waiting for an infallible base model. Systems must treat the LLM as an **untrusted probabilistic worker operating inside a deterministic control harness** equipped with mechanical verification oracles.
+
+### Comparative Matrix: AI Capability Metrics vs Operational Production Realities
+
+| Capability Metric / Tier | Measured Property | Evaluation Topology | Primary Failure Mode | Verifier / Oracle Dependency | Production Applicability |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Academic Benchmark (e.g. SWE-bench Verified)** | Single-pass patch resolution on curated, closed-world issues. | Static repository diff against pre-existing test assertions. | **Benchmark Overfitting & S-Curve Saturation**: Succeeds on bounded issues, fails on messy open-ended codebases. | Pre-existing unit test pass/fail. | Proxy indicator of raw capability; poor indicator of autonomous production safety. |
+| **Autonomous Task Horizon (METR 50% Threshold)** | Duration of human-equivalent work an agent can complete with $50\%$ success rate. | Open-ended agentic execution across terminals, files, and browsers. | **Compounding Drift**: 50% success rate requires multiple retries and human monitoring to achieve convergence. | Multi-stage acceptance tests and environment state inspection. | Experimental pilot automation; acceptable only with active human-in-the-loop oversight. |
+| **Soft Hallucination Threshold ($80\%\to 95\%$ Reliability)** | Semantic validity of subtle edge cases, architectural invariants, and API flags. | Multi-turn dialectic dialogue and complex system refactoring. | **Persuasive Epistemic Deception**: Output looks impeccably engineered, bypassing superficial human code reviews. | High-coverage mutation testing and static AST linters. | Standard developer pair-programming under vigilant review. |
+| **Deterministic Production Harness ($99.9\%+$ Reliability) (Recommended)** | End-to-end task completion with guaranteed zero-semantic drift and regression prevention. | Probabilistic agent constrained within deterministic state machines. | Trapped loops and timeout aborts when agent fails to satisfy mechanical test gates. | **Mechanical Ground Truth**: Compilers, linters, isolated sandboxes, and immutable test suites. | **Mission-critical enterprise software engineering and automated delivery pipelines.** |
+
+---
+
 ## Summary
 
 LLMs are still improving rapidly, but they are not moving along a single curve toward infallibility. Several different capabilities are advancing at different rates:
