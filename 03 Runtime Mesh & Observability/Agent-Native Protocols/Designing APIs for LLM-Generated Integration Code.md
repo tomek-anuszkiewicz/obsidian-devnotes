@@ -14,6 +14,20 @@ aliases:
   - Agent-Native Interface Bundles
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: The Agent-Native Interface Bundle
+> In the agentic era, external APIs and microservices are primarily consumed and integrated by **autonomous coding agents and LLM orchestration engines**, rather than humans manually reading HTML documentation. Exposing raw, untyped HTTP endpoints forces models to guess path parameters, serialization conventions, and side effects—drastically increasing integration hallucination rates.
+> Modern service interfaces must publish an **Agent-Native Interface Bundle**: pairing formal schema contracts (OpenAPI, AsyncAPI, GraphQL) with **strongly typed generated clients**, **first-class tool servers (MCP)**, **machine-executable operational instructions (`SKILL.md`)**, and **deterministic sandbox test suites**.
+
+| Bundle Component | Primary Target | Technical Artifact | Agentic Role & Capability |
+| :--- | :--- | :--- | :--- |
+| **Formal Contract** | Code generators & schema validators | OpenAPI 3.1, AsyncAPI, GraphQL Schema | Defines machine-readable endpoints, parameter constraints, and operational schemas. |
+| **Strongly Typed Client** | Application compile-time verification | Generated SDK (Kiota, OpenAPI Generator) | Constrains the model's action space to valid methods, eliminating URL and payload errors. |
+| **Tool Protocol Server** | Runtime agent invocation & reflection | Model Context Protocol (MCP) Server | Exposes discrete, discoverable tools that agents can execute or inspect dynamically. |
+| **Executable Skill** | Agent context & reasoning guide | `SKILL.md` (metadata + workflow rules) | Teaches the agent auth flows, retry backoffs, idempotency rules, and semantic error semantics. |
+| **Verification Sandbox** | Automated feedback & testing harness | Deterministic mock server / test container | Provides an immediate verification oracle for generated integration code. |
+
+---
+
 ## Goal
 
 When using an LLM coding agent within an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]], the goal is not necessarily for the agent to call an API directly.
@@ -201,34 +215,31 @@ The important principle is:
 
 The coding agent should normally not construct HTTP requests manually.
 
-Instead of generating:
+Instead of generating raw HTTP transport strings:
 
-```csharp
-await httpClient.DeleteAsync(
-    $"/users/{userId}/sessions");
+```text
+// Anti-pattern: Handcrafted transport assembly (error-prone, URL hallucination risk)
+await http.delete("/users/" + userId + "/sessions");
 ```
 
-prefer a generated typed client:
+prefer a generated, strongly typed domain client:
 
-```csharp
-await identityClient.RevokeUserSessionsAsync(
-    userId,
-    cancellationToken);
+```text
+// Preferred: Strongly typed domain client method
+await identityClient.revokeUserSessions(userId, context);
 ```
 
-The client can be generated from OpenAPI using tools such as:
+The client can be generated from OpenAPI using modern multi-ecosystem tools such as:
 
-- Kiota,
-    
-- NSwag,
-    
-- OpenAPI Generator.
-    
+- **Microsoft Kiota** (TypeScript, Go, Python, Java, .NET, PHP),
+- **OpenAPI Generator** (Rust, Go, TypeScript, Java, C#, Python, Swift),
+- **grpc-gateway / buf** (gRPC and Protobuf across systems and managed runtimes),
+- **NSwag / Swagger Codegen**.
 
 The flow becomes:
 
 ```text
-OpenAPI
+OpenAPI / AsyncAPI / Schema
    ↓
 Client generator
    ↓
@@ -260,28 +271,25 @@ Instead, it chooses a typed method.
 
 ## Preserve Documentation in Generated Clients
 
-Ideally, descriptions from OpenAPI should become XML documentation or equivalent comments in the generated client.
+Ideally, descriptions from OpenAPI should become docstrings, JSDoc, XML comments, or doc comments in the generated client.
 
 For example:
 
-```csharp
-public interface IInvoicesClient
-{
-    /// <summary>
-    /// Cancels an issued invoice while preserving it for audit.
-    /// Do not use for draft invoices.
-    /// </summary>
-    Task CancelInvoiceAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+```text
+interface InvoicesClient {
+    /**
+     * Cancels an issued invoice while preserving it for audit.
+     * Precondition: Invoice status must be 'Issued'.
+     * Do not use for draft invoices (use deleteDraftInvoice instead).
+     */
+    cancelInvoice(id: UUID, context: ExecutionContext): Promise<InvoiceReceipt>;
 
-    /// <summary>
-    /// Permanently deletes a draft invoice.
-    /// Issued invoices cannot be deleted.
-    /// </summary>
-    Task DeleteDraftInvoiceAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+    /**
+     * Permanently deletes a draft invoice.
+     * Precondition: Invoice status must be 'Draft'.
+     * Issued invoices cannot be deleted.
+     */
+    deleteDraftInvoice(id: UUID, context: ExecutionContext): Promise<void>;
 }
 ```
 
