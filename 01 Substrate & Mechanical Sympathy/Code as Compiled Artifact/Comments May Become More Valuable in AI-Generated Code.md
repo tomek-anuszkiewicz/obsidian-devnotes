@@ -196,6 +196,47 @@ The code satisfies immediate execution; the decisional comments protect future a
 
 ---
 
+## Pre-Emptive Knowledge Rehydration: Mining Git and Documentation for Decisional Anchors
+
+A critical implementation question emerges from this paradigm:
+*If coding agents will not proactively query Git history or issue trackers during routine feature modifications, how does historical intent get into a legacy codebase that currently lacks inline decisional comments?*
+
+The solution is an **asynchronous, proactive Knowledge Rehydration pipeline**. Rather than expecting real-time coding agents to execute speculative, high-latency tool calls on every line of code, an offline **Code Archaeology Agent** performs a targeted repository-wide sweep:
+
+```text
+HISTORICAL ARTIFACTS                                      ACTIVE CODEBASE
+┌───────────────────────────────┐                        ┌──────────────────────────────┐
+│ • Git Log & Commit Messages   │                        │                              │
+│ • Pull Request Reviews & Diffs│ ──► ARCHAEOLOGICAL ──► │ // DECISIONAL INVARIANT:     │
+│ • Issue / Ticket Trackers     │       AGENT PASS       │ // [Synthesized Intent]      │
+│ • Incident Post-Mortem Docs   │                        │ target_routine()             │
+└───────────────────────────────┘                        └──────────────────────────────┘
+```
+
+### The 4-Stage Rehydration Pipeline:
+
+1. **Anomaly & Churn Detection**:
+   The archaeology agent parses `git log` and `git blame` to identify hot spots and anomaly commits:
+   - Commits tagged with critical intent markers (*"hotfix"*, *"workaround"*, *"vendor bug"*, *"race condition"*, *"silent drop"*, *"do not touch"*).
+   - Lines with high historical churn or unusual defensive structures that lack clear structural explanations.
+2. **Multi-Source Intent Synthesis**:
+   The agent crawls linked external sources (pull request discussions, issue trackers, incident post-mortems, design docs). It extracts the original *failure mode*, *vendor asymmetry*, or *non-standard constraint* that necessitated the implementation.
+3. **Distillation into Negative Knowledge & Decisional Guards**:
+   Rather than dumping the entire historical thread into the file, the model distills the multi-page context into a dense, 2-to-4 line **Decisional Comment** or **Negative Knowledge Guard** directly above the vulnerable AST node.
+4. **Permanent Context Hydration**:
+   The comments are committed back into the codebase, permanently transforming external corporate memory into co-located token context.
+
+### Inverting the Retrieval Economics:
+
+| Retrieval Strategy | Latency & Tool Overhead | Token Cost per Mutation | Ingestion Reliability |
+| :--- | :--- | :--- | :--- |
+| **Reactive In-Flight Querying** (Agent queries `git blame` + Jira on every line) | Extreme (Multi-turn tool roundtrips per line) | High (Massive context explosion across candidate lines) | **Near Zero** (Agent rarely doubts its own ability to "simplify" code) |
+| **Pre-Emptive Rehydration** (Offline sweep extracts intent $\rightarrow$ injects inline comments) | **Zero** (Comments are already physically present in token space) | **Zero Overhead** (Minimal token footprint alongside AST) | **100% Guaranteed** (Co-located in attention window at mutation point) |
+
+By treating code archaeology as an offline, preparatory compilation step, teams convert latent, fragmented institutional memory into high-priority, zero-latency physical tokens before active development agents ever touch the files.
+
+---
+
 ## Summary Principles
 
 1. **Comments are Context Retrieval Anchors**: Inline comments are the only knowledge artifacts guaranteed to enter the model's context window alongside the code without requiring external tool calls.
@@ -204,6 +245,7 @@ The code satisfies immediate execution; the decisional comments protect future a
 4. **The Git History Fallacy**: Version control history is forensic and tool-mediated; an agent will never proactively run `git blame` on every line during routine mutation turns.
 5. **Fence Invariants with Negative Knowledge**: Explicitly warn against seemingly obvious simplifications that would break domain rules.
 6. **Protect Future Agent Trajectories**: Treat high-signal comments as long-term context engineering for subsequent automated refactoring turns.
+7. **Pre-Emptive Knowledge Rehydration**: In legacy systems lacking comments, run offline archaeological agents to mine Git logs, PRs, and incident docs, synthesizing and injecting decisional comments directly into the source before active development begins.
 
 ---
 
@@ -211,6 +253,8 @@ The code satisfies immediate execution; the decisional comments protect future a
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Explains why comments must capture the "why" of intentional non-standard business rules.
 - **[[Retrieval-Augmented Generation and Context Architecture]]**: Contrasts multi-hop tool-based retrieval (Git blame, issue tracking) with zero-latency co-located context injection.
+- **[[LLM Agents and Institutional Memory]]**: How automated code archaeology over corporate archives reveals the historical intent behind legacy workarounds.
+- **[[Refactoring Legacy Systems with AI Agents]]**: Using offline symbolic agents to isolate historical invariants and safely modernize legacy architectures without erasing defensive edge cases.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing Business Decision Records (BDRs) and architectural guardrails alongside code.
 - **[[AI-Generated Architectural Documentation from Code]]**: How semantic code comments feed living architectural models and agent context.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation cards and semantic blueprints as deterministic agent frameworks.
