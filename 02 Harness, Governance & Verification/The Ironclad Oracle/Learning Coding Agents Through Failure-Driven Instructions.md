@@ -10,617 +10,238 @@ tags:
 aliases:
   - Failure-Driven Agent Learning
   - Instruction Tuning from Coding Failures
+  - Procedural Memory for Coding Agents
+  - Eval-Driven Instruction Engineering
+  - Dual Optimization Loops
 ---
 
-## Core Idea
+# Learning Coding Agents Through Failure-Driven Instructions
 
-Instead of treating an agent instruction as a static prompt, treat it as a **versioned artifact that can be continuously improved based on agent failures**, forming the basis of [[Constraint Saturation and Rule Oscillation in Coding Agents|governing instruction saturation]].
-
-Within a controlled [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], the goal is not merely to make the agent eventually produce correct code.
-
-The more interesting goal is:
-
-> **Produce good code with the minimum number of iterations by continuously improving the instructions, examples, rules, and context given to the agent.**
-
-This creates two nested optimization loops.
-
----
-
-## 1. Inner Loop: Improve the Code
-
-As examined in [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification|correcting AI-generated code]], the normal coding-agent loop looks like this:
+> [!IMPORTANT]
+> **The Core Thesis**: Instead of treating agent instructions as static prompts or appending ad-hoc rules into a bloated config file, **instructions must be treated as versioned, testable engineering artifacts that evolve through failure analysis**. The ultimate goal of an autonomous harness is not merely to fix broken code through repeated brute-force loops, but to maximize **First-Pass Success** by building an organizational **procedural memory** that prevents entire classes of architectural and domain errors.
 
 ```text
-task
-↓
-agent generates code
-↓
-compile / tests / static analysis / review
-↓
-failure
-↓
-agent fixes code
-↓
-...
-↓
-success
-```
-
-This is already realistic today because software provides unusually strong automated feedback through [[Testing in the Model, Agent, LLM Era|deterministic test oracles]]:
-
-- compiler errors
-    
-- unit tests
-    
-- integration tests
-    
-- architecture tests
-    
-- static analysis
-    
-- linting
-    
-- security checks
-    
-- performance benchmarks
-    
-- repository-level validation
-    
-
-The agent can repeatedly modify the implementation until the checks pass.
-
----
-
-## 2. Outer Loop: Improve the Instructions
-
-The more interesting loop happens above the coding loop:
-
-```text
-task
-+
-instruction v12
-↓
-agent
-↓
-failure
-↓
-analyze why the failure happened
-↓
-extract a reusable lesson
-↓
-generate candidate instruction changes
-↓
-evaluate them
-↓
-instruction v13
-```
-
-The system therefore learns not only:
-
-> How do I fix this implementation?
-
-but:
-
-> What information should the agent have received so that this class of mistake would not happen in the first place?
-
-Over time, repeated failures can become organizational knowledge.
-
----
-
-## Example
-
-Suppose the task is:
-
-> Add an endpoint returning order history.
-
-The agent creates:
-
-```text
-Controller
-    ↓
-DbContext
-```
-
-Tests pass, but an architecture test fails because controllers are not allowed to access persistence directly.
-
-The system records:
-
-```text
-Failure:
-Controller accessed DbContext directly.
-
-Underlying reason:
-The agent did not understand the application's architectural boundary.
-
-Candidate rule:
-HTTP endpoints should delegate to application handlers and must not access persistence directly.
-```
-
-This rule becomes part of the future agent context.
-
-Later, instead of:
-
-```text
-task
-→ bad implementation
-→ feedback
-→ fix
-→ success
-```
-
-we want:
-
-```text
-task
-→ correct implementation
+Prompt Engineering ──► Instruction Engineering ──► Eval-Driven Optimization ──► Organizational Procedural Memory
 ```
 
 ---
 
-## The Important Metric: First-Pass Success
+## Executive Summary & Core Architectural Invariants
 
-Success rate alone is not sufficient.
-
-An agent that succeeds after seven attempts may be much less useful than one that succeeds almost immediately.
-
-Useful metrics include:
-
-```text
-first-pass success rate
-average number of iterations
-total tokens consumed
-execution time
-number of regressions introduced
-human review effort
-```
-
-A simplified optimization function could look like:
-
-```text
-score =
-    implementation quality
-  - iteration cost
-  - token cost
-  - execution cost
-  - regression cost
-  - human review cost
-```
-
-One of the best high-level KPIs may therefore be:
-
-> **How often can the agent produce an acceptable PR without corrective feedback?**
+1. **The Dual Optimization Loop**: Software development with coding agents operates across two nested loops:
+   - **Inner Loop (Code Level)**: The agent repairs transient implementation defects against deterministic compiler, lint, and test signals.
+   - **Outer Loop (Instruction Level)**: The system analyzes post-task failures and human review dissents, extracts generalizable lessons, and refines repository instructions so future agents avoid the mistake entirely.
+2. **First-Pass Success as the Sovereign Metric**: Raw eventual success is an insufficient metric; brute-forcing seven repair loops wastes tokens and human attention. Systems optimize for:
+   $$\text{Utility} = \text{Implementation Quality} - \sum (\text{Iterations} + \text{Token Overhead} + \text{Review Friction} + \text{Regression Risk})$$
+3. **Instructions as Code (Not Append-Only Sprawl)**: Naively appending every failure to a flat instructions file leads to context saturation, contradictory rules, and rule oscillation. Instructions must be versioned, tested against regression suites, compressed, and pruned.
+4. **Dynamic Behavioral Retrieval (RAG for Agent Steering)**: Rather than loading hundreds of accumulated lessons into every prompt, systems dynamically retrieve relevant operational guidelines based on task domain, architectural layer, and touched subsystems.
+5. **High-Leverage Human Review**: Human review shifts from repetitive mechanical linting to authoritative negative knowledge curation. When a human explains a subtle domain or architectural error once, the system formalizes it into persistent instructions and tests, compounding organizational capability over time.
 
 ---
 
-## Do Not Simply Append Every Failure to AGENTS.md
-
-A naive implementation would be:
+## 1. The Dual Optimization Hierarchy: Inner Code vs. Outer Instruction Loops
 
 ```text
-failure
-↓
-add another rule
-↓
-add another rule
-↓
-add another rule
+Outer Loop: Organizational Learning (Eval-Driven Instruction Tuning)
+┌────────────────────────────────────────────────────────────────────────┐
+│ Task Definition + Versioned Instruction Set (vN)                       │
+│     │                                                                  │
+│     ▼                                                                  │
+│ Inner Loop: Implementation Synthesis                                   │
+│ ┌────────────────────────────────────────────────────────────────────┐ │
+│ │ Agent Synthesizes Code ──► CI / Test Oracle ──► Pass / Fail        │ │
+│ │      ▲                                                │            │ │
+│ │      └────────── Stochastic Repair Loop ──────────────┘            │ │
+│ └────────────────────────────────┬───────────────────────────────────┘ │
+│                                  │ (Task Completed or Failed)          │
+│                                  ▼                                     │
+│ Analyze Root Cause Failure ──► Extract Invariant ──► A/B Eval Suite   │
+│                                  │                                     │
+│                                  ▼                                     │
+│              Promote Optimized Instruction Set (vN+1)                  │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-Eventually the instructions would become enormous, redundant, contradictory, and difficult for the model to follow.
+### The Inner Loop: Automated Implementation Repair
+As examined in [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]], the baseline coding loop leverages immediate deterministic feedback:
+- Compiler and typechecker errors,
+- Deterministic unit and integration test vectors,
+- Static analysis, security linters, and architectural boundaries.
 
-Instead, failure processing should look more like:
+The agent loops locally until the deterministic harness turns green. However, relying exclusively on this inner loop treats every task as an amnesic event: the agent makes the same architectural missteps on Monday that it made the previous Friday, burning compute to rediscover boundaries.
 
-```text
-failure
-↓
-extract lesson
-↓
-check whether similar knowledge already exists
-↓
-generalize
-↓
-detect contradictions
-↓
-generate several candidate formulations
-↓
-evaluate them
-↓
-keep the version that improves results
-```
-
-Instructions themselves should therefore be treated almost like code:
-
-- versioned
-    
-- tested
-    
-- reviewed
-    
-- refactored
-    
-- compressed
-    
-- removed when no longer useful
-    
+### The Outer Loop: Continuous Instruction Refinement
+The outer loop abstracts beyond the immediate pull request:
+1. **Failure Ingestion**: Captures failures where the agent required multiple iterations, violated an unwritten architectural rule, or received human review corrections.
+2. **Root-Cause Generalization**: Distinguishes between localized code bugs and missing contextual constraints.
+3. **Candidate Synthesis**: Drafts candidate instruction updates or architectural non-goals (see [[Negative Knowledge and Explicit Architectural Dissents]]).
+4. **Offline Evaluation**: Tests candidate instructions against a historical suite of representative tasks to ensure the change improves first-pass yield without inducing regressions or rule oscillation.
 
 ---
 
-## A/B Testing Instructions
+## 2. Abstracting Domain Failures: An Architectural Case Study
 
-Different formulations of the same rule may produce different results.
+Consider a task assigned to an autonomous coding agent:
+> *"Implement an API endpoint that queries and returns historical customer orders."*
 
-For example:
-
-### Version A
-
-```text
-Do not access DbContext from controllers.
-```
-
-### Version B
+### Naive Implementation & Architectural Failure
+The agent generates a solution that passes unit tests, but violates architectural layering:
 
 ```text
-Controllers are transport adapters only.
-They may validate transport-level input and invoke application handlers,
-but must not access persistence directly.
+[ Transport Layer (HTTP Controller / RPC Handler) ]
+                       │
+                       │ (Direct coupling: architectural violation)
+                       ▼
+         [ Persistence Layer (ORM / Database) ]
 ```
 
-### Version C
+An automated architectural rule or human reviewer flags the PR: *Transport handlers must remain pure adapters and are forbidden from querying persistence engines directly; they must delegate to application-layer command/query handlers.*
+
+### Transforming the Failure into Procedural Memory
 
 ```text
-Before modifying an HTTP endpoint:
+Observed Failure:
+Transport adapter bypassed the application boundary to query database persistence directly.
 
-1. identify the application handler,
-2. place persistence access there,
-3. keep the controller limited to transport concerns.
+Underlying Architectural Defect:
+The agent lacked explicit knowledge of the repository's hexagonal / clean architecture boundaries.
+
+Extracted Boundary Invariant:
+Transport adapters (HTTP/RPC/CLI) are interface translators only. They validate transport payloads 
+and dispatch to domain application handlers; they must never import or invoke persistence gateways directly.
 ```
 
-They can be tested against a historical task suite:
+By formalizing this rule, the outer loop ensures that subsequent agents across all services generate the decoupled architecture on their very first pass:
 
-|Instruction|Success|Avg. Attempts|Cost|
-|---|--:|--:|--:|
-|Current|82%|2.1|Low|
-|A|84%|1.9|Low|
-|B|91%|1.4|Medium|
-|C|92%|1.3|Higher|
-
-The best instruction is not necessarily the longest or the one with the highest raw success rate.
-
-The objective is the best trade-off between:
-
-> quality × reliability × iteration count × cost
+```text
+[ Transport Layer ] ──► [ Application Handler ] ──► [ Domain / Persistence ]
+```
 
 ---
 
-## Avoid Overfitting to Individual Tasks
+## 3. The Sovereign Metric: First-Pass Success & Optimization Trade-offs
 
-A dangerous loop would be:
+Raw eventual completion is an economically naive metric. An agent that reaches a solution on attempt #8 often generates bloated, defensive code while consuming excessive tokens and wall-clock time.
 
-```text
-task fails
-↓
-change instruction
-↓
-rerun the same task
-↓
-task passes
-↓
-declare improvement
-```
+### Key Performance Indicators
+- **First-Pass Success Rate (FPSR)**: The percentage of tasks where the agent generates an acceptable, green PR without needing corrective inner loops.
+- **Iteration Depth**: Average number of compile/test/repair cycles per task.
+- **Token Efficiency**: Total input/output tokens consumed per merged feature.
+- **Cognitive Load on Human Reviewers**: Hours of senior engineering attention required to audit PRs.
 
-This may simply encode the solution to one particular case.
-
-Instead, instruction development should resemble machine learning evaluation:
-
-```text
-TRAIN SET
-historical failures and tasks
-↓
-optimize instructions
-
-VALIDATION SET
-different tasks
-↓
-check whether the rule generalizes
-
-HOLDOUT SET
-unseen tasks
-↓
-measure real improvement
-```
-
-The instruction system itself can overfit.
+$$\text{Instruction Score} = \frac{\text{Functional Correctness} \times \text{Architectural Fidelity}}{\text{Iterations} \times \log(\text{Prompt Token Cost})}$$
 
 ---
 
-## Instructions Should Be Retrieved, Not Always Loaded
+## 4. Avoiding Instruction Sprawl: Eval-Driven Hygiene
 
-Eventually the organization may accumulate hundreds of useful lessons.
+The most dangerous anti-pattern in agent prompt management is the **Append-Only Trap**:
+```text
+Failure Occurs ──► Append New Rule to Instructions ──► File Reaches 1,000 Lines ──► Context Saturation & Rule Oscillation
+```
 
-Loading all of them into every agent request would be inefficient.
+As documented in [[Constraint Saturation and Rule Oscillation in Coding Agents]], models overwhelmed by massive, unorganized prompt rules suffer cognitive degradation. Instructions must be governed with the same rigor as production software:
 
-Instead, knowledge could be organized by domain:
+```text
+                         Agent Failure Event
+                                  │
+                                  ▼
+                        Extract Core Invariant
+                                  │
+                                  ▼
+           Check for Semantic Duplication / Contradictions
+                                  │
+                                  ▼
+          Generate Candidate Formulations (Short vs. Explanatory)
+                                  │
+                                  ▼
+            Evaluate on Holdout Suite (Regression Verification)
+                                  │
+                     ┌────────────┴────────────┐
+                     ▼                         ▼
+             [ Improves FPSR ]         [ Degrades / Neutral ]
+                     │                         │
+                     ▼                         ▼
+             Promote to Repo           Discard Candidate
+```
+
+### A/B Testing Rule Formulations
+Different expressions of the identical architectural invariant produce dramatically different model behaviors:
+
+| Formulation Type | Instruction Example | FPSR | Iterations | Context Overhead |
+| :--- | :--- | :---: | :---: | :---: |
+| **Negative Proscription** | *"Do not query database contexts inside transport controllers."* | 84% | 1.9 | Low |
+| **Architectural Rationale** | *"Transport controllers are interface adapters. They must delegate all persistence operations to application handlers."* | 91% | 1.4 | Moderate |
+| **Procedural Step-by-Step** | *"1. Identify application handler. 2. Place query logic in handler. 3. Call handler from controller."* | 92% | 1.3 | High |
+
+The winning formulation is not necessarily the most prescriptive; it is the one that balances cognitive clarity with minimal token consumption.
+
+---
+
+## 5. Architectural Memory: Retrieval-Augmented Steering (Behavioral RAG)
+
+As an enterprise accumulates hundreds of validated architectural invariants, loading every rule into every prompt saturates the model's working memory. 
+
+Organizations must deploy **Behavioral Retrieval**: partitioning rules into modular, domain-specific packs and dynamically retrieving them based on the task's context envelope:
 
 ```text
 instructions/
-
-architecture/
-    boundaries.md
-    messaging.md
-    persistence.md
-
-dotnet/
-    ef-core.md
-    cancellation.md
-    serialization.md
-
-business/
-    pricing.md
-    reservations.md
-    authorization.md
-
-testing/
-    integration-tests.md
-    test-data.md
+├── architecture/
+│   ├── boundary-enforcement.md
+│   ├── messaging-topologies.md
+│   └── persistence-gateways.md
+├── runtimes/
+│   ├── concurrency-cancellation.md
+│   ├── allocation-limits.md
+│   └── serialization-pipelines.md
+├── domain/
+│   ├── billing-invariants.md
+│   ├── order-state-machine.md
+│   └── identity-tenancy.md
+└── verification/
+    ├── integration-harness.md
+    └── property-fuzzing.md
 ```
 
-For a task such as:
+When an agent is assigned to *"Update payment retry backoff"*, the harness dynamically retrieves:
+1. `architecture/boundary-enforcement.md`
+2. `runtimes/concurrency-cancellation.md`
+3. `domain/billing-invariants.md`
 
-> Add cancellation of a hotel reservation
-
-the system may retrieve only:
-
-```text
-architecture/boundaries
-business/reservations
-business/authorization
-testing/integration-tests
-```
-
-This creates a form of **RAG for agent behavior**.
-
-Instead of retrieving facts for answering a question, the system retrieves the relevant operational knowledge required to perform the task correctly.
+This delivers surgical, high-density steering instructions without global context pollution.
 
 ---
 
-## Compressing Organizational Experience
+## 6. Transforming Human Review into Compounding Organizational Capital
 
-Repeated failures may generate overlapping rules:
-
+Traditional code review treats human corrections as ephemeral, single-use interventions:
 ```text
-Never instantiate HttpClient manually.
-
-Use IHttpClientFactory.
-
-External integrations must use typed clients.
-
-Handlers should not construct HttpClient.
+Traditional Model:
+Agent Makes Error ──► Human Explains Flaw ──► Agent Patches PR ──► Knowledge Lost in Git History
 ```
 
-A meta-agent can detect that they express the same underlying principle and replace them with:
-
+Learning-oriented engineering harnesses convert every human review correction into enduring organizational capital:
 ```text
-External HTTP integrations must use the project's registered typed clients.
-Application code must not instantiate HttpClient directly.
+Compounding Model:
+Agent Makes Error ──► Human Explains Flaw ──► Knowledge Extracted into Formal Invariant
+                             │
+                             ▼
+              Added to Behavioral Regression Suite
+                             │
+                             ▼
+              Future Agents Immunized Against Entire Error Class
 ```
 
-The compressed instruction set can then be evaluated against the regression suite.
+When a principal architect spends 15 minutes explaining why an implicit state-machine transition violates downstream billing guarantees, that explanation is not discarded. It is distilled into an architectural rule, verified against the eval suite, and embedded into the agent's procedural memory.
 
-If performance does not decrease, the redundant rules can be removed.
-
-This creates something resembling a:
-
-> **garbage collector for agent knowledge**
-
----
-
-## Human Feedback Becomes Much More Valuable
-
-Not every mistake can be detected automatically.
-
-The hardest failures are often things like:
-
-> Technically correct, but this domain model is wrong.
-
-For example, a reviewer may say:
-
-```text
-A reservation is not cancelled immediately.
-
-Cancellation creates a request that may later be accepted or rejected.
-```
-
-Instead of treating this as feedback only for one PR, the system can transform it into:
-
-- a domain rule
-    
-- an example
-    
-- an architecture constraint
-    
-- a test
-    
-- a reusable agent instruction
-    
-
-The human therefore supplies the expensive insight once.
-
-Future agents can reuse it indefinitely.
-
----
-
-## Code Review Changes Meaning
-
-Traditional code review:
-
-```text
-agent makes mistake
-↓
-human explains mistake
-↓
-agent fixes PR
-↓
-knowledge disappears into PR history
-```
-
-Learning-oriented code review:
-
-```text
-agent makes mistake
-↓
-human explains mistake
-↓
-mistake becomes structured knowledge
-↓
-knowledge becomes instruction / example / test
-↓
-instruction enters regression suite
-↓
-future agents avoid the same class of mistake
-```
-
-This changes the economics of review.
-
-A good review comment is no longer only an improvement to one PR.
-
-It becomes a potential improvement to **all future generated code**.
-
----
-
-## What Can Already Be Automated?
-
-### Strong automatic feedback
-
-These areas are particularly suitable today:
-
-- compilation
-    
-- unit tests
-    
-- integration tests
-    
-- architecture tests
-    
-- dependency rules
-    
-- linters
-    
-- static analysis
-    
-- security scanning
-    
-- performance benchmarks
-    
-- repository conventions
-    
-
-For these signals, the complete learning loop can potentially run automatically.
-
-### Weak automatic feedback
-
-Human judgment is still very valuable for:
-
-- domain modeling
-    
-- architecture trade-offs
-    
-- unclear business semantics
-    
-- maintainability
-    
-- unnecessary abstractions
-    
-- conceptual correctness
-    
-- product intent
-    
-
-However, even here the human may only need to provide the explanation once.
-
-The system can then convert the explanation into reusable knowledge.
-
----
-
-## The Result Is Not Necessarily a Better Model
-
-An important distinction:
-
-The underlying LLM may remain unchanged.
-
-What improves is the system around it:
-
-```text
-LLM
-+
-repository
-+
-tests
-+
-evaluation suite
-+
-organization-specific instructions
-+
-examples
-+
-failure history
-+
-retrieval
-+
-feedback loop
-```
-
-After enough iterations, the same general-purpose model may become dramatically more effective inside one particular organization.
-
-The advantage comes from accumulated organizational experience.
-
----
-
-## Mental Model
-
-The interesting progression is:
-
-```text
-Prompt Engineering
-↓
-Instruction Engineering
-↓
-Eval-Driven Instruction Development
-↓
-Organizational Agent Learning
-```
-
-The long-term asset may therefore not be a giant prompt.
-
-It is a continuously evolving system containing:
-
-```text
-tasks
-+
-failures
-+
-lessons
-+
-instructions
-+
-examples
-+
-tests
-+
-evaluations
-```
-
-The objective is:
-
-> **Every meaningful agent failure should increase the probability that future agents avoid the entire class of mistake.**
-
-In this model, an organization gradually builds its own **procedural memory for software-engineering agents**.
 ---
 
 ## Relationship to the Knowledge Graph
 
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: How failure-driven instructions and project rules are integrated into agent runtime harnesses.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: The dangers of instruction over-accumulation leading to multi-objective thrashing and rule oscillation.
-- **[[LLM Agents and Institutional Memory]]**: Preserving historical failure modes and architectural decisions in version-controlled instruction sets.
-- **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing rejected trajectories and debugging sessions as strategic training assets.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Identifying whether agent failures stem from code, instructions, or domain ambiguity.
-- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: Translating past failure modes into active pre-merge review rules.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The physical execution harness that injects versioned instructions and evaluates pass/fail metrics.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: The mathematical and cognitive foundation explaining why instructions must be pruned, compressed, and retrieved selectively.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How failure-driven instruction learning systematically builds the repository's Negative Knowledge Base ($K^-$).
+- **[[Testing in the Model, Agent, LLM Era]]**: Deterministic test suites and verification oracles as the foundational inner loop providing automated signal.
+- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Decision criteria for determining whether a failure demands an inline code patch, a specification rewrite, or an instruction update.
+- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How learned instruction rules are integrated into pre-merge automated agent reviewers.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing rejected trajectories and instruction evals as high-value strategic assets.
