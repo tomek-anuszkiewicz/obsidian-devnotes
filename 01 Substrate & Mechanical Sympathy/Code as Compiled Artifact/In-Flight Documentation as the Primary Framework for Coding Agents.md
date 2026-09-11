@@ -189,7 +189,10 @@ With coding agents, the marginal cost of documentation generation drops to near 
 
 A common misconception in agentic software engineering is the belief in **one-shot top-down generation**—the naive assumption that an architect can effortlessly author a pristine Markdown specification, and the agent will flawlessly emit production-grade systems code on the first attempt.
 
-In real-world engineering, especially when designing non-trivial subsystems (e.g., high-performance stateful dispatch loops, complex protocol engines, or delicate concurrency pipelines), human intent is rarely fully formed upfront. 
+In real-world engineering, especially when designing non-trivial subsystems (e.g., high-performance stateful dispatch loops, complex protocol engines, or delicate concurrency pipelines), human intent is rarely fully formed upfront:
+
+> [!NOTE]
+> **The Empirical Axiom of Specification**: A specification is not something conjured in isolation at a desk before work begins. A true specification is an empirically tested, calibrated distillate forged through direct battle with real-world code.
 
 The actual workflow operates as an **iterative crystallization loop**:
 
