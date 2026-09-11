@@ -993,5 +993,5 @@ That could change what we consider "clean" architecture.
 - **[[Designing Software for AI Agents]]**: Why explicit execution flows and visible side effects are easier for agents to reason about than hidden magic.
 - **[[Software Entropy and the Zero-Friction Trap]]**: How localized duplication provides cleaner blast-radius isolation than shared, sprawling abstractions.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: The shift from human typing-saving abstractions to agent-navigable explicit patterns.
-- **[[Designing Internal NuGet Packages as an Explicit, Composable Framework]]**: Building modular libraries without hiding critical execution semantics.
+- **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Building modular libraries without hiding critical execution semantics.
 - **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Trading implicit build-time generation for explicit, inspectable code.

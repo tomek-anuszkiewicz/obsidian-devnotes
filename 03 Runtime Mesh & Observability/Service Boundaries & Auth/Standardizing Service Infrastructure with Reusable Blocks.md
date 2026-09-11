@@ -263,7 +263,7 @@ Anything outside the common path becomes disproportionately difficult.
 
 ## A Framework Is Not Inherently Bad
 
-The problem is not that [[Designing Internal NuGet Packages as an Explicit, Composable Framework|internal NuGet packages]] collectively form a framework.
+The problem is not that [[Designing Internal Packages as an Explicit, Composable Framework|internal packages]] collectively form a framework.
 
 A framework can be useful when it provides:
 
@@ -1217,8 +1217,8 @@ The preferred outcome is a paved road rather than a walled garden:
 
 ## Relationship to the Knowledge Graph
 
-- **[[Designing Internal NuGet Packages as an Explicit, Composable Framework]]**: Building modular shared libraries that avoid framework lock-in.
-- **[[Internal NuGet Packages vs Agent-Generated Code]]**: Balancing shared package dependencies against localized, agent-generated code.
+- **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Building modular shared libraries that avoid framework lock-in.
+- **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing shared package dependencies against localized, agent-generated code.
 - **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Standardizing communication clients while letting applications own their dependencies.
 - **[[OpenTelemetry]]**: Standardizing observability pipelines across heterogeneous enterprise services.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Providing uniform hosting and configuration blocks across monolithic modules.

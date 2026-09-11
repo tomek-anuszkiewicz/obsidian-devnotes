@@ -240,6 +240,6 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
 - **[[Software Entropy and the Zero-Friction Trap]]**: The emergence of agent-native defaults (flat 1:1 hierarchy, localized duplication) to combat entropy.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
-- **[[Internal NuGet Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
+- **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
 - **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for substrate performance.
