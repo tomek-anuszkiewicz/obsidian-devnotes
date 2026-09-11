@@ -14,108 +14,119 @@ aliases:
   - Agent-Native Interface Bundles
 ---
 
-> [!IMPORTANT] Executive Architectural Thesis: The Agent-Native Interface Bundle
-> In the agentic era, external APIs and microservices are primarily consumed and integrated by **autonomous coding agents and LLM orchestration engines**, rather than humans manually reading HTML documentation. Exposing raw, untyped HTTP endpoints forces models to guess path parameters, serialization conventions, and side effects—drastically increasing integration hallucination rates.
-> Modern service interfaces must publish an **Agent-Native Interface Bundle**: pairing formal schema contracts (OpenAPI, AsyncAPI, GraphQL) with **strongly typed generated clients**, **first-class tool servers (MCP)**, **machine-executable operational instructions (`SKILL.md`)**, and **deterministic sandbox test suites**.
+# Designing APIs for LLM-Generated Integration Code
 
-| Bundle Component | Primary Target | Technical Artifact | Agentic Role & Capability |
-| :--- | :--- | :--- | :--- |
-| **Formal Contract** | Code generators & schema validators | OpenAPI 3.1, AsyncAPI, GraphQL Schema | Defines machine-readable endpoints, parameter constraints, and operational schemas. |
-| **Strongly Typed Client** | Application compile-time verification | Generated SDK (Kiota, OpenAPI Generator) | Constrains the model's action space to valid methods, eliminating URL and payload errors. |
-| **Tool Protocol Server** | Runtime agent invocation & reflection | Model Context Protocol (MCP) Server | Exposes discrete, discoverable tools that agents can execute or inspect dynamically. |
-| **Executable Skill** | Agent context & reasoning guide | `SKILL.md` (metadata + workflow rules) | Teaches the agent auth flows, retry backoffs, idempotency rules, and semantic error semantics. |
-| **Verification Sandbox** | Automated feedback & testing harness | Deterministic mock server / test container | Provides an immediate verification oracle for generated integration code. |
-
----
-
-## Goal
-
-When using an LLM coding agent within an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]], the goal is not necessarily for the agent to call an API directly.
-
-Instead, the agent should be able to:
-
-1. understand the requested business operation,
-    
-2. discover which external API capability provides it,
-    
-3. find the correct generated client,
-    
-4. choose the correct client method,
-    
-5. generate application code that uses that method correctly.
-    
-
-A useful mental model is:
+> [!IMPORTANT]
+> **The Agent-Native Interface Bundle Axiom**: In the agentic era, external APIs and microservices are primarily consumed and integrated by **autonomous coding agents and LLM orchestration engines**, rather than humans manually reading HTML documentation. Exposing raw, untyped HTTP endpoints forces models to guess path parameters, serialization conventions, and side effects—drastically increasing integration hallucination rates. Modern service interfaces must publish an **Agent-Native Interface Bundle**: pairing formal schema contracts (OpenAPI, AsyncAPI, GraphQL) with **strongly typed generated clients**, **first-class tool servers (MCP)**, **machine-executable operational instructions (`SKILL.md`)**, and **deterministic sandbox test suites**.
 
 ```text
-Business requirement
-        ↓
-Discover business capability
-        ↓
-Find appropriate client
-        ↓
-Find appropriate operation
-        ↓
-Generate application code
-        ↓
-Generated client
-        ↓
-REST API
+Traditional API Publishing:
+OpenAPI Spec + HTML Swagger Docs ──► Human Reads in Browser ──► Manually Writes Integration Code
+
+Agent-Native Interface Bundle:
+OpenAPI / AsyncAPI Contract
+  ├── Strongly Typed Generated Client (Constrains action space to typed methods)
+  ├── Native MCP Server (Exposes runtime tool invocation & parameter schemas)
+  ├── Executable Skill / Rulebook (Encodes auth, idempotency & retry workflows)
+  └── Deterministic Sandbox Oracle (Provides instant pass/fail compilation & tests)
+              │
+              ▼
+Autonomous Agent Synthesizes Verified Integration Code in Minutes
 ```
-
-## Internal vs External APIs
-
-It is useful to distinguish between internal and external APIs.
-
-### Internal APIs
-
-Internal APIs may:
-
-- reflect internal service architecture,
-    
-- expose implementation-specific concepts,
-    
-- use internal data representations,
-    
-- change relatively freely,
-    
-- depend on concepts already understood inside the system.
-    
-
-### External APIs
-
-External APIs (governing [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]]) should:
-
-- provide stable contracts,
-    
-- avoid leaking internal implementation details,
-    
-- expose business concepts rather than internal mechanics,
-    
-- remain compatible over time,
-    
-- use terminology meaningful to consumers.
-    
-
-This distinction becomes even more important when [[Designing Software for AI Agents|designing software for AI agents]] and LLM-generated code.
-
-The easier it is to understand the business meaning of an operation, the easier it is for an agent to select it correctly.
 
 ---
 
-## OpenAPI as the Source of Truth
+## Executive Summary & Core Architectural Invariants
 
-For REST APIs, OpenAPI should describe not only the HTTP contract, but also the semantics of the operation.
+Designing APIs for automated generation by coding agents operating inside an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]] inverts traditional API design assumptions:
 
-A weak specification:
+1. **Constraining the Model's Action Space**: Never force an agent to manually construct raw HTTP requests (`http.post("/api/v1/...")`). Generating transport-level strings invites URL hallucinations, header mistakes, and serialization bugs. Providing a **strongly typed client SDK** collapses the agent's action space to valid, compiler-verified methods.
+2. **The Agent-Native Interface Bundle**: High-trust services ship four interconnected artifacts: the **Formal Contract** (OpenAPI 3.1, AsyncAPI, GraphQL), the **Typed Client SDK** (generated via Kiota, OpenAPI Generator, or buf), a **First-Class MCP Server** (for runtime tool discovery), and an **Executable Skill** (`SKILL.md` detailing auth, workflows, and edge cases).
+3. **Intent-Revealing Business Operations Over Generic CRUD**: APIs must expose explicit domain operations (`cancelInvoice`, `revokeUserSessions`, `reserveInventory`) rather than generic database mutations (`updateEntity`, `changeStatus`). Explicit intent prevents agents from mistaking cancellation for deletion.
+4. **Negative Documentation as Hallucination Defenses**: Schema descriptions must explicitly declare preconditions and counter-indications—stating what an operation *does not* do and which alternative operation must be selected instead.
+5. **Docstring Preservation in Generated SDKs**: Client generators must propagate OpenAPI summaries, parameter constraints, and markdown descriptions directly into code comments (JSDoc, XML comments, docstrings). Agents reason over local in-file comments rather than parsing raw JSON schemas for every prompt.
+6. **Machine-Actionable Semantic Error Contracts**: Runtime error payloads must not return opaque status codes or unformatted strings. They must return machine-readable resolution hints (e.g., `{"code": "invoice_already_issued", "suggestedOperation": "cancelInvoice"}`) allowing autonomous agents to self-heal integration logic.
+7. **Protocol-Agnostic Contract Governance**: The same discipline applies across all integration topologies: REST with OpenAPI, GraphQL with typed introspection schemas, and asynchronous event-driven messaging with AsyncAPI message contracts.
+8. **Repository-Level Discovery Ergonomics**: Client classes must use domain-oriented names (`IOrdersClient`, `IIdentityClient`) rather than transport or team labels (`IServiceAClient`, `IApiV2Client`). Coding agents discover capabilities by matching business concepts against typed interface definitions.
 
-```yaml
-/users/{id}/sessions:
-  delete:
-    operationId: deleteSessions
+---
+
+## The Preferred Integration Architecture
+
+The goal when steering a coding agent is not merely for the model to execute an API call, but to synthesize durable, maintainable application code that cleanly interfaces with external capabilities:
+
+```text
+                       Business Requirement
+                                │
+                          Coding Agent
+                                │
+                   Discover Business Capability
+                                │
+                     Strongly Typed Interface
+                                │
+            ┌───────────────────┼───────────────────┐
+            │                   │                   │
+         OpenAPI             GraphQL             AsyncAPI
+            │                   │                   │
+          REST                GraphQL            Messaging
 ```
 
-A better specification:
+The critical abstraction presented to the coding agent must always be a **typed, semantically named client interface**. Low-level transport mechanics—HTTP serialization, TLS handshakes, multiplexing, and headers—must remain hidden beneath the generated SDK.
+
+---
+
+## The Agent-Native Interface Bundle: Beyond Swagger UI
+
+In the agentic era, documenting an API solely for human developers reading HTML in browser tabs is obsolete. When an enterprise or public platform exposes services, the primary consumers are increasingly **autonomous coding agents and LLM orchestration loops**.
+
+Platform creators should ship an **Agent-Native Interface Bundle** (a pattern closely aligned with [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP and agent-native toolkits]]):
+
+### 1. First-Class Model Context Protocol (MCP) Servers
+Instead of forcing an agent to write boilerplate HTTP request handlers from scratch, services provide a native MCP server:
+- The MCP server exposes the API's business operations as **discrete, typed tools** with explicit parameters, deterministic outputs, and rich error structures.
+- Agents can either invoke the MCP tools directly during runtime execution or use the MCP schemas as ground truth to generate verified integration code.
+
+### 2. Bundling Executable Agent Skills (`SKILL.md`)
+Traditional documentation relies on human intuition to navigate pagination, rate-limiting backoffs, or OAuth token refresh flows. An **Agent Skill** bundles these operational rules as explicit markdown instructions with frontmatter. It tells the agent:
+- Exactly how to authenticate and refresh credentials,
+- How to handle pagination and idempotency keys,
+- Which endpoints must be called sequentially (workflows),
+- How to interpret domain-specific error codes.
+
+### 3. Pre-Packaged Verification Sandboxes
+An agent cannot reliably verify integration code without an execution loop:
+- Platforms should provide deterministic sandbox endpoints or mock test suites that agents can immediately run locally in their verification step.
+- This creates an immediate pass/fail compiler and runtime feedback loop.
+
+---
+
+## Contract Engineering: OpenAPI, Business Semantics & Negative Guidance
+
+For REST APIs, OpenAPI must describe not only the transport contract, but also the business semantics and lifecycle preconditions of the operation.
+
+### Intent-Revealing Operations vs. Vague CRUD
+Operations should clearly express domain intent:
+
+```text
+Prefer:
+cancelInvoice
+revokeUserSessions
+reserveInventory
+approveOrder
+
+Avoid:
+updateEntity
+executeAction
+changeStatus
+processRequest
+```
+
+CRUD operations are appropriate only when the business operation is genuine database storage (e.g., `DELETE /drafts/{id}`). But a business operation such as cancelling an issued invoice must be represented explicitly (`POST /invoices/{id}/cancel`) rather than pretending that cancellation is equivalent to deletion.
+
+### Negative Guidance as a Guardrail
+Models frequently hallucinate operations based on superficial lexical matching (e.g., choosing `delete` whenever encountering words like "remove", "invalidate", or "cancel"). 
+
+Authoritative schema descriptions must inject **negative guidance**:
 
 ```yaml
 /users/{userId}/sessions:
@@ -123,159 +134,68 @@ A better specification:
     operationId: revokeUserSessions
     summary: Revoke all active sessions for a user
     description: |
-      Revokes all active authentication sessions belonging
-      to the specified user.
-
-      Use this operation when access for the user must be
-      immediately invalidated.
-
-      This operation does not delete the user account.
+      Revokes all active authentication sessions belonging to the specified user.
+      Use this operation when access for the user must be immediately invalidated.
+      
+      Preconditions:
+      - User must exist and have active sessions.
+      
+      Side Effects:
+      - Drops all active JWT tokens across all devices.
+      
+      Negative Guidance:
+      - This operation DOES NOT delete or deactivate the user account.
+      - To disable a user account, call disableUser.
 ```
-
-The description should answer questions such as:
-
-- What does this operation do?
-    
-- When should it be used?
-    
-- When should it not be used?
-    
-- What are the preconditions?
-    
-- What side effects does it have?
-    
-- What are the important failure modes?
-    
-
-Negative guidance can be especially useful.
-
-For example:
 
 ```yaml
-description: |
-  Permanently deletes a draft invoice.
-
-  Only draft invoices can be deleted.
-
-  Do not use this operation for issued invoices.
-  Issued invoices must be cancelled using cancelInvoice.
+/invoices/{id}:
+  delete:
+    operationId: deleteDraftInvoice
+    summary: Permanently delete a draft invoice
+    description: |
+      Permanently deletes a draft invoice from persistence.
+      
+      Preconditions:
+      - Invoice status must be 'Draft'.
+      
+      Negative Guidance:
+      - DO NOT use this operation for issued invoices.
+      - Issued invoices are immutable legal documents and must be cancelled using cancelInvoice.
 ```
 
-This helps the agent choose the correct business operation rather than matching only on words such as "delete".
+Explicitly stating when an operation *must not* be used prevents the agent from making disastrous integration errors.
 
 ---
 
-## Prefer Business-Oriented Operations
+## Client Synthesis & Strongly Typed SDKs
 
-Operations should clearly express intent.
-
-Prefer:
-
-```text
-cancelInvoice
-revokeUserSessions
-reserveInventory
-approveOrder
-```
-
-over vague operations such as:
-
-```text
-updateEntity
-executeAction
-changeStatus
-processRequest
-```
-
-CRUD operations are perfectly fine when the business operation really is CRUD.
-
-For example:
-
-```http
-DELETE /drafts/{id}
-```
-
-is appropriate if the object is actually deleted.
-
-But a business operation such as cancelling an issued invoice should probably be represented explicitly:
-
-```http
-POST /invoices/{id}/cancel
-```
-
-rather than pretending that cancellation is equivalent to deletion.
-
-The important principle is:
-
-> The API should expose business capabilities, not merely database mutations.
-
----
-
-## Generate Strongly Typed Clients
-
-The coding agent should normally not construct HTTP requests manually.
-
-Instead of generating raw HTTP transport strings:
+A coding agent should never construct HTTP requests manually:
 
 ```text
 // Anti-pattern: Handcrafted transport assembly (error-prone, URL hallucination risk)
 await http.delete("/users/" + userId + "/sessions");
-```
 
-prefer a generated, strongly typed domain client:
-
-```text
-// Preferred: Strongly typed domain client method
+// Preferred: Strongly typed domain client method (compiler-verified)
 await identityClient.revokeUserSessions(userId, context);
 ```
 
-The client can be generated from OpenAPI using modern multi-ecosystem tools such as:
-
+Clients are compiled from OpenAPI contracts using modern multi-ecosystem tools:
 - **Microsoft Kiota** (TypeScript, Go, Python, Java, .NET, PHP),
 - **OpenAPI Generator** (Rust, Go, TypeScript, Java, C#, Python, Swift),
 - **grpc-gateway / buf** (gRPC and Protobuf across systems and managed runtimes),
 - **NSwag / Swagger Codegen**.
 
-The flow becomes:
-
 ```text
-OpenAPI / AsyncAPI / Schema
-   ↓
-Client generator
-   ↓
-Strongly typed client
-   ↓
-LLM-generated application code
+OpenAPI / AsyncAPI Contract  ──►  Client Generator  ──►  Strongly Typed SDK  ──►  Agent Application Code
 ```
 
-This significantly reduces the space in which the agent can make mistakes.
+This drastically collapses the agent's error surface. The agent no longer needs to deduce URLs, HTTP verbs, serialization conventions, query string formatting, or header names—it selects a typed, compiler-validated method.
 
-It no longer needs to reconstruct:
+### Preserving Documentation in Generated Clients
+Descriptions from OpenAPI must be carried directly into generated docstrings, JSDoc, or XML comments:
 
-- the URL,
-    
-- HTTP method,
-    
-- serialization format,
-    
-- request schema,
-    
-- response schema,
-    
-- query parameter names.
-    
-
-Instead, it chooses a typed method.
-
----
-
-## Preserve Documentation in Generated Clients
-
-Ideally, descriptions from OpenAPI should become docstrings, JSDoc, XML comments, or doc comments in the generated client.
-
-For example:
-
-```text
+```typescript
 interface InvoicesClient {
     /**
      * Cancels an issued invoice while preserving it for audit.
@@ -293,315 +213,57 @@ interface InvoicesClient {
 }
 ```
 
-This is particularly useful for coding agents because the most relevant semantic information is available directly next to the methods they are expected to use.
-
-If the generated client loses all API descriptions, much of the semantic value of OpenAPI is lost.
+Because agents reason over local repository context, placing semantic descriptions directly above method signatures enables the model to select the correct method without needing to parse multi-megabyte external OpenAPI specifications on every turn.
 
 ---
 
-## Client Discoverability
+## Semantic Error Payloads & Self-Healing Workflows
 
-Having good generated clients is not enough.
-
-The agent must also be able to discover which client provides a given capability.
-
-Prefer domain-oriented names:
-
-```text
-IIdentityClient
-IOrdersClient
-IBillingClient
-IInvoicesClient
-```
-
-instead of implementation-oriented names:
-
-```text
-IServiceAClient
-IBackendClient
-IApiV2Client
-```
-
-Likewise, operation names should expose intent clearly:
-
-```text
-RevokeUserSessionsAsync
-CancelInvoiceAsync
-ReserveInventoryAsync
-```
-
-This allows a coding agent to search the repository by business concepts.
-
-Example reasoning:
-
-```text
-Requirement:
-"When an employee is disabled, invalidate all login sessions."
-
-↓ search for:
-session
-revoke session
-identity
-
-↓ find:
-IIdentityClient
-
-↓ inspect methods:
-RevokeUserSessionsAsync
-
-↓ generate:
-await identityClient.RevokeUserSessionsAsync(...)
-```
-
-The repository itself becomes a semantic index of available capabilities.
-
----
-
-## Repository Guidance for Agents
-
-The agent should be explicitly told how external integrations are organized.
-
-For example, an `AGENTS.md`, repository instruction, or coding skill may contain:
-
-```text
-When integrating with another service:
-
-1. Search existing generated clients by business concept.
-2. Inspect method names and documentation.
-3. Prefer generated clients over direct HTTP calls.
-4. If the correct operation is unclear, inspect the source OpenAPI specification.
-5. Do not invent endpoint URLs or construct REST requests manually when a generated client exists.
-```
-
-The instruction tells the agent **how to discover and use capabilities**.
-
-The OpenAPI specification tells it **which capabilities exist and what they mean**.
-
-These are different responsibilities.
-
----
-
-## OpenAPI Does Not Always Need to Be Read Directly
-
-If the generated client is well named and well documented, the coding agent may not need to inspect `swagger.json` for every task.
-
-In the common case:
-
-```text
-Business requirement
-        ↓
-Search generated clients
-        ↓
-Inspect documented methods
-        ↓
-Generate code
-```
-
-OpenAPI remains the authoritative contract and can be consulted when additional details are needed.
-
-For example:
-
-- detailed error responses,
-    
-- optional parameters,
-    
-- lifecycle constraints,
-    
-- response schemas,
-    
-- operation semantics not fully exposed by the generated client.
-    
-
-Therefore, a useful hierarchy is:
-
-```text
-OpenAPI
-   ↓
-Generated typed client
-   ↓
-Generated documentation/comments
-   ↓
-Coding agent
-```
-
----
-
-## Error Responses Should Also Be Semantic
-
-Avoid responses such as:
+When an API call fails, the response payload must provide structured, machine-actionable diagnosis rather than raw HTTP status codes or generic strings:
 
 ```json
+// Anti-pattern: Opaque error code
 {
   "errorCode": 3817
 }
-```
 
-Prefer errors that expose the state and possible resolution:
-
-```json
+// Preferred: Machine-actionable semantic error payload
 {
   "code": "invoice_already_issued",
   "message": "Issued invoices cannot be deleted.",
-  "suggestedOperation": "cancelInvoice"
+  "status": 409,
+  "suggestedOperation": "cancelInvoice",
+  "documentationUrl": "https://api.domain.internal/errors/invoice_already_issued"
 }
 ```
 
-This is useful both for generated application code and for an LLM trying to understand the intended workflow.
+When an agent encounters `suggestedOperation: "cancelInvoice"`, its error recovery loop can immediately self-correct: replacing `deleteDraftInvoice` with `cancelInvoice` and re-running the test suite without human intervention.
 
 ---
 
-## The Same Principle Applies Beyond REST
+## Protocol Agnosticism: GraphQL and AsyncAPI
 
-The same architecture can be applied to other integration styles.
+The same contract-first principles govern non-REST protocols:
 
 ### GraphQL
+- Use rich schema descriptions on types and fields,
+- Expose explicit mutations (`cancelInvoice(id: ID!): Invoice!`) rather than generic update mutations,
+- Generate typed GraphQL clients via code generators to eliminate syntax errors in query documents.
 
-Use:
+### Event-Driven Messaging (AsyncAPI)
+- Clearly distinguish commands from domain events:
+  - `RevokeUserSessions` (Command sent by application to initiate state change),
+  - `UserSessionsRevoked` (Event emitted after successful execution).
+- Use **AsyncAPI** to define message schemas, topic topologies, header propagation, and delivery guarantees.
+- Provide strongly typed message publisher and consumer wrappers so agents publish typed events rather than raw message envelopes.
 
-- well-described schema fields,
-    
-- meaningful query and mutation names,
-    
-- introspection,
-    
-- generated typed GraphQL clients.
-    
-
-Example:
-
-```graphql
-"""
-Cancels an issued invoice while preserving it for audit.
-Do not use for draft invoices.
-"""
-cancelInvoice(id: ID!): Invoice!
-```
-
-### Messaging
-
-Use message contracts plus AsyncAPI.
-
-For example:
-
-```text
-RevokeUserSessions
-```
-
-should be clearly distinguishable from:
-
-```text
-UserSessionsRevoked
-```
-
-The first may be a command that application code sends.
-
-The second is an event produced as a result of processing that command.
-
-AsyncAPI can describe:
-
-- messages,
-    
-- payload schemas,
-    
-- channels/topics,
-    
-- send/receive direction,
-    
-- headers,
-    
-- operation semantics.
-    
-
-A coding agent can then generate or discover the correct publisher abstraction.
-
----
-
-## Preferred Architecture
-
-A good integration architecture for LLM-generated code is:
-
-```text
-                       Business requirement
-                                ↓
-                           Coding agent
-                                ↓
-                 Discover business capability
-                                ↓
-                     Strongly typed interface
-                                ↓
-           ┌────────────────────┼────────────────────┐
-           │                    │                    │
-        OpenAPI             GraphQL              AsyncAPI
-           │                    │                    │
-         REST                GraphQL             Messaging
-```
-
-The important abstraction presented to the coding agent should usually be a **typed, semantically named application client**.
-
-Transport details should remain underneath it.
-
----
-
-## Beyond Swagger: Shipping MCP Servers and Agent Skills Alongside APIs
-
-In the agentic era, documenting an API solely for human developers reading HTML in browser tabs is obsolete. When an enterprise or public platform exposes services, the primary consumers are increasingly **autonomous coding agents and LLM orchestration loops**.
-
-Platform creators should ship an **Agent-Native Interface Bundle** (a pattern closely aligned with [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP and agent-native toolkits]]):
-
-```text
-Traditional API Publishing:
-OpenAPI spec + Swagger UI / HTML docs → human reads in browser → human manually codes client
-
-Agent-Native API Publishing:
-OpenAPI contract + Native MCP Server + Agent Skills (SKILL.md) + Sandbox Test Suite
-       ↓
-Coding agent discovers capability → invokes MCP tool or embeds Skill → generates & verifies client
-```
-
-### 1. First-Class Model Context Protocol (MCP) Servers
-- Instead of forcing an agent to write boilerplate HTTP request handlers from scratch, provide a native MCP server.
-- The MCP server exposes the API's business operations as **discrete, typed tools** with explicit parameters, deterministic outputs, and rich error structures.
-- Agents can either invoke the MCP tools directly during agentic runtime or use the MCP schemas as ground truth to generate verified integration code.
-
-### 2. Bundling Executable Agent Skills (`SKILL.md`)
-- Traditional documentation relies on human intuition to understand pagination, rate-limiting backoffs, or OAuth token refresh flows.
-- An **Agent Skill** bundles these operational rules as explicit markdown instructions with frontmatter. It tells the agent:
-  - Exactly how to authenticate and refresh credentials,
-  - How to handle pagination and idempotency keys,
-  - Which endpoints must be called sequentially (workflows),
-  - How to interpret domain-specific error codes.
-
-### 3. Pre-Packaged Verification Sandboxes
-- An agent cannot reliably verify integration code without an execution loop.
-- Platforms should provide deterministic sandbox endpoints or mock test suites that agents can immediately run locally in their verification step.
-
----
-
-## Core Principle
-
-A useful rule is:
-
-> External integrations should expose well-documented formal contracts, generate strongly typed clients from those contracts, and make those clients easy for coding agents to discover by business capability.
-
-The coding agent should prefer those generated clients over constructing transport-level calls directly.
-
-A well-designed API therefore becomes more than a machine-readable protocol description.
-
-It becomes part of the semantic environment from which the LLM can infer:
-
-- what capabilities exist,
-    
-- which capability matches the requested business operation,
-    
-- how it should be called,
-    
-- and which operations must not be confused with one another.
 ---
 
 ## Relationship to the Knowledge Graph
 
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Extends API contracts directly into browser DOM environments via `navigator.modelContext`.
-- **[[Designing Software for AI Agents]]**: Foundations of building discoverable, strongly typed client abstractions for agentic consumption.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Inter-service contract governance and dependency boundaries.
+- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Exposing domain primitives and validation invariants rather than monolithic UI features.
+- **[[Designing Software for AI Agents]]**: General architectural principles for making software discoverable, verifiable, and navigable for coding agents.
+- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Inter-service contract governance, synchronous vs. asynchronous topologies, and dependency boundaries.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Providing native MCP servers and sandbox test suites alongside API contracts.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How application integration paradigms evolve when agents write and maintain client code.
