@@ -733,33 +733,66 @@ Explicit failure-path documentation forces the agent to:
 
 ---
 
-# Multiple Levels of Detail
+# Multiple Levels of Detail (The C4 Model for Agents)
 
-A single diagram for the entire system quickly becomes unreadable.
+A single diagram or monolithic architectural document for an entire system quickly exhausts an agent's context window and degrades transformer attention.
 
-Documentation should therefore support different zoom levels.
+Software architecture resolves this through hierarchical zoom levels—most prominently formalized as Simon Brown's **C4 Model** (**C**ontext, **C**ontainers, **C**omponents, **C**ode). In agentic software engineering, the C4 hierarchy serves as an active **hierarchical context-budgeting protocol**: agents load only the zoom level necessary for their current cognitive phase (routing, planning, interface binding, or mutation).
 
-## Level 1 — Business View
+```text
+Zoom Out (Macro Routing)
+   │
+   ├─► Level 1: System Context  [Users, External Systems, Core System Boundaries]
+   │
+   ├─► Level 2: Containers      [Web Apps, APIs, Microservices, Datastores, Message Brokers]
+   │
+   ├─► Level 3: Components      [Controllers, Repositories, Domain Aggregates, Handlers]
+   │
+   └─► Level 4: Code            [ASTs, Method Signatures, State Transitions, Source Lines]
+   │
+Zoom In (Code Mutation)
+```
+
+### Level 1 — System Context (Business View)
+Describes the macro boundaries between users, external third-party systems, and the overall software boundary.
 
 ```text
 Customer
-→ Orders
-→ Payments
-→ Inventory
-→ Shipping
+   │
+   ▼
+[E-Commerce Platform] ◄──► [External Payment Gateway]
+   │
+   ▼
+[External Shipping Provider]
 ```
+* **Agent Utility**: Used during task triage and global intent routing. Consumes negligible tokens (~50 tokens) to determine which high-level system owns the requested capability.
 
-## Level 2 — Architectural View
+### Level 2 — Container View (Architectural / Runtime Substrate)
+Zooms inside the system boundary to show deployable execution runtimes: web applications, API services, background workers, databases, caches, and event message buses.
 
 ```text
-REST API
-→ Command Handler
-→ Database
-→ Message Broker
-→ Consumer
+[Web Frontend] ──HTTP──► [API Gateway] ──gRPC──► [Orders Service] ──► [PostgreSQL]
+                                                        │
+                                                   Outbox Event
+                                                        ▼
+                                                 [Kafka Broker] ──► [Inventory Worker]
 ```
+* **Agent Utility**: Used during cross-service planning and network topology inspection. Enables the agent to determine asynchronous boundaries and transactional limits.
 
-## Level 3 — Implementation View
+### Level 3 — Component View (Modular / Structural Composition)
+Zooms inside an individual container to reveal modular blocks, responsibilities, and dependency flows.
+
+```text
+Orders API Container
+  ├── Ingress: OrdersController
+  ├── Application: PlaceOrderCommandHandler
+  ├── Domain: OrderAggregate, PricingService
+  └── Infrastructure: RelationalOrderRepository, EventPublisher
+```
+* **Agent Utility**: Critical for feature scoping. An agent can load the Level 3 component card to understand what services and interfaces already exist without reading their concrete source implementations.
+
+### Level 4 — Code View (Implementation Detail)
+The deepest zoom level, representing the concrete source code, class definitions, function signatures, ASTs, and state machines.
 
 ```text
 POST /orders
@@ -771,8 +804,25 @@ POST /orders
 → UnitOfWork
 → EventPublisher
 ```
+* **Agent Utility**: Loaded exclusively at the point of mutation. By scoping context through Levels 1–3 first, the agent loads only the exact file or AST slice needed to execute the edit.
 
-Agents can then load only the level of detail relevant to the current task.
+### Hierarchical Context Scoping for Agent Workflows
+
+Instead of dumping an entire repository into a monolithic prompt, agent orchestrators traverse the C4 hierarchy on demand:
+
+```text
+Task: "Add idempotency to order submission"
+  ↓
+[Query L1 Context]    ──► Identify: Order Management Boundary
+  ↓
+[Query L2 Container]  ──► Identify: Orders API + Relational DB
+  ↓
+[Query L3 Component]  ──► Identify: PlaceOrderCommandHandler + Ingress Middleware
+  ↓
+[Fetch L4 Code]       ──► Load ONLY PlaceOrderCommandHandler & UnitOfWork (150 tokens)
+  ↓
+[Execute Mutation]    ──► Zero Context Thrashing, 95% Token Savings
+```
 
 ---
 
