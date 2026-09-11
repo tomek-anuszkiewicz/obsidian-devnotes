@@ -147,6 +147,7 @@ if payment.batch_settlement_id is not null:
 
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: How semantic comments prevent agents from removing critical domain edge cases during refactoring.
 - **[[Designing Software for AI Agents]]**: Explores the separation of explicit business decision components from surrounding technical infrastructure.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Explains how hidden abstractions and lack of direct expression cause agents to make critical mistakes during refactoring.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Outlines how Business Decision Records (BDRs) capture the underlying domain rationale.
 - **[[LLM Agents and Institutional Memory]]**: How institutional history and tribal knowledge prevent agents from misinterpreting domain invariants.
 - **[[Testing in the Model, Agent, LLM Era]]**: How characterization and behavioral tests lock down domain assumptions against subtle agent regressions.
