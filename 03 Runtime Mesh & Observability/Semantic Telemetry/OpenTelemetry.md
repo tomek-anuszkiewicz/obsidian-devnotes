@@ -13,6 +13,20 @@ aliases:
   - OTel Signals and Collector
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Decoupling Telemetry Production from Storage Backends
+> Distributed microservices and autonomous agent meshes require strict decoupling of application instrumentation from vendor storage backends:
+> $$\text{Unified Observability Mesh} = \text{Correlated Signals (Traces, Metrics, Logs, Profiles)} \times \text{W3C Context Propagation} \times \text{Vendor-Neutral OTLP}$$
+> OpenTelemetry is not an observability database, dashboard, or proprietary monitoring agent. It is a vendor-neutral standard specification, API/SDK ecosystem, and telemetry proxy pipeline (**OpenTelemetry Collector**) that standardizes how distributed software generates, describes, enriches, and transports diagnostic signals. Standardizing on the **OpenTelemetry Protocol (OTLP)** and leveraging W3C TraceContext propagation across synchronous RPCs and asynchronous message queues eliminates proprietary SDK lock-in, enables dynamic tail sampling, and provides the correlated semantic trace graph required for automated root-cause analysis.
+
+| Telemetry Signal | Core Data Model | Primary Architectural Role | Critical Scaling Challenge | Sampling / Mitigation Strategy |
+| :--- | :--- | :--- | :--- | :--- |
+| **Distributed Traces** | Directed Acyclic Graph (DAG) of spans with W3C TraceContext | Causal execution paths across microservices, queues, and agent loops | High network & storage volume at high request rates | Head sampling (probabilistic) or Tail sampling (error/latency-based) |
+| **Metrics** | Numeric aggregations over time with dimension attributes | Macro-level system health, SLI/SLA tracking, threshold alerts | Cardinality explosion (e.g., user IDs in dimension keys) | Strict metric schema governance; drop high-cardinality tags at Collector |
+| **Structured Logs** | Timestamped semantic event records with trace correlation | Micro-level execution evidence and detailed error diagnostics | Unstructured log sprawl; massive storage indexing costs | Convert to structured OTLP logs; correlate via `TraceId` and `SpanId` |
+| **Continuous Profiles** | Stack trace samples attributed to execution runtime | Identifying mechanical CPU hotspots and memory allocations | Profiling runtime overhead; tooling ecosystem maturity | Periodic low-overhead sampling (eBPF / runtime native profilers) |
+
+---
+
 ## 1. What OpenTelemetry Is
 
 OpenTelemetry is a vendor-neutral observability framework that serves as a cornerstone for [[Standardizing Service Infrastructure with Reusable Blocks|standardizing service infrastructure with reusable blocks]].
@@ -390,55 +404,62 @@ Collector
 
 ---
 
-# 6. OpenTelemetry in .NET
+# 6. Runtime Integration: Native Language Primitives and Multi-Ecosystem Instrumentation
 
-Modern .NET already contains primitives that map naturally to OpenTelemetry.
+OpenTelemetry is designed to integrate cleanly with native language primitives rather than forcing applications into a foreign paradigm.
 
-The most important are:
+Different runtimes map their built-in diagnostic and concurrency primitives directly to OpenTelemetry signals:
 
-```text
-System.Diagnostics.Activity
-System.Diagnostics.ActivitySource
-System.Diagnostics.Metrics
-Microsoft.Extensions.Logging.ILogger
-```
-
-A useful mapping is:
-
-```text
-Activity        ≈ OpenTelemetry Span
-ActivitySource  ≈ span producer
-Meter           ≈ metrics producer
-ILogger         ≈ logs
-```
+| Ecosystem | Native Tracing Primitive | Native Metrics Primitive | Logging Integration | Context Propagation Mechanism |
+| :--- | :--- | :--- | :--- | :--- |
+| **Go** | `go.opentelemetry.io/otel/trace` | `otel/metric` | `slog` / `zap` | `context.Context` explicit passing |
+| **Rust** | `tracing` (`Span`, `Event`) | `metrics` crate | `tracing-subscriber` | `tracing::Span::current()` implicit |
+| **Java** | `io.opentelemetry.api.trace` / Java Agent | Micrometer / OTel Metrics | SLF4J / Logback | ThreadLocal / `Scope` object |
+| **Python** | `opentelemetry.trace` / WSGI middleware | `opentelemetry.metrics` | `logging` stdlib module | ContextVars / async task-local |
+| **TypeScript** | `@opentelemetry/api` | `@opentelemetry/api-metrics` | `winston` / `pino` | `AsyncLocalStorage` |
+| **.NET** | `System.Diagnostics.ActivitySource` | `System.Diagnostics.Metrics.Meter` | `ILogger` | `AsyncLocal<T>` / `Activity.Current` |
 
 ---
 
-## Tracing in .NET
+## Conceptual Span Creation Across Runtimes
 
-A custom span can be created using `ActivitySource`.
+Regardless of programming language, creating a custom span follows a universal semantic pattern:
 
-```csharp
-private static readonly ActivitySource Source =
-    new("Orders");
+```text
+// Conceptual OpenTelemetry span creation
+tracer = getTracer("OrdersService")
+
+with span = tracer.startSpan("CreateOrder"):
+    span.setAttribute("order.id", order.id)
+    span.setAttribute("customer.type", customer.type)
+    
+    // Execute domain operation
+    executeOrderCreation(order)
+```
+
+For example, in ecosystems with native diagnostic sources (such as .NET `ActivitySource` or Rust `tracing` subscribers), the application creates an activity/span without taking a hard dependency on a specific telemetry vendor:
+
+```text
+// Decoupled runtime instrumentation pattern
+private static readonly ActivitySource Source = new("Orders");
 
 using var activity = Source.StartActivity("CreateOrder");
-
 activity?.SetTag("order.id", order.Id);
 activity?.SetTag("customer.type", customer.Type);
 ```
 
-The code does not need to know whether the final backend will be:
+The application code remains completely agnostic to whether the downstream backend is:
 
 ```text
 Azure Application Insights
-Tempo
+Grafana Tempo
 Jaeger
-Elastic
+Elasticsearch
 Datadog
+AWS X-Ray
 ```
 
-That decision can be made later.
+That decision is externalized to deployment configuration and Collector routing.
 
 ---
 
