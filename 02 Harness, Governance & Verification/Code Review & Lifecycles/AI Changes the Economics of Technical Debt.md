@@ -12,13 +12,37 @@ aliases:
   - Economics of Automated Refactoring
 ---
 
+# AI Changes the Economics of Technical Debt
+
+> [!IMPORTANT]
+> **The Operational Inversion of Technical Debt**: In classical software engineering, technical maintenance was treated as an invisible aesthetic cost, routinely deprioritized in favor of new features. In the agentic era, technical debt directly sabotages agent autonomy: messy abstractions, hidden coupling, and bloated files inflate context windows, induce prompt rule decay, increase iteration cycles, and trigger catastrophic hallucination cascades. **Technical maintenance gains an immediate, quantifiable ROI: clean 1:1 architecture directly maximizes agent First-Pass Success and slashes compute costs.**
+
+```text
+Without Mechanical Constraints:
+Zero Typing Friction ──► Speculative Wrappers & File Sprawl ──► Context Bloat ──► Agent Thrashing
+
+With Mechanical Isolation:
+1:1 File Architecture + Hard Line Limits ──► High Semantic Locality ──► Autonomous Agent Throughput
+```
+
+---
+
+## Executive Summary & Core Architectural Invariants
+
+1. **The Zero-Friction Trap**: In the manual era, typing fatigue and cognitive drag served as natural friction that discouraged developers from adding unnecessary abstraction layers. Because agents experience zero friction, they casually generate speculative wrappers, duplicate logic, and touch 15 files across layers in a single turn unless mechanically constrained.
+2. **Mechanical Enclosures Over Soft Guidelines**: Verbal instructions cannot stop zero-friction sprawl. Architecture requires hard mechanical gates: **1:1 file-to-operation mapping** (isolating blast radius), **hard line ceilings** (500–800 lines max per file), and **strict touchpoint limits** per task.
+3. **Operationalizing Debt Metrics**: Technical debt ceases to be a subjective complaint. It is measured empirically through agent telemetry: token consumption per feature, PR diff size, iteration depth, and human review time.
+4. **Balanced Capacity Allocation**: Organizations that dedicate 100% of newly unlocked AI velocity to feature shipping accelerate codebase decay. Sustainable velocity requires allocating 30–40% of agent throughput to continuous background maintenance: updating dependencies, pruning dead code, and modernizing legacy slices.
+
+---
+
 ## Agents Can Reduce or Accelerate Technical Debt: The "Zero-Friction" Trap
 
 Agents can continuously reduce routine maintenance debt:
 - update dependencies,
 - migrate deprecated APIs,
-- remove warnings,
-- improve tests,
+- remove compiler warnings,
+- expand test coverage,
 - identify dead code,
 - update documentation,
 - prepare framework upgrades,
