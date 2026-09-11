@@ -12,6 +12,22 @@ aliases:
   - Collaborative Coding Agents
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Multi-Agent Systems as Distributed Computing with Stochastic Reasoning Nodes
+> Multi-agent software engineering transforms software construction from interactive IDE assistance into a **distributed systems problem**. The central engineering question shifts from *"Can a frontier model write correct code in isolation?"* to:
+> $$\text{System Reliability} = f(\text{Task Decomposition}, \text{Context Isolation}, \text{Adversarial Verification}, \text{State Synchronization})$$
+> Multi-agent architectures introduce a fundamentally new computational primitive: **the autonomous, ephemeral software worker** that is dynamically provisioned, specialized via modular skills, sandboxed in isolated repository worktrees, verified against non-negotiable harness oracles, and terminated on demand. Scaling engineering velocity requires managing communication topologies, context pollution boundaries, and failure containment rather than expanding monolithic prompt contexts.
+
+| Coordination Topology | Execution Pattern | State & Context Boundary | Primary Failure Mode | Arbiter / Verification Mechanism |
+| :--- | :--- | :--- | :--- | :--- |
+| **Independent Exploration** | Parallel non-communicating sessions | 100% disjoint context | Solution space anchoring / human review bottleneck | Human architect comparison & selection |
+| **Hierarchical Subagents** | Vertical tree delegation (Parent $\to$ Child) | Filtered, scoped context per leaf node | Context loss across parent-child boundary | Parent agent summary aggregation & re-prompting |
+| **Fleet / Graph Decomposition** | Parallel horizontal task graphs (DAG) | Isolated repository worktrees / sandboxes | Merge conflicts & inter-module interface drift | Integration test suites & harness oracles |
+| **Role Pipelines** | Sequential stage-gate transitions | Progressively enriched pipeline artifact | Cascading upstream hallucinations | Downstream verification gates (lint, build, review) |
+| **Competitive / Adversarial** | Best-of-$N$ generation & red-teaming | Disjoint generation with shared critique | Over-optimization of proxy metrics | Automated benchmark suites & scoring oracles |
+| **Persistent Agent Teams** | Long-lived specialized functional roles | Shared repository conventions & skills | Role boundary confusion & coordination deadlock | Team lead orchestrator & architectural rulebooks |
+
+---
+
 Modern agentic development is no longer limited to a single coding agent working in one loop. A new class of workflows is emerging around multiple agents working in parallel, sequentially, competitively, or as a coordinated team.
 
 This creates a new design problem: not only _what should an agent do_, but also _how many agents should be involved, how should work be divided, how independent should they be, and how should their outputs be validated and integrated_—questions central to both [[Introduction to Workflow Orchestration|workflow orchestration]] and building an [[LLMs as a Code Review Team|automated code review team]].
