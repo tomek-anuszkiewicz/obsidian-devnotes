@@ -205,5 +205,6 @@ The second agent is an attention aid, not the final authority.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Diagnosing when an over-constrained agent enters a thrashing loop between competing review rules.
 - **[[Developing Features with AI Coding Agents]]**: Ensuring specifications and acceptance tests are reviewed before code implementation.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Focusing review energy on subtle domain misinterpretations rather than syntax.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Explores the aesthetic bikeshedding trap where human reviewers reject machine code over harmless syntactic explicitness.
 - **[[AI Changes the Role and Training of Software Engineers]]**: How the engineering role elevates toward skeptical review, risk control, and architectural design.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The cognitive fatigue and vigilance penalty of full-time agent diff auditing.
