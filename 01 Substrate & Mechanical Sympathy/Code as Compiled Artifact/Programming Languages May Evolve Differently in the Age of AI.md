@@ -124,8 +124,8 @@ Could an entirely new programming language be designed specifically for AI agent
 However, new languages face **The Ecosystem Training Paradox**:
 
 ```text
-ESTABLISHED LANGUAGES (Python, TypeScript, C#, Java, Rust, Go):
-  - Saturated public training corpora (billions of tokens, StackOverflow, GitHub)
+ESTABLISHED GENERAL-PURPOSE LANGUAGES (Across Dynamic, Managed, and Systems Paradigms):
+  - Saturated public training corpora (billions of tokens, open-source repositories)
   - Foundation models exhibit fluent, pretrained intuitive competence
 
 NOVEL "AI-OPTIMIZED" LANGUAGES:
