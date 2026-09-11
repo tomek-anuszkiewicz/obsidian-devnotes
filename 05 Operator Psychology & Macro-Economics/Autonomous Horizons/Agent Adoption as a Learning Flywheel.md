@@ -11,6 +11,26 @@ aliases:
   - Organizational Learning with Agents
 ---
 
+# Agent Adoption as a Learning Flywheel
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Agent capabilities do not advance through passive waiting for foundation model scale; they compound through an active **Empirical Adoption Flywheel**:
+> $$\text{Attempt Task} \implies \text{Observable Failure} \implies \text{Formalize Rules \& Tests} \implies \text{Record Verified Trajectory} \implies \text{Next-Gen SFT/RL}$$
+> - **From Static Code to Full Trajectories**: Training signals have evolved from static code snippets (`problem -> answer`) to complete multi-step problem-solving arcs (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`).
+> - **The Fallacy of Passive Waiting**: An organization that waits for an "infallible model" before adopting agents loses twice: it fails to generate the proprietary execution data needed to fine-tune internal models, and it fails to build the deterministic harnesses, test oracles, and API boundaries without which even a superhuman agent cannot safely operate.
+> - **Capturing Durable Value on Failure**: Every failed agent run must leave behind permanent engineering assets: clearer architecture decision records, high-coverage mutation tests, and explicit harness guardrails.
+
+### Comparative Matrix: Organizational AI Adoption Strategies
+
+| Adoption Strategy | Operational Philosophy | Value Extracted on Agent Failure | Environmental Adaptation | Infrastructure Instrumentation | Long-Term Strategic Position |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Passive Waiting ("Wait for AGI")** | Freeze automation until foundation models achieve zero error rates. | **Zero**: No data captured, no workflows analyzed, no internal learnings. | Static: Retains legacy tangled architectures and undocumented tribal knowledge. | None: No automated test harnesses, no sandbox virtualization, no machine-readable APIs. | **Severe Disruption**: Completely unprepared when frontier models arrive; cannot safely integrate them. |
+| **Naive Brittle Trial-and-Error** | Give developers unconstrained access without harnesses or tracking. | **Negative**: Burns tokens, introduces subtle technical debt, causes developer frustration. | Ad-hoc: Codebase accumulates superficial agentic patches without architectural cohesion. | Chaotic: No structured logging of agent steps, failure modes, or review interventions. | Cynical retreat: Organization concludes "AI doesn't work for complex systems." |
+| **The Systematic Adoption Flywheel (Recommended)** | Deploy agents inside controlled, deterministic harnesses with strict test gates. | **High & Durable**: Failures immediately generate regression tests, explicit rules, and isolated modules. | **Proactive Paved Road**: Re-architects code into 1:1 file boundaries and explicit typed contracts. | **Complete**: Records full execution trajectories (Git diffs, tool traces, human corrections). | **Compounding Advantage**: Proprietary operational data flywheel and autonomous-ready delivery mesh. |
+
+---
+
 ## Core idea
 
 When people attempt to use an AI agent for a task that current models cannot perform reliably, those attempts may help make the task feasible for future models.
