@@ -44,6 +44,29 @@ domain models / spec + tests + LLM agent → explicit, readable, fully debuggabl
 
 ---
 
+## The Economics of Explicit Code Have Inverted
+
+Historically, software engineering wisdom stated:
+> *"Duplicate code is evil; abstract or generate it."*
+
+This rule existed primarily because **human keystrokes and manual human maintenance were expensive**. Writing 50 mapping profiles, 100 DTO builders, or 80 validation classes manually was tedious, repetitive, and error-prone.
+
+AI inverts the core economics:
+
+```text
+Old Tradeoff:
+Cost of writing & maintaining 500 lines of explicit boilerplate > Cost of designing, configuring, and learning a code generator
+
+New Tradeoff:
+Cost of authoring & refactoring 500 lines with an LLM ≈ 0
+Cost of designing, configuring, and debugging a code generator > 0
+→ Explicit generated code wins.
+```
+
+When an agent can generate, update, refactor, and test hundreds of lines of explicit code in seconds, the justification for maintaining custom code-generation tools, T4 templates, reflection containers, or specialized source generators collapses.
+
+---
+
 ## When Code Autogeneration Was Necessary: The Historical Rationale
 
 Code autogeneration was not invented out of aesthetic preference; it was an essential survival mechanism for software teams managing large-scale application architectures:
@@ -52,6 +75,28 @@ Code autogeneration was not invented out of aesthetic preference; it was an esse
 2. **Keeping Evolving Schemas in Sync**: When a database table or API contract adds a column, generators ensure that downstream contracts and serialization models automatically reflect the change without silent omissions.
 3. **Eliminating Slow Runtime Reflection**: The initial answer to boilerplate—runtime reflection libraries—inflicted massive performance penalties, heavy memory allocations, and runtime crashes. Compile-time source generators emerged as a way to restore compile-time safety and zero-overhead performance without forcing developers to type the code themselves.
 4. **Enforcing Organizational Consistency**: Generators prevented hundreds of developers across large enterprise teams from inventing bespoke, conflicting mapping and validation patterns.
+
+---
+
+## The Real Cost of the "Codegen Meta-Layer"
+
+Writing and maintaining code generators or complex metaprogramming layers was never free. It introduced a parasitic maintenance burden, illustrating how [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]:
+
+1. **You Maintained Two Codebases Instead of One**: The application code AND the generator program, compiler plugin, or mapping DSL.
+2. **Brittle Build Pipelines**: Build steps depended on external script runners (Node, Python), IDE analyzer extensions, or pre-build hooks that broke across environment upgrades.
+3. **Debugging Nightmares**: Debuggers could not easily step through synthetic, generated files or opaque reflection pipelines without mapping symbols.
+4. **The "80/20" Edge Case Trap**: When business requirements inevitably diverged from what the generator could emit, developers had to either write ugly post-processing hooks or abandon the generator for those specific cases.
+
+```text
+The Generator Trap:
+simple repetitive requirement
+→ adopt a generator / mapping framework
+→ custom business edge cases appear
+→ generator requires complex configuration DSL & hooks
+→ team now maintains both application code and generator infrastructure
+```
+
+LLMs break this trap completely. An agent does not need an intermediate templating language, compiler plugin, or reflection container. It reads the specification or domain model and writes the exact, explicit target code directly.
 
 ---
 
@@ -162,64 +207,6 @@ Domain Entities & API Contracts
 
 ---
 
-## The Real Cost of the "Codegen Meta-Layer"
-
-Writing and maintaining code generators or complex metaprogramming layers was never free. It introduced a parasitic maintenance burden, illustrating how [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]:
-
-1. **You Maintained Two Codebases Instead of One**: The application code AND the generator program, compiler plugin, or mapping DSL.
-2. **Brittle Build Pipelines**: Build steps depended on external script runners (Node, Python), IDE analyzer extensions, or pre-build hooks that broke across environment upgrades.
-3. **Debugging Nightmares**: Debuggers could not easily step through synthetic, generated files or opaque reflection pipelines without mapping symbols.
-4. **The "80/20" Edge Case Trap**: When business requirements inevitably diverged from what the generator could emit, developers had to either write ugly post-processing hooks or abandon the generator for those specific cases.
-
-```text
-The Generator Trap:
-simple repetitive requirement
-→ adopt a generator / mapping framework
-→ custom business edge cases appear
-→ generator requires complex configuration DSL & hooks
-→ team now maintains both application code and generator infrastructure
-```
-
-LLMs break this trap completely. An agent does not need an intermediate templating language, compiler plugin, or reflection container. It reads the specification or domain model and writes the exact, explicit target code directly.
-
----
-
-## Comparing Metaprogramming Approaches vs. Agent-Generated Code
-
-| Dimension | Runtime Reflection (e.g. AutoMapper) | Compile-Time Source Generators (e.g. MapStruct, Roslyn) | Agent-Generated Explicit Code |
-| :--- | :--- | :--- | :--- |
-| **Tooling & Build Overhead** | Low build overhead, but heavy runtime library dependencies | High (compiler plugins, analyzers, slow build passes, IDE lag) | **Zero** (standard, idiomatic code committed to source control) |
-| **Debuggability & Navigation** | Very poor (reflection internals hide execution; breakpoints cannot be set) | Difficult (navigating into synthetic/generated files in temporary cache folders) | **Optimal** (plain, standard code; instant "Go to Definition"; line-by-line stepping) |
-| **Handling Edge Cases** | Medium (custom value resolvers, but prone to runtime crashes) | Painful (must learn complex configuration DSLs or escape-hatch annotations) | **Trivial** (agent writes clear, standard `if/else`, string formats, or calculations directly) |
-| **Cognitive Load** | High (must understand dynamic convention rules and expression trees) | High (must understand generator mechanics, AST models, and configuration) | **Low** (what you see is what executes) |
-| **Execution Performance** | Poor (reflection overhead, dynamic dispatch, high GC allocations) | High (compile-time generated code) | **Optimal** (identical or superior inlining, constant folding, zero heap allocations) |
-| **Cross-Cutting Maintenance** | Fragile (schema changes fail at runtime; hard to verify statically) | Automated, but breaks when edge cases exceed the generator DSL | **Fast & Deterministic** (agent updates hundreds of explicit call sites in seconds; verified by compiler & tests) |
-
----
-
-## The Economics of Explicit Code Have Inverted
-
-Historically, software engineering wisdom stated:
-> *"Duplicate code is evil; abstract or generate it."*
-
-This rule existed primarily because **human keystrokes and manual human maintenance were expensive**. Writing 50 mapping profiles, 100 DTO builders, or 80 validation classes manually was tedious, repetitive, and error-prone.
-
-AI inverts the core economics:
-
-```text
-Old Tradeoff:
-Cost of writing & maintaining 500 lines of explicit boilerplate > Cost of designing, configuring, and learning a code generator
-
-New Tradeoff:
-Cost of authoring & refactoring 500 lines with an LLM ≈ 0
-Cost of designing, configuring, and debugging a code generator > 0
-→ Explicit generated code wins.
-```
-
-When an agent can generate, update, refactor, and test hundreds of lines of explicit code in seconds, the justification for maintaining custom code-generation tools, T4 templates, reflection containers, or specialized source generators collapses.
-
----
-
 ## Removing Abstractions Improves Performance and Simplicity
 
 Explicit code generated by an agent is substantially faster and easier for compilers, runtimes, and JITs to optimize than generic runtime abstractions or dynamic reflection layers.
@@ -246,6 +233,19 @@ Benefits:
 - **Direct Compiler Optimization**: The compiler sees every property assignment, enabling aggressive inlining, branch prediction hints, dead-code elimination, and register allocation.
 - **Zero Indirection**: No reflection caches, dynamic method dispatch, or hidden expression-tree compilation.
 - **Total Transparency**: Any engineer (and any subsequent AI agent) can immediately read, understand, and modify the code without learning third-party framework quirks.
+
+---
+
+## Comparing Metaprogramming Approaches vs. Agent-Generated Code
+
+| Dimension | Runtime Reflection (e.g. AutoMapper) | Compile-Time Source Generators (e.g. MapStruct, Roslyn) | Agent-Generated Explicit Code |
+| :--- | :--- | :--- | :--- |
+| **Tooling & Build Overhead** | Low build overhead, but heavy runtime library dependencies | High (compiler plugins, analyzers, slow build passes, IDE lag) | **Zero** (standard, idiomatic code committed to source control) |
+| **Debuggability & Navigation** | Very poor (reflection internals hide execution; breakpoints cannot be set) | Difficult (navigating into synthetic/generated files in temporary cache folders) | **Optimal** (plain, standard code; instant "Go to Definition"; line-by-line stepping) |
+| **Handling Edge Cases** | Medium (custom value resolvers, but prone to runtime crashes) | Painful (must learn complex configuration DSLs or escape-hatch annotations) | **Trivial** (agent writes clear, standard `if/else`, string formats, or calculations directly) |
+| **Cognitive Load** | High (must understand dynamic convention rules and expression trees) | High (must understand generator mechanics, AST models, and configuration) | **Low** (what you see is what executes) |
+| **Execution Performance** | Poor (reflection overhead, dynamic dispatch, high GC allocations) | High (compile-time generated code) | **Optimal** (identical or superior inlining, constant folding, zero heap allocations) |
+| **Cross-Cutting Maintenance** | Fragile (schema changes fail at runtime; hard to verify statically) | Automated, but breaks when edge cases exceed the generator DSL | **Fast & Deterministic** (agent updates hundreds of explicit call sites in seconds; verified by compiler & tests) |
 
 ---
 
