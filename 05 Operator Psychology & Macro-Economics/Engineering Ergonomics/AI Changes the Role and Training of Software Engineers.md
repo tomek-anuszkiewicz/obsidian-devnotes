@@ -157,6 +157,21 @@ Engineers do not need to memorize every line of boilerplate, but they must under
 
 When the agent inevitably hits a wall, the human engineer is the only fallback standing between an operational system and total paralysis.
 
+### Epistemic Grounding: How Engineers Learn Systems Without Tactile Coding
+Historically, software comprehension was an emergent byproduct of manual implementation: developers developed an intimate mental model of a system because they spent weeks typing out data structures, debugging compiler errors, and assembling endpoints by hand. Tactile friction was the vehicle for learning.
+
+When code generation becomes instantaneous and autonomous, this tactile apprenticeship vanishes. If an engineer never types the implementation, **how do they internalize the mental model required to govern the system?**
+
+In an agentic organization, system comprehension is achieved through two deliberate, complementary practices:
+
+1. **Top-Down Epistemic Calibration via Living Documentation**:
+   Rather than attempting to read thousands of lines of synthetic implementation code, the engineer engages with the system at the specification level (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]). By authoring, refining, and reading structured Markdown architecture cards, domain state machines, and interface contracts, the engineer internalizes the system's structural topology. The living documentation acts as a cognitive compression layer—allowing the human brain to grasp system boundaries in minutes rather than days.
+
+2. **Bottom-Up Cognitive Assimilation via Adversarial Code Review**:
+   As detailed in [[Reviewing AI-Generated Code]], code review ceases to be a bureaucratic rubber stamp and becomes the engineer's primary learning laboratory. The reviewer actively interrogates the diff: *Where does state mutate? Which invariants are asserted? How are failure cascades contained?* By mentally executing the diff and reconciling it against the high-level specification, the engineer actively constructs and refreshes their internal neural representation of the system.
+
+Without these twin practices, engineering teams succumb to the **"Alien Codebase" crisis**—a state where all automated pipelines succeed, yet the software has evolved beyond human comprehension, leaving the organization helpless when the agent reaches its reasoning boundaries.
+
 ### The "Zero-Line Developer" Paradox: Why No-Code Authoring Still Demands Deep Engineering Mastery
 A striking phenomenon of the agentic era is that an engineer can now direct an agent to build a complex, low-level execution engine, state machine, and interactive graphical debugging suite **without writing a single gram of manual code**. The engineer’s role is entirely instructional: orchestrating agent sessions, defining architectural constraints, and verifying outputs.
 
@@ -315,6 +330,9 @@ With zero-cost code generation and unbounded curiosity comes a new danger: the t
 ## Related Notes
 
 - **[[The First AI-Native Generation of Software Engineers]]**: How junior engineers develop intuition when early tasks are automated by agents.
+- **[[Reviewing AI-Generated Code]]**: Code review as the essential cognitive synchronization checkpoint and pedagogical vehicle.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living documentation as the top-down cognitive compression layer for learning architectures.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How code structure shifts toward explicit, agent-friendly forms evaluated on consequences rather than syntax.
 - **[[AI Era Software Engineering Recruitment]]**: How hiring criteria shift from coding speed to system modeling, review, and verification.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Psychological impacts on engineering identity in agent-dominated workflows.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why training and productivity depend on end-to-end delivery pipelines.
