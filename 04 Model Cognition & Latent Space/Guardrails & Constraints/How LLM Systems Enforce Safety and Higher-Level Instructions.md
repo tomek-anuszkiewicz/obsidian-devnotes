@@ -12,6 +12,28 @@ aliases:
   - Instruction Hierarchy and Policy Enforcement
 ---
 
+# How LLM Systems Enforce Safety and Higher-Level Instructions
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Safety, security, and compliance in LLM systems cannot be achieved through a single mechanism. Relying solely on system prompts fails against adversarial jailbreaks; relying solely on post-training alignment fails when laws, policies, or organizational rules change faster than model weights.  
+> Production-grade governance requires a **Multi-Layer Defense-in-Depth Architecture**:
+> 1. **Strict Instruction Hierarchy**: Platform rules permanently outrank application instructions, which outrank user prompts, which outrank untrusted retrieved text (`Platform > App > User > RAG`).
+> 2. **Pre-Inference Input Classifiers**: Fast, dedicated guardrail models filter malicious prompts and indirect injections before hitting the generator.
+> 3. **Deterministic Sandbox & Tool Permissions**: Hard execution boundaries, rate limits, and cryptographic capability tokens prevent compromised models from performing unauthorized I/O.
+> 4. **Post-Inference Output Judges**: Asynchronous policy evaluators verify generated payloads against safety and privacy rules before presentation to the user.
+
+### Comparative Matrix: Multi-Layer Safety & Constraint Enforcement
+
+| Defense Layer | Enforcement Point | Adaptability / Freshness | Resistance to Jailbreaks / Injections | Latency & Compute Cost | Primary Failure Modes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Trained Post-Training Reflexes (RLHF / DPO)** | Embedded directly in parameter weights. | **Static**: Frozen at training time; cannot adapt to daily legal changes. | Moderate: Resilient to basic prompt hacks, but vulnerable to novel out-of-distribution exploits. | Zero extra latency (inherent to token generation). | Over-refusal of benign requests; catastrophic forgetting of nuanced edge cases. |
+| **System Prompt Instruction Hierarchy** | Context window prefix before user message. | **Instant**: Updateable via configuration deployment. | Low-to-Moderate: Vulnerable to context window overflow, attention dilution, and semantic override. | Minor: Token consumption per turn. | Instruction drift; lower-level user prompts tricking model into ignoring system rules. |
+| **Input & Output Classification Guardrails** | External models/classifiers inspecting I/O streams. | High: Rules and classifier thresholds can be tuned in real-time. | **High against known patterns**: Evaluates text independently of conversational context. | Moderate: Adds 50–200ms per classification pass. | False positives blocking legitimate developer queries; evasion via obfuscation. |
+| **Deterministic Tool & Sandbox Fences (Recommended)** | OS kernel, container boundaries, API gateway mTLS, and file system permissions. | Immediate: Infrastructure-level policy enforcement. | **Absolute**: Even a fully jailbroken model cannot exceed its operating system or API permissions. | Negligible: Native OS/network execution overhead. | Coarse granularity; does not prevent semantic misinformation in generated text. |
+
+---
+
 Safety and higher-level constraints are not implemented in one place. They can come from trained behavior, instruction hierarchy, runtime policy, classifiers, evaluators, and tool restrictions.
 
 ## 1. Some Instructions Sit Above the User
