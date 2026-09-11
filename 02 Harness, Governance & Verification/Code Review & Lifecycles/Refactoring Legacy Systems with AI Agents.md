@@ -254,7 +254,7 @@ The single greatest failure mode in legacy migrations is the instinct to "improv
 
 ## Phase 4: Mechanical Sympathy in Legacy Modernization (Data-Oriented Design)
 
-When using agents to refactor legacy codebases (such as legacy enterprise C#, Java, or procedural systems), software architects must confront a subtle but dangerous failure mode: **LLM "Object-Oriented Contamination" and Mechanical Blindness**.
+When using agents to refactor legacy codebases (such as monolithic enterprise architectures or sprawling procedural services), software architects must confront a subtle but dangerous failure mode: **LLM "Object-Oriented Contamination" and Mechanical Blindness**.
 
 ### 1. The LLM Object-Oriented Contamination Trap
 Because frontier models have been pre-trained on vast repositories of enterprise code, their default statistical prior is to solve problems using deep object-oriented abstractions:
