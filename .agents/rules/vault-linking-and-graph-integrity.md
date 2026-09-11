@@ -32,3 +32,15 @@ Whenever creating, modifying, or refactoring notes in this Obsidian vault, the a
 5. **Semantic Inline Linking Over "Hairball" Sprawl**:
    - **Quality over Quantity**: Do not turn the vault into a fully connected mesh ($K_n$) where "everything links to everything." Maintain a healthy "small-world network" topology (typically 4 to 7 high-signal links per note).
    - Graph connections must be sharp, intentional, and high-signal. Prune obsolete or redundant links during refactorings.
+
+6. **Strict Isolation of Private Notes (Zero Public-to-Private Links)**:
+   - **Absolute Prohibition on Outbound Public-to-Private Links**: Never, under any circumstances, insert a wikilink (`[[...]]`) or markdown link from a public note (any note in the 5-Layer Stack, root directories, or public hubs) to a private note located in `_Private/` or any other gitignored/private directory.
+   - **One-Way Privacy Membrane**:
+     - `_Private/` $\rightarrow$ `_Private/`: **Allowed**. Private notes may freely cross-link with each other.
+     - `_Private/` $\rightarrow$ `Public Notes`: **Allowed**. Private playbooks and strategies can and should link out to canonical public architectural hubs.
+     - `Public Notes` $\rightarrow$ `_Private/`: **STRICTLY FORBIDDEN**. Public notes must remain completely self-contained and unaware of private notes.
+     - `Public Notes` $\rightarrow$ `Public Notes`: **Allowed**. Standard dual-layer graph connectivity.
+   - **Rationale**:
+     - *Leak Prevention*: Prevents private note titles, cognitive profiles, personal strategies, or confidential topics from leaking into public graph views, Obsidian Publish deployments, or open-source repositories.
+     - *Broken Link Prevention*: In cloned or published versions of the vault where `_Private/` is gitignored, any outbound link to a private note renders as an orphaned, broken link, violating Principle 4 (*Zero Broken Links*).
+
