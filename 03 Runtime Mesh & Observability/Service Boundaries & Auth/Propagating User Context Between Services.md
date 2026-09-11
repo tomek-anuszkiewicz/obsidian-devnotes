@@ -12,6 +12,24 @@ aliases:
   - Service Identity and End-User Identity
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Orthogonal Identity and Context Separation
+> In distributed systems and microservice meshes, conflating technical caller authentication with user context causes security vulnerabilities, confused-deputy attacks, and architectural rot. Resilient architectures enforce a strict six-way separation of concerns:
+> $$\text{Service Identity} \neq \text{User Identity} \neq \text{Authorization Decision} \neq \text{Audit Context} \neq \text{Distributed Trace} \neq \text{Tenant Boundary}$$
+> - **The calling service authenticates itself** via technical workload identity (mTLS, service tokens, or cloud IAM).
+> - **The user identifier is propagated as trusted metadata** only after the technical caller has been authenticated.
+> - **Authorization is decided locally by the service owning the resource**, preserving service boundary autonomy.
+
+| Context Dimension | Semantic Purpose | Wire Protocol / Header | Verification & Trust Boundary |
+| :--- | :--- | :--- | :--- |
+| **Service Identity** | Who is physically making the call | mTLS (SPIFFE/SAN), OAuth Client Credentials | Verified cryptographically at network/transport layer |
+| **User Identity** | Who initiated the original business intent | Propagated metadata header or Token Exchange (RFC 8693) | Trusted only if calling service is authenticated |
+| **Authorization** | Is the technical caller or user allowed this action | Local domain engine / policy enforcement point (PEP) | Evaluated by the service owning the resource |
+| **Audit Context** | Non-repudiation and compliance logging | Structured immutable metadata payload | Written to append-only audit trail with actor chains |
+| **Trace Context** | Causal distributed execution chain | W3C `traceparent` and `tracestate` | Transparently forwarded across all RPC and message hops |
+| **Tenant Boundary** | Logical data isolation barrier | Cryptographically signed claim or verified header | Validated against user identity and organizational claims |
+
+---
+
 ## Context
 
 In distributed systems, Service A may receive a request initiated by a user and then call Service B.
@@ -171,33 +189,39 @@ Always use an **explicit allowlist** of validated context fields for outbound re
 
 ## A Shared Context Contract in Code
 
-Model the context contract explicitly using strongly-typed records rather than an untyped dictionary:
+Model the context contract explicitly using strongly-typed structures rather than an untyped generic dictionary:
 
-```csharp
-public sealed record ExecutionContext(
-    string CallerService,
-    string? InitiatedByUserId,
-    string? TenantId,
-    string CorrelationId);
+```text
+// Strongly typed execution context schema
+record ExecutionContext {
+    callerService: string,
+    initiatedByUserId?: string,
+    tenantId?: string,
+    correlationId: string,
+    traceParent: string
+}
 
-public sealed record ActorContext(
-    string TechnicalActor,
-    string? OriginalUser,
-    string? TenantId,
-    string? DelegationChain);
+record ActorContext {
+    technicalActor: string,
+    originalUser?: string,
+    tenantId?: string,
+    delegationChain?: string[]
+}
 ```
 
 ### Avoid One Global Ambient Context
-Avoid relying heavily on ambient global state (e.g. static `CurrentUser.Id`, unchecked `AsyncLocal` globals, or direct access to `HttpContext` deep inside business domains):
-- Makes unit testing difficult and hides method prerequisites.
-- Risks leaking user context into fire-and-forget background tasks or thread pool threads.
-- Domain logic should receive required identity values explicitly via method arguments or scoped domain interfaces:
+Avoid relying heavily on ambient global state (e.g., static thread-local variables, unchecked task-local globals, or direct access to HTTP request objects deep inside business domains):
+- Makes unit testing difficult and conceals method prerequisites.
+- Risks leaking user context into fire-and-forget background worker routines or thread pools.
+- Domain logic should receive required identity and context values explicitly via method arguments or scoped domain execution interfaces:
 
-```csharp
-public Task UpdateDocumentAsync(
-    DocumentId documentId,
-    UserId initiatedBy,
-    CancellationToken cancellationToken);
+```text
+// Explicit context passing in domain operations
+updateDocument(
+    documentId: DocumentId,
+    initiatedBy: UserId,
+    context: ExecutionContext
+): Promise<OperationResult>
 ```
 
 ---
