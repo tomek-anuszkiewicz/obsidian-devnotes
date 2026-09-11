@@ -177,6 +177,14 @@ True emergence occurs in the **feedback loop between the two**:
 3. The model maps that observation across its latent space, finding structural parallels in computing history and systems architecture.
 4. The synthesized response gives the human an explicit framework to evaluate, refine, and apply back to the code.
 
+### Tacit Knowledge Compilation and the Epistemic Authorship Resolution
+
+This loop resolves the persistent **authorship dilemma** (*"Did I author this insight, or did the AI?"*):
+- **Polanyi’s Tacit Knowing**: Following Michael Polanyi's thesis that *"we can know more than we can tell"*, experienced software architects possess vast reservoirs of **tacit knowledge**—instinctive heuristics about system fragility, lock contention, abstraction drag, and organizational friction acquired over decades of building.
+- **The LLM as a Tacit Compiler**: The practitioner brings the unarticulated, visceral insight (the Lens). The neural network (the Prism) performs **tacit knowledge compilation**: refracting raw empirical intuition through universal abstractions and computing history to produce explicit, structured vocabulary.
+- **Verification Through Recognition**: When an engineer reads an AI synthesis and immediately recognizes its profound truth, that recognition is an active epistemic verification. The model did not invent the reality; it rendered the practitioner's implicit empirical experience into explicit, communicable architecture.
+- **The Whiteboard Defense Criterion**: If the engineer can subsequently stand at a whiteboard without the model and defend every causal link, invariant, and trade-off in the synthesized architecture, the knowledge is authentically theirs (see [[AI Changes the Role and Training of Software Engineers]]).
+
 ---
 
 ## Summary
@@ -191,7 +199,8 @@ True emergence occurs in the **feedback loop between the two**:
 ## Relationship to the Knowledge Graph
 
 - **[[Competitive advantage in the age of commodity AI]]**: Details why asking extraordinary questions is the primary defensible moat when code generation is commoditized.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the cognitive transformation of the engineer into an epistemic catalyst driving the model outside the averaged prior.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the cognitive transformation of the engineer into an epistemic catalyst and introduces the Defense Test.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Analyzes the psychological tension of authorship debt and cognitive vigilance exhaustion.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Explains how unguided models default to mediocre averages and how targeted prompts prevent premature convergence.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Serves as the primary case study where real-world debugging friction crystallized into an architectural isolation thesis.
 - **[[How Context Narrows an AI's Solution Space]]**: Details the underlying attention dynamics that shape how context focuses latent space navigation.
