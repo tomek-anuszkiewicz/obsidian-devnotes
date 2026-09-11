@@ -213,7 +213,9 @@ The source of professional meaning must evolve:
 ## Relationship to the Knowledge Graph
 
 - **[[AI Changes the Role and Training of Software Engineers]]**: Explores the macro transition from manual coding to architectural questioning and epistemic catalysis.
+- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Details how corporate framework monopolies and centralized innovation suppress individual engineering agency, accelerating developer burnout.
 - **[[Reviewing AI-Generated Code]]**: Outlines the practical techniques for managing review attention and avoiding the catastrophic "dead in the water" trap.
 - **[[The First AI-Native Generation of Software Engineers]]**: Examines how junior developers will form their engineering identity in a world where code authoring is entirely delegated.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explores how mechanical boundaries protect human attention and prevent agent-generated code sprawl.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why pushing developers to review faster without human sustainability creates systemic quality collapse.
+
