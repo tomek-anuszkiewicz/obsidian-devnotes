@@ -134,6 +134,8 @@ Retrieval is no longer a single-shot database query. An autonomous agent activel
 4. Read linked Architectural Decision Record `ADR-019`.
 5. Synthesize root cause with complete context.
 
+*(Note: While agentic RAG executes this multi-hop chain during deep forensic debugging, routine code modifications cannot afford speculative VCS tool queries for every line; routine operations depend on zero-latency co-located context anchors, as explored in [[Comments May Become More Valuable in AI-Generated Code]].)*
+
 ### Generation 4: Graph RAG (Relational and Topological Knowledge)
 Software systems are directed graphs, not flat paragraphs. Graph RAG constructs a knowledge graph where code symbols, database tables, team ownerships, and architectural decisions are linked by typed edges:
 
@@ -265,5 +267,6 @@ Deploying RAG in software systems reveals distinct architectural hazards:
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Using personal second-brain RAG indexes as the baseline for computing epistemic diffs against external knowledge.
 - **[[How LLM Systems Build Context]]**: The complementary mechanics of context window management, compaction, and retrieval scheduling.
 - **[[Designing Software for AI Agents]]**: Designing codebases with clear structural boundaries that enable clean, unambiguous AST chunking and retrieval.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: Contrasts multi-hop agentic retrieval (Git blame, ticket lookup) with zero-cost co-located context injection directly in source files.
 - **[[LLM Agents and Institutional Memory]]**: Preserving long-term organizational knowledge across teams via persistent, version-controlled RAG repositories.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing browser-side tool state and DOM context directly to client-side RAG agents.
