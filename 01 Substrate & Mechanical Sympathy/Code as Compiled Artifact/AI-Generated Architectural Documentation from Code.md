@@ -567,169 +567,78 @@ This can help answer questions such as:
 
 # State Machines
 
-For complex business entities, documentation should extract and formalize explicit **state machines**. Real-world business entities rarely progress in simple linear sequences; they branch across retries, transient states, asynchronous validations, manual interventions, disputes, and terminal states.
+For important business entities, documentation can include generated state machines.
 
-Below is an architectural state machine representing an asynchronous payment and settlement lifecycle:
+Rather than simple linear flows, business entities branch across decisions and terminal states. An extracted state machine should capture allowed transitions, conditions, and terminal states:
 
 ```text
-                            ┌────────────────────────┐
-                            │      INITIALIZED       │
-                            └───────────┬────────────┘
-                                        │ AuthorizePaymentCommand
-                                        ▼
-                            ┌────────────────────────┐
-                            │      AUTHORIZING       │◄─────────────────────────────┐
-                            └─────┬────────────┬─────┘                              │
-     [Hard Decline / Auth Error]  │            │  [Provider Timeout / Network Drop] │
-  ┌───────────────────────────────┘            └────────────────────┐               │
-  │                                                                 │               │
-  ▼                                                                 ▼               │ [RetryCount < Max]
-┌────────────────────────┐                               ┌──────────────────────┐   │ (Exp. Backoff)
-│        DECLINED        │                               │   RETRY_SCHEDULED    ├───┘
-│       (Terminal)       │                               └──────────┬───────────┘
-└────────────────────────┘                                          │ [RetryCount >= Max]
-                                                                    ▼
-                                                         ┌──────────────────────┐
-                                                         │   SUSPENDED_AUDIT    │
-                                                         │ (Reconciliation Job) │
-                                                         └──────────┬───────────┘
-                               Reconciliation Expired /             │
-                               Manual Void                          │
-  ┌─────────────────────────────────────────────────────────────────┼─────────────────────────────────┐
-  │                                                                 │ Reconciled Verified             │ Reconciled Error /
-  ▼                                                                 ▼                                 │ Unrecoverable
-┌────────────────────────┐                              ┌────────────────────────┐                    ▼
-│       CANCELLED        │                              │       AUTHORIZED       │         ┌──────────────────────┐
-│       (Terminal)       │                              └───────────┬────────────┘         │RECONCILIATION_FAILED │
-└────────────────────────┘                                          │                      │    (Terminal/DLQ)    │
-                                                                    │                      └──────────────────────┘
-                                       ┌────────────────────────────┴─────────────┐
-                                       │ CapturePaymentCommand                    │
-                                       ▼                                          │ VoidPaymentCommand
-                            ┌────────────────────────┐                            ▼
-                            │       CAPTURING        │                 ┌────────────────────────┐
-                            └─────┬────────────┬─────┘                 │         VOIDED         │
-        [Capture Succeeded]       │            │                       │       (Terminal)       │
-     ┌────────────────────────────┘            │                       └────────────────────────┘
-     │                                         │ [Settlement Failure / Drop]
-     ▼                                         ▼
-┌────────────────────────┐          ┌────────────────────────┐
-│        SETTLED         │          │   SETTLEMENT_FAILED    │
-│  (Terminal Happy Path) │          │  (Escalate to DLQ/Ops) │
-└───────────┬────────────┘          └────────────────────────┘
-            │
-            ├──────────────────────────────────────────┐
-            │ DisputeInitiatedEvent                    │ RefundRequestedCommand
-            ▼                                          ▼
-┌────────────────────────┐                 ┌────────────────────────┐
-│        DISPUTED        │                 │       REFUNDING        │
-└─────┬────────────┬─────┘                 └─────┬────────────┬─────┘
-      │            │                             │            │
-      │DisputeLost │DisputeWon                   │Full Refund │Partial Refund
-      ▼            ▼                             ▼            ▼
-┌──────────┐ ┌───────────┐                 ┌───────────┐ ┌──────────────────┐
-│ CHARGED_ │ │  SETTLED  │                 │ REFUNDED  │ │PARTIALLY_REFUNDED│
-│   BACK   │ │(Restored) │                 │(Terminal) │ │   (Terminal)     │
-└──────────┘ └───────────┘                 └───────────┘ └──────────────────┘
+               ┌───────────┐
+               │  Pending  │
+               └─────┬─────┘
+       [Cancel]      │ [Authorize]
+    ┌────────────────┼────────────────┐
+    ▼                ▼                ▼
+┌───────────┐  ┌───────────┐    ┌───────────┐
+│ Cancelled │  │Authorized │    │  Failed   │
+└───────────┘  └─────┬─────┘    └───────────┘
+                     │ [Capture]
+                     ▼
+               ┌───────────┐
+               │ Completed │
+               └─────┬─────┘
+                     │ [Refund]
+                     ▼
+               ┌───────────┐
+               │ Refunded  │
+               └───────────┘
 ```
 
-### State Machine Transition Contract
+The generated documentation should describe:
 
-To make state machines actionable for LLM coding agents, the generated documentation should formalize transitions into a deterministic matrix:
+- **Allowed transitions**: `Pending` can transition to `Authorized`, `Cancelled`, or `Failed`.
+- **Guard conditions**: `Capture` is only valid when in `Authorized` state; `Refund` requires `Completed`.
+- **Commands & Events**: `AuthorizePaymentCommand` emits `PaymentAuthorized` or `PaymentFailed`.
+- **Terminal states**: `Cancelled`, `Failed`, and `Refunded` allow no further state mutations.
 
-| Source State | Trigger (Command / Event) | Guard Condition | Target State | Emitted Domain Event | Side Effects |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `INITIALIZED` | `AuthorizePaymentCommand` | Valid request payload | `AUTHORIZING` | `PaymentAuthorizingEvent` | Dispatches external gateway RPC |
-| `AUTHORIZING` | Gateway Decline Response | Hard decline from issuer | `DECLINED` | `PaymentDeclinedEvent` | Releases reserved inventory |
-| `AUTHORIZING` | Gateway Timeout / Drop | `RetryCount < MaxRetries` | `RETRY_SCHEDULED` | `PaymentRetryScheduledEvent` | Registers timer with exponential jitter |
-| `RETRY_SCHEDULED`| Retry Timer Fired | `RetryCount < MaxRetries` | `AUTHORIZING` | `PaymentAuthorizingEvent` | Re-executes gateway RPC with idempotency key |
-| `RETRY_SCHEDULED`| Retry Timer Fired | `RetryCount >= MaxRetries`| `SUSPENDED_AUDIT` | `PaymentSuspendedEvent` | Enqueues to reconciliation worker |
-| `SUSPENDED_AUDIT`| `ReconcilePaymentCommand`| Ledger verifies success | `AUTHORIZED` | `PaymentAuthorizedEvent` | Unblocks order fulfillment workflow |
-| `SUSPENDED_AUDIT`| `ReconcilePaymentCommand`| Ledger confirms drop | `CANCELLED` | `PaymentCancelledEvent` | Compensates previous reservation sagas |
-| `AUTHORIZED` | `CapturePaymentCommand` | Within capture window | `CAPTURING` | `PaymentCapturingEvent` | Dispatches settlement instruction |
-| `AUTHORIZED` | `VoidPaymentCommand` | Pre-capture cancellation | `VOIDED` | `PaymentVoidedEvent` | Issues gateway reversal transaction |
-| `CAPTURING` | Settlement Confirmation | Bank clears funds | `SETTLED` | `PaymentSettledEvent` | Triggers final accounting journal entry |
-| `SETTLED` | `RefundRequestedCommand` | `Amount <= RemainingBalance`| `REFUNDING` | `PaymentRefundInitiatedEvent`| Initiates downstream payout transaction |
-| `SETTLED` | `DisputeInitiatedEvent` | Chargeback notification | `DISPUTED` | `PaymentDisputedEvent` | Freezes merchant dispute funds |
-
-State machines prevent agents from generating illegal, out-of-order mutations (e.g., executing a capture on an un-authorized or expired transaction).
+This prevents coding agents from generating illegal state jumps or bypassing domain invariants.
 
 ---
 
 # Failure-Path Documentation
 
-Documentation must not describe only the happy path. In distributed architectures, failure paths represent the majority of operational complexity: timeouts, partial writes, network partitions, circuit trips, retry exhaustion, and compensating rollbacks.
+Documentation should not describe only the happy path. In distributed systems, failure paths and retry boundaries represent critical operational knowledge.
 
-Below is an architectural topology mapping how an operation navigates failure domains:
+An operation document can illustrate how timeouts and transient errors are handled via retry loops and fallback branches:
 
 ```text
-[Incoming Command / HTTP Mutation Request]
-                  │
-                  ▼
-      ┌───────────────────────┐
-      │ 1. Invariant & Schema ├─────[Schema / Domain Validation Error]────► 422 Unprocessable (Zero State Mutation)
-      │      Validation       │
-      └───────────┬───────────┘
-                  │ Validation Passed
-                  ▼
-      ┌───────────────────────┐
-      │ 2. Optimistic Locking ├─────[Version Conflict / DB Disconnect]────► Transient Error / Jittered Backoff & Retry
-      │    & State Persist    │
-      └───────────┬───────────┘
-                  │ Committed
-                  ▼
-      ┌───────────────────────┐
-      │ 3. External Gateway   ├─────[HTTP 4xx Non-Retryable Error]────────► Terminal Decline (Publish OperationDeclined)
-      │    RPC Invocation     │
-      └───────────┬───────────┘
-                  │ [HTTP 5xx / TCP Timeout / Network Partition]
-                  ▼
-      ┌───────────────────────┐
-      │ 4. Circuit Breaker    ├─────[Circuit OPEN / Rate-Limit Exceeded]──► Fast-Fail Fallback (Queue to Durable Outbox)
-      │         Gate          │
-      └───────────┬───────────┘
-                  │ Circuit CLOSED / HALF-OPEN
-                  ▼
-      ┌───────────────────────┐
-      │ 5. Resilient Retry    │◄────┐ [Attempt <= MaxRetries]
-      │      Loop Block       │     │ (Exponential Backoff + Full Jitter)
-      └───────────┬───────────┘     │
-                  │                 │
-                  ├─────────────────┘
-                  │ [Retries Exhausted / Unresponsive]
-                  ▼
-      ┌───────────────────────┐
-      │ 6. Compensating Saga  ├─────[Compensation Succeeded]──────────────► State: CANCELLED (Emits CompensatedEvent)
-      │     Orchestrator      │
-      └───────────┬───────────┘
-                  │ [Compensation Failed / Inconsistent Partial State]
-                  ▼
-      ┌───────────────────────┐
-      │ 7. Dead-Letter Queue  ├─────► High-Priority Alert (PagerDuty / Ops Slack)
-      │     & Manual Audit    ├─────► Escalate to Human Reconciliation Dashboard
-      └───────────────────────┘
+[Operation Invoked]
+        │
+        ▼
+┌───────────────┐
+│ Call Provider ├───────► [Success] ──► State: Confirmed
+└───────┬───────┘
+        │ [Timeout / Network Error]
+        ▼
+┌───────────────┐
+│  Retry Loop   │◄──┐ [Attempt < 3]
+└───────┬───────┘   │ (Backoff & Retry)
+        │           │
+        ├───────────┘
+        │ [Attempts Exhausted]
+        ▼
+┌───────────────┐
+│ Manual Audit  │ ──► State: NeedsAttention (Alert Ops)
+└───────────────┘
 ```
 
-### Distributed Failure Mitigation Matrix
+Useful failure information includes:
 
-| Failure Stage | Error Vector | Detection Mechanism | Immediate Action | Final State Outcome | Compensation / Recovery Vector |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Ingress & Schema** | Malformed JSON, invariant violation | Static validator middleware | Reject synchronously (422) | No state created | None required (pure function boundary) |
-| **Local Persistence** | Concurrency conflict, DB disconnect | DB driver exception / Stale Object | Exponential backoff retry | `INITIALIZED` | Retry transaction up to 3 times |
-| **External Provider** | Invalid credentials, account frozen | HTTP 400/401/403 response | Abort immediately | `DECLINED` | Release local reservations, notify client |
-| **Network Substrate** | TCP timeout, HTTP 502/503/504 | Connection pool / socket timeout | Hand off to retry scheduler | `RETRY_SCHEDULED` | Exponential backoff with decorrelated jitter |
-| **Gateway Congestion** | Rate limits exceeded (HTTP 429) | Circuit breaker trip | Divert to durable outbox | `SUSPENDED_AUDIT` | Throttled background drain when circuit resets |
-| **Retry Exhaustion** | 3 successive timeouts | Attempt counter overflow | Trigger compensating saga | `CANCELLED` | Roll back inventory locks, issue reversal |
-| **Partial Failure** | Compensation step crashes | Saga transaction failure | Route payload to Dead-Letter Queue | `RECONCILIATION_FAILED` | Human operator intervention via admin dashboard |
+- **Retry policy**: Backoff intervals, jitter, and maximum attempt count (e.g., max 3 attempts).
+- **Fallback logic**: What state is persisted when all retries are exhausted (`NeedsAttention`).
+- **Idempotency**: Ensuring retried requests do not create duplicate side effects.
+- **Operator intervention**: Triggering alerts or routing failed operations to a reconciliation job.
 
-### Why Failure-Path Documentation Is Vital for Coding Agents
-
-LLM coding agents have a documented **happy-path cognitive bias**: when prompted to implement or modify a feature, they routinely assume zero-latency networks, immediate database consistency, and infallible third-party APIs. 
-
-Explicit failure-path documentation forces the agent to:
-1. **Enforce Idempotency**: Guard every mutation against duplicate execution during automatic retries.
-2. **Implement Compensating Logic**: Ensure that partial failures trigger explicit clean-up handlers rather than leaving orphaned database rows.
-3. **Handle Eventual Consistency**: Prevent agents from writing synchronous reads immediately following asynchronous command dispatch.
+Explicit failure paths prevent AI agents from falling into "happy-path bias" and writing code that assumes third-party calls never time out or fail.
 
 ---
 
