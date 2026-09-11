@@ -7,7 +7,7 @@ tags:
   - code-review
   - maintainability
   - intent-specification
-  - mechanical-sympathy
+  - infrastructure-constraints
 aliases:
   - Code Comments in AI Era
   - Semantic Value of Comments in AI Code
@@ -37,7 +37,7 @@ AGENTIC PARADIGM:
 
 When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the buried Git commit message, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. Nor will an agent proactively fall back to `git blame` to inspect every routine or line of code it modifies.
 
-However, **any comment physically placed next to the implementation is guaranteed to be ingested into the model's context window**. Comments therefore act as a microscopic, zero-latency semantic cache—anchoring human architectural intent directly at the point of mutation, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
+However, **any comment physically placed next to the implementation is guaranteed to be ingested into the model's context window**. Comments therefore act as a microscopic, zero-latency context anchor—locking human architectural intent directly at the point of mutation, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
 ### The Decisional Inversion:
 1. **The Death of Descriptive Comments**: Explaining *how* an algorithm steps through an array or formats an output is pure token noise. Foundation models parse syntactic control flow effortlessly.
@@ -51,8 +51,8 @@ In traditional software engineering culture, developers often push back against 
 
 While a deliberate human engineer might occasionally use `git blame` during deep investigation, relying on version control as an agent context mechanism completely collapses in practice due to four architectural dynamics:
 
-1. **The Epistemic Blindspot (Zero Proactive Doubt)**:
-   An agent only invokes tools like `git blame`, `git log -S`, or commit explorers during **forensic debugging** after a test or build has already failed. When an agent performs routine feature work, refactoring sweeps, or deduplication passes, it experiences **high completion confidence**. Seeing a redundant-looking guard or historical quirk, the model assumes the code is simply clumsy or dead—it experiences zero epistemic doubt to pause, suspect hidden context, and run a speculative `git blame` check.
+1. **The Overconfidence Trap (Zero Proactive Doubt)**:
+   An agent only invokes tools like `git blame`, `git log -S`, or commit explorers during **forensic debugging** after a test or build has already failed. When an agent performs routine feature work, refactoring sweeps, or deduplication passes, it generates code with high statistical confidence. Seeing an unusual guard or historical quirk, the model simply assumes the code is redundant—it never pauses to doubt its assumptions, suspect hidden context, or run a speculative `git blame` check.
 2. **Context Latency and Tool-Call Multiplication**:
    Checking Git history is an external, tool-mediated operation. If an agent were instructed to inspect `git blame` for every function or line it intends to touch, the execution loop would instantly collapse under a deluge of tool round-trips (`git blame` $\rightarrow$ `git log` $\rightarrow$ `git show <hash>`), exploding token budgets and latency by orders of magnitude.
 3. **Provenance Decay and Blame Erosion**:
