@@ -90,6 +90,7 @@ Human code was shaped by human physical and cognitive limits:
 
 Agents operate under an entirely inverted set of economic and cognitive constraints:
 - **Zero typing fatigue**: An agent generates 100 explicit lines as effortlessly as one.
+- **Effortless duplication discovery & semantic discrimination**: An agent effortlessly locates duplicated or divergent logic across the entire repository in seconds and can synchronize or adapt it on the fly. Crucially, unlike blunt find-and-replace tools, an agent possesses the semantic reasoning to discern whether a given instance actually warrants synchronization or represents intentional domain divergence that should be left untouched.
 - **Vulnerability to hidden magic**: Agents are easily confused by deep runtime indirection, convention-over-configuration magic, and ambient state.
 - **Superiority of flat, explicit code**: Optimal agent-native code is **explicit, flat, locally duplicated, and mechanically isolated** (e.g. 1:1 file-to-operation hierarchy with strict line limits).
 
@@ -166,7 +167,7 @@ more explicit code → negligible generation cost → easier local reasoning →
 
 This does not justify uncontrolled sprawl. But it gives **localized duplication** three decisive architectural advantages:
 1. **Guaranteed Minimal Blast Radius**: When logic is duplicated locally inside each operation rather than shared through a fragile common abstraction, modifying Operation A physically cannot break Operation B.
-2. **Effortless Synchronization**: LLM agents can search the entire repository, identify semantic duplicates in seconds, and update them consistently across dozens of files.
+2. **Effortless Synchronization & Semantic Discrimination**: LLM agents can search the entire repository, identify semantic duplicates in seconds, and update them consistently across dozens of files. More importantly, agents possess contextual awareness to evaluate whether an instance truly shares the same lifecycle and requires synchronization, or represents intentional divergence that must be preserved.
 3. **Zero Cognitive Drag**: Generating or modifying 10 specialized, self-contained implementations costs an agent no more effort than modifying a single shared framework.
 
 Instead of asking *"Is this duplicated?"*, architects must ask:
