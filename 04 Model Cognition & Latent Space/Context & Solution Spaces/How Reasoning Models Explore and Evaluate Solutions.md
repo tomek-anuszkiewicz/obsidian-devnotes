@@ -12,6 +12,26 @@ aliases:
   - Solution Exploration and Verification in LLMs
 ---
 
+# How Reasoning Models Explore and Evaluate Solutions
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Reasoning capability in frontier models is not a hard-coded symbolic algorithm; it is a **learned behavioral policy trained via test-time trajectory exploration and reinforcement learning**.  
+> - **Search-Space Failure Outweighs Reasoning Failure**: An agent or evaluator model may evaluate candidates $A, B, C$ with flawless mathematical rigor; however, if the globally optimal architectural pattern $D$ was omitted during the initial expansion phase, the system commits a locally optimal failure.
+> - **Outcome vs Process Supervision**: Outcome Reward Models (ORMs) verify only the destination, rewarding accidentally correct guesses that used broken logic. Process Reward Models (PRMs) score individual intermediate deduction steps, preventing error propagation.
+> - **Tripartite Quality Partition**: Debugging reasoning breakdowns requires strictly isolating **Context Quality** (retrieval completeness), **Reasoning Quality** (deductive step integrity), and **Answer Quality** (synthesized communication).
+
+### Comparative Matrix: Reasoning Evaluation & Supervision Paradigms
+
+| Evaluation Paradigm | Evaluation Granularity | Verification Mechanism | Hallucinated Rationale Detection | Computational Overhead | Primary Vulnerability / Failure Mode |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Outcome Supervision (ORM)** | Coarse: Final output evaluated only at the end of the trajectory. | Binary scalar reward or correctness metric (e.g. test pass/fail). | **Blind**: Rewards faulty reasoning that arrives at the correct answer by accident. | Low: Single evaluation call at trajectory termination. | Reward hacking; reinforcing unprincipled shortcuts or flawed heuristic logic. |
+| **Process Supervision (PRM)** | Dense: Evaluates each intermediate reasoning step sequentially. | Step-level reward model scoring deduction validity ($s_1, s_2, \dots, s_n$). | **High**: Detects the precise token step where logical fallacy or hallucination begins. | High: Requires step-by-step scoring across multi-branch tree search. | Credit assignment noise; difficulty scoring ambiguous non-mathematical deductions. |
+| **LLM-as-a-Judge** | Semantic: Secondary model grades reasoning transcript against criteria rubric. | Prompted natural language critique and grading scale. | Moderate: Spots obvious contradictions, but shares cognitive blind spots with generator. | Moderate: Extra inference call per evaluated trajectory. | **Shared Blind Spots**: Judge model rationalizes plausible-sounding errors made by the generator. |
+| **Deterministic Verification Oracles** | Exact: External execution environments (compilers, test runners, formal provers). | Ground-truth mechanical verification (exit codes, assertion traces). | **Absolute for observable behavior**: Code either compiles and passes unit tests or fails. | Low-to-Moderate: Dependent on test suite execution speed. | Does not verify unexercised branches or missing requirements; oracle debt. |
+
+---
+
 Reasoning quality depends not only on whether a model can follow a promising path, but also on whether it explores enough alternatives, evaluates them well, and verifies the final choice.
 
 ## 1. Reasoning Itself Is Learned Behavior
