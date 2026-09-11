@@ -134,6 +134,25 @@ A reviewer must never approve an agentic pull request unless they can independen
 
 If you cannot sketch the architecture and failure paths without looking at the LLM summary, do not merge the code. When the agent fails in production, the human engineer is the only fallback.
 
+### Review as Knowledge Acquisition: Learning the System Without Tactile Implementation
+In traditional software engineering, developers learned a codebase organically through **tactile implementation**—the physical friction of typing lines, wrestling with syntax, and writing unit tests etched the architecture into biological memory.
+
+In the agentic era, implementation labor is delegated to models. This creates a severe epistemological vacuum: **if an engineer no longer authors the code, how do they learn how the system works and maintain cognitive control?**
+
+The human mental model cannot be maintained through passive observation. Instead, knowledge acquisition shifts entirely to two synchronized cognitive modalities:
+1. **Top-Down Grounding Through Living Documentation**:
+   Before reviewing diffs or commissioning features, the engineer digests and calibrates structured architectural specifications (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]). This grounds the reviewer in domain topologies, resource budgets, and operational invariants without drowning in thousands of lines of intermediate syntax.
+2. **Bottom-Up Assimilation Through Code Review**:
+   Code review is transformed from an administrative approval gate into **the primary pedagogical ritual of engineering**. Interrogating a diff is the sole moment where the engineer actively maps abstract specification onto concrete mechanical state transitions. By tracing how data enters, mutates, and exits, the engineer forces their neural pathways to assimilate the changes.
+
+#### Preventing the "Alien Codebase" Crisis (The Ship of Theseus)
+If a team relies exclusively on green-check test suites and allows agents to author and commit code without active human review, the repository undergoes a quiet **epistemic drift**. Within months, every module is syntactically sound and passes unit tests, yet the entire system has morphed into an **alien artifact**—a software estate where no living engineer understands why certain invariants exist or where hidden coupling lies.
+
+Code review is the indispensable human defense against the Alien Codebase crisis:
+- It maintains human intellectual stewardship over the system's state space.
+- It prevents the loss of tacit operational knowledge.
+- It ensures that when an emergency exceeds the agent's reasoning horizon, a human operator is already cognitively synchronized and capable of decisive manual intervention.
+
 ---
 
 ## Use Agents to Support Review, Not Replace It
@@ -201,6 +220,7 @@ The second agent is an attention aid, not the final authority.
 ## Relationship to the Knowledge Graph
 
 - **[[LLMs as a Code Review Team]]**: How automated multi-agent reviewer teams assist humans by conducting initial adversarial checks.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: The upstream specification framework providing top-down grounding for code review.
 - **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: Codifying tribal review knowledge into continuous automated prompts.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Diagnosing when an over-constrained agent enters a thrashing loop between competing review rules.
 - **[[Developing Features with AI Coding Agents]]**: Ensuring specifications and acceptance tests are reviewed before code implementation.
