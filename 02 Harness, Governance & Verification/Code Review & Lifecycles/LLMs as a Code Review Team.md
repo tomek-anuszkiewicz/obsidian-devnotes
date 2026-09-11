@@ -10,970 +10,219 @@ tags:
 aliases:
   - Multi-Agent Code Review
   - Continuous Engineering Verification with LLMs
+  - Continuous Falsification Engine
+  - Specialized Reviewer Topologies
+  - Adversarial Review Pipeline
 ---
 
-LLMs can change code review from a mostly human, manually executed activity into a continuous system of specialized reviewers.
+# LLMs as a Code Review Team
 
-The most useful model is not:
-
-> One AI reads a pull request and gives its opinion.
-
-A more interesting model is:
-
-> A team of specialized agents continuously examines changes, forms hypotheses about potential problems, and uses deterministic tools to verify them—realizing the vision of [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize|agentic review enforcing complex semantic rules]].
-
-The role of humans then shifts toward [[Reviewing AI-Generated Code|reviewing high-risk findings]] and preventing [[Software Entropy and the Zero-Friction Trap|software entropy]].
-
----
-
-## The Most Important Property May Be Relentlessness
-
-One of the biggest advantages of an automated reviewer is not intelligence; it is the [[Agent Advantage -  Relentless, Methodical Work|relentless, methodical stamina of agents]] that never tires.
-
-A human reviewer gets tired.
-
-After reviewing many pull requests, large diffs, repetitive changes, or hundreds of similar files, attention inevitably decreases.
-
-An agent does not care that:
-
-- this is the twentieth pull request today;
-    
-- the diff contains 150 files;
-    
-- the same validation pattern appears for the hundredth time;
-    
-- a checklist contains 40 items;
-    
-- the issue it is looking for occurs only once every few thousand changes.
-    
-
-It can apply the same procedure every time.
-
-This makes agents especially useful for review work within an [[Agentic Coding Harness and Controlled Development Workflows|automated delivery harness]], particularly when work is:
-
-- repetitive;
-    
-- systematic;
-    
-- easy to forget;
-    
-- rare but important;
-    
-- dependent on large amounts of context.
-    
-
-A human may know that every new endpoint should verify authorization, propagate cancellation, validate input, preserve backward compatibility, update telemetry, and contain relevant tests.
-
-Knowing the rules does not mean remembering every rule during every review.
-
-An agent can.
-
-This may be one of the strongest reasons to introduce AI review even when human reviewers are already very experienced.
-
----
-
-## Code Review Does Not Need One General Reviewer
-
-A single prompt such as:
+> [!IMPORTANT]
+> **The Conceptual Shift: Continuous Engineering Verification**: Code review ceases to be a human reading a diff to see if it looks plausible. In the agentic era, code review becomes an **adversarial continuous falsification engine**: a team of specialized, relentless agents that systematically generate failure hypotheses, execute deterministic tools to confirm or refute them, and synthesize high-confidence findings before human review.
 
 ```text
-Review this pull request.
-```
-
-asks one model to simultaneously reason about too many unrelated concerns.
-
-A better design is a team of specialized reviewers.
-
-For example:
-
-```text
-Review Router
-    |
-    +-- Correctness Reviewer
-    +-- Test Reviewer
-    +-- Security Reviewer
-    +-- API Compatibility Reviewer
-    +-- Database Reviewer
-    +-- Performance Reviewer
-    +-- Concurrency Reviewer
-    +-- Architecture Reviewer
-```
-
-Not every reviewer needs to run for every change.
-
-A lightweight routing agent can inspect the diff and decide which specialists are relevant.
-
-For example:
-
-```text
-DTO / controller / public contract changed
-        ->
-API Compatibility Reviewer
-```
-
-or:
-
-```text
-EF / SQL / migration changed
-        ->
-Database Reviewer
-```
-
-or:
-
-```text
-authentication / authorization changed
-        ->
-Security Reviewer
-```
-
-Correctness and test reviewers may run almost always, while expensive specialists run conditionally.
-
-This keeps both cost and noise under control.
-
----
-
-## Different Reviewers Should Have Different Instructions
-
-Each reviewer can have its own playbook.
-
-A database reviewer may inspect:
-
-- query count;
-    
-- N+1 queries;
-    
-- indexes;
-    
-- transaction boundaries;
-    
-- query plans;
-    
-- excessive materialization;
-    
-- unnecessary round trips;
-    
-- locking behavior.
-    
-
-An API reviewer may inspect:
-
-- backward compatibility;
-    
-- serialization changes;
-    
-- optional versus required fields;
-    
-- enum compatibility;
-    
-- HTTP semantics;
-    
-- authorization;
-    
-- versioning.
-    
-
-A performance reviewer may inspect:
-
-- allocations;
-    
-- algorithmic complexity;
-    
-- reflection;
-    
-- unnecessary abstractions;
-    
-- excessive LINQ;
-    
-- repeated parsing;
-    
-- synchronization;
-    
-- database access;
-    
-- hot-path behavior.
-    
-
-A correctness reviewer may concentrate on:
-
-- boundary conditions;
-    
-- missing cases;
-    
-- null handling;
-    
-- exception paths;
-    
-- inconsistent state;
-    
-- assumptions that no longer hold.
-    
-
-This is much easier to improve than one enormous global prompt.
-
----
-
-## The Reviewer Should Form Hypotheses, Not Just Opinions
-
-LLMs are useful at spotting suspicious patterns, but a review becomes much more valuable when an agent can verify its own suspicions.
-
-Instead of:
-
-```text
-This code might be slow.
-```
-
-the reviewer should try:
-
-```text
-Hypothesis:
-The new implementation introduces O(n²) behavior.
-
-Experiment:
-Run a benchmark for 1k, 10k and 100k elements.
-
-Result:
-main:  38 ms
-PR:    4.7 s
-
-Conclusion:
-Confirmed performance regression.
-```
-
-The same principle applies to correctness.
-
-```text
-Reviewer suspects a bug
-        |
-        v
-generate reproduction test
-        |
-        v
-run against main
-        |
-        v
-run against PR
-        |
-        v
-report only if confirmed
-```
-
-This creates a useful distinction:
-
-> LLMs generate hypotheses. Deterministic tools provide evidence.
-
----
-
-## Reviewers Can Use the Existing Engineering Toolchain
-
-AI review does not replace CI.
-
-It orchestrates and interprets it.
-
-A reviewer can use:
-
-```text
-dotnet test
-static analyzers
-CodeQL
-coverage
-BenchmarkDotNet
-dotnet-counters
-dotnet-trace
-SQL EXPLAIN
-linters
-integration tests
-property-based tests
-fuzz tests
-```
-
-The agent can decide which tool is relevant, execute it, interpret the result, and attach the evidence to the finding.
-
-Instead of:
-
-> This allocation could become expensive.
-
-it can report:
-
-```text
-main:
-2.1 µs
-0 B allocated
-
-PR:
-3.8 µs
-320 B allocated
-
-The method is called approximately 5 million times per day.
-```
-
-The discussion then becomes much less subjective.
-
----
-
-## Agents Can Also Create Tests During Review
-
-A powerful reviewer should be allowed to create temporary tests.
-
-For example:
-
-```text
-Potential bug detected
-        |
-create regression test
-        |
-test passes on main
-        |
-test fails on PR
-        |
-finding confirmed
-```
-
-The test itself can become part of the suggested fix.
-
-This turns review into something closer to automated investigation.
-
-The reviewer is not merely saying:
-
-> I think this is wrong.
-
-It is saying:
-
-> I can demonstrate a case where this is wrong.
-
----
-
-## Reviewer and Fixer Should Be Separate Roles
-
-It may be useful to deliberately separate finding problems from changing code.
-
-For example:
-
-```text
-Reviewer
-    read
-    search
-    run tests
-    run benchmarks
-    no write access
-```
-
-and:
-
-```text
-Fixer
-    read
-    edit
-    run tests
-```
-
-The workflow becomes:
-
-```text
-Reviewer:
-I suspect a bug.
-
-Validator:
-Confirmed by this test.
-
-Fixer:
-Here is a proposed patch.
-
-Validator:
-The test now passes.
-
-Human:
-Approve or reject.
-```
-
-This reduces the risk that the same agent unconsciously rationalizes the solution it has just created.
-
-It also makes permissions easier to control.
-
----
-
-## Independent Reviewers May Be Valuable
-
-Review does not necessarily have to be performed by the same model that produced the code.
-
-It may be useful to deliberately introduce diversity:
-
-```text
-Model A generates code.
-
-Model B reviews correctness.
-
-Model C reviews security.
-
-Model D tries to find counterexamples.
-```
-
-Different models may have different failure modes.
-
-Even using the same model with independent contexts can help because one reviewer is not anchored by the reasoning that produced the implementation.
-
-The analogy is similar to having another engineer examine the change without first hearing a long explanation of why the author thinks it is correct.
-
----
-
-## A Review Router Can Control Cost
-
-Running ten powerful models on every typo would be wasteful.
-
-A router can classify a change first.
-
-For example:
-
-```text
-Change classification:
-
-documentation only
-    -> no technical review
-
-test-only change
-    -> correctness + test reviewer
-
-database migration
-    -> correctness + database + compatibility
-
-authentication change
-    -> correctness + security + tests
-
-hot-path implementation
-    -> correctness + performance + tests
-```
-
-The router itself can use a cheap model.
-
-Expensive reasoning is reserved for changes where it matters.
-
----
-
-## A Final Reviewer Can Synthesize the Findings
-
-Multiple reviewers create another problem: noise.
-
-Seven agents producing thirty comments can make a pull request worse rather than better.
-
-A final synthesizer can therefore collect all findings and perform:
-
-```text
-deduplication
-confidence filtering
-severity ranking
-cross-checking
-evidence validation
-```
-
-A possible pipeline is:
-
-```text
-7 reviewers
-
-24 candidate findings
-
-9 duplicates / overlapping findings removed
-
-5 low-confidence findings discarded
-
-4 findings disproved by tests
-
-6 findings presented to the developer
-```
-
-The final review can use a common format:
-
-```text
-Severity: HIGH
-Confidence: HIGH
-
-Problem:
-...
-
-Evidence:
-...
-
-Impact:
-...
-
-Suggested fix:
-...
-
-Reviewer:
-database-performance
-```
-
-This makes AI review much less noisy.
-
----
-
-## Confidence Should Matter
-
-Not every observation deserves a pull-request comment.
-
-A useful policy could be:
-
-```text
-HIGH severity + HIGH confidence
-    -> inline comment / request changes
-
-MEDIUM severity + HIGH confidence
-    -> normal comment
-
-LOW confidence
-    -> review summary only
-
-LOW severity + LOW confidence
-    -> suppress
-```
-
-This is particularly important because an AI reviewer that produces too many false positives will quickly be ignored.
-
-The goal is not maximum number of findings.
-
-The goal is high-value findings.
-
----
-
-## Reviewers Can Learn From Human Decisions
-
-Every review interaction creates useful feedback.
-
-For each finding the system can record:
-
-```text
-accepted
-rejected
-false positive
-already known
-fixed
-ignored
-disputed
-```
-
-Over time this becomes a dataset for improving the reviewer instructions.
-
-For example, the team may discover that the performance reviewer frequently complains about allocations in paths that are executed once per request and have no measurable impact.
-
-Its instructions can then be changed:
-
-```text
-Do not report allocation differences unless:
-
-- the code is demonstrably hot,
-- the difference is measurable,
-- or the allocation has another significant consequence.
-```
-
-The review process itself can therefore become an optimization loop.
-
----
-
-## Review Quality Can Be Measured
-
-AI review creates the possibility of measuring reviewer effectiveness much more systematically.
-
-Useful metrics include:
-
-```text
-findings generated
-findings accepted
-findings rejected
-false-positive rate
-confirmed bugs found
-security problems found
-regressions found
-tests generated
-findings confirmed by tests
-time per review
-cost per review
-```
-
-A reviewer can then be evaluated like another engineering component.
-
-For example:
-
-```text
-Security Reviewer
-
-1,240 PRs reviewed
-87 findings
-72 accepted
-9 rejected
-6 inconclusive
-
-precision: ~83%
-```
-
-The question becomes less:
-
-> Is this prompt good?
-
-and more:
-
-> How effective is this reviewer?
-
----
-
-## GitHub Is a Natural Platform for This Model
-
-GitHub already provides most of the infrastructure required to build such a system.
-
-A reviewer can react to events such as:
-
-```text
-pull request created
-new commit pushed
-review requested
-comment created
-check completed
-```
-
-There are several ways to integrate an AI reviewer.
-
----
-
-## GitHub Actions
-
-The simplest architecture is often:
-
-```text
-Pull Request
-     |
-GitHub Actions
-     |
-AI Reviewer
-```
-
-The important advantage is that the agent can operate in the same environment as ordinary CI.
-
-It can:
-
-```text
-checkout repository
-build
-run tests
-generate temporary tests
-run benchmarks
-inspect artifacts
-```
-
-This is particularly attractive when verification requires executing the code.
-
----
-
-## GitHub Apps
-
-An external reviewer such as CodeRabbit can instead run as a GitHub App.
-
-The architecture becomes:
-
-```text
-GitHub
-   |
-webhook
-   |
-External Review Service
-   |
-GitHub API
-   |
-PR review / comments / checks
-```
-
-The service may run completely outside GitHub.
-
-It can listen for events such as:
-
-```text
-pull_request.opened
-pull_request.synchronize
-issue_comment
-review_comment
-```
-
-and react automatically.
-
-From the developer's perspective, the application behaves almost like another reviewer.
-
-It can add:
-
-- inline comments;
-    
-- review summaries;
-    
-- suggested changes;
-    
-- approvals;
-    
-- requests for changes;
-    
-- status checks.
-    
-
-This is the model used by many external analysis and review products.
-
----
-
-## Reviewers Can Also Be Invoked On Demand
-
-Not everything needs to run automatically.
-
-A developer could request specialized investigation directly from a pull request:
-
-```text
-@review-bot performance
-```
-
-or:
-
-```text
-/review security
-```
-
-or even:
-
-```text
-@review-bot investigate whether this query causes an N+1 problem
-```
-
-This creates an interesting hybrid between a reviewer and an engineering assistant.
-
-The pull request itself becomes the workspace in which humans and agents collaborate.
-
----
-
-## GitHub Checks May Be Better Than Comments
-
-Not every result needs to appear as another PR conversation.
-
-Reviewers can publish checks such as:
-
-```text
-Build                     PASS
-Tests                     PASS
-Security Review           PASS
-API Compatibility         PASS
-Performance Review        FAIL
-Database Review           PASS
-```
-
-Detailed findings can live inside the check.
-
-This reduces comment noise and gives the review system a more structured interface.
-
-Selected checks could eventually become required for merge.
-
-Care is needed, however.
-
-An unreliable LLM reviewer should not become a merge gate merely because it exists.
-
----
-
-## External Reviewers Can Be Independent Services
-
-There does not need to be one central AI-review system.
-
-A repository could eventually have:
-
-```text
-GitHub Copilot
-Company Architecture Reviewer
-Security vendor
-Performance service
-CodeQL
-Sonar
-Dependency scanner
-Business Rules Reviewer
-```
-
-All of them independently observe the same pull request.
-
-GitHub effectively becomes an event bus and shared collaboration surface.
-
-Different reviewers may be:
-
-- SaaS products;
-    
-- internal company services;
-    
-- GitHub Actions;
-    
-- custom agents;
-    
-- deterministic analyzers;
-    
-- LLM-based systems.
-    
-
-Their results meet in the pull request.
-
----
-
-## Private Companies Can Build Their Own Reviewer
-
-A company can create a private GitHub App and run its reviewer in its own infrastructure.
-
-For example:
-
-```text
-GitHub
-   |
-webhook
-   |
-Company Review Platform
-   |
-   +-- LLM
-   +-- internal documentation
-   +-- architecture decisions
-   +-- Jira
-   +-- production telemetry
-   +-- Grafana
-   +-- test infrastructure
-```
-
-This reviewer could know things that a general-purpose SaaS reviewer cannot know.
-
-For example:
-
-> This endpoint technically works, but service X is being retired and new code must use service Y.
-
-or:
-
-> This query operates on a table containing 900 million rows in production, so this seemingly harmless scan is dangerous.
-
-The value of the reviewer grows significantly when it has access to organizational context.
-
----
-
-## Permissions Should Be Deliberately Limited
-
-A reviewer does not necessarily need permission to modify code.
-
-A conservative integration could have:
-
-```text
-Repository contents: read
-Pull requests: read/write
-Checks: write
-Actions: read
-```
-
-while explicitly denying:
-
-```text
-Repository contents: write
-Administration: write
-Secrets
-```
-
-A system that only investigates and comments requires much less trust than an autonomous coding agent.
-
-Writing code can be delegated to a separate fixer with stronger permissions.
-
----
-
-## Human Review Does Not Necessarily Disappear
-
-AI review may instead change what humans review.
-
-Today humans often spend time checking things such as:
-
-```text
-Did someone forget a null check?
-Is cancellation propagated?
-Is this method tested?
-Is this API backward compatible?
-Did someone accidentally introduce N+1?
-```
-
-These are valuable checks, but they consume attention.
-
-Agents can perform them relentlessly.
-
-Humans can spend more attention on:
-
-- whether the business behavior is correct;
-    
-- whether the abstraction makes sense;
-    
-- whether the product should behave this way at all;
-    
-- long-term architecture;
-    
-- trade-offs;
-    
-- organizational context;
-    
-- risk acceptance.
-    
-
-The review becomes layered:
-
-```text
-machines check everything they can check repeatedly
-
-humans concentrate on what requires judgment
+Synthetic Diff Proposed
+           │
+           ▼
+[ Review Router ] ──► Classifies Diff (API, Database, Concurrency, Hot Path)
+           │
+     ┌─────┴───────────────────────────┬───────────────────────────┐
+     ▼                                 ▼                           ▼
+[ Security Specialist ]       [ Database Specialist ]     [ Performance Specialist ]
+"Forms vulnerability thesis"  "Inspects query plans"      "Generates microbenchmark"
+     │                                 │                           │
+     └────────────────────────┬────────┴───────────────────────────┘
+                              │
+                              ▼
+        [ Tool Execution & Hypothesis Falsification ]
+        (Test Runners / Static Analysis / Profilers / EXPLAIN)
+                              │
+                              ▼
+            [ Finding Synthesizer & Filter ]
+            (Deduplication, confidence gating, test proofs)
+                              │
+                              ▼
+       HUMAN ARCHITECT REVIEWS SURVIVING DECISIONS
 ```
 
 ---
 
-# Code Review May Become Continuous Engineering Verification
+## Executive Summary & Core Architectural Invariants
 
-The most important shift may therefore be conceptual.
+1. **Hypothesis Generation vs. Deterministic Proof**: LLMs must not merely offer subjective opinions ("this looks slow"). An agentic reviewer **forms a concrete hypothesis**, generates an automated reproduction test or microbenchmark, runs it against both `main` and the `PR` branch, and reports only when the defect is empirically proven.
+2. **Relentlessness Over Genius**: The primary advantage of an automated review agent is not superhuman intelligence, but **inexhaustible stamina**. An agent applies the identical 40-point verification checklist on Friday at 6:00 PM across a 150-file diff with the same mechanical rigor as on Monday morning.
+3. **Specialized Topologies Over Monolithic Prompts**: Prompting a single model to "Review this pull request" causes cognitive dilution and rule oscillation. High-assurance systems deploy a router that delegates to domain specialists (Database, Concurrency, Security, Public API Compatibility, Performance).
+4. **Strict Separation of Reviewer and Fixer Roles**: The agent identifying problems must remain strictly read-only (`inspect, execute tests, profile`). Granting the reviewer write access creates self-rationalization bias: the model bends the code to validate its own hallucinations. Fixing is delegated to an isolated fixer agent, validated by a third-party test oracle.
+5. **Noise Gating and Synthesizer Pipelines**: Seven specialized reviewers emitting uncoordinated findings create pull-request alert fatigue. A centralized synthesizer deduplicates overlap, discards low-confidence observations, and filters out findings disproven by tests.
+6. **Multi-Ecosystem Toolchain Orchestration**: Review agents do not replace CI; they orchestrate it. Agents invoke native test runners (`cargo test`, `pytest`, `go test`, `dotnet test`), memory profilers, query plan explainers (`EXPLAIN ANALYZE`), and fuzzing engines to provide empirical data alongside diff comments.
 
-Traditional review is approximately:
+---
+
+## 1. The Superpower of Methodical Relentlessness
+
+Human attention is a perishable, non-renewable resource:
+- Human reviewers suffer from cognitive fatigue after reviewing large PRs, repetitive changes, or boilerplate-heavy files.
+- Subtle invariants—propagating cancellation tokens, checking tenant authorization filters, handling deserialization backward-compatibility, validating boundary conditions—are easily forgotten under deadline pressure.
+- An agentic reviewer executes the same verification protocol every single time:
+  - It does not care that this is the 30th pull request of the day,
+  - It does not skim because the diff contains 150 files,
+  - It relentlessly checks for low-probability, high-consequence failure modes (see [[Agent Advantage -  Relentless, Methodical Work]]).
+
+---
+
+## 2. Specialized Reviewer Topologies & Dynamic Routing
+
+A single general-purpose prompt forces one model to reason simultaneously across dozens of conflicting dimensions. Effective architectures partition review into a modular agent hierarchy:
 
 ```text
-developer writes code
-        |
-human reads diff
-        |
-human notices some problems
-        |
-merge
+                             Pull Request Diff
+                                     │
+                                     ▼
+                           [ Review Router ]
+                                     │
+         ┌───────────────────┬───────┴───────────┬───────────────────┐
+         ▼                   ▼                   ▼                   ▼
+[ Correctness Reviewer ] [ Test Reviewer ] [ Security Reviewer ] [ Specialized Reviewers ]
+(Always Active)          (Always Active)   (Auth / Crypto / Web)  (Conditionally Routed)
+                                                                     │
+                                                   ┌─────────────────┼─────────────────┐
+                                                   ▼                 ▼                 ▼
+                                             [ Database ]     [ Performance ]    [ Public API ]
+                                             (ORM / SQL / DDL) (Alloc / Latency)  (Contracts / DTOs)
 ```
 
-Agentic review can become:
+### Dynamic Routing Conditions
+To optimize token budgets and reduce latency, the router inspects the diff AST and triggers expensive specialists conditionally:
+- **Public API / Contract Changed**: Invokes API Compatibility Reviewer (verifies serialization schemas, optionality, HTTP semantics, backward compatibility).
+- **Database / Storage Changed**: Invokes Database Reviewer (inspects N+1 queries, locking behavior, transaction scopes, missing indexes, query plans).
+- **Hot-Path / Computational Kernels**: Invokes Performance Reviewer (monitors memory allocations, heap boxing, algorithmic complexity $O(n)$, lock contention).
+- **Authentication / Tenant Flow**: Invokes Security Reviewer (inspects authorization boundaries, injection vectors, token expiration, secret leakage).
+
+---
+
+## 3. The Hypothesis-Falsification Protocol
+
+Subjective opinions pollute review threads and erode developer trust. Agentic reviewers must adhere to a strict **Scientific Method**:
 
 ```text
-developer or agent creates change
-        |
-multiple reviewers inspect it
-        |
-reviewers form hypotheses
-        |
-tests and tools verify them
-        |
-findings are challenged and filtered
-        |
-fixes are proposed
-        |
-tests verify the fixes
-        |
-human reviews the remaining decisions
+Reviewer Detects Potential Defect
+               │
+               ▼
+   Formulate Concrete Hypothesis
+   "Adding this nested loop creates O(n²) scaling when collection > 1,000 items."
+               │
+               ▼
+   Synthesize Empirical Verification Test / Benchmark
+               │
+               ▼
+   Execute Against Baseline (main) vs. Branch (PR)
+               │
+      ┌────────┴────────┐
+      ▼                 ▼
+[ Hypothesis Disproven ] [ Hypothesis Confirmed ]
+(Main == PR)             (Main: 2ms, PR: 4.2s)
+      │                         │
+   SUPPRESS FINDING             ▼
+                     Report Finding with Machine Evidence
 ```
 
-The goal is no longer merely:
+### Reporting with Objective Machine Evidence
+Instead of ambiguous prose (*"This might allocate too much memory"*), the agent reports concrete profiling evidence:
+```text
+Severity: HIGH | Confidence: HIGH | Category: Performance Regression
+Target: OrderProcessingPipeline.cs::ExecuteBatch
 
-> Have somebody read the code before merge.
+Hypothesis Confirmed:
+The new stream transformation introduces heap allocation per item in the hot path.
 
-It becomes:
+Empirical Evidence:
+- Baseline (main): 1.8 µs | 0 bytes heap allocated
+- Pull Request:   4.2 µs | 480 bytes heap allocated per transaction
+- Production Impact: ~10 million invocations/day = ~4.8 GB unnecessary GC garbage/day.
 
-> Continuously attempt to prove that the change is wrong before it reaches production.
+Reproduction Benchmark: tests/perf/BatchProcessingBenchmark.cs
+Suggested Remediation: Use pre-allocated span/buffer slices instead of LINQ / stream iterators.
+```
 
-That is where LLM reviewers may be particularly powerful.
+---
 
-They are not perfect.
+## 4. Separation of Concerns: Reviewer vs. Fixer vs. Validator
 
-But they can be **relentless, specialized, cheap to duplicate, able to investigate suspicious changes, and willing to run the same verification procedure every single time**.
+Granting a single agent write permissions to patch the problems it finds creates acute confirmation bias:
 
-For code review, those properties may matter almost as much as raw intelligence.
+```text
+┌────────────────────────────────────────────────────────────────┐
+│ Reviewer Agent (Read-Only)                                     │
+│ - Reads diff, git history, and living specs                    │
+│ - Executes test suites, linters, and profilers                 │
+│ - Disallowed from editing source files                         │
+└───────────────────────────────┬────────────────────────────────┘
+                                │ Emits verified finding + failing test
+                                ▼
+┌────────────────────────────────────────────────────────────────┐
+│ Fixer Agent (Write-Only)                                       │
+│ - Receives the failing test vector and defect description      │
+│ - Synthesizes minimal patch targeting the implementation       │
+└───────────────────────────────┬────────────────────────────────┘
+                                │ Submits patch
+                                ▼
+┌────────────────────────────────────────────────────────────────┐
+│ Validation Harness (Independent Gate)                         │
+│ - Runs full regression suite                                   │
+│ - Verifies the patch fixes the defect without side effects     │
+└────────────────────────────────────────────────────────────────┘
+```
+
+This strict architectural separation prevents models from silently modifying test assertions to excuse broken implementation code (enforcing [[Testing in the Model, Agent, LLM Era|The Frozen Oracle Rule]]).
+
+---
+
+## 5. Noise Suppression & Synthesizer Pipeline
+
+Multiple parallel reviewers inevitably generate overlapping, redundant, or borderline findings. A centralized **Synthesizer Agent** processes all candidate findings before publishing:
+
+```text
+Raw Findings from 6 Specialists (e.g., 28 items)
+                       │
+                       ▼
+         [ Deduplication & Merging ]
+         (Combines overlapping database and performance findings)
+                       │
+                       ▼
+        [ Confidence & Severity Matrix ]
+        - HIGH Severity + HIGH Confidence   ──► Inline PR Comment (Blocks Merge)
+        - MEDIUM Severity + HIGH Confidence ──► PR Review Summary Item
+        - LOW Confidence / Speculative      ──► Suppressed to Background Audit Log
+                       │
+                       ▼
+         [ Final Synthesized Review ] (e.g., 4 High-Signal Findings)
+```
+
+By enforcing strict confidence gating, engineering teams ensure that automated reviews maintain a high signal-to-noise ratio, preserving developer goodwill and trust.
+
+---
+
+## 6. The Multi-Layered Future: Continuous Engineering Verification
+
+When machines relentlessly handle repeatable invariant verification, human engineers elevate to the architectural summit:
+
+| Layer | Responsibility | Primary Actor |
+| :--- | :--- | :--- |
+| **Mechanical Syntax & Lint** | Formatting, typing, style, nullability | Compilers & Linters |
+| **System Invariants** | Concurrency safety, memory allocation limits, query plans | Multi-Agent Review Team |
+| **Hypothesis Proofs** | Generating tests and benchmarks proving defects | Specialized Testing Agents |
+| **Domain & Intent Judgment** | Product semantics, business model fidelity, architectural trade-offs | Human Software Architect |
+
+Code review is no longer a bureaucratic pause before merging; it is a **continuous engineering verification pipeline** that actively attempts to falsify every code change before it touches production reality.
+
 ---
 
 ## Relationship to the Knowledge Graph
 
 - **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How review agents evaluate informal, architectural, and business-level rules.
-- **[[Reviewing AI-Generated Code]]**: Principles for human oversight and skeptical review of agent outputs.
+- **[[Reviewing AI-Generated Code]]**: Principles for human oversight, mental model construction, and skeptical review of agent diffs.
 - **[[Multi-Agent Software Development]]**: Coordinating specialized reviewer personas (security, performance, domain logic, test coverage).
-- **[[Testing in the Model, Agent, LLM Era]]**: Combining automated review agents with deterministic test suites and mutation testing.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Integrating multi-agent review checkpoints into CI/CD harnesses.
+- **[[Testing in the Model, Agent, LLM Era]]**: Combining automated review agents with deterministic test suites, frozen oracles, and mutation testing.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Integrating multi-agent review checkpoints into CI/CD delivery harnesses.
+- **[[Agent Advantage -  Relentless, Methodical Work]]**: The foundational cognitive asymmetry between human fatigue and agentic procedural stamina.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing unreviewed code accumulation from degrading repository maintainability.
