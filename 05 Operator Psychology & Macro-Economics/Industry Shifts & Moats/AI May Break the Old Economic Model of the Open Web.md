@@ -12,6 +12,26 @@ aliases:
   - Collapse of Ad-Supported Web Model
 ---
 
+# AI May Break the Old Economic Model of the Open Web
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> For thirty years, the commercial contract of the open web was built on a simple quid-pro-quo: **content creators published open information in exchange for search referral traffic and programmatic ad monetization**. Frontier search engines and synthesis models dismantle this compact by answering user intent directly on the results page—severing referral links and starving the web's economic engine.
+> - **The Zero-Click Inversion**: Search volume may remain flat or increase while downstream referral traffic collapses by 70–90%. Web publishers bear the full financial cost of hosting and research while AI answer engines capture 100% of the economic surplus.
+> - **The Enclosure of the Commons**: When public web publishing becomes commercially suicidal, human authors retreat into private paywalls, gated communities (Substack, Discord, private Slack), and cryptographically signed data vaults—starving future model generations of high-quality public training data.
+
+### Comparative Matrix: The Economic Regimes of the World Wide Web
+
+| Dimension | The Hyperlink Web (1995–2010) | The Algorithmic Feed Web (2010–2023) | The AI Synthesis Web (Post-2024) |
+| :--- | :--- | :--- | :--- |
+| **Discovery Mechanism** | Ten blue links; directory portals; user manually browses sites. | Attention-maximizing social feeds; algorithmic engagement loops. | **Zero-Click Direct Synthesis**: LLM digests sources and produces raw answer. |
+| **Referral Traffic Flow** | Direct, massive funnel of visitors to the original content creator. | Intermediated: Platform keeps users in-app, but profile links still drove traffic. | **Severed**: User consumes answer in LLM UI; original site receives zero pageviews. |
+| **Publisher Monetization** | Display advertising, affiliate links, direct subscriptions. | Programmatic ad tech, sponsored posts, platform creator funds. | **Economic Collapse**: Ad revenue collapses; paywalls or complete closure. |
+| **Content Incentive** | Optimize for human depth, bookmarking, and link citations. | Optimize for clickbait headlines and viral algorithmic distribution. | **Defensive Enclosure**: Blocking AI scrapers; gating content in walled gardens. |
+| **Long-Term Systemic Risk** | Fragmented search indexes. | Polarizing filter bubbles and disinformation. | **Autophagic Model Collapse**: Web fills with AI-generated sludge; genuine human reality disappears. |
+
+---
+
 Generative AI is changing more than search engines.
 
 It may undermine the economic model that supported the open web, accelerating the [[Unbundling of Enterprise Software|unbundling of content and software]]:
