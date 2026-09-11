@@ -26,13 +26,33 @@ aliases:
 
 # Testing in the Model, Agent, LLM Era
 
-## The Foundational Paradigm: Ephemeral Code & The Ironclad Test Oracle
-
-The convergence of living markdown documentation, generative coding agents, and automated test oracles gives rise to a transformative architectural model: **the era of disposable implementation code ("Ephemeral Code")**.
+> [!IMPORTANT]
+> **The Ephemeral Code Axiom**: When systems possess authoritative living specifications and exhaustive, deterministic test oracles, **concrete implementation code becomes disposable, semi-ephemeral scrap**. The traditional commandment against rewriting software from scratch collapses: an agent can safely regenerate an entire module in minutes, provided the verification oracle is frozen, immutable, and strictly decoupled from the model's generation loop.
 
 ```text
-Detailed Living Specs (Markdown) ──► LLM Generation ──► Disposable Code (Rust / C#) ◄──► Ironclad Test Oracle (300k+ Vectors)
+Living Semantic Specs (Markdown) ──► Agent Code Synthesis ──► Ephemeral Implementation ◄──► Ironclad Test Oracle (300k+ Vectors)
 ```
+
+---
+
+## Executive Summary & Core Architectural Invariants
+
+Modern software engineering with autonomous coding agents inverts the economics of testing and implementation:
+
+1. **Dual-Steering Control Plane**: Steering an autonomous coding agent requires a two-force coordinate system: **Soft Semantic Intent** (Living Markdown specifications establishing *what* and *why*) paired with **Hard Deterministic Rigor** (rigid, machine-executable test assertions delivering binary pass/fail feedback).
+2. **The Frozen Oracle Rule**: Never grant an implementation agent write permissions to its own test assertions. When faced with subtle edge cases, models optimize along the path of least resistance by relaxing assertions. The test oracle must remain strictly read-only during synthesis and refactoring.
+3. **The Precision Trap (The 4GL Paradox)**: Natural language specifications cannot serve as a complete programming language. Attempting to make Markdown specifications exhaustively precise simply creates a verbose, untyped programming language without a compiler. Natural language must govern intent; executable oracles must govern mechanics.
+4. **Implementation Is Ephemeral; Invariants Are Permanent**: With a comprehensive oracle, epochal rewrites—regenerating a rotten, fragmented, or legacy subsystem from scratch in minutes—become safer and cheaper than months of delicate manual patching.
+5. **Epochal Modernization vs. Hyperactive Churn**: Code disposability must not devolve into weekly throwaway code churn (the "Ship of Theseus" dilemma, where nobody understands production systems). Disposability is an architectural escape valve for multi-year inflection points, while day-to-day changes remain incremental, stable, and strictly isolated.
+6. **The Oracle Cache Blindspot**: Test oracles validate functional equivalence (`result == expected`), but are completely blind to hardware efficiency. An agent-generated module can pass 300,000 verification vectors while inducing catastrophic instruction-cache (L1i) thrashing, pointer chasing, and heap fragmentation in multi-tenant production.
+7. **Hyrum's Law and the Incompleteness of Oracles**: No test suite exercises the infinite state space of production. Rewriting code under an incomplete oracle risks silently breaking unmodeled downstream dependencies (Hyrum's Law) or introducing hallucinated fallback behaviors in unconstrained state paths.
+8. **The Negative Proof Dilemma**: Formal mathematical proofs (e.g., interactive theorem provers) prove that an algorithm fulfills proposition $P$, but cannot prove the non-existence of unmodeled physical side effects $Q$ (timing leaks, heap exhaustion, cache pollution). Verification requires neurosymbolic proofs paired with dynamic runtime observation.
+9. **Heal Mechanics, Never Semantics**: Autonomous testing agents may self-heal broken test mechanics (e.g., DOM locators, network timeouts, selector churn), but must be strictly forbidden from modifying semantic assertions (e.g., expected balances, state transitions, business rules).
+10. **Flattening the Test Inventory**: Generative agents drastically reduce the cost of authoring end-to-end and component integration scenarios, flattening the traditional test pyramid's inventory profile while maintaining a steep pyramid in execution frequency and compute budget.
+
+---
+
+## The Foundational Paradigm: Ephemeral Code & The Ironclad Test Oracle
 
 ### 1. The Dual-Steering Architecture: Semantic Specs vs. Rigid Deterministic Oracles
 Steering an autonomous coding agent cannot rely on prose alone; it requires a dual-force coordinate system operating across two fundamentally different physical realities:
@@ -40,10 +60,10 @@ Steering an autonomous coding agent cannot rely on prose alone; it requires a du
 $$\text{Agent Control Plane} = \underbrace{\text{Living Markdown Specs}}_{\text{Soft Semantic Intent (What & Why)}} + \underbrace{\text{Ironclad Test Oracle}}_{\text{Hard Deterministic Rigor (Binary Pass/Fail)}}$$
 
 - **Why Tests Constrain the Agent Harder Than Business Prose**: Natural language specifications in Markdown are essential for high-level orientation, architectural topology, and domain intent. However, models suffer from probabilistic drift, hallucination, and rule decay when context constraints saturate (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]). 
-- In contrast, test assertions (`assert_eq!(actual, expected)`) provide a rigid, unyielding mathematical wall. The test runner does not negotiate with the model; a non-zero exit code forces the agent to discard hallucinations and collapse its search space to exact reality.
+- In contrast, test assertions (`assert(actual == expected)`) provide a rigid, unyielding mathematical wall. The test runner does not negotiate with the model; a non-zero exit code forces the agent to discard hallucinations and collapse its search space to exact reality.
 
 ### 2. The Historical Cycle: The Curse of 4GL, CASE, Executable UML, and Prompt Ambiguity
-Every 15 to 20 years, the software engineering discipline proclaims a familiar revolution: *"The era of writing manual code in C/C++/Java is over! We will draw visual diagrams or author high-level business specifications, and an automated generator will emit perfect implementation code!"*
+Every 15 to 20 years, the software engineering discipline proclaims a familiar revolution: *"The era of writing manual code in systems and enterprise languages is over! We will draw visual diagrams or author high-level business specifications, and an automated generator will emit perfect implementation code!"*
 - In the 1980s, this dream arrived as **Fourth-Generation Languages (4GL)**.
 - In the 1990s, it re-emerged as **Computer-Aided Software Engineering (CASE) tools**.
 - In the 2000s, it was rebranded as **Model-Driven Architecture (MDA) and Executable UML**.
@@ -55,7 +75,7 @@ Every single one of these historical paradigms collapsed due to an immutable epi
 Software systems require exact, unambiguous mechanics: memory layout, error unwinding paths, atomic state transitions, concurrency memory ordering, and edge-case exceptions. 
 - To make a natural language or Markdown specification sufficiently precise that an agent generates defect-free code without human intervention, the author must explicitly define every atomic invariant, operational boundary, and branch condition.
 - The moment a specification reaches that level of exhaustive precision, **the author has simply invented a new, verbose, untyped programming language without a compiler or type checker**.
-- Instead of writing 10 lines of clean, expressive, statically typed Rust, Go, or C#, the engineer ends up authoring 50 to 100 lines of English prose. 
+- Instead of writing 10 lines of clean, expressive, statically typed code in a modern systems or enterprise language, the engineer ends up authoring 50 to 100 lines of English prose. 
 
 Therefore, natural language specifications can never serve as a complete, substitute programming language. Instead, they must serve strictly as **the semantic intent layer** in a dual-steering control system.
 
@@ -69,7 +89,7 @@ For decades, software engineering obeyed Joel Spolsky's famous commandment: *"Ne
 
 The pairing of **Living Markdown Specs** and an **Ironclad Test Oracle** completely inverts this economics:
 - If a team possesses comprehensive living specifications (capturing architecture and invariants) and an exhaustive, deterministic test oracle (e.g., 300,000 verification vectors or recorded production traces), **the concrete source code becomes semi-disposable scrap**.
-- When a module rots, accumulates architectural entropy, or needs to transition to a new paradigm (e.g., from an OOP abstraction to a zero-allocation, cache-aligned data layout), developers do not waste weeks delicately patching legacy lines.
+- When a module rots, accumulates architectural entropy, or needs to transition to a new paradigm (e.g., from an object-oriented abstraction with scattered pointers to a zero-allocation, cache-aligned data layout), developers do not waste weeks delicately patching legacy lines.
 - The engineer instructs the agent to delete the implementation and **regenerate the entire module from scratch in minutes**. The ironclad test oracle provides the instant, deterministic safety net that guarantees bit-for-bit functional equivalence across all edge cases.
 
 #### Strategic Epochal Rewrites vs. Hyperactive Churn: Escaping the "Ship of Theseus" Trap
@@ -83,13 +103,13 @@ The disciplined agentic paradigm operates on the opposite principle:
 1. **Day-to-Day Stability and Comprehension**: Under normal conditions, production code remains stable, carefully maintained, and deeply understood by the engineering team. Changes are localized, incremental, and bound by strict 1:1 file isolation (see [[Software Entropy and the Zero-Friction Trap]]).
 2. **Epochal Modernization (When Necessity Compels)**: Code disposability is an architectural escape valve reserved for **major inflection points that occur every few years**:
    - When a subsystem reaches a fundamental throughput or concurrency ceiling,
-   - When a major architectural shift is mandated (e.g., migrating from synchronous blocking I/O to asynchronous event streaming, or from bloated OOP layers to flat, zero-allocation data-oriented layouts),
-   - When legacy technical debt and deprecated framework versions would require 18 months of tedious manual patching to unwind.
+   - When a major architectural shift is mandated (e.g., migrating from synchronous blocking I/O to asynchronous event streaming, or from bloated polymorphic object hierarchies to flat, zero-allocation data-oriented layouts),
+   - When legacy technical debt and deprecated runtime frameworks would require 18 months of tedious manual patching to unwind.
 3. **Mental Continuity Anchored in Living Specs**: Because the team continuously maintains the **Living Markdown Specifications**, the team’s mental model never evaporates during an epochal rewrite. The architecture, domain invariants, and operational boundaries remain stable and familiar—only the concrete syntax is refreshed to match modern host realities.
 
 ### 5. The Invariant Director: The Evolving Identity of the Software Architect
 The rise of ephemeral implementation code shifts the fundamental role of the human engineer:
-- The engineer ceases to be a manual syntax typist grinding through boilerplate, boilerplate unit tests, and repetitive CRUD mappers.
+- The engineer ceases to be a manual syntax typist grinding through boilerplate, repetitive glue code, and trivial mapping layers.
 - The engineer becomes a **System Director, Invariant Architect, and Guardian of Mechanical Sympathy**:
   1. Defining high-authority domain specifications and boundary contracts.
   2. Curating and freezing the deterministic test oracle.
@@ -107,6 +127,22 @@ While an ironclad test oracle guarantees functional correctness, it creates a ca
 
 An agent can generate an implementation that passes 300,000 unit vectors with zero failures, yet is completely unviable in high-performance production.
 
+```text
+┌────────────────────────────────────────────────────────┐
+│                   Test Oracle Gate                     │
+│  Assert: actual == expected  ──► [ PASS (300k vectors) ]│
+└───────────────────────────┬────────────────────────────┘
+                            │ (Blind to hardware dynamics)
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│               Production CPU Realities                 │
+│  - L1 Instruction Cache (L1i: 32-64KB) Thrashing       │
+│  - Random Pointer Chasing & Heap Fragmentation         │
+│  - Branch Target Buffer Evictions                      │
+│  - Catastrophic Throughput Collapse Under Multi-Tenant │
+└────────────────────────────────────────────────────────┘
+```
+
 ### 1. The Cache Blindspot: D-Cache vs. I-Cache Thrashing
 A frequent pitfall occurs when benchmarking agent-generated code:
 - **The Microbenchmark Illusion**: An agent generates a massive dispatch table consisting of thousands of discrete, specialized functions or unrolled match arms. In a synthetic microbenchmark, a tight test loop executes the same 10 to 20 operations repeatedly. The working set fits comfortably in CPU caches, the hardware branch predictor achieves 99.9% accuracy, and the profiler reports dazzling numbers: 100x realtime throughput at 1% CPU utilization.
@@ -117,8 +153,8 @@ A frequent pitfall occurs when benchmarking agent-generated code:
 
 ### 2. Why Compact Layouts and DOD Trump Unrolled Agent Code
 Traditional, tightly packed switch interpreters, flat jump tables, and compact loops frequently outperform unrolled, generated functions in production because their entire execution kernel remains permanently resident in the L1i cache.
-- Furthermore, models trained on enterprise code exhibit **"Object-Oriented Contamination"**: defaulting to deep class hierarchies, pointer indirection, heap-allocated boxing, and fragmented memory buffers.
-- The test oracle verifies only that `result == expected`. It does not detect that every object lookup incurred a cache miss across scattered RAM addresses.
+- Furthermore, models trained predominantly on general enterprise code exhibit **"Object-Oriented Contamination"**: defaulting to deep class hierarchies, pointer indirection, heap-allocated boxing, and fragmented memory buffers.
+- The test oracle verifies only that `result == expected`. It does not detect that every object lookup incurred a cache miss across scattered memory addresses.
 - **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **mechanical sympathy** (see [[Software Engineering May Shift Toward Code Optimized for Agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-empathetic code.
 
 ### 3. The Incompleteness of the Oracle: Hyrum's Law and Unconstrained State Spaces
@@ -137,21 +173,21 @@ Software systems operate in an effectively infinite state space. When an agent d
 To overcome the inherent incompleteness of static test oracles and the blindspots of generative coding, advanced agentic architectures deploy four complementary verification pillars:
 
 ### 1. Data-Oriented Design (DOD) Constraints
-To combat LLM object-oriented contamination, the harness injects explicit hardware constraints into task definitions:
-- Zero heap allocations in critical runtime paths (`no_std`, pre-allocated arenas, or slab allocators).
+To combat model object-oriented contamination, the harness injects explicit hardware constraints into task definitions:
+- Allocation-free hot paths (pre-allocated memory arenas, slab allocators, or zero-heap execution modes).
 - Contiguous flat-memory layouts (Struct-of-Arrays instead of Array-of-Structs) to ensure optimal CPU cache line packing (64-byte alignment).
-- Memory bandwidth verification: automated profiling gates that fail the build if memory allocations occur inside core execution loops.
+- Memory bandwidth verification: automated profiling gates that fail the build if heap allocations or unexpected boxing occur inside core execution loops.
 
-### 2. Virtual-Time & Time-Travel Debugging (Deterministic Record-Replay)
-Intermittent concurrency races, memory corruption, and heisenbugs are notorious for evading standard test suites:
-- Modern agentic harnesses integrate with **Virtual-Time Engines and Record-Replay frameworks** (such as `rr` or `Pernosco`).
-- When an ephemeral test failure occurs, the harness captures a deterministic, bit-exact execution trace under virtualized time.
-- The coding agent can then micro-step backwards and forwards through instruction cycles, inspecting CPU registers and memory states at the exact microsecond of divergence, eliminating the guesswork of stochastic concurrency debugging.
+### 2. Virtual-Time & Deterministic Record-Replay Debugging
+Intermittent concurrency races, memory corruption, and non-deterministic timing bugs are notorious for evading standard test suites:
+- Modern agentic harnesses integrate with **Virtual-Time Engines and Deterministic Record-Replay frameworks** (such as instruction-trace recording tools).
+- When an ephemeral test failure occurs, the harness captures a deterministic, bit-exact execution trace under virtualized clock cycles.
+- The coding agent can then micro-step backwards and forwards through instruction cycles, inspecting register files and memory states at the exact microsecond of divergence, eliminating the guesswork of stochastic concurrency debugging.
 
-### 3. Neurosymbolic Proofs and the Negative Proof Dilemma (Lean 4)
-For mission-critical invariants, static test suites are increasingly complemented by formal mathematical proofs using interactive theorem provers like **Lean 4**:
+### 3. Neurosymbolic Proofs and the Negative Proof Dilemma
+For mission-critical invariants, static test suites are increasingly complemented by formal mathematical proofs using interactive theorem provers and proof assistants (e.g., Lean, Coq, Isabelle/HOL, or formal state-machine specifications like TLA+):
 - Instead of testing 300,000 discrete inputs, an agent generates formal proofs establishing that invariant $\forall x, P(x)$ holds universally across all possible states.
-- **The Negative Proof Dilemma**: While formal verification mathematically guarantees that specification $P$ is satisfied, it does not prove the non-existence of unmodeled side effects $Q$ (the classical Frame Problem). Proving that an algorithm calculates the correct cryptographic hash does not prove that it does not leak timing information or exhaust heap memory. Formal proofs verify mathematical truth, but physical execution still requires runtime observation (see [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]).
+- **The Negative Proof Dilemma**: While formal verification mathematically guarantees that specification $P$ is satisfied, it does not prove the non-existence of unmodeled side effects $Q$ (the classical Frame Problem). Proving that an algorithm calculates the correct cryptographic signature does not prove that it does not leak timing information through side channels or exhaust system heap memory. Formal proofs verify mathematical truth, but physical execution still requires runtime observation (see [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]).
 
 ### 4. Shadow Execution & Digital Twin Traffic Mirroring
 Because static oracles can never anticipate every real-world quirk, disposable rewrites must undergo **Live Differential Shadowing**:
@@ -165,22 +201,22 @@ Because static oracles can never anticipate every real-world quirk, disposable r
 ## The Agentic Testing Lifecycle & Control Loop
 
 ### 1. Tests as Part of the Agentic Control Loop
-In traditional development, tests primarily served humans (documenting behavior, assisting refactoring). In an agentic workflow, tests gain an even more vital role:
+In traditional development, tests primarily served humans (documenting behavior, assisting manual refactoring). In an agentic workflow, tests gain an even more vital role:
 
 > **They become executable constraints that the agent uses to deterministically verify and steer its own work.**
 
 ```text
-specification
+Specification
     ↓
-generate / modify code
+Generate / Modify Code
     ↓
-compile
+Compile & Typecheck
     ↓
-run deterministic tests
+Run Deterministic Tests
     ↓
-inspect failures
+Inspect Failures (Machine-Parsable Diagnostics)
     ↓
-repair
+Self-Repair Loop
     ↺
 ```
 
@@ -189,25 +225,25 @@ The key advantage is that the agent does not need another expensive, stochastic 
 ### 2. Some Tests Must Exist Before Code Generation (Agent TDD)
 For important behavior, tests should be created before implementation:
 ```text
-requirement / bug / specification
+Requirement / Defect / Specification
         ↓
-agent proposes behavioral scenarios
+Agent Proposes Behavioral Scenarios
         ↓
-human reviews important scenarios
+Human Architect Reviews Invariants
         ↓
-agent generates executable tests
+Agent Generates Executable Tests
         ↓
-tests become part of frozen task definition
+Tests Become Part of Frozen Task Definition
         ↓
-agent generates implementation
+Agent Generates Implementation Code
         ↓
-tests verify implementation
+Oracle Verifies Functional Equivalence
 ```
 This forces clarity about the specification before writing code. If an agent writes the implementation and tests simultaneously without oversight, it tends to verify what it implemented rather than what was required.
 
 ### 3. Fewer Manually Written Unit Tests, More Selective Invariants
 In traditional teams, developers spent 40% of their time manually typing mock-heavy unit tests. Agents invert this:
-- **Trivial unit tests are generated on demand**: Testing simple DTO mappings or obvious plumbing no longer requires human keystrokes.
+- **Trivial unit tests are generated on demand**: Testing simple data-transfer mappings or obvious plumbing no longer requires human keystrokes.
 - **Human focus shifts to boundary contracts and core invariants**: State-machine transitions, mathematical kernels, and concurrency invariants receive deep human-guided testing, while routine tests are synthesized by agents.
 
 ### 4. The Flattening of the Test Pyramid
@@ -215,47 +251,47 @@ In traditional teams, developers spent 40% of their time manually typing mock-he
 The classical test pyramid does not disappear, but its inventory profile transforms:
 
 ```text
-                  live-model evals
-                       small
+                  Live-Model Evals
+                       [Small]
 
-               broad E2E scenarios
-                 more than today
+                Broad E2E Scenarios
+                  [Expanded Inventory]
 
-              component / API tests
-                    strong
+               Component / API Tests
+                     [Strong]
 
-            domain / invariant tests
-                    strong
+             Domain / Invariant Tests
+                     [Strong]
 
-         trivial implementation tests
-                   reduced
+          Trivial Implementation Tests
+                    [Reduced]
 ```
 
-- **Inventory Flattens**: Because AI makes complex integration and browser scenarios cheap to generate, organizations maintain far more broad E2E and API scenarios than in the manual era.
-- **Execution Remains a Pyramid**: In CI pipelines, fast unit and invariant checks run on every keystroke, while broad E2E scenarios run asynchronously or on PR boundaries due to compute cost.
+- **Inventory Flattens**: Because AI makes complex integration and headless end-to-end scenarios cheap to generate, organizations maintain far more broad integration and API scenarios than in the manual era.
+- **Execution Remains a Pyramid**: In CI pipelines, fast unit and invariant checks run on every keystroke, while broad E2E scenarios run asynchronously or on PR boundaries due to compute cost and execution latency.
 
 ---
 
 ## Self-Healing Mechanics vs. Semantic Protection
 
 ### 1. Healing Mechanics, Not Semantics
-Browser and E2E tests are notoriously fragile due to UI DOM shifts. Modern agentic testing platforms allow tests to self-heal:
-- If a button's CSS selector or DOM path changes (`#submit-btn` $\rightarrow$ `button.primary-action`), an agent analyzes the visual layout and accessibility tree to update the locator automatically.
+End-to-end and integration tests are notoriously fragile due to presentation-layer shifts. Modern agentic testing platforms allow tests to self-heal:
+- If a target element's markup selector or structural path changes (`#submit-btn` $\rightarrow$ `button.primary-action`), an agent analyzes the layout and semantic accessibility tree to update the locator automatically.
 - **The Critical Semantic Boundary**: AI should heal **locators and mechanics**, NEVER **semantic business assertions**:
   ```text
   ALLOWED: Update selector from button#pay to button.checkout-pay
-  FORBIDDEN: Change assert balance == 100 to assert balance == 90
+  FORBIDDEN: Change assert(balance == 100) to assert(balance == 90)
   ```
   If an assertion fails, the business outcome was violated. Automatically "healing" an assertion conceals genuine defects.
 
 ### 2. Scenario Intent Over Generated Test Code
-The long-term source of truth is shifting toward the **scenario specification** rather than the generated Playwright or Cypress script:
-- If the implementation or underlying framework changes from React to Svelte, the scenario intent (*"User logs in, adds item to cart, applies discount code, asserts total price"*) remains identical.
-- The agent simply re-emits the target test script to match the new framework.
+The long-term source of truth is shifting toward the **declarative scenario specification** rather than the generated test framework script:
+- If the presentation layer or target test runner changes across modern frontend or backend frameworks, the scenario intent (*"User logs in, adds item to cart, applies discount code, asserts total price"*) remains identical.
+- The agent simply re-emits the target test script to match the new execution framework.
 
 ### 3. Deterministic Tests Over Live-Model Evals
 - **Keep deterministic tests deterministic**: Do not replace reliable unit assertions with fuzzy LLM judges.
-- **Live-model evals should be a narrow layer**: Model-based evaluation is reserved exclusively for non-deterministic features (e.g. evaluating the tone of an AI summary, translation quality, or semantic relevance). Everything else must execute as pure, zero-cost deterministic code.
+- **Live-model evals should be a narrow layer**: Model-based evaluation is reserved exclusively for non-deterministic features (e.g., evaluating the tone of an AI summary, translation quality, or semantic relevance). Everything else must execute as pure, zero-cost deterministic code.
 
 ---
 
@@ -281,27 +317,11 @@ In human development, a flaky test is an annoyance; a human re-runs the CI job. 
 
 ---
 
-## Core Principles Summary
-
-1. **Tests become executable context for agents, not merely regression protection.**
-2. **The Dual-Steering Architecture pairs soft Living Markdown Specs with an Ironclad Deterministic Test Oracle.**
-3. **The Frozen Oracle Rule**: Never grant the implementation agent write permission to its own test assertions.
-4. **Implementation is Ephemeral; Invariants are Permanent**: With an ironclad oracle, rewriting an unmaintainable module from scratch in minutes is safer and cheaper than endless legacy patching.
-5. **Epochal Modernization over Continuous Churn**: Avoid the Ship of Theseus trap by maintaining day-to-day code stability and reserving disposability for major inflection points.
-6. **An ironclad test oracle guarantees functional equivalence, but only the human architect guarantees mechanical sympathy.**
-7. **AI should heal test mechanics (selectors, locators), never semantic assertions.**
-8. **Generate tests with models, but execute them deterministically whenever possible.**
-9. **Put each important behavior at the cheapest test level that expresses it clearly.**
-10. **The test pyramid may flatten in inventory while remaining a pyramid in execution cost and frequency.**
-11. **Formal mathematical proofs guarantee that a function fulfills proposition $Q$, but only dynamic empirical harnesses resolve The Negative Proof Dilemma by proving it executes no unmodeled physical harm.**
-
----
-
 ## Relationship to the Knowledge Graph
 
-- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Formal specifications and interactive theorem proving (Lean 4) paired with dynamic empirical harnesses to resolve the Frame Problem.
+- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Formal specifications and interactive theorem proving paired with dynamic empirical harnesses to resolve the Frame Problem.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Practical harness implementation using shadow twins, differential traffic mirroring, and characterization oracles.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, L1i cache density, and Data-Oriented Design against LLM OOP bias.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, L1i cache density, and Data-Oriented Design against model OOP bias.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explains how disciplined 1:1 isolation and atomic commits prevent code churn and Ship of Theseus team alienation.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why deterministic test assertions constrain agents more reliably than probabilistic prose instructions.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Capturing rejected failure modes and anti-patterns as regression assertions in the test oracle.
