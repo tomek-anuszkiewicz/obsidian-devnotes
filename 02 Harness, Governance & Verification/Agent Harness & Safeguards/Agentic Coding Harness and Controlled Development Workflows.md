@@ -95,7 +95,7 @@ A typical coding session follows this cycle:
 6. The model chooses the next action.
 7. The loop continues until completion or a stop condition is reached.
 
-For example, when asked to add an API endpoint, the model does not directly open files or execute test commands (`cargo test`, `pytest`, `go test`, `dotnet test`). It requests these actions through tools exposed by the harness. The local harness performs them and sends the results back to the model.
+For example, when asked to add an API endpoint, the model does not directly open files or execute raw test commands. It requests these actions through tools exposed by the harness. The local harness performs them and sends the results back to the model.
 
 This distinction matters because the quality of an agent depends on more than model intelligence. Two agents using similarly capable models can perform differently because their harnesses differ in:
 
@@ -189,7 +189,7 @@ These can usually run automatically within an approved semantic step:
 - examining logs;
 - fixing an unambiguous compiler error.
 
-The goal is not to approve every `dotnet test` invocation. The human should approve changes in meaning, scope and risk.
+The goal is not to approve every automated test invocation. The human should approve changes in meaning, scope and risk.
 
 ## Bounded implementation loops (The Self-Healing Loop)
 
@@ -203,8 +203,8 @@ An agent can work in a loop, but the loop needs explicit success and failure con
 │                                       │
 │                                       ▼
 │                             [Deterministic Verification]
-│                             - Tests (pytest, dotnet test)
-│                             - Linters & Typecheck (mypy, eslint)
+│                             - Automated Tests & Assertions
+│                             - Static Analyzers & Linters
 │                             - Build & Syntax Check
 │                                       │
 │                         ┌─────────────┴─────────────┐
@@ -467,10 +467,10 @@ Skills remain mostly text, but they can also contain scripts, templates, example
 
 ### Skills as Native Code Functions (Beyond Shell Commands)
 
-While agents can run terminal commands, building skills as native code functions (e.g. in Python or C#) provides:
-1. **Pre-filtering Context (AST Parsers):** Instead of dumping a 3,000-line file into context, a native skill uses `ast` or `tree-sitter` to extract only the target class or method signature.
-2. **Direct SDK Integration:** Interacting with GitHub (`PyGithub` / Octokit), cloud providers (`boto3`, Azure SDK), or databases directly avoids fragile CLI stdout parsing.
-3. **Deterministic Sandboxing:** Skills can manage local Docker containers or ephemeral in-memory databases to validate migrations without side effects.
+While agents can run terminal commands, building skills as native executable functions provides:
+1. **Pre-filtering Context (AST Parsers):** Instead of dumping a 3,000-line file into context, a native skill uses AST parsers or tree-sitter grammars to extract only the target component or interface signature.
+2. **Direct API Integration:** Interacting with code hosting platforms, cloud substrates, or persistence layers via structured API clients directly avoids fragile CLI stdout parsing.
+3. **Deterministic Sandboxing:** Skills can manage local containers or ephemeral in-memory databases to validate migrations without side effects.
 
 ## Deterministic tools should enforce deterministic rules
 
@@ -543,22 +543,22 @@ It then runs the test suite:
 - **no coverage** — the mutated code was not executed;
 - **timeout** — the mutation caused execution to exceed the limit.
 
-For .NET, Stryker.NET already generates mutations, runs tests and produces reports. An LLM should not manually mutate every class and operator.
+Automated mutation testing engines already generate mutations, run tests, and produce reports. An LLM should not manually mutate every class and operator.
 
 The useful division of responsibilities is:
 
-### Stryker.NET
+### Automated Mutation Testing Engine
 
-- generates mutations;
-- selects and runs tests;
+- generates mutations across AST nodes;
+- selects and runs relevant tests;
 - restores or switches mutated code;
 - calculates results;
-- produces a structured and HTML report.
+- produces a structured and machine-readable report.
 
 ### Agent
 
 - analyzes surviving mutants;
-- groups them by class and business risk;
+- groups them by component and business risk;
 - distinguishes likely missing tests from equivalent or low-value mutations;
 - proposes boundary cases and assertions;
 - implements an approved test;
@@ -578,23 +578,23 @@ Do not chase a 100% mutation score blindly. Focus on business-critical behavior 
 
 An agent performs best when the repository can be initialized without undocumented manual work.
 
-Useful components for .NET include:
+Useful components for reproducible local environments include:
 
-- `global.json` for the SDK version;
-- `Directory.Packages.props` for centralized package versions;
-- a local .NET tool manifest;
-- `docker-compose.yml` for local infrastructure;
+- a declarative runtime / SDK version pinning file;
+- centralized dependency lockfiles;
+- a local tool and CLI dependency manifest;
+- container definitions (e.g., `docker-compose.yml`) for local infrastructure;
 - deterministic test fixtures and seed data;
-- setup and verification scripts;
-- optionally, a Dev Container.
+- standardized setup and verification scripts;
+- optionally, a containerized development environment.
 
-The ideal path from checkout to verification should be close to:
+The ideal path from checkout to verification should be an automated, deterministic pipeline:
 
-```powershell
-dotnet tool restore
-docker compose up -d
-./scripts/setup.ps1
-./scripts/verify.ps1
+```text
+run setup_dependencies
+run start_local_services
+run execute_test_suite
+run verify_invariants
 ```
 
 ## Permissions and secrets
