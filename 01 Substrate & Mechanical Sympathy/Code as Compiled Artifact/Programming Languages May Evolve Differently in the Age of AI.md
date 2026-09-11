@@ -29,7 +29,7 @@ HISTORICAL HUMAN PARADIGM:
 
 AGENTIC PARADIGM:
   Goal: Maximize machine verifiability, eliminate semantic ambiguity
-  Mechanisms: Refined domain types, exhaustive pattern matching, strict ownership, explicit contracts
+  Mechanisms: Algebraic data types, exhaustive pattern matching, formal ownership models, contract specifications
   Result: Code may be somewhat more verbose, but contains zero hidden ambiguity
 ```
 
@@ -82,33 +82,6 @@ The more semantic constraints a language compiler can verify deterministically a
 > *"Make correct code easy to write."*  
 to:  
 > *"Make incorrect code mathematically impossible to express."*
-
----
-
-## The Rise of Strong Domain Primitive Modeling
-
-In classical development, software engineers frequently defaulted to primitive types (`int`, `string`, `decimal`, `float`) for domain concepts to avoid the overhead of declaring and maintaining dozens of distinct wrapper types:
-
-```text
-PRIMITIVE OBSESSION (Easy to type, highly prone to silent bugs):
-  decimal price
-  uuid customer_id
-  decimal margin_rate
-```
-
-Because humans had to manually write constructors, mappers, and serialization helpers, strong domain modeling was skipped. Consequently, compilers remained powerless when a developer accidentally passed `order_id` where `customer_id` was expected, or added `gross_amount` to `net_amount`.
-
-When agents author boilerplate at near-zero cost, **refined domain modeling becomes economically trivial**:
-
-```text
-REFINED DOMAIN MODELING (Machine-Checked Semantic Invariants):
-  Money<Currency::USD> price
-  CustomerId customer_id
-  GrossAmount total_gross
-  TaxRate vat_percentage
-```
-
-The compiler mechanically enforces that currencies cannot be added without explicit currency exchange routines, and customer identifiers cannot be passed to order lookup functions. Verbosity increases, but silent runtime semantic corruption is eradicated.
 
 ---
 
@@ -185,6 +158,7 @@ For a new language or feature to succeed, it cannot wait ten years to accumulate
 ## Related Notes
 
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Shifting language design from concise human typing ergonomics to explicit machine verifiability.
+- **[[Agent Advantage -  Relentless, Methodical Work]]**: Contrasting language-level evolution with existing engineering disciplines (such as strong typing) that agents execute effortlessly upon instruction.
 - **[[New Developer Technologies May Need to Be Agent-Ready from Day One]]**: Analyzing how new compiler features and libraries face adoption inertia in model pretraining weights and require context-native bootstrap packages.
 - **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Replacing complex metaprogramming macros and AST generators with explicit, agent-authored code.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: The penalty of opaque language abstractions in agentic refactoring and inspection.
