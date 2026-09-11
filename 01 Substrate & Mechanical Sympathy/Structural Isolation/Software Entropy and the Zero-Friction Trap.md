@@ -96,7 +96,7 @@ Impose strict, mechanically verified line limits on source files:
 ### 3. Constrained Touchpoints and Blast Radius
 An agent should not be permitted to touch arbitrary files across the codebase during a single prompt or workflow step:
 - **Touchpoint budget**: Restrict changes to a maximum number of files (e.g., 1 implementation file + 1 test file per task).
-- **Narrow interface boundaries**: Prevent cross-module imports by enforcing dependency rules at the build/linter level (e.g., ArchUnit, NetArchTest, custom ESLint/Roslyn analyzers).
+- **Narrow interface boundaries**: Prevent cross-module imports by enforcing architectural dependency rules at the build and linter level (e.g., modular visibility constraints, AST architectural linters, and strict package dependency graphs).
 - By physically bounding the touchpoints, the agent **physically cannot tangle the codebase**, regardless of how many tokens it generates.
 
 ### 4. Hardware Consequences: Codebase & Call-Path Explosion vs. L1i Cache Thrashing
