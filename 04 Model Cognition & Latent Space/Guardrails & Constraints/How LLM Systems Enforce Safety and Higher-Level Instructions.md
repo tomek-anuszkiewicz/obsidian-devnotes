@@ -14,8 +14,7 @@ aliases:
 
 # How LLM Systems Enforce Safety and Higher-Level Instructions
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Multi-Layer Defense-in-Depth Safety Architecture
 > Safety, security, and compliance in LLM systems cannot be achieved through a single mechanism. Relying solely on system prompts fails against adversarial jailbreaks; relying solely on post-training alignment fails when laws, policies, or organizational rules change faster than model weights.  
 > Production-grade governance requires a **Multi-Layer Defense-in-Depth Architecture**:
 > 1. **Strict Instruction Hierarchy**: Platform rules permanently outrank application instructions, which outrank user prompts, which outrank untrusted retrieved text (`Platform > App > User > RAG`).
@@ -23,14 +22,63 @@ aliases:
 > 3. **Deterministic Sandbox & Tool Permissions**: Hard execution boundaries, rate limits, and cryptographic capability tokens prevent compromised models from performing unauthorized I/O.
 > 4. **Post-Inference Output Judges**: Asynchronous policy evaluators verify generated payloads against safety and privacy rules before presentation to the user.
 
-### Comparative Matrix: Multi-Layer Safety & Constraint Enforcement
+```text
++----------------------------------------------------------------------------------------------------+
+|               MULTI-LAYER DEFENSE-IN-DEPTH SAFETY & GOVERNANCE PIPELINE                            |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  [ Inbound User / External Payload ]                                                               |
+|                 │                                                                                  |
+|                 ▼                                                                                  |
+|  +───────────────────────────────+                                                                 |
+|  | Layer 1: Input Classifiers    | ──► [Malicious Injection / Jailbreak Detected] ──► [Fast Reject]|
+|  | (Fast Guardrail Model)        |                                                                 |
+|  +───────────────────────────────+                                                                 |
+|                 │ (Clean Input)                                                                    |
+|                 ▼                                                                                  |
+|  +───────────────────────────────+                                                                 |
+|  | Layer 2: Instruction Hierarchy| ──► Platform Policy > Developer Spec > User Prompt > RAG Source  |
+|  | (Authoritative Prompt Prefix) |                                                                 |
+|  +───────────────────────────────+                                                                 |
+|                 │                                                                                  |
+|                 ▼                                                                                  |
+|  +───────────────────────────────+                                                                 |
+|  | Layer 3: Parameter Reflexes   | ──► RLHF / DPO / Constitutional Alignment in Model Weights      |
+|  +───────────────────────────────+                                                                 |
+|                 │                                                                                  |
+|                 ▼                                                                                  |
+|  +───────────────────────────────+                                                                 |
+|  | Layer 4: Deterministic Sandbox| ──► Container cgroups, read-only FS, API token capabilities     |
+|  | (OS / Kernel / API Boundary)  |     (Model cannot exceed deterministic OS privileges)           |
+|  +───────────────────────────────+                                                                 |
+|                 │                                                                                  |
+|                 ▼                                                                                  |
+|  +───────────────────────────────+                                                                 |
+|  | Layer 5: Output Evaluator     | ──► Policy Judge validates PII, safety, & invariants before emit|
+|  +───────────────────────────────+                                                                 |
+|                 │                                                                                  |
+|                 ▼                                                                                  |
+|  [ Safe & Verified Output Delivered to Consumer ]                                                  |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Defense Layer | Enforcement Point | Adaptability / Freshness | Resistance to Jailbreaks / Injections | Latency & Compute Cost | Primary Failure Modes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Trained Post-Training Reflexes (RLHF / DPO)** | Embedded directly in parameter weights. | **Static**: Frozen at training time; cannot adapt to daily legal changes. | Moderate: Resilient to basic prompt hacks, but vulnerable to novel out-of-distribution exploits. | Zero extra latency (inherent to token generation). | Over-refusal of benign requests; catastrophic forgetting of nuanced edge cases. |
-| **System Prompt Instruction Hierarchy** | Context window prefix before user message. | **Instant**: Updateable via configuration deployment. | Low-to-Moderate: Vulnerable to context window overflow, attention dilution, and semantic override. | Minor: Token consumption per turn. | Instruction drift; lower-level user prompts tricking model into ignoring system rules. |
-| **Input & Output Classification Guardrails** | External models/classifiers inspecting I/O streams. | High: Rules and classifier thresholds can be tuned in real-time. | **High against known patterns**: Evaluates text independently of conversational context. | Moderate: Adds 50–200ms per classification pass. | False positives blocking legitimate developer queries; evasion via obfuscation. |
-| **Deterministic Tool & Sandbox Fences (Recommended)** | OS kernel, container boundaries, API gateway mTLS, and file system permissions. | Immediate: Infrastructure-level policy enforcement. | **Absolute**: Even a fully jailbroken model cannot exceed its operating system or API permissions. | Negligible: Native OS/network execution overhead. | Coarse granularity; does not prevent semantic misinformation in generated text. |
+## Executive Summary & Core Architectural Invariants
+
+1. **Multi-Layer Defense-in-Depth Over Monolithic Guardrails**:
+   Safety, security, and regulatory compliance cannot rely on a single defensive layer. Prompt-level instructions fail against sophisticated adversarial jailbreaks; static parameter alignment (RLHF) cannot adapt to daily legal updates; and post-hoc output filtering cannot reverse unsafe intermediate tool executions.
+
+2. **Strict Instruction Hierarchy Precedence**:
+   Context ingestion must enforce an explicit, immutable authority hierarchy: `Platform Invariants > Application Specifications > User Prompts > Untrusted RAG Context`. Lower-priority instructions (including user overrides or retrieved web text) must never be permitted to supersede higher-priority governance rules.
+
+3. **Deterministic Sandbox Fences as the Ultimate Boundary**:
+   The primary defense against rogue or compromised agents is mechanical, not probabilistic. Hard operating system permissions, container isolation, ephemeral network egress tokens, and least-privilege API scopes guarantee that even an agent under active adversarial control cannot exceed physical infrastructure boundaries.
+
+4. **Decoupling Dynamic Jurisdictional Rules from Static Parameter Weights**:
+   Legal statutes, compliance mandates, and enterprise access policies mutate orders of magnitude faster than foundation model training cycles. Dynamic, auditable governance requires external policy injection and deterministic pre/post-inference evaluation rather than attempting to fine-tune transient laws directly into neural weights.
+
+5. **Pre-Execution vs Post-Execution Interception**:
+   Output evaluations alone are insufficient for autonomous tool-using agents. Safety checks must intercept tool calls *before* execution (preventing irreversible data mutations or unauthorized egress) rather than inspecting conversational text after the damage has already occurred.
 
 ---
 
