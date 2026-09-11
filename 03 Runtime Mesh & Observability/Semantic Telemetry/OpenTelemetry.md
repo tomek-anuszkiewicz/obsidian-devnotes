@@ -23,8 +23,8 @@ aliases:
 > OpenTelemetry is not an observability database, dashboard, or proprietary monitoring agent. It is a vendor-neutral standard specification, API/SDK ecosystem, and telemetry proxy pipeline (**OpenTelemetry Collector**) that standardizes how distributed software generates, describes, enriches, and transports diagnostic signals. Standardizing on the **OpenTelemetry Protocol (OTLP)** and leveraging W3C TraceContext propagation across synchronous RPCs and asynchronous message queues eliminates proprietary SDK lock-in, enables dynamic tail sampling, and provides the correlated semantic trace graph required for automated root-cause analysis.
 
 ```text
-Application Services (Go, Rust, .NET, Java, Python, Node)
-       │ (Native Diagnostic Primitives: ActivitySource, tracing, slog)
+Application Microservices (Heterogeneous Polyglot Runtimes)
+       │ (Native Diagnostic Primitives: Diagnostics API, Spans, Structured Logs)
        ├── Traces & Metrics ──► OTLP (gRPC / Protobuf) ────────┐
        └── Logs ──────────────► Structured stdout/stderr ─────┐│
                                                               ││
@@ -57,7 +57,7 @@ OpenTelemetry establishes a standardized observability interoperability layer ac
    - **Logs**: Timestamped structured event records containing contextual debugging detail, correlated with active traces via `TraceId` and `SpanId`.
    - **Profiles**: Continuous call-stack samples attributing CPU and heap allocations to runtime execution paths.
 3. **The Collector as an Ingestion Pipeline**: The OpenTelemetry Collector operates as a proxy pipeline consisting of **Receivers** (accepting OTLP, Prometheus, or logs), **Processors** (filtering, batching, scrubbing sensitive PII, and sampling), and **Exporters** (routing to one or multiple destinations).
-4. **Native Language Integration**: OpenTelemetry binds directly to native runtime primitives: `ActivitySource` in .NET, `tracing` in Rust, `context.Context` in Go, `ContextVars` in Python, and `AsyncLocalStorage` in Node.js.
+4. **Native Language Integration**: OpenTelemetry binds directly to native runtime primitives across ecosystems (such as asynchronous local storage, runtime diagnostic event sources, thread-local contexts, and task-scoped variables).
 5. **The Cardinality Governance Rule**: Metric dimension attributes must maintain low cardinality (`environment`, `region`, `status_code`). High-cardinality values (`user_id`, `order_id`, `request_id`) must never be added as metric tags—they belong exclusively in traces and structured logs to prevent time-series database crashes.
 6. **The Direct In-Process OTLP Log Trap**: Directly exporting logs from application memory via OTLP is dangerous: unhandled process crashes (`SIGKILL`, OOM exceptions) destroy in-memory telemetry buffers. Production workloads log structured JSON to `stdout`/`stderr`, relying on container runtimes and node-level Collector DaemonSets for durable ingestion.
 7. **W3C Context Propagation Across Boundaries**: Distributed transactions propagate identity across network boundaries using standardized W3C TraceContext headers (`traceparent`, `tracestate`), allowing spans to link across HTTP, gRPC, and message brokers.
@@ -70,7 +70,7 @@ OpenTelemetry establishes a standardized observability interoperability layer ac
 A resilient, cloud-native architecture separates telemetry pathways by durability and performance requirements:
 
 ```text
-                         Application Runtime (.NET / Go / Java)
+                         Application Runtime (Containerized Workload)
                          /                                    \
                         /                                      \
               Traces + Metrics                                Structured Logs
