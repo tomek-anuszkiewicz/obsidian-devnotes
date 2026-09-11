@@ -17,37 +17,36 @@ created: 2026-08-23
 # LLM Capability, Reliability, and the Shape of Progress
 
 > [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
-> **Model capability is fundamentally distinct from system reliability**. While single-attempt benchmark scores (SWE-bench Verified) and autonomous task horizons (METR 50% success limits) advance rapidly, real-world operational dependability advances along a much flatter curve.  
-> - **The Exponential Compounding Trap**: In multi-step autonomous execution, unmitigated per-step error rates compound exponentially. An agent operating at $95\%$ accuracy per step has only a $36\%$ probability of successfully completing a 20-step task:
->   $$P(\text{End-to-End Success}) = p^N \quad \implies \quad 0.95^{20} \approx 35.8\%$$
-> - **The Soft Hallucination Threat**: As models scale, obvious failures vanish and are replaced by *soft hallucinations*—subtle, highly persuasive logic errors, inverted business invariants, and nonexistent API flags wrapped in pristine syntax.
-> - **The Harness Axiom**: Production reliability will never be delivered by waiting for an infallible base model. Systems must treat the LLM as an **untrusted probabilistic worker operating inside a deterministic control harness** equipped with mechanical verification oracles.
+> **Executive Architectural Thesis**: Model capability and operational system reliability evolve along decoupled trajectories. While single-attempt benchmark scores and task horizons expand exponentially, autonomous multi-step execution suffers from geometric error compounding ($P = p^N$). Production reliability cannot be achieved by awaiting base model infallibility; it requires bounding untrusted probabilistic model cognition inside deterministic verification harnesses, automated feedback loops, and immutable mechanical oracles.
 
-### Comparative Matrix: AI Capability Metrics vs Operational Production Realities
+```text
+       ASYMPTOTIC CAPABILITY VS OPERATIONAL RELIABILITY DIVERGENCE
+ 100% +-------------------------------------------------------------------+
+      |               Raw Benchmark & Single-Task Horizon Capability      |
+      |             ..................................................... |
+      |          .·´                                                      |
+  75% |        .·´                                                        |
+      |      .·´                                                          |
+      |     .·                                  Operational Reliability   |
+  50% |    .·                                   (Unmitigated P = p^N)     |
+      |   .·                                    ---------------------\    |
+      |  .·                                                           \   |
+  25% | .·                                                             \  |
+      | ·                                                               \ |
+   0% +-------------------------------------------------------------------+
+      Step 1      Step 5              Step 10                     Step 20
 
-| Capability Metric / Tier | Measured Property | Evaluation Topology | Primary Failure Mode | Verifier / Oracle Dependency | Production Applicability |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Academic Benchmark (e.g. SWE-bench Verified)** | Single-pass patch resolution on curated, closed-world issues. | Static repository diff against pre-existing test assertions. | **Benchmark Overfitting & S-Curve Saturation**: Succeeds on bounded issues, fails on messy open-ended codebases. | Pre-existing unit test pass/fail. | Proxy indicator of raw capability; poor indicator of autonomous production safety. |
-| **Autonomous Task Horizon (METR 50% Threshold)** | Duration of human-equivalent work an agent can complete with $50\%$ success rate. | Open-ended agentic execution across terminals, files, and browsers. | **Compounding Drift**: 50% success rate requires multiple retries and human monitoring to achieve convergence. | Multi-stage acceptance tests and environment state inspection. | Experimental pilot automation; acceptable only with active human-in-the-loop oversight. |
-| **Soft Hallucination Threshold ($80\%\to 95\%$ Reliability)** | Semantic validity of subtle edge cases, architectural invariants, and API flags. | Multi-turn dialectic dialogue and complex system refactoring. | **Persuasive Epistemic Deception**: Output looks impeccably engineered, bypassing superficial human code reviews. | High-coverage mutation testing and static AST linters. | Standard developer pair-programming under vigilant review. |
-| **Deterministic Production Harness ($99.9\%+$ Reliability) (Recommended)** | End-to-end task completion with guaranteed zero-semantic drift and regression prevention. | Probabilistic agent constrained within deterministic state machines. | Trapped loops and timeout aborts when agent fails to satisfy mechanical test gates. | **Mechanical Ground Truth**: Compilers, linters, isolated sandboxes, and immutable test suites. | **Mission-critical enterprise software engineering and automated delivery pipelines.** |
+      [ Untrusted LLM Engine ] ---> [ Deterministic Harness & Oracle ] ---> [ Verified Output ]
+      (Probabilistic Cognition)     (Compilers, Linters, Mutation Tests)    (Guaranteed State)
+```
 
----
+## Executive Summary & Core Architectural Invariants
 
-## Summary
-
-LLMs are still improving rapidly, but they are not moving along a single curve toward infallibility. Several different capabilities are advancing at different rates:
-
-- performance on well-defined tasks is already high;
-- reasoning, coding, tool use, and multimodality are improving quickly;
-- the duration of tasks agents can complete is increasing especially fast;
-- calibration, robustness, and recognition of uncertainty improve more slowly;
-- general-purpose infallibility remains far away and may not be a meaningful attainable state.
-
-The best description of the present moment is:
-
-> We are high on the curve of single-answer capability, on a steep part of the agentic-capability curve, but much lower on the curve of real-world reliability.
+1. **Decoupling Capability from Operational Reliability**: High scores on static benchmarks (e.g., SWE-bench) prove that an LLM *can* solve an isolated problem, not that it will *reliably* repeat that success across varying contexts or edge conditions.
+2. **Geometric Degradation Across Execution Horizons**: In unmitigated multi-step autonomous workflows, success degrades exponentially ($P_{\text{success}} = p^N$). Even a high per-step accuracy ($p = 0.95$) yields a catastrophic $35.8\%$ completion rate across a 20-step execution trajectory.
+3. **The Threat of Soft Hallucinations**: As parameter scales and reasoning tokens increase, crude syntactical hallucinations vanish, replaced by subtle semantic deceits—plausible API parameter inversions, hallucinated configuration flags, and incorrect business rules that easily bypass superficial human review.
+4. **Harness-Centric Engineering Over Model Waiting**: Reliable software systems do not wait for theoretical model infallibility. They treat probabilistic reasoning engines as untrusted worker components bounded by deterministic gatekeepers, compiler type checks, and [[Automated Regression Suites]].
+5. **Differential Progress Velocities**: Coding and tool use improve along steep curves, but uncertainty calibration and boundary recognition improve slowly. Production architectures must bridge this gap mechanically.
 
 ## Capability is not reliability
 
@@ -292,13 +291,14 @@ For serious agentic work, reliability should come from the complete system:
 
 The model supplies capability. The [[Agentic Coding Harness and Controlled Development Workflows|Agentic Harness]] supplies control and evidence.
 
-## Related notes
+## Related Notes
 
-- [[LLM Coding Agents Reliability|Subtle Hallucinations in LLM-Assisted Programming]]
-- [[Agentic Coding Harness and Controlled Development Workflows|Agentic Harness]]
-- [[Designing APIs for LLM-Generated Integration Code|Designing APIs for LLM-Generated Code]]
-- [[LLM Agents and Institutional Memory]]
-- [[Testing in the Model, Agent, LLM Era|Evaluating Coding Agents]]
+- **[[LLM Coding Agents Reliability]]**: Practical error modes, subtle hallucinations, and failure topologies of coding agents in real-world codebases.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural design of deterministic control harnesses that bound probabilistic agent cognition.
+- **[[How Reasoning Models Explore and Evaluate Solutions]]**: How test-time compute, Monte Carlo rollouts, and search heuristics affect frontier capability frontiers.
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: The transition from passive web pre-training to active agentic synthetic data and RLHF.
+- **[[AI Productivity Is Limited by the Delivery System]]**: The macroeconomic and organizational bottlenecks that prevent raw capability increases from translating to production throughput.
+- **[[Testing in the Model, Agent, LLM Era]]**: Why non-deterministic AI generation requires automated, immutable deterministic test oracles.
 
 ## Sources
 
@@ -310,12 +310,3 @@ The model supplies capability. The [[Agentic Coding Harness and Controlled Devel
 - [OpenAI — Why Language Models Hallucinate](https://openai.com/index/why-language-models-hallucinate/)
 - [OpenAI — Introducing GPT-5.2](https://openai.com/index/introducing-gpt-5-2/)
 
----
-
-## Related Notes
-
-- **[[LLM Coding Agents Reliability]]**: Evaluating the practical reliability frontier and error modes of coding agents.
-- **[[How Reasoning Models Explore and Evaluate Solutions]]**: How test-time compute and search heuristics shape advanced model capabilities.
-- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: The shift from brute parameter scaling to high-quality synthetic and agentic data.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why model capability gains do not translate to business throughput without delivery infrastructure.
-- **[[Testing in the Model, Agent, LLM Era]]**: How non-deterministic model progress necessitates rigid deterministic verification oracles.
