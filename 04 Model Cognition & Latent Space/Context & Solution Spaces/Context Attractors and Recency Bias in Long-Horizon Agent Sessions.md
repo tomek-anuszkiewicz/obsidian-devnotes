@@ -17,6 +17,22 @@ aliases:
 
 # Context Attractors and Recency Bias in Long-Horizon Agent Sessions
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> In extended multi-turn agent sessions, the self-attention mechanism ($\text{softmax}(QK^T / \sqrt{d_k})V$) produces an emergent cognitive failure mode known as **Attention Gravity**. As specific motifs are repeatedly debated and cited, their token representations saturate the Key-Value (KV) cache. Subsequent query vectors ($Q$) are irresistibly pulled toward these high-density keys ($K$), transforming the motif into a **Context Attractor** that the agent treats as a universal explanation for every subsequent unrelated problem.  
+> Paradoxically, **automated conversation compaction worsens this attractor**: recursive summarizers extract the dominant motif due to its sheer prominence and promote it to an explicit system-prompt invariant. Preventing cognitive monoculture requires **atomic turn-bounded sessions (the 15-Turn Strike Team)**, **hard session resets via committed markdown artifacts**, and **simple FIFO window pruning** over recursive synthetic summarization.
+
+### Comparative Matrix: Long-Horizon Context Management Strategies
+
+| Context Strategy | Session Topology & Lifecycle | Attractor Formation Risk | Compaction Distortion | Epistemic Agility & Skepticism | Recommended Use Cases |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Monolithic Long-Horizon Session (100+ Turns)** | Single unbounded thread accumulating all turns. | **Extreme**: Self-attention locks onto dominant recurring tokens; mono-thematic diagnosis. | High memory pressure; eventual out-of-memory or context exhaustion. | **Severely degraded**: Agent rationalizes all new problems through the attractor lens. | Open-ended brainstorming where continuity matters more than objective accuracy. |
+| **Automated LLM Compaction / Recursive Summaries** | Background summarizer compresses history into synthetic system prompt context. | **Amplified**: Summarizer selects prominent attractor and codifies it as immutable ground truth. | **High semantic drift**: Nuance and dissent stripped away; dogmatic axioms remain. | **Low**: Model echoes its own compressed assumptions with false confidence. | Generic customer support bots; not recommended for high-stakes software architecture. |
+| **FIFO Sliding Window (Hard Head/Tail Truncation)** | Oldest turns dropped raw without summarization; active prompt and files preserved. | **Low**: Physical removal of early tokens purges the KV cache anchor weight. | **Zero synthetic distortion**: Eliminates hallucinatory summary inflation. | **Moderate**: Retains local focus; loses historical long-arc context. | Continuous coding sessions where active file state represents ground truth. |
+| **Atomic Strike Teams (15-Turn Hard Reset) (Recommended)** | Short, task-scoped burst $\to$ distill to Git-tracked artifact $\to$ hard reset into fresh session. | **Near Zero**: Conversation history never reaches the density required for gravitational collapse. | **None**: Distilled artifacts are reviewed and edited by the human operator. | **Maximum**: Each new session starts with a clean slate, evaluated against fresh code and explicit invariants. | **Mission-critical architecture, formal refactoring, complex system design.** |
+
+---
+
 ## The Illusion of Cumulative Wisdom
 
 In prolonged, multi-turn architectural dialogues and agentic pair-programming sessions, there is a natural intuition that longer conversations yield deeper synthesis:
