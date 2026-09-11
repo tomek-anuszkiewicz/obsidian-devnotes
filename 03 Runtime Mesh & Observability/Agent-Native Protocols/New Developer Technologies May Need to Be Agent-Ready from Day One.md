@@ -12,6 +12,21 @@ aliases:
   - Agent First Frameworks
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: The In-Context Bootstrap Requirement for New Technologies
+> In an agent-driven software engineering ecosystem, the primary bottleneck to technology adoption shifts from human developer marketing to **agentic discoverability and in-context teachability**:
+> $$\text{Adoption Velocity} \propto \frac{\text{Semantic In-Context Priming (Skills + Schemas)}}{\text{Token Friction + Hallucination Probability}}$$
+> Incumbent libraries possess an overwhelming structural advantage: millions of public training examples in frontier model weights. If a new, superior framework relies on human search alone, coding agents default to incumbent tools—**the new alternative is never even evaluated**. To survive, modern developer technologies must be **Agent-Ready from Day Zero**, shipping not merely source code and human HTML documentation, but executable machine instructions (`SKILL.md`), native tool servers (MCP), and automated verification testbeds that allow an unfamiliar agent to achieve zero-shot mastery within a single prompt context.
+
+| Dimension | Incumbent Technology (Training Prior) | Day-Zero Technology (In-Context Primed) |
+| :--- | :--- | :--- |
+| **Discoverability Channel** | Deep parametric memory in foundation models | Explicit prompt injection, `AGENTS.md`, and local skill directories |
+| **Initial Adoption Barrier** | Low friction; agents generate boilerplate effortlessly | High risk of hallucinated legacy patterns or rejection |
+| **Release Artifact Scope** | Code + Human HTML Docs + Package Registry | Code + Docs + **MCP Server + `SKILL.md` + Verification Testbed** |
+| **Architectural Design Bias** | Implicit conventions, dynamic magic, terse human syntax | Explicit types, minimal hidden state, machine-scannable APIs |
+| **Ecosystem Survival Path** | Relies on historical inertia and training corpus gravity | Must achieve high task completion within a 2,000-token context budget |
+
+---
+
 The adoption of programming languages, libraries, frameworks, and language features has always depended on more than technical quality.
 
 A new technology must usually build:
