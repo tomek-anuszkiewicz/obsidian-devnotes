@@ -180,11 +180,10 @@ await http.delete("/users/" + userId + "/sessions");
 await identityClient.revokeUserSessions(userId, context);
 ```
 
-Clients are compiled from OpenAPI contracts using modern multi-ecosystem tools:
-- **Microsoft Kiota** (TypeScript, Go, Python, Java, .NET, PHP),
-- **OpenAPI Generator** (Rust, Go, TypeScript, Java, C#, Python, Swift),
-- **grpc-gateway / buf** (gRPC and Protobuf across systems and managed runtimes),
-- **NSwag / Swagger Codegen**.
+Clients are compiled from API contracts using modern contract-first client generators:
+- **Declarative HTTP/REST Client Generators** emitting strongly typed client interfaces across language ecosystems,
+- **Protocol Buffer and RPC Compilers** providing binary serialization and schema validation,
+- **OpenAPI and AsyncAPI SDK Emitters**.
 
 ```text
 OpenAPI / AsyncAPI Contract  ──►  Client Generator  ──►  Strongly Typed SDK  ──►  Agent Application Code
@@ -193,24 +192,23 @@ OpenAPI / AsyncAPI Contract  ──►  Client Generator  ──►  Strongly Ty
 This drastically collapses the agent's error surface. The agent no longer needs to deduce URLs, HTTP verbs, serialization conventions, query string formatting, or header names—it selects a typed, compiler-validated method.
 
 ### Preserving Documentation in Generated Clients
-Descriptions from OpenAPI must be carried directly into generated docstrings, JSDoc, or XML comments:
+Descriptions from API specifications must be carried directly into generated docstrings and interface comments:
 
-```typescript
-interface InvoicesClient {
-    /**
-     * Cancels an issued invoice while preserving it for audit.
-     * Precondition: Invoice status must be 'Issued'.
-     * Do not use for draft invoices (use deleteDraftInvoice instead).
-     */
-    cancelInvoice(id: UUID, context: ExecutionContext): Promise<InvoiceReceipt>;
+```text
+interface InvoicesClient:
+    """
+    Cancels an issued invoice while preserving it for audit.
+    Precondition: Invoice status must be 'Issued'.
+    Do not use for draft invoices (use delete_draft_invoice instead).
+    """
+    function cancel_invoice(id: UUID, context: ExecutionContext) -> InvoiceReceipt
 
-    /**
-     * Permanently deletes a draft invoice.
-     * Precondition: Invoice status must be 'Draft'.
-     * Issued invoices cannot be deleted.
-     */
-    deleteDraftInvoice(id: UUID, context: ExecutionContext): Promise<void>;
-}
+    """
+    Permanently deletes a draft invoice.
+    Precondition: Invoice status must be 'Draft'.
+    Issued invoices cannot be deleted.
+    """
+    function delete_draft_invoice(id: UUID, context: ExecutionContext) -> Void
 ```
 
 Because agents reason over local repository context, placing semantic descriptions directly above method signatures enables the model to select the correct method without needing to parse multi-megabyte external OpenAPI specifications on every turn.
