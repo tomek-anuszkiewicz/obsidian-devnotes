@@ -19,13 +19,48 @@ aliases:
 > Convenient client libraries often become architectural traps: they hide remote network failures beneath local-call illusions, leak upstream transport schemas directly into downstream domain logic, and couple release cadences across service boundaries. 
 > Resilient architectures enforce a strict division of responsibility: **Service B owns the public wire contract (OpenAPI/IDL)**; **Service A owns its internal port/interface, error translation, and retry/timeout budget**; and the **underlying platform owns cross-cutting telemetry, mTLS, and context propagation**.
 
-| Calling Strategy | Contract & Artifact | Coupling Degree | Schema Drift Detection | Best-Fit Scenario |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. Shared Contract Package** | Passive DTO package (NuGet/npm/crates) | Moderate (coupled to package release cycle) | Compile-time in same language ecosystem | Homogeneous stacks with high internal trust |
-| **2. Official Client SDK** | Provider-maintained client library | High (embeds transport & dependency choices) | Compile-time against SDK interface | Complex third-party or enterprise platform APIs |
-| **3. Consumer-Generated Client** | Auto-generated SDK from OpenAPI/IDL | Low (generated locally via Kiota/buf) | Build-time schema validation | Heterogeneous polyglot microservice meshes |
-| **4. Local Scoped Adapter** | Hand-crafted minimal HTTP/gRPC client | Lowest (depends only on consumed fields) | Runtime or contract testing | Consuming 1–2 endpoints from an expansive API |
-| **5. Declarative RPC Client** | Interface mapped to HTTP annotations | Low boilerplate, high risk of local-call illusion | Compile-time interface types | Internal CRUD utilities with strict network timeouts |
+```text
++----------------------------------------------------------------------------------------------------+
+|               INTER-SERVICE COMMUNICATION & CONTRACT BOUNDARY ARCHITECTURE                        |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|   SERVICE A DOMAIN (Consumer)                      PLATFORM MESH             SERVICE B (Provider)  |
+|  +-----------------------------+               +-------------------+      +---------------------+  |
+|  | Internal Business Logic     |               | Distributed Trace |      | Provider Handler    |  |
+|  | (Domain Invariants / Ports) |               | (W3C traceparent) |      | (Controller / gRPC) |  |
+|  +-----------------------------+               +-------------------+      +---------------------+  |
+|                 |                                        ^                           ^             |
+|                 v                                        |                           |             |
+|  +-----------------------------+               +-------------------+      +---------------------+  |
+|  | Consumer-Owned Adapter      |               | Zero-Trust mTLS   |      | Wire Contract Spec  |  |
+|  | Anti-Corruption Translation |               | (Workload / OIDC) |      | (OpenAPI / Protobuf)|  |
+|  +-----------------------------+               +-------------------+      +---------------------+  |
+|                 |                                        ^                           ^             |
+|                 v                                        |                           |             |
+|  +-----------------------------+                         |                           |             |
+|  | Thin Transport Client       |                         |                           |             |
+|  | (HTTP / gRPC / Resil. Loop) | ---- Wire Request (HTTP/2 / JSON) ------------------+             |
+|  +-----------------------------+                                                                   |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
+
+## Executive Summary & Core Architectural Invariants
+
+1. **Separation of Contract Ownership and Usage Ownership**:
+   Service B strictly owns the public wire contract (OpenAPI specification, Protobuf schemas, endpoint definitions, and semantic error codes). Service A strictly owns its internal consumption model (its domain interfaces, local data projections, and anti-corruption translation layers). Neither service leaks its internal representation across the wire.
+
+2. **Rejection of the Local-Call Illusion**:
+   Remote procedure calls must never be disguised as deterministic, local in-memory method invocations. Inter-service client abstractions must make network boundaries, failure modes, timeouts, and latency budgets explicit to consumer code.
+
+3. **Consumer-Owned Anti-Corruption Layer**:
+   Service A must never let Service B's external transport DTOs permeate its internal domain logic. Service A wraps remote transport calls inside a localized adapter that maps wire models into consumer domain models and translates provider status codes into domain-specific business states.
+
+4. **Independent Failure and Resilience Budgets**:
+   Service A owns its retry policies, circuit breakers, timeout limits, and fallback strategies. Providers cannot dictate how long callers wait or how frequently they retry; consumer-owned resilience protects Service A from cascading latency failures and thundering herds.
+
+5. **Platform-Managed Cross-Cutting Infrastructure**:
+   Cross-cutting concerns—including distributed tracing (W3C `traceparent`), transport encryption (mTLS), workload identity attestation, and semantic telemetry—belong to reusable platform infrastructure or mesh sidecars, not bespoke application code inside individual service clients.
 
 ---
 
