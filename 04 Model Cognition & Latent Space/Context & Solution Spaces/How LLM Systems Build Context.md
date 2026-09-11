@@ -239,7 +239,7 @@ current context
 For example:
 
 ```text
-user works mainly with .NET
+user develops distributed cloud microservices
 user prefers modular monoliths
 the previous discussion concerned agentic code review
 ```
@@ -407,7 +407,7 @@ The agent does not need to load all of these sources at once. It can choose the 
 For example:
 
 ```text
-"How does this .NET API work?"
+"How does this external library API contract work?"
 → external framework documentation
 
 "Why do we use it this way in PaymentService?"
