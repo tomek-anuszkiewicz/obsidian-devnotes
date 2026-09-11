@@ -569,38 +569,35 @@ This can help answer questions such as:
 
 For important business entities, documentation can include generated state machines.
 
-Rather than simple linear flows, business entities branch across decisions and terminal states. An extracted state machine should capture allowed transitions, conditions, and terminal states:
+Examples:
+
+- Order
+- Payment
+- Shipment
+- Subscription
+- Support Ticket
+
+For example:
 
 ```text
-               ┌───────────┐
-               │  Pending  │
-               └─────┬─────┘
-       [Cancel]      │ [Authorize]
-    ┌────────────────┼────────────────┐
-    ▼                ▼                ▼
-┌───────────┐  ┌───────────┐    ┌───────────┐
-│ Cancelled │  │Authorized │    │  Failed   │
-└───────────┘  └─────┬─────┘    └───────────┘
-                     │ [Capture]
-                     ▼
-               ┌───────────┐
-               │ Completed │
-               └─────┬─────┘
-                     │ [Refund]
-                     ▼
-               ┌───────────┐
-               │ Refunded  │
-               └───────────┘
+Pending ──► Cancelled
+   ↓
+Confirmed
+   ↓
+Shipped
+   ↓
+Completed
 ```
 
-The generated documentation should describe:
+The generated documentation should ideally also describe:
 
-- **Allowed transitions**: `Pending` can transition to `Authorized`, `Cancelled`, or `Failed`.
-- **Guard conditions**: `Capture` is only valid when in `Authorized` state; `Refund` requires `Completed`.
-- **Commands & Events**: `AuthorizePaymentCommand` emits `PaymentAuthorized` or `PaymentFailed`.
-- **Terminal states**: `Cancelled`, `Failed`, and `Refunded` allow no further state mutations.
+- allowed transitions,
+- conditions,
+- commands causing transitions,
+- events emitted,
+- terminal states.
 
-This prevents coding agents from generating illegal state jumps or bypassing domain invariants.
+State machines are valuable because important business rules are often distributed across handlers, validators, and domain methods.
 
 ---
 
