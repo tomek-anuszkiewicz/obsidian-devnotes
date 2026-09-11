@@ -14,22 +14,56 @@ aliases:
 
 # User Context in Asynchronous Systems
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Temporal Decoupling and Credential-Free Asynchronous Context
 > Asynchronous messaging breaks the temporal and security assumptions of synchronous HTTP. Passing live bearer tokens across message brokers introduces catastrophic security and operational failure modes: **token expiration during queue lag**, **credential leakage in broker logs and Dead Letter Queues (DLQs)**, and **replay vulnerabilities**.  
 > The correct architectural pattern decouples **identity assertion** from **authorization mechanics**:
 > 1. **Zero Live Tokens**: Enqueue lean, immutable audit context (`initiatedByUserId`, `tenantId`, `correlationId`) inside an execution envelope without credentials.
 > 2. **Explicit Authorization Timing**: Choose between *Acceptance-Time* (producer pre-authorizes command before enqueueing) and *Execution-Time* (consumer re-evaluates permissions against current state).
 > 3. **Strict Command vs Event Distinction**: Commands carry intent and require authorization; Domain Events represent immutable historical facts where user context is strictly informational audit metadata.
 
-### Architectural Context & Authorization Matrix
+```text
++----------------------------------------------------------------------------------------------------+
+|               ASYNCHRONOUS USER CONTEXT & TEMPORAL BOUNDARY TOPOLOGY                               |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  [ Synchronous HTTP Boundary ] (Immediate ms, Active User Session)                                 |
+|  User Browser ──(Bearer Token)──> Edge Gateway ──(Forward Token)──> Service A                      |
+|                                                                                                    |
+|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TEMPORAL & SECURITY DETACHMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
+|                                                                                                    |
+|  [ Asynchronous Messaging Boundary ] (Decoupled: Minutes / Hours / Retries / User Session Terminated)  |
+|                                                                                                    |
+|  +------------------------+             +----------------------+             +------------------+  |
+|  | Producer (Service A)   |             | Distributed Broker   |             | Consumer Service |  |
+|  | - Pre-Authorizes Intent|             | (Kafka/Rabbit/SBus)  |             | (Worker Daemon)  |  |
+|  | - Strips Live Creds    |             |                      |             | - Reads Audit Id |  |
+|  | - Builds Lean Envelope |             | Dead-Letter Storage  |             | - Optional Check |  |
+|  +------------------------+             +----------------------+             +------------------+  |
+|              |                                     ^                                  ^            |
+|              |                                     |                                  |            |
+|              +-- Enqueues Envelope Without Tokens -+                                  |            |
+|                  { msgId, tenantId, initiatedByUserId, traceparent }                  |            |
+|                                                    +--- Dequeues for Processing ------+            |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Architectural Pattern | Trust & Security Boundary | Token Lifetime vs Queue Lag | Operational Complexity | Failure & Revocation Handling | Recommended Use Cases |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Direct Token Forwarding (Anti-Pattern)** | Broken: Raw bearer credentials persisted in queue storage and DLQs. | High failure risk: Tokens expire during consumer backpressure or outages. | Low initially, extreme operational debt during failures. | Revoked sessions cannot stop in-flight messages; expired tokens cause spurious DLQ poison messages. | **Never recommended** for asynchronous brokers. |
-| **Pre-Authorization (Acceptance-Time)** | High: Edge/Producer validates user rights; bus carries trusted, accepted commands. | Independent: Zero token dependency in queue; messages remain valid across retries. | Low: Consumers rely on broker mTLS/producer trust and process commands directly. | State changes after enqueueing are ignored; command represents an accepted obligation. | Standard business workflows (e.g., `PlaceOrder`, `SendNotification`, batch intake). |
-| **Post-Authorization (Execution-Time)** | Strict: Consumer re-verifies user permissions against authoritative store upon dequeuing. | Independent: Context envelope contains `initiatedByUserId`; rights checked dynamically. | Moderate: Requires consumer access to identity/permission directory. | Dynamic: Revoked user roles or terminated accounts immediately abort execution at consumer. | High-latency, scheduled, or high-privilege operations (e.g., `PurgeDatabase`, financial settlements). |
-| **Domain Event Metadata** | Informational: Facts cannot be denied or authorized; event is immutable history. | Zero dependency: Historical context only. | Minimal: Header or envelope context logging. | Facts cannot be rolled back; consumers handle idempotently. | Event-driven choreography, read-model projections, audit trails. |
+## Executive Summary & Core Architectural Invariants
+
+1. **Zero Live Credentials Across Message Brokers**:
+   Raw bearer tokens (JWTs), browser session cookies, and user passwords must never be serialized into asynchronous message envelopes, payloads, or transport headers. Enqueuing live credentials causes inevitable expiration failures during queue backpressure, leaks secrets to persistent broker disks and Dead-Letter Queues (DLQs), and creates catastrophic replay attack surfaces.
+
+2. **Lean, Immutable Context Envelopes**:
+   Asynchronous workflows propagate caller provenance as lean, strongly-typed audit metadata—consisting strictly of `initiatedByUserId`, `tenantId`, `correlationId`, `causationId`, and W3C `traceparent`. Identity in asynchronous queues is an immutable historical claim of origin, not an active cryptographic authorization key.
+
+3. **Explicit Temporal Authorization Strategy**:
+   Systems must deliberately choose between *Acceptance-Time Authorization* (the producing service validates user permissions before enqueueing an accepted, binding command) and *Execution-Time Authorization* (the consuming worker dynamically re-verifies user permissions against the authoritative directory upon dequeuing). Execution-time authorization is mandatory for high-latency or scheduled tasks where user permissions may be revoked prior to execution.
+
+4. **Strict Semantic Division: Commands vs. Domain Events**:
+   Commands carry intent and mandate explicit authorization. Domain Events represent immutable historical occurrences (*"OrderPlaced"*, *"PaymentSettled"*); domain events can never be authorized or denied by downstream consumers, and their user context exists exclusively for audit logging and read-model projections.
+
+5. **Traceability and Tenant Isolation Integrity**:
+   Every message must preserve distributed trace continuity and multi-tenant scoping across consumer boundary execution. Background workers consuming asynchronous events must rehydrate tenant isolation boundaries from the message envelope before executing any data persistence operations.
 
 ---
 
