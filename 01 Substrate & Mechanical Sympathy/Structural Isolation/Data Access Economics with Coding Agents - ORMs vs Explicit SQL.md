@@ -24,7 +24,7 @@ aliases:
 
 Coding agents fundamentally upend the historical economics of data access architectures, inverting the decades-old trade-off between Object-Relational Mappers (ORMs) and explicit SQL. This directly transforms how engineering teams manage [[AI Changes the Economics of Technical Debt|technical debt in persistence layers]].
 
-Historically, engineering teams defaulted to heavy ORMs (such as Hibernate, Entity Framework, Prisma, or SQLAlchemy) not because ORMs generated superior SQL, but to avoid human cognitive toil:
+Historically, engineering teams defaulted to heavy Object-Relational Mappers (ORMs) and dynamic persistence layers not because ORMs generated superior SQL, but to avoid human cognitive toil:
 - Writing hundreds of repetitive Data Transfer Objects (DTOs) and row mappers.
 - Maintaining tedious change-tracking and state-synchronization plumbing.
 - Handcrafting mechanical CRUD queries and integration test harnesses.
