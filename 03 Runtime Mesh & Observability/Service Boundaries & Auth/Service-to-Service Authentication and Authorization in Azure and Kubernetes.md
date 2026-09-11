@@ -18,13 +18,48 @@ aliases:
 > $$\text{Workload Security} = \text{Network Reachability (L3/L4)} \times \text{Cryptographic Identity (mTLS / SPIFFE / OIDC)} \times \text{Granular Policy (L7 Scopes / App Roles)}$$
 > IP addresses, Kubernetes Service DNS names, and internal private endpoints provide *connectivity*, but they provide **zero proof of caller identity**. Relying on network perimeters alone invites lateral movement during container compromises. Zero-trust service-to-service architectures eliminate long-lived shared secrets in favor of **ephemeral workload identities** (e.g., Kubernetes projected service account tokens federated with cloud IAM like Entra Workload Identity) or **transparent service mesh mTLS (SPIFFE/SAN)**—enforcing mutual cryptographic authentication at the transport layer while validating business permissions at Layer 7.
 
-| Authentication Mechanism | Cryptographic Primitive | Credential Lifecycle & Rotation | Multi-Cluster / Hybrid Portability | Best Fit Scenario |
-| :--- | :--- | :--- | :--- | :--- |
-| **Cloud Workload Identity** | Short-lived OIDC tokens projected into Pods federated to Cloud IAM | Fully automated (in-memory, 1hr TTL, zero stored secrets) | Native across cloud services; requires OIDC federation for multi-cloud | Kubernetes workloads accessing managed cloud databases, queues, and APIs |
-| **Mutual TLS (Service Mesh)** | X.509 certificates with SPIFFE IDs in SAN | Fully automated via mesh control plane (Istio, Linkerd) | High within mesh; complex across distinct PKI roots | Intra-cluster and inter-cluster microservice RPCs with transparent encryption |
-| **SPIFFE / SPIRE Federation** | Standardized X.509 SVIDs or JWT SVIDs | Automated cryptographic attestation across heterogeneous hosts | Exceptional; universal multi-cloud, bare-metal, and VM standard | Heterogeneous topologies spanning on-prem VMs, edge nodes, and multiple cloud vendors |
-| **OAuth 2.0 Client Credentials** | Signed asymmetric JWTs issued by STS | Token caching with automatic refresh prior to expiration | High across HTTP/REST boundaries | Cross-boundary HTTP calls between independent platforms and legacy APIs |
-| **Shared Secrets / API Keys** | Static pre-shared keys or connection strings | Manual or Key Vault rotation (high operational overhead) | Universal across legacy systems | Anti-pattern; restricted strictly to legacy endpoints lacking IAM/mTLS support |
+```text
++-----------------------------------------------------------------------------------------+
+|                  LAYERED ZERO-TRUST SERVICE-TO-SERVICE TOPOLOGY                         |
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|  [ Workload A (Pod / VM / App) ]                    [ Workload B (Target Service) ]      |
+|  Identity: sa/orders-api                             Identity: sa/inventory-api         |
+|                                                                                         |
+|  +-----------------------------+                    +--------------------------------+  |
+|  | Layer 7: Application / Authz |                    | Layer 7: Policy Verification   |  |
+|  | Audience-bound Token / Role | -- App Claims ---> | Validates Issuer, Aud, Roles   |  |
+|  +-----------------------------+                    +--------------------------------+  |
+|                 |                                                  ^                    |
+|  +-----------------------------+                    +--------------------------------+  |
+|  | Layer 4: Cryptographic mTLS |                    | Layer 4: TLS Termination       |  |
+|  | Short-lived SPIFFE/X.509    | == Mutual TLS ===> | Verifies SAN / Client Cert     |  |
+|  +-----------------------------+                    +--------------------------------+  |
+|                 |                                                  ^                    |
+|  +-----------------------------+                    +--------------------------------+  |
+|  | Layer 3: Network Topology   |                    | Layer 3: Packet Filtering      |  |
+|  | DNS Resolution / Service IP | --- IP Packet ---> | NetworkPolicy / Subnet NSG     |  |
+|  +-----------------------------+                    +--------------------------------+  |
+|                                                                                         |
++-----------------------------------------------------------------------------------------+
+```
+
+## Executive Summary & Core Architectural Invariants
+
+1. **Network Reachability Is Not Cryptographic Identity**:
+   IP addresses, Kubernetes cluster DNS names (`http://inventory-api.orders.svc.cluster.local`), and private virtual network subnets provide packet routing, not proof of caller provenance. Network perimeter security (`NetworkPolicy`, Azure NSGs) must be treated as a defense-in-depth reachability filter, never as an authentication assertion.
+
+2. **Elimination of Static, Long-Lived Shared Secrets**:
+   Production distributed architectures must actively decommission static API keys, pre-shared connection strings, and shared JWT symmetric signing keys. Cryptographic authentication must rely on ephemeral, short-lived credentials—such as projected OIDC Kubernetes Service Account tokens federated to cloud IAM (Entra Workload Identity) or automated mTLS certificates rotated via mesh control planes (Istio, Linkerd) and SPIRE.
+
+3. **Strict Separation Between Identity and Authorization**:
+   Proving *who* calls a service (workload authentication via SPIFFE ID, mTLS SAN, or OIDC `sub`/`appid` claims) is strictly orthogonal to deciding *what* that caller is permitted to mutate. Service B must execute target-side policy evaluation (verifying application roles, OAuth scopes, and domain invariants) rather than assuming any caller with valid transport credentials possesses blanket administrative rights.
+
+4. **Audience-Restricted Token Scoping**:
+   When using token-based OAuth/OIDC exchanges across service boundaries, tokens must be strictly constrained by explicit `aud` (audience) claims. Service A requesting a token to invoke Service B must never receive a token that can be replayed against Service C or managed databases, preventing credential forwarding and privilege escalation across compromised hops.
+
+5. **Cross-Hosting Federated Identity Uniformity**:
+   Modern topologies span hybrid boundaries (AKS clusters, Azure App Service, on-premise VMs, and multi-cloud nodes). Rather than inventing fragmented per-environment credential silos, platforms must adopt federated identity standards: SPIFFE/SPIRE for universal heterogeneous workloads, or cloud IAM OIDC federation for cloud-native managed resources.
 
 ---
 
