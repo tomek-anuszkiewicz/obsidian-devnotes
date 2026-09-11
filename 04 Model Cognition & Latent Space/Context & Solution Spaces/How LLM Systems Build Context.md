@@ -13,6 +13,29 @@ aliases:
   - Context Assembly Pipeline
 ---
 
+# How LLM Systems Build Context
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> The effective capability and reliability of an LLM application is primarily determined by its **Context Assembly Pipeline**, not merely the raw parameter weights of the underlying model. An LLM never reasons over an isolated user prompt; instead, the runtime harness dynamically compiles a multi-layered working context from:
+> 1. **System & Safety Invariants** (authoritative baseline instructions and non-negotiable boundaries),
+> 2. **Session & Conversational State** (turn history and user episodic memory),
+> 3. **Semantic Retrieval / RAG** (domain documents, indexed codebases, external web grounding),
+> 4. **Dynamic Tool & API Responses** (runtime state, telemetry, command outputs).  
+> Expanding context windows does not eliminate the need for curation. Uncurated context dumps trigger **attention dilution**, **lost-in-the-middle omissions**, and **contradictory priors**. High-reliability systems treat the context window as a strictly managed cache, prioritizing high-signal invariants and explicit task boundaries.
+
+### Comparative Matrix: Context Pipeline Ingestion Sources
+
+| Context Source Layer | Ingestion Mechanism | Freshness & Mutability | Attention Density & Signal-to-Noise | Verifiability & Provenance | Primary Failure Modes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Parametric Model Weights** | Pre-training and post-training / fine-tuning. | Static: Frozen at training cutoff date. | High density, but general and probabilistic. | Low: Implicit, unciteable, prone to hallucination on private domains. | Outdated knowledge, confabulation, zero awareness of local enterprise rules. |
+| **System & Developer Instructions** | Hard-coded or template-injected system prompts. | Highly static per deployment version. | **Maximum**: Serves as the authoritative frame for all subsequent reasoning. | Complete: Auditable source text in repository. | Rule collision, instruction drift, prompt injection vulnerability. |
+| **Conversational History (Session State)** | Sliding FIFO window or compressed turn summarization. | Dynamic: Grows turn-by-turn within active session. | Variable: Can become diluted with conversational noise and failed attempts. | High: Visible in message history log. | **Attention Gravity** (locking onto irrelevant early turns), memory bloat, context exhaustion. |
+| **Retrieval-Augmented Generation (RAG)** | Dense vector embeddings or hybrid lexical search over chunked corpora. | Dynamic: Real-time query over updated databases. | Moderate: Depends heavily on chunking quality, reranking, and semantic relevance. | **Explicit**: Attributable to exact source documents, line numbers, or URIs. | Chunk fragmentation, semantic drift, retrieving outdated or contradictory documentation. |
+| **Dynamic Tool / API Outputs** | Structured JSON or text payloads returned by executed tool actions. | Real-time: Reflects immediate live system state. | Focused: High operational relevance for specific execution steps. | **Deterministic**: Exact payload recorded in execution telemetry. | Schema mismatch, excessive payload size blowing context budgets, unhandled tool errors. |
+
+---
+
 A modern LLM system does not reason from the visible user prompt alone. As synthesized in [[How Modern LLM Systems Build Context, Reason, and Stay Constrained|how modern LLM systems build context, reason, and stay constrained]], effective context is assembled from instructions, conversation history, memory, retrieved documents, web search, tools, APIs, and metadata.
 
 ## 1. The Model Does Not Start With an Empty Context
