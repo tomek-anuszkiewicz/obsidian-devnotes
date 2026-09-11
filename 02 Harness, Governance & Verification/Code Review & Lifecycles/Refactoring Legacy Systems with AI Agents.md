@@ -337,4 +337,6 @@ A clean history allows any human reviewer to immediately distinguish:
 - **[[Designing Software for AI Agents]]**: The target architectural patterns (flat 1:1 modules, explicit boundaries) used when refactoring monoliths.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Step-by-step harness loops for safely modernizing legacy systems without regressions.
 - **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Explains why formal specifications cannot guarantee the absence of hidden side-effects, establishing the necessity of the zero-semantic-drift shadow baseline.
+- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Details the organizational politics and complexity fetishism that prevent enterprise teams from initiating first-principles refactorings.
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The foundational system hierarchy framing where legacy refactoring harnesses interface between substrate efficiency and runtime telemetry.
+

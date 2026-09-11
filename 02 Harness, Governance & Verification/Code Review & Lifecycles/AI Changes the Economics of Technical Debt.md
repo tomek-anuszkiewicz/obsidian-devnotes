@@ -131,3 +131,5 @@ Modernization is no longer only about code aesthetics. It becomes an investment 
 - **[[Agent Advantage -  Relentless, Methodical Work]]**: Discusses how agents excel at repetitive, methodical maintenance tasks that humans avoid.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Examines how accelerated code generation exposes downstream organizational and deployment bottlenecks.
 - **[[Designing Software for AI Agents]]**: Details structural design patterns that maximize agent autonomy and minimize refactoring regressions.
+- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Explains the organizational barriers and complexity worship that cause enterprises to accumulate unaddressed technical debt.
+
