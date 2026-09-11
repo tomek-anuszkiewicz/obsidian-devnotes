@@ -299,6 +299,26 @@ A critical finding from empirical studies of AI code generation (such as GitClea
 
 ---
 
+## Exploratory Pruning: Rapid Archaeology and Invariant Path Slicing in Unfamiliar Codebases
+
+When an engineer or architect confronts an unfamiliar, sprawling codebase—whether an enterprise legacy monolith, an inherited third-party system, or an open-source framework—human cognition is severely bottlenecked by **The Breadth Trap**:
+- Human engineers struggle to discard code they have not personally inspected. The fear of triggering an unknown side-effect forces developers to spend days or weeks mentally traversing hundreds of peripheral call paths.
+- The cognitive load of verifying whether an obscure helper function mutates global state, leaks memory, or touches database locks causes severe analytical paralysis.
+
+### 1. Inverting Code Archaeology via LLM Path Slicing
+Modern LLMs act as high-velocity **Symbolic Pruning Engines**:
+- **Critical Path Slicing**: Given a target outcome or state mutation (e.g., *"How does an incoming trade order reach final ledger persistence?"*), an agent can traverse the entire AST across hundreds of files, isolating the exact active call graph while ignoring thousands of lines of irrelevant scaffolding.
+- **Negative Safety Proofs (Proving Irrelevance)**: The most transformative capability of LLMs in code archaeology is not merely finding what *is* relevant, but **rigorously proving what is NOT relevant**:
+  - The model can verify that adjacent background services, diagnostic pipelines, or telemetry hooks are strictly decoupled from the target transaction.
+  - It proves negative invariants: *"Path B does not mutate state, does not acquire locks on table T, and has no side effects on domain entity E; it is functionally safe to ignore."*
+
+### 2. Search-Space Reduction from Weeks to Hours
+By using the LLM to prove the safety and irrelevance of non-critical branches, the architect prunes 90% of the cognitive search space:
+- Instead of reading 100,000 lines over three weeks of anxious exploration, the architect isolates the 3 critical execution paths and their foundational invariants in 45 minutes.
+- The architect can then focus 100% of their biological deep-work battery exclusively on the critical path, confident that the pruned branches cannot introduce unseen regressions.
+
+---
+
 ## Practical Working Rules
 
 ### For commits
