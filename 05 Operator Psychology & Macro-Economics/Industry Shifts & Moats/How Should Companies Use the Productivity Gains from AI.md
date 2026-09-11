@@ -12,6 +12,25 @@ aliases:
   - Resource Allocation with AI Gains
 ---
 
+# How Should Companies Use the Productivity Gains from AI
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> If an organization responds to AI productivity gains with layoffs (*"We doubled velocity, so we fired half the engineers"*), employees immediately recognize the game-theoretic trap. The rational human response is **underground automation**: hiding prompts, sandbagging estimates, exaggerating task difficulty, and refusing to document agent workflows.
+> - **The Perverse Incentive Trap**: When efficiency is penalized with redundancy, engineers sabotage AI adoption to protect psychological and financial security.
+> - **The Productivity Dividend**: Sustainable organizational transformation requires sharing the surplus—reinvesting capacity into ambitious feature backlogs, eliminating soul-crushing on-call toil, and modernizing legacy debt.
+
+### Comparative Matrix: Organizational Reinvestment Strategies for AI Dividends
+
+| Strategy | Headcount Liquidation (Cost-Cutting) | Workload Compression (Sweatshop) | Capacity Reinvestment (High Growth) |
+| :--- | :--- | :--- | :--- |
+| **Corporate Action** | Lay off 30–50% of engineers to boost quarterly operating margins. | Keep team size; double sprint story points and deadlines. | Keep team size; tackle previously impossible architectural and product bets. |
+| **Employee Response** | Sandbagging, underground automation, cognitive secrecy. | Burnout, resentment, quiet quitting, high senior attrition. | High psychological safety, rapid prompt sharing, active tooling innovation. |
+| **Long-Term Velocity** | **Collapses**: Survivors refuse to automate; institutional knowledge lost. | **Fragile**: Frequent production outages due to rubber-stamped code. | **Exponential**: Organization develops unassailable product surface area. |
+| **Economic Outcome** | Fleeting margin bump followed by market irrelevance. | High turnover costs; catastrophic production regressions. | Dominates industry via continuous innovation and customer value. |
+
+---
+
 ## Productivity Incentives Matter
 
 If a team observes this pattern:
