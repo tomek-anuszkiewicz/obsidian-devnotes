@@ -43,10 +43,10 @@ The transition to agentic engineering redefines the very definition and purpose 
 
 ```text
 TRADITIONAL COMPILATION:
-C# / Rust Source Code ──► Deterministic Compiler (Roslyn / rustc) ──► Machine Assembly / Bytecode
+High-Level Source Code ──► Deterministic Compiler / Type Checker ──► Machine Binary / Bytecode
 
 AGENTIC COMPILATION:
-Markdown Design Specification ──► LLM Reasoning Engine (AI Compiler) ──► Systems Code (Rust / C# / TypeScript)
+Markdown Design Specification ──► LLM Reasoning Engine (AI Compiler) ──► Verified Implementation Code
 ```
 
 In this operational model:
@@ -99,8 +99,8 @@ The modern agentic paradigm does not repeat this failure because it does not att
 #### 1. Why Markdown Is Not a Programming Language (The Compiler-less Language Paradox)
 The fatal error of 4GL, CASE tools, and Executable UML was attempting to replace programming languages with clumsy abstractions:
 - To generate production-grade code without human intervention, visual models or 4GL scripts were forced to specify **every atomic nuance of execution**: exact memory allocation, pointer dereferencing, lock acquisition order, null checks, and error unwinding paths.
-- The moment a specification reaches that level of exhaustive granularity, **it ceases to be a specification and becomes an untyped, verbose programming language without a compiler or type checker**. Instead of writing 10 lines of concise, expressive Rust or C#, the engineer ended up authoring 50 to 100 lines of clumsy diagrammatic or verbal prose.
-- **The Agentic Demarcation**: In our architecture, Markdown **never describes atomic execution steps**. It does not dictate how to iterate a loop, allocate a vector, or handle register arithmetic. The frontier LLM reasoning engine already possesses pre-trained mastery of compiler mechanics, borrow checkers, standard libraries, and language idioms.
+- The moment a specification reaches that level of exhaustive granularity, **it ceases to be a specification and becomes an untyped, verbose programming language without a compiler or type checker**. Instead of writing 10 lines of concise, expressive statically typed code, the engineer ended up authoring 50 to 100 lines of clumsy diagrammatic or verbal prose.
+- **The Agentic Demarcation**: In our architecture, Markdown **never describes atomic execution steps**. It does not dictate how to iterate a loop, allocate a vector, or handle register arithmetic. The frontier LLM reasoning engine already possesses pre-trained mastery of syntax semantics, standard library interfaces, type systems, and idiomatic execution patterns.
 - Markdown specifies strictly **domain invariants, state boundaries, operational non-goals, and boundary contracts**. It is the compass, not the engine.
 
 #### 2. Why Markdown Alone Degrades into Hallucination (The Need for the Ironclad Oracle)
@@ -108,7 +108,7 @@ Natural language—even when formatted into clean, structured Markdown cards—i
 - When models operate over extended contexts or encounter edge conditions, they suffer from **context drift, rule decay, and constraint saturation** (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]).
 - If an agent is guided solely by Markdown prose without deterministic boundaries, it will generate code that *sounds* convincing and *looks* idiomatic, yet silently violates subtle operational contracts or introduces phantom states.
 - **The Ironclad Test Oracle as the Anchor of Reality**: Markdown specification functions as high-level architectural code **only because it is bounded by an [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracle]]**. 
-  - The test suite (`assert_eq!`) provides an unyielding, non-negotiable physical wall.
+  - The test suite (deterministic assertions and invariants) provides an unyielding, non-negotiable physical wall.
   - The test runner does not negotiate with the model. A non-zero exit code forces the agent to discard hallucinations and collapse its probabilistic search space to exact reality.
   - Markdown supplies the **semantic intent**; the test oracle supplies the **deterministic rigor**. Neither can function safely without the other.
 
