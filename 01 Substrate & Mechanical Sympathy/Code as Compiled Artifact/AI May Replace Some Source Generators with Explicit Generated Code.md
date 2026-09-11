@@ -25,10 +25,10 @@ aliases:
 For decades, software engineering relied on metaprogramming—runtime reflection libraries, compile-time source generators, complex annotation processors, and custom generation scripts—to solve a fundamental human constraint: **humans are slow, error-prone, and unwilling to manually author and maintain large volumes of repetitive, boilerplate code**.
 
 To avoid writing hundreds of repetitive, mechanical lines, developers built an entire secondary ecosystem of generative tooling:
-- **Object-to-object mappers and projection tools** (AutoMapper, MapStruct, Mapster),
-- **Language-level source generators and annotation processors** (Roslyn source generators, Java Lombok and Annotation Processors, Go `generate`),
-- **Validation and builder generators** (FluentValidation generators, Lombok `@Builder`),
-- **Schema-to-code emitters and client generators** (OpenAPI codegen, Protobuf/gRPC emitters, custom JSON transformers).
+- **Declarative object mappers and projection libraries**,
+- **Compile-time source generators, compiler plugins, and AST annotation processors**,
+- **Validation and builder generators**,
+- **Schema-to-code client emitters and serialization transformers**.
 
 In the era of LLMs and agentic coding, **this entire meta-layer is rapidly becoming obsolete** as [[Software Engineering May Shift Toward Code Optimized for Agents|software engineering shifts toward code optimized for agents]]. 
 
@@ -115,35 +115,35 @@ Writing these mappings by hand was historically painful:
 
 ### Phase 2: The Magic Reflection Illusion (Runtime Mappers)
 
-To escape manual boilerplate, the industry enthusiastically adopted runtime reflection mappers (such as AutoMapper in .NET or reflection-based ModelMappers in Java):
+To escape manual boilerplate, the industry enthusiastically adopted dynamic runtime reflection mappers:
 
-```csharp
-// The promise: one magical line of code
-var userDto = _mapper.Map<UserDto>(user);
+```text
+// The dynamic reflection promise: one opaque line of transformation
+target_dto = runtime_mapper.transform(source_entity, TargetType=UserDTO)
 ```
 
 While this eliminated typing, it created severe architectural side effects:
 - **Hidden Runtime Failures**: If a property name drifted or a type conversion failed, the compiler remained blissfully green. The application compiled cleanly, only to crash with a runtime exception in production when an unmapped property path was exercised.
-- **Punishing Runtime Overhead**: Inspecting object hierarchies via reflection incurs runtime allocation overhead and defeats the JIT compiler's ability to aggressively inline operations, optimize register allocation, or eliminate dead code.
-- **Debugging Black Holes**: When a value mapped incorrectly, a developer could not set a breakpoint or step through the assignment. The execution vanished into a labyrinth of expression trees and dynamic dispatch pipelines.
+- **Punishing Runtime Overhead**: Inspecting object hierarchies via reflection incurs runtime allocation overhead and defeats the compiler/JIT's ability to aggressively inline operations, optimize register allocation, or eliminate dead code.
+- **Debugging Black Holes**: When a value mapped incorrectly, a developer could not set a breakpoint or step through the assignment. The execution vanished into a labyrinth of dynamic dispatch pipelines.
 
 ### Phase 3: Compile-Time Source Generators and The "80/20 Edge Case Wall"
 
-To cure the runtime cost of reflection, modern frameworks introduced compile-time source generators and annotation processors (such as Roslyn Source Generators, MapStruct, or Mapster). These tools analyze annotations at compile time and emit C# or Java code into synthetic build artifacts.
+To cure the runtime cost of reflection, modern frameworks introduced compile-time source generators and AST annotation processors. These tools analyze annotations at compile time and emit source code into synthetic build artifacts.
 
 While this restored runtime speed, it collided directly with **The 80/20 Edge Case Wall**:
-- **The 80% case is trivial**: Copying 1-to-1 identical properties (`FirstName` $\rightarrow$ `FirstName`) works cleanly.
+- **The 80% case is trivial**: Copying 1-to-1 identical properties (`first_name` $\rightarrow$ `first_name`) works cleanly.
 - **The 20% case breaks the generator**: Real-world business logic requires non-uniform projections:
   - Formatting dates according to a user's localized timezone,
-  - Masking credit card numbers or conditionally redacting fields based on caller permissions,
-  - Flattening complex nested value objects or computing aggregate fields (e.g., `itemCount = order.Items.Count()`),
+  - Masking sensitive fields or conditionally redacting attributes based on caller permissions,
+  - Flattening complex nested value objects or computing aggregate fields,
   - Handling legacy database quirks, status code conversions, or enum translations.
 
 To accommodate this 20%, generator tooling grew into **complex, fragile mini-compilers**:
-- Developers had to learn bespoke fluent configuration DSLs, custom XML/JSON mappings, or convoluted annotations:
-  ```java
-  @Mapping(target = "orderTotal", expression = "java(order.calculateDiscounts(user.getTier()))")
-  @Mapping(target = "status", source = "legacyStatusCode", qualifiedByName = "legacyStatusConverter")
+- Developers had to learn bespoke configuration DSLs, custom annotations, or escape-hatch templates:
+  ```text
+  [FieldMapping: target="order_total", expression="calculate_discounts(user.tier)"]
+  [FieldMapping: target="status", source="legacy_status_code", converter="status_converter"]
   ```
 - The team stopped maintaining simple code and began maintaining a **secondary generator configuration codebase**.
 - Build pipelines slowed down as compiler plugins analyzed syntax trees during every compilation pass.
@@ -165,23 +165,21 @@ In the agentic era, **LLMs eliminate the need for reflection mappers, source gen
 ### 1. Explicit, Plain Code Over Opaque Generators
 The agent directly generates explicit, pure, static mapping and projection functions:
 
-```csharp
-public static UserDto ToDto(User user)
-{
-    return new UserDto(
-        Id: user.Id,
-        FullName: $"{user.FirstName} {user.LastName}",
-        Email: user.Email,
-        Tier: user.IsVip ? CustomerTier.Premium : CustomerTier.Standard,
-        MaskedCardNumber: user.PaymentMethod != null ? $"****-****-****-{user.PaymentMethod.LastFour}" : null,
-        TotalOrders: user.Orders.Count,
-        TotalSpent: user.Orders.Sum(o => o.TotalAmount),
-        CreatedAtUtc: user.CreatedAt.ToUniversalTime()
-    );
-}
+```text
+function project_to_user_dto(user: UserEntity) -> UserDTO:
+    return UserDTO(
+        id = user.id,
+        full_name = user.first_name + " " + user.last_name,
+        email = user.email,
+        tier = (user.is_vip ? TIER_PREMIUM : TIER_STANDARD),
+        masked_card = mask_card(user.payment_method?.last_four),
+        total_orders = len(user.orders),
+        total_spent = sum(user.orders.amounts),
+        created_at = to_utc(user.created_at)
+    )
 ```
 
-- **Zero Magical Dependencies**: No AutoMapper NuGet packages, no MapStruct dependencies, no Roslyn analyzer plugins injected into the build pipeline.
+- **Zero External Metaprogramming Dependencies**: No heavy runtime reflection packages, no external annotation processor dependencies, and no compiler-plugin hooks injected into build pipelines.
 - **Natural Handling of Business Edge Cases**: Custom transformations, conditional checks, calculations, and fallback logic are written as standard, readable language constructs right where they belong—with explanatory comments.
 - **Flawless Debuggability and Navigation**: "Go to Definition" navigates directly to the exact assignment line. A developer can set a standard breakpoint, inspect local variables, and step line-by-line through the mapping with zero indirection.
 
@@ -200,7 +198,7 @@ Domain Entities & API Contracts
                ↓
         LLM Coding Agent
                ↓
-       UserMappings.cs
+     user_mappings (source file)
  (Clean, explicit, direct property assignments
   with in-place business rules & zero reflection)
 ```
@@ -212,21 +210,21 @@ Domain Entities & API Contracts
 Explicit code generated by an agent is substantially faster and easier for compilers, runtimes, and JITs to optimize than generic runtime abstractions or dynamic reflection layers.
 
 Instead of generic runtime dispatch:
-```csharp
+```text
 // Opaque reflection lookup: allocates memory, prevents inlining, hides failures
-var response = _mapper.Map<OrderSummaryResponse>(order);
+response = runtime_mapper.map(order, OrderSummaryResponse)
 ```
 
 The agent produces direct, explicit logic:
-```csharp
+```text
 // Explicit projection: 100% type-safe, inlinable, zero-allocation, instant debuggability
-var response = new OrderSummaryResponse(
-    OrderId: order.Id,
-    CustomerName: order.Customer.DisplayName,
-    ItemCount: order.Items.Count,
-    TotalAmount: order.Total.Amount,
-    Status: order.Status.ToStringFast()
-);
+response = OrderSummaryResponse(
+    order_id = order.id,
+    customer_name = order.customer.display_name,
+    item_count = len(order.items),
+    total_amount = order.total.amount,
+    status = to_string(order.status)
+)
 ```
 
 Benefits:
@@ -238,7 +236,7 @@ Benefits:
 
 ## Comparing Metaprogramming Approaches vs. Agent-Generated Code
 
-| Dimension | Runtime Reflection (e.g. AutoMapper) | Compile-Time Source Generators (e.g. MapStruct, Roslyn) | Agent-Generated Explicit Code |
+| Dimension | Runtime Reflection Mappers | Compile-Time Source Generators | Agent-Generated Explicit Code |
 | :--- | :--- | :--- | :--- |
 | **Tooling & Build Overhead** | Low build overhead, but heavy runtime library dependencies | High (compiler plugins, analyzers, slow build passes, IDE lag) | **Zero** (standard, idiomatic code committed to source control) |
 | **Debuggability & Navigation** | Very poor (reflection internals hide execution; breakpoints cannot be set) | Difficult (navigating into synthetic/generated files in temporary cache folders) | **Optimal** (plain, standard code; instant "Go to Definition"; line-by-line stepping) |
