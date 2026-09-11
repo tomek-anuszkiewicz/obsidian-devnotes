@@ -25,19 +25,35 @@ aliases:
 
 # Refactoring Legacy Systems with AI Agents
 
+> [!IMPORTANT]
+> **The Economic Inversion of Legacy Modernization**: In classical software engineering, rewriting legacy systems from scratch was an organizational death trap. Autonomous coding agents invert this economics: **aggressively straightening out and rewriting legacy subsystems via automated characterization oracles and shadow mirroring is vastly cheaper over time than continuously paying the compounding cognitive, token, and regression taxes of maintaining a legacy labyrinth.**
+
+```text
+Option A: The Maintenance Trap (Complexity Masking)
+Leave legacy spaghetti intact ──► Patch with LLMs ──► Context costs explode + regressions multiply
+
+Option B: Automated Straightening (Agentic Strangler Fig)
+Isolate behavior via oracles ──► Re-synthesize 1:1 flat modules ──► Future maintenance costs collapse
+```
+
+---
+
+## Executive Summary & Core Architectural Invariants
+
+1. **Automated Straightening Over Complexity Masking**: Using agents to navigate spaghetti code merely masks architectural rot. Because agents make typing cheap, extracting business rules and rewriting vertical slices into flat, agent-native architectures delivers 10x lower operational overhead than perpetual legacy patching.
+2. **The "Frankenstein Intermediate Phase" Trap**: During architectural transitions, developers and agents reflexively build complex hybrid adapters and synthetic bridges. Because LLMs have a strong **status-quo anchoring bias**, they will aggressively rationalize this intermediate mess. Escaping requires **human architectural courage** to demand clean breaks.
+3. **Symbolic Pruning Over Biological Archaeology**: Humans suffer from the "Breadth Trap"—paralyzed by the fear of unknown side effects across 100,000 lines. Coding agents invert this by acting as symbolic pruning engines: proving what code is *not* relevant, collapsing weeks of manual exploration into 45 minutes.
+4. **Parity First, Evolutionary Modernization Second**: The fatal flaw of historical rewrites is the Second-System Effect (trying to improve features while rewriting). Modernization mandates a strict two-phase discipline: **Bug-for-bug parity first** (the "clean refresh" achieving $0.000\%$ behavioral drift under dark production traffic), followed by evolutionary optimization only after parity is proven.
+5. **Dark Differential Traffic Mirroring**: Deploying the modernized service as an asynchronous shadow twin receiving mirrored live production ingress allows autonomous differential oracles to catch every unmodeled divergence, converting real production traffic into an ironclad regression suite.
+6. **Mechanical Sympathy Against Model OOP Bias**: Pre-trained models default to deep class hierarchies, dynamic dispatch, and heap-allocated DTO wrappers. The human architect must constrain the agent to enforce Data-Oriented Design (DOD)—compact memory layouts, zero-allocation hot paths, and L1i cache locality.
+
+---
+
 ## The Legacy Dilemma: Maintaining with Agents vs. Automated Straightening (Rewriting)
 
 When an enterprise possesses a massive codebase plagued by decades of technical debt, labyrinthine architecture, and undocumented runtime coupling, it faces a fundamental strategic dilemma:
 
 > **Should the organization use AI agents to maintain and patch the legacy monolith, or should it use agents to aggressively "straighten out" and rewrite the system into a modern, agent-native architecture?**
-
-```text
-Option A: The Maintenance Trap (Complexity Masking)
-leave legacy spaghetti intact → use agents to navigate & patch → context costs explode + hidden dependencies trigger regressions
-
-Option B: Automated Straightening (Agentic Strangler Fig)
-extract behavior via tests → isolate pure business rules → rapidly rewrite into 1:1 flat modules → future maintenance costs collapse
-```
 
 ### Why Maintaining Legacy with Agents Is a Trap
 Many organizations default to Option A because agents make legacy systems feel superficially easier to navigate. However, this is a dangerous illusion:
