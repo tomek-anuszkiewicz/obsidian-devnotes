@@ -110,7 +110,7 @@ If the text was not stored as a pre-existing artifact, it cannot be explained by
 During pretraining on trillions of tokens across code, papers, books, and discussions, an LLM optimizes for next-token prediction across disparate domains:
 - **Software engineering history**: Lehman's laws of software evolution, code smell theory, the DRY dogma, Conway's law.
 - **Cognitive ergonomics**: Cognitive load theory, typing resistance, diff review fatigue, context-switching overhead.
-- **Systems & low-level programming**: CPU cycle constraints, compiler inlining, macro expansion, emulation architectures.
+- **Systems & low-level programming**: CPU cycle constraints, compiler inlining, macro expansion, kernel dispatch loops, memory fences.
 - **Information theory and token dynamics**: Lossless compression, generative friction, AST navigation, tool-use execution loops.
 
 These domains are not stored in separate mental folders. In the neural network's weights, they are mapped into a **continuous, high-dimensional latent space**.
