@@ -20,6 +20,9 @@ aliases:
   - The Specification, Synthesis, and Verification Pipeline
   - Escaping the 4GL and CASE Trap
   - The Compiler-less Language Paradox
+  - Multi-Stage Documentation Calibration
+  - The Specification Crystallization Loop
+  - Knowledge Freezing in Agentic Coding
 ---
 
 # In-Flight Documentation as the Primary Framework for Coding Agents
@@ -179,6 +182,61 @@ With coding agents, the marginal cost of documentation generation drops to near 
 - Generating a companion markdown card requires merely a single instruction in the workflow harness:
   > *"Synthesize an Operation Card documenting the entry points, invariant rules, data flow, failure modes, and file touchpoints for this new component."*
 - The engineer does not type the prose; they simply review and validate the agent's synthesized blueprint.
+
+---
+
+## The Iterative Reality: Code Exploration, Multi-Stage Calibration, and Knowledge Freezing
+
+A common misconception in agentic software engineering is the belief in **one-shot top-down generation**—the naive assumption that an architect can effortlessly author a pristine Markdown specification, and the agent will flawlessly emit production-grade systems code on the first attempt.
+
+In real-world engineering, especially when designing non-trivial subsystems (e.g., high-performance stateful dispatch loops, complex protocol engines, or delicate concurrency pipelines), human intent is rarely fully formed upfront. 
+
+The actual workflow operates as an **iterative crystallization loop**:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│               THE ITERATIVE SPECIFICATION CRYSTALLIZATION LOOP         │
+│                                                                        │
+│   1. COMPLEX PROBLEM (Intent is fuzzy, optimal pattern unknown)        │
+│                         │                                              │
+│                         ▼                                              │
+│   2. CODE-LEVEL EXPLORATION & PROMPT STEERING                          │
+│      - Hands-on code review and iterative micro-prompting              │
+│      - Direct intervention in the implementation trenches              │
+│      - Discovering hidden edge cases through active execution          │
+│                         │                                              │
+│                         ▼                                              │
+│   3. STABLE IMPLEMENTATION REACHED                                     │
+│                         │                                              │
+│                         ▼                                              │
+│   4. KNOWLEDGE FREEZING (In-Flight Documentation Synthesis)            │
+│      - Agent extracts invariants, decisions, and boundaries into a card│
+│                         │                                              │
+│                         ▼                                              │
+│   5. MULTI-STAGE SPECIFICATION CALIBRATION                             │
+│      - Test the documentation: Can an agent rebuild or modify the      │
+│        component relying solely on the synthesized Markdown card?      │
+│      - If agent drifts -> Refine invariants and boundary contracts     │
+│      - If agent succeeds -> Document is verified as canonical source   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### 1. Descending into the Trenches: Code Review and Micro-Prompting
+When tackling complex architecture, attempting to specify everything a priori leads to paralysis or flawed assumptions. The engineer must get their hands dirty in the implementation:
+- Steer the agent through granular prompt-by-prompt corrections,
+- Conduct rigorous code reviews on each generated diff,
+- Experiment with alternative execution models directly in source code until performance and correctness thresholds are met.
+
+### 2. Knowledge Freezing: Capturing the Hard-Won Solution
+The greatest hazard of manual prompt-steering is that the hard-won insights remain trapped in ephemeral chat logs. Without immediate capture, a future agent session will overwrite the solution with naive defaults.
+- The moment the code stabilizes and passes tests, the harness demands in-flight documentation.
+- The agent synthesizes an Operation Card codifying the exact invariants, execution rules, and anti-patterns discovered during the prompt struggle.
+- This **freezes the solution**, ensuring the engineer never has to fight the same architectural battle twice.
+
+### 3. Multi-Stage Documentation Calibration
+Synthesizing documentation is itself an empirical, iterative process. A specification is only as good as the code it can reliably reproduce:
+- **The Calibration Test**: Feed the newly synthesized Markdown card to a fresh agent session. If the agent generates incorrect code or misses edge cases, the documentation is incomplete.
+- **Refinement Passes**: The engineer iterates on the Markdown card—clarifying ambiguous rules, tightening state boundaries, and adding negative constraints—until the specification demonstrably generates valid code on demand.
 
 ---
 
