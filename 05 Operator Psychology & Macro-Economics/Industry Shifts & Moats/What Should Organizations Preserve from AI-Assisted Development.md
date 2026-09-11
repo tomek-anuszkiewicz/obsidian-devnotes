@@ -12,6 +12,25 @@ aliases:
   - Artifacts to Keep from Agentic Coding
 ---
 
+# What Should Organizations Preserve from AI-Assisted Development
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> When code generation is free, treating the raw code syntax as the primary asset to preserve is an architectural mistake. Code becomes ephemeral and easily regenerated; what an organization must fiercely preserve is the **upstream intent and downstream verification**: the architectural decision records (ADRs), business invariant specifications, rejected counter-hypotheses, and deterministic test oracles.
+> - **The Ephemeral Code Inversion**: Raw code is simply a compiled artifact of intent. If the business decision record and test oracles survive, the code can be deleted and re-synthesized overnight.
+> - **Combating Structural Amnesia**: Without explicit capture of *why* an obscure rule was chosen and *what failure modes* were considered, teams suffer catastrophic institutional memory loss when rotating engineers or swapping agent models.
+
+### Comparative Matrix: What to Preserve vs. What to Treat as Disposable
+
+| Artifact Category | Traditional Development Value | Agentic Era Value | Retention & Governance Strategy |
+| :--- | :--- | :--- | :--- |
+| **Raw Code Syntax & Boilerplate** | High: Considered the primary intellectual property asset. | **Disposable**: Ephemeral implementation detail; easily regenerated. | Refactor, straighten, or delete without hesitation; zero sentimental attachment. |
+| **Business Decision Records (BDRs)** | Often neglected; trapped in scattered emails or meetings. | **Paramount (The Crown Jewel)**: The ultimate source of truth for agents. | Version-controlled Markdown co-located with code; updated on every PR. |
+| **Architectural Dissents & Dead Ends** | Discarded upon ticket closure; forgotten. | **Extremely High**: Prevents future agents from re-exploring failed branches. | Recorded in `Negative Knowledge and Explicit Architectural Dissents`. |
+| **Deterministic Test Oracles** | Moderate: Often secondary to shipping features. | **Non-Negotiable**: The rigid mathematical fence that prevents drift. | Frozen, immutable execution gates; exit code 0 or pull request rejected. |
+
+---
+
 ## Documentation Can Become a Process Output
 
 Agents can reduce the cost of maintaining business documentation, helping safeguard [[LLM Agents and Institutional Memory|institutional memory in software teams]].
