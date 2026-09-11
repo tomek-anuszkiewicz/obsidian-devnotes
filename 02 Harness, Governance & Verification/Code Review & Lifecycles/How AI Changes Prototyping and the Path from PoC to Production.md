@@ -20,14 +20,29 @@ aliases:
 
 # How AI Changes Prototyping and the Path from PoC to Production
 
-In classical software engineering, prototyping was an expensive, high-friction endeavor. Building a functional proof-of-concept (PoC) required weeks of manual coding, boilerplate setup, and tentative library integrations. Because so much human labor was invested, organizations developed a pathological habit: **pushing fragile prototypes directly into production**, saddle-bagging the enterprise with years of architectural technical debt.
+> [!IMPORTANT]
+> **The Death of "PoC to Production"**: In classical software engineering, temporary prototypes inevitably became permanent production systems due to the sunk cost of months of manual coding. In the agentic era, generative speed collapses the cost of code synthesis to near zero. **A prototype must NEVER become production code.** The prototype is a strictly disposable exploratory probe; its sole deliverable is **crystallized knowledge, verified assumptions, and codified test vectors**. The exploratory code itself must be deleted to zero (`git branch -D`), followed by first-principles synthesis of the production service under an ironclad oracle.
 
-In the agentic era, generative speed and zero typing friction completely invert this paradigm:
-- The economic cost of synthesizing code drops to near zero.
-- The prototype is decoupled from production implementation.
-- **The proof-of-concept becomes a strictly disposable exploratory probe.**
+```text
+CLASSICAL PARADIGM (Manual Labor / Sunk Cost Trap):
+3 Months of Manual Coding ──► "Too costly to rewrite!" ──► Prototype Shipped ──► Permanent V1 Tech Debt
 
-The primary deliverable of an agent-driven prototype is **crystallized knowledge, verified assumptions, and codified invariants**—never reusable source code.
+AGENTIC PARADIGM (Scorched Earth Disposability):
+30-Min Agentic Probe ──► Extract Discovered Invariants & Test Vectors ──► PROTOTYPE DELETED TO ZERO
+                                                                                    │
+                                                                                    ▼
+First-Principles Production Synthesis under [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracles]]
+```
+
+---
+
+## Executive Summary & Core Architectural Invariants
+
+1. **Knowledge Is the Deliverable; Implementation Is Scrap**: The value of a proof of concept is never the code; it is discovering undocumented constraints, failure boundaries, and state invariants. Once those are formalized in Markdown specs and test vectors, the prototype code is obsolete.
+2. **Total Collapse of the Sunk Cost Fallacy**: Spending pennies of LLM tokens on an exploratory spike removes all human emotional attachment to the code. Developers discard 2,000 lines of prototype code without financial or psychological hesitation.
+3. **The Asymmetry of Patching vs. Clean Synthesis**: Attempting to "harden" or "retrofit" a prototype (adding telemetry, transactions, auth, and error unwinding) triggers the Frankenstein Hybrid Trap. Synthesizing a brand-new production service from scratch inside a standardized chassis takes 45 minutes and guarantees day-one architectural purity.
+4. **Counter-Prototyping in Technical Debates**: Rather than enduring hours of speculative theoretical arguments during architectural reviews, engineers deploy agents to build concrete, working counter-prototypes on isolated branches in 30 minutes, replacing rhetoric with empirical runtime telemetry.
+5. **Mechanically Enforced Scorched Earth**: CI/CD pipelines must enforce prototype isolation: blocking pull requests originating from `prototype/*` or `scratch/*` branches and forbidding exploratory code from residing in production microservice repositories.
 
 ---
 
