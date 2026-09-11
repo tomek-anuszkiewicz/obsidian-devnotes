@@ -12,6 +12,21 @@ aliases:
   - Durable Execution and Orchestration
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Decoupling Process Durability from Stochastic Reasoning
+> Building resilient enterprise systems and autonomous agent workflows requires a strict separation of computational concerns:
+> $$\text{Deterministic Invariants} + \text{Durable State (Orchestration)} + \text{Isolated Sandboxes} + \text{Stochastic Reasoning (LLM)}$$
+> Background job runners (queues/workers) execute tasks; message brokers transport asynchronous events; but **workflow orchestrators govern the causal ordering, state persistence, and durability of the business process itself**. By encapsulating stochastic LLM invocations as individual, idempotent activity steps inside deterministic state machines (or durable execution DAGs), systems survive process crashes and multi-day human-in-the-loop pauses while preventing hallucinated agent actions from corrupting system invariants.
+
+| Architectural Tier | Primary Responsibility | State & Failure Semantics | Representative Systems |
+| :--- | :--- | :--- | :--- |
+| **Background Job Executor** | Asynchronous task execution & retries | Ephemeral queue-based workers; point-to-point retries | Celery, Hangfire, BullMQ, Sidekiq |
+| **Durable Workflow Engine** | Long-running process state & causal ordering | Replay-based event sourcing; survives crashes & long pauses | Temporal, Cadence, AWS Step Functions, Azure Durable |
+| **Agent Reasoning Framework** | Stochastic token generation & dynamic tool loops | Ephemeral prompt memory; bounded loop iterations | LangGraph, AutoGen, CrewAI, Semantic Kernel |
+| **Isolated Execution Sandbox** | Safe, disposable compute for agent actions | Ephemeral container / microVM; filesystem isolation | E2B, Firecracker, Docker, Modal |
+| **Semantic Telemetry & Eval** | Tracing causal chains & model cost/latency | Distributed span trees, token tracking, evaluation scoring | OpenTelemetry, Langfuse, Arize Phoenix |
+
+---
+
 ## Core Idea
 
 A workflow orchestrator coordinates actions that together form a process, serving as the operational infrastructure beneath an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]].
