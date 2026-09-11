@@ -35,7 +35,7 @@ AGENTIC PARADIGM:
           costly, speculative external tool calls.
 ```
 
-When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. Nor will an agent proactively run `git blame` or inspect commit histories for every routine it modifies.
+When an agent enters a repository to modify a specific routine, it does not possess the historical tribal memory of the engineering team. It will never read the three-year-old Jira ticket, the buried Git commit message, the archived Slack debate, or the forgotten meeting notes that explain why a non-obvious conditional check exists. Nor will an agent proactively fall back to `git blame` to inspect every routine or line of code it modifies.
 
 However, **any comment physically placed next to the implementation is guaranteed to be ingested into the model's context window**. Comments therefore act as a microscopic, zero-latency semantic cache—anchoring human architectural intent directly at the point of mutation, as explored in [[Developing Features with AI Coding Agents|developing features with AI coding agents]].
 
