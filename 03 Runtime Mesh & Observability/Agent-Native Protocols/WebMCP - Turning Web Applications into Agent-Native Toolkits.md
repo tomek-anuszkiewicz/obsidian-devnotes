@@ -16,6 +16,19 @@ aliases:
   - navigator.modelContext
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: The In-Browser Semantic Tool Protocol
+> WebMCP inverts the architectural assumption that web applications are visual viewports designed exclusively for human eyes:
+> $$\text{Client Application} \xrightarrow{\text{navigator.modelContext.registerTool}} \text{Browser-Native Semantic Registry} \xleftarrow{\text{Discover \& Invoke}} \text{In-Browser Agent}$$
+> Rather than forcing models into slow, expensive, and fragile **Vision-Based Computer Use** (taking viewport screenshots, calculating pixel coordinates, and synthesizing DOM clicks), WebMCP allows web pages to expose **structured, discoverable tools directly within the browser runtime**. Because these tools execute inside the authenticated page context, they instantly inherit the user's active session cookies, CSRF tokens, and local state—turning any existing web application into a zero-infrastructure API while introducing critical security dilemmas around indirect prompt injection and superhuman session abuse.
+
+| Interaction Modality | Execution Substrate | Latency & Token Overhead | Auth & Session Inheritance | UI Drift Fragility | Backend Infrastructure Cost |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Vision Computer-Use** | External VLM + Synthetic Input | Very High (2–5s per step; heavy vision tokens) | Requires automated browser login flows | Extreme; breaks on CSS/DOM layout shifts | Zero (operates on existing GUI) |
+| **Dedicated Public API** | Cloud API Gateway (REST/GraphQL) | Low (50–200ms; structured JSON) | Requires API keys, OAuth scopes, tenant provisioning | Zero (stable API contract) | High (gateways, rate-limiters, SDKs, docs) |
+| **WebMCP (In-Browser)** | Client DOM (`navigator.modelContext`) | Ultra-Low (<10ms; local JS function execution) | Native & Automatic (inherits browser session & cookies) | Zero (bound to store actions, not CSS classes) | Zero (leverages existing client-side endpoints) |
+
+---
+
 # WebMCP: Turning Web Applications into Agent-Native Toolkits
 
 For decades, the web has been designed around a fundamental assumption: **the consumer of a web page is a human being operating a mouse and keyboard in front of a graphical viewport**.
