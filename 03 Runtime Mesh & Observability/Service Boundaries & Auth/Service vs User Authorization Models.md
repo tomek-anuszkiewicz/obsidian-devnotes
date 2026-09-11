@@ -12,6 +12,19 @@ aliases:
   - Authorization Patterns in Microservices
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Disentangling Service Identity from User Authorization
+> In distributed microservice architectures, answering *"Is this request authorized?"* requires establishing **which service owns the security rule** and **which identity is being evaluated**:
+> $$\text{Request Authorization} = f(\text{Technical Caller (Service A)}, \text{End-User Initiator (User U)}, \text{Target Resource Domain})$$
+> Blindly forwarding user JWTs across internal service hops creates audience mismatches, excessive privilege leakage, and tight cross-service coupling. Systems must choose an explicit authorization model: **Model 1 (Service-Level Capability)** where upstream workflow orchestrators validate the user and call downstream utilities via service tokens; **Model 2 (User-Level Resource Authorization)** where the resource-owning service evaluates user ACLs directly over trusted context; or **Model 3 (Explicit Token Exchange / RFC 8693)** where identity providers issue downscoped, audience-restricted delegated tokens.
+
+| Authorization Topology | Authoritative Decision Point | Identity Evaluated by Callee | Wire Credential | Coupling & Blast Radius |
+| :--- | :--- | :--- | :--- | :--- |
+| **Model 1: Capability-Oriented** | Upstream Orchestrator (Service A) | Technical Service Identity (`service-a`) | Workload Identity / mTLS / Client Credentials | Minimal; Service B is decoupled from user schemas |
+| **Model 2: Resource-Oriented** | Resource Owner (Service B) | End-User (`userId` via trusted context) | Technical Service Token + Propagated User Context | Moderate; Service B must understand user ACL rules |
+| **Model 3: Token Exchange (RFC 8693)** | Downstream Callee (Service B) | Composite: Service A on behalf of User U | Downscoped Delegated JWT (`sub: U, act: A, aud: B`) | Maximum security; requires central Token Service |
+
+---
+
 # Service vs User Authorization Models
 
 In distributed microservice architectures, answering the question *"Is this request allowed?"* requires determining **which service owns the authorization rule** and **which identity is being authorized**.
@@ -81,12 +94,13 @@ User U ──[edits doc]──> Web Portal (Service A)
   * Service B owns sensitive domain entities with granular ACLs (e.g. Document Service, Payroll Service, Medical Records).
   * Access rules depend on resource-specific ownership, department boundaries, or document-level sharing settings stored exclusively within Service B.
 * **Evaluation in Code:**
-  ```csharp
-  await authorizationService.AuthorizeAsync(
-      userId,
-      documentId,
-      Permission.Edit,
-      cancellationToken);
+  ```text
+  // Resource-level authorization evaluation
+  decision = await authEngine.authorize(
+      userId = context.initiatedByUserId,
+      resourceId = documentId,
+      permission = Permission.Edit
+  );
   ```
 * **Critical Requirement:** Service B must authenticate Service A before accepting `userId`. An untrusted caller must never be allowed to assert arbitrary user identities.
 
