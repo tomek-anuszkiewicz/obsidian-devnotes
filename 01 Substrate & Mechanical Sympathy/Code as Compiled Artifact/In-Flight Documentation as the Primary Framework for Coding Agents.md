@@ -225,9 +225,9 @@ An effective in-flight documentation card does not replicate code verbatim; it c
 - External PSP timeout ceiling: 5000ms.
 
 **File Touchpoints**:
-- Orchestration: `Billing/SettlementCoordinator.cs`
-- Contract: `Billing/Contracts/ISettlementGateway.cs`
-- Verification Test: `Billing.Tests/SettlementCoordinatorTests.cs`
+- Orchestration: `billing/settlement_coordinator`
+- Contract: `billing/contracts/settlement_gateway`
+- Verification Test: `billing/tests/settlement_coordinator_test`
 
 **Allowed Dependencies**:
 - Synchronous: Gateway client, Clock, Logger.
