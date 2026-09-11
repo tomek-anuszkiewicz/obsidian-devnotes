@@ -271,6 +271,7 @@ To prevent the personal knowledge base from becoming a hermetically sealed echo 
 - **[[The Implications of Having a Digital Model of Yourself]]**: Examines the consequences of externalizing one's reasoning and world model into machine-readable assets.
 - **[[Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs]]**: Explores the commercial and infrastructure layer enabling personal agents to access and diff cloud knowledge assets.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Details the scarcity of original thought and explains why semantic filtering against repetition is critical.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Discusses the cognitive transformation from manual reading and typing to high-leverage questioning and conceptual synthesis.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Discusses the cognitive transformation from manual reading and typing to high-level questioning and conceptual synthesis.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: Details how agents transpile long-form books and articles to adapt external knowledge to the reader's cognitive substrate.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted prompts allow agents to synthesize non-obvious relationships across disparate knowledge manifolds.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: How actively surfacing contradictions prevents personal thinking from collapsing into the averaged prior of generic consensus.

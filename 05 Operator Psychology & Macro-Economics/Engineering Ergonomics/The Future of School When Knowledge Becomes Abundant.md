@@ -1014,6 +1014,7 @@ It may be that AI finally makes it possible for teachers and schools to stop spe
 
 - **[[The First AI-Native Generation of Software Engineers]]**: The new educational baseline for students learning technical crafts alongside ubiquitous AI tutors.
 - **[[AI Changes the Role and Training of Software Engineers]]**: Elevating curiosity, epistemic framing, and verifiable critical thinking over rote memorization.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: How individuals use agentic epistemic transpilers to digest long-form books, papers, and complex domains.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Training students to distinguish primary empirical truth from derivative synthetic repetition.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: The art of prompting as an inquiry methodology for navigating complex knowledge spaces.
 - **[[Singularity Without AGI -  The Civilizational Automation Loop]]**: The societal and institutional adaptations required as machine intelligence democratizes specialized skills.
