@@ -15,8 +15,7 @@ aliases:
 
 # How LLM Systems Build Context
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Context Assembly as the Core Determinant of Model Capability
 > The effective capability and reliability of an LLM application is primarily determined by its **Context Assembly Pipeline**, not merely the raw parameter weights of the underlying model. An LLM never reasons over an isolated user prompt; instead, the runtime harness dynamically compiles a multi-layered working context from:
 > 1. **System & Safety Invariants** (authoritative baseline instructions and non-negotiable boundaries),
 > 2. **Session & Conversational State** (turn history and user episodic memory),
@@ -24,15 +23,50 @@ aliases:
 > 4. **Dynamic Tool & API Responses** (runtime state, telemetry, command outputs).  
 > Expanding context windows does not eliminate the need for curation. Uncurated context dumps trigger **attention dilution**, **lost-in-the-middle omissions**, and **contradictory priors**. High-reliability systems treat the context window as a strictly managed cache, prioritizing high-signal invariants and explicit task boundaries.
 
-### Comparative Matrix: Context Pipeline Ingestion Sources
+```text
++----------------------------------------------------------------------------------------------------+
+|               MULTI-SOURCE CONTEXT ASSEMBLY & INGESTION PIPELINE                                   |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  [ User Prompt / Goal ]                                                                            |
+|            │                                                                                       |
+|            ▼                                                                                       |
+|  +──────────────────────────────────────────────────────────────────────────────────────────────+  |
+|  | DYNAMIC CONTEXT COMPILER & HARNESS                                                           |  |
+|  |                                                                                              |  |
+|  |  [ Layer 1: System & Safety Invariants ] ──────► Immutable Rules, Output Schemas, Jailbreaks |  |
+|  |  [ Layer 2: Developer & App Instructions ] ───► Workspace Guidelines, Paved Road Conventions |  |
+|  |  [ Layer 3: Conversational Session State ] ────► FIFO Turns, Compressed Turn Artifacts      |  |
+|  |  [ Layer 4: Semantic RAG / Document Index ] ──► Hybrid Vector/BM25 Chunks, File ASTs       |  |
+|  |  [ Layer 5: Dynamic Tool Telemetry ] ──────────► CLI Outputs, Test Results, Linter Feedback  |  |
+|  |  [ Layer 6: Temporal & Runtime Metadata ] ─────► Timestamps, OS Env, User Workspace Path     |  |
+|  +──────────────────────────────────────────────────────────────────────────────────────────────+  |
+|                                                  │                                                 |
+|                                                  ▼                                                 |
+|                                        [ Compiled Context Window ]                                 |
+|                                                  │                                                 |
+|                                                  ▼                                                 |
+|                                       [ Frontier Model Engine ]                                    |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Context Source Layer | Ingestion Mechanism | Freshness & Mutability | Attention Density & Signal-to-Noise | Verifiability & Provenance | Primary Failure Modes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Parametric Model Weights** | Pre-training and post-training / fine-tuning. | Static: Frozen at training cutoff date. | High density, but general and probabilistic. | Low: Implicit, unciteable, prone to hallucination on private domains. | Outdated knowledge, confabulation, zero awareness of local enterprise rules. |
-| **System & Developer Instructions** | Hard-coded or template-injected system prompts. | Highly static per deployment version. | **Maximum**: Serves as the authoritative frame for all subsequent reasoning. | Complete: Auditable source text in repository. | Rule collision, instruction drift, prompt injection vulnerability. |
-| **Conversational History (Session State)** | Sliding FIFO window or compressed turn summarization. | Dynamic: Grows turn-by-turn within active session. | Variable: Can become diluted with conversational noise and failed attempts. | High: Visible in message history log. | **Attention Gravity** (locking onto irrelevant early turns), memory bloat, context exhaustion. |
-| **Retrieval-Augmented Generation (RAG)** | Dense vector embeddings or hybrid lexical search over chunked corpora. | Dynamic: Real-time query over updated databases. | Moderate: Depends heavily on chunking quality, reranking, and semantic relevance. | **Explicit**: Attributable to exact source documents, line numbers, or URIs. | Chunk fragmentation, semantic drift, retrieving outdated or contradictory documentation. |
-| **Dynamic Tool / API Outputs** | Structured JSON or text payloads returned by executed tool actions. | Real-time: Reflects immediate live system state. | Focused: High operational relevance for specific execution steps. | **Deterministic**: Exact payload recorded in execution telemetry. | Schema mismatch, excessive payload size blowing context budgets, unhandled tool errors. |
+## Executive Summary & Core Architectural Invariants
+
+1. **Context Assembly Over Raw Model Parameters**:
+   The practical capability, safety, and reliability of an LLM system are primarily governed by its runtime context compilation pipeline rather than raw parameter count. An agent reasons across a synthesized composite of system prompts, semantic retrieval, session history, and tool telemetry.
+
+2. **Context as an Attention-Managed Working Cache**:
+   Expanding context windows do not eliminate the necessity of context curation. Indiscriminate token dumps induce attention dilution, lost-in-the-middle degradation, and conflicting priors. High-reliability harnesses treat the context window as a strictly budgeted working cache, prioritizing high-signal invariants over bloated historical transcripts.
+
+3. **Strict Ingestion Layering and Precedence**:
+   Context sources operate across strict architectural hierarchies: System Safety & Behavioral Invariants take precedence over Application Instructions, which override Retrieved External Documents, which constrain Dynamic Tool Telemetry. Resolving collisions requires explicit precedence rather than ad-hoc concatenation.
+
+4. **Episodic and Semantic Grounding Over Hallucinatory Parametric Recall**:
+   Parametric model weights encode frozen, probabilistic generalities that confabulate on private enterprise domains. Live systems must ground assertions in verifiable, external evidence retrieved via hybrid lexical/dense search or live tool execution, binding generated solutions to concrete codebases and operational realities.
+
+5. **Dynamic Feedback and Tool Execution Loops**:
+   Context is not a static one-shot artifact; it evolves iteratively. Tool outputs, compiler errors, and test oracle feedback continuously re-seed the context window, transforming the model from an open-loop text generator into a closed-loop cybernetic reasoning engine.
 
 ---
 
