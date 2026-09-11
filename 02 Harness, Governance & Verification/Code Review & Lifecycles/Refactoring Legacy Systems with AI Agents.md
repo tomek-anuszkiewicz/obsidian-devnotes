@@ -20,7 +20,10 @@ aliases:
   - Mechanical Sympathy in Legacy Modernization
   - The Ship of Theseus in Code Migration
   - Data-Oriented Design in Legacy Refactoring
+  - Exploratory Pruning in Legacy Codebases
 ---
+
+# Refactoring Legacy Systems with AI Agents
 
 ## The Legacy Dilemma: Maintaining with Agents vs. Automated Straightening (Rewriting)
 
@@ -53,14 +56,19 @@ AI agents invert this economic calculation:
 
 For an enterprise, **straightening out the legacy code once is vastly cheaper over time than continuously paying the cognitive and operational tax of agent-assisted legacy maintenance.**
 
-#### The Limits of Naive Rewriting: The 4GL Curse and Hyrum's Law
+### The Limits of Naive Rewriting: The 4GL Curse and Hyrum's Law
 However, the newfound viability of agentic rewriting must not be mistaken for the naive fantasy of "disposable code without guardrails":
 1. **The 4GL / CASE / Executable UML Trap**: Every two decades, software engineering attempts to eliminate code by generating it from high-level prose or visual diagrams. As formalized in [[Testing in the Model, Agent, LLM Era]], natural language specifications in Markdown are inherently underspecified, probabilistic, and ambiguous. Attempting to prompt-generate a legacy rewrite purely from verbal descriptions fails because the author must specify every atomic nuance, creating a verbose, compiler-less programming language.
 2. **Hyrum's Law and Characterization Blindspots**: Characterization tests capture known observed behaviors, but no test suite captures every undocumented reliance (such as exact collection ordering, whitespace formatting, or internal exception types). A green test suite does not guarantee zero breaking changes for downstream consumers.
 3. **The Discipline of Invariant-Driven Strangler Fig**: Safe modernization requires anchoring the agent between **Frozen Living Specs** (semantic intent) and an **Ironclad Test Oracle**, validated through live traffic mirroring.
 
-### The Psychological Shift: Overcoming Learned Helplessness and Developer Cynicism
+---
 
+## The Psychological Dimension: Cognitive Ownership & The Human Circuit Breaker
+
+Legacy systems are not merely technical artifacts; they dictate team psychology, developer identity, and organizational momentum. Successfully modernizing legacy code requires navigating profound psychological transitions.
+
+### 1. Overcoming Learned Helplessness and Developer Cynicism
 Beyond organizational economics, legacy codebases inflict a profound psychological toll on engineering teams: **learned helplessness**.
 - When an engineer encounters a fragile, badly designed subsystem, their natural instinct to fix it is crushed by the reality of mechanical friction: months of tedious typing, manual regression testing, and defensive PR reviews.
 - Over time, engineers adapt by adopting a defense mechanism of **passive cynicism**: complaining about how terrible the architecture is, making minimal cynical patches, and resigning themselves to the status quo.
@@ -69,23 +77,27 @@ Beyond organizational economics, legacy codebases inflict a profound psychologic
   - With characterization testing and vertical slice extraction automated by the agent, engineers no longer feel paralyzed by fear of breaking unseen dependencies.
   - The satisfaction of crafting clean, elegant software is restored, transforming the emotional relationship between the engineer and legacy systems.
 
-### The "Frankenstein Intermediate Phase" and LLM Status-Quo Bias
+### 2. Preserving Mental Continuity: Escaping the "Ship of Theseus" Alienation
+A critical finding from empirical studies of AI code generation (such as GitClear's 2024 report across hundreds of millions of lines) is the surge in **code churn (doubled rates) and team alienation**:
+- If an agent is allowed to rewrite an entire legacy module in a single unreviewed pass, the team suffers the **Ship of Theseus dilemma**: during a 3:00 AM production outage, the on-call engineer is forced to debug an alien codebase generated 48 hours earlier that nobody understands.
+- **Mental Continuity via Living Specs and Granular Commits**: By forcing the agent to execute refactoring across multiple, atomic, reviewable commits (separating renames, extraction, structural changes, and rule changes), the engineering team maintains full cognitive ownership of the code's evolution. The architecture remains deeply understood, turning legacy modernization into a collaborative, disciplined ascent rather than a stochastic rewrite.
 
+### 3. The "Frankenstein Intermediate Phase" and LLM Status-Quo Bias
 When migrating or modernizing a subsystem, engineering teams frequently encounter the most dangerous trap in agent-assisted development: **the Frankenstein Intermediate Phase**.
 
-#### 1. The Hybrid Trap
+#### A. The Hybrid Trap
 During a profound architectural transition—such as moving from high-level abstract linear processing to fine-grained discrete state-machine execution, or from an in-memory monolith to asynchronous distributed queues—there is a natural temptation to build an intermediate compromise:
 - Developers and agents attempt to bridge the two incompatible paradigms with glue code, synthetic queues, adapter wrappers, and complex outer polling loops.
 - This results in an **unmaintainable hybrid monster**: it inherits the synchronization overhead, latency spikes, and edge-case fragility of both worlds without delivering the conceptual purity of either.
 - The intermediate glue code often becomes more complex, fragile, and bloated than the original legacy code it was intended to replace.
 
-#### 2. The LLM Anchoring Bias (Status-Quo Rationalization)
+#### B. The LLM Anchoring Bias (Status-Quo Rationalization)
 When an agent is asked to debug or advance a codebase stuck in this intermediate state, it exhibits a powerful **anchoring bias**:
 - LLMs are pattern-completion engines. When the context window is dominated by existing glue code, adapter wrappers, and historical git diffs, the model **naturally rationalizes the status-quo complexity**.
 - The agent will enthusiastically justify the flawed hybrid architecture, proposing increasingly baroque patches, nested locks, and defensive null-checks to keep the Frankenstein monster functioning (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]).
 - An agent will almost never conclude on its own: *"This entire intermediate bridge is an architectural dead-end; we must tear it down."* Instead, it defends the existing code simply because the context points to it.
 
-#### 3. The Human Circuit Breaker: Architectural Courage and Clean Breaks
+#### C. The Human Circuit Breaker: Architectural Courage and Clean Breaks
 Escaping the hybrid trap requires **human architectural courage**:
 - The human engineer must act as the circuit breaker, decisively rejecting the agent’s plausible rationalizations and refusing to invest another hour in patching intermediate glue.
 - The engineer must mandate a **clean break**: demanding the complete removal of the hybrid bridge and committing 100% to first-principles reality (e.g., pure, atomic discrete state transitions that directly own their execution phases and resource boundaries).
@@ -93,38 +105,88 @@ Escaping the hybrid trap requires **human architectural courage**:
 
 ---
 
-## The Shadow-Twin and Autonomous Differential Mirroring Pattern
+## Phase 1: Reconnaissance & Exploratory Pruning
+
+Before an architect can design a shadow service or write characterization tests, they must confront the sheer volume of unfamiliar legacy code. Human cognition is severely bottlenecked by **The Breadth Trap**:
+- Human engineers struggle to discard code they have not personally inspected. The fear of triggering an unknown side-effect forces developers to spend days or weeks mentally traversing hundreds of peripheral call paths.
+- The cognitive load of verifying whether an obscure helper function mutates global state, leaks memory, or touches database locks causes severe analytical paralysis.
+
+### 1. Inverting Code Archaeology via LLM Path Slicing
+Modern LLMs act as high-velocity **Symbolic Pruning Engines**:
+- **Critical Path Slicing**: Given a target outcome or state mutation (e.g., *"How does an incoming trade order reach final ledger persistence?"*), an agent can traverse the entire AST across hundreds of files, isolating the exact active call graph while ignoring thousands of lines of irrelevant scaffolding.
+- **Negative Safety Proofs (Proving Irrelevance)**: The most transformative capability of LLMs in code archaeology is not merely finding what *is* relevant, but **rigorously proving what is NOT relevant**:
+  - The model can verify that adjacent background services, diagnostic pipelines, or telemetry hooks are strictly decoupled from the target transaction.
+  - It proves negative invariants: *"Path B does not mutate state, does not acquire locks on table T, and has no side effects on domain entity E; it is functionally safe to ignore."*
+
+### 2. Search-Space Reduction from Weeks to Hours
+By using the LLM to prove the safety and irrelevance of non-critical branches, the architect prunes 90% of the cognitive search space:
+- Instead of reading 100,000 lines over three weeks of anxious exploration, the architect isolates the 3 critical execution paths and their foundational invariants in 45 minutes.
+- The architect can then focus 100% of their biological deep-work battery exclusively on the critical path, confident that the pruned branches cannot introduce unseen regressions.
+
+---
+
+## Phase 2: Disciplined Behavioral Extraction
+
+Agents are exceptionally powerful for legacy modernization when guided by disciplined, behavior-preserving workflows.
+
+Avoid broad, unconstrained instructions such as:
+> *Rewrite this module using clean architecture.*
+
+Prefer disciplined, step-by-step extraction:
+1. **Map current behavior** via LLM path slicing and AST call-graphs.
+2. **Add characterization tests** recording actual observed runtime outputs across historical datasets.
+3. **Rename ambiguous concepts** and legacy domain terminology to reflect actual business meaning.
+4. **Move code without editing it** (pure structural reorganization).
+5. **Extract pure functions** isolating computational kernels from I/O side effects.
+6. **Introduce explicit types** replacing generic dictionaries, raw tuples, or untyped bags.
+7. **Isolate external side effects** (database writes, queue emissions, network calls) behind explicit boundaries.
+8. **Compare old and new outputs** deterministically across production datasets.
+9. **Only then introduce new business behavior**.
+
+Characterization tests do not claim that the current behavior is correct. They record what the system currently does so that refactoring does not change it accidentally.
+
+For pricing systems, run both implementations against historical data:
+```text
+old pricing result
+vs.
+new pricing result
+```
+During pure refactoring, results should remain identical, including rounding behavior and legacy quirks.
+
+---
+
+## Phase 3: The Shadow-Twin & Autonomous Differential Mirroring Pattern
 
 When rewriting an aging, critical service from scratch, the greatest existential danger is breaking undocumented downstream assumptions. Rather than speculative manual testing, the agentic paradigm enables **Zero-Risk Rewriting via Autonomous Differential Mirroring**.
 
 ```text
-                               ┌────────────────────────────────────────┐
-                               │       Production Traffic Gateway       │
-                               │        / Message Bus Event Stream      │
-                               └───────────────────┬────────────────────┘
-                                                   │
-                         ┌─────────────────────────┴─────────────────────────┐
-                         ▼ (Live Traffic)                                    ▼ (Mirrored Traffic)
-             ┌───────────────────────┐                           ┌───────────────────────┐
-             │     LEGACY SERVICE    │                           │    SHADOW SERVICE     │
-             │ (Decaying, bloated)   │                           │ (Clean, agentic code) │
-             └───────────┬───────────┘                           └───────────┬───────────┘
-                         │                                                   │
-                         │ Live Response                                     │ Shadow Response
-                         ▼                                                   ▼
-                [Production Client]                               ┌─────────────────────────────┐
-                                                                  │    DIFFERENTIAL ORACLE      │
-                                                                  │   (Observer Agent/Filter)   │
-                                                                  └──────────────┬──────────────┘
-                                                                                 │
-                                                                                 │ Disparity Detected (Δ != 0)
-                                                                                 ▼
-                                                                  ┌─────────────────────────────┐
-                                                                  │  AUTONOMOUS REPAIR AGENT    │
-                                                                  │  1. Generates test vector   │
-                                                                  │  2. Diagnoses & patches     │
-                                                                  │  3. Re-compiles shadow      │
-                                                                  └─────────────────────────────┘
+                                ┌────────────────────────────────────────┐
+                                │       Production Traffic Gateway       │
+                                │        / Message Bus Event Stream      │
+                                └───────────────────┬────────────────────┘
+                                                    │
+                          ┌─────────────────────────┴─────────────────────────┐
+                          ▼ (Live Traffic)                                    ▼ (Mirrored Traffic)
+              ┌───────────────────────┐                           ┌───────────────────────┐
+              │     LEGACY SERVICE    │                           │    SHADOW SERVICE     │
+              │ (Decaying, bloated)   │                           │ (Clean, agentic code) │
+              └───────────┬───────────┘                           └───────────┬───────────┘
+                          │                                                   │
+                          │ Live Response                                     │ Shadow Response
+                          ▼                                                   ▼
+                 [Production Client]                               ┌─────────────────────────────┐
+                                                                   │    DIFFERENTIAL ORACLE      │
+                                                                   │   (Observer Agent/Filter)   │
+                                                                   └──────────────┬──────────────┘
+                                                                                  │
+                                                                                  │ Disparity Detected (Δ != 0)
+                                                                                  ▼
+                                                                   ┌─────────────────────────────┐
+                                                                   │  AUTONOMOUS REPAIR AGENT    │
+                                                                   │  1. Generates test vector   │
+                                                                   │  2. Diagnoses & patches     │
+                                                                   │  3. Re-compiles shadow      │
+                                                                   └─────────────────────────────┘
 ```
 
 ### 1. The Immutable External Facade
@@ -172,10 +234,9 @@ The single greatest failure mode in legacy migrations is the instinct to "improv
 - **Establishing the Shadow Twin Baseline**: The refreshed service is deployed immediately alongside the live legacy system in dark shadow mode. Before any architectural optimizations or algorithmic refactoring are permitted, the shadow twin must ingest mirrored live production traffic until empirical telemetry confirms **$0.000\%$ behavioral drift** across millions of real-world payloads.
 - **Negative Proof Resolution**: As established in [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]], functional specifications and unit tests cannot prove the absence of hidden side-effects or unexpected mutations. Running the "clean refresh" in shadow mode under production load serves as the empirical antidote, proving that no unstated invariants have been violated before the codebase undergoes progressive structural transformation within [[The 5-Layer System Stack for Agentic Software Engineering]].
 
-
 ---
 
-## Mechanical Sympathy in Legacy Modernization: Enforcing Data-Oriented Design (DOD)
+## Phase 4: Mechanical Sympathy in Legacy Modernization (Data-Oriented Design)
 
 When using agents to refactor legacy codebases (such as legacy enterprise C#, Java, or procedural systems), software architects must confront a subtle but dangerous failure mode: **LLM "Object-Oriented Contamination" and Mechanical Blindness**.
 
@@ -198,140 +259,52 @@ To ensure modernized systems achieve true mechanical sympathy, the human archite
 
 ---
 
-## Refactoring Legacy Code with Agents
+## Tactical Delivery: Atomic Commit Discipline & Review Hygiene
 
-Agents are exceptionally powerful for legacy modernization when guided by disciplined, behavior-preserving workflows.
+To prevent code churn and maintain mental continuity, refactoring must be structured into meaningful, reviewable commit histories.
 
-Avoid broad, unconstrained instructions such as:
-
-> Rewrite this module using clean architecture.
-
-Prefer disciplined, step-by-step extraction:
-
-1. map the current behavior,
-    
-2. add characterization tests,
-    
-3. rename ambiguous concepts,
-    
-4. move code without editing it,
-    
-5. extract pure functions,
-    
-6. introduce explicit types,
-    
-7. isolate side effects,
-    
-8. compare old and new outputs,
-    
-9. only then introduce new business behavior.
-    
-
-Characterization tests do not claim that the current behavior is correct. They record what the system currently does so that refactoring does not change it accidentally.
-
-For pricing systems, run both implementations against historical data:
-
+A disciplined sequence is:
 ```text
-old pricing result
-vs.
-new pricing result
-```
-
-During pure refactoring, results should remain identical, including rounding behavior.
-
----
-
-## Use Multiple Reviewable Commits
-
-Agents can be instructed to create a meaningful commit history.
-
-A useful sequence is:
-
-```text
-1. Add characterization tests
-2. Rename and move only
+1. Add characterization tests (locking in baseline behavior)
+2. Rename and move only (zero semantic modification)
 3. Extract types without behavior change
-4. Extract calculation stages
-5. Introduce the explicit domain model
-6. Change the business rule
-7. Remove obsolete code
+4. Extract calculation stages and isolate side effects
+5. Introduce the explicit domain model / clean refresh
+6. Change the business rule (if extending behavior)
+7. Remove obsolete legacy code
 ```
 
-Each commit should:
+Each commit must:
+- Have **one distinct purpose**,
+- Compile independently without errors,
+- Pass all relevant regression tests,
+- Clearly state in its commit message whether it preserves or alters behavior,
+- Avoid mixing mechanical formatting with architectural changes.
 
-- have one purpose,
-    
-- compile independently,
-    
-- pass relevant tests,
-    
-- clearly state whether it changes behavior,
-    
-- avoid mixing mechanical and semantic changes.
-    
-
-Do not allow histories such as:
-
+### Anti-Pattern Commit Histories
+Never allow commit streams such as:
 ```text
 add implementation
 fix compilation
 fix tests
 cleanup
 ```
+Those commits describe the agent's internal trial-and-error mistakes, not the deliberate architectural evolution of the system.
 
-Those commits describe the agent's mistakes, not the evolution of the system.
+A clean history allows any human reviewer to immediately distinguish:
+1. Baseline existing behavior,
+2. Structural preparation,
+3. The exact business or architectural change,
+4. Post-migration cleanup.
 
-A good history allows a reviewer to distinguish:
+### Practical Working Rules Checklist
 
-- existing behavior,
-    
-- structural preparation,
-    
-- the exact business change,
-    
-- later cleanup.
+- **One purpose per commit**: Never bundle refactoring with business feature changes.
+- **Every commit must be green**: Code must build and pass existing test suites at every commit boundary.
+- **Strict category separation**: Keep rename, move, formatting, architectural refactoring, and behavior modifications in separate commits.
+- **Immutable test assertions during refactoring**: Do not alter expected test values during behavior-preserving transformations.
+- **Self-explanatory evolution**: Write commit messages that explain *why* the architectural boundary shifted.
 
-### Preserving Mental Continuity: Escaping the "Ship of Theseus" Alienation
-A critical finding from empirical studies of AI code generation (such as GitClear's 2024 report across hundreds of millions of lines) is the surge in **code churn (doubled rates) and team alienation**:
-- If an agent is allowed to rewrite an entire legacy module in a single unreviewed pass, the team suffers the **Ship of Theseus dilemma**: during a 3:00 AM production outage, the on-call engineer is forced to debug an alien codebase generated 48 hours earlier that nobody understands.
-- **Mental Continuity via Living Specs and Granular Commits**: By forcing the agent to execute refactoring across multiple, atomic, reviewable commits (separating renames, extraction, structural changes, and rule changes), the engineering team maintains full cognitive ownership of the code's evolution. The architecture remains deeply understood, turning legacy modernization into a collaborative, disciplined ascent rather than a stochastic rewrite.
-    
-
----
-
-## Exploratory Pruning: Rapid Archaeology and Invariant Path Slicing in Unfamiliar Codebases
-
-When an engineer or architect confronts an unfamiliar, sprawling codebase—whether an enterprise legacy monolith, an inherited third-party system, or an open-source framework—human cognition is severely bottlenecked by **The Breadth Trap**:
-- Human engineers struggle to discard code they have not personally inspected. The fear of triggering an unknown side-effect forces developers to spend days or weeks mentally traversing hundreds of peripheral call paths.
-- The cognitive load of verifying whether an obscure helper function mutates global state, leaks memory, or touches database locks causes severe analytical paralysis.
-
-### 1. Inverting Code Archaeology via LLM Path Slicing
-Modern LLMs act as high-velocity **Symbolic Pruning Engines**:
-- **Critical Path Slicing**: Given a target outcome or state mutation (e.g., *"How does an incoming trade order reach final ledger persistence?"*), an agent can traverse the entire AST across hundreds of files, isolating the exact active call graph while ignoring thousands of lines of irrelevant scaffolding.
-- **Negative Safety Proofs (Proving Irrelevance)**: The most transformative capability of LLMs in code archaeology is not merely finding what *is* relevant, but **rigorously proving what is NOT relevant**:
-  - The model can verify that adjacent background services, diagnostic pipelines, or telemetry hooks are strictly decoupled from the target transaction.
-  - It proves negative invariants: *"Path B does not mutate state, does not acquire locks on table T, and has no side effects on domain entity E; it is functionally safe to ignore."*
-
-### 2. Search-Space Reduction from Weeks to Hours
-By using the LLM to prove the safety and irrelevance of non-critical branches, the architect prunes 90% of the cognitive search space:
-- Instead of reading 100,000 lines over three weeks of anxious exploration, the architect isolates the 3 critical execution paths and their foundational invariants in 45 minutes.
-- The architect can then focus 100% of their biological deep-work battery exclusively on the critical path, confident that the pruned branches cannot introduce unseen regressions.
-
----
-
-## Practical Working Rules
-
-### For commits
-
-- One purpose per commit.
-    
-- Every commit should compile and pass tests.
-    
-- Keep rename, move, formatting, refactoring, and behavior changes separate.
-    
-- Do not alter expected test values during behavior-preserving refactoring.
-    
-- Make the commit history explain the evolution of the system.
 ---
 
 ## Relationship to the Knowledge Graph
@@ -349,4 +322,3 @@ By using the LLM to prove the safety and irrelevance of non-critical branches, t
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Step-by-step harness loops for safely modernizing legacy systems without regressions.
 - **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Explains why formal specifications cannot guarantee the absence of hidden side-effects, establishing the necessity of the zero-semantic-drift shadow baseline.
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The foundational system hierarchy framing where legacy refactoring harnesses interface between substrate efficiency and runtime telemetry.
-
