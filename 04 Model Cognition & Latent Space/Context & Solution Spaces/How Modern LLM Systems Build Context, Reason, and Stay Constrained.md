@@ -14,6 +14,24 @@ aliases:
 
 # How Modern LLM Systems Build Context, Reason, and Stay Constrained
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> A production AI agent is not a stateless text generator (`Prompt -> LLM -> Output`); it is a **distributed cognitive state machine**. The observable intelligence, reliability, and safety of the system emerge from the orchestration loop that wraps the neural substrate:
+> 1. **Context Preparation & Normative Bounding**: Dynamically gathering jurisdictional constraints, system invariants, episodic memory, and retrieved domain context before reasoning begins.
+> 2. **Test-Time Compute & Tree Exploration**: Utilizing internal reasoning tokens and deliberate path-branching to explore alternative solution trajectories and challenge premature assumptions.
+> 3. **Deterministic Verification & Policy Fences**: Validating candidate outputs through automated tests, static analyzers, and external safety evaluators before committing state changes.  
+> System capability scales through improvements across this entire harness loop—not merely by scaling model parameters.
+
+### Comparative Matrix: AI Execution Topologies
+
+| Architecture Topology | System Orchestration | Context Assembly & Bounds | Reasoning & Path Exploration | Invariant Verification | Failure Modes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Monolithic Direct Call (`Prompt -> Answer`)** | Stateless single-turn HTTP request directly into model weights. | Static: Limited to prompt text and immediate conversation buffer. | Single-pass greedy token generation; zero test-time search. | None: Output delivered directly to user or consuming process. | Hallucinations, premature convergence on averaged solutions, prompt injections. |
+| **Basic ReAct / Tool Loop (`Reason -> Act -> Observe`)** | Linear iterative loop interleaving text thought and tool calls. | Reactive: Tool outputs appended naively to linear history. | Shallow: Local step-by-step recovery; vulnerable to local minima traps. | Reactive: Relies on tool error strings to trigger retries. | Infinite tool retry loops, context blowout, attention gravity on early error traces. |
+| **Constrained Cognitive Engine (The Full Agent Loop) (Recommended)** | Multi-stage state machine: Pre-check $\to$ Context Planning $\to$ Tree Search $\to$ Verification $\to$ Post-Eval. | **Proactive & Curated**: Negative bounding fences, hierarchical RAG, and strict memory pruning. | **Deep Multi-Path**: Explores divergent solution classes, evaluates trade-offs, and validates invariants. | **Deterministic & Multi-Layered**: Compiler checks, unit tests, linters, and external policy classifiers. | Higher token latency and orchestration complexity; requires formal harness engineering. |
+
+---
+
 A modern LLM system is not just a model that receives a question and immediately generates an answer.
 
 A more useful mental model is:
