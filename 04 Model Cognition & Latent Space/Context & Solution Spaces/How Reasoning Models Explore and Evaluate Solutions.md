@@ -14,21 +14,57 @@ aliases:
 
 # How Reasoning Models Explore and Evaluate Solutions
 
-> [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
+> [!IMPORTANT] Executive Architectural Thesis: Trajectory Exploration, Process Supervision, and Search Completeness
 > Reasoning capability in frontier models is not a hard-coded symbolic algorithm; it is a **learned behavioral policy trained via test-time trajectory exploration and reinforcement learning**.  
 > - **Search-Space Failure Outweighs Reasoning Failure**: An agent or evaluator model may evaluate candidates $A, B, C$ with flawless mathematical rigor; however, if the globally optimal architectural pattern $D$ was omitted during the initial expansion phase, the system commits a locally optimal failure.
 > - **Outcome vs Process Supervision**: Outcome Reward Models (ORMs) verify only the destination, rewarding accidentally correct guesses that used broken logic. Process Reward Models (PRMs) score individual intermediate deduction steps, preventing error propagation.
 > - **Tripartite Quality Partition**: Debugging reasoning breakdowns requires strictly isolating **Context Quality** (retrieval completeness), **Reasoning Quality** (deductive step integrity), and **Answer Quality** (synthesized communication).
 
-### Comparative Matrix: Reasoning Evaluation & Supervision Paradigms
+```text
++----------------------------------------------------------------------------------------------------+
+|               REASONING TRAJECTORY EXPLORATION & SUPERVISION TOPOLOGY                              |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  [ Problem Formulation & Grounded Context ]                                                        |
+|                       │                                                                            |
+|                       ▼                                                                            |
+|  [ Trajectory Search & Expansion ]                                                                 |
+|         │                                                                                          |
+|         ├── Path A: [ Step 1 ] ──► [ Step 2 ] ──► [ Flawed Step 3 ] ──► [ Result A ]               |
+|         │              │              │                 │                     │                    |
+|         │              ▼              ▼                 ▼ (PRM Catches Drop)  ▼ (ORM Blind Pass)   |
+|         │            PRM=0.9        PRM=0.8          PRM=0.1 ──► [Prune]     Outcome=True?         |
+|         │                                                                                          |
+|         └── Path B: [ Step 1 ] ──► [ Step 2 ] ──► [ Step 3 ] ───────► [ Result B ] (Optimal)       |
+|                        │              │                 │                     │                    |
+|                        ▼              ▼                 ▼                     ▼                    |
+|                      PRM=0.95       PRM=0.98         PRM=0.99            Deterministic Pass        |
+|                                                                                                    |
+|  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DECOUPLED EVALUATION PIPELINE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
+|                                                                                                    |
+|  [ Context Quality ] ────────► [ Search-Space Breadth ] ──────► [ Process-Step Verification ]      |
+|  (Did RAG retrieve             (Did the search include           (Did PRMs and test oracles        |
+|   all missing invariants?)      the global optimum D?)            verify intermediate deductions?) |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
+```
 
-| Evaluation Paradigm | Evaluation Granularity | Verification Mechanism | Hallucinated Rationale Detection | Computational Overhead | Primary Vulnerability / Failure Mode |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Outcome Supervision (ORM)** | Coarse: Final output evaluated only at the end of the trajectory. | Binary scalar reward or correctness metric (e.g. test pass/fail). | **Blind**: Rewards faulty reasoning that arrives at the correct answer by accident. | Low: Single evaluation call at trajectory termination. | Reward hacking; reinforcing unprincipled shortcuts or flawed heuristic logic. |
-| **Process Supervision (PRM)** | Dense: Evaluates each intermediate reasoning step sequentially. | Step-level reward model scoring deduction validity ($s_1, s_2, \dots, s_n$). | **High**: Detects the precise token step where logical fallacy or hallucination begins. | High: Requires step-by-step scoring across multi-branch tree search. | Credit assignment noise; difficulty scoring ambiguous non-mathematical deductions. |
-| **LLM-as-a-Judge** | Semantic: Secondary model grades reasoning transcript against criteria rubric. | Prompted natural language critique and grading scale. | Moderate: Spots obvious contradictions, but shares cognitive blind spots with generator. | Moderate: Extra inference call per evaluated trajectory. | **Shared Blind Spots**: Judge model rationalizes plausible-sounding errors made by the generator. |
-| **Deterministic Verification Oracles** | Exact: External execution environments (compilers, test runners, formal provers). | Ground-truth mechanical verification (exit codes, assertion traces). | **Absolute for observable behavior**: Code either compiles and passes unit tests or fails. | Low-to-Moderate: Dependent on test suite execution speed. | Does not verify unexercised branches or missing requirements; oracle debt. |
+## Executive Summary & Core Architectural Invariants
+
+1. **Reasoning as Learned Policy, Not Hard-Coded Logic**:
+   Chain-of-thought decomposition, assumption testing, and backtracking are emergent behavioral policies acquired through test-time search and reinforcement learning, rather than rigid, deterministic algorithms.
+
+2. **The Primacy of Search-Space Completeness Over Evaluator Precision**:
+   Evaluating candidates $A, B$, and $C$ with flawless mathematical rigor yields a sub-optimal solution if the globally optimal architectural pattern $D$ was omitted during initial candidate expansion. Search-space deficiency dominates reasoning failure in complex architecture.
+
+3. **Superiority of Process Supervision Over Outcome Supervision**:
+   Outcome Reward Models (ORMs) evaluate only the final output, creating severe vulnerabilities to reward hacking and accidentally correct answers derived from hallucinated logic. Process Reward Models (PRMs) score every intermediate deductive step, isolating logical errors at the point of origin.
+
+4. **Tripartite Separation of System Failure Modes**:
+   Diagnosing reasoning breakdowns requires isolating three distinct orthogonal stages: *Context Quality* (completeness of retrieved invariants), *Reasoning Quality* (deductive step integrity), and *Answer Quality* (synthesizing and communicating conclusions).
+
+5. **Decoupling Candidate Generation from Verification**:
+   Frontier models exhibit an asymmetry between generation and verification: they often fail to independently generate optimal counter-intuitive patterns, yet can reliably verify, critique, and select them when presented as candidate alternatives. Production harnesses must decouple generation, critique, and verification into distinct passes.
 
 ---
 
