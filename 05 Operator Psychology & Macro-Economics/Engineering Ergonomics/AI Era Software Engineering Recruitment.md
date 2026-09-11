@@ -17,6 +17,24 @@ created: 2026-08-23
 
 # AI-Era Software Engineering Recruitment
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Inverting recruitment from *syntax recall (LeetCode whiteboarding)* to *systemic verification and problem decomposition* is the defining hiring challenge of the agentic era. When frontier models can solve algorithmic puzzles in seconds, evaluating candidates on independent syntax authoring selects for obsolete skills while ignoring critical failure modes: rubber-stamping plausible hallucinations, context bloat, and architectural drift.
+> - **The Core Hiring Criterion**: The decisive question shifts from *"Can this candidate write the code?"* to *"Can this candidate turn ambiguous requirements into a hardened specification, rigorously audit generated diffs, and take full legal/operational responsibility for the outcome?"*
+> - **Evaluating Verification over Tooling**: Never hire for transient tool mastery (e.g. specific IDE plugins). Test for durable capabilities: boundary definition, negative proof skepticism, deterministic test oracle construction, and architectural taste.
+
+### Comparative Matrix: Software Engineering Recruitment Paradigms
+
+| Dimension | Classical LeetCode Recruitment (Pre-AI) | Tool-Centric AI Screening (Transitional) | Invariant & Verification Recruitment (Agentic Era) |
+| :--- | :--- | :--- | :--- |
+| **Primary Assessment** | Algorithmic puzzle solving, syntax memorization, time-space Big-O recall. | Asking candidate if they use Cursor/Copilot; superficial prompt tricks. | **System Decomposition & Diff Audit**: Candidate is given ambiguous specs and flawed AI diffs to critique. |
+| **Code Authorship Test** | Writing linked lists or dynamic programming on a whiteboard without IDE. | Watching candidate prompt an agent to complete a toy web app. | **Adversarial Bug Finding**: Diagnosing race conditions, memory leaks, or logical security holes hidden in clean-looking AI code. |
+| **Junior vs. Senior Delineation** | Speed of writing clean functions and mastering framework libraries. | Number of daily pull requests generated using AI shortcuts. | **Architectural Taste & Restraint**: Knowing when *not* to add code, bounding blast radiuses, proving invariants. |
+| **Communication Assessment** | Explaining code syntax to another developer in synchronous interview. | Writing prompts into a chat box. | **Asynchronous Architectural Inception**: Producing unambiguous Markdown specifications and conformance contracts. |
+| **Risk Mitigated** | Hiring a candidate who cannot code basic algorithmic functions. | Hiring a candidate who refuses to adopt modern AI tooling. | **Hiring a "Rubber-Stamper"**: Eliminating candidates who deploy unverified AI code that triggers systemic production outages. |
+
+---
+
 ## Central thesis
 
 The main hiring question is no longer simply:
