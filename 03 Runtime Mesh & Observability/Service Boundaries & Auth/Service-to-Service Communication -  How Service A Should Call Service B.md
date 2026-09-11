@@ -1073,7 +1073,7 @@ Later it adds:
 suspended
 ```
 
-A generated .NET enum may fail deserialization or map the value incorrectly.
+A generated strictly typed enum may fail deserialization or map an unexpected value incorrectly.
 
 Safer approaches include:
 
@@ -1289,10 +1289,10 @@ A better pipeline is:
 Source of truth: OpenAPI
 
 Generated artifacts:
-- .NET client
-- TypeScript client
+- Backend service SDK
+- Web / Edge client
 - API documentation
-- compatibility report
+- Compatibility report
 ```
 
 The generated artifacts should not become competing contract definitions.
@@ -1598,7 +1598,7 @@ This isolates:
 
 ### Use a Service B contracts package when
 
-- consumers are primarily .NET,
+- consumers share a homogeneous runtime or language ecosystem,
     
 - DTOs are small and passive,
     
