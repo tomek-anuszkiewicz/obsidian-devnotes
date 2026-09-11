@@ -262,7 +262,7 @@ For the exhaustive analysis of human friction vs. agent generation, localized du
 
 ## Relationship to the Knowledge Graph
 
-- **[[Agentic Coding with EF Core and SQL Server]]**: Practical patterns for constraining ORM complexity and schema operations under agentic workflows.
+- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Practical patterns for constraining ORM complexity and schema operations under agentic workflows.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explores the zero-friction generation dilemma and why mechanical 1:1 file constraints are required.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why implicit meta-layers, reflection, and runtime magic disorient agentic reasoning.

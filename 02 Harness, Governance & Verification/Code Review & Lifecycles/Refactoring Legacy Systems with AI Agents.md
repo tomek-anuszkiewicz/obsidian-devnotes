@@ -191,7 +191,7 @@ When rewriting an aging, critical service from scratch, the greatest existential
 
 ### 1. The Immutable External Facade
 In legacy rewrites, the internal implementation must not dictate the migration boundary:
-- **Internal Freedom**: The internal database, data structures, state machines, and file layouts can be completely reimagined into flat, high-performance, agent-native code (e.g. eliminating ORMs in favor of direct [[Agentic Coding with EF Core and SQL Server|explicit SQL]] or branchless state tables).
+- **Internal Freedom**: The internal database, data structures, state machines, and file layouts can be completely reimagined into flat, high-performance, agent-native code (e.g. eliminating ORMs in favor of direct [[Data Access Economics with Coding Agents - ORMs vs Explicit SQL|explicit SQL]] or branchless state tables).
 - **External Immobility**: The **facade**—how the service interacts with the rest of the enterprise—must remain 100% frozen:
   - Exact REST/gRPC contracts, header propagation, and error payloads,
   - Identical queue consumer/producer semantics and message serialization,
