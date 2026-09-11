@@ -225,7 +225,6 @@ A pervasive friction in teams adopting coding agents is the reflex of human revi
 - *"Why did the agent write an explicit constructor or explicit parameter assignments instead of using compiler-synthesized primary constructors or implicit defaults?"*
 - *"Why did it explicitly generate an equality comparison method (`equals` / value-equality routine) when language records or default object equality exist?"*
 - *"Why didn't it use the newest terse syntactic sugar or language shorthand?"*
-- *"Why is the layout or indentation slightly different from how a senior human developer would format it?"*
 
 Reviewers frequently reject pull requests over these cosmetic deviations, claiming the code is "bloated" or "unidiomatic." This represents the modern reincarnation of **Parkinson's Law of Triviality (Bikeshedding)**:
 1. **Identical Functional Semantics**: Formally and practically, the code executes identically. The presence of explicit initializers or explicit equality routines compiles down to equivalent or identical machine representations.
