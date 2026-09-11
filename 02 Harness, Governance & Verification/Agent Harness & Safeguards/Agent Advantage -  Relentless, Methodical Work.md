@@ -72,10 +72,38 @@ An agent has no ego, no boredom, and no physiological fatigue. It executes the t
 │    combinatorial states of complex business tax rules.                 │
 │ 4. SCAFFOLDING CLEANUP: Pruning 40 dead feature flags and removing    │
 │    obsolete database columns after migration verification.             │
+│ 5. DOMAIN PRIMITIVE ENFORCEMENT: Wrapping raw primitives into 50+      │
+│    strongly typed domain value records to eradicate silent bugs.       │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 The human architect provides the invariant definition once; the agent executes the operational sweep across millions of lines of code.
+
+### Eliminating Primitive Obsession: Freeing Classical Disciplines from Human Typing Fatigue
+
+A prime manifestation of human cognitive fatigue versus agent stamina is **strong domain typing**—eradicating the classical architectural anti-pattern of *Primitive Obsession*.
+
+Software engineering literature has advocated for decades that domain entities should not be represented as raw primitive strings, integers, or floats, but wrapped in distinct domain value types:
+
+```text
+PRIMITIVE OBSESSION (Convenient for humans to type, highly error-prone):
+  decimal price
+  uuid customer_id
+  decimal margin_rate
+
+STRONG DOMAIN MODELING (Compiler-checked semantic invariants):
+  Money<Currency::USD> price
+  CustomerId customer_id
+  GrossAmount total_gross
+  TaxRate vat_percentage
+```
+
+In human-driven development, engineers understood the theoretical benefits: preventing developers from accidentally passing `order_id` into a `customer_id` parameter, or adding `tax_rate` to `gross_amount`. Yet teams almost universally abandoned strong domain typing because declaring and maintaining dozens of wrapper types, constructors, mapping functions, and serialization adapters imposed unbearable typing fatigue.
+
+In the agentic era, **enforcing this classical discipline requires no language revolution and no novel compiler inventions**:
+> **The operator simply instructs the agent to enforce strong domain primitives, and the agent executes it tirelessly across hundreds of models without friction or complaint.**
+
+Because the agent experiences zero keystroke drag, generating explicit wrapper types, type-safe constructors, and serialization conversions costs near-zero effort. A discipline that was once too tedious for human developers to maintain manually becomes an effortlessly enforced invariant simply by defining it as a project guideline.
 
 ---
 
@@ -101,3 +129,4 @@ High-assurance harnesses enforce **proportionality constraints** (see [[Agentic 
 - **[[AI Changes the Economics of Technical Debt]]**: How persistent maintenance work reduces long-neglected technical debt.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Details how tireless step-by-step extraction enables safe, complex refactoring of legacy codebases.
 - **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How tireless compliance checking enforces architectural standards in code reviews.
+- **[[Programming Languages May Evolve Differently in the Age of AI]]**: Contrasting operational application-level disciplines (such as strong domain typing) with core language-level and compiler evolution.
