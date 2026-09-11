@@ -13,6 +13,20 @@ aliases:
   - Model Gateway and Execution Setup
 ---
 
+> [!IMPORTANT] Executive Architectural Thesis: Decoupling Cognitive Work from Compute Substrates
+> Production agentic systems enforce a strict four-way separation of concerns:
+> $$\text{Workflow Logic (Agent)} \neq \text{Cognitive Unit (Model)} \neq \text{Broker / Router (Gateway)} \neq \text{Physical Execution (Inference Engine)}$$
+> Just as virtualization and container orchestration decoupled compiled software artifacts from physical servers, modern model execution infrastructure decouples agentic reasoning from specific model vendors. An agent dynamically provisions cognitive capacity—routing cheap classifications to local hardware, code generation to specialized weights, and multi-step verification to frontier reasoning clusters.
+
+| Architectural Tier | Primary Abstraction | Core Capabilities | Representative Technologies |
+| :--- | :--- | :--- | :--- |
+| **Enterprise AI Platform** | Cloud-native governance & operational umbrella | IAM, cataloging, compliance, RAG, prompt lineage, enterprise safety guardrails | Microsoft Foundry, AWS Bedrock, Google Vertex AI |
+| **Model Gateway / Broker** | Unified API facade over heterogeneous providers | Failover routing, latency hedging, model aliasing, unified billing, rate-limit arbitrage | OpenRouter, LiteLLM, Cloudflare AI Gateway |
+| **Dedicated Inference Cloud** | Managed, high-throughput GPU/ASIC clusters | Speculative decoding, custom hardware acceleration (LPU/SambaNova), low-latency token streaming | Together AI, Fireworks AI, Groq, Cerebras, Replicate |
+| **Local / Edge Runtime** | Hardware-adjacent self-hosted inference | Zero data exfiltration, deterministic unit cost, offline execution, fine-grained quantization | Ollama, vLLM, llama.cpp, Hugging Face TGI, NVIDIA NIM |
+
+---
+
 Modern AI systems increasingly separate the **agent or application** from the **model that performs a given task**, a core principle of [[Agent Deployment and Execution Models|agent deployment and execution models]].
 
 A useful way to think about this ecosystem is to distinguish several layers: enterprise AI platforms, model gateways, inference providers, and local model runtimes.
