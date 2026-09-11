@@ -12,6 +12,37 @@ aliases:
   - Verification of Agent Diffs
 ---
 
+# Reviewing AI-Generated Code
+
+> [!IMPORTANT]
+> **The Cognitive Duty of Code Review**: In the agentic era, code review ceases to be a syntax or formatting gatekeeper—linters and compilers already solve mechanical checks. **Code review is the mandatory cognitive checkpoint where the human engineer constructs and internalizes their mental model of the system.** When reviewers fall into the trap of rubber-stamping clean, green-tested diffs without understanding internal state transitions and invariants, the team faces total paralysis ("dead in the water") the moment a production outage exceeds the model's reasoning horizon.
+
+```text
+Synthetic Code Generation (Fast, Zero-Friction)
+                       ↓
+        Passes Test Oracle & Linters
+                       ↓
+   [ THE ILLUSION OF UNDERSTANDING TRAP ] ──► Rubber-stamped without mental model
+                       ↓                                   ↓
+            Production Incident Strikes            Agent Hits Insolubility Horizon
+                       ↓                                   ↓
+        Human Summoned to Intervene ◄─────────────── Agent Thrashes / Hallucinates
+                       ↓
+   HUMAN HAS NO MENTAL MODEL → TOTAL SYSTEMIC PARALYSIS
+```
+
+---
+
+## Executive Summary & Core Architectural Invariants
+
+1. **Review as Cognitive Model Construction**: If a reviewer cannot explain the lifecycle, state mutations, and failure boundaries of the diff in their own words without looking at the LLM summary, the code must not be merged.
+2. **The Insolubility Horizon**: AI agents excel at localized patches, but suffer cognitive thrashing when faced with non-deterministic race conditions, distributed deadlocks, or contradictory invariants. The human engineer is the sole fallback.
+3. **Risk-First Order Over File-Order Traversal**: Never review diffs top-to-bottom in alphabetical file order. Audit highest-risk architectural invariants first: business rules, transaction boundaries, concurrency locks, security authorization, and external side-effects; review mechanical mapping and glue code last.
+4. **The Green-Test Mirage**: An agent can generate an implementation that satisfies 100% of unit assertions while violating domain semantics or introducing catastrophic latency degradation. Tests prove what was anticipated, not what was omitted.
+5. **Adversarial Multi-Agent Audit**: Deploy secondary, isolated agent personas with explicit skeptical directives (hunting unstated assumptions, missing negative branches, and race hazards) to guide human attention, never as the approving authority.
+
+---
+
 ## Human Attention Becomes the Critical Resource
 
 An agent can generate code faster than a human can honestly review it, dramatically increasing the risk of [[Software Entropy and the Zero-Friction Trap|software entropy and frictionless code sprawl]].
