@@ -102,20 +102,18 @@ Paradoxically, being trained primarily on open-source repositories is almost a f
 
 ## Model Prior Probabilities & Context Infrastructure
 
-### What an LLM Generates Without Guidelines
-If an LLM receives no project-specific guidance, it does not search for an objectively optimal solution; this makes [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]] critical for anchoring model behavior.
+### Refactoring Code Not Designed for Agents: Where Hidden Abstractions Cause Agent Errors
+When an autonomous agent is tasked with maintaining or refactoring an existing codebase that was not intentionally engineered for machine maintainers, it encounters a severe architectural friction boundary. 
 
-A realistic mental model of agent output is:
-```text
-common training patterns
-+ framework conventions
-+ documentation examples
-+ model tuning toward clarity and safety
-+ prompt context
-→ generated solution
-```
+Human-centric codebases frequently conceal execution mechanics behind layers of indirection—ambient dependency injection containers, runtime interceptors, implicit lifecycle hooks, and fragmented abstractions designed purely to reduce human keystrokes. This lack of direct semantic expression creates two compounding failure modes:
 
-The result will naturally reflect mainstream, idiomatic patterns (e.g., standard DI, async/await, EF Core, controllers, standard DTOs). Without explicit project guidelines, asking an agent to implement a feature forces it to navigate opaque indirections, proving why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become more expensive in agent-maintained code]]: the agent must guess missing architectural decisions using its training priors, often violating organization-specific constraints and worsening [[Software Entropy and the Zero-Friction Trap|software entropy]].
+1. **The Cognitive Failure Mode (Hallucinated Invariants & Subtle Regressions)**:
+   Because an agent's reasoning is bounded by its active context window, it cannot reliably hold dozens of disconnected framework layers in mind while modifying a local function. When critical business intent and state invariants are implied rather than stated plainly, the agent is forced to extrapolate missing mechanics using its generic training priors. The agent generates code that compiles cleanly and passes localized smoke tests, but silently breaks unexpressed business rules or transactional guarantees (see [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]]). This is why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become toxic in agent-maintained code]].
+
+2. **The Mechanical Sympathy Failure Mode (Compounding Substrate Inefficiency)**:
+   Code engineered for human brevity often relies on heavy runtime metaprogramming, dynamic dispatch, and speculative heap-allocated wrappers. Not only do these layers obscure the agent's view of real execution paths, but they also produce sluggish, cache-unfriendly runtime performance. Because data transformations are buried inside opaque frameworks, an agent refactoring such a subsystem cannot easily perform mechanical optimizations (such as memory layout flattening or zero-allocation batching) without risking systemic breakage, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy]].
+
+Without explicit architectural constraints anchored via [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]], asking an agent to refactor an indirect, human-optimized codebase turns refactoring into a stochastic hazard. This reinforces why modern engineering must prioritize [[Refactoring Legacy Systems with AI Agents|automated straightening]] of legacy spaghetti into flat, explicit, machine-legible operational units.
 
 ### Mainstream Code vs. Agent-Friendly Code
 Mainstream architectures enjoy a built-in advantage: models have encountered them millions of times during training. 
@@ -187,21 +185,19 @@ see pattern 3 times → evaluate synchronization risk → abstract ONLY if it el
 The result is more explicit loops, direct control flow, specialized local queries, and fewer generic runtime frameworks.
 
 ### 3. Humans Adapting to Agent-Generated Explicitness
-Humans naturally prefer compact, dense code (e.g. nested LINQ one-liners or generic middleware filters). An agent often produces 25 lines of explicit `foreach`, in-place validation checks, and direct assignments:
+Humans naturally prefer compact, dense code (e.g., nested stream reductions, higher-order collection one-liners, or generic middleware filters). An agent often produces 25 lines of explicit iteration, in-place validation checks, and direct assignments:
 
-```csharp
-// Agent-preferred explicit flow: local semantics, instant debugger stepping, easy instrumentation
-foreach (var order in orders)
-{
-    if (!IsEligible(order))
-        continue;
+```text
+// Agent-preferred explicit flow: local semantics, linear control flow, instant verification
+for each order in orders:
+    if not is_eligible(order):
+        continue
 
-    var normalized = Normalize(order);
-    if (normalized.Amount <= 0)
-        continue;
+    normalized = normalize(order)
+    if normalized.amount <= 0:
+        continue
 
-    validOrders.Add(normalized);
-}
+    valid_orders.append(normalized)
 ```
 
 From a traditional aesthetic viewpoint, this looks verbose. From an agentic viewpoint, it provides **explicit control flow, transparent local semantics, instant breakpoint targeting, and trivial future automated modification**.
@@ -222,7 +218,7 @@ Code review becomes the critical friction boundary where two distinct paradigms 
 ### "Not Optimal" Must Mean Something Concrete
 When a human reviewer claims agent-generated code is "not optimal," they must distinguish between genuine technical defects and subjective stylistic preferences:
 - **Genuine Defects**: $O(n^2)$ algorithmic complexity, memory leaks, unindexed queries, broken authorization checks, missing transaction rollbacks.
-- **Subjective Discomfort**: *"This could be written in three lines using a LINQ aggregate."*
+- **Subjective Discomfort**: *"This could be written in a single line using a higher-order stream reduction."*
 
 ### Human Review Could Accidentally Degrade Agent-Friendliness
 If a human reviewer forces the agent to compress explicit, isolated code into an intricate, generic abstraction, they may satisfy their aesthetic preference while **severely impairing future agent maintainability**. The next agent entering that module will struggle with the newly introduced indirection.
@@ -243,6 +239,7 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
 - **[[Software Entropy and the Zero-Friction Trap]]**: The emergence of agent-native defaults (flat 1:1 hierarchy, localized duplication) to combat entropy.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models struggle with implicit domain invariants hidden behind layers of indirection during refactoring.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
