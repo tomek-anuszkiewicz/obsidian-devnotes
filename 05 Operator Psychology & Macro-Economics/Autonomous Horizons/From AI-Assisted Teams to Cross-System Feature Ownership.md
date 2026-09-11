@@ -12,6 +12,27 @@ aliases:
   - End-to-End Ownership with Agents
 ---
 
+# From AI-Assisted Teams to Cross-System Feature Ownership
+
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> Traditional engineering organizations are structured around Conway's Law: siloed service, platform, and component teams created because manual coding was expensive and human cognitive capacity could not hold multiple sprawling repositories simultaneously.  
+> As coding agents collapse the cognitive and mechanical cost of exploring unfamiliar codebases, **the primary bottleneck shifts from implementation to cross-team coordination and review queues**.  
+> The organizational architecture evolves through three distinct epochs:
+> 1. **Local Siloed Assistance (Current State)**: Developers generate code faster locally, but complete features remain stalled in multi-team backlog negotiations and deployment queues.
+> 2. **Team-Level Autonomous Workflows (Near-Term)**: Teams formalize repository-level instructions, test gates, and PR preparation within existing boundaries.
+> 3. **Cross-System Feature Ownership (Emerging State)**: Senior engineers with strong domain context take end-to-end ownership of vertical user outcomes across multiple backend repositories—directing agents to execute multi-repo code modifications while permanent platform teams pivot to maintaining contracts, test oracles, and deployment guardrails.
+
+### Comparative Matrix: Engineering Organization Topologies
+
+| Organizational Topology | Ownership Unit | Role of Autonomous Agents | End-to-End Feature Velocity | Coordination & Handoff Overhead | Primary Bottlenecks & Failure Modes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Siloed Component Ownership (Conway's Law Default)** | Single service, frontend, or backend repository. | Local pair-programmer; writes isolated functions and tests within the local repo. | **Slow**: Blocked by multi-team sprint alignments, backlog handoffs, and API contract debates. | **High**: Feature requires coordinated changes across 3–5 independent service backlogs. | Local productivity illusion: Code is written in minutes, but takes months to ship to production. |
+| **Temporary Matrixed Feature Teams** | Ephemeral squad assembled across siloed specialists. | Scaffolding and glue-code generator for the temporary squad. | Moderate: Better focus, but disbanding teams causes knowledge fragmentation. | Moderate: High meeting overhead to maintain alignment between specialists. | High context-switching overhead; ambiguous long-term maintenance and technical debt ownership. |
+| **Cross-System Feature Ownership (Recommended)** | End-to-end vertical user outcome across all touched services. | **Distributed Technical Executor**: Explores unfamiliar repos, prepares multi-repo PRs, runs integration tests. | **Maximum**: One engineer or lean pair drives feature from UI to database without handoffs. | **Minimal**: Execution is unified; coordination is handled via explicit machine-readable contracts. | **Review Overload & Blast Radius**: Requires rigorous automated test oracles and platform gatekeepers. |
+
+---
+
 AI-assisted software development is still evolving too quickly to support confident predictions about the final structure of engineering organizations.
 
 However, as teams evolve from [[Multi-Agent Software Development|multi-agent development]] to organizational autonomy, it is possible to separate three layers:
@@ -623,7 +644,7 @@ The likely sequence is:
 
 The long-term structure is uncertain, but it will probably emerge from this process rather than appear as a complete design from the beginning.
 
-Ta wersja celowo zachowuje ostrożność: opisuje obecny stan, dość prawdopodobną ewolucję oraz dopiero potem hipotezę o globalnym feature ownership.
+This framing deliberately maintains epistemic caution: it analyzes the current operational reality, projects the probable near-term evolution, and only then formulates the hypothesis regarding end-to-end cross-system feature ownership.
 ---
 
 ## Relationship to the Knowledge Graph
