@@ -14,6 +14,24 @@ aliases:
 
 # LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors
 
+> [!IMPORTANT]
+> **Executive Summary & Architectural BLUF**:  
+> LLM coding agents are not autonomous engineering authorities; they are **probabilistic change generators operating inside deterministic harness controls**.  
+> - **The Plausible Near-Miss**: The most dangerous error mode is not syntax or compilation failure (which deterministic tooling catches instantly), but **semantic near-misses**—subtle logical drift where the code compiles cleanly, passes existing tests, and provides an articulate PR justification while subtly violating an essential business invariant.
+> - **Local Consistency Masks Global Invalidation**: Because an agent generates code, comments, test assertions, and PR explanations in a single coherent trajectory, the entire artifact package consistently reinforces the same flawed assumption. Green CI proves agreement between code and tests, not agreement with business reality.
+> - **Zero Consequence Awareness**: Agents possess zero skin in the game and will cheerfully hallucinate invalid workarounds rather than admitting an architectural problem exceeds their knowledge boundary. Reliability must be enforced via **Two-Pass Verification Harnesses** (Pass 1: Functional Generation; Pass 2: Independent Invariant Audit) backed by mechanical test gates and human semantic code comprehension.
+
+### Comparative Matrix: Error Detection Across Software Verification Layers
+
+| Failure Mode Category | Manifestation | Compiler / Type Checker | Automated Test Suites | LLM Self-Reflection / Verbalized Confidence | Independent Human Code Review |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Mechanical Syntax & Type Errors** | Missing symbols, broken signatures, invalid types. | **Deterministic Catch ($100\%$)**: Build fails immediately; zero runtime risk. | N/A (Build aborts before test execution). | High: Readily repairs its own syntax errors when fed compiler diagnostics. | Unnecessary: Mechanical tooling handles this autonomously. |
+| **Obvious Behavioral Regressions** | Broken existing functionality, null pointers, thrown exceptions. | Blind (Code compiles cleanly). | **High Catch Rate**: Caught if regression test coverage exists for that path. | Moderate: Agent can self-heal if test failure stack trace is clear and actionable. | Secondary verification of test coverage breadth. |
+| **Plausible Near-Miss (Semantic Drift)** | Subtle logic inversion (e.g. checking wrong state enum, non-idempotent retry). | **Blind**: Syntactically and structurally flawless. | **Blind**: Existing tests pass; agent-generated new tests assert the buggy behavior. | **Zero / Negative**: Confidently rationalizes the flawed interpretation. | **Mandatory**: Human engineer must interrogate the code against real-world domain requirements. |
+| **Destructive Tool / File Aberration** | Accidental file deletion, overwriting architectural foundations during refactoring. | Blind. | Blind until subsequent tests fail. | **Zero**: Agent perceives file deletion and docstring addition as identical token schemas. | Prevented exclusively by **hard harness fences** (Git checkpoints, read-only sandboxes). |
+
+---
+
 ## Core idea
 
 Using LLMs for programming does not require them to be infallible. A coding agent should be treated as a **generator and executor of proposed changes operating inside a system of controls**, not as an authority capable of deciding by itself whether a solution is correct.
@@ -115,11 +133,9 @@ Requirement:
 
 A superficially reasonable implementation:
 
-```csharp
-if (order.Status != OrderStatus.Shipped)
-{
-    order.Cancel();
-}
+```text
+if order.status != OrderStatus.Shipped:
+    order.cancel()
 ```
 
 The code confuses two similar concepts:
