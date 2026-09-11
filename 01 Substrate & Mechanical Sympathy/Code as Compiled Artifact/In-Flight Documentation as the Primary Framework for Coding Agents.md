@@ -71,44 +71,44 @@ In this operational model:
 5. **Documentation as the Canonical Source of Truth**:
    When system behavior or business logic must evolve, the engineer does not wade through thousands of lines of syntactic boilerplate. They update the high-level Markdown specification and re-compile the subsystem through the agent. The generated source code is merely the transient intermediate representation, and the binary is the final runtime artifact.
 
-### Escaping the 4GL / Executable UML Trap: The Triad of Specs, Oracles, and Human Sympathy
+### Escaping the 4GL / Executable UML Trap: Specifications, Verification Oracles, and Human Stewardship
 
 A natural, well-founded historical skepticism frequently challenges the concept of in-flight documentation:  
 > *"Isn't treating Markdown as high-level source code merely the recurring curse of Fourth-Generation Languages (4GL in the 1980s), CASE tools (in the 1990s), and Model-Driven Architecture / Executable UML (in the 2000s)?"*
 
 Every 15 to 20 years, the software industry attempts to eliminate manual programming by proclaiming that visual diagrams or high-level business prose will automatically compile into flawless code. Every single one of these historic attempts collapsed under the weight of an immutable epistemological reality: **natural language and visual diagrams are inherently underspecified, probabilistic, and ambiguous**.
 
-The modern agentic paradigm does not repeat this failure because it does not attempt to make Markdown a standalone programming language. Instead, it embeds Markdown as the semantic intent vector inside a **triad of complementary forces**:
+The modern agentic paradigm does not repeat this failure because it does not attempt to make Markdown an isolated, standalone programming language. Instead, it embeds Markdown as the semantic intent vector inside a **coherent specification, synthesis, and verification pipeline**:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   THE AGENTIC SOFTWARE ENGINEERING TRIAD               │
+│           THE AGENTIC SPECIFICATION & VERIFICATION PIPELINE            │
 │                                                                        │
-│   1. LIVING MARKDOWN SPECS (Semantic Steering Vector)                 │
-│      - Captures "Why" and "What"                                      │
-│      - Codifies architectural invariants, contracts, state machines    │
-│      - Avoids atomic instruction mechanics                             │
+│   1. HUMAN SYSTEM ARCHITECT (Strategic Intent & Constraints)           │
+│      - System topology, domain boundaries, and resource budgets        │
+│      - Non-functional requirements (latency, security, concurrency)    │
 │                         │                                              │
-│                         ├──────────────────────────────┐               │
-│                         ▼                              ▼               │
-│   2. IRONCLAD TEST ORACLE               3. HUMAN SYSTEM ARCHITECT      │
-│      (Hard Physical Reality)               (Mechanical Sympathy)       │
-│      - Binary Pass/Fail boundary           - L1i cache layout & DOD    │
-│      - Immutable test vectors              - Memory alignment & allocs │
-│      - Prevents probabilistic drift        - Concurrency & hardware    │
-│                         │                              │               │
-│                         └──────────────┬───────────────┘               │
-│                                        ▼                               │
-│                         LLM REASONING & SYNTHESIS                      │
-│                       (Front-end semantic compiler)                    │
-│                                        │                               │
-│                                        ▼                               │
-│                            INTERMEDIATE SOURCE CODE                    │
-│                    (Auditable intermediate representation)             │
-│                                        │                               │
-│                                        ▼                               │
-│                        DETERMINISTIC COMPILER & RUNTIME                │
-│                       (Verified machine binary / bytecode)             │
+│                         ▼                                              │
+│   2. LIVING MARKDOWN SPECS (Semantic Source of Truth)                  │
+│      - Architectural invariants, contracts, and state machines         │
+│      - Eliminates atomic instruction clutter; defines What & Why       │
+│                         │                                              │
+│                         ▼                                              │
+│   3. LLM REASONING ENGINE (Front-End Semantic Compiler)                │
+│      - Synthesizes idioms, boilerplate, and algorithmic logic          │
+│                         │                                              │
+│                         ▼                                              │
+│   4. INTERMEDIATE SOURCE CODE (Machine-Synthesized Artifact)           │
+│                         │                                              │
+│                         ▼                                              │
+│   5. DETERMINISTIC VERIFICATION (Back-End Compiler & Test Oracle)      │
+│      - Compiler & Type Checker: Enforces memory safety & typing        │
+│      - Test Oracle: Binary pass/fail validation of operational rules   │
+│                         │                                              │
+│          ┌──────────────┴──────────────┐                               │
+│          ▼                             ▼                               │
+│      [FAIL / ERROR]                 [PASS]                             │
+│   Feedback to Agent       Deployable Executable / Binary               │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -119,25 +119,25 @@ The fatal error of 4GL, CASE tools, and Executable UML was attempting to replace
 - **The Agentic Demarcation**: In our architecture, Markdown **never describes atomic execution steps**. It does not dictate how to iterate a loop, allocate a vector, or handle register arithmetic. The frontier LLM reasoning engine already possesses pre-trained mastery of syntax semantics, standard library interfaces, type systems, and idiomatic execution patterns.
 - Markdown specifies strictly **domain invariants, state boundaries, operational non-goals, and boundary contracts**. It is the compass, not the engine.
 
-#### 2. Why Markdown Alone Degrades into Hallucination (The Need for the Ironclad Oracle)
+#### 2. Why Markdown Alone Degrades into Hallucination (The Role of the Deterministic Test Oracle)
 Natural language—even when formatted into clean, structured Markdown cards—is fluid and probabilistic:
 - When models operate over extended contexts or encounter edge conditions, they suffer from **context drift, rule decay, and constraint saturation** (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]).
 - If an agent is guided solely by Markdown prose without deterministic boundaries, it will generate code that *sounds* convincing and *looks* idiomatic, yet silently violates subtle operational contracts or introduces phantom states.
-- **The Ironclad Test Oracle as the Anchor of Reality**: Markdown specification functions as high-level architectural code **only because it is bounded by an [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracle]]**. 
-  - The test suite (deterministic assertions and invariants) provides an unyielding, non-negotiable physical wall.
-  - The test runner does not negotiate with the model. A non-zero exit code forces the agent to discard hallucinations and collapse its probabilistic search space to exact reality.
-  - Markdown supplies the **semantic intent**; the test oracle supplies the **deterministic rigor**. Neither can function safely without the other.
+- **The Ironclad Test Oracle as the Verification Gate**: Markdown specification functions as high-level architectural code **only because it is verified by an [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracle]]**. 
+  - The automated test suite does not "execute" the Markdown document; it validates the **intermediate source code** generated by the agent.
+  - The test runner provides an unyielding, non-negotiable physical wall. A non-zero exit code (`FAIL`) produces precise error feedback that collapses the agent's probabilistic search space back to deterministic compliance.
+  - Markdown supplies the **semantic intent**; the test oracle supplies the **binary verification**. Neither can function safely without the other.
 
-#### 3. The Human Engineer's Domain Knowledge and Mechanical Sympathy (The Physical Reality Anchor)
-Neither Markdown specifications nor automated test suites possess **mechanical sympathy** or an understanding of hardware physics:
-- A test oracle validates functional equivalence (`actual == expected`); it is completely blind to whether the agent's code triggers devastating **L1 instruction cache thrashing (L1i)** by unrolling thousands of sprawling handlers, introduces hidden GC heap boxing, or misaligns 64-byte memory cache lines (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
-- A language model defaults to enterprise OOP patterns (factories, deep abstractions, pointer-chasing wrappers) because of its training distribution, inadvertently destroying cache locality.
-- **The Non-Delegable Role of the Human Architect**: The human software engineer is the irreplaceable linchpin who:
-  1. Enforces **Data-Oriented Design (DOD)** and cache-aligned contiguous memory layouts.
-  2. Dictates real-world operational constraints (network timeouts, serialization boundaries, connection pools).
-  3. Acts as the circuit breaker against architectural complexity traps (see [[Refactoring Legacy Systems with AI Agents]]).
+#### 3. The Non-Delegable Role of the Human System Architect (Architectural Sympathy & Reality Anchor)
+Neither Markdown specifications nor automated test suites possess holistic systems judgment:
+- A test oracle validates functional assertions (`actual == expected`); it is completely blind to whether the agent's code introduces catastrophic architectural coupling, exceeds network latency budgets, leaks database connection pools, or introduces subtle concurrency deadlocks under high production load.
+- A language model, if left unconstrained, defaults to generic textbook abstractions (over-engineered inheritance trees, unnecessary wrapper layers, leaky boundaries) because of its training distribution.
+- **The Non-Delegable Role of the Human Architect**: The human software engineer remains the indispensable strategic governor who:
+  1. **Enforces System Topology & Blast Radius Boundaries**: Defines modular boundaries, data ownership, and isolation barriers, preventing spaghetti dependencies.
+  2. **Establishes Real-World Non-Functional Constraints**: Sets uncompromising operational envelopes for latency budgets, serialization overhead, concurrency models, and cloud infrastructure cost.
+  3. **Acts as the Circuit Breaker Against Architectural Rot**: Identifies complexity traps, rejects speculative abstractions, and maintains long-term system cohesion across autonomous agent sessions (see [[Refactoring Legacy Systems with AI Agents]]).
 
-Markdown documentation is therefore not a nostalgic rehash of the 4GL dream; it is the **semantic intent layer** of a disciplined triad that binds high-level architectural thought to deterministic verification and mechanical reality.
+Markdown documentation is therefore not a nostalgic rehash of the 4GL dream; it is the **semantic intent layer** in a disciplined pipeline that binds human architectural judgment to deterministic machine verification.
 
 ---
 
