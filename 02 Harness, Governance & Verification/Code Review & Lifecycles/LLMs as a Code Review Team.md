@@ -54,7 +54,7 @@ Synthetic Diff Proposed
 3. **Specialized Topologies Over Monolithic Prompts**: Prompting a single model to "Review this pull request" causes cognitive dilution and rule oscillation. High-assurance systems deploy a router that delegates to domain specialists (Database, Concurrency, Security, Public API Compatibility, Performance).
 4. **Strict Separation of Reviewer and Fixer Roles**: The agent identifying problems must remain strictly read-only (`inspect, execute tests, profile`). Granting the reviewer write access creates self-rationalization bias: the model bends the code to validate its own hallucinations. Fixing is delegated to an isolated fixer agent, validated by a third-party test oracle.
 5. **Noise Gating and Synthesizer Pipelines**: Seven specialized reviewers emitting uncoordinated findings create pull-request alert fatigue. A centralized synthesizer deduplicates overlap, discards low-confidence observations, and filters out findings disproven by tests.
-6. **Multi-Ecosystem Toolchain Orchestration**: Review agents do not replace CI; they orchestrate it. Agents invoke native test runners (`cargo test`, `pytest`, `go test`, `dotnet test`), memory profilers, query plan explainers (`EXPLAIN ANALYZE`), and fuzzing engines to provide empirical data alongside diff comments.
+6. **Multi-Ecosystem Toolchain Orchestration**: Review agents do not replace CI; they orchestrate it. Agents invoke native build systems, automated test suites, memory profilers, query plan analyzers (`EXPLAIN ANALYZE`), and fuzzing engines to provide empirical data alongside diff comments.
 
 ---
 
