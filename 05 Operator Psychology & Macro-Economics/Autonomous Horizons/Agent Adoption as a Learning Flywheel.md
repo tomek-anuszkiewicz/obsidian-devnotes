@@ -14,20 +14,49 @@ aliases:
 # Agent Adoption as a Learning Flywheel
 
 > [!IMPORTANT]
-> **Executive Summary & Architectural BLUF**:  
-> Agent capabilities do not advance through passive waiting for foundation model scale; they compound through an active **Empirical Adoption Flywheel**:
-> $$\text{Attempt Task} \implies \text{Observable Failure} \implies \text{Formalize Rules \& Tests} \implies \text{Record Verified Trajectory} \implies \text{Next-Gen SFT/RL}$$
-> - **From Static Code to Full Trajectories**: Training signals have evolved from static code snippets (`problem -> answer`) to complete multi-step problem-solving arcs (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`).
-> - **The Fallacy of Passive Waiting**: An organization that waits for an "infallible model" before adopting agents loses twice: it fails to generate the proprietary execution data needed to fine-tune internal models, and it fails to build the deterministic harnesses, test oracles, and API boundaries without which even a superhuman agent cannot safely operate.
-> - **Capturing Durable Value on Failure**: Every failed agent run must leave behind permanent engineering assets: clearer architecture decision records, high-coverage mutation tests, and explicit harness guardrails.
+> **Executive Architectural Thesis**: Organizational agent competence does not compound by waiting passively for foundation models to achieve perfection; it compounds through the active **Agent Adoption Flywheel**. High-value training data has shifted from static code snapshots to complete multi-turn interaction trajectories (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`). Every failed agent execution must be harvested to harden deterministic test harnesses, decouple monolithic codebases, and log proprietary execution traces that prepare the organization for next-generation frontier models.
 
-### Comparative Matrix: Organizational AI Adoption Strategies
+```text
+                  THE AGENT ADOPTION & LEARNING FLYWHEEL
++-------------------------------------------------------------------------+
+|                        1. ATTEMPT REAL-WORLD TASK                       |
+|                   (Agent operates in bounded sandbox)                   |
++------------------------------------|------------------------------------+
+                                     |
+                                     v
++-------------------------------------------------------------------------+
+|                        2. OBSERVABLE FAILURE                            |
+|             (Compiler error, test failure, semantic drift)              |
++------------------------------------|------------------------------------+
+                                     |
+                                     v
++-------------------------------------------------------------------------+
+|                  3. ASSET EXTRACTION & HARNESS HARDENING                 |
+|       * Codify regression test oracle (The Ironclad Gate)               |
+|       * Disentangle code into modular 1:1 boundaries                    |
+|       * Record explicit failure-driven architectural instructions       |
++------------------------------------|------------------------------------+
+                                     |
+                                     v
++-------------------------------------------------------------------------+
+|                4. VERIFIED TRAJECTORY LOGGING (Proprietary IP)          |
+|    [ Goal -> Plan -> Action -> Error -> Diagnosis -> Fix -> Green CI ]  |
++------------------------------------|------------------------------------+
+                                     |
+                                     v
++-------------------------------------------------------------------------+
+|             5. NEXT-GEN FINE-TUNING & COMPOUNDING READINESS             |
+|   (Internal SFT/RL training + Zero-friction harness for next models)    |
++-------------------------------------------------------------------------+
+```
 
-| Adoption Strategy | Operational Philosophy | Value Extracted on Agent Failure | Environmental Adaptation | Infrastructure Instrumentation | Long-Term Strategic Position |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Passive Waiting ("Wait for AGI")** | Freeze automation until foundation models achieve zero error rates. | **Zero**: No data captured, no workflows analyzed, no internal learnings. | Static: Retains legacy tangled architectures and undocumented tribal knowledge. | None: No automated test harnesses, no sandbox virtualization, no machine-readable APIs. | **Severe Disruption**: Completely unprepared when frontier models arrive; cannot safely integrate them. |
-| **Naive Brittle Trial-and-Error** | Give developers unconstrained access without harnesses or tracking. | **Negative**: Burns tokens, introduces subtle technical debt, causes developer frustration. | Ad-hoc: Codebase accumulates superficial agentic patches without architectural cohesion. | Chaotic: No structured logging of agent steps, failure modes, or review interventions. | Cynical retreat: Organization concludes "AI doesn't work for complex systems." |
-| **The Systematic Adoption Flywheel (Recommended)** | Deploy agents inside controlled, deterministic harnesses with strict test gates. | **High & Durable**: Failures immediately generate regression tests, explicit rules, and isolated modules. | **Proactive Paved Road**: Re-architects code into 1:1 file boundaries and explicit typed contracts. | **Complete**: Records full execution trajectories (Git diffs, tool traces, human corrections). | **Compounding Advantage**: Proprietary operational data flywheel and autonomous-ready delivery mesh. |
+## Executive Summary & Core Architectural Invariants
+
+1. **Active Learning Flywheel Over Passive Waiting**: Waiting for future foundation models to achieve perfection is an organizational dead-end. True capability compounds through active execution: attempt $\to$ failure $\to$ rule formalization $\to$ trajectory recording $\to$ harness hardening.
+2. **Interaction Trajectories as Core Assets**: The highest-value software training data has shifted from static code files (`problem -> solution`) to complete multi-step problem-solving trajectories (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`).
+3. **Extracting Durable Value on Failure**: Every agent failure must leave behind permanent engineering assets: an immutable regression test, a modularized code boundary, or an explicit failure-driven architectural rule.
+4. **Harness Readiness as a Competitive Moat**: Even a superhuman model is useless inside a tangled monolith lacking automated tests or sandbox execution. Early agent adoption forces organizations to build the deterministic harnesses and verification oracles required for autonomous operation.
+5. **Proprietary Operational Data Moats**: Enterprises that record verified developer-agent interaction loops accumulate domain-specific fine-tuning datasets that public web scrapers cannot replicate.
 
 ---
 
