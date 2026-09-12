@@ -112,6 +112,11 @@ Elite agentic engineering converges on a **tailored, repository-native harness**
 * **In-Tree Procedural Skills**: Specialized operational scripts and domain runbooks stored directly inside `.agents/skills/`.
 * **Zero Dependency Overhead**: Completely model-agnostic, zero-cost, and directly aligned with the mental model of [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor]].
 
+> [!TIP]
+> **The Harness Reflection Principle**:  
+> *"The agentic harness mirrors the cognitive rhythm of the person driving it."*  
+> An in-repository harness is not a generic corporate dashboard; it is a mechanical exoskeleton directly externalizing the architect's mental model, verification standards, and operational tempo.
+
 ---
 
 ## Relationship to the Knowledge Graph
