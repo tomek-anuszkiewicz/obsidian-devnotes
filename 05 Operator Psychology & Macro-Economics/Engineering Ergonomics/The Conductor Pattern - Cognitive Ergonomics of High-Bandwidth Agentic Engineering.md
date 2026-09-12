@@ -68,6 +68,11 @@ In modern agentic development, this law applies at the individual level:
 
 $$\text{System Architecture} = f(\text{Cognitive Rhythm of Architect} \times \text{Harness Topology})$$
 
+> [!TIP]
+> **The Cognitive Mirror Axiom**:  
+> *"The agentic harness mirrors the cognitive rhythm of the person driving it."*  
+> When an engineer operates with disciplined associative tempo, the harness crystallizes that tempo into versioned boundaries, automated tests, and procedural skills. If the engineer operates haphazardly, the harness degrades into a noisy, fragmented tangle of conflicting prompts.
+
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   THE HARNESS AS COGNITIVE PROJECTION                  │
