@@ -62,7 +62,7 @@ The convergence of personal cloud subscriptions with developer API platforms fun
 5. **Data Gravity as an Unassailable Competitive Moat**: Pure-play frontier model vendors face extreme pressure from vertically integrated ecosystem platforms. A model with slightly higher benchmark scores cannot overcome an agent that possesses ambient, zero-click access to a user's multi-year document history, calendar, and email threads.
 6. **Capability-Based Authorization Scoping**: Simple monolithic API keys are inadequate for personal AI subscriptions. Runtimes require granular, scoped capability tokens (analogous to macaroons or OAuth scopes) ensuring a third-party photo editor cannot query private financial records via the ambient RAG layer.
 7. **Human vs. Background Quota Isolation**: Subscriptions must isolate interactive human chat and voice sessions from autonomous background scripts, preventing rogue terminal agents from burning daily token allowances.
-8. **Epistemic Lock-in and Migration Friction**: Once years of personal memories, document relations, and private context are indexed within an ambient ecosystem, switching costs become insurmountable—severing the collective memory powering all personal applications.
+8. **Cognitive Lock-in and Migration Friction**: Once years of personal memories, document relations, and private context are indexed within an ambient ecosystem, switching costs become insurmountable—severing the collective memory powering all personal applications.
 
 ---
 

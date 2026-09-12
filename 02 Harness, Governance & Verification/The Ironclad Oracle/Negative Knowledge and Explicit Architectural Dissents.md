@@ -45,7 +45,7 @@ Classical Knowledge Base (K+):
 Tri-State Knowledge Base (K+ ∪ K-):
 K+ (Affirmative): Validated invariants & patterns currently in production.
 K- (Dissent Firewall): Formally evaluated and rejected anti-patterns with empirical rationale.
-S \ (K+ ∪ K-): Genuinely unexamined ideas eligible for Epistemic Diffing.
+S \ (K+ ∪ K-): Genuinely unexamined ideas eligible for Cognitive Diffing.
 ```
 
 ---
@@ -57,7 +57,7 @@ S \ (K+ ∪ K-): Genuinely unexamined ideas eligible for Epistemic Diffing.
 
 When negative knowledge is left unwritten—stored only as oral history in the minds of senior architects—it decays rapidly. When AI agents enter the development loop, this uncodified history creates catastrophic regression loops: agents reintroduce rejected complexities under the guise of "modern best practices."
 
-As established in [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Epistemic Diff]], equipping personal and organizational agents with an explicit negative knowledge base converts the agent from a naive cheerleader into an active **Dissent Firewall**.
+As established in [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Cognitive Diff]], equipping personal and organizational agents with an explicit negative knowledge base converts the agent from a naive cheerleader into an active **Dissent Firewall**.
 
 ---
 
@@ -256,7 +256,7 @@ This dissent may ONLY be reopened if:
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of negative bounding, where harnesses enforce forbidden zones rather than prescriptive micromanagement.
 - **[[How Context Narrows an AI's Solution Space]]**: Explores the theoretical and mathematical mechanisms of solution space pruning through negative constraints.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why negative bounding prevents prompt bloat and eliminates rule oscillation.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Integrates negative knowledge ($K^-$) as the foundational Dissent Firewall in the Tri-State Epistemic Filter.
+- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Integrates negative knowledge ($K^-$) as the foundational Dissent Firewall in the Tri-State Cognitive Filter.
 - **[[Testing in the Model, Agent, LLM Era]]**: Explains the limitations of automated test oracles when validating non-functional hardware sympathy and subtle regressions.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Details how zero-friction generative churn destroys architecture unless mechanically bounded by strict constraints.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Contrasts the disposable nature of early PoC exploratory spikes with the disciplined permanence required for production systems.

@@ -1011,4 +1011,4 @@ The future personal AI may therefore be best understood not as **an assistant th
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling personal agents to seamlessly authenticate and operate browser applications on behalf of the user.
 - **[[How Modern LLM Systems Build Context, Reason, and Stay Constrained|Context Management and Conversational Grounding in LLM Workflows]]**: Retaining grounding and long-term memory across extended agent interactions.
 - **[[Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs]]**: Commercial and architectural packaging of personal models, cloud RAG, and portable credentials.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Computing epistemic diffs between personal agent representations and external vaults.
+- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Computing cognitive diffs between personal agent representations and external vaults.

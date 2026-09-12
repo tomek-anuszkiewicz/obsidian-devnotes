@@ -56,7 +56,7 @@ aliases:
    High-stakes architectural pair-programming must reject unbounded multi-day chat sessions in favor of short, task-scoped bursts (5–15 turns). Breakthrough insights must be distilled into Git-tracked markdown artifacts, followed by an immediate hard session reset that clears conversational KV cache gravity.
 
 5. **FIFO Head-Truncation Over Recursive Summarization**:
-   When working within an active coding harness, unsummarized FIFO sliding window truncation (dropping the oldest conversational turns raw while preserving active files and instructions) maintains superior epistemic agility compared to LLM-generated historical summaries.
+   When working within an active coding harness, unsummarized FIFO sliding window truncation (dropping the oldest conversational turns raw while preserving active files and instructions) maintains superior reasoning agility compared to LLM-generated historical summaries.
 
 ---
 

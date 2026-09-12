@@ -15,7 +15,7 @@ aliases:
 # Finding Original Knowledge in an Internet Full of Repetition
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: The open internet is increasingly engulfed by **synthetic regurgitation**: millions of SEO-optimized articles, syndicated paraphrases, and AI-generated summaries that exhibit high lexical variance but virtually zero epistemic novelty. Token volume has decoupled from true informational entropy; training models on recursive internet paraphrases risks mode collapse and epistemic stagnation. To sustain intelligence growth, ingestion architectures must transition from naive textual scrapers to **epistemic diff engines** that filter for empirical counter-examples, direct physical telemetry, and verified causal state deltas.
+> **Executive Architectural Thesis**: The open internet is increasingly engulfed by **synthetic regurgitation**: millions of SEO-optimized articles, syndicated paraphrases, and AI-generated summaries that exhibit high lexical variance but virtually zero informational novelty. Token volume has decoupled from true informational entropy; training models on recursive internet paraphrases risks mode collapse and intellectual stagnation. To sustain intelligence growth, ingestion architectures must transition from naive textual scrapers to **knowledge diff engines** that filter for empirical counter-examples, direct physical telemetry, and verified causal state deltas.
 
 ```text
            THE RECURSIVE DEGRADATION OF SYNTHETIC WEB CONTENT
@@ -24,13 +24,13 @@ aliases:
 | - SEO summaries & clickbait paraphrases    |    | - Raw production telemetry & logs  |
 | - AI-generated regurgitated tutorials      |    | - Negative benchmark results       |
 | - High lexical variance, 0 causal novelty  |    | - Physical sensor & hardware traces|
-| - Autophagic risk: Model Mode Collapse     |    | - High epistemic entropy & falsification
+| - Autophagic risk: Model Mode Collapse     |    | - High informational entropy & falsification
 +--------------------------------------------+    +------------------------------------+
                       \                                      /
                        \                                    /
                         v                                  v
                      +----------------------------------------+
-                     | EPISTEMIC DIFF & CAUSAL FILTER HARNESS |
+                     | KNOWLEDGE DIFF & CAUSAL FILTER HARNESS |
                      | (Selects ground-truth reality tokens)  |
                      +----------------------------------------+
 ```
@@ -38,9 +38,9 @@ aliases:
 ## Executive Summary & Core Architectural Invariants
 
 1. **The Decoupling of Volume and Entropy**: Ingesting billions of additional tokens of rewritten prose adds negligible gradient information if those tokens communicate zero new causal facts.
-2. **Lexical Novelty vs. Epistemic Novelty**: Synthetic and SEO content frequently alters phrasing, synonyms, and tone while repeating well-trodden premises; true informational novelty lies in unexpected empirical observations.
+2. **Lexical Novelty vs. Informational Novelty**: Synthetic and SEO content frequently alters phrasing, synonyms, and tone while repeating well-trodden premises; true informational novelty lies in unexpected empirical observations.
 3. **The Autophagic Threat of Model Collapse**: Training recursive machine learning architectures on synthetic web exhaust produces mode collapse, bland homogenization, and statistical hallucinations.
-4. **Epistemic Diff Filtering as Core Infrastructure**: Future retrieval and pre-training pipelines must evaluate candidate text by computing its causal delta against an established world model.
+4. **Cognitive Diff Filtering as Core Infrastructure**: Future retrieval and pre-training pipelines must evaluate candidate text by computing its causal delta against an established world model.
 5. **The Primacy of Reality Over Text**: Unambiguous signal originates from direct physical interaction with the world: compiler errors, production outage traces, hardware telemetry, and empirical experiments.
 
 ---
@@ -620,7 +620,7 @@ Direct Ingestion into Knowledge Inbox (10-second human review)
    - **Consensus ($K^+$)**: Recycled points are silently pruned or logged as validation datapoints.
    - **Dissents ($K^-$)**: Naive buzzwords or discredited patterns are discarded without interrupting the engineer.
    - **Unseen Signals ($S \setminus (K^+ \cup K^-)$)**: Genuine empirical novelties, unencountered benchmarks, or contradictory claims are crystallized into concise markdown cards.
-4. **Attention Inversion**: The human engineer stops browsing or listening passively. The agent acts as an epistemic shield, turning hours of ambient video fluff into seconds of high-density knowledge acquisition.
+4. **Attention Inversion**: The human engineer stops browsing or listening passively. The agent acts as an information shield, turning hours of ambient video fluff into seconds of high-density knowledge acquisition.
 
 ---
 

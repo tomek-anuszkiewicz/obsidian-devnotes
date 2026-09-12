@@ -264,7 +264,7 @@ Deploying RAG in software systems reveals distinct architectural hazards:
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: How execution harnesses query the RAG substrate to seed context into autonomous coding loops.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation templates specifically formatted for high-efficiency RAG indexing.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Using personal second-brain RAG indexes as the baseline for computing epistemic diffs against external knowledge.
+- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Using personal second-brain RAG indexes as the baseline for computing cognitive diffs against external knowledge.
 - **[[How LLM Systems Build Context]]**: The complementary mechanics of context window management, compaction, and retrieval scheduling.
 - **[[Designing Software for AI Agents]]**: Designing codebases with clear structural boundaries that enable clean, unambiguous AST chunking and retrieval.
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: Contrasts multi-hop agentic retrieval (Git blame, ticket lookup) with zero-cost co-located context injection directly in source files.

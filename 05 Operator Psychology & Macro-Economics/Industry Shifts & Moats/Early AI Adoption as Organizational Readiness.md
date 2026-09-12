@@ -34,7 +34,7 @@ aliases:
 
 1. **Adoption as Organizational Diagnosis**: Early AI trials act as a diagnostic dye, exposing systemic software rot, missing interface boundaries, and undocumented operational workflows.
 2. **The Asymmetry of Readiness**: Organizations that build structured agent delivery pipelines and testing harnesses can upgrade foundation models frictionlessly, whereas hesitant peers remain bottlenecked by organizational friction.
-3. **Failures as Epistemic Assets**: An early prototype that breaks due to poor data consistency or missing specifications produces valuable structural intelligence on where the company's interfaces must be hardened.
+3. **Failures as Diagnostic Assets**: An early prototype that breaks due to poor data consistency or missing specifications produces valuable structural intelligence on where the company's interfaces must be hardened.
 4. **Agent-Native Architecture Transformation**: Preparing for autonomous agents forces the modularization, typed encapsulation, and contract verification of internal systems.
 5. **Human Governance and Responsibility**: Early adoption establishes clear lines of human accountability, teaching teams to act as rigorous evaluation authorities rather than passive consumers.
 

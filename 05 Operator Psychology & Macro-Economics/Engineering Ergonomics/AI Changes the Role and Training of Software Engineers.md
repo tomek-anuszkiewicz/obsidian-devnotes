@@ -11,7 +11,7 @@ aliases:
   - Future Role of Software Engineers
   - Software Engineering Training in AI Era
   - The Cognitive Inversion of the AI Engineer
-  - From Overthinking to Epistemic Leverage
+  - From Overthinking to Cognitive Leverage
   - Psychological Transformation of Software Engineers
   - Asynchronous Agentic RFCs and Feature Inception
   - The Death of the Sunk-Cost Design Meeting
@@ -157,14 +157,14 @@ Engineers do not need to memorize every line of boilerplate, but they must under
 
 When the agent inevitably hits a wall, the human engineer is the only fallback standing between an operational system and total paralysis.
 
-### Epistemic Grounding: How Engineers Learn Systems Without Tactile Coding
+### Cognitive Grounding: How Engineers Learn Systems Without Tactile Coding
 Historically, software comprehension was an emergent byproduct of manual implementation: developers developed an intimate mental model of a system because they spent weeks typing out data structures, debugging compiler errors, and assembling endpoints by hand. Tactile friction was the vehicle for learning.
 
 When code generation becomes instantaneous and autonomous, this tactile apprenticeship vanishes. If an engineer never types the implementation, **how do they internalize the mental model required to govern the system?**
 
 In an agentic organization, system comprehension is achieved through two deliberate, complementary practices:
 
-1. **Top-Down Epistemic Calibration via Living Documentation**:
+1. **Top-Down Cognitive Calibration via Living Documentation**:
    Rather than attempting to read thousands of lines of synthetic implementation code, the engineer engages with the system at the specification level (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]). By authoring, refining, and reading structured Markdown architecture cards, domain state machines, and interface contracts, the engineer internalizes the system's structural topology. The living documentation acts as a cognitive compression layer—allowing the human brain to grasp system boundaries in minutes rather than days.
 
 2. **Bottom-Up Cognitive Assimilation via Adversarial Code Review**:
@@ -178,7 +178,7 @@ A striking phenomenon of the agentic era is that an engineer can now direct an a
 To an outside observer, this creates a seductive and dangerous fallacy:
 > *"If an engineer can build a complex, low-level system without writing code, then anyone—even someone with zero programming experience or computer science knowledge—can build the exact same software just by asking an AI."*
 
-This is fundamentally false. While the syntax barrier has collapsed to zero, the cognitive and epistemic barrier has actually risen:
+This is fundamentally false. While the syntax barrier has collapsed to zero, the cognitive and cognitive barrier has actually risen:
 
 1. **The Asymmetry of the Abstraction Level**:
    - A non-technical creator operates at a superficial, macro-level abstraction: *"Build me a high-performance transactional engine / distributed state machine."* The agent will dutifully comply, but it will converge on the **averaged prior**—a naive, toy implementation that handles happy paths but lacks crash recovery semantics, lock-free concurrency, memory alignment, and robust transaction isolation boundaries.
@@ -206,25 +206,25 @@ This shift is felt most intensely by **veteran engineers who experienced the pre
 - When an experienced engineer directs an agent to architect and deliver in **two months** a complex, low-level engine that previously would have required **two years** of grueling manual effort, the realization is staggering.
 - Pride is no longer derived from typing speed or syntactic recall, but from **systemic directorship**: framing the problem, anticipating edge cases, curating ground-truth specifications, and holding the system accountable to rigorous mathematical and business invariants.
 
-### The Epistemic Authorship Dilemma: Extended Mind, Tacit Compilation, and the Defense Test
+### The Cognitive Authorship Dilemma: Extended Mind, Tacit Compilation, and the Defense Test
 
-As engineers reach advanced levels of symbiotic workflow with AI models, they frequently encounter an acute epistemic dissonance: **the dilemma of "authorship debt"** (*"Did I genuinely architect this system, or did the model? Is this knowledge truly mine, or am I taking credit for a synthetic hallucination?"*).
+As engineers reach advanced levels of symbiotic workflow with AI models, they frequently encounter an acute cognitive dissonance: **the dilemma of "authorship debt"** (*"Did I genuinely architect this system, or did the model? Is this knowledge truly mine, or am I taking credit for a synthetic hallucination?"*).
 
 This cognitive tension is resolved through four structural mechanisms:
 
 1. **The Extended Mind Thesis (Cognitive Scaffolding)**:
    - Drawing on Andy Clark and David Chalmers' *Extended Mind Thesis*, the boundary of human cognition is not demarcated by the skull or the skin. External tools—from historical notebooks and slide rules to mathematical compilers and neural latent manifolds—function as coupled cognitive extensions.
    - In isolation, an LLM possesses zero autonomous agency, curiosity, or intent; left unprompted, it converges onto the banal, mediocre [[AI, Averaged Decisions, and Premature Convergence on Solutions|averaged prior]].
-   - The practitioner provides the entire intentional vector: the problem formulation, the domain boundary, the non-consensus hypothesis, and the stopping criteria. The model serves as an epistemic scaffold, not an autonomous author.
+   - The practitioner provides the entire intentional vector: the problem formulation, the domain boundary, the non-consensus hypothesis, and the stopping criteria. The model serves as an cognitive scaffold, not an autonomous author.
 
 2. **Tacit Knowledge Compilation**:
    - Following Michael Polanyi's epistemological principle (*"we know more than we can tell"*), experienced practitioners accumulate decades of **tacit knowledge**—instinctive architectural intuition regarding concurrency traps, memory pressure, abstraction leaks, and structural fragility.
    - Translating vast tacit intuition into formal, structured documentation or rigorous taxonomy historically required immense, exhausting effort.
-   - The model acts as an **epistemic compiler**: the practitioner injects an unpolished, intuitive empirical seed, and the model projects that seed across its multi-dimensional training manifold, returning explicit terminology and formal conceptual lattices (see [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]). The insight is not foreign; it is the practitioner's tacit intuition rendered into explicit syntax.
+   - The model acts as an **cognitive compiler**: the practitioner injects an unpolished, intuitive empirical seed, and the model projects that seed across its multi-dimensional training manifold, returning explicit terminology and formal conceptual lattices (see [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]). The insight is not foreign; it is the practitioner's tacit intuition rendered into explicit syntax.
 
-3. **Recognition as an Active Epistemic Act (Verification Taste)**:
+3. **Recognition as an Active Cognitive Act (Verification Taste)**:
    - Reading an agentic proposal and recognizing that it is correct, invariant, and mechanically sound is not passive absorption.
-   - Just as an art curator or master editor exercises deep domain mastery without painting every stroke or typing every word, the engineer's **taste and verification discernment** represent the scarce epistemic filter. Novices cannot distinguish between brilliant architectural synthesis and superficially polished nonsense.
+   - Just as an art curator or master editor exercises deep domain mastery without painting every stroke or typing every word, the engineer's **taste and verification discernment** represent the scarce cognitive filter. Novices cannot distinguish between brilliant architectural synthesis and superficially polished nonsense.
 
 4. **The Defense Test ("Test Obrony") as the Internalization Boundary**:
    - The definitive boundary between genuine mastery and ungrounded mimicry is the **Defense Test**:
@@ -234,7 +234,7 @@ This cognitive tension is resolved through four structural mechanisms:
 
 ---
 
-## The Cognitive Inversion: From "Overthinker" to Epistemic Catalyst
+## The Cognitive Inversion: From "Overthinker" to Cognitive Catalyst
 
 In traditional engineering organizations, developers with highly divergent cognitive styles—those who reflexively question every requirement, generate fifteen alternative implementations for every problem, and refuse to accept standard conventions at face value—often faced severe social and operational friction:
 - **Sprint Friction**: In sprint-driven corporate environments, divergent thinkers are frequently perceived as "overthinkers" or bottlenecks prone to "paralysis by analysis." Teams aiming to close tickets quickly often view architectural skepticism as a liability.
@@ -251,7 +251,7 @@ The Agentic Engineering Setting:
 divergent questioning → high-entropy prompt catalyst → zero-fatigue LLM exploration → rapid proactive straightening
 ```
 
-### 1. Breaking the Averaged Prior Through Epistemic Audacity
+### 1. Breaking the Averaged Prior Through Cognitive Audacity
 As models become ubiquitous, access to an LLM is commoditized. An average prompt fed to an LLM yields the **averaged prior**—the mediocre, boilerplate mean of internet training data.
 - The model itself possesses no autonomous curiosity or critical skepticism. It is a vast latent manifold waiting for a directional impulse.
 - The developer who constantly questions assumptions, rejects default patterns, and explores alternative conceptual angles acts as the **crystallization seed** for the model.

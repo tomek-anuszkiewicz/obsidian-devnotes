@@ -90,7 +90,7 @@ The second layer governs the containment, steering, and mechanical verification 
 1. **The Ironclad Oracle**: Software reliability in the agentic era does not depend on model intelligence; it depends on the **hardness of the deterministic test oracle**. As formalized in [[Testing in the Model, Agent, LLM Era|testing in the agent era]], deterministic tests serve as executable specifications that mechanically reject invalid model mutations.
 2. **The Negative Proof Dilemma**: While formal proof assistants (Lean 4, Coq) guarantee that code satisfies positive specification $P$, they cannot prove that the code does not introduce unmodeled physical side-effects, rogue allocations, or cache invalidation—a reality formalized in [[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]. Verification requires pairing symbolic proofs with empirical dynamic fuzzing.
 3. **Controlled State Machines and Agent Harnesses**: Autonomous coding requires structured harnesses that isolate execution stages (planning, scaffolding, execution, verification, and regression check) into non-leaky state boundaries, as detailed in [[Agentic Coding Harness and Controlled Development Workflows]].
-4. **Negative Knowledge and Epistemic Dissents**: Engineering integrity is preserved by maintaining a formal corpus of rejected paradigms, failed refactorings, and architectural anti-patterns, as cataloged in [[Negative Knowledge and Explicit Architectural Dissents]].
+4. **Negative Knowledge and Cognitive Dissents**: Engineering integrity is preserved by maintaining a formal corpus of rejected paradigms, failed refactorings, and architectural anti-patterns, as cataloged in [[Negative Knowledge and Explicit Architectural Dissents]].
 
 ---
 
@@ -114,7 +114,7 @@ The fourth layer governs the reasoning mechanics, context window constraints, re
 1. **Context as the Sovereign Bottleneck**: The context window is the primary working memory of the agent. Raw prompt bloat triggers attention degradation and retrieval failures. As formalized in [[Retrieval-Augmented Generation and Context Architecture|the RAG and Context Master Architecture]], high-performance cognition requires hybrid dense/sparse retrieval, cross-encoder reranking, and dynamic context compaction.
 2. **Solution Space Bounding**: Models hallucinate and prematurely converge when search spaces are unbounded. As analyzed in [[How Context Narrows an AI's Solution Space]], feeding negative constraints and domain boundaries crystallizes sharp, high-probability reasoning trajectories.
 3. **Constraint Saturation and Rule Oscillation**: Injecting too many conflicting instructions into model context produces non-deterministic rule oscillation. As detailed in [[Constraint Saturation and Rule Oscillation in Coding Agents]], governance rules must be modularized into discrete, on-demand activation skills rather than monolithic system prompts.
-4. **The Epistemic Diff**: Personal models must reconcile external documentation against historical personal truths, utilizing [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Epistemic Diff]] to reject marketing hype and preserve architectural invariants.
+4. **The Cognitive Diff**: Personal models must reconcile external documentation against historical personal truths, utilizing [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Cognitive Diff]] to reject marketing hype and preserve architectural invariants.
 
 ---
 

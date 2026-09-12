@@ -1491,5 +1491,5 @@ The difference may depend less on how intelligent the model becomes and more on 
 - **[[The Most Valuable Software Training Data May Be Private]]**: The sensitive privacy, security, and IP governance questions surrounding personal operational histories.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling personal agent models to interact with authenticated web services via standardized tool contracts.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How deep interaction prompts elicit individualized cognitive models from foundation models.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: How personal digital models act as epistemic filters when encountering external knowledge bases.
+- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: How personal digital models act as cognitive filters when encountering external knowledge bases.
 - **[[AI Era Software Engineering Recruitment]]**: How longitudinal personal performance models upend conventional resume screening and interview evaluations.

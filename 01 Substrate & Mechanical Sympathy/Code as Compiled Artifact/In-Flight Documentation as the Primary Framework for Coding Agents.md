@@ -74,7 +74,7 @@ In this operational model:
 5. **Documentation as the Canonical Source of Truth**:
    When system behavior or business logic must evolve, the engineer does not wade through thousands of lines of syntactic boilerplate. They update the high-level Markdown specification and re-compile the subsystem through the agent. The generated source code is merely the transient intermediate representation, and the binary is the final runtime artifact.
 
-6. **The Dual-Audience Epistemic Compression Layer**:
+6. **The Dual-Audience Cognitive Compression Layer**:
    While living documentation serves as machine-actionable input for the front-end AI compiler, it simultaneously serves as the **human engineer's primary cognitive compression layer**. In a development lifecycle where engineers no longer acquire a mental model through tactile typing, reading and calibrating concise in-flight documentation—paired with adversarial [[Reviewing AI-Generated Code|code review]]—is the primary mechanism by which humans learn the system, maintain situational awareness, and avoid the "Alien Codebase" crisis (see [[AI Changes the Role and Training of Software Engineers]]).
 
 ### Escaping the 4GL / Executable UML Trap: Specifications, Verification Oracles, and Human Stewardship

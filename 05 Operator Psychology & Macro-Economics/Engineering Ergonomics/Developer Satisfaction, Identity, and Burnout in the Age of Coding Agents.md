@@ -121,7 +121,7 @@ Software engineering has historically accommodated two distinct psychological ar
 │ • Loves the physical rhythm of typing │ • Frustrated by typing bottlenecks    │
 │ • Derives joy from clean, hand-crafted│ • Obsessed with high-level topology,  │
 │   syntax and local algorithmic beauty │   domain boundaries, and mechanics    │
-│ • Finds peace in implementation flow  │ • Enjoys epistemic sparring, testing  │
+│ • Finds peace in implementation flow  │ • Enjoys cognitive sparring, testing  │
 │ • Experiences agentic review as       │   edge cases, and rapid prototyping   │
 │   alienating management overhead      │ • Feels empowered and supercharged by │
 │                                       │   orchestrating agent swarms          │
@@ -134,7 +134,7 @@ For developers who entered the profession because they loved the quiet, meditati
 - They are asked to think continuously, analyze non-stop, and resolve discrepancies in diffs they did not author.
 - They feel alienated from their own codebase: the software works, but they do not feel the deep, proprietary pride of having crafted it line by line.
 
-### The Liberation of the Epistemic Catalyst
+### The Liberation of the Cognitive Catalyst
 Conversely, engineers who naturally lean toward architectural design, systems thinking, and domain modeling find agentic workflows exhilarating. They can direct an agent to build an entire low-level execution engine or complex platform in days without writing manual syntax, focusing 100% of their energy on architectural correctness, verification harnesses, and high-level inquiry.
 
 ---
@@ -173,7 +173,7 @@ A recurring source of acute engineer irritation is encountering an agent that st
 ### 3. The Futility of Emotional Calibration
 In human collaboration, social and emotional friction is an adaptive calibration mechanism: a stern critique, a sharp tone, or an expression of fatigue signals to a colleague that an approach is failing, prompting them to change tactics, reflect, and adapt.
 
-With an AI agent, **emotional feedback is an epistemic dead end**:
+With an AI agent, **emotional feedback is an cognitive dead end**:
 - Scolding an agent, expressing irritation, or pleading with it does not alter its underlying sampling weights or context dynamics.
 - The model accepts scolding with frictionless, hollow remorse (*"You are completely right, my mistake!"*), which only compounds developer fury when the subsequent token generation lapses right back into the same irritating pattern.
 - The developer finds themselves yelling at a polite, oblivious machine that physically cannot feel shame, remorse, or the desire to genuinely improve.
@@ -201,7 +201,7 @@ In the AI era, burnout takes on a new, insidious form: **cognitive vigilance exh
 
 1. **The Anxiety of the Opaque Diff**: The constant, background dread that an agentic diff contains a subtle, catastrophic bug (a concurrency leak or data corruption) that passed green tests but will detonate in production (see [[Reviewing AI-Generated Code]]).
 2. **The Multi-Console Juggling Slog**: In classical development, engineers enjoyed a quiet, linear "deep flow" punctuated by predictable meetings. In the agentic era, work morphs into high-frequency multi-tasking across several active terminals: on console #1 the agent is generating code, on console #2 tests and lints are running, while on console #3 the developer is refining a specification or unblocking a stalled task. This parallel attention split rapidly drains cognitive energy.
-3. **The Loss of Mastery and Authorship Debt (The Impostor Dissonance)**: Feeling like a passive passenger rather than the driver. When things go well, the agent generated the code; when things fail, the human must untangle the mess. At higher levels of symbiosis, this triggers acute epistemic dissonance: *"Did I actually create this architecture, or did the model? Am I taking credit for synthetic intuition?"* This feeling of unearned capability erodes professional confidence unless re-grounded in intentional constraint design.
+3. **The Loss of Mastery and Authorship Debt (The Impostor Dissonance)**: Feeling like a passive passenger rather than the driver. When things go well, the agent generated the code; when things fail, the human must untangle the mess. At higher levels of symbiosis, this triggers acute cognitive dissonance: *"Did I actually create this architecture, or did the model? Am I taking credit for synthetic intuition?"* This feeling of unearned capability erodes professional confidence unless re-grounded in intentional constraint design.
 4. **The Emotional Tax of Oblivious Machines**: The chronic, low-grade irritation of interacting with a system that simulates interpersonal understanding but remains fundamentally unconscious, repetitive, and deaf to emotional calibration.
 
 ---
@@ -223,19 +223,19 @@ While agentic work can cause multi-console fragmentation, it also unlocks an unp
 Engineers should feel permission to write critical algorithms, domain models, or experimental spikes by hand whenever doing so brings joy or deepens understanding. Not every line of code needs to be outsourced to an agent.
 
 ### 4. Redefining Professional Pride: Verification Taste and the Defense Test
-The source of professional meaning and epistemic ownership must evolve:
+The source of professional meaning and cognitive ownership must evolve:
 - From: *"I take pride in having typed every line of this function."*
 - To: *"I take pride in formulating non-obvious questions, discovering domain invariants, curating ground truth, and defending the architecture under real-world pressure."*
 
 To overcome the dissonance of "authorship debt," engineers must recognize that **pruning and verification are authentic acts of creation**:
 - **Verification Taste**: Discerning which architectural paths are sound, filtering out plausible-sounding hallucinations, and rejecting fragile abstractions requires hard-won domain mastery. Novices cannot exercise verification taste.
-- **The Defense Test**: If the engineer can step up to a whiteboard without the agent and defend every causal mechanism, state transition, and trade-off in the system from first principles, the knowledge and architecture are authentically theirs. The agent was merely an epistemic scaffold (see [[AI Changes the Role and Training of Software Engineers]]).
+- **The Defense Test**: If the engineer can step up to a whiteboard without the agent and defend every causal mechanism, state transition, and trade-off in the system from first principles, the knowledge and architecture are authentically theirs. The agent was merely an cognitive scaffold (see [[AI Changes the Role and Training of Software Engineers]]).
 
 ---
 
 ## Relationship to the Knowledge Graph
 
-- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the macro transition from manual coding to architectural questioning, epistemic catalysis, and the defense test.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the macro transition from manual coding to architectural questioning, cognitive catalysis, and the defense test.
 - **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Details how corporate framework monopolies and centralized innovation suppress individual engineering agency, accelerating developer burnout.
 - **[[Reviewing AI-Generated Code]]**: Outlines the practical techniques for managing review attention and avoiding the catastrophic "dead in the water" trap.
 - **[[The First AI-Native Generation of Software Engineers]]**: Examines how junior developers will form their engineering identity in a world where code authoring is entirely delegated.

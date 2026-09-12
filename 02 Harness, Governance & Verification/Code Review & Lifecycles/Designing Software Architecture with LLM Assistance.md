@@ -64,7 +64,7 @@ Catastrophic failure in production       2. Formulate falsification questions
 └──────────────────────────────────────────┘  └──────────────────────────────────────────┘
 ```
 
-The core failure mode is **epistemic silence**: an LLM rarely states, *"This problem is underspecified in ways that invalidate any recommendation."* Instead, it fills missing voids with plausible fiction.
+The core failure mode is **cognitive silence**: an LLM rarely states, *"This problem is underspecified in ways that invalidate any recommendation."* Instead, it fills missing voids with plausible fiction.
 
 ---
 

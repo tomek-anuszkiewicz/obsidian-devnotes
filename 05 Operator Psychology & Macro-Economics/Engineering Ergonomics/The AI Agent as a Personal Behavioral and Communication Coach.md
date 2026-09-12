@@ -188,7 +188,7 @@ This behavioral coaching loop directly connects with broader shifts in technical
 
 - **Evolving Recruitment Dynamics**: In an era where AI handles syntactic implementation, hiring processes shift decisively toward behavioral resilience, high-stress reasoning, and collaborative clarity, as explored in [[AI Era Software Engineering Recruitment]].
 - **Neutralizing Workplace Burnout**: Much of engineering burnout stems not from writing code, but from the emotional exhaustion of dysfunctional organizational friction and unmanaged interpersonal conflict. Systematic communication training restores agency and reduces friction, directly impacting [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]].
-- **Epistemic Diffing for Soft Skills**: Just as an architect diffs technical whitepapers using [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Epistemic Diff]], an individual can diff their personal negotiation recordings against master negotiators, identifying communicative blind spots before they cost career capital.
+- **Cognitive Diffing for Soft Skills**: Just as an architect diffs technical whitepapers using [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|the Cognitive Diff]], an individual can diff their personal negotiation recordings against master negotiators, identifying communicative blind spots before they cost career capital.
 
 ---
 
@@ -207,6 +207,6 @@ This behavioral coaching loop directly connects with broader shifts in technical
 - **[[AI Era Software Engineering Recruitment]]**: How behavioral simulation and interpersonal deconstruction prepare engineers for agent-era hiring loops.
 - **[[The Implications of Having a Digital Model of Yourself]]**: Using personal conversational telemetry to construct a faithful behavioral model for coaching and self-reflection.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Reducing the psychological toll of workplace friction through calibrated communication.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: The epistemic counterpart: diffing interpersonal communication habits against gold-standard dialogue models.
+- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: The cognitive counterpart: diffing interpersonal communication habits against gold-standard dialogue models.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The broader transition where communicative and architectural steering supersedes manual implementation.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Cultivating authentic, high-signal personal communication amidst generic corporate discourse.

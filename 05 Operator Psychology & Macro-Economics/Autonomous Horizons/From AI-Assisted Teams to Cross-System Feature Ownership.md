@@ -666,7 +666,7 @@ The likely sequence is:
 
 The long-term structure is uncertain, but it will probably emerge from this process rather than appear as a complete design from the beginning.
 
-This framing deliberately maintains epistemic caution: it analyzes the current operational reality, projects the probable near-term evolution, and only then formulates the hypothesis regarding end-to-end cross-system feature ownership.
+This framing deliberately maintains cognitive caution: it analyzes the current operational reality, projects the probable near-term evolution, and only then formulates the hypothesis regarding end-to-end cross-system feature ownership.
 ---
 
 ## Relationship to the Knowledge Graph

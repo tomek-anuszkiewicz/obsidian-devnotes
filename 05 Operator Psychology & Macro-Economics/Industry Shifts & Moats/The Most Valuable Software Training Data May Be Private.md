@@ -15,7 +15,7 @@ aliases:
 # The Most Valuable Software Training Data May Be Private
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Public open-source repositories represent only the **sterilized, survivorship-biased end state** of software engineering—squashed commits and cleaned files that systematically strip away the true epistemic signal: dead-end explorations, review debates, regression recoveries, and production incident post-mortems. The most valuable training substrate for frontier reasoning agents resides inside private corporate archives: granular commit histories, failing test traces, PR refactorings, and architectural dissents. Models trained exclusively on finished code memorize *what* syntax looks like, but remain ignorant of *how* to diagnose anomalies, negotiate trade-offs, and recover from incorrect assumptions.
+> **Executive Architectural Thesis**: Public open-source repositories represent only the **sterilized, survivorship-biased end state** of software engineering—squashed commits and cleaned files that systematically strip away the true reasoning signal: dead-end explorations, review debates, regression recoveries, and production incident post-mortems. The most valuable training substrate for frontier reasoning agents resides inside private corporate archives: granular commit histories, failing test traces, PR refactorings, and architectural dissents. Models trained exclusively on finished code memorize *what* syntax looks like, but remain ignorant of *how* to diagnose anomalies, negotiate trade-offs, and recover from incorrect assumptions.
 
 ```text
            THE COGNITIVE ASYMMETRY OF CODE TRAINING DATA
@@ -32,7 +32,7 @@ PUBLIC REPOSITORIES (Sterilized Artifact)    PRIVATE CORPORATE ARCHIVES (Cogniti
 ## Executive Summary & Core Architectural Invariants
 
 1. **The Survivorship Bias of Public Code**: Public git repositories showcase working end-states while concealing the iterative struggle, failed hypotheses, and edge-case corrections required to achieve them.
-2. **Epistemic Value Resides in the Journey**: Training agents on how a developer diagnosed a flaky race condition or resolved a production outage instills genuine causal reasoning.
+2. **Diagnostic Value Resides in the Journey**: Training agents on how a developer diagnosed a flaky race condition or resolved a production outage instills genuine causal reasoning.
 3. **The Goldmine of Private Failure Telemetry**: Private CI/CD logs, compiler error cycles, and incident post-mortems provide the negative examples necessary to teach models boundary constraints.
 4. **Contextual Linking Across Artifacts**: The nexus linking business requirements, design discussions, commit diffs, and production performance metrics exists exclusively inside enterprise boundaries.
 5. **Private Data as a Strategic Asset**: Organizations that preserve and index their internal engineering trajectories possess an insurmountable training moat for domain-specific agent tuning.

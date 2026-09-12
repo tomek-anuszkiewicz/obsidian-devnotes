@@ -146,7 +146,7 @@ The human mental model cannot be maintained through passive observation. Instead
    Code review is transformed from an administrative approval gate into **the primary pedagogical ritual of engineering**. Interrogating a diff is the sole moment where the engineer actively maps abstract specification onto concrete mechanical state transitions. By tracing how data enters, mutates, and exits, the engineer forces their neural pathways to assimilate the changes.
 
 #### Preventing the "Alien Codebase" Crisis (The Ship of Theseus)
-If a team relies exclusively on green-check test suites and allows agents to author and commit code without active human review, the repository undergoes a quiet **epistemic drift**. Within months, every module is syntactically sound and passes unit tests, yet the entire system has morphed into an **alien artifact**—a software estate where no living engineer understands why certain invariants exist or where hidden coupling lies.
+If a team relies exclusively on green-check test suites and allows agents to author and commit code without active human review, the repository undergoes a quiet **knowledge drift**. Within months, every module is syntactically sound and passes unit tests, yet the entire system has morphed into an **alien artifact**—a software estate where no living engineer understands why certain invariants exist or where hidden coupling lies.
 
 Code review is the indispensable human defense against the Alien Codebase crisis:
 - It maintains human intellectual stewardship over the system's state space.

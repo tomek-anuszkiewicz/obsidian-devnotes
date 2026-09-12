@@ -767,7 +767,7 @@ Therefore, the first answer produced by an LLM should often be treated as:
 
 ## Relationship to the Knowledge Graph
 
-- **[[Competitive advantage in the age of commodity AI]]**: Details why accepting averaged LLM answers commoditizes strategy and why epistemic audacity creates defensible moats.
+- **[[Competitive advantage in the age of commodity AI]]**: Details why accepting averaged LLM answers commoditizes strategy and why cognitive audacity creates defensible moats.
 - **[[How Context Narrows an AI's Solution Space]]**: Explores the computational and attention mechanisms that prematurely restrict the model's exploratory boundaries.
 - **[[How Reasoning Models Explore and Evaluate Solutions]]**: Analyzes tree search, multi-path generation, and how reasoning models evaluate divergent alternatives.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted practitioner prompts act as crystallization seeds to force models outside the averaged prior.

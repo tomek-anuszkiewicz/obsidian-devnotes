@@ -26,7 +26,7 @@ aliases:
 > Deep, non-obvious insights produced by advanced models are neither static database retrievals nor pure hallucinations. They are **emergent mathematical projections across continuous high-dimensional latent space manifolds**.  
 > - **The Averaging Trap**: Generic prompts activate broad, diffuse attention distributions that default to the statistical mean of public training data ("the averaged prior").
 > - **The Crystallization Seed**: When an engineer injects an empirical observation born from real-world friction, cross-attention heads are forced to compute an intersection query across previously unjoined latent coordinates (e.g., historical systems metaprogramming, software evolution laws, cognitive friction, and token generation economics).
-> - **The Epistemic Division of Labor**: The human acts as the **Lens** (providing empirical ground truth and real-world boundary conditions); the neural network acts as the **Prism** (refracting the empirical seed across trillions of latent connections to synthesize explicit, rigorous architectural frameworks).
+> - **The Cognitive Division of Labor**: The human acts as the **Lens** (providing empirical ground truth and real-world boundary conditions); the neural network acts as the **Prism** (refracting the empirical seed across trillions of latent connections to synthesize explicit, rigorous architectural frameworks).
 
 ```text
 +----------------------------------------------------------------------------------------------------+
@@ -73,10 +73,10 @@ aliases:
 3. **Cross-Attention Manifold Intersection**:
    Targeted prompts force transformer cross-attention heads to compute dot-product intersections between orthogonally distant concept clusters (e.g., historical macro systems, Lehman's laws of software decay, and token economics), precipitating structured frameworks out of super-saturated latent potential.
 
-4. **The Complementary Lens-and-Prism Epistemic Loop**:
+4. **The Complementary Lens-and-Prism Cognitive Loop**:
    Human intuition and model intelligence are strictly complementary: the human acts as the *Lens* (providing real-world ground truth, sensory verification, and boundary conditions); the model acts as the *Prism* (refracting the empirical seed across trillions of latent connections to formalize explicit, rigorous vocabulary).
 
-5. **Epistemic Moats Through Divergent Inquiry**:
+5. **Cognitive Moats Through Divergent Inquiry**:
    When generative code synthesis becomes commoditized, competitive architectural advantage shifts from answering questions to formulating extraordinary, non-consensus queries that force models outside their averaged pre-training prior.
 
 ---
@@ -160,7 +160,7 @@ Crystallized Thesis:
 
 ---
 
-## 4. The Human-AI Epistemic Loop: Lens and Prism
+## 4. The Human-AI Cognitive Loop: Lens and Prism
 
 This dynamic clarifies the complementary roles of the human engineer and the neural network:
 
@@ -177,12 +177,12 @@ True emergence occurs in the **feedback loop between the two**:
 3. The model maps that observation across its latent space, finding structural parallels in computing history and systems architecture.
 4. The synthesized response gives the human an explicit framework to evaluate, refine, and apply back to the code.
 
-### Tacit Knowledge Compilation and the Epistemic Authorship Resolution
+### Tacit Knowledge Compilation and the Cognitive Authorship Resolution
 
 This loop resolves the persistent **authorship dilemma** (*"Did I author this insight, or did the AI?"*):
 - **Polanyi’s Tacit Knowing**: Following Michael Polanyi's thesis that *"we can know more than we can tell"*, experienced software architects possess vast reservoirs of **tacit knowledge**—instinctive heuristics about system fragility, lock contention, abstraction drag, and organizational friction acquired over decades of building.
 - **The LLM as a Tacit Compiler**: The practitioner brings the unarticulated, visceral insight (the Lens). The neural network (the Prism) performs **tacit knowledge compilation**: refracting raw empirical intuition through universal abstractions and computing history to produce explicit, structured vocabulary.
-- **Verification Through Recognition**: When an engineer reads an AI synthesis and immediately recognizes its profound truth, that recognition is an active epistemic verification. The model did not invent the reality; it rendered the practitioner's implicit empirical experience into explicit, communicable architecture.
+- **Verification Through Recognition**: When an engineer reads an AI synthesis and immediately recognizes its profound truth, that recognition is an active cognitive verification. The model did not invent the reality; it rendered the practitioner's implicit empirical experience into explicit, communicable architecture.
 - **The Whiteboard Defense Criterion**: If the engineer can subsequently stand at a whiteboard without the model and defend every causal link, invariant, and trade-off in the synthesized architecture, the knowledge is authentically theirs (see [[AI Changes the Role and Training of Software Engineers]]).
 
 ---
@@ -199,7 +199,7 @@ This loop resolves the persistent **authorship dilemma** (*"Did I author this in
 ## Relationship to the Knowledge Graph
 
 - **[[Competitive advantage in the age of commodity AI]]**: Details why asking extraordinary questions is the primary defensible moat when code generation is commoditized.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the cognitive transformation of the engineer into an epistemic catalyst and introduces the Defense Test.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the cognitive transformation of the engineer into an cognitive catalyst and introduces the Defense Test.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Analyzes the psychological tension of authorship debt and cognitive vigilance exhaustion.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Explains how unguided models default to mediocre averages and how targeted prompts prevent premature convergence.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Serves as the primary case study where real-world debugging friction crystallized into an architectural isolation thesis.

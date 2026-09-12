@@ -990,7 +990,7 @@ Instead of suffocating the model with a rigid, 50-step micro-plan that collapses
 
 ## Relationship to the Knowledge Graph
 
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: The epistemological foundation of negative bounding, explaining why excluding catastrophic anti-paths outperforms prescriptive micromanagement.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: The conceptual foundation of negative bounding, explaining why excluding catastrophic anti-paths outperforms prescriptive micromanagement.
 - **[[Agent Deployment and Execution Models]]**: Infrastructure environments where controlled agent harnesses operate.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Harness circuit breakers and constraint tiering to prevent multi-objective rule thrashing.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Converting runtime harness execution failures into permanent repository rules.

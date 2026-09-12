@@ -69,7 +69,7 @@ Every 15 to 20 years, the software engineering discipline proclaims a familiar r
 - In the 2000s, it was rebranded as **Model-Driven Architecture (MDA) and Executable UML**.
 - In the 2020s, it has resurfaced as prompt-driven and markdown-based code generation.
 
-Every single one of these historical paradigms collapsed due to an immutable epistemological barrier: **natural language (even when structured into formal Markdown specifications) is inherently underspecified, probabilistic, and ambiguous**.
+Every single one of these historical paradigms collapsed due to an immutable conceptual barrier: **natural language (even when structured into formal Markdown specifications) is inherently underspecified, probabilistic, and ambiguous**.
 
 #### The Precision Trap: The Compiler-less Language Paradox
 Software systems require exact, unambiguous mechanics: memory layout, error unwinding paths, atomic state transitions, concurrency memory ordering, and edge-case exceptions. 

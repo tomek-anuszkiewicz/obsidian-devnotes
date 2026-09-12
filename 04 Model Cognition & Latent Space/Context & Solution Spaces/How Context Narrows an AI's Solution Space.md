@@ -20,7 +20,7 @@ aliases:
 > Context is not passive text storage; it acts as a **geometric bounding manifold that dynamically prunes candidate solution trajectories before detailed reasoning begins**.  
 > - **The Pruning Mechanism**: Injecting jurisdiction, organizational invariants, interface boundaries, and operational constraints eliminates trillions of theoretically possible but practically invalid token paths from the model's high-dimensional latent space.
 > - **Hard Constraints vs Soft Norms**: Robust architectures strictly separate *Hard Invariants* (immutable laws, memory boundaries, security policies) from *Soft Norms* (corporate boilerplate, temporary conventions). Treating soft norms as hard constraints prematurely collapses the search space onto mediocre industry averages.
-> - **Negative Bounding over Affirmative Prescription**: Prescribing an exact affirmative path creates brittle agent execution that fails on unseen obstacles. In contrast, **Negative Bounding** (pruning 2–3 explicit failure modes and non-goals) preserves a broad, safe convex hull within which frontier models navigate and self-correct with maximum epistemic agility.
+> - **Negative Bounding over Affirmative Prescription**: Prescribing an exact affirmative path creates brittle agent execution that fails on unseen obstacles. In contrast, **Negative Bounding** (pruning 2–3 explicit failure modes and non-goals) preserves a broad, safe convex hull within which frontier models navigate and self-correct with maximum reasoning agility.
 
 ```text
 +----------------------------------------------------------------------------------------------------+
@@ -605,7 +605,7 @@ For the complete architectural blueprint detailing how context retrieval, tree-o
 
 ## Relationship to the Knowledge Graph
 
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: Explores the epistemological foundation of negative bounding and why forbidding anti-paths outperforms affirmative micromanagement.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: Explores the conceptual foundation of negative bounding and why forbidding anti-paths outperforms affirmative micromanagement.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of negative fences within automated agent harnesses.
 - **[[How Modern LLM Systems Build Context, Reason, and Stay Constrained]]**: High-level synthesis connecting context building, reasoning depth, and policy constraints.
 - **[[How LLM Systems Build Context]]**: Examines the technical architecture of context windows, retrieval mechanisms, and working memory.

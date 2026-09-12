@@ -408,9 +408,9 @@ LLMs have a strong gravitational pull toward the **Averaged Prior**—the well-t
 - A genuine competitive advantage belongs to leaders and architects who possess the depth to **force the LLM outside its default schemas**.
 - This requires deep domain immersion and the willingness to reject generic textbook best practices when specific physics, economics, or operational constraints demand a different path.
 
-### 3. Epistemic Leadership: Managing Questions, Not Tasks
+### 3. Intellectual Leadership: Managing Questions, Not Tasks
 Management historically revolved around decomposing goals into Jira tasks and supervising human execution.
-In the agentic era, leadership becomes **epistemic direction**:
+In the agentic era, leadership becomes **intellectual direction**:
 - Defining non-obvious constraints,
 - Asking provocative, boundary-testing questions that collapse the LLM's latent space into novel solutions,
 - Rigorously verifying the synthesized results against real-world friction.

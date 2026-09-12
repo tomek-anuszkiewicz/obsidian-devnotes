@@ -160,7 +160,7 @@ The most defensible organizational IP lies in **Negative Trajectories (Via Negat
 2. **Human PR Rejection Rationales**: The exact review comments where senior human engineers rejected an agent's syntactically valid code because it violated unspoken business invariants, introduced operational debt, or ignored hardware cache locality.
 3. **Debug Trajectories and Heisenbug Retries**: The step-by-step reasoning steps where an agent wrestled with distributed race conditions before finding the minimal, correct fix.
 
-As explored in [[Negative Knowledge and Explicit Architectural Dissents]], training on positive outputs alone creates brittle, hallucinatory agents that repeatedly wander into known corporate traps. Incorporating negative trajectories transforms corporate memory from a naive repository of code into a **defensive epistemic firewall**.
+As explored in [[Negative Knowledge and Explicit Architectural Dissents]], training on positive outputs alone creates brittle, hallucinatory agents that repeatedly wander into known corporate traps. Incorporating negative trajectories transforms corporate memory from a naive repository of code into a **defensive verification firewall**.
 
 ---
 

@@ -15,7 +15,7 @@ aliases:
 # The Future of School When Knowledge Becomes Abundant
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Institutional schooling was historically engineered to solve a singular physical bottleneck: the scarcity of knowledgeable instructors and authoritative texts. When frontier models provide every human with an infinitely patient, personalized 1:1 Socratic tutor, the 19th-century factory model of broadcast curricula, synchronized age cohorts, and rote regurgitation collapses. Education inverts from **information transmission** to **epistemic discernment, adversarial verification, and empirical experimentation**, shifting human teachers from lecture broadcasters to high-touch behavioral and ethical mentors.
+> **Executive Architectural Thesis**: Institutional schooling was historically engineered to solve a singular physical bottleneck: the scarcity of knowledgeable instructors and authoritative texts. When frontier models provide every human with an infinitely patient, personalized 1:1 Socratic tutor, the 19th-century factory model of broadcast curricula, synchronized age cohorts, and rote regurgitation collapses. Education inverts from **information transmission** to **critical discernment, adversarial verification, and empirical experimentation**, shifting human teachers from lecture broadcasters to high-touch behavioral and ethical mentors.
 
 ```text
            EDUCATION PARADIGM INVERSION: BROADCAST VS SOCRATIC MENTORSHIP
@@ -36,14 +36,14 @@ AI-ABUNDANT ACADEMY (Zero Knowledge Scarcity):
 +------------------------------------|------------------------------------+
                                      v
 +-------------------------------------------------------------------------+
-| MASTERY-BASED EPISTEMIC DISCERNMENT & RESILIENCE                        |
+| MASTERY-BASED CRITICAL DISCERNMENT & RESILIENCE                        |
 | Progresses only when student proves invariants; resists passive atrophy |
 +-------------------------------------------------------------------------+
 ```
 
 ## Executive Summary & Core Architectural Invariants
 
-1. **Inversion from Transmission to Discernment**: For centuries, schooling solved the scarcity of teachers and books through broadcast lectures. When AI makes personalized Socratic explanation free and abundant, education inverts from information transmission to epistemic discernment and critical verification.
+1. **Inversion from Transmission to Discernment**: For centuries, schooling solved the scarcity of teachers and books through broadcast lectures. When AI makes personalized Socratic explanation free and abundant, education inverts from information transmission to critical discernment and critical verification.
 2. **Mastery-Based Dynamic Pacing**: The rigid industrial model of advancing students by biological age cohort collapses. AI tutors enable true mastery-based progression: advancing only when foundational causal concepts are proven.
 3. **The Death of Rote Memorization Assessments**: Essays and multiple-choice tests are trivialized by generative models. Assessments pivot to live oral defense, adversarial debugging, and real-world physical or empirical demonstrations.
 4. **Teachers as Fiduciary Mentors and Behavioral Coaches**: Relieved of repetitive lecturing and grading, human educators elevate to high-touch mentors cultivating emotional resilience, social calibration, and ethical reasoning.
@@ -1013,8 +1013,8 @@ It may be that AI finally makes it possible for teachers and schools to stop spe
 ## Relationship to the Knowledge Graph
 
 - **[[The First AI-Native Generation of Software Engineers]]**: The new educational baseline for students learning technical crafts alongside ubiquitous AI tutors.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Elevating curiosity, epistemic framing, and verifiable critical thinking over rote memorization.
-- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: How individuals use agentic epistemic transpilers to digest long-form books, papers, and complex domains.
+- **[[AI Changes the Role and Training of Software Engineers]]**: Elevating curiosity, problem framing, and verifiable critical thinking over rote memorization.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: How individuals use agentic knowledge synthesis tools to digest long-form books, papers, and complex domains.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Training students to distinguish primary empirical truth from derivative synthetic repetition.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: The art of prompting as an inquiry methodology for navigating complex knowledge spaces.
 - **[[Singularity Without AGI -  The Civilizational Automation Loop]]**: The societal and institutional adaptations required as machine intelligence democratizes specialized skills.
