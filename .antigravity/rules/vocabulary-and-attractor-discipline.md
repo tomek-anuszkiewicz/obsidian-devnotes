@@ -28,6 +28,21 @@ Physical microarchitectural execution terms are strictly quarantined by architec
      - Use **branch prediction efficiency** or **state machine compactness** instead of *hardware branch predictor saturation*.
      - Use **execution blast radius** instead of *cache invalidation*.
 
+### 2.1 The "Mechanical Sympathy" Attractor Containment
+The phrase *mechanical sympathy*—originally introduced to software by Martin Thompson from racing driver Jackie Stewart's dictum ("You don't have to be an engineer to be a racing driver, but you do have to have Mechanical Sympathy...")—refers strictly to software engineered in harmony with underlying hardware execution mechanisms (pipelining, cache hierarchies, memory bus bandwidth).
+
+Due to associative attractor drift, models tend to turn this term into an empty slogan across unrelated layers (e.g. "Guardian of Mechanical Sympathy" in test oracles, "Mechanical Sympathy in SQL queries", or in human ergonomics).
+
+1. **Strict Layer Quarantine**:
+   - The phrase `mechanical sympathy` is permitted **ONLY** in Layer 1 (`01 Substrate & Mechanical Sympathy/`) historical context and in the root system charters (`The 5-Layer System Stack...`, `_Explore.md`, `Preamble.md`).
+   - It is **strictly forbidden** anywhere in Layers 2, 3, 4, and 5.
+2. **Strict Heading Ban**:
+   - `mechanical sympathy` must **NEVER** appear in any Markdown section headings (`#`, `##`, `###`, etc.) across any layer (the sole exception being the canonical Layer 1 definition in `The 5-Layer System Stack for Agentic Software Engineering.md`).
+3. **Mandated Substitutions**:
+   - In Layer 2 (Verification/Harness): use **hardware reality**, **physical resource invariants**, **low-level execution efficiency**.
+   - In Layer 5 (Human Ergonomics/Organization): use **systems efficiency**, **direct hardware optimization**, **low-level systems comprehension**.
+   - In Layer 1 (outside historical definition): use **hardware-aware optimization**, **substrate efficiency**, **execution engine alignment**.
+
 ---
 
 ## 3. Lexical Diversity & Ban on High-Register Jargon Monoculture
