@@ -106,7 +106,7 @@ Ecological Fallacy (Individual Level Decision):
 "Individual X belongs to Cohort A; therefore, Individual X is a credit risk."
 ```
 
-In autonomous runtime systems (as explored in [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]), committing the ecological fallacy is an architectural defect:
+In autonomous runtime systems (as explored in [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry|runtime telemetry integration]]), committing the ecological fallacy is an architectural defect:
 - A bank that denies a $250,000/year software engineer a mortgage because their neighborhood has low median wealth is losing its highest-margin business.
 - An e-commerce engine that disables expedited shipping to a neighborhood due to aggregate package theft rates alienates high-value, honest consumers who happen to reside there.
 
@@ -154,7 +154,7 @@ Following Judea Pearl's formal causality framework, systems must ascend beyond p
 - **Level 3: Counterfactuals ($P(Y_{X=x} | X=x', Y=y)$)**: *"Would this customer have defaulted if their employment remained stable, regardless of where they live?"*
 
 ### B. The Direct Verification Invariant
-An autonomous decision harness (as governed by [[Agentic Coding Harness and Controlled Development Workflows]]) must mandate:
+An autonomous decision harness (as governed by [[Agentic Coding Harness and Controlled Development Workflows|controlled harness architectures]]) must mandate:
 > **Never allow a proxy variable to override or substitute for a measurable causal invariant.**
 
 - **In Insurance**: Model flood risk by querying real-time topological LIDAR elevations and drainage capacity, never broad geographic quadrant labels.

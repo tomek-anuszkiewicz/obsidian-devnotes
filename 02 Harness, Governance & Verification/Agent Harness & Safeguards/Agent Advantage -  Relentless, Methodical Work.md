@@ -114,7 +114,7 @@ Because agents do not feel exhaustion, they can easily burn compute generating t
 - Generating repetitive markdown documentation for obvious code,
 - Introducing speculative generic interfaces for single-use routines.
 
-High-assurance harnesses enforce **proportionality constraints** (see [[Agentic Coding Harness and Controlled Development Workflows]]):
+High-assurance harnesses enforce **proportionality constraints** (see [[Agentic Coding Harness and Controlled Development Workflows|controlled harness workflows]]):
 - *Risk Tiering*: Low-risk internal scripts receive lightweight checks; public ingress APIs receive exhaustive matrix verification.
 - *Touchpoint Caps*: Restricting the agent to editing maximum $N$ files per pull request.
 - *Negative Fences*: Explicitly forbidding the introduction of unnecessary abstractions.

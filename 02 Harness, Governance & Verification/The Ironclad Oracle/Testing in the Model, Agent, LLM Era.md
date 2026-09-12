@@ -115,7 +115,7 @@ The rise of ephemeral implementation code shifts the fundamental role of the hum
   2. Curating and freezing the deterministic test oracle.
   3. Enforcing hardware-sympathetic data layouts and cache efficiency.
   4. Reviewing algorithmic invariants and topological boundaries.
-  5. Governing the cognitive trade-offs between human readability and machine efficiency (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]).
+  5. Governing the cognitive trade-offs between human readability and machine efficiency (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|operator psychology and burnout]]).
 
 ---
 
@@ -145,7 +145,7 @@ An agent can generate an implementation that passes 300,000 unit vectors with ze
 
 ### 1. The Cache Blindspot: Data Locality vs. Instruction Cache Thrashing
 A frequent pitfall occurs when benchmarking agent-generated code:
-- **The Microbenchmark Illusion**: An agent generates a massive dispatch table consisting of thousands of discrete, specialized functions or unrolled match arms. In a synthetic microbenchmark, a tight test loop executes the same 10 to 20 operations repeatedly. The working set fits comfortably in CPU caches, the hardware branch predictor achieves 99.9% accuracy, and the profiler reports dazzling numbers: 100x realtime throughput at 1% CPU utilization.
+- **The Microbenchmark Illusion**: An agent generates a massive dispatch table consisting of thousands of discrete, specialized functions or unrolled match arms. In a synthetic microbenchmark, a tight test loop executes the same 10 to 20 operations repeatedly. The working set fits comfortably in CPU caches, branch prediction achieves near-perfect accuracy, and the profiler reports dazzling numbers: 100x realtime throughput at 1% CPU utilization.
 - **The Reality of Production (Instruction Cache Thrashing)**: In real-world multi-tenant production, execution does not loop over 10 operations. Under live traffic with varied request payloads, interrupt handling, and OS context switching, the CPU must jump across hundreds of different function entry points.
 - **Data vs. Instruction Locality**: While working data often fits comfortably within large shared caches, hardware **Instruction Caches (I-Cache)** remain rigidly bounded.
 - When an agent generates thousands of unrolled, specialized functions, the executable binary size of the hot execution path explodes past fast instruction cache limits.
@@ -175,7 +175,7 @@ To overcome the inherent incompleteness of static test oracles and the blindspot
 ### 1. Data-Oriented Design (DOD) Constraints
 To combat model object-oriented contamination, the harness injects explicit hardware constraints into task definitions:
 - Allocation-free hot paths (pre-allocated memory arenas, slab allocators, or zero-heap execution modes).
-- Contiguous flat-memory layouts (Struct-of-Arrays instead of Array-of-Structs) to ensure optimal CPU cache line packing (64-byte alignment).
+- Contiguous flat-memory layouts (Struct-of-Arrays instead of Array-of-Structs) to ensure optimal memory locality and sequential access throughput.
 - Memory bandwidth verification: automated profiling gates that fail the build if heap allocations or unexpected boxing occur inside core execution loops.
 
 ### 2. Virtual-Time & Deterministic Record-Replay Debugging

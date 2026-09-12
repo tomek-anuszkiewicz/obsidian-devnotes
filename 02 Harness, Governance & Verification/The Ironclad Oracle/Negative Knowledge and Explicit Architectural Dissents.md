@@ -192,7 +192,7 @@ In real-world production execution, the system behaves completely differently:
 2. 65,536 distinct, specialized handler functions occupy tens of megabytes of compiled machine code.
 3. The host CPU cannot keep these handlers in fast instruction memory. As the execution engine jumps across diverse handlers, the processor suffers severe **Instruction Cache Thrashing**.
 4. The instruction prefetcher stalls continuously. The superscalar execution pipelines sit starved of instructions, burning CPU cycles waiting for code lines to be fetched from slower memory tiers.
-5. In contrast, a tight, compact, highly optimized core state machine occupies a tiny code footprint. It **remains permanently resident in fast instruction cache**, allowing the CPU's branch predictor and execution engine to run at maximum saturation.
+5. In contrast, a tight, compact, highly optimized core state machine occupies a tiny code footprint. It **remains permanently resident in fast instruction cache**, allowing the CPU's branch prediction and execution pipelines to run at maximum saturation.
 
 ```text
 The Instruction Cache Blind Spot:

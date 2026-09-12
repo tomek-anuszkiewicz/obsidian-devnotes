@@ -51,7 +51,7 @@ aliases:
 2. **Removal from the Critical Path**: The historical tipping point occurs when human cognitive bandwidth ceases to be the rate-limiting step in technological refinement, tool iteration, and software optimization.
 3. **Verification Closes the Loop**: Self-improvement cannot function on probabilistic generation alone (which suffers from autophagous collapse); it requires cheap, objective mechanical falsification (compilers, formal proofs, physical experiments).
 4. **Physical Delivery as the Final Friction**: While digital iteration approaches zero marginal cost, overall societal velocity becomes bounded by physical constraints: silicon fabrication cycles, energy distribution, and supply chains.
-5. **The Human Invariant Governor**: In closed automation meshes, human agency shifts from executing technical steps to defining teleological invariants, moral boundaries, and resource budgets.
+5. **The Human Invariant Governor**: In closed automation meshes, human agency shifts from executing technical steps to defining directional intent, moral boundaries, and resource budgets.
 
 ---
 

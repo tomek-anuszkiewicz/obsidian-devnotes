@@ -43,7 +43,7 @@ aliases:
    "Does f(x) satisfy specification Q?"      "Does f(x) perform unmodeled harm?"
                  │                                         │
    - Functional equivalence                  - Zero hidden heap allocations
-   - Type-level termination guarantees       - Cache line locality & alignment
+   - Type-level termination guarantees       - Memory access locality & alignment
    - State machine transition proofs         - Latency jitter & thread safety
                  │                                         │
                  └────────────────────┬────────────────────┘

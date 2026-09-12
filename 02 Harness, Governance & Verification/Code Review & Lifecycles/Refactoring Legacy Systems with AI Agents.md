@@ -263,13 +263,13 @@ Because frontier models have been pre-trained on vast repositories of enterprise
 
 ### 2. The Cache Blindspot: Data Locality vs. Instruction Cache Degradation
 When modernizing high-throughput or latency-sensitive legacy services, test oracles create a dangerous illusion:
-- **The Microbenchmark Illusion**: An agent unrolls legacy processing into thousands of specialized, discrete handlers or deep class hierarchies. In unit tests and synthetic microbenchmarks, the small test loop fits easily within CPU caches, branch predictors achieve 99.9% accuracy, and the profiler reports blazing speeds.
+- **The Microbenchmark Illusion**: An agent unrolls legacy processing into thousands of specialized, discrete handlers or deep class hierarchies. In unit tests and synthetic microbenchmarks, the small test loop fits easily within CPU caches, branch prediction achieves near-perfect accuracy, and the profiler reports blazing speeds.
 - **The Reality of Production (Instruction Cache Degradation)**: In live multi-tenant production, execution does not loop over 10 operations. The CPU must jump across thousands of sprawling class methods and dispatch tables, rapidly exceeding the host core's fast instruction cache capacity.
 - While working data often fits comfortably within shared caches, instruction cache exhaustion forces the CPU to stall for idle clock cycles while fetching code lines from slower memory tiers. Throughput collapses under production load despite passing all unit tests (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
 
 ### 3. Enforcing Data-Oriented Design (DOD) as an Invariant
 To ensure modernized systems achieve true mechanical sympathy, the human architect must constrain the agent to enforce **Data-Oriented Design (DOD)**:
-- **Contiguous Memory Buffers**: Struct-of-Arrays (SoA) layouts instead of Array-of-Structs (AoS) to maximize cache line packing (64-byte alignment).
+- **Contiguous Memory Buffers**: Struct-of-Arrays (SoA) layouts instead of Array-of-Structs (AoS) to maximize spatial memory locality and sequential read throughput.
 - **Zero-Allocation Hot Paths**: Eliminating heap allocations, object boxing, and intermediate DTO mappings inside tight calculation pipelines.
 - **Compact Dispatch Tables**: Replacing bloated, unrolled agent code with tightly packed jump tables and flat state machines whose entire execution loop remains permanently pinned in fast execution memory.
 
