@@ -19,6 +19,9 @@ aliases:
   - Steering Agents via Negative Boundaries
   - Negative Bounding in Agent Workflows
   - Bounding by Exclusion
+  - Harness Engineering vs Vibe Coding
+  - Vibe Coding vs Harness Engineering
+  - SOTA Patterns for High-Assurance Agents
 ---
 
 # Agentic Coding Harness and Controlled Development Workflows
@@ -988,9 +991,27 @@ Instead of suffocating the model with a rigid, 50-step micro-plan that collapses
 
 ---
 
+## State-of-the-Art (SOTA) Patterns for High-Assurance Agents
+
+When deploying autonomous agents across low-tolerance, mission-critical systems, frontier workflows move beyond raw prompting to implement five deterministic, high-assurance patterns:
+
+| Pattern | Operational Purpose | Failure Mode Prevented |
+| :--- | :--- | :--- |
+| **Repro-First / Regression Guard** | Mandate writing an isolated, failing reproduction test *before* editing production code. | Prevents unanchored code modifications, stochastic guessing, and silent adjacent breakages. |
+| **Pre-Flight Gate** | A unified script verifying code formatting, architectural invariants, language attractors, and session logs. | Eliminates manual checklist fatigue before merging or committing changes. |
+| **Platform Quirks & Invariants Catalog** | Centralized index of non-intuitive hardware idiosyncrasies, timing constraints, and substrate traps. | Stops agents from "fixing" intentional low-level quirks that appear anomalous to generic training data. |
+| **Reference Triangulation** | Reconciles official architecture manuals, local design notes, and clean-room reference implementations. | Prevents hallucinations, conflicting contract interpretations, and divergent state representations. |
+| **Git Worktree Sandbox** | Disposable, isolated git worktrees for rapid, experimental architectural spikes and tracer bullets. | Protects the primary working tree from exploratory pollution and merge conflicts. |
+
+These patterns form the deterministic operating scaffolding within which [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor]] directs agent execution without sacrificing architectural rigor.
+
+---
+
 ## Relationship to the Knowledge Graph
 
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The ergonomic leadership model of directing high-assurance agent harnesses via voice dictation and immediate friction codification.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: The conceptual foundation of negative bounding, explaining why excluding catastrophic anti-paths outperforms prescriptive micromanagement.
+- **[[Exploring Agent Harnesses]]**: Deconstructs the taxonomy of in-repo harnesses versus bloated commercial off-the-shelf wrappers.
 - **[[Agent Deployment and Execution Models]]**: Infrastructure environments where controlled agent harnesses operate.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Harness circuit breakers and constraint tiering to prevent multi-objective rule thrashing.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Converting runtime harness execution failures into permanent repository rules.
