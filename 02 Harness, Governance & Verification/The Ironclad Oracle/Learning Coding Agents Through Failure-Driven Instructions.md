@@ -234,10 +234,18 @@ Agent Makes Error ──► Human Explains Flaw ──► Knowledge Extracted in
 
 When a principal architect spends 15 minutes explaining why an implicit state-machine transition violates downstream billing guarantees, that explanation is not discarded. It is distilled into an architectural rule, verified against the eval suite, and embedded into the agent's procedural memory.
 
+### The Immediate Friction Codification Protocol
+To prevent procedural memory decay, engineering teams must establish a strict operational invariant: **Never silently repair an agent's architectural failure.**
+
+1. **The Silent Patch Anti-Pattern**: An engineer notices that an agent generated code with an unnecessary wrapper layer or an unhandled concurrency edge case. Rather than correcting the root cause, the engineer quickly patches the diff by hand in the IDE. While this saves 30 seconds immediately, it guarantees that every future agent invocation in that repository will repeat the identical mistake.
+2. **Immediate Invariant Freezing**: Under [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor Pattern]], the engineer refuses to clean up in silence. Instead, the friction is immediately externalized: directing the agent to draft or refine an explicit rule (`.agents/rules/`), encapsulate the procedure into an operational skill, or write a pre-flight architectural lint test.
+3. **Closing the Outer Loop**: By treating every stumble as a harness defect rather than an implementation nuisance, the system continuously closes the Outer Optimization Loop, compounding developer leverage with every task.
+
 ---
 
 ## Relationship to the Knowledge Graph
 
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The ergonomic discipline of immediate friction codification, ensuring no agent failure is patched silently.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The physical execution harness that injects versioned instructions and evaluates pass/fail metrics.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: The mathematical and cognitive foundation explaining why instructions must be pruned, compressed, and retrieved selectively.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How failure-driven instruction learning systematically builds the repository's Negative Knowledge Base ($K^-$).
