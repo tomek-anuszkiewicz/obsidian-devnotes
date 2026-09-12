@@ -17,7 +17,7 @@ aliases:
   - The Hybrid Trap in AI Refactoring
   - LLM Anchoring and Status-Quo Bias
   - Shadow Twin and Differential Execution
-  - Mechanical Sympathy in Legacy Modernization
+  - Data-Oriented Optimization in Legacy Modernization
   - The Ship of Theseus in Code Migration
   - Data-Oriented Design in Legacy Refactoring
   - Exploratory Pruning in Legacy Codebases
@@ -45,7 +45,7 @@ Isolate behavior via oracles ──► Re-synthesize 1:1 flat modules ──► 
 3. **Symbolic Pruning Over Biological Archaeology**: Humans suffer from the "Breadth Trap"—paralyzed by the fear of unknown side effects across 100,000 lines. Coding agents invert this by acting as symbolic pruning engines: proving what code is *not* relevant, collapsing weeks of manual exploration into 45 minutes.
 4. **Parity First, Evolutionary Modernization Second**: The fatal flaw of historical rewrites is the Second-System Effect (trying to improve features while rewriting). Modernization mandates a strict two-phase discipline: **Bug-for-bug parity first** (the "clean refresh" achieving $0.000\%$ behavioral drift under dark production traffic), followed by evolutionary optimization only after parity is proven.
 5. **Dark Differential Traffic Mirroring**: Deploying the modernized service as an asynchronous shadow twin receiving mirrored live production ingress allows autonomous differential oracles to catch every unmodeled divergence, converting real production traffic into an ironclad regression suite.
-6. **Mechanical Sympathy Against Model OOP Bias**: Pre-trained models default to deep class hierarchies, dynamic dispatch, and heap-allocated DTO wrappers. The human architect must constrain the agent to enforce Data-Oriented Design (DOD)—compact memory layouts, zero-allocation hot paths, and instruction cache locality.
+6. **Data-Oriented Design Against Model OOP Bias**: Pre-trained models default to deep class hierarchies, dynamic dispatch, and heap-allocated DTO wrappers. The human architect must constrain the agent to enforce Data-Oriented Design (DOD)—compact memory layouts, zero-allocation hot paths, and instruction cache locality.
 
 ---
 
@@ -252,9 +252,9 @@ The single greatest failure mode in legacy migrations is the instinct to "improv
 
 ---
 
-## Phase 4: Mechanical Sympathy in Legacy Modernization (Data-Oriented Design)
+## Phase 4: Data-Oriented Design in Legacy Modernization
 
-When using agents to refactor legacy codebases (such as monolithic enterprise architectures or sprawling procedural services), software architects must confront a subtle but dangerous failure mode: **LLM "Object-Oriented Contamination" and Mechanical Blindness**.
+When using agents to refactor legacy codebases (such as monolithic enterprise architectures or sprawling procedural services), software architects must confront a subtle but dangerous failure mode: **LLM "Object-Oriented Contamination" and Execution Inefficiency**.
 
 ### 1. The LLM Object-Oriented Contamination Trap
 Because frontier models have been pre-trained on vast repositories of enterprise code, their default statistical prior is to solve problems using deep object-oriented abstractions:
@@ -268,7 +268,7 @@ When modernizing high-throughput or latency-sensitive legacy services, test orac
 - While working data often fits comfortably within shared caches, instruction cache exhaustion forces the CPU to stall for idle clock cycles while fetching code lines from slower memory tiers. Throughput collapses under production load despite passing all unit tests (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
 
 ### 3. Enforcing Data-Oriented Design (DOD) as an Invariant
-To ensure modernized systems achieve true mechanical sympathy, the human architect must constrain the agent to enforce **Data-Oriented Design (DOD)**:
+To ensure modernized systems achieve optimal execution efficiency, the human architect must constrain the agent to enforce **Data-Oriented Design (DOD)**:
 - **Contiguous Memory Buffers**: Struct-of-Arrays (SoA) layouts instead of Array-of-Structs (AoS) to maximize spatial memory locality and sequential read throughput.
 - **Zero-Allocation Hot Paths**: Eliminating heap allocations, object boxing, and intermediate DTO mappings inside tight calculation pipelines.
 - **Compact Dispatch Tables**: Replacing bloated, unrolled agent code with tightly packed jump tables and flat state machines whose entire execution loop remains permanently pinned in fast execution memory.
@@ -326,7 +326,7 @@ A clean history allows any human reviewer to immediately distinguish:
 ## Relationship to the Knowledge Graph
 
 - **[[Testing in the Model, Agent, LLM Era]]**: Canonical hub establishing the dual-steering architecture, the limits of test oracles, the 4GL curse, and ephemeral code discipline.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, instruction footprint, and Data-Oriented Design against LLM OOP bias.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing low-level execution efficiency, instruction footprint, and Data-Oriented Design against LLM OOP bias.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explains how disciplined 1:1 isolation and atomic commits prevent code churn and Ship of Theseus team alienation.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Formalizing codified rejections of flawed refactoring patterns and premature hybrid intermediate compromises.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological transformation from learned helplessness and cynicism into active code straightening and architectural directorship.

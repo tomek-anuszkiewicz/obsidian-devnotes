@@ -12,13 +12,13 @@ aliases:
   - Agent-Driven Test Strategies
   - Disposable Implementation vs Ironclad Test Oracle
   - Ephemeral Code and Test Oracles
-  - The Limits of Test Oracles: Mechanical Sympathy
+  - The Limits of Test Oracles: Hardware Reality & Physical Execution
   - The Dual-Steering Architecture
   - The Frozen Oracle Rule
   - The Frictionless Rewrite
   - Semantic Specs vs Rigid Deterministic Oracles
   - The 4GL Curse and Prompt Ambiguity
-  - Mechanical Sympathy in AI-Generated Code
+  - Low-Level Optimization in AI-Generated Code
   - Virtual-Time Debugging and Record-Replay
   - The Invariant Director
   - Ephemeral Code and the Negative Proof Dilemma
@@ -110,7 +110,7 @@ The disciplined agentic paradigm operates on the opposite principle:
 ### 5. The Invariant Director: The Evolving Identity of the Software Architect
 The rise of ephemeral implementation code shifts the fundamental role of the human engineer:
 - The engineer ceases to be a manual syntax typist grinding through boilerplate, repetitive glue code, and trivial mapping layers.
-- The engineer becomes a **System Director, Invariant Architect, and Guardian of Mechanical Sympathy**:
+- The engineer becomes a **System Director, Invariant Architect, and Guardian of Hardware Reality & Resource Invariants**:
   1. Defining high-authority domain specifications and boundary contracts.
   2. Curating and freezing the deterministic test oracle.
   3. Enforcing hardware-sympathetic data layouts and cache efficiency.
@@ -119,11 +119,11 @@ The rise of ephemeral implementation code shifts the fundamental role of the hum
 
 ---
 
-## Mechanical Sympathy & The Limits of the Oracle
+## Hardware Realities & The Limits of the Oracle
 
 While an ironclad test oracle guarantees functional correctness, it creates a catastrophic blind spot if developers rely on it exclusively:
 
-> **A test oracle validates functional equivalence; it is completely blind to mechanical sympathy and architectural efficiency.**
+> **A test oracle validates functional equivalence; it is completely blind to physical execution efficiency and hardware constraints.**
 
 An agent can generate an implementation that passes 300,000 unit vectors with zero failures, yet is completely unviable in high-performance production.
 
@@ -155,7 +155,7 @@ A frequent pitfall occurs when benchmarking agent-generated code:
 Traditional, tightly packed state machines, flat jump tables, and compact loops frequently outperform unrolled, generated functions in production because their entire execution kernel remains permanently resident in fast instruction memory.
 - Furthermore, models trained predominantly on general enterprise code exhibit **"Object-Oriented Contamination"**: defaulting to deep class hierarchies, pointer indirection, heap-allocated boxing, and fragmented memory buffers.
 - The test oracle verifies only that `result == expected`. It does not detect that every object lookup incurred a cache miss across scattered memory addresses.
-- **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **mechanical sympathy** (see [[Software Engineering May Shift Toward Code Optimized for Agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-empathetic code.
+- **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **hardware-aligned execution** (see [[Software Engineering May Shift Toward Code Optimized for Agents|code optimized for agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-empathetic code.
 
 ### 3. The Incompleteness of the Oracle: Hyrum's Law and Unconstrained State Spaces
 A vital engineering reality must temper the enthusiasm for disposable rewrites:
@@ -321,7 +321,7 @@ In human development, a flaky test is an annoyance; a human re-runs the CI job. 
 
 - **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Formal specifications and interactive theorem proving paired with dynamic empirical harnesses to resolve the Frame Problem.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Practical harness implementation using shadow twins, differential traffic mirroring, and characterization oracles.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, instruction cache locality, and Data-Oriented Design against model OOP bias.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing low-level execution efficiency, instruction cache locality, and Data-Oriented Design against model OOP bias.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explains how disciplined 1:1 isolation and atomic commits prevent code churn and Ship of Theseus team alienation.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why deterministic test assertions constrain agents more reliably than probabilistic prose instructions.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Capturing rejected failure modes and anti-patterns as regression assertions in the test oracle.

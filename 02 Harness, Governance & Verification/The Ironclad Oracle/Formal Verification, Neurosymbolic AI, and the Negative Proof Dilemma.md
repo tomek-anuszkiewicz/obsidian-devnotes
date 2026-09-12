@@ -82,7 +82,7 @@ Unless the formal specification models the entire operating system, network stac
 ### Vector 2: Physical Resource Destruction (Latency, Allocations, and Cache Thrashing)
 Formal proofs reason over abstract values, not CPU microarchitecture. A formally proven algorithm can completely destroy production throughput:
 - **Hidden Allocations**: A formally verified functional routine might allocate millions of short-lived heap objects, triggering catastrophic garbage collector pause times.
-- **Cache Invalidation**: As detailed in [[AI May Make Aggressive Code Optimization Economically Viable|mechanical sympathy and cache optimization]], an algorithm proven correct in mathematical space can produce severe instruction cache thrashing or unaligned memory access patterns, running orders of magnitude slower than a "messy" hand-optimized loop.
+- **Cache Invalidation**: As detailed in [[AI May Make Aggressive Code Optimization Economically Viable|hardware optimization and cache dynamics]], an algorithm proven correct in mathematical space can produce severe instruction cache thrashing or unaligned memory access patterns, running orders of magnitude slower than a "messy" hand-optimized loop.
 - **Algorithmic Complexity vs. Real-World Inputs**: A proof may verify termination, but tell you nothing about constant factors or worst-case $O(n^2)$ behavior under adversarial payloads.
 
 ### Vector 3: Concurrency and Runtime Reentrancy Hazards
@@ -163,7 +163,7 @@ To resolve the Negative Proof Dilemma, autonomous agent workflows must never rel
 
 - **[[Testing in the Model, Agent, LLM Era]]**: The canonical hub for verification in the agent era; provides the foundation for deterministic execution harnesses and AI-assisted test oracles.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Explores the triad of living specs, mechanical oracles, and human engineering judgment that prevents formal specification decay.
-- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: The physical mechanical sympathy counterpart: why mathematically correct code fails if it degrades instruction cache locality or ignores memory hierarchy.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: The physical silicon execution counterpart: why mathematically correct code fails if it degrades instruction cache locality or ignores memory hierarchy.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Practical deployment of shadow twins and differential execution to guard against unintended behavioral drift during rewrites.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: How runtime operational telemetry serves as the ultimate empirical truth engine when static proof guarantees end.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Epistemological foundation of the Negative Proof Dilemma: defining software systems through explicit exclusions and bounded constraints.

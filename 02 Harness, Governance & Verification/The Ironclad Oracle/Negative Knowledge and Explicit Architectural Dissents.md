@@ -135,7 +135,7 @@ The Ephemeral Code model assumes that a massive test suite (even one spanning 30
 
 This is epistemologically false. As explored in [[Testing in the Model, Agent, LLM Era|testing in the agent era]]:
 - A test suite only validates **behaviors its human author anticipated**.
-- Automated test suites verify functional input/output correctness; they are completely blind to **non-functional host realities**: mechanical sympathy, instruction-cache alignment, memory bus saturation, thread contention, and long-tail latency degradation.
+- Automated test suites verify functional input/output correctness; they are completely blind to **non-functional host realities**: physical hardware constraints, instruction-cache alignment, memory bus saturation, thread contention, and long-tail latency degradation.
 - When an agent regenerates a module from scratch, it may pass 300,000 functional assertion vectors while silently introducing pathological host degradation (e.g., triggering memory fragmentation or destroying compiler inlining heuristics).
 
 ---
@@ -169,7 +169,7 @@ Instant LLM Generation → Skip Shared Refactoring → Double Code Churn (+81% D
 
 ---
 
-## 5. Case Study II: Mechanical Sympathy vs. The Instruction Cache Thrashing Trap
+## 5. Case Study II: Hardware Reality vs. The Instruction Cache Thrashing Trap
 
 A common failure mode of AI-generated architectures is confusing **data cache efficiency** with **instruction cache efficiency**.
 
@@ -207,7 +207,7 @@ The Instruction Cache Blind Spot:
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-Without human mechanical sympathy and an explicit Architectural Dissent record, an AI agent will repeatedly advocate for the bloated static dispatch table, mistaking synthetic benchmark speed for production efficiency.
+Without human hardware awareness and an explicit Architectural Dissent record, an AI agent will repeatedly advocate for the bloated static dispatch table, mistaking synthetic benchmark speed for production efficiency.
 
 ---
 
@@ -228,7 +228,7 @@ Discarding human-maintained module code in favor of continuous full-module LLM
 regeneration verified exclusively by automated test oracles.
 
 ## Invariants Violated
-1. Mechanical Sympathy Invariant: Test oracles do not verify instruction cache locality or 
+1. Hardware Reality Invariant: Test oracles do not verify instruction cache locality or 
    host memory bus contention.
 2. Operational Debuggability Invariant: The on-call engineering team must maintain 
    a coherent, continuous mental model of all production code paths.
