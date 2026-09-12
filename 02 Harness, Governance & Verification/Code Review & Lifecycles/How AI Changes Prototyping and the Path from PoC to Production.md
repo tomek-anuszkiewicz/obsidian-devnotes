@@ -185,6 +185,39 @@ Discipline cannot rely solely on human willpower; it must be mechanically enforc
 
 ---
 
+## Tracer Bullets and the Assembly Line: From Precedent to High-Throughput Delegation
+
+The economics of prototyping are deeply tied to cognitive ergonomics and workflow progression:
+
+### 1. Recognition vs. Generation Asymmetry ($O(1)$ vs. $O(N)$)
+One of the most exhausting traps in software design is attempting to write a 100% complete, flawless specification upfront:
+* **Generative Mode ($O(N)$ Mental Fatigue)**: Staring at a blank document trying to anticipate every compiler error, interface nuance, and domain edge case burns immense mental energy.
+* **Recognition Mode ($O(1)$ Intuitive Critique)**: Looking at an existing, concrete draft or working prototype and immediately recognizing structural flaws, non-idiomatic abstractions, or unhandled errors is rapid, intuitive, and low-friction.
+
+### 2. The Tracer Bullet Lifecycle
+```mermaid
+sequenceDiagram
+    participant Conductor as Human Architect
+    participant Agent as Autonomous Agent
+    participant Harness as Repository Harness
+
+    Conductor->>Agent: 1. Bounded prompt / rapid prototype ("Tracer Bullet")
+    Agent->>Conductor: 2. Concrete draft & test feedback
+    Conductor->>Conductor: 3. Deep code inspection ("Read the Code")
+    Conductor->>Harness: 4. Crystallize pattern into Skill, Rule & Test Gate
+    loop The Assembly Line ("Jak na Taśmie")
+        Conductor->>Agent: 5. Execute 20 similar tasks via hardened Skill
+        Agent->>Harness: 6. Automated verification (Tests & Linters)
+        Harness-->>Conductor: 7. Clean diffs & green gates
+    end
+```
+
+1. **Instance 1: Read the Code**: On the very first instance of a new architectural pattern (such as introducing a new database access strategy, a domain event handler, or an external API gateway), human judgment cannot be bypassed. The architect reads the generated code line by line, scrutinizing structural boundaries and naming idioms.
+2. **Crystallize the Recipe**: The lessons, corrections, and discovered invariants from that first instance are immediately codified into an in-repo **Skill** (`.agents/skills/`), an explicit **Rule** (`.agents/rules/`), and an automated **Test Oracle**.
+3. **The Assembly Line**: For the subsequent 20 to 50 instances of the pattern, execution transitions to the automated assembly line. The agent executes the hardened procedure deterministically under [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor]], freeing the human from reading repetitive boilerplate.
+
+---
+
 ## Practical Working Rules
 
 ### For Exploratory Prototyping
@@ -202,6 +235,7 @@ Discipline cannot rely solely on human willpower; it must be mechanically enforc
 
 ## Relationship to the Knowledge Graph
 
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The operational dynamic of deploying tracer bullets to trigger recognition mode ($O(1)$) and establishing assembly line delegation.
 - **[[Testing in the Model, Agent, LLM Era]]**: Foundational hub establishing the ironclad test oracle as the mandatory prerequisite for synthesizing production code after prototypes are discarded.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living Markdown blueprints as the only enduring asset preserved from exploratory prototyping.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Deconstructs the Frankenstein Intermediate Phase that occurs when teams attempt to patch prototypes rather than executing clean breaks.
