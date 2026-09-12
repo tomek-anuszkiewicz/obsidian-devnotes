@@ -39,7 +39,7 @@ TOP-DOWN INSTITUTIONAL MONOPOLY:
                                      v
 GRASSROOTS FIRST-PRINCIPLES AGENCY (The Invariant Antidote):
 +-------------------------------------------------------------------------+
-| FRONTLINE ARCHITECTURAL PARSIMONY & MECHANICAL SYMPATHY                 |
+| FRONTLINE ARCHITECTURAL PARSIMONY & SYSTEMS EFFICIENCY                 |
 | * Partition hot state (5 GB) from cold audit logs (9.995 TB cold store) |
 | * Deploy surgical vertical slices; prove correctness via test oracles   |
 | * Decommission redundant distributed state; measure true cycle costs   |
@@ -52,7 +52,7 @@ GRASSROOTS FIRST-PRINCIPLES AGENCY (The Invariant Antidote):
 2. **Complexity Fetishism as Political Currency**: Convoluted, distributed architectures function as social trophies. Maintaining an unpartitioned 10 TB database cluster justifies squad sizes, promotion packets, and cloud spend; simplifying it into a lean 5 GB working set threatens the incumbent team's organizational status.
 3. **The Fossilization of Negative Tribal Dogma**: Past engineering failures become unquestioned taboos (*"We tried that in 2017 and it failed, so we never do X"*), ignoring that modern runtimes, compilers, and hardware have completely eliminated the original failure condition.
 4. **Defensive Antibodies Against Simplification**: When an engineer solves an "impossible" enterprise problem through clean first-principles parsimony, the organization frequently reacts with defensive hostility, because radical simplification exposes the preceding years of monumental maintenance as unnecessary waste.
-5. **First-Principles Invariant Parsimony**: Robust software engineering demands rejecting accidental enterprise complexity in favor of mechanical sympathy: separating hot transactional state from cold history, minimizing distributed round-trips, and enforcing explicit data lifecycles.
+5. **First-Principles Invariant Parsimony**: Robust software engineering demands rejecting accidental enterprise complexity in favor of low-level efficiency and execution sympathy: separating hot transactional state from cold history, minimizing distributed round-trips, and enforcing explicit data lifecycles.
 
 ---
 
@@ -174,7 +174,7 @@ To manage thousands of developers with varying levels of skill, mature enterpris
 
 While intended to streamline common patterns (logging, metrics, service discovery), internal platforms frequently metastasize into **monopolistic frameworks**:
 - **Frozen Technology Skansens**: Internal frameworks are built around the design dogmas of the era in which the platform team was formed (e.g., heavy reflection-based dependency injection, bloated XML/JSON serialization pipelines, and Chatty HTTP RPCs).
-- **Outlawing Mechanical Sympathy**: An engineer seeking to implement low-latency zero-allocation buffers, binary RPC protocols, or compile-time code generation is blocked because the in-house platform does not support them.
+- **Outlawing Direct Hardware Optimization**: An engineer seeking to implement low-latency zero-allocation buffers, binary RPC protocols, or compile-time code generation is blocked because the in-house platform does not support them.
 - **The Deskilling Loop**: Over time, high-caliber systems thinkers leave the company because they cannot practice genuine software engineering. They are replaced by developers who have only ever known the internal company framework. When these developers eventually move to other companies, they discover their skills are largely non-transferable.
 
 ---

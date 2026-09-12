@@ -244,4 +244,4 @@ To cultivate true intellectual agency in an AI-saturated world, the modern knowl
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Anchors knowledge acquisition at the intersection of Layer 4 (Model Cognition & Context) and Layer 5 (Operator Psychology & Macro-Economics).
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Explores the inverse paradigm—where code is rewritten for machine maintainers, just as external texts are recompiled for human cognition.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Illustrates why human operators must preserve deep conceptual understanding of business domains rather than blindly trusting automated abstractions.
-- **[[The First AI-Native Generation of Software Engineers]]**: Analyzes the specific risks of cognitive atrophy and loss of mechanical sympathy among engineers raised on AI tools.
+- **[[The First AI-Native Generation of Software Engineers]]**: Analyzes the specific risks of cognitive atrophy and loss of low-level systems comprehension among engineers raised on AI tools.
