@@ -205,7 +205,7 @@ sequenceDiagram
     Agent->>Conductor: 2. Concrete draft & test feedback
     Conductor->>Conductor: 3. Deep code inspection ("Read the Code")
     Conductor->>Harness: 4. Crystallize pattern into Skill, Rule & Test Gate
-    loop The Assembly Line ("Jak na Taśmie")
+    loop The Assembly Line (High-Throughput Delegation)
         Conductor->>Agent: 5. Execute 20 similar tasks via hardened Skill
         Agent->>Harness: 6. Automated verification (Tests & Linters)
         Harness-->>Conductor: 7. Clean diffs & green gates

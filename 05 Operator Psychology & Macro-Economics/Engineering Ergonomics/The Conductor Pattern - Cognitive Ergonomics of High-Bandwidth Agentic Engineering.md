@@ -137,7 +137,7 @@ Whenever an agent stumbles, deviates from expectations, or introduces architectu
 
 ---
 
-## 5. The Assembly Line Transition ("Jak na Taśmie")
+## 5. The Assembly Line Transition: High-Throughput Delegation
 
 Software development within the Conductor Pattern operates across two distinct modes of execution:
 
