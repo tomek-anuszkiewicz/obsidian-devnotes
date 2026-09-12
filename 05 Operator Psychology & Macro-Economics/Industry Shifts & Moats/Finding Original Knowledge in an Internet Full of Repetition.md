@@ -607,7 +607,7 @@ Full Text Transcript
          │
          ▼
 Atomic Novelty Extract (S \ (K+ U K-)):
-"At 42:15, Speaker describes a deterministic L1i cache invalidation 
+"At 42:15, Speaker describes a deterministic instruction cache invalidation 
 issue when multiplexing async task handlers under high core concurrency."
          │
          ▼

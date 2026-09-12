@@ -142,7 +142,7 @@ Year 6 (Taboo):     Original engineers leave; new hires strictly forbidden from 
 
 ### The Obsolete Constraint Trap
 In software engineering, constraints are not static axioms; they are dynamic functions of:
-1. Hardware architectures (core counts, NVMe latency, L1/L2/L3 cache sizes),
+1. Hardware architectures (core counts, NVMe latency, processor cache hierarchies),
 2. Network topology (10 Gbps/100 Gbps intra-datacenter interconnects),
 3. Compiler maturity and runtime optimizations (SIMD vectorization, escape analysis),
 4. Ecosystem tooling and serialization protocols.

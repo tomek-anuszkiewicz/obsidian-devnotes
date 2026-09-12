@@ -44,7 +44,7 @@ Modern software engineering with autonomous coding agents inverts the economics 
 3. **The Precision Trap (The 4GL Paradox)**: Natural language specifications cannot serve as a complete programming language. Attempting to make Markdown specifications exhaustively precise simply creates a verbose, untyped programming language without a compiler. Natural language must govern intent; executable oracles must govern mechanics.
 4. **Implementation Is Ephemeral; Invariants Are Permanent**: With a comprehensive oracle, epochal rewrites—regenerating a rotten, fragmented, or legacy subsystem from scratch in minutes—become safer and cheaper than months of delicate manual patching.
 5. **Epochal Modernization vs. Hyperactive Churn**: Code disposability must not devolve into weekly throwaway code churn (the "Ship of Theseus" dilemma, where nobody understands production systems). Disposability is an architectural escape valve for multi-year inflection points, while day-to-day changes remain incremental, stable, and strictly isolated.
-6. **The Oracle Cache Blindspot**: Test oracles validate functional equivalence (`result == expected`), but are completely blind to hardware efficiency. An agent-generated module can pass 300,000 verification vectors while inducing catastrophic instruction-cache (L1i) thrashing, pointer chasing, and heap fragmentation in multi-tenant production.
+6. **The Oracle Cache Blindspot**: Test oracles validate functional equivalence (`result == expected`), but are completely blind to hardware efficiency. An agent-generated module can pass 300,000 verification vectors while inducing severe instruction-cache thrashing, pointer chasing, and heap fragmentation in multi-tenant production.
 7. **Hyrum's Law and the Incompleteness of Oracles**: No test suite exercises the infinite state space of production. Rewriting code under an incomplete oracle risks silently breaking unmodeled downstream dependencies (Hyrum's Law) or introducing hallucinated fallback behaviors in unconstrained state paths.
 8. **The Negative Proof Dilemma**: Formal mathematical proofs (e.g., interactive theorem provers) prove that an algorithm fulfills proposition $P$, but cannot prove the non-existence of unmodeled physical side effects $Q$ (timing leaks, heap exhaustion, cache pollution). Verification requires neurosymbolic proofs paired with dynamic runtime observation.
 9. **Heal Mechanics, Never Semantics**: Autonomous testing agents may self-heal broken test mechanics (e.g., DOM locators, network timeouts, selector churn), but must be strictly forbidden from modifying semantic assertions (e.g., expected balances, state transitions, business rules).
@@ -136,23 +136,23 @@ An agent can generate an implementation that passes 300,000 unit vectors with ze
                             ▼
 ┌────────────────────────────────────────────────────────┐
 │               Production CPU Realities                 │
-│  - L1 Instruction Cache (L1i: 32-64KB) Thrashing       │
+│  - Instruction Cache Thrashing & Codebloat             │
 │  - Random Pointer Chasing & Heap Fragmentation         │
 │  - Branch Target Buffer Evictions                      │
 │  - Catastrophic Throughput Collapse Under Multi-Tenant │
 └────────────────────────────────────────────────────────┘
 ```
 
-### 1. The Cache Blindspot: D-Cache vs. I-Cache Thrashing
+### 1. The Cache Blindspot: Data Locality vs. Instruction Cache Thrashing
 A frequent pitfall occurs when benchmarking agent-generated code:
 - **The Microbenchmark Illusion**: An agent generates a massive dispatch table consisting of thousands of discrete, specialized functions or unrolled match arms. In a synthetic microbenchmark, a tight test loop executes the same 10 to 20 operations repeatedly. The working set fits comfortably in CPU caches, the hardware branch predictor achieves 99.9% accuracy, and the profiler reports dazzling numbers: 100x realtime throughput at 1% CPU utilization.
-- **The Reality of Production (I-Cache Thrashing)**: In real-world multi-tenant production, execution does not loop over 10 operations. Under live traffic with varied request payloads, interrupt handling, and OS context switching, the CPU must jump across hundreds of different function entry points.
-- **D-Cache vs. I-Cache Reality**: While working data (D-Cache) often fits comfortably within large L2 or L3 caches (e.g., 512 KB to 32 MB), the **L1 Instruction Cache (L1i)** is rigidly constrained to a tiny footprint (typically 32 KB or 64 KB per core).
-- When an agent generates thousands of unrolled, specialized functions, the executable binary size of the hot loop explodes past the 64 KB L1i boundary.
-- The result is severe **L1i Cache Thrashing**: the CPU spends hundreds of idle clock cycles constantly evicting and reloading instruction lines from slower L3 cache or main RAM. The instruction prefetch queue runs dry, branch target buffers miss, and throughput collapses under real load—despite passing every test in the oracle.
+- **The Reality of Production (Instruction Cache Thrashing)**: In real-world multi-tenant production, execution does not loop over 10 operations. Under live traffic with varied request payloads, interrupt handling, and OS context switching, the CPU must jump across hundreds of different function entry points.
+- **Data vs. Instruction Locality**: While working data often fits comfortably within large shared caches, hardware **Instruction Caches (I-Cache)** remain rigidly bounded.
+- When an agent generates thousands of unrolled, specialized functions, the executable binary size of the hot execution path explodes past fast instruction cache limits.
+- The result is severe **Instruction Cache Thrashing**: the CPU spends idle clock cycles constantly evicting and reloading instruction lines from slower memory tiers or main RAM. The instruction prefetch queue runs dry, branch target buffers miss, and throughput collapses under real load—despite passing every test in the oracle.
 
 ### 2. Why Compact Layouts and DOD Trump Unrolled Agent Code
-Traditional, tightly packed switch interpreters, flat jump tables, and compact loops frequently outperform unrolled, generated functions in production because their entire execution kernel remains permanently resident in the L1i cache.
+Traditional, tightly packed state machines, flat jump tables, and compact loops frequently outperform unrolled, generated functions in production because their entire execution kernel remains permanently resident in fast instruction memory.
 - Furthermore, models trained predominantly on general enterprise code exhibit **"Object-Oriented Contamination"**: defaulting to deep class hierarchies, pointer indirection, heap-allocated boxing, and fragmented memory buffers.
 - The test oracle verifies only that `result == expected`. It does not detect that every object lookup incurred a cache miss across scattered memory addresses.
 - **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **mechanical sympathy** (see [[Software Engineering May Shift Toward Code Optimized for Agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-empathetic code.
@@ -321,7 +321,7 @@ In human development, a flaky test is an annoyance; a human re-runs the CI job. 
 
 - **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Formal specifications and interactive theorem proving paired with dynamic empirical harnesses to resolve the Frame Problem.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Practical harness implementation using shadow twins, differential traffic mirroring, and characterization oracles.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, L1i cache density, and Data-Oriented Design against model OOP bias.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, instruction cache locality, and Data-Oriented Design against model OOP bias.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explains how disciplined 1:1 isolation and atomic commits prevent code churn and Ship of Theseus team alienation.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why deterministic test assertions constrain agents more reliably than probabilistic prose instructions.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Capturing rejected failure modes and anti-patterns as regression assertions in the test oracle.

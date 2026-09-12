@@ -35,7 +35,7 @@ aliases:
 3. **Bounding by Exclusion Over Prescriptive Micromanagement**: Affirmative guidance leaves an infinite unconstrained perimeter. Granting agents wide autonomy while strictly fencing off 2 to 3 catastrophic anti-paths yields superior, robust implementations without prompt bloat or rule oscillation.
 4. **The Ephemeral Code Illusion**: Natural language specifications cannot replace concrete code without recreating the failed 4GL/CASE trap. Test suites cannot verify physical execution efficiency or prevent cognitive alienation.
 5. **The On-Call Reality Check**: Systems must remain debuggable at 3:00 AM. Replacing enduring codebases with disposable machine-generated churn destroys human mental models, as empirically documented by GitClear 2024.
-6. **Instruction Cache Sympathy**: Generative models easily confuse data cache fit with instruction cache locality. Massive unrolled dispatch tables win synthetic microbenchmarks but thrash the CPU's L1i cache in production.
+6. **Instruction Cache Sympathy**: Generative models easily confuse data cache fit with instruction cache locality. Massive unrolled dispatch tables win synthetic microbenchmarks but evict hot code from the CPU's instruction cache in production.
 
 ```text
 Classical Knowledge Base (K+):
@@ -50,11 +50,10 @@ S \ (K+ ∪ K-): Genuinely unexamined ideas eligible for Epistemic Diffing.
 
 ---
 
-## 1. The Asymmetry of Negative Knowledge
+## 1. What Is Negative Knowledge?
 
-Knowledge in complex systems is fundamentally asymmetric:
-- **Positive knowledge** ($K^+$) is context-dependent and fragile. A pattern that works well at 1,000 requests per second may fail catastrophically at 100,000 requests per second.
-- **Negative knowledge** ($K^-$) represents discovered boundaries and invariant violations. Once an engineering team proves that a specific paradigm introduces unmanageable operational friction, instruction cache thrashing, or team alienation under their physical constraints, that negative finding remains true unless the underlying physical constraints change.
+- **Positive knowledge** ($K^+$) represents what works: patterns, libraries, algorithms, architectures, and design idioms that successfully solve domain problems. Positive knowledge is inherently context-dependent and subject to decay as software ecosystems shift.
+- **Negative knowledge** ($K^-$) represents discovered boundaries and invariant violations. Once an engineering team proves that a specific paradigm introduces unmanageable operational friction, instruction cache pressure, or team alienation under their physical constraints, that negative finding remains true unless the underlying physical constraints change.
 
 When negative knowledge is left unwritten—stored only as oral history in the minds of senior architects—it decays rapidly. When AI agents enter the development loop, this uncodified history creates catastrophic regression loops: agents reintroduce rejected complexities under the guise of "modern best practices."
 
@@ -170,13 +169,13 @@ Instant LLM Generation → Skip Shared Refactoring → Double Code Churn (+81% D
 
 ---
 
-## 5. Case Study II: Mechanical Sympathy vs. The I-Cache Thrashing Trap
+## 5. Case Study II: Mechanical Sympathy vs. The Instruction Cache Thrashing Trap
 
 A common failure mode of AI-generated architectures is confusing **data cache efficiency** with **instruction cache efficiency**.
 
 ### The Fallacy
 A systems architect designs a high-throughput transaction router, command dispatcher, or protocol parsing engine. Observing modern hardware realities:
-> *"The host CPU features 32 MB of L3 cache, and our domain working set (e.g., 512 KB) fits effortlessly into the L2 cache. Therefore, we should eliminate compact iterative state loops and instead generate a flat lookup table of 65,536 specialized, direct operation handlers!"*
+> *"The host CPU features 32 MB of shared cache, and our domain working set (e.g., 512 KB) fits effortlessly into local CPU cache. Therefore, we should eliminate compact iterative state loops and instead generate a flat lookup table of 65,536 specialized, direct operation handlers!"*
 
 On its initial benchmark run, the agent reports stunning metrics:
 - 100x real-time execution throughput!
@@ -184,27 +183,27 @@ On its initial benchmark run, the agent reports stunning metrics:
 
 The LLM rationalizes this as a triumph of modern hardware sympathy: *"Flat static dispatch tables beat dynamic loops."*
 
-### The Reality: Synthetic Benchmark Illusion vs. Real-World I-Cache Thrashing
+### The Reality: Synthetic Benchmark Illusion vs. Real-World Instruction Cache Thrashing
 The benchmark was a synthetic micro-benchmark executing a tight loop of 15 identical operations.
-- Because only 15 handlers were exercised, all 15 handlers fit perfectly into the host CPU's **L1 Instruction Cache (L1i)**, which is typically tiny—only 32 KB or 64 KB per core. The branch predictor achieved 99.9% accuracy.
+- Because only 15 handlers were exercised, all 15 handlers fit perfectly into the host core's fast **Instruction Cache**, yielding 99.9% branch prediction accuracy and zero instruction fetch stalls.
 
 In real-world production execution, the system behaves completely differently:
 1. Real production workloads execute an erratic distribution of commands across the full 65,536-entry operation spectrum.
 2. 65,536 distinct, specialized handler functions occupy tens of megabytes of compiled machine code.
-3. The host CPU cannot keep these handlers in L1i. As the execution engine jumps across diverse handlers, the core suffers catastrophic **L1i Cache Thrashing**.
-4. The instruction prefetcher stalls continuously. The superscalar execution pipelines sit starved of instructions, burning hundreds of clock cycles waiting for code to be fetched from L3 cache or main RAM.
-5. In contrast, a tight, compact, highly optimized core interpreter loop occupies less than 16 KB of code space. It **never leaves L1i**, allowing the CPU's branch predictor and out-of-order execution engine to run at maximum saturation.
+3. The host CPU cannot keep these handlers in fast instruction memory. As the execution engine jumps across diverse handlers, the processor suffers severe **Instruction Cache Thrashing**.
+4. The instruction prefetcher stalls continuously. The superscalar execution pipelines sit starved of instructions, burning CPU cycles waiting for code lines to be fetched from slower memory tiers.
+5. In contrast, a tight, compact, highly optimized core state machine occupies a tiny code footprint. It **remains permanently resident in fast instruction cache**, allowing the CPU's branch predictor and execution engine to run at maximum saturation.
 
 ```text
-The I-Cache Blind Spot:
+The Instruction Cache Blind Spot:
 ┌────────────────────────────────────────────────────────────────────────┐
 │ Synthetic Benchmark (15 operations):                                   │
-│ Handlers fit in 32 KB L1i → 99.9% branch accuracy → 100x Realtime      │
+│ Compact hot handlers fit in fast I-Cache → Zero fetch stalls → High TPS│
 └────────────────────────────────────────────────────────────────────────┘
                                     VS
 ┌────────────────────────────────────────────────────────────────────────┐
 │ Real Production Workload (Erratic distribution across 65,536 handlers):│
-│ 50 MB of handler code → Continuous L1i Cache Thrashing → CPU Stalls   │
+│ Bloated handler code footprint → Continuous I-Cache Thrashing → Stalls │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -229,7 +228,7 @@ Discarding human-maintained module code in favor of continuous full-module LLM
 regeneration verified exclusively by automated test oracles.
 
 ## Invariants Violated
-1. Mechanical Sympathy Invariant: Test oracles do not verify L1i cache density or 
+1. Mechanical Sympathy Invariant: Test oracles do not verify instruction cache locality or 
    host memory bus contention.
 2. Operational Debuggability Invariant: The on-call engineering team must maintain 
    a coherent, continuous mental model of all production code paths.
@@ -238,13 +237,13 @@ regeneration verified exclusively by automated test oracles.
 
 ## Empirical Evidence
 - GitClear 2024 analysis: 2x churn rate, 50% drop in refactoring, 81% duplication increase.
-- Micro-benchmarks vs production traces: Validates L1i cache thrashing in generated 
-  macro-dispatch tables.
+- Micro-benchmarks vs production traces: Validates instruction cache degradation in generated 
+   macro-dispatch tables.
 
 ## Reconsideration Trigger
 This dissent may ONLY be reopened if:
 - Automated verification tooling incorporates deterministic physical execution 
-  profiling (measuring L1i miss rates and hardware memory stalls inside CI).
+   profiling (measuring instruction cache miss rates and hardware memory stalls inside CI).
 - AI agent harnesses provide verified formal semantic equivalence proofs across 
   complete multi-thousand-line diffs.
 ```

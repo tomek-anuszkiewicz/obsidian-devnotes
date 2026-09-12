@@ -180,7 +180,7 @@ Repositories can define permanent, specialized agent personas anchored in reposi
 Persistent Roles:
 - architecture-agent  (Enforces modular monolith boundaries and dependency rules)
 - security-agent      (Inspects auth flows, secret exposure, and input sanitization)
-- performance-agent   (Audits memory allocations, N+1 queries, and L1 cache locality)
+- performance-agent   (Audits memory allocations, N+1 queries, and cache locality)
 - test-agent          (Maintains mutation scores and regression test oracles)
 ```
 

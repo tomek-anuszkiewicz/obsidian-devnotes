@@ -99,12 +99,12 @@ An agent should not be permitted to touch arbitrary files across the codebase du
 - **Narrow interface boundaries**: Prevent cross-module imports by enforcing architectural dependency rules at the build and linter level (e.g., modular visibility constraints, AST architectural linters, and strict package dependency graphs).
 - By physically bounding the touchpoints, the agent **physically cannot tangle the codebase**, regardless of how many tokens it generates.
 
-### 4. Hardware Consequences: Codebase & Call-Path Explosion vs. L1i Cache Thrashing
+### 4. Hardware Consequences: Codebase Sprawl and Instruction Locality Loss
 The zero-friction generative capacity of agents does not merely threaten human cognitive maintainability; it directly threatens **physical execution throughput**:
 - **Codebase and Call-Path Inflation**: When asked to implement or extend features, an unconstrained agent effortlessly introduces layers of helper routines, adapter functions, and specialized intermediate calls. While each individual function appears clean, the aggregate **call base (call path depth)** and executable binary footprint swell by orders of magnitude.
-- **Evicting the L1 Instruction Cache (L1i)**: While modern host servers offer multi-megabyte L2/L3 caches and gigabytes of RAM, superscalar CPU cores remain physically bound to a tiny **32 KB or 64 KB L1 Instruction Cache (L1i)** per core.
-- **The Execution Stoppage**: As execution paths meander across thousands of agent-generated helper functions scattered throughout executable memory pages, the CPU suffers continuous **L1i instruction cache thrashing**. Every instruction miss stalls the processor pipeline for 15 to 40 clock cycles while code lines are fetched from slower memory tiers.
-- **The Architectural Defense**: As detailed in [[AI May Make Aggressive Code Optimization Economically Viable]], mechanical sympathy demands that architects treat instruction footprint as a scarce physical constraint. Agents must be directed toward compact, flat static execution structures, hot-path inlining, and reuse of tightly packed kernel routines rather than allowing effortless token production to dilute hardware efficiency.
+- **Instruction Cache Pressure**: While modern host servers offer multi-megabyte shared caches and gigabytes of RAM, high-performance CPU cores rely on compact, bounded instruction caches to sustain maximum throughput.
+- **Pipeline Stalls and Codebloat**: As execution paths meander across thousands of agent-generated helper functions scattered throughout executable memory pages, the processor suffers continuous instruction cache misses and branch mispredictions. Every instruction miss stalls the processor pipeline while code lines are fetched from slower memory tiers.
+- **The Architectural Defense**: As detailed in [[AI May Make Aggressive Code Optimization Economically Viable]], mechanical sympathy demands that architects treat instruction footprint as a scarce physical constraint. Agents must be directed toward compact, flat execution structures, hot-path inlining, and reuse of tightly packed kernel routines rather than allowing effortless token production to dilute hardware efficiency.
 
 ---
 

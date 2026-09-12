@@ -45,7 +45,7 @@ Isolate behavior via oracles ──► Re-synthesize 1:1 flat modules ──► 
 3. **Symbolic Pruning Over Biological Archaeology**: Humans suffer from the "Breadth Trap"—paralyzed by the fear of unknown side effects across 100,000 lines. Coding agents invert this by acting as symbolic pruning engines: proving what code is *not* relevant, collapsing weeks of manual exploration into 45 minutes.
 4. **Parity First, Evolutionary Modernization Second**: The fatal flaw of historical rewrites is the Second-System Effect (trying to improve features while rewriting). Modernization mandates a strict two-phase discipline: **Bug-for-bug parity first** (the "clean refresh" achieving $0.000\%$ behavioral drift under dark production traffic), followed by evolutionary optimization only after parity is proven.
 5. **Dark Differential Traffic Mirroring**: Deploying the modernized service as an asynchronous shadow twin receiving mirrored live production ingress allows autonomous differential oracles to catch every unmodeled divergence, converting real production traffic into an ironclad regression suite.
-6. **Mechanical Sympathy Against Model OOP Bias**: Pre-trained models default to deep class hierarchies, dynamic dispatch, and heap-allocated DTO wrappers. The human architect must constrain the agent to enforce Data-Oriented Design (DOD)—compact memory layouts, zero-allocation hot paths, and L1i cache locality.
+6. **Mechanical Sympathy Against Model OOP Bias**: Pre-trained models default to deep class hierarchies, dynamic dispatch, and heap-allocated DTO wrappers. The human architect must constrain the agent to enforce Data-Oriented Design (DOD)—compact memory layouts, zero-allocation hot paths, and instruction cache locality.
 
 ---
 
@@ -261,17 +261,17 @@ Because frontier models have been pre-trained on vast repositories of enterprise
 - When asked to clean up tangled procedural legacy code, an agent instinctively wraps everything in factories, strategy patterns, generic dependency-injected interfaces, and heap-allocated DTOs.
 - While the resulting code looks aesthetically "clean" to human enterprise reviewers and passes all functional characterization tests, it is mechanically catastrophic: introducing multiple layers of pointer indirection, cache-hostile data structures, and continuous garbage collector / heap allocation pressure.
 
-### 2. The Cache Blindspot: D-Cache vs. L1i Instruction Cache Thrashing
+### 2. The Cache Blindspot: Data Locality vs. Instruction Cache Degradation
 When modernizing high-throughput or latency-sensitive legacy services, test oracles create a dangerous illusion:
 - **The Microbenchmark Illusion**: An agent unrolls legacy processing into thousands of specialized, discrete handlers or deep class hierarchies. In unit tests and synthetic microbenchmarks, the small test loop fits easily within CPU caches, branch predictors achieve 99.9% accuracy, and the profiler reports blazing speeds.
-- **The Reality of Production (L1i Thrashing)**: In live multi-tenant production, execution does not loop over 10 operations. The CPU must jump across thousands of sprawling class methods and dispatch tables, rapidly blowing past the tiny **32 KB or 64 KB L1 Instruction Cache (L1i)** limit.
-- While Data Cache (D-Cache) scales across megabytes of L2/L3 cache, instruction cache exhaustion forces the CPU to stall for hundreds of idle clock cycles while fetching instructions from slower RAM. Throughput collapses under production load despite passing all unit tests (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
+- **The Reality of Production (Instruction Cache Degradation)**: In live multi-tenant production, execution does not loop over 10 operations. The CPU must jump across thousands of sprawling class methods and dispatch tables, rapidly exceeding the host core's fast instruction cache capacity.
+- While working data often fits comfortably within shared caches, instruction cache exhaustion forces the CPU to stall for idle clock cycles while fetching code lines from slower memory tiers. Throughput collapses under production load despite passing all unit tests (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
 
 ### 3. Enforcing Data-Oriented Design (DOD) as an Invariant
 To ensure modernized systems achieve true mechanical sympathy, the human architect must constrain the agent to enforce **Data-Oriented Design (DOD)**:
 - **Contiguous Memory Buffers**: Struct-of-Arrays (SoA) layouts instead of Array-of-Structs (AoS) to maximize cache line packing (64-byte alignment).
 - **Zero-Allocation Hot Paths**: Eliminating heap allocations, object boxing, and intermediate DTO mappings inside tight calculation pipelines.
-- **Compact Dispatch Tables**: Replacing bloated, unrolled agent code with tightly packed jump tables and flat state machines whose entire execution loop remains permanently pinned in the L1i cache.
+- **Compact Dispatch Tables**: Replacing bloated, unrolled agent code with tightly packed jump tables and flat state machines whose entire execution loop remains permanently pinned in fast execution memory.
 
 ---
 
@@ -326,7 +326,7 @@ A clean history allows any human reviewer to immediately distinguish:
 ## Relationship to the Knowledge Graph
 
 - **[[Testing in the Model, Agent, LLM Era]]**: Canonical hub establishing the dual-steering architecture, the limits of test oracles, the 4GL curse, and ephemeral code discipline.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, L1i cache density, and Data-Oriented Design against LLM OOP bias.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Architectural counterpart governing mechanical sympathy, instruction footprint, and Data-Oriented Design against LLM OOP bias.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Explains how disciplined 1:1 isolation and atomic commits prevent code churn and Ship of Theseus team alienation.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Formalizing codified rejections of flawed refactoring patterns and premature hybrid intermediate compromises.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological transformation from learned helplessness and cynicism into active code straightening and architectural directorship.
