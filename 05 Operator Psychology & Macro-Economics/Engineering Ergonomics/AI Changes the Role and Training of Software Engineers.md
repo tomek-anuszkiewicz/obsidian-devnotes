@@ -55,6 +55,7 @@ AI-NATIVE INVARIANT DIRECTOR:
 3. **The Death of Sunk-Cost Design Meetings**: Long RFC writing cycles and defensive alignment meetings are replaced by 15-minute asynchronous counter-prototypes, evaluating concrete working code slices instead of abstract speculation.
 4. **Overcoming Learned Helplessness in Legacy Code**: Because code generation and test synthesis have zero marginal labor cost, engineers are liberated from legacy debt tolerance, using characterization harnesses to actively untangle legacy monoliths.
 5. **Architectural Taste and Evaluation as Primary Moats**: When code generation is free, judgment—knowing what *not* to build, pruning divergent prototypes, and identifying subtle domain near-misses—becomes the defining skill of elite engineers.
+6. **The Conductor Pattern as Cognitive Ergonomics**: Breaking the 40-year keyboard bottleneck via high-bandwidth voice dictation (150–200 words per minute) shifts the practitioner's cognitive stance from a manual typist to [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor]], directly projecting architectural taste into an in-repo execution harness.
 
 ---
 
@@ -335,5 +336,6 @@ With zero-cost code generation and unbounded curiosity comes a new danger: the t
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How code structure shifts toward explicit, agent-friendly forms evaluated on consequences rather than syntax.
 - **[[AI Era Software Engineering Recruitment]]**: How hiring criteria shift from coding speed to system modeling, review, and verification.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Psychological impacts on engineering identity in agent-dominated workflows.
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The ergonomic model of breaking typing bottlenecks via voice dictation and immediate friction codification.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why training and productivity depend on end-to-end delivery pipelines.
 - **[[Testing in the Model, Agent, LLM Era]]**: Training engineers to build deterministic test oracles rather than writing manual boilerplate.
