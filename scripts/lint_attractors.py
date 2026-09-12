@@ -74,6 +74,15 @@ CHARTER_NOTES = [
     os.path.normpath("Preamble.md"),
 ]
 
+# Notes and folders allowed to reference 'mechanical sympathy'
+MECHANICAL_SYMPATHY_ALLOWLIST = [
+    os.path.normpath("01 Substrate & Mechanical Sympathy"),
+    os.path.normpath("The 5-Layer System Stack for Agentic Software Engineering.md"),
+    os.path.normpath("_Explore.md"),
+    os.path.normpath("Preamble.md"),
+    os.path.normpath("scripts/"),
+]
+
 # Regex for unpiped wikilinks: [[Hub Name]] without '|' and not inside headings or bullet-lists at the end
 UNPIPED_HUB_PATTERNS = {
     hub: re.compile(r"(?<!#\s)(?<!\*\s)\[\[" + re.escape(hub) + r"\]\]")
@@ -179,6 +188,35 @@ def scan_vault(verbose: bool = False):
                     "message": "Public note references private directory. Violates one-way privacy membrane.",
                     "snippet": line[:100]
                 })
+
+            # 5. Mechanical Sympathy Heading Check
+            if line.startswith("#"):
+                if re.search(r"\bmechanical sympathy\b", line, re.IGNORECASE):
+                    # Only allow canonical layer definition heading in The 5-Layer System Stack
+                    is_stack_charter_layer1_heading = (
+                        "The 5-Layer System Stack for Agentic Software Engineering.md" in rel_str
+                        and re.match(r"^##\s+Layer\s+1:\s+Substrate\s+&\s+Mechanical\s+Sympathy$", line, re.IGNORECASE)
+                    )
+                    if not is_stack_charter_layer1_heading:
+                        violations[rel_str].append({
+                            "line": line_num,
+                            "type": "HEADING_ATTRACTOR",
+                            "match": "mechanical sympathy",
+                            "message": "Do not use 'mechanical sympathy' in headings. Use specific engineering terms (e.g. 'Hardware Realities', 'Execution Efficiency', 'Substrate Alignment').",
+                            "snippet": line[:100]
+                        })
+
+            # 6. Mechanical Sympathy Layer Quarantine Check
+            is_mech_sympathy_allowed = any(allowed in rel_str for allowed in MECHANICAL_SYMPATHY_ALLOWLIST)
+            if not is_mech_sympathy_allowed:
+                if re.search(r"\bmechanical sympathy\b", line, re.IGNORECASE):
+                    violations[rel_str].append({
+                        "line": line_num,
+                        "type": "LAYER_QUARANTINE_VIOLATION",
+                        "match": "mechanical sympathy",
+                        "message": "'mechanical sympathy' is quarantined strictly to Layer 1 (Substrate) and system charters. Generalize to hardware reality, systems efficiency, or low-level comprehension.",
+                        "snippet": line[:100]
+                    })
 
     return note_count, violations
 
