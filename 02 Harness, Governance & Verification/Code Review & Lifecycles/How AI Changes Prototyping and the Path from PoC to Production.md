@@ -181,7 +181,7 @@ Discipline cannot rely solely on human willpower; it must be mechanically enforc
 2. **Zero In-Tree Prototype Directories**:
    - Prototypes must never live inside production microservice repositories where their classes can be imported by production code. They must reside in ephemeral standalone sandboxes.
 3. **Escaping the Permanent V1 Prototype Trap**:
-   - As documented in empirical research on AI code generation (such as GitClear's 2024 analysis), undisciplined AI usage doubles code churn and traps teams in a "permanent V1 prototype" cycle. Enforcing total prototype deletion ensures that production repositories contain only high-signal, fully tested, and deeply understood architecture (see [[Software Entropy and the Zero-Friction Trap]]).
+   - As documented in empirical research on AI code generation (such as GitClear's 2024 analysis), undisciplined AI usage doubles code churn and traps teams in a "permanent V1 prototype" cycle. Enforcing total prototype deletion ensures that production repositories contain only high-signal, fully tested, and deeply understood architecture (see [[Software Entropy and the Zero-Friction Trap|architectural containment under friction-free generation]]).
 
 ---
 

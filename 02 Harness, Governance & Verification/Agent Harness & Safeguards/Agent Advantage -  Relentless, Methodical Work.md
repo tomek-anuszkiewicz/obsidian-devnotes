@@ -52,7 +52,7 @@ Most software disasters do not stem from architectural ignorance. Teams know the
 - Remove temporary feature flags and clean up scaffolding.
 ```
 
-The breakdown occurs because each step imposes friction. Humans naturally optimize effort toward visible feature progress, cutting corners on unglamorous verification steps. Together, these skipped steps trigger the compounding decay described in [[Software Entropy and the Zero-Friction Trap]].
+The breakdown occurs because each step imposes friction. Humans naturally optimize effort toward visible feature progress, cutting corners on unglamorous verification steps. Together, these skipped steps trigger the compounding decay described in [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]].
 
 An agent has no ego, no boredom, and no physiological fatigue. It executes the twentieth migration script with the same precision as the first.
 

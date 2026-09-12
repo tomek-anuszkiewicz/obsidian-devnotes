@@ -157,7 +157,7 @@ This maintenance hazard is not theoretical; it has been rigorously quantified at
 - **Refactoring Plummets by 50%**: Developers and agents almost completely stopped executing thoughtful structural refactorings, replacing them with net-new code generation and copy-paste sprawl.
 - **Duplication Rose by 81%**: Code reuse dropped precipitously, replaced by siloed, duplicate logic.
 
-The report proved that unconstrained generative workflows plunge engineering teams into a **"Permanent Prototype V1"** state: systems that are fast to bootstrap, brittle to evolve, and terrifying to operate in production. This directly accelerates the architectural decay described in [[Software Entropy and the Zero-Friction Trap]] and undermines the sustainable transitions analyzed in [[How AI Changes Prototyping and the Path from PoC to Production]].
+The report proved that unconstrained generative workflows plunge engineering teams into a **"Permanent Prototype V1"** state: systems that are fast to bootstrap, brittle to evolve, and terrifying to operate in production. This directly accelerates the architectural decay described in [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]] and undermines the sustainable transitions analyzed in [[How AI Changes Prototyping and the Path from PoC to Production]].
 
 ```text
 The Permanent Prototype V1 Cycle:

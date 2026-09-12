@@ -42,7 +42,7 @@ The objective is not to optimize code for a specific foundation model version, b
 
 ---
 
-## The Zero-Friction Trap & The 3 Mechanical Enclosures
+## Generative Sprawl & The 3 Mechanical Enclosures
 
 While human developers are naturally constrained by biological friction (typing fatigue, diff aversion, context-switching drag), AI agents possess **zero generative friction**. Left unconstrained, an agent will effortlessly create sprawling intermediate classes, nested interfaces, and multi-file dependencies.
 
@@ -65,7 +65,7 @@ To contain zero-friction generation, architecture must transition from polite gu
 └─────────────────────────────────────────────────────────────┘
 ```
 
-For the exhaustive theoretical analysis of this dynamic, see **[[Software Entropy and the Zero-Friction Trap]]**.
+For the exhaustive theoretical analysis of this dynamic, see **[[Software Entropy and the Zero-Friction Trap|the treatise on software entropy and generative sprawl]]**.
 
 ---
 

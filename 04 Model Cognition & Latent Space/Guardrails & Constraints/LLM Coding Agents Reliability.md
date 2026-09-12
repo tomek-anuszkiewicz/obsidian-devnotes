@@ -348,7 +348,7 @@ Separating *generation* from *rule auditing* prevents attention saturation and e
 ### 3. Why Engineers Must Continue Reading Code
 Automated tests, typecheckers, and multi-agent review subagents catch syntactic regressions, but they cannot replace semantic comprehension:
 - An agent can produce code that builds without warning, passes all unit tests, and satisfies its own automated reviewers, yet silently discards essential domain invariants or deletes critical edge-case handling.
-- Engineers who treat autonomous agents as an opaque black box inevitably accumulate catastrophic architectural entropy (see [[Software Entropy and the Zero-Friction Trap]]).
+- Engineers who treat autonomous agents as an opaque black box inevitably accumulate catastrophic architectural entropy (see [[Software Entropy and the Zero-Friction Trap|containment strategies for generative entropy]]).
 - **Reading the code and maintaining deep situational awareness remains the foundational, non-delegable responsibility of the human engineer.** The human is the sole consequential anchor standing between probabilistic generation and production reality.
 
 ## Conclusions

@@ -281,7 +281,7 @@ Instead of burning tens of thousands of tokens per prompt just to orient the mod
 
 ## Maintaining Architectural Trajectory and Preventing Entropy
 
-As a codebase evolves across dozens of autonomous agent sessions, the risk of architectural drift and "zero-friction sprawl" increases exponentially (see [[Software Entropy and the Zero-Friction Trap]]).
+As a codebase evolves across dozens of autonomous agent sessions, the risk of architectural drift and "zero-friction sprawl" increases exponentially (see [[Software Entropy and the Zero-Friction Trap|controlling generative code entropy]]).
 
 In-flight documentation ensures **directional alignment**:
 - Every newly created component adheres to a uniform template (e.g., standard lifecycle states, explicit error returns, dedicated file boundaries).

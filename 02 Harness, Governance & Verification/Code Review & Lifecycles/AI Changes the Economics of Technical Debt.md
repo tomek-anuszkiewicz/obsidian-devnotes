@@ -29,14 +29,14 @@ With Mechanical Isolation:
 
 ## Executive Summary & Core Architectural Invariants
 
-1. **The Zero-Friction Trap**: In the manual era, typing fatigue and cognitive drag served as natural friction that discouraged developers from adding unnecessary abstraction layers. Because agents experience zero friction, they casually generate speculative wrappers, duplicate logic, and touch 15 files across layers in a single turn unless mechanically constrained.
+1. **The Generative Velocity Trap**: In the manual era, typing fatigue and cognitive drag served as natural friction that discouraged developers from adding unnecessary abstraction layers. Because agents experience zero friction, they casually generate speculative wrappers, duplicate logic, and touch 15 files across layers in a single turn unless mechanically constrained.
 2. **Mechanical Enclosures Over Soft Guidelines**: Verbal instructions cannot stop zero-friction sprawl. Architecture requires hard mechanical gates: **1:1 file-to-operation mapping** (isolating blast radius), **hard line ceilings** (500–800 lines max per file), and **strict touchpoint limits** per task.
 3. **Operationalizing Debt Metrics**: Technical debt ceases to be a subjective complaint. It is measured empirically through agent telemetry: token consumption per feature, PR diff size, iteration depth, and human review time.
 4. **Balanced Capacity Allocation**: Organizations that dedicate 100% of newly unlocked AI velocity to feature shipping accelerate codebase decay. Sustainable velocity requires allocating 30–40% of agent throughput to continuous background maintenance: updating dependencies, pruning dead code, and modernizing legacy slices.
 
 ---
 
-## Agents Can Reduce or Accelerate Technical Debt: The "Zero-Friction" Trap
+## Agents Can Reduce or Accelerate Technical Debt: The Generative Dilemma
 
 Agents can continuously reduce routine maintenance debt:
 - update dependencies,
