@@ -1,0 +1,7 @@
+﻿# RAG Exclusion Patterns
+_Private
+*private*
+.obsidian
+.smart-env
+.agents
+.antigravity
