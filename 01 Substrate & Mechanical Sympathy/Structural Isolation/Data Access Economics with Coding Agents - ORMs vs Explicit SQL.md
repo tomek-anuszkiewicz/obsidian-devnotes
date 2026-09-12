@@ -50,7 +50,7 @@ However, cheap code generation does not automatically guarantee architectural so
 1. **Source of Truth Authority**: Does authority reside in declarative migrations, schema dumps, or application models?
 2. **Contract Consistency Across Boundaries**: How do we mathematically ensure that the database column types, query projections, deserializers, and domain types never drift?
 3. **Execution Placement**: Where does business logic belong—in the application host, or pushed into database engines?
-4. **Mechanical Sympathy vs. Semantic Drift**: Can human engineers still audit and verify the resulting query topologies when [[Reviewing AI-Generated Code|reviewing AI-generated code]]?
+4. **Database Engine Efficiency vs. Semantic Drift**: Can human engineers still audit and verify the resulting query topologies when [[Reviewing AI-Generated Code|reviewing AI-generated code]]?
 
 ---
 
@@ -145,7 +145,7 @@ In modern relational engines, query metadata can be inspected dynamically withou
 
 ---
 
-## Mechanical Sympathy: What Explicit SQL Unlocks
+## Execution Engine Efficiency: What Explicit SQL Unlocks
 
 When coding agents relieve developers from the burden of manual typing, applications can deliberately exploit the deep, specialized execution features of relational database engines that ORMs struggle to model or translate reliably:
 

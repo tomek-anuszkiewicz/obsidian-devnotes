@@ -76,8 +76,8 @@ At the foundational layer lies physical reality: the CPU instruction pipeline, b
 
 ### Core Architectural Invariants:
 1. **The Training Paradox**: LLMs were trained on public GitHub repositories authored by humans who prioritized typing economy over hardware execution efficiency (heavy Object-Oriented polymorphism, deep inheritance hierarchies, reflection, and runtime dynamic dependency injection). When an agent produces code without guidance, it reproduces these anti-patterns.
-2. **Mechanical Sympathy via Flat Layouts**: As established in [[Software Engineering May Shift Toward Code Optimized for Agents|code optimized for agents]], machine-maintained code must prioritize **1:1 operation-to-file structural isolation** and data-oriented layouts. Explicit flat switch tables and unrolled execution paths eliminate dynamic dispatch overhead and maximize branch prediction accuracy.
-3. **Instruction Cache Density**: Handcrafted microbenchmarks frequently suffer from the Zipfian illusion. As detailed in [[AI May Make Aggressive Code Optimization Economically Viable|mechanical sympathy and cache dynamics]], specialized execution routines must remain compact enough to fit within L1 instruction cache (32 KB L1i) boundaries, balancing inlining against cache thrashing.
+2. **Hardware Alignment via Flat Layouts**: As established in [[Software Engineering May Shift Toward Code Optimized for Agents|code optimized for agents]], machine-maintained code must prioritize **1:1 operation-to-file structural isolation** and data-oriented layouts. Explicit flat switch tables and unrolled execution paths eliminate dynamic dispatch overhead and maximize branch prediction accuracy.
+3. **Instruction Cache Density**: Handcrafted microbenchmarks frequently suffer from the Zipfian illusion. As detailed in [[AI May Make Aggressive Code Optimization Economically Viable|hardware-aware optimization and cache dynamics]], specialized execution routines must remain compact enough to fit within L1 instruction cache (32 KB L1i) boundaries, balancing inlining against cache thrashing.
 4. **Code as an Ephemeral Compiled Artifact**: As explored in [[In-Flight Documentation as the Primary Framework for Coding Agents]], concrete source code ceases to be a permanent sacred artifact; it becomes an ephemeral compilation target generated from high-authority specifications and deterministic test oracles.
 
 ---
@@ -148,7 +148,7 @@ The 5-Layer Stack operates as a continuous, bidirectional cybernetic loop:
                EMPIRICAL REALITY (Bottom-Up Feedback) ──► Operator Insight (L5)
 ```
 
-1. **Top-Down Intent Projection**: The human engineer (Layer 5) defines business invariants and negative constraints, which are framed into cognitive boundary prompts (Layer 4), compiled through agent-native service contracts (Layer 3), verified against deterministic oracles (Layer 2), and committed to hardware-sympathetic data layouts (Layer 1).
+1. **Top-Down Intent Projection**: The human engineer (Layer 5) defines business invariants and negative constraints, which are framed into cognitive boundary prompts (Layer 4), compiled through agent-native service contracts (Layer 3), verified against deterministic oracles (Layer 2), and committed to hardware-aligned data layouts (Layer 1).
 2. **Bottom-Up Empirical Feedback**: Silicon cache counters and hardware performance metrics (Layer 1) are verified against unit and allocation assertions (Layer 2), emitted through distributed telemetry spans (Layer 3), digested through asynchronous cognitive compaction (Layer 4), and presented to the engineer as high-signal operational intelligence (Layer 5).
 
 ---
