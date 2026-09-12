@@ -55,6 +55,13 @@ HARDWARE_ALLOWLIST_SUBSTRINGS = [
 # C4 Model False Positive Exclusions (e.g. "Query L1 Context", "L2 Container")
 C4_MODEL_EXCLUSION = re.compile(r"\[Query\s+L[1-4]\s+(?:Context|Container|Component|Code)\]", re.IGNORECASE)
 
+# 2b. Polish / Non-English Language Detection (notes-language.md enforcement)
+POLISH_DIACRITICS = re.compile(r"[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]")
+POLISH_INDICATORS = re.compile(
+    r"\b(jak\s+na\s+ta[sś]mie|oraz|poniewa[zż]|notatk\w*|jestem|b[eę]dzie|dla|przez|mo[zż]emy|wstawi[cć]|rozmow\w*|innym|b[yye]ł\w*)\b",
+    re.IGNORECASE
+)
+
 # 3. Canonical Hubs that must be piped if embedded inline in body prose
 CANONICAL_HUBS = [
     "Software Entropy and the Zero-Friction Trap",
@@ -215,6 +222,20 @@ def scan_vault(verbose: bool = False):
                         "type": "LAYER_QUARANTINE_VIOLATION",
                         "match": "mechanical sympathy",
                         "message": "'mechanical sympathy' is quarantined strictly to Layer 1 (Substrate) and system charters. Generalize to hardware reality, systems efficiency, or low-level comprehension.",
+                        "snippet": line[:100]
+                    })
+
+            # 7. Non-English / Polish Language Leak Check (notes-language.md enforcement)
+            if not in_code_block:
+                pol_diacritics = POLISH_DIACRITICS.findall(line)
+                pol_phrases = POLISH_INDICATORS.findall(line)
+                if pol_diacritics or pol_phrases:
+                    match_str = "".join(sorted(set(pol_diacritics))) if pol_diacritics else pol_phrases[0]
+                    violations[rel_str].append({
+                        "line": line_num,
+                        "type": "POLISH_LANGUAGE_LEAK",
+                        "match": match_str,
+                        "message": "Polish characters or words detected in public note. Violates notes-language.md (all vault notes must be exclusively in English).",
                         "snippet": line[:100]
                     })
 
