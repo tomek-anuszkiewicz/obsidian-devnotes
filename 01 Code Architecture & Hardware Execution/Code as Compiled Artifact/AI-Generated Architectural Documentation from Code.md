@@ -4,1173 +4,212 @@ tags:
   - ai-agents
   - software-architecture
   - documentation
-  - knowledge-management
   - reverse-engineering
   - code-review
+  - system-design
 aliases:
-  - Architectural Documentation Generation
+  - AI-Generated Architectural Documentation
   - Extracting Architecture from Code with LLMs
+  - Documentation as Semantic Cache
+  - Architectural Drift Detection
+  - Operation Cards from Code
 ---
 
 # AI-Generated Architectural Documentation from Code
 
-## Idea
+## Core Thesis
 
-LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code—a vital tool when [[Refactoring Legacy Systems with AI Agents|refactoring legacy systems with AI agents]].
+In software engineering, large language models are usually discussed as code writers. But models are equally powerful in the reverse direction: **extracting, reconstructing, and maintaining high-level architectural documentation from existing codebases**.
 
-This is especially useful for preserving [[LLM Agents and Institutional Memory|institutional memory in software teams]] and managing systems with:
+This is especially critical when dealing with legacy repositories where:
+- Original design documents are years out of date or missing entirely,
+- Tribal knowledge walked out the door with previous developers (see [[LLM Agents and Institutional Memory|institutional memory in software teams]]),
+- The system is too large for any single developer to hold in their head.
 
-- legacy systems created before widespread AI adoption,
-    
-- systems with incomplete or outdated documentation,
-    
-- large repositories where the architecture is difficult to infer,
-    
-- codebases where architectural knowledge exists mostly in developers' heads.
-    
-
-The goal is not merely to generate class or method descriptions.
-
-The more valuable goal is to create a **semantic model of the system** (serving as [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation for coding agents]]) that explains:
-
-- what components exist,
-    
-- what they are responsible for,
-    
-- how they communicate,
-    
-- how data flows through the system,
-    
-- how important business operations execute,
-    
-- what happens synchronously and asynchronously,
-    
-- what state transitions exist,
-    
-- what architectural rules and invariants are implicit in the code.
-    
-
----
-
-# Code as a Source of Architectural Knowledge
-
-Existing source code contains a large amount of architectural information, helping clarify [[What Should Organizations Preserve from AI-Assisted Development|what organizations should preserve from AI-assisted development]].
-
-A developer may need to inspect:
-
-- controllers,
-    
-- handlers,
-    
-- services,
-    
-- repositories,
-    
-- database models,
-    
-- message consumers,
-    
-- event publishers,
-    
-- configuration,
-    
-- dependency injection,
-    
-- middleware,
-    
-- scheduled jobs,
-    
-- external API clients,
-    
-
-before understanding how one business operation works.
-
-An LLM can help reconstruct this information into a more compact representation.
-
-The transformation can be seen as:
+The goal is **not** to generate trivial comments on every class or method (`GetOrder retrieves an order`). The true value lies in reconstructing the system's **relational architecture**:
+- Which components exist and what boundaries isolate them,
+- Who owns which database tables and business aggregates,
+- How data flows synchronously versus asynchronously across services,
+- What state transitions and failure modes are enforced in code.
 
 ```text
-Code
-  ↓
-Structural Analysis
-  ↓
-System Model
-  ↓
-Semantic Documentation
-```
-
-Structural analysis tools such as dependency graphs, call graphs, symbol graphs, GitNexus, Graphify, or static analysis can provide reliable structural facts.
-
-The LLM can then interpret these facts and describe their architectural or business meaning.
-
-For example:
-
-```text
-OrdersController
-    ↓
-PlaceOrderHandler
-    ↓
-PricingService
-    ↓
-OrderRepository
-    ↓
-EventPublisher
-```
-
-can be interpreted as:
-
-```text
-PlaceOrderHandler is the orchestration boundary for order creation.
-
-Pricing is resolved synchronously.
-
-The order is persisted before downstream processing begins.
-
-Inventory processing starts asynchronously after OrderCreated is published.
-```
-
-The structural graph provides **relationships**.
-
-The LLM adds **meaning**.
-
----
-
-# Documentation as a Semantic Cache
-
-Without architectural documentation, an agent working on a task may repeatedly perform:
-
-```text
-Read code
-→ discover dependencies
-→ reconstruct architecture
-→ understand business flow
-→ solve task
-```
-
-With good generated documentation, the process can become:
-
-```text
-Read architecture summary
-→ inspect relevant implementation
-→ solve task
-```
-
-Documentation therefore acts as a kind of **semantic cache for the repository**.
-
-Instead of repeatedly reconstructing the same system model from raw code, agents can reuse an already prepared high-level representation.
-
-This may improve:
-
-### 1. Token Usage and Inference Economics
-- **Amortizing the Reconnaissance Tax**: Without high-level summaries, agents spend dozens of tool calls reading raw source files (controllers, services, repositories, configurations) simply to map the mutation surface. Architectural documentation collapses thousands of lines of raw code into compact topological summaries (such as Operation Cards or Module Specs), amortizing the cognitive reconstruction cost across every subsequent agent interaction.
-- **Reducing Turn-Count Multipliers**: In iterative agentic tool loops, each conversational turn re-submits previous history plus new tool outputs. Slashing exploratory reconnaissance calls directly prevents exponential context accumulation, drastically reducing cumulative prompt token consumption.
-- **Hardware-Level Prompt and KV-Cache Alignment**: Static, highly standardized semantic documentation modules serve as invariant prompt prefixes. Modern inference providers can leverage KV-cache reuse on these deterministic prefixes, yielding significant latency and cost discounts compared to volatile, dynamically queried code snippets.
-
-### 2. Attention Density and Signal-to-Noise Ratio
-- **Preventing "Lost-in-the-Middle" Attention Dilution**: Raw source code is dominated by syntactic ceremony—boilerplate, imports, type declarations, serialization annotations, and low-level loop mechanics. As formalized in [[Retrieval-Augmented Generation and Context Architecture]], injecting raw files dilutes transformer self-attention. A semantic cache isolates pure relational invariants, state boundaries, and data ownership contracts, maximizing token attention density.
-- **Preserving Context Window Headroom for Complex Reasoning**: By loading high-density semantic abstractions instead of raw file trees, agents retain maximum context capacity for multi-step reasoning, execution traces, diff generation, and compiler error triage, directly raising the complexity ceiling of solvable tasks (see [[How LLM Systems Build Context]]).
-- **Eliminating Premature Context Window Compaction**: When agents exhaust their context windows during exploratory code reading, session compaction or sliding-window truncation is triggered. Compaction frequently discards subtle architectural constraints. A semantic cache keeps working memory lean, bypassing compaction loss.
-
-### 3. Latency and Cold-Start Velocity
-- **Zero-Turn Cold Start (Time-to-First-Mutation)**: Bypassing the exploratory search phase enables the agent to transition immediately from problem statement to implementation. The agent skips blind grep-and-read cycles and navigates directly to the target component.
-- **Minimizing Cognitive Trajectory Variance**: Without an architectural map, agents frequently explore irrelevant code paths, rabbit-holing into downstream libraries or legacy adapters. A semantic cache provides a deterministic topological index, bounding the search space.
-
-### 4. Multi-Agent and Cross-Session Cohesion
-- **Shared Ontological Baseline Across Agent Swarms**: When multiple subagents work in parallel (e.g., frontend, backend, migrations, integration tests), a shared semantic cache ensures that every worker shares an identical mental model of domain boundaries and interface contracts. Without this shared cache, independent agents construct divergent, conflicting abstractions.
-- **Defending Invariants Against Status-Quo Rationalization**: Raw code often contains historical cruft and accidental coupling. LLMs naturally pattern-match against existing code smells and reproduce them. A canonical semantic cache explicitly documents non-negotiable architectural invariants (e.g., *"Module A must never directly access Module B's database"*), anchoring autonomous mutations to intended design rather than legacy entropy.
-- **Cross-Session Determinism**: Successive agent sessions remain architecturally aligned over days or weeks, preventing the architectural drift that occurs when different models or prompts reconstruct system intent differently.
-
-### 5. Architectural Invariant Auditing and Drift Detection
-- **Cache Misses as Architectural Signals**: When an agent attempts an implementation that cannot be resolved against the semantic cache—or when a proposed change violates a cached constraint—it indicates architectural novelty or boundary drift.
-- **Automated Cache Invalidation**: Treating documentation as a cache establishes a clean invalidation lifecycle: when code mutations alter symbols or call graphs, CI pipelines invalidate and recompile the affected semantic documentation slices, maintaining a zero-drift living architecture.
-
-For very large repositories, operating documentation as a semantic cache is not merely an ergonomic convenience—it is an absolute economic necessity that directly dictates the feasibility and cost-effectiveness of autonomous software engineering.
-
----
-
-# Why Good Tests Alone Are Insufficient for Maintenance
-
-A common counterargument in agentic software engineering suggests that comprehensive test suites might render architectural documentation redundant:
-
-> *"If a repository has exhaustive, deterministic tests that verify every requirement, why do we need high-level architectural documentation?"*
-
-While comprehensive test suites are indispensable—serving as [[Testing in the Model, Agent, LLM Era|the ironclad verification oracle]] for autonomous development—there is a fundamental operational asymmetry between **creation/rewriting** and **ongoing maintenance**:
-
-* **Tests are sufficient for rewriting and greenfield synthesis**: When an agent regenerates a self-contained module from scratch against an established contract, the test suite acts as an automated black-box acceptance oracle. The agent can treat the implementation as disposable scrap, iterating until the test runner yields zero exit codes.
-* **Tests are insufficient for ongoing system maintenance and evolution**:
-  1. **Verification vs. Navigation**: Tests answer whether a specific input produces a known output (`actual == expected`). They cannot answer *where* a new capability belongs, *which* service owns an aggregate, or *how* cross-boundary workflows communicate.
-  2. **Blindness to Architectural Drift**: A test suite will happily pass even if an agent introduces catastrophic architectural coupling—such as bypassing domain services to query an adjacent module's database directly or duplicating business logic inside an ingress controller. Tests verify local behavior, not structural boundaries.
-  3. **Absence of Tests for Novel Capabilities**: Maintenance primarily involves extending systems with features that have no pre-existing tests. Without architectural documentation, agents design new flows in a vacuum, relying on unstructured guesswork.
-  4. **The Trial-and-Error Token Tax**: Relying on tests as the sole navigation mechanism forces agents into expensive guess-and-check loops (mutate $\to$ fail test $\to$ read trace $\to$ retry), rapidly exhausting context windows and token budgets. Architectural documentation provides the topological map that enables **First-Pass Success**.
-
-For a comprehensive exploration of this dynamic, see [[Tests Are for Verification, Not Architectural Navigation]].
-
----
-
-# Useful Levels of Generated Documentation
-
-Generated documentation should exist at several levels.
-
-## 1. System Level
-
-Describe the major runtime components.
-
-Examples:
-
-- web applications,
-    
-- APIs,
-    
-- workers,
-    
-- databases,
-    
-- message brokers,
-    
-- schedulers,
-    
-- caches,
-    
-- external integrations.
-    
-
-This answers:
-
-> What does the system consist of?
-
----
-
-## 2. Module Level
-
-For each module, describe:
-
-- responsibility,
-    
-- owned data,
-    
-- public entry points,
-    
-- dependencies,
-    
-- emitted events,
-    
-- consumed events,
-    
-- architectural boundaries.
-    
-
-For example:
-
-```text
-Orders Module
-
-Responsibility:
-Owns the lifecycle of customer orders.
-
-Owns:
-- Order aggregate
-- Orders database tables
-- Order API
-
-Depends on:
-- Pricing synchronously
-- Inventory asynchronously
-- Payments asynchronously
-
-Must not:
-- modify inventory tables directly
-- modify payment state directly
-```
-
-This kind of documentation is particularly useful for coding agents because it explicitly describes architectural constraints.
-
----
-
-# Operation-Oriented Documentation
-
-Some of the most useful documentation should be organized around **business operations**, not classes.
-
-Examples:
-
-- Place Order
-    
-- Cancel Order
-    
-- Confirm Payment
-    
-- Issue Refund
-    
-- Register Customer
-    
-
-A single operation may involve multiple modules and continue over time.
-
-An operation document can contain:
-
-- purpose,
-    
-- entry points,
-    
-- participating components,
-    
-- sequence of steps,
-    
-- data changes,
-    
-- events,
-    
-- asynchronous processing,
-    
-- failure modes,
-    
-- state transitions,
-    
-- links to relevant source code.
-    
-
-Example:
-
-```text
-ConfirmPayment
-
-Purpose:
-Confirm an authorized payment and start downstream fulfillment.
-
-Entry points:
-- POST /payments/{id}/confirm
-- PaymentConfirmationWorker
-
-Flow:
-
-1. Validate request
-2. Load payment
-3. Verify payment state
-4. Call external payment provider
-5. Persist Confirmed state
-6. Publish PaymentConfirmed
-7. Accounting processes the event asynchronously
-
-Failure modes:
-- payment not found
-- invalid state
-- provider timeout
-- event publication failure
-```
-
-This can be significantly more useful than documentation organized around individual classes.
-
----
-
-# Generated Architectural Diagrams
-
-LLMs can also generate diagrams from reconstructed system knowledge.
-
-These diagrams should preferably be stored as structured text such as:
-
-- Mermaid,
-    
-- PlantUML,
-    
-- Graphviz,
-    
-- JSON graphs,
-    
-
-rather than only as images.
-
-This makes them:
-
-- versionable,
-    
-- diffable,
-    
-- editable,
-    
-- readable by agents,
-    
-- regenerable into visual diagrams.
-    
-
----
-
-# Component Diagrams
-
-Component diagrams show the major parts of the system and their dependencies.
-
-Example:
-
-```text
-Client
-   ↓
-API
-   ↓
-Orders
-   ├── PostgreSQL
-   ├── Pricing
-   └── Message Broker
-             ↓
-          Inventory
-             ↓
-         Inventory DB
-```
-
-They answer:
-
-> Which components exist and how are they connected?
-
----
-
-# Sequence Diagrams
-
-Sequence diagrams are especially useful for reconstructing how a concrete operation executes.
-
-They show:
-
-- who calls whom,
-    
-- in what order,
-    
-- request-response boundaries,
-    
-- event publication,
-    
-- callbacks,
-    
-- retries,
-    
-- asynchronous continuation.
-    
-
-Example:
-
-```text
-Client
-  → Orders API
-  → PlaceOrderHandler
-  → Pricing
-  → Orders DB
-  → Event Broker
-
-Event Broker
-  → Inventory Consumer
-  → Inventory DB
-```
-
-These diagrams expose behavior that may otherwise be distributed across many parts of the repository.
-
----
-
-# Temporal and Asynchronous Flow Diagrams
-
-A particularly valuable type of generated documentation is a diagram showing how one logical operation is distributed over time.
-
-Many real systems do not execute as:
-
-```text
-request
-→ business logic
-→ response
-```
-
-Instead they behave more like:
-
-```text
-T0
-Client sends request
-
-T0 + milliseconds
-API validates request
-
-T0 + milliseconds
-State is persisted
-
-T0 + milliseconds
-Event is published
-
-T0 + milliseconds
-API returns 202 Accepted
-
-T0 + seconds
-Consumer receives event
-
-T0 + seconds
-Inventory is reserved
-
-T0 + seconds/minutes
-External provider responds
-
-T0 + minutes
-Final status is updated
-```
-
-This distinction is extremely important.
-
-An API response may mean only:
-
-> the operation was accepted for processing
-
-rather than:
-
-> the entire business process completed successfully.
-
-Temporal diagrams can make this explicit.
-
-They can show:
-
-- immediate processing,
-    
-- delayed work,
-    
-- scheduler execution,
-    
-- queue waiting,
-    
-- retries,
-    
-- callbacks,
-    
-- eventual consistency,
-    
-- timeout boundaries.
-    
-
-This is particularly valuable when debugging distributed systems.
-
----
-
-# Data Flow Diagrams
-
-Data-flow documentation explains:
-
-- where data originates,
-    
-- how it is transformed,
-    
-- who owns it,
-    
-- where it is stored,
-    
-- where it is copied,
-    
-- which events contain it.
-    
-
-For example:
-
-```text
-HTTP Request
-   ↓
-CreateOrderCommand
-   ↓
-Order Aggregate
-   ↓
-Orders Database
-   ↓
-OrderCreated Event
-   ↓
-Inventory Projection
-```
-
-This can help answer questions such as:
-
-- Where is `CustomerTier` calculated?
-    
-- Which service owns `FinalPrice`?
-    
-- When does the order status change?
-    
-- Why does one system contain stale data?
-    
-- Which service is the source of truth?
-    
-
----
-
-# State Machines
-
-For important business entities, documentation can include generated state machines.
-
-Examples:
-
-- Order
-- Payment
-- Shipment
-- Subscription
-- Support Ticket
-
-For example:
-
-```text
-Pending ──► Cancelled
-   ↓
-Confirmed
-   ↓
-Shipped
-   ↓
-Completed
-```
-
-The generated documentation should ideally also describe:
-
-- allowed transitions,
-- conditions,
-- commands causing transitions,
-- events emitted,
-- terminal states.
-
-State machines are valuable because important business rules are often distributed across handlers, validators, and domain methods.
-
----
-
-# Failure-Path Documentation
-
-Documentation should not describe only the happy path. In distributed systems, failure paths and retry boundaries represent critical operational knowledge.
-
-An operation document can illustrate how timeouts and transient errors are handled via retry loops and fallback branches:
-
-```text
-[Operation Invoked]
-        │
-        ▼
-┌───────────────┐
-│ Call Provider ├───────► [Success] ──► State: Confirmed
-└───────┬───────┘
-        │ [Timeout / Network Error]
-        ▼
-┌───────────────┐
-│  Retry Loop   │◄──┐ [Attempt < 3]
-└───────┬───────┘   │ (Backoff & Retry)
-        │           │
-        ├───────────┘
-        │ [Attempts Exhausted]
-        ▼
-┌───────────────┐
-│ Manual Audit  │ ──► State: NeedsAttention (Alert Ops)
-└───────────────┘
-```
-
-Useful failure information includes:
-
-- **Retry policy**: Backoff intervals, jitter, and maximum attempt count (e.g., max 3 attempts).
-- **Fallback logic**: What state is persisted when all retries are exhausted (`NeedsAttention`).
-- **Idempotency**: Ensuring retried requests do not create duplicate side effects.
-- **Operator intervention**: Triggering alerts or routing failed operations to a reconciliation job.
-
-Explicit failure paths prevent AI agents from falling into "happy-path bias" and writing code that assumes third-party calls never time out or fail.
-
----
-
-# Multiple Levels of Detail (The C4 Model for Agents)
-
-A single diagram or monolithic architectural document for an entire system quickly exhausts an agent's context window and degrades transformer attention.
-
-Software architecture resolves this through hierarchical zoom levels—most prominently formalized as Simon Brown's **C4 Model** (**C**ontext, **C**ontainers, **C**omponents, **C**ode). In agentic software engineering, the C4 hierarchy serves as an active **hierarchical context-budgeting protocol**: agents load only the zoom level necessary for their current cognitive phase (routing, planning, interface binding, or mutation).
-
-```text
-Zoom Out (Macro Routing)
-   │
-   ├─► Level 1: System Context  [Users, External Systems, Core System Boundaries]
-   │
-   ├─► Level 2: Containers      [Web Apps, APIs, Microservices, Datastores, Message Brokers]
-   │
-   ├─► Level 3: Components      [Controllers, Repositories, Domain Aggregates, Handlers]
-   │
-   └─► Level 4: Code            [ASTs, Method Signatures, State Transitions, Source Lines]
-   │
-Zoom In (Code Mutation)
-```
-
-### Level 1 — System Context (Business View)
-Describes the macro boundaries between users, external third-party systems, and the overall software boundary.
-
-```text
-Customer
-   │
-   ▼
-[E-Commerce Platform] ◄──► [External Payment Gateway]
-   │
-   ▼
-[External Shipping Provider]
-```
-* **Agent Utility**: Used during task triage and global intent routing. Consumes negligible tokens (~50 tokens) to determine which high-level system owns the requested capability.
-
-### Level 2 — Container View (Architectural / Runtime Substrate)
-Zooms inside the system boundary to show deployable execution runtimes: web applications, API services, background workers, databases, caches, and event message buses.
-
-```text
-[Web Frontend] ──HTTP──► [API Gateway] ──gRPC──► [Orders Service] ──► [PostgreSQL]
-                                                        │
-                                                   Outbox Event
-                                                        ▼
-                                                 [Kafka Broker] ──► [Inventory Worker]
-```
-* **Agent Utility**: Used during cross-service planning and network topology inspection. Enables the agent to determine asynchronous boundaries and transactional limits.
-
-### Level 3 — Component View (Modular / Structural Composition)
-Zooms inside an individual container to reveal modular blocks, responsibilities, and dependency flows.
-
-```text
-Orders API Container
-  ├── Ingress: OrdersController
-  ├── Application: PlaceOrderCommandHandler
-  ├── Domain: OrderAggregate, PricingService
-  └── Infrastructure: RelationalOrderRepository, EventPublisher
-```
-* **Agent Utility**: Critical for feature scoping. An agent can load the Level 3 component card to understand what services and interfaces already exist without reading their concrete source implementations.
-
-### Level 4 — Code View (Implementation Detail)
-The deepest zoom level, representing the concrete source code, class definitions, function signatures, ASTs, and state machines.
-
-```text
-POST /orders
-→ PlaceOrderController
-→ PlaceOrderCommand
-→ PlaceOrderHandler
-→ PricingClient
-→ OrderRepository
-→ UnitOfWork
-→ EventPublisher
-```
-* **Agent Utility**: Loaded exclusively at the point of mutation. By scoping context through Levels 1–3 first, the agent loads only the exact file or AST slice needed to execute the edit.
-
-### Hierarchical Context Scoping for Agent Workflows
-
-Instead of dumping an entire repository into a monolithic prompt, agent orchestrators traverse the C4 hierarchy on demand:
-
-```text
-Task: "Add idempotency to order submission"
-  ↓
-[Query L1 Context]    ──► Identify: Order Management Boundary
-  ↓
-[Query L2 Container]  ──► Identify: Orders API + Relational DB
-  ↓
-[Query L3 Component]  ──► Identify: PlaceOrderCommandHandler + Ingress Middleware
-  ↓
-[Fetch L4 Code]       ──► Load ONLY PlaceOrderCommandHandler & UnitOfWork (150 tokens)
-  ↓
-[Execute Mutation]    ──► Zero Context Thrashing, 95% Token Savings
+STATIC RECONSTRUCTION PIPELINE:
+Source Code ──► Dependency & Call Graphs ──► LLM Interpretation ──► Living Architecture Docs
+[Raw Implementation]   [Structural Facts]        [Domain Meaning]       [Compact Operation Cards]
 ```
 
 ---
 
-# Intended Architecture vs Implemented Architecture
+## Documentation as a Semantic Cache for Agents
 
-Generated documentation remains useful even when the original system was created from an existing specification.
-
-In that case there are two distinct representations:
+Without high-level architectural docs, an AI coding agent assigned to a task must spend dozens of tool calls reading controllers, handlers, repositories, and config files just to figure out where to begin:
 
 ```text
-Intended architecture
-        ↓
-       Code
-        ↓
-Reconstructed architecture
+WITHOUT ARCHITECTURAL DOCS (EXPENSIVE RECONNAISSANCE):
+Read 15 files ──► Map dependencies ──► Guess business flow ──► 25,000 tokens burned ──► First edit
+
+WITH ARCHITECTURAL DOCS (DIRECT EXECUTION):
+Read 40-line Operation Card ──► Inspect target file ──► 2,000 tokens burned ──► First edit
 ```
 
-The original documentation describes:
-
-> how the system is supposed to work.
-
-The reconstructed documentation describes:
-
-> how the system actually works.
-
-Comparing them can reveal **architecture drift**.
-
-Examples:
-
-- documentation says communication is asynchronous, but implementation performs synchronous HTTP calls,
-    
-- modules were supposed to be isolated, but one module accesses another module's database,
-    
-- a validation step described in the specification is missing,
-    
-- a new cache or queue exists in code but not in documentation,
-    
-- implementation contains additional business exceptions,
-    
-- an originally simple workflow evolved into several consumers and retries.
-    
-
-This gives a useful validation loop:
-
-```text
-Specification
-      ↓
-Implementation
-      ↓
-Reconstructed Model
-      ↓
-Compare with Specification
-```
+Architectural documentation acts as a **semantic cache for the repository**:
+1. **Saves Context Window Budget**: Instead of loading sprawling file trees into context, the agent ingests a concise summary card that defines boundaries and entry points.
+2. **Speeds Up Execution**: The agent moves from prompt to implementation immediately, skipping exploratory grep-and-read loops.
+3. **Prevents Boundary Violations**: LLMs naturally pattern-match against existing code. If legacy code has messy coupling, the model will copy it unless explicit architectural cards state: *"Orders must never write to Inventory tables directly."*
 
 ---
 
-# Architectural Diff
+## Why Tests Alone Aren't Enough for Maintenance
 
-The same idea can be applied between versions of the repository.
+A common belief is that an exhaustive test suite eliminates the need for architectural documentation.
 
-Instead of asking only:
+While deterministic tests are essential as the verification floor (see [[Testing in the Model, Agent, LLM Era|automated test verification]]), **tests and architectural documentation solve completely different problems**:
 
-> What files changed?
+| Dimension | Automated Test Suites | Architectural Documentation |
+| :--- | :--- | :--- |
+| **Primary Purpose** | Verifies behavior (`actual == expected`) | Guides navigation and structural boundaries |
+| **Greenfield / Rewrites** | Excellent (run tests until all pass) | Helpful, but tests alone can guide the rewrite |
+| **Ongoing Maintenance** | Blind to architecture (passes even if coupling is terrible) | Prevents architectural drift across modules |
+| **New Capabilities** | Zero coverage (tests don't exist yet) | Shows where the new feature belongs and what rules apply |
 
-the system can answer:
-
-> What changed architecturally?
-
-For example:
-
-```text
-Before:
-
-Orders
-→ Payments synchronously
-
-
-After:
-
-Orders
-→ PaymentRequested event
-→ Payment Consumer
-→ Payments
-```
-
-The generated architectural diff could report:
-
-```text
-Payment processing changed from synchronous communication
-to asynchronous event-driven communication.
-
-A new failure mode was introduced:
-PaymentRequested may remain unprocessed if the consumer is unavailable.
-
-Order completion is now eventually consistent.
-```
-
-This could be very useful during pull request review.
+A test suite will happily pass even if an agent queries another module's database directly or bypasses validation middleware. Tests verify output correctness; architectural documentation protects structural boundaries (see [[Tests Are for Verification, Not Architectural Navigation]]).
 
 ---
 
-# Documentation Generated from Runtime Evidence
+## The Four Zoom Levels: Hierarchical Context for Agents
 
-Static code analysis describes what the system **can do**.
-
-Runtime telemetry can show what the system **actually does**.
-
-Useful sources include:
-
-- distributed tracing,
-    
-- logs,
-    
-- metrics,
-    
-- event streams,
-    
-- production request traces.
-    
-
-Combining code analysis with runtime evidence can produce richer documentation.
-
-For example:
+A monolithic 50-page document for an entire system is useless for an agent—it swamps context and dilutes attention. Instead, architecture should be organized in hierarchical zoom levels (similar to the C4 model):
 
 ```text
-Code model:
-API → Service A → Service B → Database
-
-Runtime observation:
-
-P50: 80 ms
-P95: 420 ms
-P99: 2.1 s
+Level 1: System Context  ──► Users, external payment gateways, core platform boundaries
+Level 2: Containers      ──► Web apps, APIs, workers, databases, message queues
+Level 3: Components      ──► Ingress controllers, domain handlers, repositories
+Level 4: Implementation  ──► Source code, method signatures, exact state transitions
 ```
 
-Or:
+When an agent is given a task, the workflow navigates down the hierarchy:
+1. **Macro Routing (Level 1 & 2)**: Determine which service or container owns the requested feature.
+2. **Component Mapping (Level 3)**: Identify existing handlers and interfaces without reading their implementation.
+3. **Targeted Mutation (Level 4)**: Load only the single file or interface needed to make the change.
 
-```text
-Payment callback normally arrives within 3–10 seconds.
-
-Approximately 2% of requests trigger one retry.
-
-The reconciliation job handles unresolved payments after 15 minutes.
-```
-
-This transforms architectural documentation into something closer to an **operational model of the system**.
+By scoping context hierarchically, the agent achieves first-pass success while using 90% fewer tokens.
 
 ---
 
-# A Possible Documentation Structure
+## Operation Cards: Workflow-Centric Documentation
 
-A repository could contain:
+Organizing documentation strictly by file or class creates silos. The most valuable architectural docs are organized around **business workflows**:
 
-```text
-/docs
+```markdown
+### Operation: ConfirmPayment
 
-    system-overview.md
+**Purpose**: Confirms an authorized payment and kicks off downstream fulfillment.
 
-    modules/
-        orders.md
-        payments.md
-        inventory.md
-        shipping.md
+**Entry Points**:
+- HTTP: `POST /payments/{id}/confirm`
+- Worker: `PaymentConfirmationWorker`
 
-    flows/
-        place-order.md
-        cancel-order.md
-        confirm-payment.md
-        refund-payment.md
+**Synchronous Flow**:
+1. Validate incoming request contract
+2. Load payment record from PostgreSQL
+3. Verify state is `Authorized`
+4. Call external Payment Gateway
+5. Persist status as `Confirmed`
 
-    states/
-        order-state.md
-        payment-state.md
+**Asynchronous Flow**:
+6. Publish `PaymentConfirmed` event to message broker
+7. Accounting and Inventory consumers process the event asynchronously
 
-    architecture/
-        module-boundaries.md
-        data-ownership.md
-        integrations.md
-        event-topics.md
+**State Transitions**:
+`Authorized` ──► `Confirmed` (or `Failed` on terminal provider error)
 
-    diagrams/
-        system.mmd
-        place-order-sequence.mmd
-        payment-timeline.mmd
-        order-state-machine.mmd
+**Failure Modes & Retries**:
+- Provider timeout: Exponential backoff, max 3 attempts.
+- Persistence failure: Abort transaction and log operational alert.
 ```
 
-The documentation does not need to be large.
-
-Small, structured documents are often more useful for agents than large narrative documents.
+From this compact markdown representation, tools can generate Mermaid sequence diagrams, verification checklists, and prompt context for coding agents.
 
 ---
 
-# Operation Cards
+## Intended vs. Implemented Architecture: Detecting Drift
 
-An especially useful abstraction may be an **Operation Card**.
-
-Each important operation receives a compact description containing everything needed to understand it.
-
-For example:
+One of the most practical applications of generated documentation is comparing **how the system was supposed to work** with **how it is actually implemented**:
 
 ```text
-Operation: ConfirmPayment
-
-Purpose:
-Confirm an authorized payment.
-
-Entry points:
-- POST /payments/{id}/confirm
-
-Components:
-- Payments API
-- Payments Domain
-- PostgreSQL
-- External PSP
-- Event Broker
-- Accounting Consumer
-
-Synchronous steps:
-1. Validate request
-2. Load payment
-3. Validate state
-4. Confirm with PSP
-5. Save status
-
-Asynchronous steps:
-6. Publish PaymentConfirmed
-7. Accounting updates ledger
-
-State transition:
-Authorized → Confirmed
-
-Failure modes:
-- invalid state
-- PSP timeout
-- persistence failure
-- publication failure
+SPECIFICATION (Intended Architecture)
+            │
+            ▼
+    Source Codebase
+            │
+            ▼
+RECONSTRUCTED MODEL (Implemented Architecture)
+            │
+            ▼
+COMPARE SPEC vs RECONSTRUCTION ──► Surface Architectural Drift
 ```
 
-From the same structured representation, the system could generate:
-
-- human-readable documentation,
-    
-- Mermaid diagrams,
-    
-- LLM context,
-    
-- tests,
-    
-- review checklists.
-    
+Comparing the two models immediately highlights:
+- A module was supposed to be isolated, but code directly imports an internal database model from another domain,
+- A workflow described as asynchronous event-driven is actually making synchronous blocking HTTP calls,
+- A cache was added to bypass a slow query, masking a database bottleneck without updating design docs.
 
 ---
 
-# Continuous Documentation
+## Architectural Diffs in Pull Requests
 
-Documentation generation does not have to be a one-time migration project.
-
-It can become part of the development lifecycle.
-
-A possible process:
+Traditional code reviews focus on file diffs: *"Which lines changed?"*  
+AI-generated architectural analysis answers: **"What changed architecturally?"**
 
 ```text
-Developer / Agent creates PR
-        ↓
-Changed symbols detected
-        ↓
-Affected modules and flows identified
-        ↓
-Architectural model regenerated
-        ↓
-Relevant documentation updated
-        ↓
-Architectural diff generated
-        ↓
-Consistency with intended design checked
+TRADITIONAL PR DIFF:
+Modified: orders_controller, payment_client, event_publisher (340 lines added, 120 removed)
+
+ARCHITECTURAL PR DIFF:
+- Payment processing changed from synchronous HTTP calls to asynchronous event publishing.
+- Added eventual consistency boundary: Order completion now depends on PaymentConsumer.
+- Introduced new failure mode: Unhandled messages in the payment dead-letter queue.
 ```
 
-This creates a form of **living architecture documentation**.
-
-Instead of manually maintaining every diagram, the repository continuously reconstructs its own architectural representation.
+This summary allows senior engineers reviewing PRs to immediately spot architectural trade-offs, security implications, and reliability risks without getting lost in cosmetic syntax (see [[Reviewing AI-Generated Code]]).
 
 ---
 
-# Human Documentation and AI Documentation May Differ
+## Combining Static Code Analysis with Runtime Telemetry
 
-Traditional documentation is optimized primarily for people.
+Static code analysis shows what a system *can* do. Real-world runtime telemetry shows what the system *actually does*.
 
-Documentation intended as LLM context may have different priorities.
-
-For agents, concise structural facts can be more valuable than long prose.
-
-For example:
+By combining code inspection with distributed tracing, logs, and metrics, generated documentation turns into an **operational blueprint**:
 
 ```text
-Module: Orders
+STATIC CODE PATH:
+Orders API ──► Payment Gateway ──► Ledger Service ──► Database
 
-Owns:
-- Order
-- OrderLine
-
-Writes:
-- orders.*
-- order_lines.*
-
-Reads:
-- pricing.read_model
-
-Calls synchronously:
-- Pricing
-
-Publishes:
-- OrderCreated
-- OrderCancelled
-
-Consumes:
-- PaymentConfirmed
-- InventoryRejected
-
-Forbidden:
-- direct writes to payment.*
-- direct writes to inventory.*
+RUNTIME OPERATIONAL REALITY:
+- P50 Latency: 65ms | P95 Latency: 480ms | P99 Latency: 2.3s
+- External Payment Gateway times out on ~1.8% of requests during peak load.
+- Background reconciliation job cleans up stranded transactions every 15 minutes.
 ```
 
-This format is extremely compact while providing high-value architectural constraints.
-
-The same repository can therefore maintain:
-
-```text
-Human documentation
-+
-Machine-oriented semantic documentation
-```
-
-generated from the same underlying model.
+This bridges the gap between software design and production operations, giving agents and developers an accurate picture of system behavior under load.
 
 ---
 
-# Key Principle
+## Practical Rules for Teams
 
-The most valuable generated documentation is usually **not information that is obvious from one source file**.
-
-Automatically documenting every method:
-
-```text
-GetOrder retrieves an order.
-SaveOrder saves an order.
-```
-
-adds little value.
-
-Instead, generation should focus on information that requires understanding relationships across the repository:
-
-- module boundaries,
-    
-- responsibilities,
-    
-- ownership,
-    
-- dependencies,
-    
-- operation flows,
-    
-- asynchronous behavior,
-    
-- state transitions,
-    
-- side effects,
-    
-- failure paths,
-    
-- architectural invariants.
-    
-
-This is precisely the information that is expensive for both humans and agents to reconstruct repeatedly.
+1. **Document relationships, not syntax**: Never waste tokens explaining what a single function does; document data ownership, module boundaries, async boundaries, and failure handling.
+2. **Generate docs continuously in CI**: Hook architectural extraction into your pull request pipeline to keep markdown cards and diagrams synchronized with code.
+3. **Use Operation Cards as agent context**: When dispatching an agent to modify a feature, pass the Operation Card as the primary blueprint (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
+4. **Surface architectural diffs in code review**: Review pull requests at the structural level before diving into individual code lines.
 
 ---
 
-# Broader Model
+## Related Notes
 
-The long-term architecture of AI-assisted software development may therefore look less like:
-
-```text
-Documentation
-    ↓
-   Code
-```
-
-and more like:
-
-```text
-        Specification
-             ↕
-     Semantic Architecture
-        ↙            ↘
-     Code           Diagrams
-       ↕                ↕
-Structural Graph    Runtime Model
-        \              /
-         \            /
-          Agent Context
-```
-
-Code, documentation, graphs, diagrams, telemetry, and specifications become different representations of the same system.
-
-Each representation can validate and enrich the others.
-
-The result is not simply "automatically generated documentation".
-
-It is a **living semantic model of the software system** that can be consumed by both humans and AI agents.
----
-
-## Relationship to the Knowledge Graph
-
-- **[[Comments May Become More Valuable in AI-Generated Code]]**: How decision-focused comments form the raw semantic material for living architectural docs.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating documentation concurrently during development as a deterministic blueprint and token-efficient framework.
-- **[[Tests Are for Verification, Not Architectural Navigation]]**: Why test suites serve as verification oracles for rewrites but fail as navigational maps for ongoing maintenance.
-- **[[Testing in the Model, Agent, LLM Era]]**: The canonical Layer 2 hub establishing test oracles and disposable implementation economics.
-- **[[Retrieval-Augmented Generation and Context Architecture]]**: Context minimization and attention density mechanics underlying semantic caching.
-- **[[How LLM Systems Build Context]]**: Engineering working memory and context headroom for coding agent decision loops.
-- **[[What Should Organizations Preserve from AI-Assisted Development]]**: Preserving decision traces and architectural rationale as strategic intellectual property.
-- **[[LLM Agents and Institutional Memory]]**: Connecting living documentation to corporate history and onboarding workflows.
-- **[[Designing Software for AI Agents]]**: Structuring code to make semantic extraction and architectural diagrams reliable.
-- **[[Introduction to RAG]]**: Indexing living architecture documents to provide high-precision context for development agents.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating concise architectural blueprints concurrently during code authoring to guide future agents.
+- **[[Tests Are for Verification, Not Architectural Navigation]]**: Why deterministic test suites verify functionality but cannot guide agents on architectural boundaries.
+- **[[Reviewing AI-Generated Code]]**: How senior engineers pivot from line-by-line syntax checks to reviewing structural invariants and architectural diffs.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: Why non-derivable domain intent recorded in code comments feeds directly into generated architectural documentation.
+- **[[LLM Agents and Institutional Memory]]**: Preserving institutional engineering knowledge and system rationale across team transitions.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebases adapt their layout and boundaries to make semantic extraction and automated maintenance seamless.
+- **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification layer that ensures reconstructed code and implementations adhere to specifications.
