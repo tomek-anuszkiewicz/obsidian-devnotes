@@ -18,8 +18,14 @@ aliases:
 
 # Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize
 
-> [!IMPORTANT]
-> **The Semantic Verification Continuum**: Historically, engineering rules were bifurcated: either a rule could be precisely coded into a deterministic compiler/linter check, or it lived as unenforced folklore in documentation, dependent on human vigilance. Coding agents introduce a third operational layer: **natural-language executable policies**. Semantic review agents transform subjective human intuition into continuously enforced organizational invariants, operating directly on architectural intent, boundary leakage, and domain semantics.
+In traditional software engineering, quality rules were strictly divided into two categories:
+
+1. **Rules that can be coded deterministically**: Typecheckers, linters, and unit tests. If a rule can be expressed as a regex, an AST visitor, or a Boolean assertion, CI checks it instantly and cheaply.
+2. **Rules that live in human memory**: Architectural principles like *"keep domain models free of database concerns"*, *"avoid premature abstractions"*, or *"ensure errors fail safely"*. These rules were written down in wiki pages or architectural decision records, but their enforcement depended entirely on whether an exhausted human reviewer remembered them during a pull request.
+
+Coding agents introduce a third category: **natural-language executable policies**. 
+
+By using language models to evaluate code diffs against written guidelines, teams turn subjective architectural taste into continuously enforced rules—checking for boundary leaks, hidden coupling, and semantic intent that static analyzers cannot detect.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -28,142 +34,116 @@ aliases:
                                     │
     ┌───────────────────────────────┼───────────────────────────────┐
     ▼                               ▼                               ▼
-[ TIER 1: DETERMINISTIC ]     [ TIER 2: SEMANTIC AGENT ]     [ TIER 3: HUMAN JUDGMENT ]
-- Compilers & Typecheckers    - Natural language policies     - Strategic trade-offs
-- Linters & AST Analyzers     - Architectural boundary leaks  - Business risk tolerance
-- Unit & Mutation Tests       - Speculative abstractions      - Conflicting priorities
-"Cheap, exact, reproducible"  "Context-aware intent & taste"  "Ultimate authority"
+[ TIER 1: DETERMINISTIC ]     [ TIER 2: SEMANTIC AGENTS ]    [ TIER 3: HUMAN JUDGMENT ]
+• Compilers & Typecheckers    • Natural-language guidelines   • Strategic product trade-offs
+• Linters & AST Analyzers     • Architectural boundary leaks  • Risk tolerance & exceptions
+• Unit & Integration Tests    • Unnecessary abstractions      • Unclear business intent
+"Cheap, instant, reproducible" "Context-aware architectural    "Ultimate decision maker"
+                                intent & domain invariants"
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **Human Attention Was the Missing Runtime**: Teams have always authored architecture principles ("prefer explicit dependencies", "do not leak persistence into domain", "avoid premature abstractions"). Without agents, these documents were dead prose; their execution depended entirely on whether a fatigued human remembered them. Agents serve as the missing runtime that evaluates every diff against the full policy corpus.
-2. **The Verification Continuum Protocol**:
-   - *If a rule can be cheaply and deterministically coded* $\rightarrow$ **Encode it in compilers, types, or tests** (never replace cheap tests with expensive, stochastic LLM prompts).
-   - *If a rule is semantically rich and too costly to formalize* $\rightarrow$ **Delegate enforcement to review agents**.
-   - *If an agent repeatedly catches the same recurring violation* $\rightarrow$ **Promote it into a deterministic architecture test**.
-   - *If the resolution requires business trade-offs or strategic context* $\rightarrow$ **Escalate to the human software architect**.
-3. **Intent Over Syntax (The Semantic Gap)**: A deterministic architecture test verifies that Module A does not reference Module B's package. An agent catches the deeper violation: Module A copying Module B's internal database layout, violating boundary semantics while passing all mechanical tests.
-4. **Relentlessness as the Great Equalizer**: Senior architects know twenty principles, but fatigue causes them to evaluate only three under Friday afternoon pressure. Agents relentlessly apply all twenty checks against a 150-file diff without degrading attention.
-5. **From Ephemeral Experiments to Permanent Oracles**: Agents can generate temporary, hypothesis-driven tests to verify race conditions or cache corruptions during review, promoting the test to the permanent regression suite only if an invariant violation is proven.
+1. **Never Replace Cheap Deterministic Tests with LLMs**: If an invariant can be validated with a compiler type, a linter, or a unit test (`assert(price >= 0)`), keep it deterministic. LLMs should handle the nuanced, contextual rules that are too difficult or brittle to code into static analyzers (see [[Testing in the Model, Agent, LLM Era|deterministic verification versus semantic review]]).
+2. **Review Agents as Living Documentation Runtimes**: Architectural documentation has historically been dead prose. Agents act as the active execution engine that checks every pull request against your team's documented principles before human review.
+3. **Intent Over Syntax (The Semantic Gap)**: Static linters check whether Module A imports Module B's package. An agent catches the deeper violation: Module A copying Module B's raw database schema or table names, creating tight coupling while passing all mechanical linter checks.
+4. **The Escalation Flywheel**: When an agent repeatedly catches the same architectural violation across multiple pull requests, do not burn tokens checking it forever. Promote the rule into a deterministic linter or custom architecture test.
+5. **Ephemeral Investigation vs. Permanent Tests**: Agents can write temporary, disposable test scripts during review to verify suspected race conditions or cache leaks, promoting them to the permanent test suite only if a real defect is proven.
 
 ---
 
-## 1. The Breakdown of Traditional Rule Formalization
+## 1. Why Traditional Linters Fall Short
 
-Traditional software quality automation excels when an invariant can be expressed as a binary mathematical constraint:
-```text
-- Domain must not import Infrastructure.
-- Every public endpoint must validate authentication context.
-- Transaction amount must be non-negative: assert(amount >= 0).
-- All command handlers must implement the dispatch contract.
-```
+Static analysis tools excel at checking concrete syntax:
+- *Does this file have unused imports?*
+- *Are all public methods documented?*
+- *Does this variable follow camelCase naming?*
+- *Does this query have a parameter placeholder to prevent SQL injection?*
 
-These rules map cleanly to compiler types, static analyzers, linters, and unit tests.
+However, the most expensive bugs and architectural decay stem from **semantic violations** that static linters cannot understand:
+- *"Do not create a generic wrapper framework for a problem that occurs in exactly one place."*
+- *"Transport controllers should be thin adapters; do not put orchestration logic here, but do not create pointless single-line service interfaces either."*
+- *"Business validation must remain explicit in domain handlers rather than buried in database triggers or ORM lifecycle hooks."*
+- *"Do not introduce speculative fields or unrequested configuration flags."*
 
-However, the most critical architectural failures in large codebases stem from **semantic violations** that resist deterministic formalization:
-- *"Do not introduce an abstraction unless it represents a genuine domain boundary."*
-- *"Controllers should remain thin adapters, but trivial request translation does not warrant an extra indirection layer."*
-- *"Business rules must remain visible in pure domain logic rather than buried inside database triggers or infrastructure helpers."*
-- *"Do not build a generic framework for a problem that occurs exactly once."*
-
-An experienced architect spots these anti-patterns immediately, but writing a deterministic AST linter to detect them requires an impractically complex semantic graph. As a result, enforcement historically decayed into oral tradition.
+Writing custom AST linters for these rules is notoriously difficult and brittle. As a result, enforcement historically depended on senior engineers catching them in review—a process that inevitably degrades under deadline pressure, accelerating [[Software Entropy and the Zero-Friction Trap|uncontrolled code sprawl]].
 
 ---
 
-## 2. Natural-Language Documents as Executable Policies
+## 2. Living Documentation as Executable Policy
 
-Rather than leaving architecture guidelines as passive markdown files in `docs/architecture/`, an agentic harness injects them as active operational constraints:
+Instead of leaving architectural guidelines as passive documents in a repository folder, an agent harness injects them as active review criteria:
 
 ```text
 docs/
-├── architecture/principles.md
+├── architecture/boundaries.md
 ├── domain/invariants.md
-├── security/guidelines.md
+├── conventions/error-handling.md
 └── adrs/
 ```
 
-During every pull-request evaluation, the architecture reviewer evaluates:
-```text
-1. Identify code modifications in the diff.
-2. Cross-reference changes against active architectural principles and ADRs.
-3. Determine whether a semantic boundary is violated (even if syntax tests pass).
-4. Check for documented historical exceptions.
-5. Provide precise line citations and explain the architectural trade-off.
-```
+During pull request review, the semantic review agent checks:
+1. **Scope the Diff**: What components, data paths, and layers does this pull request modify?
+2. **Retrieve Relevant Policies**: Load the specific architectural guidelines and ADRs that govern those components.
+3. **Evaluate Intent**: Does the code violate the underlying architectural principle, even if it compiles and passes existing unit tests?
+4. **Provide Contextual Feedback**: Explain *why* the design conflicts with team conventions and reference the specific ADR or guideline.
 
-This transforms living documentation into an **active semantic firewall**, bridging the gap between passive human documentation and rigid compiler checks.
+This turns architectural documentation into an active guardrail that protects code quality on every turn.
 
 ---
 
-## 3. The Semantic Gap: Why AST Linters Miss Intent
-
-The true power of agentic review emerges when an implementation satisfies the letter of the law while violating its spirit:
+## 3. The Semantic Gap: Real-World Examples
 
 ### Case 1: The Database Shadow Leak
-- **Deterministic Test**: An architecture analyzer checks package imports and reports green: `Billing` does not reference `Inventory.Data`.
-- **Semantic Reality**: The agent notices that `Billing` duplicated the exact raw SQL schema and column names of the `Inventory` database, binding the two services at the storage layer while bypassing the module interface. The deterministic linter is blind; the agent flags the coupling immediately.
+- **Deterministic Check**: A dependency analyzer checks module imports. It reports clean: `Billing` does not reference `Inventory.Data`.
+- **Semantic Reality**: The developer in `Billing` wrote a direct SQL query against the `inventory_items` table, bypassing the inventory service contract. The dependency linter reports green because no library reference was added; the semantic review agent flags the direct database coupling immediately.
 
-### Case 2: The Malicious Compliance Guard
-- **Deterministic Test**: A unit test asserts `assert(price >= 0)`.
-- **Semantic Reality**: To make the test pass, an implementation added `price = Math.max(0, calculatedPrice)`. The technical test passes, but the code silently conceals negative invoice calculations caused by upstream discount bugs. The semantic reviewer questions the business validity of clamping an impossible financial state.
+### Case 2: Malicious Compliance
+- **Deterministic Check**: A unit test asserts `assert(invoiceTotal >= 0)`.
+- **Semantic Reality**: To make the test pass, the code added `invoiceTotal = Math.max(0, calculatedTotal)`. The technical test passes, but the code silently conceals negative invoices caused by faulty discount logic. A static analyzer sees a valid math function; the review agent questions the business validity of clamping an invalid financial calculation.
 
 ---
 
-## 4. The Two-Way Rule Escalation Cycle
+## 4. The Escalation Flywheel: Turning Agent Findings into Deterministic Rules
 
-Agentic review does not eliminate deterministic testing; it feeds it:
+Agentic review should not be a permanent tax on your token budget. It acts as an exploratory incubator for new deterministic rules:
 
 ```text
-        [ Human Architect Authors Informal Semantic Principle ]
-                                  │
-                                  ▼
-             [ Review Agent Relentlessly Enforces in PRs ]
-                                  │
-                                  ▼
+        [ Human Engineer Defines Semantic Principle ]
+                             │
+                             ▼
+        [ Review Agent Enforces Principle in Pull Requests ]
+                             │
+                             ▼
         [ Violation Pattern Becomes Stable & Predictable ]
-                                  │
-                                  ▼
-      [ ESCALATION: Engineer Converts Rule to Deterministic Test / AST Rule ]
-                                  │
-                                  ▼
-      [ Agent Freed to Monitor Newer, More Subtle Invariants ]
+                             │
+                             ▼
+    [ ESCALATION: Convert Rule to Custom Linter or Architecture Test ]
+                             │
+                             ▼
+        [ Agent Freed to Focus on Newer, Subtle Edge Cases ]
 ```
 
-When an agent repeatedly catches developers or other agents violating the same structural boundary, the team should not burn LLM tokens checking it forever. The team formalizes the stabilized check into an automated linter or architecture test, continually pushing deterministic certainty outward while the agent explores emerging semantic debt.
+When an agent catches five pull requests violating the same boundary, stop asking the LLM to find it. Write a deterministic architecture test or linter rule. The agent is your scout; the compiler and linter are your permanent border guards (see [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction updates]]).
 
 ---
 
-## 5. Ephemeral Hypothesis Testing vs. Permanent Specs
+## Practical Rules for Teams
 
-Traditional engineering conflates *investigating a defect* with *maintaining a permanent test*:
-- An engineer who suspects a concurrency race must write a unit test, wire up mocks, commit it, and maintain it across future framework upgrades.
-- In contrast, an agentic reviewer creates **ephemeral investigative harnesses**:
-  ```text
-  Suspected Concurrency Leak Detected in PR
-                      │
-                      ▼
-       Agent Synthesizes Ephemeral Fuzz Harness
-                      │
-                      ▼
-     Runs 10,000 Iterations Under Virtualized Clocks
-                      │
-           ┌──────────┴──────────┐
-           ▼                     ▼
-     [ No Defect Found ]    [ Race Reproduced ]
-     Harness Discarded      Promoted to Permanent Regression Test
-  ```
-This separation between **exploratory instruments** and **permanent specification assets** keeps repository test suites lean, deterministic, and free of sprawling speculative test mocks.
+1. **Keep simple checks deterministic**: Never use an LLM to check code formatting, indentation, or type correctness.
+2. **Focus prompts on architectural intent**: Instruct review agents to look for boundary leaks, premature abstractions, and unhandled failure states.
+3. **Escalate recurring findings**: Turn frequently caught violations into deterministic tests to save tokens and speed up CI.
+4. **Reference documented decisions**: When an agent flags a violation, have it cite the relevant ADR or architectural guideline so the author understands the context.
 
 ---
 
-## Relationship to the Knowledge Graph
+## Related Notes
 
-- **[[LLMs as a Code Review Team]]**: Architectural topologies for routing diffs to specialized semantic and deterministic review agents.
-- **[[Reviewing AI-Generated Code]]**: Human-centric heuristics for inspecting business assumptions and hidden coupling that escape linters.
-- **[[Testing in the Model, Agent, LLM Era]]**: The foundational duality pairing hard deterministic oracles with soft semantic living specifications.
-- **[[Agent Advantage -  Relentless, Methodical Work]]**: Why tireless agent execution transforms unenforced guidelines into continuous automated checks.
-- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How post-incident lessons are codified into living review policies.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing unreviewed code accumulation from degrading repository maintainability.
+- **[[LLMs as a Code Review Team]]**: Configuring specialized review personas to systematically evaluate pull requests.
+- **[[Reviewing AI-Generated Code]]**: How human reviewers focus on domain intent while machines handle mechanical and semantic checks.
+- **[[Testing in the Model, Agent, LLM Era]]**: The foundational balance between deterministic test oracles and semantic guidelines.
+- **[[Agent Advantage -  Relentless, Methodical Work]]**: Why inexhaustible procedural consistency makes agents ideal for checking complex rule sets.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How post-incident lessons are codified into living repository guidelines.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Using semantic review gates to prevent unmonitored code generation from degrading system health.
