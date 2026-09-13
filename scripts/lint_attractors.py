@@ -31,6 +31,7 @@ QUARANTINED_JARGON = [
     (r"\bhardware[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic attractor 'hardware sympathy/empathy'. Replace with 'hardware-aligned', 'substrate alignment', or 'cache-conscious'."),
     (r"\b(?:substrate|engine|cache|execution)[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic sympathy/empathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),
     (r"\bbike[- ]?shed\w*\b", "Banned colloquial jargon 'bikeshedding'. Replace with practical terms like 'petty style debates', 'cosmetic formatting debates', or 'superficial nitpicking'."),
+    (r"\bfriction\s+boundar\w*\b", "Banned pseudo-academic phrase 'friction boundary'. Replace with 'friction point', 'clash point', or 'roadblock'."),
 ]
 
 # 2. Hardware terms quarantined to Layer 1 (Substrate & Mechanical Sympathy)
