@@ -13,6 +13,9 @@ aliases:
   - The Defect Attribution Hierarchy
   - Architectural Sedimentation
   - Upstream Defect Resolution
+  - Bi-Directional Spec-Code Harmonization
+  - Harness-Orchestrated Co-Evolution
+  - Living Specification Synchronization
 ---
 
 # Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification
@@ -47,6 +50,7 @@ Decision Level               Defect Type                    Remediation Strategy
    - **Policies (How)**: Generation instructions, negative bounds, review checklists, and architectural patterns (continuously tuned via evals).
    - **Outputs (Generated)**: Disposable code, local DTOs, glue pipelines, and build configs (freely regenerated).
 5. **Code Review as Specification Discovery**: Generated code functions as an instant, concrete prototype of human requirements. When a human reviewer objects to an agent's implementation, the objection often reveals an unstated business edge case. The human's duty is to update the specification first, rather than dictating tactical code edits.
+6. **The Bi-Directional Harmonization Standard**: When correcting code via conversational prompts (*"Here is what's wrong, fix it"*), the engineering harness must not allow specifications to rot. The harness must be configured so that as the agent implements the fix and prepares the commit, it simultaneously resolves which upstream design documents, RFCs, or living specifications govern that slice, back-propagating the necessary specification amendments in lockstep with the code.
 
 ---
 
@@ -158,9 +162,86 @@ Code review is thus elevated from clerical linting to **active domain modeling**
 
 ---
 
+## 6. The Third Mode: Harness-Orchestrated Co-Evolution & Bi-Directional Spec Harmonization
+
+While the classic dichotomy pits **tactical code patching** against **manual spec-first regeneration**, high-bandwidth frontier workflows introduce an essential **third mode**: **Harness-Orchestrated Co-Evolution**.
+
+### The High-Velocity Tension
+
+In fast-paced development, forcing a human operator to pause, manually navigate the documentation tree, write detailed specification diffs in Markdown, and then invoke a fresh generation loop introduces significant friction. Conversely, giving a quick prompt to patch the code (*"Hey, you handled the timeout incorrectly here; retry twice before throwing"*) risks immediate **specification rot**, rendering documentation obsolete within days.
+
+### The Mechanism of Co-Evolution
+
+Under this third pattern, the human operator directs the agent at high conversational bandwidth:
+> *"Hey, you made a mistake in this error path: when the downstream service returns a 429, we cannot drop the message; we must route it to the dead-letter queue after three exponential backoffs. Fix this."*
+
+Rather than performing a blind inline patch or modifying test suites in isolation, the **[[Agentic Coding Harness and Controlled Development Workflows|agentic harness]]** orchestrates a dual-mutation workflow:
+
+```text
+               THE HARNESS CO-EVOLUTION & BACK-PROPAGATION LOOP
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. OPERATOR CONVERSATIONAL PROMPT                                           │
+│    "You did X wrong in component Y. Fix it and handle edge case Z."         │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. HARNESS CONTEXT & TRACEABILITY RESOLUTION                                │
+│    - Agent identifies target source files and module boundaries             │
+│    - Harness maps code path to governing spec: [docs/specs/order-queue.md]  │
+│    - Harness identifies related architectural decision records (ADRs)       │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+             ┌─────────────────────────┴─────────────────────────┐
+             ▼                                                   ▼
+┌───────────────────────────────────────────┐ ┌───────────────────────────────────────────┐
+│ 3A. CONCRETE CODE REPAIR                  │ │ 3B. LIVING SPECIFICATION AMENDMENT        │
+│ - Implements algorithmic fix              │ │ - Back-propagates new business invariant  │
+│ - Adds deterministic regression test      │ │ - Updates state machine / sequence schema │
+│ - Maintains clean architectural layers    │ │ - Documents edge-case rationale           │
+└─────────────────────┬─────────────────────┘ └─────────────────────┬─────────────────────┘
+                      │                                             │
+                      └─────────────────────┬───────────────────────┘
+                                            ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. PRE-FLIGHT VERIFICATION & HARMONIZATION GATE                             │
+│    - Runs automated test suite (verifying zero regressions)                 │
+│    - Validates semantic parity between updated spec and repaired code       │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. ATOMIC SYNCHRONIZED COMMIT                                               │
+│    - Staged together: code fix + regression tests + specification diff      │
+│    - Commit message explains both the code repair and the spec evolution    │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Core Invariants of the Co-Evolution Harness
+
+To prevent the agent from corrupting design documents during automated repairs, the harness enforces three deterministic guardrails:
+
+1. **Explicit Artifact Traceability**: Every production module must maintain a clear linkage to its governing documentation—whether via file-level metadata frontmatter, structured directory mirroring, or [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight task scoping]]. The harness uses this index to immediately resolve which document must receive the back-propagated change.
+2. **Expansion-Only Spec Mutation (No Constraint Erasure)**: An agent is permitted to *expand* the specification with newly discovered requirements, edge cases, and compensating workflows. It is strictly barred from *erasing* existing requirements or weakening security/concurrency invariants to rationalize a sloppy patch.
+3. **Paired Atomic Commit Discipline**: The harness automatically binds the code modification, its deterministic regression test, and the specification amendment into a single commit (or a pair of explicitly linked atomic commits). This prevents "documentation debt" from ever separating from production code.
+
+### Comparing the Three Remediation Strategies
+
+| Dimension | Mode 1: Tactical Code Patch | Mode 2: Manual Spec-First Rewrite | Mode 3: Harness Co-Evolution |
+| :--- | :--- | :--- | :--- |
+| **Operator Friction** | Very Low (single quick prompt) | High (operator manually authors spec diff) | Very Low (conversational prompt directing harness) |
+| **Documentation Health** | ❌ Severe Drift (spec becomes stale) | ✅ Pristine (spec precedes code) | ✅ Pristine (harness synchronizes spec automatically) |
+| **Architectural Purity** | ❌ High risk of architectural sediment | ✅ High (clean regeneration from spec) | ✅ High (harness checks structural invariants) |
+| **Regression Guard** | Often missing or ad-hoc | Re-evaluated against full suite | Dedicated regression test added + spec codified |
+| **Best Suited For** | Isolated cosmetic fixes, typos | Foundational structural redesigns | Daily feature refinement, edge-case fixes, bug repairs |
+
+---
+
 ## Relationship to the Knowledge Graph
 
 - **[[Developing Features with AI Coding Agents]]**: Principles for keeping specifications immutable during implementation.
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The operator leadership model where conversational directing triggers harness-level dual mutations across code and specifications.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living specifications as active semantic context that must be continuously updated during repair loops.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Codifying correction lessons into repo instructions to prevent recurrent regressions.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic failing tests to anchor agent self-healing loops.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Bounding the correction loop to prevent unbounded retries and hallucination compounding.
