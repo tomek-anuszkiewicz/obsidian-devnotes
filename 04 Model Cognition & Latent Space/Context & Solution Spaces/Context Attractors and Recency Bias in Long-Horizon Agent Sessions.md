@@ -27,7 +27,7 @@ aliases:
 +----------------------------------------------------------------------------------------------------+
 |                                                                                                    |
 |  EARLY MULTI-TURN SESSION (Balanced Attention & Broad Latent Sampling)                             |
-|  [Hardware Substrate] ───────► [Test Oracles] ───────► [Service Mesh] ───────► [Human Factors]     |
+|  [Hardware Execution] ───────► [Test Oracles] ───────► [Service Mesh] ───────► [Human Factors]     |
 |                                                                                                    |
 |  ~~~~~~~~~~~~~~~~~~~~~~~~ ATTENTION WEIGHT ACCUMULATION (50+ TURNS) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
 |                                                                                                    |
@@ -136,7 +136,7 @@ Rather than maintaining an endless multi-day conversational thread, split explor
 - **Phase C (Hard Reset)**: Commit the artifact to Git, terminate the session, and launch a completely fresh conversation window. The new session loads only the distilled Markdown file—purging all conversational token gravity.
 
 ### 2. Front-Cutting (Hard Context Pruning) Over Summarization
-When an agent harness must prune context, **simple FIFO truncation (cutting off the oldest 60% of raw turns without re-summarizing)** is often epistemologically superior to AI-generated compaction. It removes the historical anchor tokens completely, forcing the model to rely on the current prompt and active files rather than an amplified summary attractor.
+When an agent harness must prune context, **simple FIFO truncation (cutting off the oldest 60% of raw turns without re-summarizing)** is often far more reliable than AI-generated compaction. It removes the historical anchor tokens completely, forcing the model to rely on the current prompt and active files rather than an amplified summary attractor.
 
 ### 3. Explicit Negative Constraints (Attractor Dampening)
 If a specific motif has begun dominating the dialogue, the user must act as the cognitive circuit breaker (as formalized in [[AI, Averaged Decisions, and Premature Convergence on Solutions]]):
