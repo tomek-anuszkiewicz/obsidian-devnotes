@@ -219,7 +219,7 @@ This cognitive tension is resolved through four structural mechanisms:
    - The practitioner provides the entire intentional vector: the problem formulation, the domain boundary, the non-consensus hypothesis, and the stopping criteria. The model serves as an cognitive scaffold, not an autonomous author.
 
 2. **Tacit Knowledge Compilation**:
-   - Following Michael Polanyi's epistemological principle (*"we know more than we can tell"*), experienced practitioners accumulate decades of **tacit knowledge**—instinctive architectural intuition regarding concurrency traps, memory pressure, abstraction leaks, and structural fragility.
+   - Following Michael Polanyi's foundational observation on tacit knowledge (*"we know more than we can tell"*), experienced practitioners accumulate decades of **tacit knowledge**—instinctive architectural intuition regarding concurrency traps, memory pressure, abstraction leaks, and structural fragility.
    - Translating vast tacit intuition into formal, structured documentation or rigorous taxonomy historically required immense, exhausting effort.
    - The model acts as an **cognitive compiler**: the practitioner injects an unpolished, intuitive empirical seed, and the model projects that seed across its multi-dimensional training manifold, returning explicit terminology and formal conceptual lattices (see [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]). The insight is not foreign; it is the practitioner's tacit intuition rendered into explicit syntax.
 
