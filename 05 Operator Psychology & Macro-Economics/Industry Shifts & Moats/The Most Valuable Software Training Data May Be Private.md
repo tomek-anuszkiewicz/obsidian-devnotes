@@ -15,7 +15,7 @@ aliases:
 # The Most Valuable Software Training Data May Be Private
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Public open-source repositories represent only the **sterilized, survivorship-biased end state** of software engineering—squashed commits and cleaned files that systematically strip away the true reasoning signal: dead-end explorations, review debates, regression recoveries, and production incident post-mortems. The most valuable training substrate for frontier reasoning agents resides inside private corporate archives: granular commit histories, failing test traces, PR refactorings, and architectural dissents. Models trained exclusively on finished code memorize *what* syntax looks like, but remain ignorant of *how* to diagnose anomalies, negotiate trade-offs, and recover from incorrect assumptions.
+> **Executive Architectural Thesis**: Public open-source repositories represent only the **sterilized, survivorship-biased end state** of software engineering—squashed commits and cleaned files that systematically strip away the true reasoning signal: dead-end explorations, review debates, regression recoveries, and production incident post-mortems. The most valuable training signal for frontier reasoning agents resides inside private corporate archives: granular commit histories, failing test traces, PR refactorings, and architectural dissents. Models trained exclusively on finished code memorize *what* syntax looks like, but remain ignorant of *how* to diagnose anomalies, negotiate trade-offs, and recover from incorrect assumptions.
 
 ```text
            THE COGNITIVE ASYMMETRY OF CODE TRAINING DATA
