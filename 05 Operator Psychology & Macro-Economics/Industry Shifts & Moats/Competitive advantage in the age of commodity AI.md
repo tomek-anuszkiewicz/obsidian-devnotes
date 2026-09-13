@@ -21,7 +21,7 @@ aliases:
 
 ```text
            THE DEFRACTURING OF DEFENSIVE MOATS IN THE COMMODITY AI ERA
-   COMMODITY SUBSTRATE (Zero Moat)           THE NEW STRATEGIC FORTRESS (Durable Moat)
+   COMMODITY UTILITIES (Zero Moat)           THE NEW STRATEGIC FORTRESS (Durable Moat)
 +------------------------------------+      +------------------------------------------+
 | - Public Foundation Models / APIs  |      | - PROPRIETARY OPERATIONAL TELEMETRY      |
 | - Standard Syntactic Codebases     | ---> | - IMMUTABLE VERIFICATION TEST ORACLES    |
