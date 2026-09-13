@@ -18,7 +18,7 @@ aliases:
 # Agent Advantage — Relentless, Methodical Work
 
 > [!IMPORTANT]
-> **The Foundational Asymmetry**: **The greatest advantage of autonomous software agents is not superhuman intelligence, but inexhaustible procedural stamina.** Humans understand good engineering practices (staged migrations, compatibility shims, exhaustive regression tests, documentation updates, cleanup passes), but routinely take shortcuts because repeating these steps across 50 components induces extreme cognitive fatigue. **An agent repeats the disciplined protocol one hundred times with identical mechanical rigor on the last iteration as on the first**, provided a human architect defines what "the right thing" means.
+> **The Foundational Asymmetry**: **The greatest advantage of autonomous software agents is not superhuman insight, but inexhaustible procedural stamina.** Humans understand good engineering practices (staged migrations, compatibility shims, exhaustive regression tests, documentation updates, cleanup passes), but routinely take shortcuts because repeating these steps across dozens of components induces extreme cognitive fatigue. **An agent repeats the disciplined protocol one hundred times with identical mechanical rigor on the last iteration as on the first**, provided a human architect defines what "the right thing" means.
 
 ```text
 Human Cognitive Bottleneck:
@@ -32,29 +32,33 @@ Zero Fatigue ──► Relentless Execution ──► Exhaustive Combinations Ve
 
 ## Executive Summary & Core Architectural Invariants
 
-1. **Lowering the Cost of Thoroughness**: Historically, safe engineering practices (e.g., 5-stage dark deployments, backward-compatible DTO shims, consumer audits) were skipped because manual typing was too expensive. Agents invert this economics: **thoroughness becomes cheaper than taking risky shortcuts**.
-2. **Methodical Enumeration to the Point of Irritation**: An agent systematically inspects matrix permutations that exhaust human patience: *What happens during rolling deployments? What if both headers exist? What if external events arrive duplicated or out-of-order?* What feels pedantic to a human prevents 3:00 AM production outages.
-3. **Exhaustive Scope vs. The Halting Problem**: Because an agent never tires, it lacks the human's natural physiological brake. Without mechanical boundaries, agents will over-engineer: writing redundant unit tests, creating speculative abstractions, and generating bloated reports. The harness must impose **hard proportionality gates** (bounding context, max files touched, and explicit stop conditions).
-4. **Complementary Division of Labor**:
-   - **Human Domain**: Judgment, intent, risk acceptance, domain trade-offs, and defining the invariant criteria.
-   - **Agent Domain**: Relentless verification, AST traversal, migration execution, and continuous compliance auditing.
+1. **Lowering the Cost of Thoroughness**: Historically, safe engineering practices (e.g., 5-stage dark deployments, backward-compatible DTO shims, consumer audits) were skipped because manual typing and repetitive manual checks were too expensive. Agents invert this economics: **thoroughness becomes cheaper than taking risky shortcuts**.
+2. **Work Humans Commonly Postpone**: Agents shine on high-value, unglamorous tasks that human teams perpetually delay:
+   - *"Someone should eventually clean this up."*
+   - *"We should probably check all services for this deprecated parameter."*
+   - *"We need characterization tests before anyone touches this module."*
+   - *"We must verify that no downstream client relies on this undocumented behavior."*
+3. **Continuous Cross-Checking Across Representations**: An agent can tirelessly verify that disparate representations of the system remain in sync:
+   $$\text{Documentation} \longleftrightarrow \text{Code} \quad\vert\quad \text{OpenAPI Specs} \longleftrightarrow \text{Controllers} \quad\vert\quad \text{Database Schema} \longleftrightarrow \text{Models}$$
+4. **Exhaustive Scope vs. The Halting Problem**: Because an agent never tires, it lacks the human's natural physiological brake. Without mechanical boundaries, agents will over-engineer: writing redundant unit tests, creating speculative abstractions, and generating bloated reports. The harness must impose **hard proportionality gates** (bounding context, max files touched, and explicit stop conditions).
+5. **Complementary Division of Labor**:
+   - **Human Domain**: Judgment, business intent, risk tolerance, domain trade-offs, and defining the invariant criteria.
+   - **Agent Domain**: Relentless verification, search, structural transformation, compliance auditing, and cleanup.
 
 ---
 
 ## 1. Why Failures Happen: The Economics of Attention
 
 Most software disasters do not stem from architectural ignorance. Teams know the golden path:
-```text
 - Add backward-compatibility tests before changing schemas,
-- Audit all downstream consumers across repos,
-- Document architectural rationales and update OpenAPI specs,
+- Audit all downstream consumers across repositories,
+- Document architectural rationales and update API contracts,
 - Implement automated rollback scripts and shadow telemetry,
-- Remove temporary feature flags and clean up scaffolding.
-```
+- Remove temporary feature flags and clean up obsolete scaffolding.
 
-The breakdown occurs because each step imposes friction. Humans naturally optimize effort toward visible feature progress, cutting corners on unglamorous verification steps. Together, these skipped steps trigger the compounding decay described in [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]].
+The breakdown occurs because each step imposes friction. Humans are naturally motivated by adding visible capabilities, while cleanup and verification offer little immediate reward. As repetition increases, human attention degrades. Together, these skipped steps trigger compounding decay (see [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]]).
 
-An agent has no ego, no boredom, and no physiological fatigue. It executes the twentieth migration script with the same precision as the first.
+An agent has no ego, no boredom, and no physiological fatigue. It executes the fiftieth migration script with the same precision as the first.
 
 ---
 
@@ -64,7 +68,7 @@ An agent has no ego, no boredom, and no physiological fatigue. It executes the t
 ┌────────────────────────────────────────────────────────────────────────┐
 │               TASKS REWARDING RELENTLESS CONSISTENCY                   │
 ├────────────────────────────────────────────────────────────────────────┤
-│ 1. EXHAUSTIVE CONSUMER AUDITS: Checking 80 microservice schemas for   │
+│ 1. EXHAUSTIVE CONSUMER AUDITS: Checking 80 service schemas for        │
 │    deprecated contract fields across git history.                      │
 │ 2. STAGED REFACTORING: Extracting 120 vertical slices one-by-one into │
 │    1:1 isolated command modules without skipping a single step.        │
@@ -112,12 +116,25 @@ Because the agent experiences zero keystroke drag, generating explicit wrapper t
 Because agents do not feel exhaustion, they can easily burn compute generating trivial, low-signal assets:
 - Writing 50 unit tests for trivial property getters,
 - Generating repetitive markdown documentation for obvious code,
-- Introducing speculative generic interfaces for single-use routines.
+- Introducing speculative generic interfaces for single-use routines,
+- Performing endless refactoring on code that rarely changes.
 
 High-assurance harnesses enforce **proportionality constraints** (see [[Agentic Coding Harness and Controlled Development Workflows|controlled harness workflows]]):
 - *Risk Tiering*: Low-risk internal scripts receive lightweight checks; public ingress APIs receive exhaustive matrix verification.
 - *Touchpoint Caps*: Restricting the agent to editing maximum $N$ files per pull request.
 - *Negative Fences*: Explicitly forbidding the introduction of unnecessary abstractions.
+
+---
+
+## 4. Human-Agent Division of Responsibility
+
+| Dimension | Human Role | Agent Role |
+| :--- | :--- | :--- |
+| **Primary Strength** | Architectural judgment & business intent | Relentless, tire-free execution |
+| **Failure Modes** | Fatigue, distraction, shortcuts under pressure | Missing context, over-literal interpretation |
+| **Invariants** | Defining what "correct" and "safe" mean | Enforcing invariants across 1,000 call sites |
+| **Verification** | Reviewing failure boundaries & high-level diffs | Generating characterization suites & fuzz tests |
+| **Lifecycle** | Setting strategic roadmaps & domain boundaries | Methodical cleanup, schema sync, & migration PRs |
 
 ---
 
