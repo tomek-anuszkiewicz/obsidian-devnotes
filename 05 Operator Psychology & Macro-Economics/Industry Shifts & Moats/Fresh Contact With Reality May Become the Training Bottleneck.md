@@ -6,7 +6,7 @@ tags:
   - model-training
   - empiricism
   - ai-scaling
-  - epistemology
+  - empirical-grounding
 aliases:
   - Reality Bottleneck in AI Training
   - Contact with Reality vs Synthetic Loops
