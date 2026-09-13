@@ -17,84 +17,95 @@ aliases:
 
 # Designing Software Architecture with LLM Assistance
 
-> [!IMPORTANT]
-> **The Epistemological Reality**: **An LLM's answer is not the architecture; it is a synthetic proposal generated from a probabilistic model of the system.** That proposal inherently blends explicit facts with inferred consequences, generic industry tropes, and unstated assumptions. **The architect's primary task is not to validate the proposed technology stack, but to validate the model of reality that produced the proposal.** LLMs must be used to expand the frontier of cheap, reversible experimentation—never to rubber-stamp irreversible architectural commitments.
+When you ask an AI model to design an architecture for a new system, it will produce a well-formatted, professional document in thirty seconds. It will recommend microservices, event streaming, caching layers, and clean architectural boundaries.
+
+The dangerous part is that the proposal will sound completely plausible.
+
+The fundamental rule when designing software architecture with LLMs is:
+
+> **An LLM's proposal is not an architecture; it is a hypothesis generated from an incomplete mental model of your system.**
+
+Because language models are trained on public code and generic best practices, they silently fill unstated ambiguities with conventional industry tropes. **The architect's job is not to choose between the technologies the model proposed, but to validate the model of reality that produced the proposal.**
 
 ```text
-Problem Statement (Underspecified)
+Underspecified Problem Statement
                │
                ▼
 [ The Plausibility Trap ] ──► Model Fills Gaps with Generic Best Practices
                │             (Assumes linear state, eventual consistency, simple auth)
                ▼
-Coherent, Well-Formatted, Plausible Architecture Proposal
+Polished, Plausible Architecture Proposal
                │
-   ┌───────────┴───────────────────────────────────────────┐
-   ▼                                                       ▼
-[ NAIVE ACCEPTANCE ]                     [ RIGOROUS AGENTIC EXPLORATION ]
+    ┌──────────┴───────────────────────────────────────────┐
+    ▼                                                       ▼
+[ NAIVE ACCEPTANCE ]                     [ RIGOROUS ARCHITECTURAL SPARRING ]
 Assumptions accepted unexamined          1. Extract implicit assumptions
 Catastrophic failure in production       2. Formulate falsification questions
-                                         3. Synthesize divergent alternatives
+                                         3. Force divergent alternatives
                                          4. Run cheap empirical spikes
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **The Plausible Completeness Trap**: When requirements contain unstated ambiguities, models do not report an error; they silently complete the story using the most ubiquitous industry tropes (e.g., assuming idempotent retries, linear status workflows, or standard relational schemas). The resulting architecture looks comprehensive and professionally justified while resting on unverified assumptions.
-2. **Validating Reality Before Technology**: Before evaluating whether to use event sourcing, microservices, or specific database topologies, the architect must rigorously audit the model's factual foundation: What did the LLM assume about concurrency, transaction boundaries, failure domains, and operational team topology?
-3. **Forced Multi-Option Divergence**: Prompting an LLM for "the best architecture" triggers premature convergence on averaged, consensus designs (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]). High-leverage architects mandate the generation of at least five divergent options (the simplest, the incremental, the reversible, the radical, and the non-technical requirement change).
-4. **Adversarial Falsification Prompts**: Deploy secondary review prompts with explicit instructions to assume the proposal is fatally flawed, tasking the model with identifying hidden coupling, unmodeled distributed failure states, and migration cliffs.
-5. **Increasing Reversible Spikes**: The ultimate value of LLMs in architecture is collapsing the cost of prototyping. What previously required a two-month proof of concept can now be prototyped as an executable vertical spike in 48 hours, replacing speculative theoretical debate with empirical telemetry.
+1. **The Plausible Completeness Trap**: When requirements omit critical details, models do not stop to ask questions; they silently make assumptions (e.g. assuming messages always arrive in order or database transactions are cheap). The resulting design looks complete while resting on unverified foundations.
+2. **Validate Reality Before Choosing Technology**: Before debating whether to use event sourcing, microservices, or specific databases, audit the model's assumptions: What did it assume about data volume, network latency, team size, and failure boundaries?
+3. **Forced Multi-Option Divergence**: Prompting an LLM for "the best architecture" triggers premature convergence on generic, over-engineered defaults (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]). Architects must force the model to present at least five divergent options (the simplest, the incremental, the reversible, the robust, and the non-technical option).
+4. **Adversarial Red-Teaming**: Never ask an agent if a design is good. Instruct it to assume the design failed catastrophically in production and write a post-mortem identifying the root cause.
+5. **Reversible Spikes Over Theoretical Debates**: The highest-leverage use of LLMs in architecture is collapsing the time required to build an exploratory prototype from weeks to hours, replacing speculation with real latency and throughput data.
 
 ---
 
-## 1. Where LLMs Excel vs. Where They Fail
+## 1. Where LLMs Excel vs. Where They Struggle
 
 ```text
 ┌──────────────────────────────────────────┐  ┌──────────────────────────────────────────┐
-│             LLM STRENGTHS                │  │              LLM BLINDSPOTS              │
+│              LLM STRENGTHS               │  │              LLM BLINDSPOTS              │
 ├──────────────────────────────────────────┤  ├──────────────────────────────────────────┤
-│ - Exploring unfamiliar technology spaces │  │ - Undocumented operational history      │
-│ - Generating orthogonal alternatives     │  │ - Distinguishing essential vs accidental  │
-│ - Mapping known trade-off matrices       │  │ - Tribal domain rules in engineers' heads│
-│ - Rapid prototyping of vertical spikes   │  │ - Signaling that the prompt is incomplete│
-│ - Adversarial red-teaming of proposals   │  │ - Status-quo bias toward common fads     │
+│ • Exploring unfamiliar technology spaces │  │ • Undocumented legacy system quirks      │
+│ • Generating orthogonal trade-off options│  │ • Understanding team operational limits  │
+│ • Rapidly drafting exploratory spikes    │  │ • Signaling that requirements are vague  │
+│ • Identifying standard failure modes     │  │ • Strong bias toward complex industry fads│
+│ • Adversarial red-teaming of proposals   │  │ • Conflating PoC speed with prod readiness│
 └──────────────────────────────────────────┘  └──────────────────────────────────────────┘
 ```
 
-The core failure mode is **cognitive silence**: an LLM rarely states, *"This problem is underspecified in ways that invalidate any recommendation."* Instead, it fills missing voids with plausible fiction.
+The greatest danger is **cognitive silence**: an LLM rarely says, *"I cannot answer this because you haven't told me your data consistency requirements."* It simply invents a plausible assumption and moves forward.
 
 ---
 
-## 2. Uncovering the Hidden Assumptions Layer
+## 2. The Assumption Extraction Protocol
 
-When an LLM produces an architectural design, it almost always smuggles in unverified axioms:
-- *Temporal Coupling*: Assuming distributed asynchronous events arrive in strict chronological sequence.
-- *Idempotency*: Assuming external webhook providers or upstream payment gateways support safe retries.
-- *Data Locality*: Assuming that all required fields can be joined within a single transactional boundary without cross-datacenter latency.
-- *Team Ergonomics*: Assuming the organization possesses the SRE and observability maturity to operate complex event-driven topologies.
+Whenever an LLM produces an architectural proposal, it smuggles in unstated assumptions:
+- **Ordering**: Assuming distributed messages arrive in exact chronological sequence.
+- **Idempotency**: Assuming third-party payment or notification webhooks can be safely retried without side effects.
+- **Data Locality**: Assuming all required customer records can be queried in a single fast join.
+- **Operational Capacity**: Assuming your team has dedicated infrastructure engineers to manage complex event brokers.
 
-### The Assumption Extraction Protocol
-Before accepting any architectural proposal, run the **Assumptions Extraction Probe**:
+Before evaluating the proposal, run this extraction prompt:
 
 ```text
-Analyze your previous architecture recommendation. 
-List every assumption you made that was NOT explicitly stated in the input prompt.
-Categorize them into:
-1. Concurrency and ordering assumptions.
-2. Failure domain and recovery assumptions.
-3. Organizational and operational capability assumptions.
-4. Data volume and access pattern assumptions.
-Rank them by: If this assumption is false, how severely does the architecture collapse?
+Analyze your previous architecture proposal.
+List every assumption you made that was NOT explicitly stated in my original prompt.
+
+Group them into:
+1. Concurrency, ordering, and transaction assumptions.
+2. Failure recovery and network reliability assumptions.
+3. Operational complexity and team maintenance assumptions.
+4. Data volume, query patterns, and latency assumptions.
+
+For each assumption, answer: If this assumption is completely false, how does this 
+architecture fail?
 ```
+
+This single prompt strips away the polished veneer and exposes the real trade-offs you must decide.
 
 ---
 
-## 3. The 5-Vector Architectural Generation Framework
+## 3. The 5-Vector Divergence Framework
 
-To prevent premature convergence on generic templates, force the model across five structural axes:
+Never accept a single "recommended" architecture. Force the model to explore distinct options across five practical vectors:
 
 ```text
                                 Architectural Request
@@ -104,60 +115,71 @@ To prevent premature convergence on generic templates, force the model across fi
 [ SIMPLEST ] [ INCREMENTAL ] [ REVERSIBLE ] [ ROBUST ]   [ RADICAL ]   [ NON-TECHNICAL ]
 Single       Add module to   Decoupled via  Strict state Pre-allocated Eliminate need
 process,     existing        adapter; easy  machine; zero allocation,   by changing
-flat tables  monolith        to discard     ambient data discrete SIMD  business rule
+flat tables  monolith        to discard     ambient data high-perf loop business rule
 ```
 
-For every option, the model must supply:
-1. **The Invariants It Preserves**: Transactional, performance, and boundary invariants.
-2. **The Conditions It Requires**: What must be true for this to succeed.
-3. **When It Is Catastrophic**: Explicit anti-patterns and disqualifying constraints.
-4. **The Cheap Disproof Experiment**: A microbenchmark or spike that can disprove viability in under 24 hours.
+For each option, require the model to specify:
+1. **What It Solves**: The core trade-off it optimizes for.
+2. **The Conditions It Requires**: What must be true about your domain for this to work.
+3. **When It Is a Disaster**: Concrete failure modes where this option is completely wrong.
+4. **The 24-Hour Experiment**: A cheap prototype or benchmark that could prove or disprove viability tomorrow.
 
 ---
 
-## 4. Reusable Architectural Steering Prompts
+## 4. Practical Sparring Prompts
 
-### Phase A: Problem Space & Ambiguity Extraction
+### Phase 1: Problem Discovery Before Solution Design
 ```text
-Role: Principal Systems Architect.
-Task: Analyze the following business and technical requirement. Do NOT design an architecture yet.
-Do NOT select technologies or frameworks.
+Act as a Principal Systems Architect. Analyze the following business requirement, 
+but do NOT design a system or select any technologies yet.
 
-Output Requirements:
-1. Identify all under-specified operational boundaries, throughput expectations, and latency limits.
-2. Formulate the top 10 critical questions whose answers would materially alter the architectural choice.
-3. Highlight the 3 riskiest unstated assumptions a junior team would make when reading this prompt.
-4. Identify legacy coupling or non-functional constraints that typical designs overlook.
+Your tasks:
+1. Identify all underspecified operational requirements, concurrency limits, and latency targets.
+2. Formulate the top 8 critical questions whose answers would completely change the architectural approach.
+3. List the 3 most dangerous assumptions an engineer would make when reading this request.
+4. Highlight non-functional constraints (compliance, disaster recovery, migration) that are missing.
+
+Stop here. Wait for my answers before proposing any architecture.
 ```
 
-### Phase B: Adversarial Red-Teaming
+### Phase 2: Adversarial Failure Post-Mortem
 ```text
-Assume the recommended architecture is deployed into multi-tenant production and experiences a 
-catastrophic outage during peak traffic.
+Assume we implemented your recommended architecture and deployed it to multi-tenant production. 
+Six months later, during a peak marketing campaign, the system suffers a catastrophic 4-hour outage.
 
-Conduct a post-mortem identifying:
-1. The exact failure cascade (e.g., thread starvation, connection pool exhaustion, unhandled retry storms).
-2. Which component violated Hyrum's Law by depending on an undocumented implementation detail.
-3. Why the monitoring and telemetry failed to pinpoint the root cause immediately.
-4. The migration or deployment step that secretly introduced the regression.
+Write the post-mortem report:
+1. What was the exact cascading failure sequence (e.g. connection pool exhaustion, unhandled retry storm, database deadlocks)?
+2. Which component failed because of an undocumented operational reality?
+3. Why did our monitoring and alerting fail to catch the root cause early?
+4. What fundamental architectural trade-off was violated?
 ```
 
 ---
 
-## 5. Architectural Scaffolding for Agentic Maintenance
+## 5. Designing for Future Agent Maintenance
 
-When designing software that will subsequently be implemented and maintained by autonomous agents, the architecture must optimize for **agent ergonomics** (see [[Designing Software for AI Agents]]):
-- **1:1 File Isolation**: One domain operation equals one file, containing inputs, validation, business logic, and outputs in a flat vertical slice.
-- **Explicit Call Graphs**: Avoid dynamic reflection, invisible aspect-oriented middleware, and magic dependency-injection auto-scanners that blind an agent's static context window.
-- **Deterministic Verification Anchors**: Ensure every architectural boundary is guarded by a fast, machine-executable test harness that provides instant binary feedback.
+When designing software that will be maintained by coding agents, the architecture itself must be **agent-friendly** (see [[Designing Software for AI Agents]]):
+
+1. **Focused 1:1 Module Boundaries**: Keep individual domain operations self-contained in dedicated files. Large "god classes" flood an agent's prompt context, leading to hallucinations.
+2. **Explicit Dependency Injection**: Avoid dynamic reflection, ambient global state, or magical auto-wiring that hides how data moves. If an agent cannot see where a dependency comes from in the AST, it cannot safely modify it.
+3. **Automated Verification Harnesses**: Every architectural boundary must have a fast, automated test harness that gives immediate pass/fail feedback (see [[Testing in the Model, Agent, LLM Era|automated test harnesses]]).
 
 ---
 
-## Relationship to the Knowledge Graph
+## Practical Rules for Teams
 
-- **[[Designing Software for AI Agents]]**: Translating high-level architectural proposals into agent-friendly codebases.
-- **[[Competitive advantage in the age of commodity AI]]**: Why asking provocative architectural questions creates defensibility over generic LLM templates.
-- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Mitigating the risk of models prematurely converging on conventional, mediocre designs.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How real-world friction prompts crystallize novel architectural models.
-- **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: A concrete case study of designing flexible, future-proof module topologies with LLMs.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Attributing defects to architectural vs specification flaws.
+1. **Never ask for "the best architecture"**: Always ask for divergent options with explicit trade-offs.
+2. **Dissect the assumptions first**: Before discussing database choices or frameworks, verify what the model assumed about reality.
+3. **Use prototypes to resolve uncertainty**: If two architectures look viable on paper, have an agent build quick prototypes of both on temporary branches to compare real performance.
+4. **Human ownership of decisions**: Use the model to expand your thinking and test for blind spots, but keep final architectural responsibility strictly with the human engineer.
+
+---
+
+## Related Notes
+
+- **[[Designing Software for AI Agents]]**: Architectural principles that make codebases easy for autonomous agents to navigate and maintain.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Why LLMs default to conventional, averaged designs and how to force divergent thinking.
+- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Using rapid disposable spikes to test architectural hypotheses before committing to production.
+- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Deciding when to fix code locally versus revisiting foundational architectural decisions.
+- **[[Competitive advantage in the age of commodity AI]]**: How rigorous architectural questioning creates engineering advantages over generic AI templates.
+- **[[Testing in the Model, Agent, LLM Era]]**: Grounding architectural designs in automated, deterministic verification oracles.
