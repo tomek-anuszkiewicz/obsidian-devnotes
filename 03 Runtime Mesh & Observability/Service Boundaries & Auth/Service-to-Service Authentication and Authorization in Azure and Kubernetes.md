@@ -13,6 +13,8 @@ aliases:
   - Service Authentication Patterns
 ---
 
+# Service-to-Service Authentication and Authorization in Azure and Kubernetes
+
 > [!IMPORTANT] Executive Architectural Thesis: Multi-Layered Workload Security in Cloud & Mesh Topologies
 > Robust microservice and workload security requires decoupling network reachability from cryptographic identity and policy enforcement:
 > $$\text{Workload Security} = \text{Network Reachability (L3/L4)} \times \text{Cryptographic Identity (mTLS / SPIFFE / OIDC)} \times \text{Granular Policy (L7 Scopes / App Roles)}$$
