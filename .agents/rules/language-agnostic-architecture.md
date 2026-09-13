@@ -14,7 +14,7 @@ Whenever creating, updating, or refactoring architectural notes and documentatio
 1. **Operate on Universal Abstractions**:
    - Frame systems around ubiquitous software engineering concepts rather than platform-specific implementations:
      - Use **databases** (relational, document, key-value) instead of specific database engines.
-     - Use **cloud substrates** or **compute providers** instead of vendor-specific branding.
+     - Use **cloud platforms** or **compute providers** instead of vendor-specific branding.
      - Use **services**, **application runtimes**, and **service meshes** instead of framework-bound servers.
      - Use **persistence layers** or **Object-Relational Mappers (ORMs)** instead of *Entity Framework* or *Hibernate*.
      - Use **object mapping utilities** or **declarative transformers** instead of *AutoMapper* or *MapStruct*.

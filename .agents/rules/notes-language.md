@@ -36,3 +36,10 @@ All notes, documentation, architectural guidelines, research logs, and markdown 
 
 7. **Vocabulary Discipline & Attractor Mitigation**:
    - Strictly adhere to `vocabulary-and-attractor-discipline.md`: avoid inflated academic jargon (e.g. *epistemic*), maintain domain containment for microarchitectural terms, use piped inline wikilinks for canonical hubs, and verify changes with `python scripts/lint_attractors.py --strict`.
+
+8. **Automated Polish Language Quality Gate & Hooks**:
+   - The workspace enforces English-only files through automated multi-tier tooling in `scripts/check_polish.py`.
+   - **No Reliance on Diacritics**: The detector uses `lingua-language-detector` NLP n-gram analysis paired with an English dictionary validator (`pyspellchecker`) and an unaccented vocabulary database. Polish words written in ASCII without diacritics (such as unaccented actions, nouns, or stems) are caught with high statistical confidence.
+   - **Antigravity Lifecycle Hook**: Configured in `.agents/hooks.json` under `notes-language-guard`, intercepting `PreToolUse` on file write and modification tools to block tool execution if Polish text is introduced.
+   - **Git Pre-Commit Hook**: Installed in `.git/hooks/pre-commit`, running `python scripts/check_polish.py --git` to verify all staged changes before commit.
+   - **CLI Verification**: Run `python scripts/check_polish.py` (defaults to scanning this rule note) or `python scripts/check_polish.py --vault` to verify all public notes across the 5 layers.
