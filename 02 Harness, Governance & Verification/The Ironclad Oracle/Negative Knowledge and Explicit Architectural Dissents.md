@@ -35,7 +35,7 @@ aliases:
 3. **Bounding by Exclusion Over Prescriptive Micromanagement**: Affirmative guidance leaves an infinite unconstrained perimeter. Granting agents wide autonomy while strictly fencing off 2 to 3 catastrophic anti-paths yields superior, robust implementations without prompt bloat or rule oscillation.
 4. **The Ephemeral Code Illusion**: Natural language specifications cannot replace concrete code without recreating the failed 4GL/CASE trap. Test suites cannot verify physical execution efficiency or prevent cognitive alienation.
 5. **The On-Call Reality Check**: Systems must remain debuggable at 3:00 AM. Replacing enduring codebases with disposable machine-generated churn destroys human mental models, as empirically documented by GitClear 2024.
-6. **Instruction Cache Sympathy**: Generative models easily confuse data cache fit with instruction cache locality. Massive unrolled dispatch tables win synthetic microbenchmarks but evict hot code from the CPU's instruction cache in production.
+6. **Instruction Cache Locality**: Generative models easily confuse data cache fit with instruction cache locality. Massive unrolled dispatch tables win synthetic microbenchmarks but evict hot code from the CPU's instruction cache in production.
 
 ```text
 Classical Knowledge Base (K+):
@@ -181,7 +181,7 @@ On its initial benchmark run, the agent reports stunning metrics:
 - 100x real-time execution throughput!
 - Millions of operations per second using only 1% of a single host CPU core!
 
-The LLM rationalizes this as a triumph of modern hardware sympathy: *"Flat static dispatch tables beat dynamic loops."*
+The LLM rationalizes this as a triumph of modern execution efficiency: *"Flat static dispatch tables beat dynamic loops."*
 
 ### The Reality: Synthetic Benchmark Illusion vs. Real-World Instruction Cache Thrashing
 The benchmark was a synthetic micro-benchmark executing a tight loop of 15 identical operations.
@@ -257,7 +257,7 @@ This dissent may ONLY be reopened if:
 - **[[How Context Narrows an AI's Solution Space]]**: Explores the theoretical and mathematical mechanisms of solution space pruning through negative constraints.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why negative bounding prevents prompt bloat and eliminates rule oscillation.
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Integrates negative knowledge ($K^-$) as the foundational Dissent Firewall in the Tri-State Cognitive Filter.
-- **[[Testing in the Model, Agent, LLM Era]]**: Explains the limitations of automated test oracles when validating non-functional hardware sympathy and subtle regressions.
+- **[[Testing in the Model, Agent, LLM Era]]**: Explains the limitations of automated test oracles when validating non-functional execution realities and subtle performance regressions.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Details how zero-friction generative churn destroys architecture unless mechanically bounded by strict constraints.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Contrasts the disposable nature of early PoC exploratory spikes with the disciplined permanence required for production systems.
 - **[[AI Changes the Economics of Technical Debt]]**: Explores how unmonitored code generation compounds maintenance overhead and changes the calculus of debt elimination.
