@@ -15,12 +15,12 @@ aliases:
 # Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Current AI assistants suffer from ephemeral session amnesia. The next paradigm foundation is the **Personal Digital Representation**: a persistent, privacy-governed digital substrate that captures lifelong telemetry, codebases, communications, and evolving mental models. In an economy dominated by corporate extraction algorithms (dynamic pricing, dark patterns, automated dispute deflection), personal agents serve as an indispensable fiduciary shield, negotiation proxy, and attention firewall. Operating via a federated hub-and-spoke architecture, specialized domain agents query this personal model under strict, capability-based cryptographic permissions.
+> **Executive Architectural Thesis**: Current AI assistants suffer from ephemeral session amnesia. The next paradigm foundation is the **Personal Digital Representation**: a persistent, privacy-governed digital foundation that captures lifelong telemetry, codebases, communications, and evolving mental models. In an economy dominated by corporate extraction algorithms (dynamic pricing, dark patterns, automated dispute deflection), personal agents serve as an indispensable fiduciary shield, negotiation proxy, and attention firewall. Operating via a federated hub-and-spoke architecture, specialized domain agents query this personal model under strict, capability-based cryptographic permissions.
 
 ```text
            FEDERATED PERSONAL DIGITAL REPRESENTATION & FIDUCIARY SHIELD
 +-------------------------------------------------------------------------+
-| UNIFIED PERSONAL DIGITAL SUBSTRATE (Sovereign Local/Encrypted Layer)    |
+| UNIFIED PERSONAL DIGITAL FOUNDATION (Sovereign Local/Encrypted Layer)   |
 |   Life Telemetry, Obsidian Vaults, Git Commits, Banking, Health Records |
 |   * Temporal Truth Engine: Enduring Invariants vs Transient Habits      |
 +------------------------------------|------------------------------------+
@@ -44,7 +44,7 @@ aliases:
 
 ## Executive Summary & Core Architectural Invariants
 
-1. **Persistent Multimodal Substrate Over Ephemeral Prompts**: Chat assistants reset context every session. The next foundation is a persistent, sovereign digital representation that continuously captures life telemetry, decisions, preferences, and communications with temporal decay models.
+1. **Persistent Multimodal Foundation Over Ephemeral Prompts**: Chat assistants reset context every session. The next foundation is a persistent, sovereign digital representation that continuously captures life telemetry, decisions, preferences, and communications with temporal decay models.
 2. **The Fiduciary Counter-Weight to Corporate Asymmetry**: In an economy dominated by corporate algorithms (dynamic surge pricing, attention traps, automated dispute deflection), an unassisted human suffers severe cognitive asymmetry. A personal agent acts as a mandatory fiduciary shield and negotiation proxy.
 3. **Federated Hub-and-Spoke Agent Ecosystem**: Rather than relying on a single monolithic assistant, specialized third-party agents (legal, medical, software, tax) connect as clients to the central personal representation via fine-grained capability tokens.
 4. **Temporal Modeling of Truth**: Human preferences and beliefs evolve over time. Personal memory architectures must explicitly separate immutable core invariants from transient states and shifting habits.
