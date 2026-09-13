@@ -17,118 +17,132 @@ aliases:
 
 # Developing Features with AI Coding Agents
 
-> [!IMPORTANT]
-> **The Specification-First Feature Lifecycle**: In an agentic engineering harness, feature development must strictly follow an invariant-driven progression: **Analyze $\rightarrow$ Specify $\rightarrow$ Test $\rightarrow$ Human Audit $\rightarrow$ Vertical Slice $\rightarrow$ Full Synthesis**. Permitting an agent to write implementation code before acceptance tests are reviewed and frozen guarantees that the agent will verify what it accidentally implemented rather than what the business required.
+When developers ask an agent to build a new feature using a vague prompt—*"Add a subscription billing module with Stripe integration"*—the result is almost always a mess. The agent generates twenty files at once, invents its own domain logic, leaves edge cases unhandled, and writes tests that pass only because they assert mock trivialities.
+
+Building reliable features with AI agents requires a disciplined, step-by-step engineering progression:
 
 ```text
 Repository Analysis ──► Behavioral Spec & Decision Tables ──► Acceptance Tests Prepared
                                                                           │
                                                                           ▼
-Full Feature Expansion ◄── Architectural Review ◄── Vertical Slice ◄── [ HUMAN GATE ]
-(Skeptical 2nd Review)     (Verifies topology)      (Thin end-to-end)   (Freezes tests)
+Full Implementation ◄── Architectural Review ◄── Vertical Slice ◄── [ HUMAN REVIEW ]
+(Skeptical Audit)       (Verifies topology)      (Thin end-to-end)   (Freezes tests)
 ```
 
----
-
-## Executive Summary & Core Architectural Invariants
-
-1. **The Vertical Slice Precondition**: Never instruct an agent to synthesize a 20-file feature in a single pass. Implement one thin, complete vertical slice (from ingress contract down to persistence mutation) first. This tests architectural viability, schema alignment, and dependency injection before bulk code generation begins.
-2. **The Frozen Acceptance Gate**: Acceptance tests written from behavioral specifications must be formally approved and frozen (**Read-Only**) before implementation begins. The implementing agent must bend the code to satisfy the oracle—never modify the tests to excuse partial implementations (enforcing [[Testing in the Model, Agent, LLM Era|The Frozen Oracle Rule]]).
-3. **Decision Tables Over Prose Prompts**: Natural language requirements are inherently ambiguous. High-leverage specifications express business rules as explicit truth tables and boundary matrices, eliminating model hallucination across permutation edge cases (see [[Why Business Logic Is the Hardest Part of Agentic Coding]]).
-4. **Separation of Meaning vs. Machinery**: Tests verify that specific inputs yield specific outputs, but they cannot explain domain intent, historical exceptions, or architectural rationales. High-assurance features require the triad: **Living Specification** (Semantic Why) + **Decision Tables** (Domain What) + **Deterministic Tests** (Empirical Pass/Fail).
-5. **Independent Skeptical Audit**: The agent that wrote the feature must not be the sole automated reviewer. An independent, read-only reviewer persona with explicit skeptical prompts audits the completed slice for unmodeled side effects, performance cliffs, and missing negative branches.
+By forcing the agent to analyze before touching code, write tests before implementation, and prove the architecture with a thin vertical slice first, teams avoid sprawling rewrites and keep systems maintainable.
 
 ---
 
-## 1. The 8-Stage Agentic Feature Pipeline
+## Core Invariants
 
-Within an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], feature engineering proceeds through eight disciplined state transitions:
+1. **Analyze Before Editing**: Never let an agent modify code on turn one. The agent must first map existing domain boundaries, data models, and integration points.
+2. **Decision Tables Over Prose Prompts**: Natural language instructions are inherently ambiguous. High-leverage feature specifications use explicit truth tables and boundary matrices, eliminating model confusion across business permutations (see [[Why Business Logic Is the Hardest Part of Agentic Coding]]).
+3. **Tests Before Code (Agent TDD)**: The agent must generate acceptance tests that fail against the current codebase before writing implementation code.
+4. **The Frozen Acceptance Gate**: Once a human engineer reviews and approves the acceptance tests, those tests are marked read-only. The implementing agent must adapt the code to satisfy the tests—never modify the tests to excuse partial implementations (enforcing [[Testing in the Model, Agent, LLM Era|The Frozen Oracle Rule]]).
+5. **The Vertical Slice Rule**: Never generate an entire feature across twenty files in a single pass. Implement one thin, end-to-end path (from API endpoint down to database write) first to validate the architecture before generating the remaining handlers.
+
+---
+
+## 1. The Disciplined Feature Lifecycle
+
+Within a modern development workflow, building a feature with an agent follows eight distinct phases:
 
 ```text
-[ STAGE 1: REPOSITORY ANALYSIS ]
-Agent maps existing call graphs, data schemas, transaction boundaries, and risks without modifying files.
-                │
-                ▼
-[ STAGE 2: BEHAVIORAL SPECIFICATION ]
-Author living markdown doc: business goals, domain terminology, invariants, exceptions, and non-goals.
-                │
-                ▼
-[ STAGE 3: TEST HARNESS PREPARATION (AGENT TDD) ]
-Agent generates executable unit, contract, and integration tests; tests fail against current codebase.
-                │
-                ▼
-[ STAGE 4: HUMAN GATE (SEMANTIC AUDIT) ]
-Human architect audits test meaning: Did agent invent rules? Are negative error paths covered?
-                │
-                ▼
-[ STAGE 5: FROZEN ORACLE LOCK ]
-Acceptance suite marked read-only; agent forbidden from editing test assertions.
-                │
-                ▼
-[ STAGE 6: VERTICAL SLICE IMPLEMENTATION ]
-Agent synthesizes a single, complete execution path across all layers to validate architecture.
-                │
-                ▼
-[ STAGE 7: HORIZONTAL EXPANSION ]
-Agent synthesizes remaining operational branches, handlers, and edge-case permutations.
-                │
-                ▼
-[ STAGE 8: ADVERSARIAL REVIEW & SPEC SYNC ]
-Independent reviewer checks diff; living docs updated with new in-flight operational knowledge.
+1. Repository Reconnaissance ──► Maps models, endpoints, and schemas without changing files.
+               │
+               ▼
+2. Behavioral Specification  ──► Documents business intent, decision tables, and non-goals.
+               │
+               ▼
+3. Failing Acceptance Tests  ──► Writes tests covering business rules; tests fail initially.
+               │
+               ▼
+4. Human Review of Meaning   ──► Engineer confirms: does this describe the real business need?
+               │
+               ▼
+5. Freeze the Test Suite     ──► Tests locked read-only; agent cannot weaken assertions.
+               │
+               ▼
+6. Thin Vertical Slice       ──► Implements one single end-to-end path to prove architecture.
+               │
+               ▼
+7. Horizontal Expansion      ──► Implements remaining endpoints, edge cases, and handlers.
+               │
+               ▼
+8. Skeptical Second Review   ──► Independent agent audits diff for concurrency and security gaps.
 ```
 
 ---
 
-## 2. Step-by-Step Operational Discipline
+## 2. Step-by-Step Implementation Guide
 
-### Step 1: Repository Analysis (Read-Only Reconnaissance)
-Before proposing changes, the agent must traverse the codebase to locate:
-- Existing domain boundaries and transaction scopes,
-- Database isolation levels and schema constraints,
-- Downstream integration contracts and telemetry standards.
-*Constraint*: Zero file modifications permitted during reconnaissance.
+### Step 1: Repository Reconnaissance (Read-Only)
+Before writing any code, instruct the agent to inspect the codebase and answer:
+- Where do similar features live, and what patterns do they follow?
+- What database tables and schema constraints are involved?
+- How are transactions, logging, and error handling managed?
+- What existing utilities or shared packages should be reused?
+
+*Hard Rule*: Zero file modifications during this step. The output is purely a technical summary.
 
 ### Step 2: Behavioral Specification & Decision Tables
-The specification must anchor domain reality before code generation:
+Do not rely on long narrative descriptions of business logic. Use structured decision tables that map inputs and states directly to expected outputs:
+
 ```text
-Inputs                Condition                    Expected Output               Side Effects
-────────────────────────────────────────────────────────────────────────────────────────────────
-Order Status: Pending Payment Authorized           Order Status: Confirmed       Emit OrderConfirmedEvent
-Order Status: Pending Gateway Timeout              Order Status: PendingRetry    Schedule ExponentialBackoff
-Order Status: Shipped Cancellation Requested       HTTP 409 Conflict             AuditLog: IllegalCancel
+Current State    Event / Input            Expected Result          Side Effects
+────────────────────────────────────────────────────────────────────────────────────────────
+Active           Cancel Requested         Status: CancelPending    Send cancellation email
+Active           Payment Fails (Attempt 1)Status: Active           Schedule retry in 24h
+Active           Payment Fails (Attempt 3)Status: Suspended        Emit SubscriptionSuspendedEvent
+Suspended        Payment Succeeds         Status: Active           Emit SubscriptionReactivatedEvent
 ```
 
-### Step 3 & 4: Tests Before Code & The Human Semantic Audit
-The agent authors acceptance tests derived from the decision table. The human review focuses on business intent:
-- *Did the agent assume an optimistic path where real-world systems fail?*
-- *Are distributed failure modes (timeouts, partial rollbacks) represented?*
-- *Does the test assert business outcomes, or merely echo implementation details?*
+Decision tables force clarity: every branch is explicit, preventing the agent from guessing how to handle edge cases.
 
-### Step 5 & 6: The Vertical Slice as Architectural Proof
-Instead of generating ten domain models, five controllers, and multiple repository interfaces simultaneously:
-- The agent implements **one single transaction** from end to end.
-- The team verifies that the data access pattern, serialization pipeline, and error unwinding work smoothly in runtime reality.
-- If the architectural pattern proves awkward, unwinding one vertical slice costs minutes, avoiding large-scale refactoring.
+### Step 3 & 4: Acceptance Tests & Human Sign-Off
+The agent translates the decision table into automated acceptance tests. Before any implementation begins, a human engineer reviews the tests:
+- *Did the agent invent business rules that were never requested?*
+- *Are distributed failure modes (database timeouts, third-party 500 errors) tested?*
+- *Do the tests assert actual business state changes, or do they merely check mock interactions?*
+
+Once approved, the tests are locked. The agent is strictly forbidden from altering test assertions during implementation.
+
+### Step 5: The Vertical Slice
+Instead of having the agent generate five controllers, eight DTOs, three service interfaces, and database migrations simultaneously, have it implement **one complete transaction**:
+1. One API route.
+2. One application command handler.
+3. One database query or update.
+4. Verify that this single path compiles, runs, and passes its corresponding acceptance test.
+
+If the module boundaries or database mappings feel awkward, refactoring one thin slice takes two minutes. If you waited until twenty files were generated, restructuring would take hours.
+
+### Step 6: Horizontal Expansion & Skeptical Audit
+Once the vertical slice proves the architecture, let the agent generate the remaining branches, error paths, and validation rules.
+
+Before opening a pull request, run a secondary agent session with a skeptical review prompt:
+> *"Audit this pull request diff for race conditions, unhandled exceptions, missing database indexes, and security issues. List only concrete concerns."*
+
+This surfaces hidden landmines before the code reaches human review (see [[Reviewing AI-Generated Code]]).
 
 ---
 
-## 3. Practical Working Rules Checklist
+## Practical Rules for Teams
 
-- **Analyze before modifying**: Never allow an agent to edit files without a prior AST reconnaissance phase.
-- **Approve the specification before the code**: Ensure domain rules and decision tables are signed off.
-- **Freeze approved business tests**: Lock the acceptance suite so the model cannot negotiate assertions.
-- **Implement one vertical slice first**: Prove the architectural flow before bulk generation.
-- **Separate structural commits from business commits**: Keep refactoring, renames, and new features in distinct atomic git commits.
-- **Deploy a skeptical second reviewer**: Use an isolated agent session to challenge assumptions before human sign-off.
+1. **Never skip the analysis step**: An agent that jumps straight to editing files will almost certainly miss existing utilities and create duplicate logic.
+2. **Review the tests before the code**: Reviewing tests takes three minutes and ensures you agree on what the feature actually does.
+3. **Freeze test files during generation**: In automated agent harnesses, mark test directories as read-only while the agent writes implementation code.
+4. **Implement thin slices**: If an agent's pull request touches more than 6 files for a new feature, you probably didn't slice it thinly enough.
+5. **Separate refactoring from features**: If building a feature requires cleaning up existing code, do the refactoring in a separate, dedicated commit first.
 
 ---
 
-## Relationship to the Knowledge Graph
+## Related Notes
 
-- **[[Agentic Software Development Workflows]]**: The overarching methodology of separating specification, planning, implementation, and review.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Hard state-machine gates ensuring only approved vertical slices are implemented.
-- **[[Reviewing AI-Generated Code]]**: Checklist and heuristics for skeptical second-party review of agent diffs.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why business conditions require explicit decision tables and isolation from technical glue.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Triaging whether to patch code, adjust prompt rules, or fix the underlying specification.
-- **[[Testing in the Model, Agent, LLM Era]]**: The foundational dual-steering architecture pairing soft markdown specs with hard frozen oracles.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specs alongside code during feature evolution.
+- **[[Reviewing AI-Generated Code]]**: Best practices for auditing agent-generated code with a focus on risk and human mental models.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules and decision tables are essential for keeping agents on track.
+- **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification hub explaining why automated tests must remain immutable during implementation.
+- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: How to triage whether to fix bugs in code or upstream in the specification.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical harness architectures that enforce vertical slice workflows automatically.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specifications alongside code during feature development.
+- **[[LLMs as a Code Review Team]]**: Using independent agent reviewers to audit features before human sign-off.
+- **[[AI Changes the Economics of Technical Debt]]**: Why clean, modular architecture directly accelerates feature delivery speed with agents.
