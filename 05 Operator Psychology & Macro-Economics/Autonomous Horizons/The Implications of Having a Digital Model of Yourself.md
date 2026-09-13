@@ -476,7 +476,7 @@ To convert self-knowledge into tangible behavioral mastery, the personal digital
 
 1. **Telemetry Capture via Local-First Transcription**: Real interactions or practice sessions are captured and transcribed using sovereign on-device pipelines (e.g., local Whisper runtimes), ensuring intimate conversational telemetry never leaves the user's custody.
 2. **Post-Mortem Diagnostic Deconstruction**: The model audits the encounter without social hedging or politeness filters. It isolates the exact 30-second inflection points where the speaker surrendered narrative control, over-explained technical trivialities, or adopted a defensive posture.
-3. **Cold Rehearsal Simulation ("Na Zimno")**: With emotional arousal back at baseline, the individual uses the agent as an adversarial sparring partner. Replaying the high-friction scenario "na zimno" through iterative audio recording builds vocal muscle memory, replacing instinctive defensiveness with calm, authoritative communication invariants.
+3. **Cold Rehearsal Simulation**: With emotional arousal back at baseline, the individual uses the agent as an adversarial sparring partner. Replaying the high-friction scenario in an emotionally cool state through iterative audio recording builds vocal muscle memory, replacing instinctive defensiveness with calm, authoritative communication invariants.
 
 Through this loop, the digital model ceases to be merely a historical mirror; it becomes an active engine of human capability expansion.
 

@@ -138,8 +138,8 @@ Agent Diagnosis:
 - Leverage Lost: Validated the executive's framing that your team is slow.
 ```
 
-### Stage 3: Cold Rehearsal Simulation ("Na Zimno")
-The defining innovation of the agentic coach is **deliberate rehearsal in an emotionally neutral state ("na zimno")**.
+### Stage 3: Cold Rehearsal Simulation
+The defining innovation of the agentic coach is **deliberate rehearsal in an emotionally neutral state**.
 
 During the live interaction, the nervous system was flooded with cortisol and adrenaline, triggering fight-or-flight defensiveness. In the post-mortem phase, the user operates at baseline resting state.
 
@@ -195,7 +195,7 @@ This behavioral coaching loop directly connects with broader shifts in technical
 ## 5. Summary
 
 1. **The Telemetry Deficit**: Technical professionals measure everything except their high-stakes communication. AI transcription and analysis close this critical telemetry gap.
-2. **The Power of "Na Zimno" Rehearsal**: Adrenaline blinds humans during real conflicts. Practicing responses in an emotionally cool, simulated environment develops instinctive non-defensive habits.
+2. **The Power of Cold Rehearsal**: Adrenaline blinds humans during real conflicts. Practicing responses in an emotionally cool, simulated environment develops instinctive non-defensive habits.
 3. **The 3-Stage Deliberate Practice Model**: High-yield growth requires systematic progression: unvarnished diagnostic deconstruction, micro-scenario isolation, and iterative vocal simulation.
 4. **Rejecting the Corporate Robot**: AI coaches must optimize for brevity, authentic presence, and decisive boundaries, not sterile corporate sycophancy.
 5. **Local-First Privacy**: Behavioral self-improvement must never compromise ethical or legal boundaries; local transcription ensures total sovereignty over intimate performance data.

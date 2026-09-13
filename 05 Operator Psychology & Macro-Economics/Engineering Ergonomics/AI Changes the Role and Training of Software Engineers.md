@@ -227,7 +227,7 @@ This cognitive tension is resolved through four structural mechanisms:
    - Reading an agentic proposal and recognizing that it is correct, invariant, and mechanically sound is not passive absorption.
    - Just as an art curator or master editor exercises deep domain mastery without painting every stroke or typing every word, the engineer's **taste and verification discernment** represent the scarce cognitive filter. Novices cannot distinguish between brilliant architectural synthesis and superficially polished nonsense.
 
-4. **The Defense Test ("Test Obrony") as the Internalization Boundary**:
+4. **The Defense Test as the Internalization Boundary**:
    - The definitive boundary between genuine mastery and ungrounded mimicry is the **Defense Test**:
    > *If an engineer were stripped of the AI tool, placed in front of an architectural whiteboard before a panel of skeptical peers, could they defend every causal mechanism, state transition, and trade-off in the system using their own words and first-principles reasoning?*
    - If the operator can rigorously justify the design's invariants, failure modes, and trade-offs, the knowledge has been fully internalized; the agent served merely as an accelerator.
