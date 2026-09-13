@@ -66,7 +66,7 @@ aliases:
    Parametric model weights encode frozen, probabilistic generalities that confabulate on private enterprise domains. Live systems must ground assertions in verifiable, external evidence retrieved via hybrid lexical/dense search or live tool execution, binding generated solutions to concrete codebases and operational realities.
 
 5. **Dynamic Feedback and Tool Execution Loops**:
-   Context is not a static one-shot artifact; it evolves iteratively. Tool outputs, compiler errors, and test oracle feedback continuously re-seed the context window, transforming the model from an open-loop text generator into a closed-loop cybernetic reasoning engine.
+   Context is not a static one-shot artifact; it evolves iteratively. Tool outputs, compiler errors, and test oracle feedback continuously re-seed the context window, transforming the model from an open-loop text generator into a closed-loop feedback reasoning engine.
 
 ---
 
