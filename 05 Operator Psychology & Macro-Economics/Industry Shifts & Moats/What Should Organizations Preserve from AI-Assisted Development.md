@@ -19,7 +19,7 @@ aliases:
 
 ```text
            THE RESIDUAL ARTIFACT PYRAMID IN AGENTIC DEVELOPMENT
-       DISPOSABLE SUBSTRATE                      PERMANENT CROWN JEWELS
+       DISPOSABLE ARTIFACTS                      PERMANENT CROWN JEWELS
 +---------------------------------+      +-----------------------------------------+
 | - Ephemeral code syntax         |      | - ARCHITECTURAL DECISION RECORDS (ADRs) |
 | - Ad-hoc boilerplate & plumbing | ---> | - DOMAIN SPECIFICATIONS & INVARIANTS    |
