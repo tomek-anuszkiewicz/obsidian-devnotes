@@ -28,6 +28,8 @@ VAULT_ROOT = Path(__file__).resolve().parent.parent
 QUARANTINED_JARGON = [
     (r"\bepistemic\w*\b", "Replace academic 'epistemic' with standard engineering terms (e.g. knowledge drift, cognitive burden, authoritative validation, knowledge diff)."),
     (r"\bteleological\w*\b", "Avoid inflated philosophical term 'teleological'; describe intentionality or design goals directly."),
+    (r"\bhardware\s+sympathy\b", "Banned synthetic attractor 'hardware sympathy'. Replace with 'substrate alignment', 'hardware reality', or 'low-level execution efficiency'."),
+    (r"\b(?:substrate|engine|cache|execution)\s+sympathy\b", "Banned synthetic sympathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),
 ]
 
 # 2. Hardware terms quarantined to Layer 1 (Substrate & Mechanical Sympathy)
@@ -196,9 +198,9 @@ def scan_vault(verbose: bool = False):
                     "snippet": line[:100]
                 })
 
-            # 5. Mechanical Sympathy Heading Check
+            # 5. Mechanical & Hardware Sympathy Heading Check
             if line.startswith("#"):
-                if re.search(r"\bmechanical sympathy\b", line, re.IGNORECASE):
+                if re.search(r"\b(?:mechanical|hardware|substrate|engine|cache|execution)\s+sympathy\b", line, re.IGNORECASE):
                     # Only allow canonical layer definition heading in The 5-Layer System Stack
                     is_stack_charter_layer1_heading = (
                         "The 5-Layer System Stack for Agentic Software Engineering.md" in rel_str
@@ -208,8 +210,8 @@ def scan_vault(verbose: bool = False):
                         violations[rel_str].append({
                             "line": line_num,
                             "type": "HEADING_ATTRACTOR",
-                            "match": "mechanical sympathy",
-                            "message": "Do not use 'mechanical sympathy' in headings. Use specific engineering terms (e.g. 'Hardware Realities', 'Execution Efficiency', 'Substrate Alignment').",
+                            "match": line,
+                            "message": "Do not use 'sympathy' terms in headings. Use specific engineering terms (e.g. 'Execution Efficiency', 'Substrate Alignment', 'Hardware Realities').",
                             "snippet": line[:100]
                         })
 
