@@ -77,6 +77,7 @@ The agent must avoid over-indexing on pseudo-academic buzzwords. The following w
 | `epistemic asset` | `diagnostic asset`, `institutional knowledge`, `empirical asset` |
 | `epistemic humility / hygiene` | `factual rigor`, `intellectual discipline`, `verification hygiene` |
 | `teleological` | `directional intent`, `system purpose`, `top-level design goals` |
+| `bikeshedding / bikeshed` | `petty style debates`, `cosmetic nitpicking`, `superficial style arguments` |
 
 ---
 
