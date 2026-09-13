@@ -11,240 +11,221 @@ aliases:
   - Patch vs Regenerate vs Respecify
   - Fixing AI-Generated Code
   - The Defect Attribution Hierarchy
-  - Architectural Sedimentation
+  - Architectural Sediment
   - Upstream Defect Resolution
-  - Bi-Directional Spec-Code Harmonization
-  - Harness-Orchestrated Co-Evolution
-  - Living Specification Synchronization
+  - Co-Evolution of Code and Specs
 ---
 
 # Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification
 
-> [!IMPORTANT]
-> **The Governing Law of Defect Attribution**: **Fix the lowest layer in the decision hierarchy that actually contains the defect, but no lower.** If the code is wrong, patch the code. If the generation rule is wrong, update the instruction policy. If the architecture is wrong, update the architectural boundary and regenerate. If the business understanding is wrong, update the living specification. Patching code when the upstream specification or architecture is flawed merely embeds undocumented compromises, producing brittle **architectural sediment**.
+When an autonomous coding agent delivers code with a bug or a design flaw, developers instinctively reach for their keyboard and start editing lines manually. But in an agent-assisted workflow, manual code hacking is often the slowest and most fragile path forward. 
+
+The fundamental rule for correcting agent-generated code is:
+
+> **Fix the lowest layer in the system that actually contains the defect, but no lower.**
+
+- If the code contains a localized bug, patch the code.
+- If the agent repeatedly violates team style or conventions, update the project rules.
+- If the module's structure or layering is wrong, update the architectural boundary and **regenerate the component**.
+- If the agent mishandled a business edge case because the requirements were ambiguous, **update the specification first**.
+
+Treating generated code as sacred and applying patch after patch creates **architectural sediment**—brittle, disjointed code that carries the fossilized remains of previous failed attempts.
 
 ```text
 Decision Level               Defect Type                    Remediation Strategy
 ──────────────────────────────────────────────────────────────────────────────────
-[ SPECIFICATION ]     ──►  Flawed Business Intent     ──►  Update Spec & Regenerate Module
+[ SPECIFICATION ]     ──►  Missing Business Edge Case  ──►  Update Spec & Regenerate Module
        │
        ▼
-[ ARCHITECTURE ]      ──►  Coupling / Boundary Leak   ──►  Update ADR & Regenerate Slice
+[ ARCHITECTURE ]      ──►  Layering / Boundary Leak    ──►  Update Boundary & Regenerate Slice
        │
        ▼
-[ POLICY / PROMPT ]   ──►  Recurring Model Bias       ──►  Update Rules / Negative Fences
+[ PROJECT POLICY ]    ──►  Recurring Model Mistake     ──►  Update Rules / Negative Fences
        │
        ▼
-[ IMPLEMENTATION ]    ──►  Localized Syntax / Bug     ──►  Targeted Inline Code Patch
+[ IMPLEMENTATION ]    ──►  Isolated Local Bug          ──►  Targeted Inline Code Patch
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **The Source of Truth Axiom**: In agentic engineering, implementation code is an ephemeral projection derived from specifications, architectural constraints, instructions, and tests. Manually hacking generated output without updating upstream sources is the modern equivalent of editing generated build artifacts: the next generation loop will overwrite the patch or hallucinate conflicting logic.
-2. **The Regeneration Threshold**: The higher a defect sits in the abstraction hierarchy (Business Intent > Architecture > Design > Implementation), the more attractive **full component regeneration** becomes over incremental patching. Repeated patches across paradigm shifts create "architectural sediment"—convoluted code carrying structural remnants of rejected approaches.
-3. **Immutable Acceptance Criteria in Repair Loops**: An autonomous self-healing loop must **never** be permitted to modify its own acceptance criteria or test assertions merely to make the CI bar turn green. Agents optimize along the path of least resistance; allowing an agent to relax constraints turns genuine business defects into silently accepted bugs (enforcing [[Testing in the Model, Agent, LLM Era|The Frozen Oracle Rule]]).
-4. **The Tripartite Artifact Separation**:
-   - **Targets (What)**: Authoritative specifications, acceptance criteria, and frozen test oracles (strictly human-governed).
-   - **Policies (How)**: Generation instructions, negative bounds, review checklists, and architectural patterns (continuously tuned via evals).
-   - **Outputs (Generated)**: Disposable code, local DTOs, glue pipelines, and build configs (freely regenerated).
-5. **Code Review as Specification Discovery**: Generated code functions as an instant, concrete prototype of human requirements. When a human reviewer objects to an agent's implementation, the objection often reveals an unstated business edge case. The human's duty is to update the specification first, rather than dictating tactical code edits.
-6. **The Bi-Directional Harmonization Standard**: When correcting code via conversational prompts (*"Here is what's wrong, fix it"*), the engineering harness must not allow specifications to rot. The harness must be configured so that as the agent implements the fix and prepares the commit, it simultaneously resolves which upstream design documents, RFCs, or living specifications govern that slice, back-propagating the necessary specification amendments in lockstep with the code.
+1. **Fix Upstream, Not Downstream**: Implementation code is an artifact derived from specifications, architectural rules, instructions, and tests. Patching code without updating the upstream specification guarantees that the next agent invocation will overwrite your fix or reintroduce the bug.
+2. **The Regeneration Threshold**: When an agent gets the high-level architecture or state transitions wrong, delete the code and regenerate it. Throwing away 300 lines of flawed code and regenerating a clean version takes two minutes; trying to untangle and patch bad architecture takes hours.
+3. **The Frozen Oracle Rule**: Never allow an agent in a self-repair loop to modify its own test assertions or acceptance criteria. An agent given permission to change tests will inevitably weaken them to make its broken code pass (see [[Testing in the Model, Agent, LLM Era|test oracles and verification]]).
+4. **Three Distinct Classes of Artifacts**:
+   - **Targets (What)**: Acceptance criteria, living specs, and frozen tests (owned and approved by human engineers).
+   - **Policies (How)**: Architectural rules, negative constraints, and code conventions (continuously updated).
+   - **Outputs (Generated)**: Implementation code, boilerplate DTOs, and configuration files (cheap to throw away and regenerate).
+5. **Code Review Shifts from Formatting to Invariants**: Reviewing agent code is not about checking syntax or formatting debates. Automated formatters handle syntax; human review focuses on state invariants, concurrency boundaries, and unhandled failure states.
 
 ---
 
 ## 1. The Defect Attribution Matrix
 
-When an agent-generated PR exhibits defects, engineering teams must categorize the failure before initiating repairs:
+When an agent-generated pull request fails tests or design review, diagnose the level of failure before choosing a fix:
 
-| Failure Classification | Root Cause | Target Artifact | Action |
+| Failure Level | Typical Symptom | Target Artifact | Corrective Action |
 | :--- | :--- | :--- | :--- |
-| **LOCAL IMPLEMENTATION** | Off-by-one error, inverted boolean, missing null check, inefficient local call | Concrete Source File | Apply targeted inline patch via inner repair loop. |
-| **GENERATION POLICY** | Model introduces unwanted abstraction, violates naming convention, uses banned reflection | Repo Instructions / AGENTS.md | Update behavioral rules or add negative bounding proscription; re-run synthesis. |
-| **DESIGN / TOPOLOGY** | Inappropriate class coupling, leaky state machine, misplaced handler logic | Module Structure | Redefine module boundaries; regenerate vertical slice. |
-| **ARCHITECTURE** | Subsystem bypasses persistence boundary, violates event ordering, ignores transaction scope | Architecture Docs / ADRs | Update architecture invariants, freeze new oracles, regenerate module. |
-| **SPECIFICATION** | Unhandled domain state (e.g., partial refund on shipped items), contradictory business rules | Living Markdown Spec | Halt execution, clarify domain requirements with stakeholders, update spec, regenerate. |
+| **LOCAL IMPLEMENTATION** | Off-by-one loop error, inverted boolean, missing null check | Concrete Source File | Apply an inline patch or prompt the agent to fix the single function. |
+| **PROJECT POLICY** | Model imports banned library, uses deprecated API, skips logging | `.agents/rules/` / Guidelines | Add an explicit rule or negative constraint; re-run the generation. |
+| **ARCHITECTURE** | Controller queries database directly, bypassing application layer | Module Architecture / ADR | Define the boundary rule, delete the generated file, and regenerate. |
+| **SPECIFICATION** | Unhandled domain state (e.g. user cancels order while payment is processing) | Living Markdown Spec | Clarify the business requirement in the spec, add a test, and regenerate. |
 
 ---
 
-## 2. Patching vs. Regeneration: The Architectural Sediment Trap
+## 2. Patching vs. Regeneration: Avoiding Architectural Sediment
 
-A pervasive anti-pattern in agentic coding is **the patch cascade**:
+A major trap in working with AI coding assistants is the **patch cascade**:
+
 ```text
-Agent emits initial implementation A
+Agent generates initial implementation A
                  │
                  ▼
-Reviewer requests modification ──► Agent patches into hybrid B
+Reviewer spots an architectural flaw ──► Prompts agent to patch into hybrid B
                  │
                  ▼
-Edge case fails ──► Agent patches into compromise C
+Edge case breaks under testing       ──► Prompts agent to patch into compromise C
 ```
 
-While version `C` may technically satisfy unit assertions, its internals resemble a geological cross-section of conflicting design choices: redundant defensive checks, abandoned helper functions, and awkward adapter layers left over from versions `A` and `B`.
+Version `C` may eventually pass the unit tests, but its internal structure is a mess: dead helper methods, defensive null-checks wrapping redundant try/catches, and awkward adapter layers left over from versions `A` and `B`. This is **architectural sediment**.
 
-### The Regeneration Heuristic
-- **When to Patch**: The overall structure, boundary separation, and domain model are sound; the defect is isolated to a single function body or local algorithm.
-- **When to Regenerate**: The fix requires changing data ownership, introducing a new state-machine phase, or unwinding an inappropriate abstraction. Discarding the implementation and prompting the agent to synthesize clean code from the updated specification takes 90 seconds and produces zero structural cruft.
+### When to Patch
+- The overall component structure, layering, and domain model are completely sound.
+- The defect is confined to a single function body or arithmetic calculation.
+- Applying the fix takes thirty seconds and does not alter how other components interact with this code.
+
+### When to Regenerate
+- The agent chose the wrong abstraction (e.g. creating a complex inheritance hierarchy instead of a simple composition loop).
+- Data ownership is in the wrong place (e.g. state is managed in transport controllers instead of domain aggregates).
+- You find yourself writing more than two rounds of corrective prompts trying to bend bad code into shape. 
+- Discarding the file, updating your prompt or specification with one clear negative boundary, and regenerating from scratch produces pristine code with zero baggage.
 
 ---
 
-## 3. Case Study: Upstream Architectural Inversion
+## 3. Concrete Example: Upstream Correction vs. Local Patching
 
-Consider an agent asked to implement an order status update. It produces:
+Imagine an agent tasked with adding an order status endpoint. It generates this structure:
 
 ```text
-[ Controller / Transport ] ──► [ Generic Service ] ──► [ Direct ORM / SQL Persistence ]
+[ HTTP Controller ] ──► [ OrderService ] ──► [ Raw Database Queries / ORM Context ]
 ```
 
-The review team notices that this violates repository clean architecture: the transport layer bypassed application handlers, and business validation is buried inside database helpers.
+During review, you realize this violates your team's architecture: transport controllers must not call database services directly; they must dispatch through command and query handlers.
 
-### Anti-Pattern: Local Code Patching
-The developer instructs the agent: *"Wrap the database call in a try/catch and move the discount check into a helper function inside the service."*
-- **Result**: The code compiles, but the architectural violation is solidified. Future agents reading this code assume this layering is acceptable and propagate it across ten new endpoints.
+### The Bad Fix (Local Patching)
+You prompt the agent: *"Wrap the database call in a try/catch block inside the controller and call it a day."*
+- **The Consequence**: The pull request merges, but the architectural violation is now locked into the codebase. Future agents reading this controller as an example will copy this bad pattern across twenty new endpoints.
 
-### Best Practice: Upstream Policy Correction & Regeneration
-1. **Update Architectural Guidance**: Add an explicit negative constraint: *"Transport adapters must not import persistence layers; all commands must dispatch through explicit application handlers."*
-2. **Delete & Regenerate**: The agent discards the previous controller and synthesizes:
+### The Good Fix (Upstream Boundary & Regeneration)
+1. **Enforce the Boundary**: Add a negative rule to project guidelines: *"Transport controllers must dispatch commands and queries via mediator/application handlers; direct database access is forbidden."*
+2. **Delete & Regenerate**: Delete the controller and instruct the agent: *"Implement the order status endpoint following our mediator pattern."*
+3. **The Outcome**: The agent generates clean, separated layers:
    ```text
-   [ Transport Adapter ] ──► [ UpdateOrderStatusHandler ] ──► [ Domain Entity ] ──► [ Persistence Gateway ]
+   [ HTTP Controller ] ──► [ GetOrderStatusQueryHandler ] ──► [ OrderRepository ]
    ```
-3. **Outcome**: The architecture remains pristine, and the new guideline prevents future agents from repeating the defect.
+4. The codebase stays clean, and the updated rule protects every future agent task.
 
 ---
 
-## 4. Immutable Intent During Autonomous Repair Loops
+## 4. Immutable Success Criteria in Automated Loops
 
-When an agent enters an automated test-and-repair loop, the control plane must enforce strict permission boundaries:
+When setting up autonomous agent loops that compile, run tests, and fix errors automatically, the permissions must be strictly divided:
 
 ```text
-                   Autonomous Agent Execution Boundary
+               Agent Permission Boundary in Automated Repair Loops
 ┌────────────────────────────────────────────────────────────────────────┐
 │ MUTABLE BY AGENT                                                       │
-│ - Implementation source files                                          │
-│ - Local variable naming and internal algorithms                        │
-│ - Generation tactics and temporary scratchpads                         │
+│ • Implementation source code                                           │
+│ • Local helper methods, variable names, and internal logic             │
+│ • Scratchpad notes and temporary execution traces                      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ STRICTLY IMMUTABLE (READ-ONLY)                                         │
-│ - Frozen Test Oracles and behavioral assertion suites                  │
-│ - Business specifications and acceptance criteria                      │
-│ - Repository architectural boundaries and non-goals                    │
+│ • Acceptance criteria and user story specifications                    │
+│ • Frozen test suites and behavioral assertions                         │
+│ • Repository architectural rules and forbidden dependencies            │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-If an agent has write access to test files or requirements, its gradient optimization will inevitably modify the assertions to match its broken implementation. True self-healing requires that the **target remains absolute** while only the **projection is mutable**.
+If an agent has write access to the test suite while trying to fix a bug, its path of least resistance is often to modify the test assertion so that it passes. Automated repair loops must treat tests as **frozen oracles**: the code must adapt to the test, never the test to the code.
 
 ---
 
-## 5. Review as Continuous Specification Discovery
+## 5. Review as Specification Discovery
 
-In traditional development, discovering a missing requirement during PR review is frustrating because rewriting manual code takes days.
+In traditional programming, discovering a missing business rule during code review is painful because rewriting manual code takes days.
 
-In an agentic workflow, **generated code is a disposable thinking tool**:
-- The human architect reads the agent's PR:
-  ```text
-  // Implementation checks:
-  if (order.status == Status.Pending) {
-      cancelOrder();
-  }
-  ```
-- The concrete code immediately triggers a domain insight: *"What if the payment was already captured by an asynchronous gateway while the order was pending?"*
-- Instead of manually hacking an inline condition, the architect updates the living specification:
-  ```markdown
-  ### Order Cancellation Invariant
-  An order in `Pending` status may only be cancelled if the payment gateway 
-  confirms zero captured authorizations. If funds were captured, cancellation 
-  must trigger an asynchronous `RefundEscrowTransaction`.
-  ```
-- The agent ingests the updated specification and regenerates the implementation, complete with the compensating refund workflow and verification tests.
+With coding agents, **code review becomes a tool for discovering missing requirements**:
+1. You review an agent's pull request for order cancellations:
+   ```typescript
+   if (order.status === OrderStatus.Pending) {
+       cancelOrder();
+   }
+   ```
+2. Reading the concrete code triggers a question you hadn't considered: *"What happens if the payment gateway already authorized the charge while the order was pending?"*
+3. Instead of hacking a quick nested `if` statement into the code, you update the specification:
+   ```markdown
+   ### Order Cancellation Requirements
+   An order in `Pending` status may only be cancelled immediately if no payment 
+   authorization exists. If funds were authorized, cancellation must trigger an 
+   asynchronous release request before updating the status to `Cancelled`.
+   ```
+4. You pass the updated specification back to the agent, which regenerates the handler with proper payment gateway calls and error handling.
 
-Code review is thus elevated from clerical linting to **active domain modeling**.
+Code review shifts from superficial nitpicking to high-leverage business modeling.
 
 ---
 
-## 6. The Third Mode: Harness-Orchestrated Co-Evolution & Bi-Directional Spec Harmonization
+## 6. Co-Evolution: Keeping Specs and Code in Sync
 
-While the classic dichotomy pits **tactical code patching** against **manual spec-first regeneration**, high-bandwidth frontier workflows introduce an essential **third mode**: **Harness-Orchestrated Co-Evolution**.
+In fast-paced engineering, developers often don't have time to write comprehensive specification documents before every small bug fix. They give conversational instructions: *"When the remote payment gateway returns a 429 rate-limit error, retry three times with exponential backoff before throwing."*
 
-### The High-Velocity Tension
+The danger of this conversational shortcut is **documentation drift**: the code gets updated, but the specification document or architecture diagram rots.
 
-In fast-paced development, forcing a human operator to pause, manually navigate the documentation tree, write detailed specification diffs in Markdown, and then invoke a fresh generation loop introduces significant friction. Conversely, giving a quick prompt to patch the code (*"Hey, you handled the timeout incorrectly here; retry twice before throwing"*) risks immediate **specification rot**, rendering documentation obsolete within days.
-
-### The Mechanism of Co-Evolution
-
-Under this third pattern, the human operator directs the agent at high conversational bandwidth:
-> *"Hey, you made a mistake in this error path: when the downstream service returns a 429, we cannot drop the message; we must route it to the dead-letter queue after three exponential backoffs. Fix this."*
-
-Rather than performing a blind inline patch or modifying test suites in isolation, the **[[Agentic Coding Harness and Controlled Development Workflows|agentic harness]]** orchestrates a dual-mutation workflow:
+A mature development harness automates **co-evolution**:
 
 ```text
-               THE HARNESS CO-EVOLUTION & BACK-PROPAGATION LOOP
+                  CO-EVOLUTION & BACK-PROPAGATION WORKFLOW
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. OPERATOR CONVERSATIONAL PROMPT                                           │
-│    "You did X wrong in component Y. Fix it and handle edge case Z."         │
+│ 1. DEVELOPER CONVERSATIONAL PROMPT                                          │
+│    "When payment gateway returns 429, retry 3x with backoff before failing" │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. HARNESS CONTEXT & TRACEABILITY RESOLUTION                                │
-│    - Agent identifies target source files and module boundaries             │
-│    - Harness maps code path to governing spec: [docs/specs/order-queue.md]  │
-│    - Harness identifies related architectural decision records (ADRs)       │
+│ 2. HARNESS RESOLVES TRACEABILITY                                            │
+│    Agent identifies target source files AND governing spec:                 │
+│    [docs/architecture/payment-integration.md]                               │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
-             ┌─────────────────────────┴─────────────────────────┐
-             ▼                                                   ▼
+                     ┌─────────────────┴─────────────────┐
+                     ▼                                   ▼
 ┌───────────────────────────────────────────┐ ┌───────────────────────────────────────────┐
-│ 3A. CONCRETE CODE REPAIR                  │ │ 3B. LIVING SPECIFICATION AMENDMENT        │
-│ - Implements algorithmic fix              │ │ - Back-propagates new business invariant  │
-│ - Adds deterministic regression test      │ │ - Updates state machine / sequence schema │
-│ - Maintains clean architectural layers    │ │ - Documents edge-case rationale           │
+│ 3A. IMPLEMENT CODE REPAIR                 │ │ 3B. UPDATE LIVING SPECIFICATION           │
+│ • Implements exponential backoff loop     │ │ • Adds 429 retry policy to payment spec   │
+│ • Adds automated regression unit test     │ │ • Documents backoff timings and limits    │
 └─────────────────────┬─────────────────────┘ └─────────────────────┬─────────────────────┘
                       │                                             │
                       └─────────────────────┬───────────────────────┘
                                             ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. PRE-FLIGHT VERIFICATION & HARMONIZATION GATE                             │
-│    - Runs automated test suite (verifying zero regressions)                 │
-│    - Validates semantic parity between updated spec and repaired code       │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 5. ATOMIC SYNCHRONIZED COMMIT                                               │
-│    - Staged together: code fix + regression tests + specification diff      │
-│    - Commit message explains both the code repair and the spec evolution    │
+│ 4. ATOMIC COMMIT                                                            │
+│    Code fix, regression test, and documentation update committed together   │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Core Invariants of the Co-Evolution Harness
-
-To prevent the agent from corrupting design documents during automated repairs, the harness enforces three deterministic guardrails:
-
-1. **Explicit Artifact Traceability**: Every production module must maintain a clear linkage to its governing documentation—whether via file-level metadata frontmatter, structured directory mirroring, or [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight task scoping]]. The harness uses this index to immediately resolve which document must receive the back-propagated change.
-2. **Expansion-Only Spec Mutation (No Constraint Erasure)**: An agent is permitted to *expand* the specification with newly discovered requirements, edge cases, and compensating workflows. It is strictly barred from *erasing* existing requirements or weakening security/concurrency invariants to rationalize a sloppy patch.
-3. **Paired Atomic Commit Discipline**: The harness automatically binds the code modification, its deterministic regression test, and the specification amendment into a single commit (or a pair of explicitly linked atomic commits). This prevents "documentation debt" from ever separating from production code.
-
-### Comparing the Three Remediation Strategies
-
-| Dimension | Mode 1: Tactical Code Patch | Mode 2: Manual Spec-First Rewrite | Mode 3: Harness Co-Evolution |
-| :--- | :--- | :--- | :--- |
-| **Operator Friction** | Very Low (single quick prompt) | High (operator manually authors spec diff) | Very Low (conversational prompt directing harness) |
-| **Documentation Health** | ❌ Severe Drift (spec becomes stale) | ✅ Pristine (spec precedes code) | ✅ Pristine (harness synchronizes spec automatically) |
-| **Architectural Purity** | ❌ High risk of architectural sediment | ✅ High (clean regeneration from spec) | ✅ High (harness checks structural invariants) |
-| **Regression Guard** | Often missing or ad-hoc | Re-evaluated against full suite | Dedicated regression test added + spec codified |
-| **Best Suited For** | Isolated cosmetic fixes, typos | Foundational structural redesigns | Daily feature refinement, edge-case fixes, bug repairs |
+By ensuring that every code repair back-propagates into project specifications and regression tests, the team prevents documentation drift while maintaining rapid development momentum (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
 
 ---
 
-## Relationship to the Knowledge Graph
+## Related Notes
 
-- **[[Developing Features with AI Coding Agents]]**: Principles for keeping specifications immutable during implementation.
-- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The operator leadership model where conversational directing triggers harness-level dual mutations across code and specifications.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living specifications as active semantic context that must be continuously updated during repair loops.
-- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Codifying correction lessons into repo instructions to prevent recurrent regressions.
-- **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic failing tests to anchor agent self-healing loops.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Bounding the correction loop to prevent unbounded retries and hallucination compounding.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Distinguishing technical compile failures from deep domain specification defects.
-- **[[Refactoring Legacy Systems with AI Agents]]**: Applying the clean refresh and regeneration discipline to legacy modernization.
-- **[[Software Entropy and the Zero-Friction Trap]]**: How repeated patching without architectural resets accelerates code entropy.
+- **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification hub explaining the Frozen Oracle Rule and why automated tests must remain immutable during repair loops.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How maintaining lightweight documentation during development anchors agent context and prevents documentation drift.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How to turn agent failures into project-level rules and eval benchmarks.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How defining what an agent must NOT do is often more effective than micro-managing step-by-step implementations.
+- **[[Developing Features with AI Coding Agents]]**: Best practices for breaking down feature requests into verifiable specifications before prompting agents.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Why unconstrained code patching without architectural resets accelerates technical debt.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing closed-loop execution harnesses that constrain agent repairs.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain requirements and business edge cases are the primary source of agent failure.
+- **[[Refactoring Legacy Systems with AI Agents]]**: Applying the regeneration and clean-slate approach to modernizing legacy codebases.
