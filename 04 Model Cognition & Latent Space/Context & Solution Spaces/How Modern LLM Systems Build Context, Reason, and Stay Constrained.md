@@ -15,7 +15,7 @@ aliases:
 # How Modern LLM Systems Build Context, Reason, and Stay Constrained
 
 > [!IMPORTANT] Executive Architectural Thesis: The Autonomous AI Agent as a Distributed Cognitive State Machine
-> A production AI agent is not a stateless text generator (`Prompt -> LLM -> Output`); it is a **distributed cognitive state machine**. The observable intelligence, reliability, and safety of the system emerge from the orchestration loop that wraps the neural substrate:
+> A production AI agent is not a stateless text generator (`Prompt -> LLM -> Output`); it is a **distributed cognitive state machine**. The observable intelligence, reliability, and safety of the system emerge from the orchestration loop that wraps the underlying language model:
 > 1. **Context Preparation & Normative Bounding**: Dynamically gathering jurisdictional constraints, system invariants, episodic memory, and retrieved domain context before reasoning begins.
 > 2. **Test-Time Compute & Tree Exploration**: Utilizing internal reasoning tokens and deliberate path-branching to explore alternative solution trajectories and challenge premature assumptions.
 > 3. **Deterministic Verification & Policy Fences**: Validating candidate outputs through automated tests, static analyzers, and external safety evaluators before committing state changes.  
@@ -89,7 +89,7 @@ aliases:
 ## Executive Summary & Core Architectural Invariants
 
 1. **The Distributed Cognitive State Machine Paradigm**:
-   A production AI agent is fundamentally an asynchronous, distributed cognitive state machine, not a stateless text generator (`Prompt -> LLM -> Output`). The observable capability, safety, and reliability of the system emerge from the cybernetic orchestration harness that wraps the neural substrate.
+   A production AI agent is fundamentally an asynchronous, distributed cognitive state machine, not a stateless text generator (`Prompt -> LLM -> Output`). The observable capability, safety, and reliability of the system emerge from the orchestration harness that wraps the underlying neural model.
 
 2. **Multi-Stage Context Assembly**:
    Context compilation dynamically synthesizes system invariants, workspace instructions, episodic conversational state, semantic RAG chunks, and runtime tool telemetry. High-reliability harnesses treat this working memory as a curated cache rather than dumping unbounded context.
