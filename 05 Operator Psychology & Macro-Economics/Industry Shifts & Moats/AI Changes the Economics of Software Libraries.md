@@ -32,7 +32,7 @@ AGENTIC ERA INVERSION (Code Generation Has Zero Marginal Cost):
 +-------------------------------------------------------------------------+
                                      vs
 +-------------------------------------------------------------------------+
-| [ TIER 2: HARD DOMAIN SUBSTRATE & PROTOCOL STATE MACHINES ]             |
+| [ TIER 2: HARD DOMAIN ENGINES & PROTOCOL STATE MACHINES ]                |
 | Cryptography (libsodium), embedded DBs (SQLite), video codecs, TLS      |
 | * DECISION: RETAIN BATTLE-TESTED LIBRARIES (Decades of edge-case tests) |
 | * Re-implementing carries catastrophic security and correctness risk    |
@@ -43,7 +43,7 @@ AGENTIC ERA INVERSION (Code Generation Has Zero Marginal Cost):
 
 1. **Inversion of the Build vs Buy vs Generate Calculus**: For decades, external packages were imported simply to save human typing labor. When agents generate hundreds of lines of customized, zero-dependency code in seconds, the typing justification disappears.
 2. **The Collapse of Convenience Libraries**: Packages that exist solely to eliminate boilerplate (declarative model mappers, fluent builders, string formatters) become negative-ROI liabilities, adding supply-chain risk and upgrade churn without offsetting value.
-3. **The Enduring Moat of Hard Domain Substrates**: Libraries remain mandatory when they encapsulate complex domain physics, battle-tested cryptography, embedded storage engines, or high-performance hardware kernels where independent generation carries unacceptable security risks.
+3. **The Enduring Moat of Hard Domain Engines**: Libraries remain mandatory when they encapsulate complex domain physics, battle-tested cryptography, embedded storage engines, or high-performance compute kernels where independent generation carries unacceptable security risks.
 4. **Locality Over Reusability**: In an agent-assisted codebase, duplicate, simple local implementations with zero external dependencies are often vastly superior to centralized shared packages that couple independent microservices.
 5. **Dependency Tax Accountability**: Every external library import must justify its permanent architectural tax: security surface, semantic version drift, dependency conflicts, and long-term maintenance overhead.
 
