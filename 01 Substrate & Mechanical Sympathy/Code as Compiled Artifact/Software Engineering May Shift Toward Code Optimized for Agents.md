@@ -271,11 +271,11 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
 - **[[Software Entropy and the Zero-Friction Trap]]**: The emergence of agent-native defaults (flat 1:1 hierarchy, localized duplication) to combat entropy.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models struggle with implicit domain invariants hidden behind layers of indirection during refactoring.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models easily write technical boilerplate but silently break subtle business rules buried in messy code.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
-- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and petty style debates to verifying state invariants and failure boundaries.
+- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and petty style debates to verifying critical business rules, edge cases, and error handling.
 - **[[AI Changes the Role and Training of Software Engineers]]**: How the engineering role elevates toward skeptical review, risk control, and architectural design.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes the probabilistic dynamics of model priors and how forcing agents off-distribution creates downstream hallucination risks.
 - **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for hardware and execution engine performance.
