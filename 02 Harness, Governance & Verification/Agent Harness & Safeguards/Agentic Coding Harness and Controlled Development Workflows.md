@@ -29,7 +29,7 @@ aliases:
 > [!IMPORTANT]
 > **The Agentic Sovereign Equation**: An LLM is not an autonomous software engineer; fundamentally it executes a single probabilistic operation: `context → text response`. An agent emerges only when the model is coupled to an **agentic harness**:
 > $$\text{Agent} = \text{Model} + \text{Harness} + \text{Versioned Instructions} + \text{Deterministic Tools}$$
-> The harness is the operational substrate that manages the execution loop, sandbox security, state compaction, tool mediation, deterministic verification, and permission gating. Two agents using identical frontier models will diverge radically in output quality based on the mechanical sophistication of their harnesses.
+> The harness is the operational software runtime engine that manages the execution loop, sandbox security, state compaction, tool mediation, deterministic verification, and permission gating. Two agents using identical frontier models will diverge radically in output quality based on the mechanical sophistication of their harnesses.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -472,7 +472,7 @@ Skills remain mostly text, but they can also contain scripts, templates, example
 
 While agents can run terminal commands, building skills as native executable functions provides:
 1. **Pre-filtering Context (AST Parsers):** Instead of dumping a 3,000-line file into context, a native skill uses AST parsers or tree-sitter grammars to extract only the target component or interface signature.
-2. **Direct API Integration:** Interacting with code hosting platforms, cloud substrates, or persistence layers via structured API clients directly avoids fragile CLI stdout parsing.
+2. **Direct API Integration:** Interacting with code hosting platforms, cloud providers, or persistence layers via structured API clients directly avoids fragile CLI stdout parsing.
 3. **Deterministic Sandboxing:** Skills can manage local containers or ephemeral in-memory databases to validate migrations without side effects.
 
 ## Deterministic tools should enforce deterministic rules
@@ -940,8 +940,8 @@ THE ILLUSION OF "PROMPT SAFETY":
 Probabilistic attention slips ──► Agent executes destructive command ──► Critical file destroyed
 ```
 
-### 1. The Cold Indifference of the Non-Human Agent
-When a human engineer makes a mistake, they experience adrenaline, remorse, and fear of consequences. These emotional stakes act as a natural brake against reckless actions.
+### 1. The Asymmetry of Risk: Why Agents Have No Fear of Breaking Things
+When a human engineer makes a mistake, they experience stress and fear of consequences. These emotional stakes act as a natural brake against reckless actions.
 
 An AI agent has **zero skin in the game**:
 - It does not care that a deleted file represented three weeks of complex mathematical modeling or low-level timing logic.
@@ -999,7 +999,7 @@ When deploying autonomous agents across low-tolerance, mission-critical systems,
 | :--- | :--- | :--- |
 | **Repro-First / Regression Guard** | Mandate writing an isolated, failing reproduction test *before* editing production code. | Prevents unanchored code modifications, stochastic guessing, and silent adjacent breakages. |
 | **Pre-Flight Gate** | A unified script verifying code formatting, architectural invariants, language attractors, and session logs. | Eliminates manual checklist fatigue before merging or committing changes. |
-| **Platform Quirks & Invariants Catalog** | Centralized index of non-intuitive hardware idiosyncrasies, timing constraints, and substrate traps. | Stops agents from "fixing" intentional low-level quirks that appear anomalous to generic training data. |
+| **Platform Quirks & Invariants Catalog** | Centralized index of non-intuitive platform idiosyncrasies, timing constraints, and runtime traps. | Stops agents from "fixing" intentional low-level quirks that appear anomalous to generic training data. |
 | **Reference Triangulation** | Reconciles official architecture manuals, local design notes, and clean-room reference implementations. | Prevents hallucinations, conflicting contract interpretations, and divergent state representations. |
 | **Git Worktree Sandbox** | Disposable, isolated git worktrees for rapid, experimental architectural spikes and tracer bullets. | Protects the primary working tree from exploratory pollution and merge conflicts. |
 
@@ -1015,6 +1015,6 @@ These patterns form the deterministic operating scaffolding within which [[The C
 - **[[Agent Deployment and Execution Models]]**: Infrastructure environments where controlled agent harnesses operate.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Harness circuit breakers and constraint tiering to prevent multi-objective rule thrashing.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Converting runtime harness execution failures into permanent repository rules.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Harness enforcement of mechanical boundaries (file size, touched files) to prevent code sprawl.
-- **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic compiler and test verification within the harness loop.
+- **[[Software Entropy and the Zero-Friction Trap|software entropy and code sprawl]]**: Harness enforcement of mechanical boundaries (file size, touched files) to prevent code sprawl.
+- **[[Testing in the Model, Agent, LLM Era|automated testing harnesses]]**: Using deterministic compiler and test verification within the harness loop.
 - **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Harnesses providing prompt context to crystallize targeted model reasoning.
