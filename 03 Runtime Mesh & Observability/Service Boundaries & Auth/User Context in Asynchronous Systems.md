@@ -191,9 +191,6 @@ User context carries very different semantics depending on whether the message i
 
 ---
 
-Related core guideline: [[Propagating User Context Between Services]] and [[Service vs User Authorization Models]].
----
-
 ## Relationship to the Knowledge Graph
 
 - **[[Propagating User Context Between Services]]**: Synchronous vs asynchronous user context propagation patterns.
