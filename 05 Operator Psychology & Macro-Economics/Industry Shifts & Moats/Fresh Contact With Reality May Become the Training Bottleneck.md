@@ -24,7 +24,7 @@ CLOSED SYNTHETIC LOOP (Autophagic Decay)       EMPIRICAL GROUNDING (Infinite Hor
 | Base Model -> Paraphrase -> LLM Judge |    | HYPOTHESIS GENERATION (Agent Swarm)    |
 |       ^                       |       |    |                   |                    |
 |       +-----------------------+       |    |                   v                    |
-| Hallucinations amplify; Mode Collapse |    | [ PHYSICAL / MECHANICAL SUBSTRATE ]    |
+| Hallucinations amplify; Mode Collapse |    | [ PHYSICAL / MECHANICAL REALITY ]      |
 | (Zero new real-world entropy)         |    | (Compilers, Hardware, Wet Labs, Fleet) |
 +---------------------------------------+    |                   |                    |
                                              |                   v                    |
@@ -36,7 +36,7 @@ CLOSED SYNTHETIC LOOP (Autophagic Decay)       EMPIRICAL GROUNDING (Infinite Hor
 
 1. **The Depletion of Public Token Exhaust**: Crawling web text delivers diminishing marginal returns as human-written internet text is exhausted and contaminated by synthetic regurgitation.
 2. **The Failure Mode of Pure Synthetic Loops**: Self-rewarding and self-reflection loops isolated from empirical validation inevitably drift into hallucinated consensus and circular confirmation bias.
-3. **Reality as the Ultimate Test Oracle**: Real-world substrates—such as bare-metal OS execution, hardware fault traces, and physical experiments—provide non-negotiable binary verification that cannot be faked.
+3. **Reality as the Ultimate Test Oracle**: Real-world execution environments—such as bare-metal OS runs, hardware fault traces, and physical experiments—provide non-negotiable binary verification that cannot be faked.
 4. **The Empirical Training Moat**: Enterprises operating physical infrastructure, factories, robotics, or complex production codebases hold irreplaceable proprietary data streams.
 5. **Continuous Reality-Loop Interfacing**: Long-term model viability demands agentic architectures capable of proposing hypotheses, executing them against reality, and absorbing ground-truth friction.
 
