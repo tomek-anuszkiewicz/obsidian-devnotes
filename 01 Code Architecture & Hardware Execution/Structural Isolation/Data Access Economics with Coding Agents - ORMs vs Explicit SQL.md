@@ -9,214 +9,165 @@ tags:
   - sql
   - mechanical-sympathy
   - testing
-  - llm-agents
 aliases:
   - Agentic Coding with EF Core and SQL Server
-  - EF Core with AI Agents
-  - SQL Server and Agentic Coding
   - Data Access Economics with Coding Agents
   - ORMs vs Explicit SQL in the AI Era
+  - Hybrid Data Access Architecture
+  - Database Contract Tests for Agents
 ---
 
 # Data Access Economics with Coding Agents: ORMs vs Explicit SQL
 
-## The Core Thesis & Economic Inversion
+## Core Thesis: The Inverted Economics of Database Access
 
-Coding agents fundamentally upend the historical economics of data access architectures, inverting the decades-old trade-off between Object-Relational Mappers (ORMs) and explicit SQL. This directly transforms how engineering teams manage [[AI Changes the Economics of Technical Debt|technical debt in persistence layers]].
-
-Historically, engineering teams defaulted to heavy Object-Relational Mappers (ORMs) and dynamic persistence layers not because ORMs generated superior SQL, but to avoid human cognitive toil:
-- Writing hundreds of repetitive Data Transfer Objects (DTOs) and row mappers.
-- Maintaining tedious change-tracking and state-synchronization plumbing.
-- Handcrafting mechanical CRUD queries and integration test harnesses.
+For decades, software teams defaulted to heavy Object-Relational Mappers (ORMs) not because ORMs generate better queries, but because writing data access code by hand is soul-crushing work:
+- Handcrafting hundreds of Data Transfer Objects (DTOs) and row mappers,
+- Writing repetitive boilerplate CRUD queries,
+- Keeping entity change-tracking and unit-of-work state synchronized,
+- Scaffolding database integration tests.
 
 ```text
-HISTORICAL HUMAN TRADEOFF:
-  High Human Labor Cost ──► Heavy ORM Preferred (Abstractions hide plumbing)
-                                 │
-                                 ▼
-                             Hidden Queries, N+1 Problems, Suboptimal Execution Plans
+HISTORICAL TRADEOFF:
+High developer typing cost ──► Adopt heavy ORM to hide SQL plumbing
+                                    │
+                                    ▼
+                          Hidden N+1 queries, sluggish joins, unpredictable SQL
 
-AGENTIC REVERSED TRADEOFF:
-  Marginal Code Cost ≈ 0 ──► Explicit SQL & Flat Projections Economically Feasible
-                                 │
-                                 ▼
-                             Direct Engine Alignment, Measurable Execution Plans,
-                             Deterministic Contract Testing Oracles
+AGENTIC TRADEOFF:
+Marginal code cost ≈ 0     ──► Explicit SQL & flat DTO projections become cheap
+                                    │
+                                    ▼
+                          Full database engine features, visible query plans, fast execution
 ```
 
-Because an autonomous agent operating within an [[Agentic Coding Harness and Controlled Development Workflows|agentic harness]] can generate, update, and test mechanical queries, projection models, and mapper routines at near-zero marginal cost, **explicit SQL becomes economically viable at enterprise scale**. 
+When an autonomous coding agent can generate, update, and test explicit SQL queries and flat projection models in seconds, **handwritten SQL is no longer an expensive maintenance bottleneck**.
 
-However, cheap code generation does not automatically guarantee architectural soundness. The critical question is no longer whether an agent can write a query and map a result set to a domain model. The real architectural dilemmas are:
-1. **Source of Truth Authority**: Does authority reside in declarative migrations, schema dumps, or application models?
-2. **Contract Consistency Across Boundaries**: How do we mathematically ensure that the database column types, query projections, deserializers, and domain types never drift?
-3. **Execution Placement**: Where does business logic belong—in the application host, or pushed into database engines?
-4. **Database Engine Efficiency vs. Semantic Drift**: Can human engineers still audit and verify the resulting query topologies when [[Reviewing AI-Generated Code|reviewing AI-generated code]]?
+However, cheap code generation introduces new risks. The hard problems in database engineering don't disappear just because an agent writes the SQL:
+1. **Source of Truth**: Where does schema authority live—in migration files, schema snapshots, or application entities?
+2. **Silent Contract Drift**: How do we guarantee that database column types, query projections, row mappers, and domain models stay in sync?
+3. **The Split-Backend Trap**: How do we avoid scattering business logic between the application host and database stored procedures?
 
 ---
 
-## The Fragility of Contract Consistency Across 4 Representation Layers
+## Where SQL Queries Break: The 4-Layer Contract Pipeline
 
-A database read is never a single operation; it is an invariant pipeline spanning four separate structural representations that must maintain strict mathematical alignment:
+A database read is not a single atomic operation. It is a pipeline across four distinct layers that must stay in strict mathematical alignment:
 
 ```text
-┌───────────────────────────┐
-│ 1. Physical DB Schema     │  e.g., users.created_at TIMESTAMP WITH TIME ZONE NOT NULL
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 2. Query Projection       │  e.g., SELECT u.created_at AS created_at
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 3. Row Reader / Mapper    │  e.g., row.get_timestamp(...) / low-level buffer deserializer
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ 4. Host Language Model    │  e.g., DateTimeOffset / Instant createdAt
-└───────────────────────────┘
+1. Physical Database Schema  ──► users.created_at TIMESTAMP WITH TIME ZONE NOT NULL
+               │
+               ▼
+2. Explicit Query Projection ──► SELECT u.created_at AS created_at
+               │
+               ▼
+3. Row Reader / Mapper       ──► row.get_timestamp("created_at")
+               │
+               ▼
+4. Host Application Model    ──► DateTimeOffset / Instant createdAt
 ```
 
-When humans or agents modify any segment of this pipeline, subtle, silent failure modes emerge:
-- **Precision and Widening Discrepancies**: Integer widening mismatches (32-bit vs. 64-bit integer overflows), arbitrary-precision decimals truncated to floating-point doubles.
-- **Temporal and Timezone Drift**: Unspecified datetime timestamps mapped to UTC or local timezone representations.
-- **Nullability Inversion**: An inner column marked `NOT NULL` in the table schema becomes silently nullable when projected across a `LEFT OUTER JOIN` or aggregation.
-- **Positional vs. Nominal Drift**: Column aliases mismatched, reordered, or silently dropped during refactoring.
-- **Semantic Join Inversion**: Plausible-looking queries generated by LLMs that compile and parse cleanly, but substitute an `INNER JOIN` for an outer join, silently dropping required records under edge-case null states.
+When humans or agents edit this pipeline, subtle, silent bugs easily creep in:
+- **Nullability Inversion**: A column marked `NOT NULL` in the table schema becomes silently nullable when queried through an outer join (`LEFT JOIN`).
+- **Semantic Join Alterations**: An agent generates a plausible query that parses cleanly, but accidentally uses an `INNER JOIN` instead of a `LEFT JOIN`, silently dropping rows when optional relationships are empty.
+- **Type Truncation and Overflows**: 64-bit integers mapped to 32-bit fields, or arbitrary-precision financial decimals cast to floating-point doubles.
+- **Alias Drift**: An agent renames an alias in the SQL statement but forgets to update the row-mapping dictionary, resulting in fields silently populated with default zeroes or nulls.
 
-These bugs are notoriously deceptive: code generated by an agent appears pristine, passes syntax validation, and easily bypasses superficial human review.
+Because these queries look completely reasonable on paper, they easily pass superficial code reviews (see [[Reviewing AI-Generated Code]]).
 
 ---
 
-## Architectural Source of Truth: Directional Authority
+## The Verification Gate: Automated Tests Against Real Migrations
 
-To prevent hallucinated schema mutations and broken dependencies, systems maintained by AI agents must establish an unambiguous, unidirectional flow of truth:
+An ORM doesn't eliminate schema drift; it just changes where the crash happens. Whether you use an ORM or handwritten SQL, agent-maintained systems require **automated contract tests against a freshly migrated database** (see [[Testing in the Model, Agent, LLM Era|automated database verification harnesses]]).
 
 ```text
-                CANONICAL WRITE-PATH DIRECTION:
-  Versioned Migrations ──► Physical Database Schema ──► Application Entity Model
-
-                CANONICAL QUERY-PATH DIRECTION:
-  Versioned Migrations ──► Physical Schema ──► Explicit SQL ──► Result Metadata ──► Domain Projection
+CONTINUOUS DATABASE VERIFICATION PIPELINE:
+Spin up clean DB container ──► Run all migrations ──► Validate ORM metadata ──► Execute all SQL in schema mode ──► Run integration tests
 ```
 
-### Invariant Rules for Authority:
-1. **Versioned Migrations Are the Sole Historical Truth**: Migrations represent the immutable, ordered timeline of schema state. Schema dumps, reverse-engineered models, and snapshot files are ephemeral downstream caches designed for agent context windows—they must never be edited as independent sources of truth.
-2. **Projections Over Table Mappings**: Query results frequently combine computed expressions, window functions, conditional aggregations, and subqueries. They represent **use-case-specific projections**, not 1:1 table mirrors. Agents must be instructed to map directly to immutable projection structures rather than shoehorning complex queries into active-record domain models.
+### The Automated Contract Check
+
+In CI, an automated test runner validates every registered query against the actual migrated schema:
+
+| Property | What the Test Verifies |
+| :--- | :--- |
+| **Column Count** | Projected columns match target DTO constructor or property count exactly |
+| **Column Names** | SQL aliases match DTO property names without case or spelling mismatches |
+| **Data Types** | Database column types match host language types (e.g. `BIGINT` $\rightarrow$ 64-bit int) |
+| **Nullability** | Nullable SQL expressions are mapped to nullable host types |
+| **Conversions** | Only explicitly approved type conversions are permitted |
+
+Modern database engines let you inspect query result metadata without executing the query (for example, using schema-only execution modes or catalog descriptors). This catches 100% of structural mismatches in milliseconds.
 
 ---
 
-## The Verification Oracle: Automated Migrated-Database Contract Tests
+## What Explicit SQL Unlocks
 
-An ORM does not eliminate schema drift; it merely masks where and when runtime exceptions occur. Whether using high-level ORMs or explicit SQL, agent-maintained architectures require an ironclad, deterministic verification oracle, as formalized in [[Testing in the Model, Agent, LLM Era|rigid test oracles and database integration suites]].
-
-### The Mandatory Continuous Verification Pipeline:
-
-```text
-┌────────────────────────┐
-│ Provision Fresh DB     │  Spin up clean database container in memory/test runner
-└───────────┬────────────┘
-            ▼
-┌────────────────────────┐
-│ Apply All Migrations   │  Verify forward schema compilation from scratch
-└───────────┬────────────┘
-            ▼
-┌────────────────────────┐
-│ Validate ORM Mappings  │  Verify model metadata against physical schema
-└───────────┬────────────┘
-            ▼
-┌────────────────────────┐
-│ Validate SQL Contracts │  Execute all registered queries in schema-only mode
-└───────────┬────────────┘
-            ▼
-┌────────────────────────┐
-│ Run Semantic Suites    │  Execute round-trip integration tests with representative data
-└────────────────────────┘
-```
-
-### The Schema Contract Validator Matrix:
-The automated test harness must mechanically compare:
-- **Field Cardinality**: Count of columns projected in SQL vs. target model properties/constructors.
-- **Nominal Alignment**: Exact column alias names vs. model member names.
-- **Type Compatibility**: Database storage types vs. target runtime types (e.g., `BIGINT` $\rightarrow$ 64-bit integer, `UUID` $\rightarrow$ 128-bit identifier).
-- **Nullability Invariants**: Schema nullability (including join effects) strictly mapped to optional/nullable types.
-- **Positional Order**: Strict index validation when positional zero-allocation readers are used.
-
-In modern relational engines, query metadata can be inspected dynamically without full query execution (e.g., using schema inspection modes, prepared statement descriptors, or catalog introspection such as `sp_describe_first_result_set` or `GetColumnSchema()`).
-
----
-
-## Execution Engine Efficiency: What Explicit SQL Unlocks
-
-When coding agents relieve developers from the burden of manual typing, applications can deliberately exploit the deep, specialized execution features of relational database engines that ORMs struggle to model or translate reliably:
-
-- **Advanced Query Topology**: Recursive Common Table Expressions (CTEs), window functions, lateral joins (`CROSS APPLY` / `LATERAL`), and set-based bulk mutations.
-- **Engine-Specific Storage Engines**: Memory-optimized tables, temporal/system-versioned tables, and columnstore indexes.
-- **Atomic Set Operations**: Pushing multi-step transformations into single-round-trip statements, eliminating distributed locking and network chatter.
-- **Direct Query Plan Observability**: Explicit SQL statements can be copied directly into query analyzers, profiled with actual I/O and CPU statistics, and tuned with deterministic indexes.
-
-While ORMs generate adequate SQL for routine CRUD and straightforward joins, they become liability traps when handling complex object graphs, deep eager-loading trees, or performance-critical high-throughput pipelines.
+When teams aren't afraid of writing SQL, they can take full advantage of database engine features that ORMs struggle to express:
+- **Advanced Query Constructs**: Recursive Common Table Expressions (CTEs), window functions, lateral joins, and temporal table queries.
+- **Set-Based Batch Operations**: Performing bulk updates or deletes in a single statement, avoiding round-trips where the application loads thousands of records into memory just to modify one field.
+- **Direct Query Observability**: An explicit SQL query can be copied directly into database profiling tools, measured with actual I/O and CPU execution plans, and tuned with targeted indexes.
+- **Predictable Performance**: No surprise subqueries, unexpected joins, or Cartesian explosions caused by eager-loading multiple collections in an ORM.
 
 ---
 
 ## Logic Placement: Avoiding the Split-Backend Trap
 
-Cheap generation of database artifacts (views, functions, stored procedures) creates a dangerous architectural risk: **the accidental creation of two disconnected backends**—one in the host application and another hidden inside the database engine.
+Because coding agents can write stored procedures, views, and functions effortlessly, teams face a dangerous architectural temptation: **moving business logic into the database simply because SQL can express it**.
+
+This creates the "split-backend" nightmare, where developers and reviewers have to hunt across two distinct environments to figure out where a business rule lives:
 
 ```text
-┌──────────────────────────────────────┐  ┌──────────────────────────────────────┐
-│        HOST APPLICATION CODE         │  │           DATABASE ENGINE            │
-│  - Workflow orchestration            │  │  - Set-oriented aggregations         │
-│  - Distributed external API calls    │  │  - Mass data reduction               │
-│  - Business decision trees           │  │  - Atomic multi-table updates        │
-│  - Idempotency & event queues        │  │  - Strict relational integrity       │
-└──────────────────────────────────────┘  └──────────────────────────────────────┘
+APPLICATION RUNTIME (Clean Domain Logic):
+- Complex business workflow orchestration
+- External API integrations and notifications
+- Idempotency boundaries and domain events
+- High-frequency business rule changes
+
+DATABASE ENGINE (Data Reduction & Integrity):
+- Relational integrity constraints and foreign keys
+- Set-based bulk transformations
+- Mass data filtering and aggregation
+- Atomic multi-table state updates
 ```
 
-| Mechanism | Ideal Agentic Use Case | Anti-Pattern / Misuse |
+| Mechanism | Good Use Case | Anti-Pattern to Avoid |
 | :--- | :--- | :--- |
-| **Materialized / Indexed View** | Stable, shared read-optimized projections | Complex multi-tenant business rules that change weekly |
-| **Inline Table-Valued Function** | Parameterized, composable relational sub-queries | Procedural control flow or nested business logic |
-| **Stored Procedure** | Heavy batch operations, high-throughput atomic mutations | Orchestrating external microservice RPC calls or email alerts |
-| **Application Query File** | Explicit, use-case-specific read models | Duplicating transactional domain rules across 10 queries |
+| **Database View** | Stable, shared read projections across queries | Complex multi-tenant business filtering that changes weekly |
+| **Inline Table Function** | Composable, parameterized relational subqueries | Procedural business workflows with branching logic |
+| **Stored Procedure** | Atomic high-throughput batch transactions | Making HTTP calls, sending emails, or managing queues |
+| **Application SQL File** | Use-case-specific read models and DTO queries | Duplicating transactional validation across five queries |
 
 ---
 
 ## The Pragmatic Hybrid Architecture
 
-Rather than choosing dogmatically between an ORM or handwritten SQL, agent-accelerated systems thrive on a disciplined, hybrid data access strategy:
+Instead of choosing dogmatically between 100% ORM or 100% handwritten SQL, modern systems thrive on a pragmatic hybrid pattern:
 
-1. **ORMs for Domain Mutations & State Tracking**: Use ORMs for standard write operations, transactional aggregate root persistence, and simple relational consistency where change-tracking provides genuine leverage.
-2. **Explicit SQL for High-Performance Read Models**: Use lightweight query runners or low-level data readers with handwritten SQL for complex queries, reporting projections, and high-frequency endpoints.
-3. **Immutable Schema Migrations**: All changes to tables, views, indexes, and procedures must flow exclusively through version-controlled migration scripts.
-4. **Autonomous Contract Validation**: Execute automated schema-to-query contract validation as a mandatory continuous integration gate.
-5. **Clear Separation of Concerns**: Keep domain policy in the application layer; push only heavy set-oriented data processing into the database engine.
+1. **ORMs for Domain Mutations**: Use an ORM for core entity writes, aggregate root persistence, and transactional consistency where change tracking saves real effort.
+2. **Explicit SQL for Reads**: Use lightweight query runners and explicit SQL for reporting, search endpoints, and complex read projections.
+3. **Migrations as the Single Source of Truth**: Never edit database objects manually. All tables, views, indexes, and procedures must be tracked in version-controlled migration scripts.
+4. **Contract Verification in CI**: Run automated schema-to-DTO validation on every pull request to guarantee zero query drift.
+5. **Measure Before Optimizing**: Instruct agents to pull actual query execution plans and I/O stats before claiming a query optimization is faster.
 
 ---
 
-## Operational Directives for Coding Agents
+## Practical Rules for Coding Agents
 
-When assigning an autonomous agent to touch persistence or database code, enforce the following constraints:
-1. **Inspect Before Mutating**: Review existing migrations and generated schema snapshot metadata before authoring queries.
-2. **Ban Parameter Interpolation**: Parameterize every query value without exception to prevent SQL injection and enable query plan caching.
-3. **Prohibit Wildcard Projections**: Explicitly ban `SELECT *` in all application queries; mandate explicit column lists.
-4. **Synchronize Contracts Deterministically**: Whenever updating a query projection, update the corresponding host DTO and contract test in the same atomic commit.
-5. **Measure Execution Plans**: Require actual engine query cost and index utilization metrics before declaring a performance optimization complete.
+When directing an agent to work on database code:
+1. **Never use string concatenation for queries**: Require parameterized queries for every input to prevent SQL injection and enable query plan caching.
+2. **Ban wildcard queries (`SELECT *`)**: Mandate explicit column lists so changes to table schemas don't silently break downstream mappers.
+3. **Keep business logic in the application**: Do not let agents push domain validation into stored procedures without explicit architectural justification.
+4. **Update DTOs and tests in the same commit**: Whenever a query's projected columns change, update the corresponding model and contract test atomically.
 
 ---
 
 ## Related Notes
 
-- [[Designing Software for AI Agents|Designing Software for AI Agents]]: Exposing structured, predictable database schemas and query boundaries to coding agents.
-- [[Refactoring Legacy Systems with AI Agents|Refactoring Legacy Systems with AI Agents]]: Modernizing database access layers and isolating legacy SQL queries.
-- [[Software Entropy and the Zero-Friction Trap|Software Entropy and the Zero-Friction Trap]]: Avoiding bloated entity relationships and leaky ORM abstractions.
-- [[Testing in the Model, Agent, LLM Era|Testing in the Model, Agent, LLM Era]]: Hardening test oracles against silent database contract drift.
-- [[Why Business Logic Is the Hardest Part of Agentic Coding|Why Business Logic Is the Hardest Part of Agentic Coding]]: Isolating domain rules from persistence mechanisms.
-
----
-
-## Relationship to the Knowledge Graph
-
-- **[[Designing Software Architecture with LLM Assistance]]**: Balancing high-level system blueprints with low-level data persistence constraints.
-- **[[LLM Coding Agents Reliability]]**: Mitigating stochastic generation errors in critical database migration scripts.
-- **[[AI Changes the Economics of Technical Debt]]**: Analyzing how zero-marginal-cost code generation alters the build vs. abstract trade-off in data pipelines.
-- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Providing modular, composable database connection and migration runners across microservice boundaries.
+- **[[Designing Software for AI Agents]]**: How clean architectural boundaries and explicit schemas make systems easier for agents to modify safely.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why heavy, dynamic ORM abstractions create maintenance hazards compared to explicit, inspectable code.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing sprawling, unchecked database complexity when agents can generate code effortlessly.
+- **[[Testing in the Model, Agent, LLM Era]]**: How automated contract tests and integration suites act as the non-negotiable verification gate for persistence layers.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Isolating domain business rules from underlying database persistence mechanisms.
+- **[[AI Changes the Economics of Technical Debt]]**: Analyzing how near-zero generation costs change the build-versus-abstract calculation in data pipelines.
