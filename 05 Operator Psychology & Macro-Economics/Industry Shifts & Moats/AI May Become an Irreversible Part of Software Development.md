@@ -8,7 +8,7 @@ tags:
   - ai-adoption
 aliases:
   - Irreversibility of AI in Software
-  - AI as Core Development Substrate
+  - AI as Core Development Infrastructure
 ---
 
 # AI May Become an Irreversible Part of Software Development
@@ -32,7 +32,7 @@ aliases:
 +------------------------------------|------------------------------------+
                                      v
 +-------------------------------------------------------------------------+
-| PHASE 3 & 4: STRUCTURAL IRREVERSIBILITY (Permanent Substrate Lock-in)  |
+| PHASE 3 & 4: STRUCTURAL IRREVERSIBILITY (Permanent Platform Lock-in)   |
 |   * Human tactile typing atrophies; engineers operate as invariant oracles|
 |   * Systemic codebase complexity permanently exceeds human memory       |
 |   * Reversion Cost: Impossible (triggers immediate operational collapse)|
