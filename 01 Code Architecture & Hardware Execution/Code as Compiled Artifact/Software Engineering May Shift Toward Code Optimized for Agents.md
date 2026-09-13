@@ -16,266 +16,243 @@ aliases:
 
 # Software Engineering May Shift Toward Code Optimized for Agents
 
-## The Core Question & The Foundational Paradigm Shift
+## The Big Question: What Does "Good Code" Mean When AI Writes It?
 
-As LLMs and coding agents generate an accelerating share of enterprise software, a profound architectural question emerges:
+As LLMs and autonomous coding agents generate an ever-larger share of our software, a fundamental question hits every software architect:
 
-> **What does "good code" mean when humans are no longer its primary authors and maintainers?**
+> **What does "good code" actually look like when humans are no longer the primary authors manually typing every line?**
 
-Historically, software engineering evolved around human biological constraints. The traditional development lifecycle was strictly human-centric:
-
-```text
-Traditional Model:
-human writes → human reads → human modifies
-```
-
-In the agentic era, an increasingly dominant operational model takes its place:
+For decades, software engineering was built entirely around human cognitive and physical limits:
 
 ```text
-Agentic Model:
-human specifies → agent writes → human validates → agent modifies
+TRADITIONAL DEVELOPMENT LOOP:
+  Human writes ──► Human reads ──► Human modifies
 ```
 
-If this model becomes the standard, source code must certainly remain auditable and understandable to humans. **However, it no longer needs to be optimized primarily for the physical experience of manually typing and editing every line.**
+In the agentic era, a new operational reality takes over:
 
-In a limited sense, this resembles how developers treat high-level intermediate representation or compiler-generated artifacts: we do not manually rewrite compiler outputs simply because they contain repetitive branches. While source code will not become opaque bytecode, it is shifting toward a new status:
+```text
+AGENTIC DEVELOPMENT LOOP:
+  Human specifies ──► Agent writes ──► Human audits ──► Agent modifies
+```
 
-> **Human-auditable, but primarily machine-produced and machine-modified.**
+If this becomes the standard workflow, source code must always remain understandable and auditable to human engineers. **However, it no longer needs to be optimized for the physical grind of manually typing and maintaining boilerplate.**
+
+Think about how developers treat compiler outputs or bytecode: you don't manually rewrite compiler-generated assembly just because it looks repetitive. Source code won't become opaque binary, but it is moving toward a new status:
+
+> **Human-auditable, but primarily machine-produced and machine-maintained.**
 
 ---
 
-## The Emerging Design Goal & The Deeper Shift
+## What Models Generate Out of the Box: The Training Prior Trap
 
-The future optimization target for software architecture is no longer exclusively:
-
-```text
-human readability + human typing efficiency
-```
-
-Instead, the true design goal of modern codebases becomes:
+When an LLM is asked to implement a feature without project-specific guidelines, it does not invent the optimal architecture from first principles. It relies on its statistical training priors:
 
 ```text
-human understanding
-+ agent understanding
-+ agent modification
-+ predictable future generation
+Common open-source tutorials
++ Framework conventions & boilerplate
++ Standard documentation examples
++ Model tuning for safety and politeness
+─────────────────────────────────────────────────────────────
+= Mainstream, "textbook" code full of human compromises
 ```
 
-A foundational architectural principle emerges:
+For example, if you ask an agent to build a backend service without strict instructions, it will instinctively generate:
+- Deep dependency injection hierarchies,
+- Abstract repository patterns and unit-of-work wrappers,
+- Heavy Object-Relational Mappers (ORMs),
+- Fluent validation frameworks,
+- Generic middleware and reflection-based interceptors.
 
-> **Generate code optimized for machines to evolve, while keeping its intent transparently auditable by humans.**
+The model doesn't pick these patterns because they are objectively best for your system. **It picks them because humans invented them to save human typing effort.**
 
-This does not justify arbitrary, bloated complexity. Rather, it indicates that traditional aesthetic preferences—such as extreme brevity, clever one-liners, and dense macro-abstractions—are becoming obsolete, while **explicitness, structural regularity, semantic locality, and machine-legible architecture** become paramount.
+### The Training Paradox
+This creates an immediate contradiction:
+> **Agents should write code differently than humans, but they were trained almost exclusively on code written by humans.**
 
-### The Deeper Shift
-The most transformative impact of coding agents is not merely that software can be written faster. It is that we are systematically re-evaluating:
-- What constitutes "good" source code,
-- Which abstractions justify their weight,
-- How much localized duplication we tolerate to protect blast radius,
-- How architecture and rules are documented,
-- What human code reviewers optimize for,
-- And ultimately, **who source code is designed for**.
+- **Why humans wrote abstract code**: Humans hate typing boilerplate. Humans get tired, make copy-paste errors, and dread updating 10 similar files. So humans invented abstract base classes, dynamic reflection, and complex generic wrappers.
+- **How agents operate**: An agent generates 50 explicit lines as effortlessly as one. It doesn't get typing fatigue. But it **can easily be confused by hidden framework magic, implicit runtime conventions, and ambient state**.
+
+Left unguided, an agent defaults to writing clever human-centric code that actually makes the codebase harder for future agents to maintain.
 
 ---
 
-## The Training Paradox: Agents Must Code Differently Than the Humans Who Trained Them
+## Why "Clever" Human Abstractions Confuse Coding Agents
 
-This shift exposes a fundamental contradiction in agentic software engineering:
+Human software teams often pride themselves on concise, clever abstractions:
+- Ambient dependency injection where dependencies appear via magic decorators,
+- Dynamic runtime interceptors that modify method behavior on the fly,
+- Implicit convention-over-configuration routing,
+- Clever one-liner higher-order functional reductions.
 
-> **Agents should program differently than humans, but they were trained almost exclusively on code written by humans.**
+To an experienced human developer who already knows the framework, this looks sleek. **To an AI agent with a bounded context window, this is an architectural minefield.**
 
-Human code was shaped by human physical and cognitive limits:
-- **Typing fatigue and mental drag**: Humans invented deep inheritance hierarchies, reflection-based frameworks, and generic wrappers largely to spare themselves typing repetitive code.
-- **Fear of manual duplication**: Humans dogmatized DRY (Don't Repeat Yourself) because humans forget to update multiple copies and dread tedious manual synchronization.
+```text
+THE HIDDEN ABSTRACTION TRAP:
 
-Agents operate under an entirely inverted set of economic and cognitive constraints:
-- **Zero typing fatigue**: An agent generates 100 explicit lines as effortlessly as one.
-- **Effortless duplication discovery & semantic discrimination**: An agent effortlessly locates duplicated or divergent logic across the entire repository in seconds and can synchronize or adapt it on the fly. Crucially, unlike blunt find-and-replace tools, an agent possesses the semantic reasoning to discern whether a given instance actually warrants synchronization or represents intentional domain divergence that should be left untouched.
-- **Vulnerability to hidden magic**: Agents are easily confused by deep runtime indirection, convention-over-configuration magic, and ambient state.
-- **Superiority of flat, explicit code**: Optimal agent-native code is **explicit, flat, locally duplicated, and mechanically isolated** (e.g. 1:1 file-to-operation hierarchy with strict line limits).
+  Client Request ──► [Hidden Interceptor] ──► [Magic DI Container] ──► [Opaque ORM Hook] ──► Local Function
+                                                                                                    │
+                                                                                                    ▼
+                                                                                   Agent modifies this line,
+                                                                                   blind to the 3 hidden layers!
+```
 
-However, because models are pre-trained on open-source repositories, their default statistical prior is to emulate human compromises: creating speculative interfaces, unnecessary wrappers, and centralized abstractions. Without explicit architectural guidelines, agents instinctively write code optimized for human typing rather than agentic reliability.
+When an agent is tasked with modifying a local routine, it cannot reliably hold five disconnected framework layers in mind. If business rules or data flows are hidden behind reflection and interceptors, two major failures happen:
 
-Paradoxically, being trained primarily on open-source repositories is almost a fortunate grace period. If training corpora had been heavily saturated with legacy corporate enterprise systems, the statistical priors would be catastrophically worse: models would reflexively replicate bureaucratic class hierarchies, factory-of-factories boilerplate, reflection-heavy configuration magic, and speculative indirection engineered for corporate org-charts rather than execution clarity. As flawed as open-source human code is under agentic constraints, it remains far lighter than the enterprise labyrinth that agents encounter when tasked with [[Refactoring Legacy Systems with AI Agents|refactoring legacy enterprise systems]].
+1. **The Silent Regression Trap**: The agent makes an assumption based on generic internet code. The code compiles cleanly and passes simple smoke tests, but silently breaks an unwritten business rule or transactional guarantee (see [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]]).
+2. **The Context Waste Trap**: The agent burns precious context tokens reading dozens of generic wrapper classes just to figure out where the actual logic lives (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions in agent-maintained code]]).
+
+### The Fix: Explicitness Beats Cleverness
+In codebases designed for AI maintainers, **boring and explicit beats clever and magical every time**:
+- **1:1 Structural Isolation**: One file per command or query handler.
+- **Local Control Flow**: Straightforward input validation and explicit control loops instead of opaque framework middleware.
+- **Explicit Dependencies**: Direct parameter passing instead of magical ambient containers.
+
+```text
+TRADITIONAL "CLEVER" ONE-LINER (Hard for agents to inspect or set breakpoints):
+  return orders.Where(o => o.Valid).Select(Normalize).Where(o => o.Amount > 0).ToList();
+
+EXPLICIT AGENT-FRIENDLY PIPELINE (Transparent, easy to modify, easy to debug):
+  for order in orders:
+      if not is_eligible(order):
+          continue
+
+      normalized = normalize(order)
+      if normalized.amount <= 0:
+          continue
+
+      valid_orders.append(normalized)
+```
+
+From an old-school aesthetic standpoint, the explicit loop looks more verbose. From an agentic standpoint, it provides **transparent control flow, zero magic, instant debugging, and safe future modifications**.
 
 ---
 
-## Model Prior Probabilities & Context Infrastructure
+## The Performance Win: Boring Code Runs Faster on Real Hardware
 
-### Refactoring Code Not Designed for Agents: Where Hidden Abstractions Cause Agent Errors
-When an autonomous agent is tasked with maintaining or refactoring an existing codebase that was not intentionally engineered for machine maintainers, it runs into immediate, severe friction. 
+Here is the unexpected dividend of making code explicit for agents: **it runs significantly faster on physical hardware**.
 
-Human-centric codebases frequently conceal execution mechanics behind layers of indirection—ambient dependency injection containers, runtime interceptors, implicit lifecycle hooks, and fragmented abstractions designed purely to reduce human keystrokes. This lack of direct semantic expression creates two compounding failure modes:
+Code written for human brevity often relies heavily on:
+- Virtual method dispatch and dynamic polymorphism,
+- Heavy runtime reflection and dynamic proxies,
+- Deep object graphs scattered across heap memory via pointers.
 
-1. **The Cognitive Failure Mode (Hallucinated Invariants & Subtle Regressions)**:
-   Because an agent's reasoning is bounded by its active context window, it cannot reliably hold dozens of disconnected framework layers in mind while modifying a local function. When critical business intent and state invariants are implied rather than stated plainly, the agent is forced to extrapolate missing mechanics using its generic training priors. The agent generates code that compiles cleanly and passes localized smoke tests, but silently breaks unexpressed business rules or transactional guarantees (see [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]]). This is why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become toxic in agent-maintained code]].
+Modern CPUs hate pointer chasing and dynamic dispatch. Superscalar CPUs thrive on **contiguous memory layouts, predictable branch prediction, and flat static dispatch** (as detailed in [[AI May Make Aggressive Code Optimization Economically Viable|hardware and execution engine optimization]]).
 
-2. **The Hardware Inefficiency Trap (Compounding Runtime Overhead)**:
-   Code engineered for human brevity often relies on heavy runtime metaprogramming, dynamic dispatch, and speculative heap-allocated wrappers. Not only do these layers obscure the agent's view of real execution paths, but they also produce sluggish, cache-unfriendly runtime performance. Because data transformations are buried inside opaque frameworks, an agent refactoring such a subsystem cannot easily perform hardware-level optimizations (such as memory layout flattening or zero-allocation batching) without risking systemic breakage, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy]].
-
-Without explicit architectural constraints anchored via [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]], asking an agent to refactor an indirect, human-optimized codebase turns refactoring into a stochastic hazard. This reinforces why modern engineering must prioritize [[Refactoring Legacy Systems with AI Agents|automated straightening]] of legacy spaghetti into flat, explicit, machine-legible operational units.
-
-### Mainstream Code vs. Agent-Friendly Code
-Mainstream architectures enjoy a built-in advantage: models have encountered them millions of times during training. 
-
-However, **agent-friendly does not necessarily mean mainstream**:
+When an agent writes explicit, flat code:
 ```text
-regular vs irregular
-explicit vs implicit
-documented vs tribal
-predictable vs exception-heavy
+Direct Call ──► Inlining ──► Constant Propagation ──► Dead Code Elimination ──► Optimal Register Allocation
 ```
-
-A highly bespoke architecture can be exceptionally easy for agents to navigate if it possesses:
-- Stable architectural rules,
-- Consistent folder structure and naming,
-- Clear, isolated service boundaries,
-- Canonical, explicit reference examples,
-- Minimal undocumented exceptions.
-
-> **Rule**: Agent-friendly code is not code that blindly copies mainstream tutorials; it is code whose rules are easily inferable and remain strictly consistent.
-
-### Team Habits as Context Infrastructure & The Threat of "Context Debt"
-Agents absorb local development culture directly from the repository AST. If a team consistently enforces explicit dependencies, flat handlers, and uniform error patterns, the repository becomes an unambiguous learning signal.
-
-If the codebase contains multiple competing styles, historical layers, and undocumented exceptions, the agent receives conflicting evidence. The organization accumulates:
-
-```text
-Context Debt (Agent Comprehension Debt)
-```
-
-A system may run flawlessly in production while being impossible for agents to safely modify because critical rules exist only as tribal knowledge in senior developers' heads (e.g., *"Never invoke Service X during transaction Y"*). In an agentic environment, architectural knowledge must be reified as repository-accessible context.
+Downstream optimizing compilers and JIT engines can easily inline routines, eliminate dead branches, and pack data into cache lines. Dynamic reflection boundaries break this optimization chain completely. Agent-friendly code naturally aligns with modern CPU and database engine realities.
 
 ---
 
-## Re-Evaluating Traditional Software Engineering Best Practices
+## Re-Evaluating Classic Engineering Rules: DRY, Duplication & Line Counts
 
-Many traditional software engineering tenets were designed to minimize human authoring friction. In the agentic era, they require radical re-evaluation:
+Many software engineering dogmas were created solely to minimize human typing friction. In the agentic era, they need an honest reset:
 
-### 1. More Code May No Longer Mean More Maintenance Cost
-Historically, lines of code directly correlated with maintenance expense:
+### 1. More Code No Longer Means More Maintenance Cost
+Historically, lines of code correlated directly with maintenance cost:
 ```text
-Old Model:
-more code → more manual typing → more code to read → more human maintenance → higher cost
+HISTORICAL ASSUMPTION:
+  More Code ──► More Manual Typing ──► More Code to Read ──► Higher Maintenance Cost
 ```
 
-With agents, the relationship inverts:
+With coding agents, the equation flips:
 ```text
-Agentic Model:
-more explicit code → negligible generation cost → easier local reasoning → safe automated modification
+AGENTIC REALITY:
+  More Explicit Code ──► Zero Generation Cost ──► Easier Local Reasoning ──► Lower Maintenance Risk
 ```
+If an operation has 30 lines of explicit validation right in the handler instead of inheriting from a shared generic base class, generating those 30 lines costs nothing. More importantly, modifying that handler in the future has **zero blast radius** on other features.
 
-This does not justify uncontrolled sprawl. But it gives **localized duplication** three decisive architectural advantages:
-1. **Guaranteed Minimal Blast Radius**: When logic is duplicated locally inside each operation rather than shared through a fragile common abstraction, modifying Operation A physically cannot break Operation B.
-2. **Effortless Synchronization & Semantic Discrimination**: LLM agents can search the entire repository, identify semantic duplicates in seconds, and update them consistently across dozens of files. More importantly, agents possess contextual awareness to evaluate whether an instance truly shares the same lifecycle and requires synchronization, or represents intentional divergence that must be preserved.
-3. **Zero Cognitive Drag**: Generating or modifying 10 specialized, self-contained implementations costs an agent no more effort than modifying a single shared framework.
+### 2. Rethinking DRY (Don't Repeat Yourself)
+Humans dogmatized DRY because when a human copy-pastes code into five places, they forget to update the fifth place, creating a production bug.
 
-Instead of asking *"Is this duplicated?"*, architects must ask:
-> **"Does this duplication create unmanageable synchronization risk, or does it safely isolate the blast radius?"**
+In agent-maintained code, the question shifts:
+* **Bad Duplication**: Copy-pasting core business logic (e.g., tax calculation rules or discount formulas) that must change together. That creates synchronization risk.
+* **Good Duplication**: Local boilerplate, DTO definitions, and explicit data-mapping code. Forcing three unrelated endpoints to share a generic base class just to save 15 lines of DTO mapping creates tight coupling that confuses agents.
 
-### 2. Replacing "DRY at All Costs" with Semantic Isolation
-The traditional reflex:
-```text
-see pattern 3 times → construct generic framework abstraction
-```
-is replaced by:
-```text
-see pattern 3 times → evaluate synchronization risk → abstract ONLY if it eliminates semantic complexity
-```
-The result is more explicit loops, direct control flow, specialized local queries, and fewer generic runtime frameworks.
+Instead of the old rule:
+> *"If I see this code three times, I must create a shared framework."*
 
-### 3. Humans Adapting to Agent-Generated Explicitness
-Humans naturally prefer compact, dense code (e.g., nested stream reductions, higher-order collection one-liners, or generic middleware filters). An agent often produces 25 lines of explicit iteration, in-place validation checks, and direct assignments:
-
-```text
-// Agent-preferred explicit flow: local semantics, linear control flow, instant verification
-for each order in orders:
-    if not is_eligible(order):
-        continue
-
-    normalized = normalize(order)
-    if normalized.amount <= 0:
-        continue
-
-    valid_orders.append(normalized)
-```
-
-From a traditional aesthetic viewpoint, this looks verbose. From an agentic viewpoint, it provides **explicit control flow, transparent local semantics, instant breakpoint targeting, and trivial future automated modification**.
+The modern engineering rule becomes:
+> *"Does this duplication create real business synchronization risk? If not, prefer local explicitness over creating a tangled shared framework."*
 
 ---
 
-## The Evolution of Code Review: The Meeting Point of Two Worlds
+## Code Review: The Clash Between Machine Code and Human Habits
 
 Code review is the primary friction point where machine-generated code clashes with human habits:
 
-| Dimension | The Agent Optimizes For | The Human Reviewer Instinctively Wants |
+| Review Dimension | What the Agent Naturally Optimizes For | What the Human Reviewer Instinctively Demands |
 | :--- | :--- | :--- |
-| **Code Density** | Local explicitness, unrolled paths | Brevity, conciseness, one-liners |
-| **Coupling** | Zero shared state, isolated blast radius | DRY, unified generic abstractions |
-| **Idioms** | Predictable, straightforward control flow | Clever language idioms, syntactic sugar |
-| **Execution** | Machine legibility, fast JIT inlining | Human reading comfort and aesthetic elegance |
+| **Code Density** | Explicit local steps, unrolled loops | Brevity, conciseness, one-liners |
+| **Modularity** | Isolated blast radius, 1:1 files | DRY, unified generic base classes |
+| **Idioms** | Predictable, straightforward control flow | Clever language idioms, newest syntactic sugar |
+| **Execution** | Machine clarity, fast compiler inlining | Human aesthetic elegance and brevity |
 
-### "Not Optimal" Must Mean Something Concrete
-When a human reviewer claims agent-generated code is "not optimal," they must distinguish between genuine technical defects and subjective stylistic preferences:
-- **Genuine Defects**: $O(n^2)$ algorithmic complexity, memory leaks, unindexed queries, broken authorization checks, missing transaction rollbacks.
-- **Subjective Discomfort**: *"This could be written in a single line using a higher-order stream reduction."*
+### The Cosmetic Nitpicking Trap
+A common failure mode in teams adopting AI is the reflex of human reviewers to **reject agent-generated code purely through a human aesthetic lens**:
+- *"Why did the agent write an explicit loop instead of a compact stream one-liner?"*
+- *"Why did it write an explicit constructor instead of using implicit compiler sugar?"*
+- *"Why didn't it use the latest clever shorthand syntax?"*
 
-### The Cosmetic Nitpicking Trap: Disqualifying Agent Code Through Human Prisms
-A pervasive friction in teams adopting coding agents is the reflex of human reviewers to **disqualify machine-generated code through a purely human aesthetic lens**:
-- *"Why did the agent write an explicit constructor or explicit parameter assignments instead of using compiler-synthesized primary constructors or implicit defaults?"*
-- *"Why did it explicitly generate an equality comparison method (`equals` / value-equality routine) when language records or default object equality exist?"*
-- *"Why didn't it use the newest terse syntactic sugar or language shorthand?"*
+When reviewers spend their finite energy on **petty style debates over cosmetic formatting**, they miss the genuine dangers. Linters and automated formatters solve style deterministically.
 
-Reviewers frequently reject pull requests over these cosmetic deviations, claiming the code is "bloated" or "unidiomatic." This represents the modern reincarnation of **Parkinson's Law of Triviality (petty style debates over cosmetic formatting)**:
-1. **Identical Functional Semantics**: Formally and practically, the code executes identically. The presence of explicit initializers or explicit equality routines compiles down to equivalent or identical machine representations.
-2. **Explicitness vs. Mental Drag**: Human engineers rely on compiler defaults and shorthand syntax because humans dread typing boilerplate. For an autonomous agent, generating 10 explicit lines costs zero effort, and reading explicit mechanics eliminates ambiguity for the next agent that touches the module.
-3. **Wasted High-Leverage Bandwidth**: When human reviewers spend their finite cognitive attention policing harmless syntactic explicitness or cosmetic formatting quirks (which automated linters solve deterministically), they neglect the true high-risk boundaries: domain state machines, concurrency locks, and invariant violations (see [[Reviewing AI-Generated Code]]).
+Human code review must focus on **what actually matters in production**:
+- **Real Technical Bugs**: $O(n^2)$ database loops, unindexed queries, missing transaction rollbacks, memory leaks, and concurrency races.
+- **Subtle Business Errors**: Misinterpreting a business state (e.g., treating `Authorized` as `Paid`) or violating compliance rules.
+- **Contract & Failure Boundaries**: Ensuring error handling, retry limits, and security authorization checks are rock solid (see [[Reviewing AI-Generated Code|reviewing AI-generated code]]).
 
-### Forcing Agents Off-Distribution: The Compounding Hallucination Risk of Local Review Mandates
-A subtle yet hazardous failure mode in agentic code review occurs when a human reviewer forces the agent to adopt a localized, bespoke pattern that departs from the model's natural statistical priors:
+### The Dangerous Failure Loop
+There is a specific anti-pattern that human reviewers must actively avoid:
 
-1. **The High-Probability Manifold**:
-   An LLM coding agent generates code by sampling from dense regions of its learned probability distribution ($P(\text{code} \mid \text{context, priors})$). When guided by general training corpora, framework documentation, and repository conventions, the agent emits solutions sitting firmly at the peak of its probability manifold—code that is predictable, well-supported by statistical evidence, and stable to modify.
+```text
+1. Agent generates explicit, flat code with local boilerplate.
+       │
+       ▼
+2. Human reviewer sees repetition and says: "Extract this into a generic base class!"
+       │
+       ▼
+3. Human or agent creates a complex generic abstraction.
+       │
+       ▼
+4. Next agent comes along, fails to understand the hidden framework magic,
+   hallucinates an assumption, and breaks production.
+```
 
-2. **Off-Distribution Displacement Through Ad-Hoc Review**:
-   During code review, a human reviewer frequently rejects this high-probability baseline, enforcing an isolated, localized preference: *"Don't use the standard approach here; rewrite this service using our bespoke abstraction / this local convention."* By triggering the agent to abandon its natural prior, the reviewer pushes the solution into the **sparse tails of the probability distribution**. The agent complies, but the resulting code sits in a low-density pocket of latent space.
+Abstractions must justify their existence by genuinely reducing architectural complexity—not merely by shrinking visible line counts.
 
-3. **Downstream Hallucination Cascades in Future Iterations**:
-   When the next agent enters the module weeks later to implement a feature or perform a refactoring, it encounters **competing, contradictory contextual evidence** (worsening [[#Team Habits as Context Infrastructure & The Threat of "Context Debt"|Context Debt]]):
-   - The broad repository and the model's foundation weights pull toward the global standard prior.
-   - The local file contains a bespoke, low-probability anomaly.
-   - Operating in a low-density region with sparse training support, the agent's uncertainty spikes. Forced to extrapolate how this localized anomaly should interact with new requirements, the agent is far more likely to **generate increasingly improbable, hallucinatory solutions**—inventing non-existent APIs, breaking unexpressed domain invariants, and compounding architectural decay (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]).
+---
 
-4. **The Architectural Mandate: Global Uniformity Over Local Whims**:
-   If a system genuinely requires an architecture that departs from mainstream or model-preferred conventions, that deviation must never be introduced as an ad-hoc whim in a single PR review. Deviations must be:
-   - Formally codified in centralized [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]],
-   - Reinforced with repository-wide reference implementations,
-   - Enforced globally and uniformly so the bespoke pattern establishes its own dense, high-probability manifold across the entire codebase.
+## Summary: The Deeper Shift in Software Engineering
 
-### Human Review Could Accidentally Degrade Agent-Friendliness
-If a human reviewer forces the agent to compress explicit, isolated code into an intricate, generic abstraction, they may satisfy their aesthetic preference while **severely impairing future agent maintainability**. The next agent entering that module will struggle with the newly introduced indirection.
+1. **Code is for Agents to Modify, Humans to Audit**: We no longer design source code primarily to save human typing. We design it for machine legibility, rapid testing, and transparent human auditing.
+2. **Explicitness Beats Magic**: Flat structures, 1:1 file-to-command mappings, and explicit dependencies prevent agents from hallucinating and wasting context tokens.
+3. **Hardware Efficiency by Default**: Flat, non-generic code eliminates pointer chasing and reflection, allowing compilers to produce faster machine code.
+4. **Pragmatic DRY**: Avoid duplicating business rules, but embrace local boilerplate when the alternative is a brittle shared framework.
+5. **Focus Reviews on Reality, Not Syntax**: Stop petty style debates over cosmetic line counts; focus human review on business correctness, edge cases, and failure boundaries.
 
-### Review Shifts Toward Consequences
-Modern code review of agent-maintained code moves away from line-by-line syntax policing toward evaluating **architectural invariants and downstream consequences**:
-- **Boundary Preservation**: Does this change maintain strict structural isolation and unambiguous module contracts?
-- **Future-Agent Maintainability**: Can future agents inspect, navigate, and safely modify this code without stumbling over accidental indirections, hidden abstractions, or unhandled side effects?
-- **Test Oracle Rigor**: Are executable tests sufficient to strictly constrain future automated refactorings, ensuring [[Why Business Logic Is the Hardest Part of Agentic Coding|business logic invariants]] cannot silently drift?
+---
 
-Human review becomes the boundary where human strategic intent is reconciled with software engineered for automated machines. Rather than nitpicking syntactic sugar or compiler-synthesized constructs, review evaluates whether the system's operational boundaries remain sound. The crucial operational requirement for human engineers to maintain high-level topological comprehension and use review as an active cognitive synchronization ritual is governed in [[Reviewing AI-Generated Code]] and [[AI Changes the Role and Training of Software Engineers]].
+## Related Notes
+
+- **[[Designing Software for AI Agents]]**: Practical architectural blueprints for organizing repositories with 1:1 file structures and predictable boundaries.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models easily write technical boilerplate but silently break subtle business rules buried in messy code.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing bloated framework scaffolding with living Markdown specifications in the repository.
+- **[[Software Entropy and the Zero-Friction Trap]]**: How zero-friction code generation accelerates architectural rot unless controlled by strict modular boundaries.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why convention-over-configuration and reflection magic become toxic in agent workflows.
+- **[[Internal Shared Packages vs Agent-Generated Code]]**: Pragmatic trade-offs between centralized packages and local, specialized code generation.
+- **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
+- **[[Refactoring Legacy Systems with AI Agents]]**: Straightening legacy enterprise spaghetti into explicit, machine-legible components.
+- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and petty style debates to verifying critical business rules, edge cases, and error handling.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Removing runtime abstractions and unrolling execution paths for hardware and database engine performance.
 
 ---
 
 ## Relationship to the Knowledge Graph
 
-- **[[Designing Software for AI Agents]]**: Core heuristics for architecting software for agent discoverability, flat structures, and deterministic verification.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
-- **[[Software Entropy and the Zero-Friction Trap]]**: The emergence of agent-native defaults (flat 1:1 hierarchy, localized duplication) to combat entropy.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why explicit, inspectable source code is vastly easier for agents to debug than hidden abstractions.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models easily write technical boilerplate but silently break subtle business rules buried in messy code.
-- **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
-- **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
-- **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
-- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and petty style debates to verifying critical business rules, edge cases, and error handling.
+- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The canonical anchor note for [[The 5-Layer System Stack for Agentic Software Engineering|Layer 1 (Code Architecture & Hardware Execution)]].
 - **[[AI Changes the Role and Training of Software Engineers]]**: How the engineering role elevates toward skeptical review, risk control, and architectural design.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes the probabilistic dynamics of model priors and how forcing agents off-distribution creates downstream hallucination risks.
-- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for hardware and execution engine performance.
+- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Applying explicit, non-abstract design principles to database queries and projection models.
