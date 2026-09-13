@@ -113,7 +113,7 @@ The rise of ephemeral implementation code shifts the fundamental role of the hum
 - The engineer becomes a **System Director, Invariant Architect, and Guardian of Hardware Reality & Resource Invariants**:
   1. Defining high-authority domain specifications and boundary contracts.
   2. Curating and freezing the deterministic test oracle.
-  3. Enforcing hardware-sympathetic data layouts and cache efficiency.
+  3. Enforcing cache-conscious data layouts and memory efficiency.
   4. Reviewing algorithmic invariants and topological boundaries.
   5. Governing the cognitive trade-offs between human readability and machine efficiency (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|operator psychology and burnout]]).
 
@@ -155,7 +155,7 @@ A frequent pitfall occurs when benchmarking agent-generated code:
 Traditional, tightly packed state machines, flat jump tables, and compact loops frequently outperform unrolled, generated functions in production because their entire execution kernel remains permanently resident in fast instruction memory.
 - Furthermore, models trained predominantly on general enterprise code exhibit **"Object-Oriented Contamination"**: defaulting to deep class hierarchies, pointer indirection, heap-allocated boxing, and fragmented memory buffers.
 - The test oracle verifies only that `result == expected`. It does not detect that every object lookup incurred a cache miss across scattered memory addresses.
-- **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **hardware-aligned execution** (see [[Software Engineering May Shift Toward Code Optimized for Agents|code optimized for agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-empathetic code.
+- **The Non-Delegable Human Responsibility**: The human software architect remains the sole guardian of **hardware-aligned execution** (see [[Software Engineering May Shift Toward Code Optimized for Agents|code optimized for agents]]). The engineer must enforce **Data-Oriented Design (DOD)** invariants—struct-of-arrays memory layouts, contiguous memory allocation, and instruction cache alignment—forcing the agent to generate hardware-aligned, cache-efficient code.
 
 ### 3. The Incompleteness of the Oracle: Hyrum's Law and Unconstrained State Spaces
 A vital engineering reality must temper the enthusiasm for disposable rewrites:
