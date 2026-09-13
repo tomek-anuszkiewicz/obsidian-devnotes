@@ -14,7 +14,7 @@ aliases:
   - Economics of Aggressive Code Optimization
   - Modern Substrate Efficiency Beats Clever Legacy Hacks
   - Hardware Awareness in the Agentic Era
-  - Hardware Empathy over Legacy Optimization Hacks
+  - Substrate Alignment over Legacy Optimization Hacks
   - The I-Cache vs D-Cache Tension
   - The Microbenchmark Illusion
   - Zipfian Distribution in Code Optimization
