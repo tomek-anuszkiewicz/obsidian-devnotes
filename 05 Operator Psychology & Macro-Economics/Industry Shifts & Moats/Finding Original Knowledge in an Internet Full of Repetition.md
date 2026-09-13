@@ -5,7 +5,7 @@ tags:
   - knowledge-discovery
   - information-diet
   - synthetic-data
-  - epistemology
+  - information-entropy
   - content-pollution
 aliases:
   - Original Knowledge Scarcity
