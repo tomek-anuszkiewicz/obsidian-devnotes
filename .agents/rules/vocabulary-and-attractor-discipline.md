@@ -43,17 +43,18 @@ Due to associative attractor drift, models tend to turn this term into an empty 
    - In Layer 5 (Human Ergonomics/Organization): use **systems efficiency**, **direct hardware optimization**, **low-level systems comprehension**.
    - In Layer 1 (outside historical definition): use **hardware-aware optimization**, **substrate efficiency**, **execution engine alignment**.
 
-### 2.2 The "Hardware Sympathy" & Synthetic Mutant Attractor Ban
-When models are constrained from using "mechanical sympathy", associative attention frequently generates mutant linguistic attractors such as **hardware sympathy**, **substrate sympathy**, **execution sympathy**, **engine sympathy**, or **cache sympathy**.
+### 2.2 The "Hardware Sympathy", "Hardware Empathy" & Synthetic Mutant Attractor Ban
+When models are constrained from using "mechanical sympathy", associative attention frequently generates mutant linguistic attractors such as **hardware sympathy**, **hardware-sympathetic**, **hardware empathy**, **hardware-empathetic**, **substrate sympathy**, **execution sympathy**, **engine sympathy**, or **cache sympathy**.
 
-These synthetic terms are empty linguistic gravity wells that lack conceptual grounding.
+These synthetic terms are empty linguistic gravity wells that lack conceptual grounding (hardware possesses neither sympathy nor empathy).
 
 1. **Absolute Ban Across All Public Notes**:
-   - The term `hardware sympathy` as well as all synthetic `* sympathy` mutants (`substrate sympathy`, `execution sympathy`, `engine sympathy`, `cache sympathy`) are **strictly prohibited** across all public notes, frontmatter tags, aliases, and referential sections.
+   - The terms `hardware sympathy`, `hardware-sympathetic`, `hardware empathy`, `hardware-empathetic`, as well as all synthetic `* sympathy` / `* sympathetic` mutants (`substrate sympathy`, `execution sympathy`, `engine sympathy`, `cache sympathy`) are **strictly prohibited** across all public notes, frontmatter tags, aliases, and referential sections.
 2. **Strict Heading Ban**:
-   - No Markdown heading (`#`, `##`, `###`, etc.) may ever contain `hardware sympathy` or any `* sympathy` variation.
+   - No Markdown heading (`#`, `##`, `###`, etc.) may ever contain `hardware sympathy`, `hardware empathy`, or any `* sympathy` variation.
 3. **Mandated Substitutions**:
-   - For *hardware sympathy* / *substrate sympathy* → use **substrate alignment**, **hardware reality**, **low-level execution efficiency**, **hardware-aware optimization**.
+   - For *hardware sympathy* / *hardware-sympathetic* → use **substrate alignment**, **hardware-aligned**, **hardware reality**, **low-level execution efficiency**, **cache-conscious layout**.
+   - For *hardware empathy* / *hardware-empathetic* → use **hardware-aligned execution**, **cache-efficient implementation**, **substrate-conscious code**.
    - For *engine sympathy* → use **database engine alignment**, **direct query plans**, **execution engine optimization**.
    - For *cache sympathy* → use **instruction cache locality**, **cache-conscious layout**, **spatial/temporal locality**.
    - For *execution sympathy* → use **execution discipline**, **runtime efficiency**, **systemic parsimony**.
@@ -66,7 +67,8 @@ The agent must avoid over-indexing on pseudo-academic buzzwords. The following w
 
 | Banned / Quarantined Term | Mandated Replacement (Universal Engineering Construct) |
 | :--- | :--- |
-| `hardware sympathy` | `substrate alignment`, `hardware reality`, `low-level execution efficiency` |
+| `hardware sympathy / -sympathetic` | `substrate alignment`, `hardware reality`, `hardware-aligned`, `low-level execution efficiency` |
+| `hardware empathy / -empathetic` | `hardware-aligned code`, `cache-efficient layout`, `substrate-conscious implementation` |
 | `substrate / engine / cache sympathy` | `substrate efficiency`, `engine alignment`, `cache locality` |
 | `epistemic debt` | `knowledge debt`, `architectural drift`, `unverified cognitive debt` |
 | `epistemic burden / friction` | `cognitive load`, `verification drag`, `investigation friction` |
