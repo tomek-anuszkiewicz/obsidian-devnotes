@@ -578,7 +578,7 @@ it becomes increasingly:
 ```text
 knowledge
 =
-substrate for reasoning
+foundation for reasoning
 ```
 
 The educational challenge is therefore deciding:
