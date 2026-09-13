@@ -52,7 +52,7 @@ GRASSROOTS FIRST-PRINCIPLES AGENCY (The Invariant Antidote):
 2. **Complexity Fetishism as Political Currency**: Convoluted, distributed architectures function as social trophies. Maintaining an unpartitioned 10 TB database cluster justifies squad sizes, promotion packets, and cloud spend; simplifying it into a lean 5 GB working set threatens the incumbent team's organizational status.
 3. **The Fossilization of Negative Tribal Dogma**: Past engineering failures become unquestioned taboos (*"We tried that in 2017 and it failed, so we never do X"*), ignoring that modern runtimes, compilers, and hardware have completely eliminated the original failure condition.
 4. **Defensive Antibodies Against Simplification**: When an engineer solves an "impossible" enterprise problem through clean first-principles parsimony, the organization frequently reacts with defensive hostility, because radical simplification exposes the preceding years of monumental maintenance as unnecessary waste.
-5. **First-Principles Invariant Parsimony**: Robust software engineering demands rejecting accidental enterprise complexity in favor of low-level efficiency and execution sympathy: separating hot transactional state from cold history, minimizing distributed round-trips, and enforcing explicit data lifecycles.
+5. **First-Principles Invariant Parsimony**: Robust software engineering demands rejecting accidental enterprise complexity in favor of low-level efficiency and execution discipline: separating hot transactional state from cold history, minimizing distributed round-trips, and enforcing explicit data lifecycles.
 
 ---
 
