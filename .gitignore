@@ -1,6 +1,4 @@
-.smart-env/
 .obsidian/graph.json
 _Private/
-Private*.md
 __pycache__/
 *.pyc
