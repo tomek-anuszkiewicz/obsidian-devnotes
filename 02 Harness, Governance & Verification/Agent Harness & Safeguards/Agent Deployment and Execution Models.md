@@ -21,10 +21,10 @@ aliases:
 
 > [!IMPORTANT]
 > **The 3-Plane Decoupling Axiom**: The place where an agent reasons, the place where its workflow is coordinated, and the place where code executes are **three orthogonal architectural planes**:
-> 1. **Model Plane (Inference)**: Where the weights reside and token completion occurs (Provider Cloud vs. Dedicated Cloud GPU vs. Self-Hosted On-Premises).
+> 1. **Model Plane (Inference)**: Where weights reside and token completion occurs (Provider Cloud vs. Dedicated Cloud GPU vs. Self-Hosted On-Premises).
 > 2. **Orchestrator Plane (Harness & State)**: Where the agent loop, context compaction, and state machines reside (Local CLI vs. Centralized Workflow Engine).
 > 3. **Executor Plane (Environment)**: Where filesystem mutations, Git commits, terminal commands, builds, and test oracles execute (Developer Workstation vs. Isolated Cloud Sandbox / Container).
-> Conflating these three planes creates severe security, latency, and data-sovereignty bottlenecks.
+> Conflating these three planes creates severe security vulnerabilities, unnecessary latency, and compliance confusion.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -45,19 +45,19 @@ aliases:
 ## Executive Summary & Core Architectural Invariants
 
 1. **Orthogonal Deployment Topologies**:
-   - **Local Agent**: Orchestrator and Executor run on the developer workstation; Model runs via remote API. Ideal for interactive pair programming and exploratory debugging.
+   - **Local Agent**: Orchestrator and Executor run on the developer workstation; Model runs via remote API. Ideal for interactive pair programming and exploratory debugging inside an [[Exploring Agent Harnesses|execution harness]].
    - **Managed Remote Agent**: Orchestrator and Executor run in isolated vendor cloud environments. Enables unattended, asynchronous, and scheduled maintenance workflows.
    - **Self-Hosted Enterprise Agent**: Orchestrator and Executor run inside corporate VPCs with private network access to internal codebases, databases, and issue trackers.
    - **Hybrid Agent**: Cloud orchestrator dispatches tasks to private on-premises executors, keeping source code and credentials inside internal trust boundaries.
-2. **Data Sovereignty is Determined by the Model Plane**: Self-hosting the agent harness does not guarantee data privacy if prompts and code snippets are dispatched to an external multi-tenant LLM. Strict data-sovereignty mandates self-hosting both the executor and model inference.
-3. **Role-Based Least Privilege Gating**: Shared team agents must not possess global admin rights. Enforce strict capability boundaries: Planners (Read-Only access to specs/code), Implementers (Write access restricted to ephemeral feature branches), and Reviewers (Read-only access with test execution permissions).
-4. **Coexistence Over Monoculture**: High-performing organizations do not enforce a single deployment model. Developers use local interactive agents for tight inner loops, while managed remote agents execute overnight refactorings, automated dependency updates, and continuous PR reviews.
+2. **Data Sovereignty is Governed by the Model Plane**: Self-hosting the agent harness does not protect proprietary source code if prompts and context files are transmitted to an external multi-tenant API. Strict data sovereignty requires controlling where model inference takes place.
+3. **Role-Based Least Privilege Gating**: Shared team agents must not possess global credentials. Enforce strict capability boundaries: Planners (Read-Only access to specs/code), Implementers (Write access restricted to ephemeral feature branches), and Reviewers (Read-only access with test execution permissions).
+4. **Coexistence Over Monoculture**: High-performing organizations do not enforce a single deployment model. Developers use local interactive agents for tight inner loops, while managed remote agents execute overnight refactorings, automated dependency updates, and continuous PR reviews through automated [[AI Productivity Is Limited by the Delivery System|delivery pipelines]].
 
 ---
 
 ## 1. The 3-Plane Architectural Decomposition
 
-The decoupling of reasoning from physical execution enables modular infrastructure configurations:
+The decoupling of reasoning from physical execution enables modular infrastructure configurations via a structured [[Model Access and Execution Infrastructure|inference gateway]]:
 
 ```text
 Config A: Local Interactive (Inner Loop)
@@ -70,7 +70,7 @@ Config B: Team Managed Service (Unattended / CI)
                      [ Provider Model API ]         [ Private Git Repository ]
 
 Config C: Air-Gapped / High-Sovereignty
-[ Private VPC: Team Orchestrator ] ──► [ On-Prem Execution Worker ] ──► [ Local vLLM Cluster ]
+[ Private VPC: Team Orchestrator ] ──► [ On-Prem Execution Worker ] ──► [ Local Model Server ]
 ```
 
 ---
@@ -88,16 +88,30 @@ Config C: Air-Gapped / High-Sovereignty
 
 ---
 
-## 3. Security, Sandboxing, and Permission Scoping
+## 3. Decision Guide: Selecting the Right Architecture
 
-Deploying agents to cloud infrastructure requires defense-in-depth isolation:
+| Operational Requirement | Recommended Architectural Pattern |
+| :--- | :--- |
+| **Interactive developer pair programming** | Local agent with IDE or CLI integration |
+| **Long-running unattended tasks & overnight refactoring** | Managed or self-hosted cloud agent |
+| **Shared agent running PR reviews in CI** | Managed or self-hosted agent triggered via webhooks |
+| **Code must never leave corporate network** | Self-hosted model inference on private cluster |
+| **Control inference without buying physical GPU hardware** | Self-hosted inference on rented private GPU cloud compute |
+| **Strict air-gapped data sovereignty** | Fully on-premises stack (weights, harness, executor) |
+| **Minimal operational and infrastructure overhead** | Managed agent with vendor API |
+
+---
+
+## 4. Security, Sandboxing, and Permission Scoping
+
+Deploying agents to shared infrastructure requires defense-in-depth isolation inside a [[Agentic Coding Harness and Controlled Development Workflows|controlled development harness]]:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        AGENT SECURITY ENCLOSURE                        │
 ├────────────────────────────────────────────────────────────────────────┤
-│ 1. EPHEMERAL SANDBOXING: MicroVMs (Firecracker) or isolated containers │
-│    instantiated per task and destroyed immediately upon completion.    │
+│ 1. EPHEMERAL SANDBOXING: MicroVMs or isolated containers instantiated  │
+│    per task and destroyed immediately upon completion.                 │
 │ 2. NETWORK EGRESS FILTERING: Block outbound internet access except to  │
 │    whitelisted package registries, source control, and model APIs.     │
 │ 3. CREDENTIAL ISOLATION: Inject short-lived, scoped tokens (OIDC);     │
@@ -107,7 +121,7 @@ Deploying agents to cloud infrastructure requires defense-in-depth isolation:
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-By isolating the executor into disposable execution sandboxes, enterprises unlock autonomous, long-running agent workflows without exposing corporate networks to supply-chain or prompt-injection vulnerabilities.
+By isolating the executor into disposable execution sandboxes, engineering organizations unlock autonomous, long-running agent workflows without exposing internal networks to supply-chain or prompt-injection vulnerabilities.
 
 ---
 
