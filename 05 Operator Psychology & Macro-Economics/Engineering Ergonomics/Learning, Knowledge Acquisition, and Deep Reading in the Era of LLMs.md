@@ -2,7 +2,7 @@
 title: Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs
 tags:
   - learning
-  - epistemology
+  - knowledge-acquisition
   - cognitive-ergonomics
   - personal-models
   - deep-reading
