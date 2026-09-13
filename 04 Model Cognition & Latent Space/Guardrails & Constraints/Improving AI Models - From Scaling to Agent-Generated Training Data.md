@@ -37,7 +37,7 @@ aliases:
 |  [Problem Formulation] ──► [Internal Thought Chain / Tree-of-Thought] ──► [Verified Deduction]     |
 |                            (Process Reward Models score intermediate steps before output)          |
 |                                                                                                    |
-|  PHASE 4: AGENT TRAJECTORY LEARNING (Active Evolutionary Epistemology)                             |
+|  PHASE 4: AGENT TRAJECTORY LEARNING (Empirical Verification & Discovery)                          |
 |  [Engineering Goal] ──► [Attempt] ──► [Compiler/Test Error] ──► [Diagnostic] ──► [Verified Pass]   |
 |                         ▲                                                               │          |
 |                         └──────── Continuous RL on Verified Trajectories ───────────────┘          |
