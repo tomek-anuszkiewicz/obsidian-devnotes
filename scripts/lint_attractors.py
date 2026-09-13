@@ -26,7 +26,7 @@ VAULT_ROOT = Path(__file__).resolve().parent.parent
 
 # 1. Banned / Quarantined Jargon across ALL public notes
 QUARANTINED_JARGON = [
-    (r"\bepistemic\w*\b", "Replace academic 'epistemic' with standard engineering terms (e.g. knowledge drift, cognitive burden, authoritative validation, knowledge diff)."),
+    (r"\bepistem\w*\b", "Replace academic 'epistemic/epistemological' with standard engineering terms (e.g. knowledge drift, cognitive burden, authoritative validation, knowledge diff)."),
     (r"\bteleological\w*\b", "Avoid inflated philosophical term 'teleological'; describe intentionality or design goals directly."),
     (r"\bhardware[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic attractor 'hardware sympathy/empathy'. Replace with 'hardware-aligned', 'substrate alignment', or 'cache-conscious'."),
     (r"\b(?:substrate|engine|cache|execution)[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic sympathy/empathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),

@@ -3,7 +3,7 @@ title: Preamble — Scope, Empirical Grounding, and Evolution of This Vault
 tags:
   - meta
   - methodology
-  - epistemology
+  - empirical-methods
   - philosophy
 aliases:
   - Preamble
@@ -55,5 +55,5 @@ The breadth, depth, and inventory of topics captured here is **explicitly non-st
 
 - **[[_Explore]]**: Central index, active research backlog, and map of the 7 Canonical Hub Notes.
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The core conceptual taxonomy framing all notes from code architecture and hardware execution to engineering psychology.
-- **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: The epistemology of hands-on empiricism versus detached, circular theory.
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: The operational value of hands-on empiricism versus detached, circular theory.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Recording proven dead-ends and rejected abstractions derived from direct experience.

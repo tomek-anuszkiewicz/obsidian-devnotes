@@ -66,7 +66,7 @@ When autonomous reasoning models become the primary producers of implementation 
   └── Code as Compiled Artifact (In-Flight Living Docs, Ephemeral Syntax)
 ```
 
-This stack organizes knowledge not by transient framework brand names, but by **epistemological layer of authority**: from the physical silicon and database engines at the base to human cognitive governance at the apex.
+This stack organizes knowledge not by transient framework brand names, but by **foundational layers of authority**: from the physical silicon and database engines at the base to human cognitive governance at the apex.
 
 ---
 
