@@ -28,8 +28,8 @@ VAULT_ROOT = Path(__file__).resolve().parent.parent
 QUARANTINED_JARGON = [
     (r"\bepistemic\w*\b", "Replace academic 'epistemic' with standard engineering terms (e.g. knowledge drift, cognitive burden, authoritative validation, knowledge diff)."),
     (r"\bteleological\w*\b", "Avoid inflated philosophical term 'teleological'; describe intentionality or design goals directly."),
-    (r"\bhardware\s+sympathy\b", "Banned synthetic attractor 'hardware sympathy'. Replace with 'substrate alignment', 'hardware reality', or 'low-level execution efficiency'."),
-    (r"\b(?:substrate|engine|cache|execution)\s+sympathy\b", "Banned synthetic sympathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),
+    (r"\bhardware[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic attractor 'hardware sympathy/empathy'. Replace with 'hardware-aligned', 'substrate alignment', or 'cache-conscious'."),
+    (r"\b(?:substrate|engine|cache|execution)[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic sympathy/empathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),
 ]
 
 # 2. Hardware terms quarantined to Layer 1 (Substrate & Mechanical Sympathy)
