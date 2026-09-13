@@ -60,19 +60,19 @@ When autonomous reasoning models become the primary producers of implementation 
          ▲
          │ Enforces mathematical and empirical correctness gates
          ▼
-  LAYER 1: SUBSTRATE & MECHANICAL SYMPATHY
+  LAYER 1: CODE ARCHITECTURE & HARDWARE EXECUTION
   ├── Hardware & Execution Engines (Hardware & Software Engine Efficiency, Zero-Allocation Paths)
   ├── Structural Isolation (1:1 Operation-to-File Layout, Flat Dispatch)
   └── Code as Compiled Artifact (In-Flight Living Docs, Ephemeral Syntax)
 ```
 
-This stack organizes knowledge not by transient framework brand names, but by **epistemological layer of authority**: from the physical silicon at the base to human cognitive governance at the apex.
+This stack organizes knowledge not by transient framework brand names, but by **epistemological layer of authority**: from the physical silicon and database engines at the base to human cognitive governance at the apex.
 
 ---
 
-## Layer 1: Substrate & Mechanical Sympathy
+## Layer 1: Code Architecture & Hardware Execution
 
-At the foundational layer lies physical reality: the CPU instruction pipeline, branch predictors, cache hierarchies (L1, L2, L3), and memory bandwidth.
+At the foundational layer lies physical and system reality: CPU execution pipelines, cache hierarchies, memory allocations, database query planners, and modular codebase structure.
 
 ### Core Architectural Invariants:
 1. **The Training Paradox**: LLMs were trained on public GitHub repositories authored by humans who prioritized typing economy over hardware execution efficiency (heavy Object-Oriented polymorphism, deep inheritance hierarchies, reflection, and runtime dynamic dependency injection). When an agent produces code without guidance, it reproduces these anti-patterns.
@@ -155,7 +155,7 @@ The 5-Layer Stack operates as a continuous, bidirectional cybernetic loop:
 
 ## Relationship to the Knowledge Graph
 
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: The canonical anchor for Layer 1 (Substrate & Mechanical Sympathy); formalizes code layout for machine execution.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: The canonical anchor for Layer 1 (Code Architecture & Hardware Execution); formalizes code layout for machine execution.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The canonical anchor for Layer 2 (Harness, Governance & Verification); defines the deterministic execution boundary.
 - **[[Testing in the Model, Agent, LLM Era]]**: The verification cornerstone of Layer 2; establishes deterministic test suites as living architectural blueprints.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: The canonical anchor for Layer 3 (Runtime Mesh & Observability); formalizes conversational telemetry and runtime supervisory agents.

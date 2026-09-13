@@ -37,8 +37,8 @@ The topics addressed within these notes focus exclusively on areas where the aut
 
 A foundational commitment of this vault is **the avoidance of empty, detached theory**:
 - We deliberately avoid speculative discussions about abstract architectures that have no empirical anchor in real hardware, compilers, operating systems, or running software.
-- Concepts must survive contact with reality: mechanical sympathy, memory and cache dynamics, execution profilers, deterministic test harnesses, and actual operational failures.
-- Every architectural claim is held accountable to substrate behavior (as outlined in [[The 5-Layer System Stack for Agentic Software Engineering]]).
+- Concepts must survive contact with reality: memory and CPU cache realities, database execution plans, profilers, deterministic test harnesses, and actual operational failures.
+- Every architectural claim is held accountable to real hardware, database, and system runtime behavior (as outlined in [[The 5-Layer System Stack for Agentic Software Engineering]]).
 
 ---
 
@@ -54,6 +54,6 @@ The breadth, depth, and inventory of topics captured here is **explicitly non-st
 ## Relationship to the Knowledge Graph
 
 - **[[_Explore]]**: Central index, active research backlog, and map of the 7 Canonical Hub Notes.
-- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The core conceptual taxonomy framing all notes from substrate mechanics to operator psychology.
+- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: The core conceptual taxonomy framing all notes from code architecture and hardware execution to engineering psychology.
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: The epistemology of hands-on empiricism versus detached, circular theory.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Recording proven dead-ends and rejected abstractions derived from direct experience.
