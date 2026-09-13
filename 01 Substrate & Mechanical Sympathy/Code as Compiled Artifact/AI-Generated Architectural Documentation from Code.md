@@ -12,6 +12,8 @@ aliases:
   - Extracting Architecture from Code with LLMs
 ---
 
+# AI-Generated Architectural Documentation from Code
+
 ## Idea
 
 LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code—a vital tool when [[Refactoring Legacy Systems with AI Agents|refactoring legacy systems with AI agents]].
