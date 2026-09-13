@@ -35,7 +35,7 @@ aliases:
 │   │ Conversational UI   │  │ Auto-indexed Drive, │  │ Bring-Your-   │  │
 │   │ Multimodal reasoning│  │ Gmail, Photos, Docs │  │ Own-Brain     │  │
 │   │ Streaming chat      │  │ Continuous semantic │  │ to IDEs, CLIs,│  │
-│   │ Voice interaction   │  │ retrieval substrate │  │ third-party UI│  │
+│   │ Voice interaction   │  │ retrieval engine    │  │ third-party UI│  │
 │   └─────────────────────┘  └─────────────────────┘  └───────────────┘  │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
@@ -57,7 +57,7 @@ The convergence of personal cloud subscriptions with developer API platforms fun
 
 1. **The Collapse of the Dual-Market Illusion**: The historical divide between consumer chat subscriptions ($20/month) and metered developer API consoles was an artifact of early commercial packaging. Single personal subscription tiers (e.g., Google One AI Premium, unified developer plans) now back both interactive chat and programmatic API tokens.
 2. **The "Bring Your Own Brain" (BYOB) Architecture**: Third-party applications cease acting as token resellers. Instead of bundling AI compute into expensive subscription add-ons ($15–$30/app), applications become focused workflow shells where users inject their personal API credentials or OAuth agent tokens.
-3. **Ambient, Zero-Click Personal RAG**: Cloud storage hyperscalers (Google Drive, Microsoft OneDrive, Apple iCloud) operate [[Introduction to RAG|retrieval-augmented generation]] as ambient substrate. Because user files, spreadsheets, emails, and photos are already stored natively, indexing occurs continuously in the background without requiring manual document uploads or external vector sync pipelines.
+3. **Ambient, Zero-Click Personal RAG**: Cloud storage hyperscalers (Google Drive, Microsoft OneDrive, Apple iCloud) operate [[Introduction to RAG|retrieval-augmented generation]] as ambient infrastructure. Because user files, spreadsheets, emails, and photos are already stored natively, indexing occurs continuously in the background without requiring manual document uploads or external vector sync pipelines.
 4. **The Annihilation of the SaaS Token Markup**: Startups that merely wrapped model APIs with a 300% markup cannot survive against BYOB applications. Software value shifts decisively back to **domain modeling, mathematical invariants, UI ergonomics, and transaction execution**.
 5. **Data Gravity as an Unassailable Competitive Moat**: Pure-play frontier model vendors face extreme pressure from vertically integrated ecosystem platforms. A model with slightly higher benchmark scores cannot overcome an agent that possesses ambient, zero-click access to a user's multi-year document history, calendar, and email threads.
 6. **Capability-Based Authorization Scoping**: Simple monolithic API keys are inadequate for personal AI subscriptions. Runtimes require granular, scoped capability tokens (analogous to macaroons or OAuth scopes) ensuring a third-party photo editor cannot query private financial records via the ambient RAG layer.
