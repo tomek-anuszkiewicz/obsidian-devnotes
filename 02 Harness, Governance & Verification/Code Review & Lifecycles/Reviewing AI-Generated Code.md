@@ -10,221 +10,160 @@ tags:
 aliases:
   - AI Code Review Practices
   - Verification of Agent Diffs
+  - Risk-First Code Review
+  - Human Mental Models in Agent Code
 ---
 
 # Reviewing AI-Generated Code
 
-> [!IMPORTANT]
-> **The Cognitive Duty of Code Review**: In the agentic era, code review ceases to be a syntax or formatting gatekeeper—linters and compilers already solve mechanical checks. **Code review is the mandatory cognitive checkpoint where the human engineer constructs and internalizes their mental model of the system.** When reviewers fall into the trap of rubber-stamping clean, green-tested diffs without understanding internal state transitions and invariants, the team faces total paralysis ("dead in the water") the moment a production outage exceeds the model's reasoning horizon.
+An AI coding agent can generate 500 lines of plausible-looking code in thirty seconds. A human engineer cannot review that code with genuine understanding in thirty seconds.
+
+As coding agents become standard in development workflows, **human attention becomes the critical bottleneck**. 
+
+The purpose of code review has fundamentally changed. Code review is no longer a cosmetic syntax check or a place for formatting debates—automated formatters and linters handle mechanical rules. 
+
+Instead, **code review is the mandatory checkpoint where human engineers build and maintain their mental model of the system**. If engineers rubber-stamp pull requests because the code looks clean and the tests are green, the team loses comprehension of its own software—leaving them helpless when a production incident strikes.
 
 ```text
-Synthetic Code Generation (Fast, Zero-Friction)
-                       ↓
-        Passes Test Oracle & Linters
-                       ↓
-   [ THE ILLUSION OF UNDERSTANDING TRAP ] ──► Rubber-stamped without mental model
-                       ↓                                   ↓
-            Production Incident Strikes            Agent Hits Insolubility Horizon
-                       ↓                                   ↓
-        Human Summoned to Intervene ◄─────────────── Agent Thrashes / Hallucinates
-                       ↓
-   HUMAN HAS NO MENTAL MODEL → TOTAL SYSTEMIC PARALYSIS
+Fast Agent Code Generation (Zero Friction)
+                  │
+                  ▼
+   Passes Automated Tests & Linters
+                  │
+                  ▼
+ [ THE ILLUSION OF UNDERSTANDING ] ──► Rubber-stamped without building mental model
+                  │                                  │
+                  ▼                                  ▼
+      Production Outage Strikes               Agent Hits Reasoning Limit
+                  │                                  │
+                  ▼                                  ▼
+      Human Engineer Summoned ◄────────────── Agent Thrashes / Hallucinates
+                  │
+                  ▼
+   ENGINEER DOES NOT UNDERSTAND THE CODE → COMPLETE OPERATIONAL DEADLOCK
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **Review as Cognitive Model Construction**: If a reviewer cannot explain the lifecycle, state mutations, and failure boundaries of the diff in their own words without looking at the LLM summary, the code must not be merged.
-2. **The Insolubility Horizon**: AI agents excel at localized patches, but suffer cognitive thrashing when faced with non-deterministic race conditions, distributed deadlocks, or contradictory invariants. The human engineer is the sole fallback.
-3. **Risk-First Order Over File-Order Traversal**: Never review diffs top-to-bottom in alphabetical file order. Audit highest-risk architectural invariants first: business rules, transaction boundaries, concurrency locks, security authorization, and external side-effects; review mechanical mapping and glue code last.
-4. **The Green-Test Mirage**: An agent can generate an implementation that satisfies 100% of unit assertions while violating domain semantics or introducing catastrophic latency degradation. Tests prove what was anticipated, not what was omitted.
-5. **Adversarial Multi-Agent Audit**: Deploy secondary, isolated agent personas with explicit skeptical directives (hunting unstated assumptions, missing negative branches, and race hazards) to guide human attention, never as the approving authority.
-
----
-
-## Human Attention Becomes the Critical Resource
-
-An agent can generate code faster than a human can honestly review it, dramatically increasing the risk of [[Software Entropy and the Zero-Friction Trap|software entropy and frictionless code sprawl]].
-
-The danger is the illusion of understanding:
-
-- code has good names,
-    
-- tests are green,
-    
-- the summary sounds convincing,
-    
-- the architecture looks familiar,
-    
-- most lines appear standard.
-    
-
-The reviewer may scan the diff without reconstructing the actual behavior.
-
-Review should therefore be organized around risk rather than file order, recognizing that [[Why Business Logic Is the Hardest Part of Agentic Coding|business logic is the hardest part of agentic coding]] and cannot be verified by surface-level syntax checks.
-
-Review first:
-
-1. business rules,
-    
-2. public contracts,
-    
-3. migrations,
-    
-4. transactions and concurrency,
-    
-5. authorization,
-    
-6. ordering of side effects,
-    
-7. acceptance tests.
-    
-
-Review mechanical mapping and boilerplate later.
-
-A useful standard is:
-
-> Before approving the change, the reviewer should be able to explain the complete new flow in their own words.
-
-If they cannot, they probably have not understood the change sufficiently.
+1. **Review as Mental Model Construction**: If a reviewer cannot explain the data flow, state mutations, and failure handling of a pull request in their own words without reading the AI summary, the code must not be merged.
+2. **Shift Focus Away from Syntax Policing**: Linters, static analyzers, and compilers enforce formatting and syntax. Human review energy must be reserved exclusively for domain semantics, concurrency, security boundaries, and data integrity.
+3. **Risk-First Review Order**: Never review a diff alphabetically by filename. Audit the highest-risk components first: domain logic, database migrations, transaction boundaries, authentication, and external side effects. Review boilerplate and mapping code last.
+4. **The Green-Test Illusion**: An agent can easily generate code that satisfies 100% of unit tests while completely missing a critical business edge case or introducing severe performance degradation (see [[Testing in the Model, Agent, LLM Era|test oracles and verification limits]]).
+5. **AI as Review Assistant, Not Approver**: Use a second, skeptical agent to audit diffs and surface unstated assumptions, but keep final approval authority strictly with a human engineer.
 
 ---
 
-## The "Intractable Bug" Trap: Why Reviewers Must Build a Mental Model
+## 1. The Illusion of Understanding
 
-The greatest operational failure mode in an agent-assisted team is **the illusion that green tests eliminate the need to understand how the code works**.
+The most dangerous failure mode in agentic development is skimming:
+- The variable and method names look sensible.
+- The unit tests pass in CI.
+- The pull request summary generated by the model sounds convincing.
+- The architecture resembles standard patterns.
 
-When an agent produces a clean 300-line implementation, all unit tests pass, and the PR description sounds authoritative, reviewers face immense temptation to skim the diff and approve, forgetting that [[Testing in the Model, Agent, LLM Era|test oracles can suffer from incomplete specification]]. This treats the code as an opaque black box, which can be mitigated by deploying [[LLMs as a Code Review Team|specialized agent review teams]] to challenge assumptions.
+It is remarkably easy to scroll through a diff, nod along, and click "Approve" without actually reconstructing the runtime execution flow in your head. 
 
-### When the Agent Hits the Insolubility Horizon
-Inevitably, every production system encounters failure modes that exceed an agent's reasoning capability:
-- Non-deterministic race conditions and microsecond concurrency deadlocks,
-- Latency cliffs caused by unexpected database connection pooling or cache invalidation storms,
-- Deep domain state corruption where multiple subsystem invariants contradict each other,
-- Low-level runtime quirks (GC pauses, memory fragmentation, socket exhaustion).
+This creates a slow-burning disaster. When an agent writes code without thorough human review, it accelerates [[Software Entropy and the Zero-Friction Trap|software entropy and frictionless code sprawl]]. Within a few months, the repository becomes an **alien codebase**: an application where every file compiles and passes tests, but no living engineer understands how the pieces interact or why specific decisions were made.
 
-When faced with these problems, **an agent begins to thrash**. Because it lacks holistic architectural awareness, it generates superficial patches: wrapping calls in blind retries, adding arbitrary mutexes, masking null references, or introducing subtle semantic regressions that worsen the root problem.
+When an inevitable production issue arises that exceeds the model's reasoning window—such as a distributed race condition, database connection pool exhaustion, or inconsistent state transitions—the agent will thrash and fail. If the human engineer also abdicated understanding during review, the team is completely stranded.
 
-### The Systemic Impasse: "Dead in the Water"
-If the human engineer also abdicated understanding during code review, the team faces an existential operational deadlock:
+---
+
+## 2. Risk-First Review Order
+
+Standard code review tools display files in alphabetical order. Reviewing an agent's pull request alphabetically is a mistake: it forces you to spend your freshest mental energy on trivial configuration files and generated DTOs before you ever see the core business logic.
+
+Always review diffs in order of operational risk:
 
 ```text
-Production incident occurs
-       ↓
-Agent attempts fix → Agent thrashes / hallucinates (hits reasoning horizon)
-       ↓
-Human engineer summoned to intervene
-       ↓
-Human has zero mental model of the code (rubber-stamped an opaque diff)
-       ↓
-Total engineering paralysis ("Dead in the water")
+1. Domain Rules & State Mutations ──► Did the agent understand the business invariants?
+               │
+               ▼
+2. Public Contracts & Migrations   ──► Does this break API compatibility or schema locks?
+               │
+               ▼
+3. Transactions & Concurrency      ──► Are locks, isolation levels, and retries safe?
+               │
+               ▼
+4. Failure Boundaries & Timeouts   ──► What happens when downstream services fail?
+               │
+               ▼
+5. Test Coverage Quality           ──► Do tests verify real behavior or just pass vacously?
+               │
+               ▼
+6. Glue Code & Boilerplate         ──► DTO mappings, DI registration, trivial adapters.
 ```
 
-### Review as Cognitive Duty: The Minimum Viable Mental Model
-Code review is not a formatting gatekeeper; compilers and linters already handle syntax. 
-
-**Code review is the mandatory cognitive checkpoint where the engineer constructs and refreshes their internal mental model of the system.**
-
-A reviewer must never approve an agentic pull request unless they can independently explain:
-1. **The Lifecycle and State Flow**: How do requests enter, mutate state, and exit the component?
-2. **Invariants and Ownership**: What guarantees must hold true under all circumstances, and who owns the data?
-3. **Failure Boundaries**: What happens when an external dependency times out, drops connection, or returns malformed data?
-4. **Concurrency Assumptions**: Is the code re-entrant, thread-safe, and idempotent?
-
-If you cannot sketch the architecture and failure paths without looking at the LLM summary, do not merge the code. When the agent fails in production, the human engineer is the only fallback.
-
-### Review as Knowledge Acquisition: Learning the System Without Tactile Implementation
-In traditional software engineering, developers learned a codebase organically through **tactile implementation**—the physical friction of typing lines, wrestling with syntax, and writing unit tests etched the architecture into biological memory.
-
-In the agentic era, implementation labor is delegated to models. This creates a severe epistemological vacuum: **if an engineer no longer authors the code, how do they learn how the system works and maintain cognitive control?**
-
-The human mental model cannot be maintained through passive observation. Instead, knowledge acquisition shifts entirely to two synchronized cognitive modalities:
-1. **Top-Down Grounding Through Living Documentation**:
-   Before reviewing diffs or commissioning features, the engineer digests and calibrates structured architectural specifications (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]). This grounds the reviewer in domain topologies, resource budgets, and operational invariants without drowning in thousands of lines of intermediate syntax.
-2. **Bottom-Up Assimilation Through Code Review**:
-   Code review is transformed from an administrative approval gate into **the primary pedagogical ritual of engineering**. Interrogating a diff is the sole moment where the engineer actively maps abstract specification onto concrete mechanical state transitions. By tracing how data enters, mutates, and exits, the engineer forces their neural pathways to assimilate the changes.
-
-#### Preventing the "Alien Codebase" Crisis (The Ship of Theseus)
-If a team relies exclusively on green-check test suites and allows agents to author and commit code without active human review, the repository undergoes a quiet **knowledge drift**. Within months, every module is syntactically sound and passes unit tests, yet the entire system has morphed into an **alien artifact**—a software estate where no living engineer understands why certain invariants exist or where hidden coupling lies.
-
-Code review is the indispensable human defense against the Alien Codebase crisis:
-- It maintains human intellectual stewardship over the system's state space.
-- It prevents the loss of tacit operational knowledge.
-- It ensures that when an emergency exceeds the agent's reasoning horizon, a human operator is already cognitively synchronized and capable of decisive manual intervention.
+By prioritizing the review this way, you ensure that even if review fatigue sets in, the dangerous boundaries have received full scrutiny.
 
 ---
 
-## Use Agents to Support Review, Not Replace It
+## 3. The Four Questions Every Reviewer Must Answer
 
-A separate agent session can prepare:
+Before approving an agent-generated change, a reviewer should be able to answer four concrete questions without consulting the AI's pull request summary:
 
-- a map of the changed behavior,
-    
-- assumptions made by the implementation,
-    
-- high-risk files,
-    
-- missing edge cases,
-    
-- differences between old and new behavior,
-    
-- potential race conditions,
-    
-- test gaps,
-    
-- suspicious abstractions.
-    
+1. **How does data enter, transform, and leave this component?** Trace the primary execution path from entry point to persistence.
+2. **What invariants must always hold true?** What constraints prevent corrupted data from being stored?
+3. **What happens on partial failure?** If an external HTTP call or database write fails halfway through, does the system leave orphaned records or retry safely?
+4. **Is the operation thread-safe and idempotent?** Can two concurrent requests process the same record without race conditions?
 
-A skeptical review prompt can ask:
+If the reviewer cannot answer these questions, they have not truly reviewed the code—they have only confirmed that it compiles.
+
+---
+
+## 4. Using Skeptical AI Personas for Review
+
+While an agent should never be the final approving authority on a pull request, a secondary agent makes an excellent **adversarial reviewer**.
+
+Because the generating agent is biased toward justifying its own output, run a separate agent session with a specifically skeptical review prompt:
 
 ```text
-Review this diff as a critical senior engineer.
+Review this pull request diff as a critical staff engineer. Do NOT summarize what the code 
+does. Instead, actively search for vulnerabilities and failure modes:
 
-Look for:
-- incorrect business assumptions,
-- architecture violations,
-- race conditions,
-- transaction boundary problems,
-- incorrect idempotency,
-- compatibility issues,
-- security problems,
-- missing negative cases,
-- tests that pass without proving the requirement,
-- unnecessary abstraction.
+1. Unstated assumptions about input data or external system availability.
+2. Concurrency hazards: race conditions, missing locks, or unhandled retry storms.
+3. Transaction boundaries: partial writes, missing rollbacks, or leaky state.
+4. Test weaknesses: tests that assert trivialities while ignoring boundary edge cases.
+5. Inappropriate abstractions: unnecessary wrapper classes or speculative indirection.
+
+List only concrete risks and questions for the author.
 ```
 
-The second agent is an attention aid, not the final authority.
+This skeptical pass acts as a lens, highlighting potential landmines so the human reviewer can focus their attention where it matters most.
 
 ---
 
-## Practical Working Rules
+## 5. Reviewing the Tests as Critically as the Code
 
-### For review
+Coding agents are remarkably adept at writing tests that pass without actually verifying the intended behavior. Common traps to look for include:
+- **Tautological Assertions**: Tests that assert mock outputs against hardcoded mock expectations, proving only that the mock framework works.
+- **Missing Negative Cases**: An agent often writes five tests for the happy path and zero tests for network timeouts, malformed payloads, or permission denials.
+- **Overly Permissive Matchers**: Using assertions that check only for non-null objects or HTTP 200 responses without validating that the payload contents match domain rules.
 
-- Review risk, not file order.
-    
-- Start with business meaning.
-    
-- Inspect tests as critically as production code.
-    
-- Ask what assumption could make the whole solution wrong.
-    
-- Require the reviewer to explain the flow independently.
-    
-- Keep diffs small enough to understand honestly.
-    
-- Protect focused review time.
+As emphasized in [[Why Business Logic Is the Hardest Part of Agentic Coding|verifying agent business logic]], the tests are your primary specification. If the agent's tests are shallow, its implementation guarantees are worthless.
+
 ---
 
-## Relationship to the Knowledge Graph
+## Practical Rules for Teams
 
-- **[[LLMs as a Code Review Team]]**: How automated multi-agent reviewer teams assist humans by conducting initial adversarial checks.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: The upstream specification framework providing top-down grounding for code review.
-- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: Codifying tribal review knowledge into continuous automated prompts.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Diagnosing when an over-constrained agent enters a thrashing loop between competing review rules.
-- **[[Developing Features with AI Coding Agents]]**: Ensuring specifications and acceptance tests are reviewed before code implementation.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Focusing review energy on subtle domain misinterpretations rather than syntax.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Explores the cosmetic style trap where human reviewers reject machine code over harmless syntactic explicitness.
-- **[[AI Changes the Role and Training of Software Engineers]]**: How the engineering role elevates toward skeptical review, risk control, and architectural design.
-- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The cognitive fatigue and vigilance penalty of full-time agent diff auditing.
+1. **Never review alphabetically**: Start with database migrations and domain entities; leave controllers and adapters for the end.
+2. **The "Explain It First" rule**: Before approving, write a one-sentence summary in your own words explaining how the core state transition works.
+3. **Keep diffs small**: An agent can generate 1,500 lines in a single prompt. Split features into small, cohesive slices so human reviewers can maintain genuine comprehension.
+4. **Automate formatting and linting**: If a review comment is about indentation, brace style, or import order, fix your linter instead of wasting reviewer time.
+5. **Treat review as system learning**: Reviewing agent diffs is how engineers learn the codebase when they are no longer writing every line by hand. Treat it as the primary engineering discipline.
+
+---
+
+## Related Notes
+
+- **[[LLMs as a Code Review Team]]**: Practical workflows for configuring multi-agent reviewer teams to assist human auditors.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How maintaining lightweight documentation during development provides the context needed for effective review.
+- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: The decision framework for handling review feedback: whether to patch, regenerate, or fix the spec.
+- **[[Testing in the Model, Agent, LLM Era]]**: Why automated tests are essential for verification, but insufficient as a substitute for human architectural understanding.
+- **[[Software Entropy and the Zero-Friction Trap]]**: How rubber-stamping effortless code generation leads directly to unmaintainable systems.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules and business edge cases require human review rather than surface-level syntax checks.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Managing the cognitive fatigue and vigilance required when reviewing high volumes of machine-generated code.
+- **[[AI Changes the Role and Training of Software Engineers]]**: How engineering roles are shifting from typing code to system design, verification, and critical review.
