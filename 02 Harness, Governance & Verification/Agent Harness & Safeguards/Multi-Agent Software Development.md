@@ -58,16 +58,16 @@ aliases:
 
 Engineering multi-agent coding fleets requires treating autonomous agents not as chatbot assistants, but as stochastic distributed workers operating under strict system constraints:
 
-1. **The Distributed Systems Shift**: Multi-agent engineering is governed by distributed systems theory rather than prompt engineering. Reliability stems from message passing, idempotent operations, state synchronization, and failure containment.
+1. **The Distributed Systems Shift**: Multi-agent engineering is governed by distributed systems theory rather than prompt engineering. Reliability stems from message passing, idempotent operations, state synchronization, and failure containment across [[Agent Deployment and Execution Models|deployment models]].
 2. **Context Isolation as Quality Control**: Large tasks degrade when forced into a single monolithic context window. Partitioning problems across multiple agents with disjoint or filtered contexts prevents "context pollution," token thrashing, and prompt distraction.
 3. **Transactional Worktree Isolation**: Multiple agents writing to a shared filesystem produce catastrophic race conditions. Every autonomous worker must execute inside an isolated sandbox, container, or dedicated **Git worktree**, using version control as a transactional boundary.
-4. **Adversarial Verification Separation**: Implementers must never validate their own output. Models suffer from self-confirmation bias and anchor on their own assumptions. Verification requires independent reviewer agents that inspect only the living specification, diff, and deterministic oracle output without exposure to the implementer's thought trace.
+4. **Adversarial Verification Separation**: Implementers must never validate their own output. Models suffer from self-confirmation bias and anchor on their own assumptions. Verification requires independent [[LLMs as a Code Review Team|adversarial reviewer agents]] that inspect only the living specification, diff, and deterministic oracle output without exposure to the implementer's thought trace.
 5. **Horizontal Exploration vs. Vertical Implementation**: Multi-agent architectures deploy different communication topologies per phase: *unconnected parallel nodes* for exploring diverse architectural hypotheses without premature convergence, and *hierarchical DAGs* for deterministic implementation slices.
-6. **Heterogeneous Model Allocation**: System efficiency demands matching task profiles to model tiers. Frontier reasoning models govern architecture and task planning; fast, coding-specialized weights execute isolated file edits; and deterministic compilers, linters, and test runners provide absolute boundary validation.
+6. **Heterogeneous Model Allocation**: System efficiency demands matching task profiles to model tiers in [[Model Access and Execution Infrastructure|model execution infrastructure]]. Frontier reasoning models govern architecture and task planning; fast, coding-specialized weights execute isolated file edits; and deterministic compilers, linters, and test runners provide absolute boundary validation.
 7. **Adaptive Compute Allocation**: Compute budgets must scale dynamically with problem ambiguity. Simple tasks execute via a single direct agent; ambiguous tasks spin up competitive exploratory fleets; and high-risk refactorings spawn multi-agent red-teaming ensembles.
 8. **Skills as Composable Worker Capabilities**: Agent roles are decoupled from capabilities: $\text{Agent (Role)} + \text{Skill (Capability)} + \text{Task (Objective)}$. Reusable skills (`SKILL.md`, scripts, domain rules) allow generalist workers to instantly instantiate as specialized database, security, or migration engineers.
-9. **Blast Radius Containment**: Autonomous workers operate under fail-stop semantics. A crashing agent, infinite loop, or hallucinated file modification is discarded by terminating its process and pruning its temporary worktree, guaranteeing zero corruption to the repository mainline.
-10. **The Human as High-Level Orchestrator**: The software engineer transitions from a manual typist of source code into a technical lead and systems architect—defining domain constraints, choosing exploration strategies, arbitrating conflicting agent hypotheses, and approving final integration merges.
+9. **Blast Radius Containment**: Autonomous workers operate under fail-stop semantics. A crashing agent, infinite loop, or hallucinated file modification is discarded by terminating its process and pruning its temporary worktree, guaranteeing zero corruption to the repository mainline inside the [[Agentic Coding Harness and Controlled Development Workflows|execution harness]].
+10. **The Human as High-Level Orchestrator**: The software engineer transitions from a manual typist of source code into a technical lead and systems architect—defining domain constraints, choosing exploration strategies, arbitrating conflicting agent hypotheses, and approving final integration merges in alignment with [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|high-bandwidth conductor patterns]].
 
 ---
 
@@ -197,7 +197,7 @@ The codebase evolves from a passive repository of code into an active operationa
 
 ---
 
-## Substrate, Workspace Isolation & Failure Containment
+## Workspace Isolation, Transactional Sandboxes & Failure Containment
 
 Executing multiple coding agents concurrently against a single working tree causes immediate filesystem corruption:
 
@@ -320,3 +320,4 @@ The human engineer operates as a **Technical Lead and Architect**, directing an 
 - **[[Agent Deployment and Execution Models]]**: Detailed operational runtimes and containerization topologies for executing concurrent agent processes.
 - **[[Introduction to Workflow Orchestration]]**: State-machine orchestration, durable execution patterns, and message passing for long-running agent graphs.
 - **[[Testing in the Model, Agent, LLM Era]]**: The ironclad, deterministic verification oracle that prevents cascading multi-agent hallucinations from reaching production.
+- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The operational pattern for humans orchestrating parallel agent fleets via voice and friction codification.
