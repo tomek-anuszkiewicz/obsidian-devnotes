@@ -103,14 +103,14 @@ Paradoxically, being trained primarily on open-source repositories is almost a f
 ## Model Prior Probabilities & Context Infrastructure
 
 ### Refactoring Code Not Designed for Agents: Where Hidden Abstractions Cause Agent Errors
-When an autonomous agent is tasked with maintaining or refactoring an existing codebase that was not intentionally engineered for machine maintainers, it encounters a severe architectural friction boundary. 
+When an autonomous agent is tasked with maintaining or refactoring an existing codebase that was not intentionally engineered for machine maintainers, it runs into immediate, severe friction. 
 
 Human-centric codebases frequently conceal execution mechanics behind layers of indirection—ambient dependency injection containers, runtime interceptors, implicit lifecycle hooks, and fragmented abstractions designed purely to reduce human keystrokes. This lack of direct semantic expression creates two compounding failure modes:
 
 1. **The Cognitive Failure Mode (Hallucinated Invariants & Subtle Regressions)**:
    Because an agent's reasoning is bounded by its active context window, it cannot reliably hold dozens of disconnected framework layers in mind while modifying a local function. When critical business intent and state invariants are implied rather than stated plainly, the agent is forced to extrapolate missing mechanics using its generic training priors. The agent generates code that compiles cleanly and passes localized smoke tests, but silently breaks unexpressed business rules or transactional guarantees (see [[Why Business Logic Is the Hardest Part of Agentic Coding|why business logic is the hardest part of agentic coding]]). This is why [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|hidden abstractions become toxic in agent-maintained code]].
 
-2. **The Substrate Inefficiency Failure Mode (Compounding Hardware Overhead)**:
+2. **The Hardware Inefficiency Trap (Compounding Runtime Overhead)**:
    Code engineered for human brevity often relies on heavy runtime metaprogramming, dynamic dispatch, and speculative heap-allocated wrappers. Not only do these layers obscure the agent's view of real execution paths, but they also produce sluggish, cache-unfriendly runtime performance. Because data transformations are buried inside opaque frameworks, an agent refactoring such a subsystem cannot easily perform hardware-level optimizations (such as memory layout flattening or zero-allocation batching) without risking systemic breakage, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy]].
 
 Without explicit architectural constraints anchored via [[In-Flight Documentation as the Primary Framework for Coding Agents|in-flight documentation]], asking an agent to refactor an indirect, human-optimized codebase turns refactoring into a stochastic hazard. This reinforces why modern engineering must prioritize [[Refactoring Legacy Systems with AI Agents|automated straightening]] of legacy spaghetti into flat, explicit, machine-legible operational units.
@@ -206,7 +206,7 @@ From a traditional aesthetic viewpoint, this looks verbose. From an agentic view
 
 ## The Evolution of Code Review: The Meeting Point of Two Worlds
 
-Code review becomes the critical friction boundary where two distinct paradigms collide:
+Code review is the primary friction point where machine-generated code clashes with human habits:
 
 | Dimension | The Agent Optimizes For | The Human Reviewer Instinctively Wants |
 | :--- | :--- | :--- |
