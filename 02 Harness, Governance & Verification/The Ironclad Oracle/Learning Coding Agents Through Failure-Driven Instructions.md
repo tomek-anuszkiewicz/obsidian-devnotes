@@ -17,239 +17,242 @@ aliases:
 
 # Learning Coding Agents Through Failure-Driven Instructions
 
-> [!IMPORTANT]
-> **The Core Thesis**: Instead of treating agent instructions as static prompts or appending ad-hoc rules into a bloated config file, **instructions must be treated as versioned, testable engineering artifacts that evolve through failure analysis**. The ultimate goal of an autonomous harness is not merely to fix broken code through repeated brute-force loops, but to maximize **First-Pass Success** by building an organizational **procedural memory** that prevents entire classes of architectural and domain errors.
+When developers get frustrated with a coding agent making mistakes, their instinctive reaction is to either manually fix the code or dump another paragraph of rules into a global prompt file. Both reactions fail over time: manual fixes teach the system nothing, and append-only instruction files quickly become bloated, contradictory, and ignored by the model.
+
+Instead of treating agent instructions as static prompts or dumping grounds for grievances, **instructions should be treated as versioned, testable engineering assets that evolve through failure analysis**. 
+
+The goal is to increase **first-pass success**: every time an agent fails, that failure should be diagnosed, generalized, and encoded into the system so that future agents avoid the entire category of mistake.
 
 ```text
-Prompt Engineering ──► Instruction Engineering ──► Eval-Driven Optimization ──► Organizational Procedural Memory
+Ad-hoc Prompting ──► Project Instructions ──► Eval-Driven Rules ──► Organizational Procedural Memory
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **The Dual Optimization Loop**: Software development with coding agents operates across two nested loops:
-   - **Inner Loop (Code Level)**: The agent repairs transient implementation defects against deterministic compiler, lint, and test signals.
-   - **Outer Loop (Instruction Level)**: The system analyzes post-task failures and human review dissents, extracts generalizable lessons, and refines repository instructions so future agents avoid the mistake entirely.
-2. **First-Pass Success as the Sovereign Metric**: Raw eventual success is an insufficient metric; brute-forcing seven repair loops wastes tokens and human attention. Systems optimize for:
-   $$\text{Utility} = \text{Implementation Quality} - \sum (\text{Iterations} + \text{Token Overhead} + \text{Review Friction} + \text{Regression Risk})$$
-3. **Instructions as Code (Not Append-Only Sprawl)**: Naively appending every failure to a flat instructions file leads to context saturation, contradictory rules, and rule oscillation. Instructions must be versioned, tested against regression suites, compressed, and pruned.
-4. **Dynamic Behavioral Retrieval (RAG for Agent Steering)**: Rather than loading hundreds of accumulated lessons into every prompt, systems dynamically retrieve relevant operational guidelines based on task domain, architectural layer, and touched subsystems.
-5. **High-Leverage Human Review**: Human review shifts from repetitive mechanical linting to authoritative negative knowledge curation. When a human explains a subtle domain or architectural error once, the system formalizes it into persistent instructions and tests, compounding organizational capability over time.
+1. **The Dual Optimization Loop**: Agent-assisted development operates on two distinct loops:
+   - **Inner Loop (Code Level)**: The agent writes and fixes code against immediate compiler, lint, and test signals.
+   - **Outer Loop (Instruction Level)**: The engineering team analyzes mistakes that escaped the inner loop, extracting reusable rules so future agents get it right on the first try.
+2. **First-Pass Success as the Primary Metric**: Eventual success after eight repair loops is expensive in both token cost and human attention. Systems should optimize for getting acceptable code on turn one.
+3. **Instructions as Code**: Never let instructions become an uncurated list of ad-hoc rules. They must be versioned, tested against regression suites, compressed, and pruned when obsolete.
+4. **Targeted Rule Retrieval (Behavioral RAG)**: Rather than loading hundreds of project rules into every prompt, dynamically retrieve instructions based on the specific subsystem, framework, or task domain being touched.
+5. **Compounding Code Review**: When a senior engineer points out a design flaw in review, that insight should be captured once and converted into an instruction, linter rule, or test.
 
 ---
 
-## 1. The Dual Optimization Hierarchy: Inner Code vs. Outer Instruction Loops
+## 1. The Two Optimization Loops
 
 ```text
-Outer Loop: Organizational Learning (Eval-Driven Instruction Tuning)
+Outer Loop: Team Learning (Eval-Driven Instruction Tuning)
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Task Definition + Versioned Instruction Set (vN)                       │
+│ Task Spec + Versioned Instructions (vN)                                │
 │     │                                                                  │
 │     ▼                                                                  │
-│ Inner Loop: Implementation Synthesis                                   │
+│ Inner Loop: Code Generation & Immediate Feedback                       │
 │ ┌────────────────────────────────────────────────────────────────────┐ │
-│ │ Agent Synthesizes Code ──► CI / Test Oracle ──► Pass / Fail        │ │
-│ │      ▲                                                │            │ │
-│ │      └────────── Stochastic Repair Loop ──────────────┘            │ │
+│ │ Agent Generates Code ──► Linter / Compiler / Tests ──► Pass / Fail │ │
+│ │      ▲                                              │              │ │
+│ │      └────────── Local Fix Loop ────────────────────┘              │ │
 │ └────────────────────────────────┬───────────────────────────────────┘ │
-│                                  │ (Task Completed or Failed)          │
+│                                  │ (Task Complete or Stuck)            │
 │                                  ▼                                     │
-│ Analyze Root Cause Failure ──► Extract Invariant ──► A/B Eval Suite   │
+│ Diagnose Root Cause ──► Extract Invariant ──► Eval Against Past Tasks  │
 │                                  │                                     │
 │                                  ▼                                     │
-│              Promote Optimized Instruction Set (vN+1)                  │
+│              Commit Updated Instruction Set (vN+1)                     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### The Inner Loop: Automated Implementation Repair
-As examined in [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]], the baseline coding loop leverages immediate deterministic feedback:
-- Compiler and typechecker errors,
-- Deterministic unit and integration test vectors,
-- Static analysis, security linters, and architectural boundaries.
+### The Inner Loop: Local Code Repair
+The baseline coding loop relies on deterministic tools:
+- Compilers and typecheckers.
+- Unit and integration tests.
+- Linters, formatters, and dependency boundary checkers.
 
-The agent loops locally until the deterministic harness turns green. However, relying exclusively on this inner loop treats every task as an amnesic event: the agent makes the same architectural missteps on Monday that it made the previous Friday, burning compute to rediscover boundaries.
+The agent loops locally until these automated checks pass (see [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]). But if the team only relies on the inner loop, the system has no memory: an agent will make the exact same architectural mistake on Friday that it made on Monday, burning tokens and time rediscovering boundaries that were already known.
 
-### The Outer Loop: Continuous Instruction Refinement
-The outer loop abstracts beyond the immediate pull request:
-1. **Failure Ingestion**: Captures failures where the agent required multiple iterations, violated an unwritten architectural rule, or received human review corrections.
-2. **Root-Cause Generalization**: Distinguishes between localized code bugs and missing contextual constraints.
-3. **Candidate Synthesis**: Drafts candidate instruction updates or architectural non-goals (see [[Negative Knowledge and Explicit Architectural Dissents]]).
-4. **Offline Evaluation**: Tests candidate instructions against a historical suite of representative tasks to ensure the change improves first-pass yield without inducing regressions or rule oscillation.
-
----
-
-## 2. Abstracting Domain Failures: An Architectural Case Study
-
-Consider a task assigned to an autonomous coding agent:
-> *"Implement an API endpoint that queries and returns historical customer orders."*
-
-### Naive Implementation & Architectural Failure
-The agent generates a solution that passes unit tests, but violates architectural layering:
-
-```text
-[ Transport Layer (HTTP Controller / RPC Handler) ]
-                       │
-                       │ (Direct coupling: architectural violation)
-                       ▼
-         [ Persistence Layer (ORM / Database) ]
-```
-
-An automated architectural rule or human reviewer flags the PR: *Transport handlers must remain pure adapters and are forbidden from querying persistence engines directly; they must delegate to application-layer command/query handlers.*
-
-### Transforming the Failure into Procedural Memory
-
-```text
-Observed Failure:
-Transport adapter bypassed the application boundary to query database persistence directly.
-
-Underlying Architectural Defect:
-The agent lacked explicit knowledge of the repository's hexagonal / clean architecture boundaries.
-
-Extracted Boundary Invariant:
-Transport adapters (HTTP/RPC/CLI) are interface translators only. They validate transport payloads 
-and dispatch to domain application handlers; they must never import or invoke persistence gateways directly.
-```
-
-By formalizing this rule, the outer loop ensures that subsequent agents across all services generate the decoupled architecture on their very first pass:
-
-```text
-[ Transport Layer ] ──► [ Application Handler ] ──► [ Domain / Persistence ]
-```
+### The Outer Loop: Instruction Refinement
+The outer loop operates across tasks:
+1. **Log Failures**: Track where agents required multiple correction cycles, violated unwritten architectural standards, or received human review pushback.
+2. **Find the Root Cause**: Determine whether the failure was a one-off logic bug or a missing architectural constraint (see [[Negative Knowledge and Explicit Architectural Dissents]]).
+3. **Draft a Rule Update**: Formulate a concise guideline or negative constraint.
+4. **Evaluate Offline**: Test the new rule against a benchmark suite of historical tasks to confirm that it prevents the error without degrading performance on other tasks.
 
 ---
 
-## 3. The Sovereign Metric: First-Pass Success & Optimization Trade-offs
+## 2. Example: Preventing Architectural Layering Violations
 
-Raw eventual completion is an economically naive metric. An agent that reaches a solution on attempt #8 often generates bloated, defensive code while consuming excessive tokens and wall-clock time.
+Suppose an agent is assigned a straightforward task:
+> *"Add an endpoint to retrieve recent customer orders."*
 
-### Key Performance Indicators
-- **First-Pass Success Rate (FPSR)**: The percentage of tasks where the agent generates an acceptable, green PR without needing corrective inner loops.
-- **Iteration Depth**: Average number of compile/test/repair cycles per task.
-- **Token Efficiency**: Total input/output tokens consumed per merged feature.
-- **Cognitive Load on Human Reviewers**: Hours of senior engineering attention required to audit PRs.
+### The Naive Implementation
+The agent writes a solution that passes all unit tests, but violates system boundaries:
 
-$$\text{Instruction Score} = \frac{\text{Functional Correctness} \times \text{Architectural Fidelity}}{\text{Iterations} \times \log(\text{Prompt Token Cost})}$$
+```text
+[ HTTP Controller / Endpoint Handler ]
+                 │
+                 │ (Direct database query: architectural violation)
+                 ▼
+        [ Database Storage ]
+```
+
+A human reviewer flags the pull request: *Controllers are transport adapters only. They must not query the database directly; they must call application query handlers.*
+
+### Turning the Review into a System Rule
+
+```text
+Observed Mistake:
+The controller queried the database directly instead of dispatching to an application handler.
+
+Why It Happened:
+The agent had no context describing the service's layered architecture or clean boundaries.
+
+Extracted Guideline:
+Controllers and transport handlers are interface adapters only. They validate request input 
+and delegate execution to application handlers. Never query the database or ORM directly 
+from transport controllers.
+```
+
+By adding this rule to the repository instructions (or enforcing it with an architecture linter), future agents across all services will structure the code correctly on the very first attempt:
+
+```text
+[ HTTP Controller ] ──► [ Application Query Handler ] ──► [ Storage Layer ]
+```
 
 ---
 
-## 4. Avoiding Instruction Sprawl: Eval-Driven Hygiene
+## 3. First-Pass Success: Measuring Real Productivity
 
-The most dangerous anti-pattern in agent prompt management is the **Append-Only Trap**:
+Tracking only whether an agent eventually completes a task is misleading. An agent that takes seven compile-and-fix iterations often produces bloated, defensive code full of unnecessary null-checks and redundant wrapper logic.
+
+### Core Metrics to Track
+- **First-Pass Success Rate**: The percentage of tasks completed without requiring corrective cycles or human intervention.
+- **Iteration Depth**: The average number of compile, test, and repair cycles per task.
+- **Token and Compute Cost**: Total tokens spent per merged pull request.
+- **Reviewer Overhead**: How much human engineering time is needed to audit and correct agent-authored pull requests.
+
+The goal is to improve first-pass quality while keeping instructions concise enough that they don't eat into the model's working memory (see [[How LLM Systems Build Context]]).
+
+---
+
+## 4. Preventing Instruction Bloat
+
+The biggest trap in prompt maintenance is the **append-only anti-pattern**:
+
 ```text
-Failure Occurs ──► Append New Rule to Instructions ──► File Reaches 1,000 Lines ──► Context Saturation & Rule Oscillation
+Bug Occurs ──► Append Rule to INSTRUCTIONS.md ──► File Grows to 1,000 Lines ──► Model Ignores Half the Rules
 ```
 
-As documented in [[Constraint Saturation and Rule Oscillation in Coding Agents]], models overwhelmed by massive, unorganized prompt rules suffer cognitive degradation. Instructions must be governed with the same rigor as production software:
+When prompt instructions become too long or repetitive, models suffer from [[Constraint Saturation and Rule Oscillation in Coding Agents|rule oscillation]], prioritizing recent or loudly worded constraints while ignoring foundational ones.
+
+Instructions need regular maintenance:
 
 ```text
-                         Agent Failure Event
-                                  │
-                                  ▼
-                        Extract Core Invariant
-                                  │
-                                  ▼
-           Check for Semantic Duplication / Contradictions
-                                  │
-                                  ▼
-          Generate Candidate Formulations (Short vs. Explanatory)
-                                  │
-                                  ▼
-            Evaluate on Holdout Suite (Regression Verification)
-                                  │
-                     ┌────────────┴────────────┐
-                     ▼                         ▼
-             [ Improves FPSR ]         [ Degrades / Neutral ]
-                     │                         │
-                     ▼                         ▼
-             Promote to Repo           Discard Candidate
+                      Agent Mistake Observed
+                                │
+                                ▼
+                       Extract Core Rule
+                                │
+                                ▼
+                   Check for Duplication / Conflicts
+                                │
+                                ▼
+               Draft Formulations (Concise vs. Detailed)
+                                │
+                                ▼
+                 Run Against Historical Task Suite
+                                │
+                   ┌────────────┴────────────┐
+                   ▼                         ▼
+            [ Better Results ]        [ Neutral / Worse ]
+                   │                         │
+                   ▼                         ▼
+            Commit to Repo            Discard Draft
 ```
 
-### A/B Testing Rule Formulations
-Different expressions of the identical architectural invariant produce dramatically different model behaviors:
+### Testing Rule Formulations
+Different ways of phrasing the same concept can produce surprisingly different results:
 
-| Formulation Type | Instruction Example | FPSR | Iterations | Context Overhead |
+| Formulation Style | Example | First-Pass Rate | Avg. Iterations | Token Cost |
 | :--- | :--- | :---: | :---: | :---: |
-| **Negative Proscription** | *"Do not query database contexts inside transport controllers."* | 84% | 1.9 | Low |
-| **Architectural Rationale** | *"Transport controllers are interface adapters. They must delegate all persistence operations to application handlers."* | 91% | 1.4 | Moderate |
-| **Procedural Step-by-Step** | *"1. Identify application handler. 2. Place query logic in handler. 3. Call handler from controller."* | 92% | 1.3 | High |
+| **Strict Proscription** | *"Do not access the database context from controllers."* | 84% | 1.9 | Lowest |
+| **Architectural Role** | *"Controllers are transport adapters only. Delegate all data queries to application handlers."* | 91% | 1.4 | Moderate |
+| **Step-by-Step Procedure** | *"1. Create or find the handler. 2. Place query inside handler. 3. Call handler from controller."* | 92% | 1.3 | Highest |
 
-The winning formulation is not necessarily the most prescriptive; it is the one that balances cognitive clarity with minimal token consumption.
+The best formulation is rarely the longest one; it is the most concise phrasing that reliably steers the model.
 
 ---
 
-## 5. Architectural Memory: Retrieval-Augmented Steering (Behavioral RAG)
+## 5. Behavioral RAG: Loading Rules on Demand
 
-As an enterprise accumulates hundreds of validated architectural invariants, loading every rule into every prompt saturates the model's working memory. 
+As an organization accumulates dozens of architectural rules, injecting all of them into every prompt wastes context and dilutes attention.
 
-Organizations must deploy **Behavioral Retrieval**: partitioning rules into modular, domain-specific packs and dynamically retrieving them based on the task's context envelope:
+A better approach is **Behavioral Retrieval**: breaking guidelines into small, focused files and loading only what is relevant to the task:
 
 ```text
-instructions/
+rules/
 ├── architecture/
-│   ├── boundary-enforcement.md
-│   ├── messaging-topologies.md
-│   └── persistence-gateways.md
-├── runtimes/
-│   ├── concurrency-cancellation.md
-│   ├── allocation-limits.md
-│   └── serialization-pipelines.md
+│   ├── layer-boundaries.md
+│   ├── messaging-conventions.md
+│   └── database-access.md
+├── runtime/
+│   ├── async-cancellation.md
+│   └── error-handling.md
 ├── domain/
-│   ├── billing-invariants.md
-│   ├── order-state-machine.md
-│   └── identity-tenancy.md
-└── verification/
-    ├── integration-harness.md
-    └── property-fuzzing.md
+│   ├── billing-rules.md
+│   └── order-workflows.md
+└── testing/
+    ├── integration-tests.md
+    └── test-fixtures.md
 ```
 
-When an agent is assigned to *"Update payment retry backoff"*, the harness dynamically retrieves:
-1. `architecture/boundary-enforcement.md`
-2. `runtimes/concurrency-cancellation.md`
-3. `domain/billing-invariants.md`
+When an agent is assigned to *"Update payment retry backoff"*, the harness loads only:
+- `architecture/layer-boundaries.md`
+- `runtime/async-cancellation.md`
+- `domain/billing-rules.md`
 
-This delivers surgical, high-density steering instructions without global context pollution.
+This provides high-signal guidance exactly where needed, without polluting the context with irrelevant rules about front-end components or database migrations.
 
 ---
 
-## 6. Transforming Human Review into Compounding Organizational Capital
+## 6. Turning Review Comments into Compounding Assets
 
-Traditional code review treats human corrections as ephemeral, single-use interventions:
+Traditional code review treats human corrections as disposable:
+
 ```text
-Traditional Model:
-Agent Makes Error ──► Human Explains Flaw ──► Agent Patches PR ──► Knowledge Lost in Git History
+Traditional Review:
+Agent Makes Error ──► Human Explains Flaw ──► Agent Patches PR ──► Insight Lost in Git History
 ```
 
-Learning-oriented engineering harnesses convert every human review correction into enduring organizational capital:
+A learning-oriented development workflow captures human feedback as enduring assets:
+
 ```text
-Compounding Model:
-Agent Makes Error ──► Human Explains Flaw ──► Knowledge Extracted into Formal Invariant
-                             │
-                             ▼
+Compounding Review:
+Agent Makes Error ──► Human Explains Flaw ──► Insight Encoded into Rule or Linter
+                            │
+                            ▼
               Added to Behavioral Regression Suite
-                             │
-                             ▼
-              Future Agents Immunized Against Entire Error Class
+                            │
+                            ▼
+              Future Agents Avoid the Entire Category of Error
 ```
 
-When a principal architect spends 15 minutes explaining why an implicit state-machine transition violates downstream billing guarantees, that explanation is not discarded. It is distilled into an architectural rule, verified against the eval suite, and embedded into the agent's procedural memory.
+### The Don't-Patch-in-Silence Rule
+To prevent organizational memory from leaking away, teams should follow a simple rule: **never silently patch an agent's architectural mistake by hand**.
 
-### The Immediate Friction Codification Protocol
-To prevent procedural memory decay, engineering teams must establish a strict operational invariant: **Never silently repair an agent's architectural failure.**
-
-1. **The Silent Patch Anti-Pattern**: An engineer notices that an agent generated code with an unnecessary wrapper layer or an unhandled concurrency edge case. Rather than correcting the root cause, the engineer quickly patches the diff by hand in the IDE. While this saves 30 seconds immediately, it guarantees that every future agent invocation in that repository will repeat the identical mistake.
-2. **Immediate Invariant Freezing**: Under [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor Pattern]], the engineer refuses to clean up in silence. Instead, the friction is immediately externalized: directing the agent to draft or refine an explicit rule (`.agents/rules/`), encapsulate the procedure into an operational skill, or write a pre-flight architectural lint test.
-3. **Closing the Outer Loop**: By treating every stumble as a harness defect rather than an implementation nuisance, the system continuously closes the Outer Optimization Loop, compounding developer leverage with every task.
+1. **The Silent Fix Anti-Pattern**: A developer sees that an agent created an unnecessary wrapper class or mishandled an edge case. To save 30 seconds, the developer fixes it manually and merges the pull request. The problem is that the next agent will make the exact same mistake tomorrow.
+2. **Codify the Correction**: Instead of a silent fix, spend two minutes turning the correction into an explicit guideline, a project rule file, or an architecture lint rule.
+3. **Compound Team Velocity**: By treating recurring mistakes as defects in the development harness rather than one-off annoyances, the system becomes noticeably more competent over time.
 
 ---
 
-## Relationship to the Knowledge Graph
+## Related Notes
 
-- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The ergonomic discipline of immediate friction codification, ensuring no agent failure is patched silently.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The physical execution harness that injects versioned instructions and evaluates pass/fail metrics.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: The mathematical and cognitive foundation explaining why instructions must be pruned, compressed, and retrieved selectively.
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How failure-driven instruction learning systematically builds the repository's Negative Knowledge Base ($K^-$).
-- **[[Testing in the Model, Agent, LLM Era]]**: Deterministic test suites and verification oracles as the foundational inner loop providing automated signal.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Decision criteria for determining whether a failure demands an inline code patch, a specification rewrite, or an instruction update.
-- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How learned instruction rules are integrated into pre-merge automated agent reviewers.
-- **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing rejected trajectories and instruction evals as high-value strategic assets.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing runtime harnesses that feed versioned instructions, linters, and test feedback directly to agents.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Why dumping too many rules into a prompt causes agents to thrash, and how to keep instruction sets lean.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How failure analysis builds an explicit record of rejected patterns and architectural boundaries.
+- **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic test suites as the fast inner loop that validates functional correctness.
+- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: The practical decision matrix for fixing buggy agent code versus updating prompt specifications.
+- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: Using LLM reviewers to enforce nuanced architectural guidelines before code is merged.
+- **[[How LLM Systems Build Context]]**: Managing working memory and prompt overhead when supplying instructions to agents.
