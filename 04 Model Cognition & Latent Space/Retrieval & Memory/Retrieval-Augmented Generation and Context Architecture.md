@@ -214,7 +214,7 @@ The **Cross-Encoder Reranker** passes the query and candidate chunk together thr
 
 ## 5. The Project Knowledge Layer & Enterprise On-Premises Architecture
 
-In professional software development, RAG is not an external chatbot feature; it forms the **Project Knowledge Substrate**:
+In professional software development, RAG is not an external chatbot feature; it forms the **Project Knowledge Layer**:
 
 ```text
                                   Autonomous Agent Loop
@@ -228,7 +228,7 @@ In professional software development, RAG is not an external chatbot feature; it
                     │                       │                       │
                     └───────────────────────┼───────────────────────┘
                                             ↓
-                           Enterprise Knowledge Substrate
+                           Enterprise Knowledge Layer    
 ```
 
 ### Local On-Premises Deployment (Confidentiality Sovereign)
@@ -256,13 +256,13 @@ Deploying RAG in software systems reveals distinct architectural hazards:
 2. **Hybrid is Mandatory**: Dense vector search alone fails in software engineering. Precise symbol matching (BM25) fused with semantic embeddings (RRF) and verified by cross-encoders is the bare minimum for reliable code retrieval.
 3. **AST Over Character Slicing**: Code must be chunked along logical language boundaries (functions, classes, contracts) using AST parsers, never naive character windows.
 4. **Agentic & Graph Integration**: Real engineering context requires multi-hop path traversal across Git history, Jira tickets, and architectural decision records.
-5. **The Foundation of Autonomous Engineering**: High-density living specifications in Obsidian paired with hybrid RAG pipelines provide the executable substrate that enables coding agents to operate with precision and mechanical discipline.
+5. **The Foundation of Autonomous Engineering**: High-density living specifications in Obsidian paired with hybrid RAG pipelines provide the executable foundation that enables coding agents to operate with precision and mechanical discipline.
 
 ---
 
 ## Relationship to the Knowledge Graph
 
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: How execution harnesses query the RAG substrate to seed context into autonomous coding loops.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: How execution harnesses query the RAG index to seed context into autonomous coding loops.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight documentation templates specifically formatted for high-efficiency RAG indexing.
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Using personal second-brain RAG indexes as the baseline for computing cognitive diffs against external knowledge.
 - **[[How LLM Systems Build Context]]**: The complementary mechanics of context window management, compaction, and retrieval scheduling.
