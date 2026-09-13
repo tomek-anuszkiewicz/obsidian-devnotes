@@ -220,13 +220,13 @@ When a human reviewer claims agent-generated code is "not optimal," they must di
 - **Genuine Defects**: $O(n^2)$ algorithmic complexity, memory leaks, unindexed queries, broken authorization checks, missing transaction rollbacks.
 - **Subjective Discomfort**: *"This could be written in a single line using a higher-order stream reduction."*
 
-### The Aesthetic Bikeshedding Trap: Disqualifying Agent Code Through Human Prisms
+### The Cosmetic Nitpicking Trap: Disqualifying Agent Code Through Human Prisms
 A pervasive friction in teams adopting coding agents is the reflex of human reviewers to **disqualify machine-generated code through a purely human aesthetic lens**:
 - *"Why did the agent write an explicit constructor or explicit parameter assignments instead of using compiler-synthesized primary constructors or implicit defaults?"*
 - *"Why did it explicitly generate an equality comparison method (`equals` / value-equality routine) when language records or default object equality exist?"*
 - *"Why didn't it use the newest terse syntactic sugar or language shorthand?"*
 
-Reviewers frequently reject pull requests over these cosmetic deviations, claiming the code is "bloated" or "unidiomatic." This represents the modern reincarnation of **Parkinson's Law of Triviality (Bikeshedding)**:
+Reviewers frequently reject pull requests over these cosmetic deviations, claiming the code is "bloated" or "unidiomatic." This represents the modern reincarnation of **Parkinson's Law of Triviality (petty style debates over cosmetic formatting)**:
 1. **Identical Functional Semantics**: Formally and practically, the code executes identically. The presence of explicit initializers or explicit equality routines compiles down to equivalent or identical machine representations.
 2. **Explicitness vs. Mental Drag**: Human engineers rely on compiler defaults and shorthand syntax because humans dread typing boilerplate. For an autonomous agent, generating 10 explicit lines costs zero effort, and reading explicit mechanics eliminates ambiguity for the next agent that touches the module.
 3. **Wasted High-Leverage Bandwidth**: When human reviewers spend their finite cognitive attention policing harmless syntactic explicitness or cosmetic formatting quirks (which automated linters solve deterministically), they neglect the true high-risk boundaries: domain state machines, concurrency locks, and invariant violations (see [[Reviewing AI-Generated Code]]).
@@ -275,7 +275,7 @@ Human review becomes the boundary where human strategic intent is reconciled wit
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Re-evaluating package reuse versus local agent generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Straightening out legacy enterprise spaghetti and corporate abstraction layers into flat, machine-legible operational units.
-- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and bikeshedding to verifying state invariants and failure boundaries.
+- **[[Reviewing AI-Generated Code]]**: Shifting code review focus from cosmetic syntax policing and petty style debates to verifying state invariants and failure boundaries.
 - **[[AI Changes the Role and Training of Software Engineers]]**: How the engineering role elevates toward skeptical review, risk control, and architectural design.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes the probabilistic dynamics of model priors and how forcing agents off-distribution creates downstream hallucination risks.
-- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for substrate performance.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Unrolling algorithms and removing abstractions for hardware and execution engine performance.

@@ -291,7 +291,7 @@ The agentic paradigm dismantles this meeting pathology through **asynchronous, a
    - When generating a working, benchmarked architecture takes 15 minutes, five engineers can easily arrive at an alignment meeting with five conflicting, slickly implemented prototypes—each pulling the codebase in a different direction. While producing code is practically free, **evaluating trade-offs, comparing divergent abstractions, and achieving consensus still consume scarce human cognitive bandwidth**.
    - **The Imperative for Decisive Architectural Leadership**: Democratizing architectural input must not be confused with design-by-committee or anarchic consensus. High-velocity agentic organizations require a clear **Directly Responsible Individual (DRI) or Principal Architect**. The leader's function shifts from writing the initial spec from the top down to acting as an **evaluator, synthesizer, and decisive judge**:
      - Establishing strict evaluation criteria, constraints, and non-negotiables upfront,
-     - Filtering out bikeshedding and superficial prototype divergence,
+     - Filtering out petty style debates and superficial prototype divergence,
      - Making the authoritative, final call once diverse domain perspectives have been surfaced.
    - Input is democratized and divergent; decision-making remains focused, disciplined, and centralized.
 
