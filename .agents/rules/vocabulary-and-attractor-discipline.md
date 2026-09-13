@@ -19,7 +19,7 @@ To maintain high signal-to-noise ratio, intellectual rigor, and natural prose, t
 
 Physical microarchitectural execution terms are strictly quarantined by architectural layer:
 
-1. **Layer 1 Substrate Quarantined (`01 Substrate & Mechanical Sympathy/`)**:
+1. **Layer 1 Hardware Execution Quarantined (`01 Code Architecture & Hardware Execution/`)**:
    - Microarchitectural hardware terms (`L1 / L1i cache`, `cache lines`, `branch predictor`, `TLB miss`, `instruction cache thrashing`) are permitted **ONLY** in Layer 1 notes dedicated to physical execution dynamics (such as `AI May Make Aggressive Code Optimization Economically Viable.md`) and in the system charter (`The 5-Layer System Stack for Agentic Software Engineering.md`).
 2. **Layers 2, 3, 4, and 5 Universal Abstractions**:
    - Across Harness, Telemetry, Model Cognition, and Operator Psychology, the agent must abstract hardware details into universal software engineering constructs:
@@ -34,14 +34,14 @@ The phrase *mechanical sympathy*—originally introduced to software by Martin T
 Due to associative attractor drift, models tend to turn this term into an empty slogan across unrelated layers (e.g. "Guardian of Mechanical Sympathy" in test oracles, "Mechanical Sympathy in SQL queries", or in human ergonomics).
 
 1. **Strict Layer Quarantine**:
-   - The phrase `mechanical sympathy` is permitted **ONLY** in Layer 1 (`01 Substrate & Mechanical Sympathy/`) historical context and in the root system charters (`The 5-Layer System Stack...`, `_Explore.md`, `Preamble.md`).
+   - The phrase `mechanical sympathy` is permitted **ONLY** in Layer 1 (`01 Code Architecture & Hardware Execution/`) historical context and in the root system charters (`The 5-Layer System Stack...`, `_Explore.md`, `Preamble.md`).
    - It is **strictly forbidden** anywhere in Layers 2, 3, 4, and 5.
 2. **Strict Heading Ban**:
    - `mechanical sympathy` must **NEVER** appear in any Markdown section headings (`#`, `##`, `###`, etc.) across any layer (the sole exception being the canonical Layer 1 definition in `The 5-Layer System Stack for Agentic Software Engineering.md`).
 3. **Mandated Substitutions**:
    - In Layer 2 (Verification/Harness): use **hardware reality**, **physical resource invariants**, **low-level execution efficiency**.
    - In Layer 5 (Human Ergonomics/Organization): use **systems efficiency**, **direct hardware optimization**, **low-level systems comprehension**.
-   - In Layer 1 (outside historical definition): use **hardware-aware optimization**, **substrate efficiency**, **execution engine alignment**.
+   - In Layer 1 (outside historical definition): use **hardware-aware optimization**, **execution engine alignment**, **cache-conscious layout**.
 
 ### 2.2 The "Hardware Sympathy", "Hardware Empathy" & Synthetic Mutant Attractor Ban
 When models are constrained from using "mechanical sympathy", associative attention frequently generates mutant linguistic attractors such as **hardware sympathy**, **hardware-sympathetic**, **hardware empathy**, **hardware-empathetic**, **substrate sympathy**, **execution sympathy**, **engine sympathy**, or **cache sympathy**.
@@ -67,9 +67,10 @@ The agent must avoid over-indexing on pseudo-academic buzzwords. The following w
 
 | Banned / Quarantined Term | Mandated Replacement (Universal Engineering Construct) |
 | :--- | :--- |
-| `hardware sympathy / -sympathetic` | `substrate alignment`, `hardware reality`, `hardware-aligned`, `low-level execution efficiency` |
-| `hardware empathy / -empathetic` | `hardware-aligned code`, `cache-efficient layout`, `substrate-conscious implementation` |
-| `substrate / engine / cache sympathy` | `substrate efficiency`, `engine alignment`, `cache locality` |
+| `hardware sympathy / -sympathetic` | `hardware reality`, `hardware-aligned`, `direct hardware execution`, `low-level execution efficiency` |
+| `hardware empathy / -empathetic` | `hardware-aligned code`, `cache-efficient layout`, `hardware-conscious implementation` |
+| `substrate / engine / cache sympathy` | `direct engine alignment`, `engine efficiency`, `cache locality` |
+| `substrate` | `hardware`, `CPU & memory`, `database engine`, `runtime environment`, `cloud platform`, `execution platform` |
 | `epistemic debt` | `knowledge debt`, `architectural drift`, `unverified cognitive debt` |
 | `epistemic burden / friction` | `cognitive load`, `verification drag`, `investigation friction` |
 | `epistemic authority` | `authoritative validation`, `ground truth oracle`, `authoritative baseline` |

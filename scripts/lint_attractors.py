@@ -47,7 +47,7 @@ HARDWARE_TERMS = [
 
 # Files allowed to mention hardware terms
 HARDWARE_ALLOWLIST_SUBSTRINGS = [
-    os.path.normpath("01 Substrate & Mechanical Sympathy"),
+    os.path.normpath("01 Code Architecture & Hardware Execution"),
     os.path.normpath("The 5-Layer System Stack for Agentic Software Engineering.md"),
     os.path.normpath("Context Attractors and Recency Bias in Long-Horizon Agent Sessions.md"),
     os.path.normpath(".agents/rules/information-hierarchy.md"),
@@ -87,7 +87,7 @@ CHARTER_NOTES = [
 
 # Notes and folders allowed to reference 'mechanical sympathy'
 MECHANICAL_SYMPATHY_ALLOWLIST = [
-    os.path.normpath("01 Substrate & Mechanical Sympathy"),
+    os.path.normpath("01 Code Architecture & Hardware Execution"),
     os.path.normpath("The 5-Layer System Stack for Agentic Software Engineering.md"),
     os.path.normpath("_Explore.md"),
     os.path.normpath("Preamble.md"),

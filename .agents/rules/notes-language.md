@@ -27,7 +27,7 @@ All notes, documentation, architectural guidelines, research logs, and markdown 
 
 5. **Vault Cohesion & Reinforcing Established Thinking**:
    - Existing notes in this vault represent the user's cumulative mental models and architectural philosophy.
-   - When creating, updating, or reviewing notes, actively search and inspect existing notes in the workspace (across the 5-Layer System Stack: `01 Substrate & Mechanical Sympathy/`, `02 Harness, Governance & Verification/`, `03 Runtime Mesh & Observability/`, `04 Model Cognition & Latent Space/`, and `05 Operator Psychology & Macro-Economics/`).
+   - When creating, updating, or reviewing notes, actively search and inspect existing notes in the workspace (across the 5-Layer System Stack: `01 Code Architecture & Hardware Execution/`, `02 Harness, Governance & Verification/`, `03 Runtime Mesh & Observability/`, `04 Model Cognition & Latent Space/`, and `05 Operator Psychology & Macro-Economics/`).
    - Use existing notes as foundational context to unify ideas, maintain thematic continuity, and reinforce the user's established way of thinking.
    - Actively cross-link related concepts using Obsidian `[[Note Title]]` syntax to strengthen the vault's knowledge graph.
 
