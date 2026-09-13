@@ -15,232 +15,161 @@ aliases:
   - Disposable Exploratory Probes
   - Counter-Prototyping with AI Agents
   - Production Synthesis vs Prototype Patching
-  - Scorched Earth Prototyping Protocol
 ---
 
 # How AI Changes Prototyping and the Path from PoC to Production
 
-> [!IMPORTANT]
-> **The Death of "PoC to Production"**: In classical software engineering, temporary prototypes inevitably became permanent production systems due to the sunk cost of months of manual coding. In the agentic era, generative speed collapses the cost of code synthesis to near zero. **A prototype must NEVER become production code.** The prototype is a strictly disposable exploratory probe; its sole deliverable is **crystallized knowledge, verified assumptions, and codified test vectors**. The exploratory code itself must be deleted to zero (`git branch -D`), followed by first-principles synthesis of the production service under an ironclad oracle.
+In traditional software development, temporary prototypes had an unfortunate habit of becoming permanent production systems. A team would spend three months manually building a quick proof of concept (PoC), and when business stakeholders saw it working, they demanded it be shipped immediately. Management could not stomach discarding three months of manual work. The result was predictable: years of unmaintainable technical debt and fragile production outages.
+
+AI coding agents eliminate this dynamic entirely:
+
+> **A prototype must never become production code. The deliverable of a prototype is knowledge, not code.**
+
+Because an agent can build a functioning prototype in thirty minutes on an isolated branch, **the sunk cost of code generation is zero**. The correct engineering practice is to use the prototype to uncover edge cases and domain invariants, turn those lessons into specifications and automated tests, delete the prototype code completely, and synthesize clean production code from scratch.
 
 ```text
-CLASSICAL PARADIGM (Manual Labor / Sunk Cost Trap):
-3 Months of Manual Coding ──► "Too costly to rewrite!" ──► Prototype Shipped ──► Permanent V1 Tech Debt
+TRADITIONAL SUNK-COST TRAP:
+3 Months of Manual Coding ──► "Too costly to throw away!" ──► Ship PoC to Prod ──► Permanent Tech Debt
 
-AGENTIC PARADIGM (Scorched Earth Disposability):
-30-Min Agentic Probe ──► Extract Discovered Invariants & Test Vectors ──► PROTOTYPE DELETED TO ZERO
-                                                                                    │
-                                                                                    ▼
-First-Principles Production Synthesis under [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracles]]
+AGENTIC DISPOSABLE PROTOTYPING:
+30-Min Agentic Spike ──► Extract Invariants & Test Cases ──► DELETE PROTOTYPE CODE
+                                                                     │
+                                                                     ▼
+Synthesize Clean Production Service under [[Testing in the Model, Agent, LLM Era|Automated Test Oracles]]
 ```
 
 ---
 
-## Executive Summary & Core Architectural Invariants
+## Core Invariants
 
-1. **Knowledge Is the Deliverable; Implementation Is Scrap**: The value of a proof of concept is never the code; it is discovering undocumented constraints, failure boundaries, and state invariants. Once those are formalized in Markdown specs and test vectors, the prototype code is obsolete.
-2. **Total Collapse of the Sunk Cost Fallacy**: Spending pennies of LLM tokens on an exploratory spike removes all human emotional attachment to the code. Developers discard 2,000 lines of prototype code without financial or psychological hesitation.
-3. **The Asymmetry of Patching vs. Clean Synthesis**: Attempting to "harden" or "retrofit" a prototype (adding telemetry, transactions, auth, and error unwinding) triggers the Frankenstein Hybrid Trap. Synthesizing a brand-new production service from scratch inside a standardized chassis takes 45 minutes and guarantees day-one architectural purity.
-4. **Counter-Prototyping in Technical Debates**: Rather than enduring hours of speculative theoretical arguments during architectural reviews, engineers deploy agents to build concrete, working counter-prototypes on isolated branches in 30 minutes, replacing rhetoric with empirical runtime telemetry.
-5. **Mechanically Enforced Scorched Earth**: CI/CD pipelines must enforce prototype isolation: blocking pull requests originating from `prototype/*` or `scratch/*` branches and forbidding exploratory code from residing in production microservice repositories.
-
----
-
-## 1. The Epistemology of the Prototype: Reducing Uncertainty
-
-Agents dramatically reduce the latency and token cost of resolving technical, behavioral, and architectural ambiguities. Instead of engaging in protracted theoretical debates, an engineering team can direct an agent to build an exploratory vertical slice in 30 minutes.
-
-### Key Questions Answered by Disposable Probes:
-- **Feasibility & Integration**: Can Library X actually interface with legacy subsystem Y under live concurrency?
-- **Throughput & Latency Ceilings**: Does this architectural pattern sustain required transactions-per-second before hitting database lock contention?
-- **Domain Schema Ergonomics**: Does this proposed domain model cleanly represent complex edge-case business rules?
-- **User Experience & Interaction**: Do end-users intuitively navigate this multi-step conversational or visual workflow?
-- **Blast Radius Mapping**: How many existing contracts and service boundaries are perturbed by a proposed breaking change?
-
-The ability to cheaply reach a definitive **negative answer**—discovering within an hour that a proposed approach is an architectural dead end—is vastly more valuable than spending months slowly arriving at the same realization.
-
-### The Counter-Prototype in Architectural Negotiations
-One of the most powerful applications of agentic prototyping occurs during technical disagreements:
-- Historically, architectural reviews often devolved into political stalemates, where senior engineers debated theoretical tradeoffs for hours without empirical data.
-- In an agentic environment, an engineer deploys **counter-prototyping** (see [[AI Changes the Role and Training of Software Engineers]]): taking an opposing proposal and spinning up a concrete, working prototype on an isolated branch during the meeting.
-- Rhetorical speculation is replaced by live empirical demonstration: latency profiles, memory footprints, and code ergonomics are inspected in real time, grounding architectural decisions in physical host reality.
+1. **Knowledge Is the Goal, Code Is Scrap**: The value of a proof of concept is answering technical and business questions: finding unmapped API quirks, measuring latency under concurrency, or validating domain models. Once those answers are captured in documentation and tests, the prototype code has served its purpose.
+2. **Zero Sunk Cost Attachment**: When an exploratory spike costs pennies in LLM tokens and takes under an hour to generate, developers feel zero emotional attachment to the code. Discarding 1,000 lines of prototype code carries no psychological or financial penalty.
+3. **Synthesis Is Cheaper Than Retrofitting**: Trying to "harden" prototype code—retrofitting authentication, database migrations, retries, distributed tracing, and error handling—creates brittle, messy code. Discarding the prototype and having an agent synthesize clean production code inside your team's standard template takes 45 minutes and guarantees clean architecture from day one.
+4. **Counter-Prototyping Settles Debates**: Instead of arguing for hours in architectural meetings about theoretical trade-offs, engineers use agents to build working prototypes on temporary branches in thirty minutes, replacing speculation with empirical latency and memory benchmarks.
+5. **Strict Branch and CI Isolation**: Exploratory code must never be merged into production branches. CI pipelines should reject pull requests originating from `prototype/*` or `scratch/*` branches.
 
 ---
 
-## 2. The Death of "PoC to Production": Strict Disposability of Exploratory Code
+## 1. The Purpose of a Prototype: Eliminating Uncertainty
 
-For decades, software development was haunted by an inescapable industry reality:
+Agents dramatically lower the cost of answering technical and architectural questions. Instead of debating in a vacuum, an engineer can instruct an agent to build a quick vertical spike in thirty minutes to answer concrete questions:
 
-> *"There is nothing more permanent than a temporary prototype."*
+- **Integration Feasibility**: Does this third-party SDK actually support our required authentication and retry flow?
+- **Performance Ceilings**: Does this query pattern hold up under concurrent requests before hitting database connection limits?
+- **Domain Ergonomics**: Does our proposed domain model feel clean and natural when writing application handlers, or is it awkward?
+- **User Experience**: Does this multi-step checkout workflow make sense to end users when tested interactively?
+- **Blast Radius**: How many downstream systems would break if we changed this public event contract?
 
-This occurred because manual human labor was scarce and expensive. After spending three months manually typing a PoC, engineering managers succumbed to the **sunk cost fallacy**: *"We've already spent $100k building this; we can't afford to throw it away and start over. Just slap authentication and logging on it and ship it to production!"*
+Reaching a definitive **negative answer** in an hour—proving that a library or architecture will not work—is extraordinarily valuable. It prevents teams from wasting weeks heading down dead ends.
 
-In the agentic era, **this dynamic is obsolete. A PoC must NEVER become production.**
+### Settling Technical Debates with Counter-Prototyping
+Architectural reviews frequently get bogged down in subjective debates between senior developers defending their preferred patterns.
+
+With coding agents, teams can practice **counter-prototyping** (see [[AI Changes the Role and Training of Software Engineers]]):
+- Instead of arguing theoretically, an engineer asks an agent to spin up a working implementation of the alternative proposal on a scratch branch during the discussion.
+- The team inspects real throughput metrics, memory usage, and call graphs.
+- Empirical evidence replaces subjective opinions, allowing the team to make rapid, consensus-driven decisions.
+
+---
+
+## 2. Why Hardening a Prototype Fails
+
+Historically, prototypes became production systems because rewriting felt too slow. But attempting to "clean up" or "harden" a prototype is an architectural trap:
 
 ```text
-CLASSICAL PARADIGM (Manual Labor / Sunk Cost Trap):
-3 Months of Manual Coding ──► Sunk Cost Panic: "Too costly to rewrite!" ──► PoC Shipped to Production ──► Years of Tech Debt & Outages
-                                                                                                            (The Permanent V1 Prototype)
-
-AGENTIC PARADIGM (Strict Code Disposability):
-30-Min Agentic PoC ──► Extract Discovered Schemas & Edge Invariants ──► PROTOTYPE CODE DELETED TO ZERO
-                                                                                │
-                               ┌────────────────────────────────────────────────┘
-                               ▼
-Clean Production Synthesis under [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracles]] & Standardized Service Chassis
+Exploratory Prototype (cuts corners, hardcodes state, ignores errors)
+                  │
+                  ▼
+Try to "Harden" by adding Auth, Logging, Transactions, and Retries
+                  │
+                  ▼
+Hybrid Adapter Mess: Layer upon layer of defensive null checks and wrappers
+                  │
+                  ▼
+Fragile Production System with Hidden Failure Modes
 ```
 
-### 1. The Total Collapse of the Sunk Cost Trap
-When an AI agent synthesizes a functional prototype in 30 to 60 minutes on an isolated branch, the capital investment in the concrete source code is negligible (measured in pennies of API tokens).
-- There is zero human emotional attachment or defensive pride of authorship.
-- Throwing away 2,000 lines of exploratory code carries no financial or psychological penalty.
-- The rational economic decision is to **discard the scrap implementation the instant the technical hypothesis has been validated or disproven**.
+### The Clean Synthesis Alternative
+Once an exploratory spike reveals the necessary domain rules and failure modes:
+1. **Document the Discovered Rules**: Write down the exact state transitions, boundary limits, and external API error codes in a lightweight specification (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
+2. **Write the Tests**: Translate those requirements into automated integration and acceptance tests.
+3. **Delete the Prototype**: Force-delete the prototype branch (`git branch -D prototype/my-experiment`).
+4. **Synthesize Production Code**: Direct the agent to generate the production implementation from scratch inside your standard service architecture (see [[Standardizing Service Infrastructure with Reusable Blocks]]).
 
-### 2. Knowledge Is the Deliverable; Implementation Is Scrap
-The only durable, high-value asset produced by an exploratory prototype is **codified knowledge**:
-- *What undocumented data serialization quirks were discovered?*
-- *What edge-case invariants must the state machine enforce?*
-- *What specific error unwinding paths are necessary when external APIs fail?*
-
-This knowledge must immediately be recorded in [[In-Flight Documentation as the Primary Framework for Coding Agents|living Markdown specifications]] and converted into immutable assertions in an [[Testing in the Model, Agent, LLM Era|Ironclad Test Oracle]]. The exploratory implementation that unearthed these facts is disposable scaffolding and must be deleted.
-
-### 3. The Asymmetry of Patching vs. Clean Production Synthesis
-Attempting to "harden", "patch", or "retrofit" an exploratory prototype into production readiness is a catastrophic architectural mistake:
-- **The Hidden Omissions of Prototypes**: Exploratory code deliberately cuts corners: omitting distributed trace propagation ([[OpenTelemetry]]), ignoring transactional outbox patterns, hardcoding credentials, skipping concurrency locks, and neglecting memory allocation budgets.
-- **The Frankenstein Hybrid Trap**: Trying to patch these missing concerns into prototype code triggers the **Frankenstein Intermediate Phase** (see [[Refactoring Legacy Systems with AI Agents]]). The agent and engineer waste days layering defensive null-checks, adapter wrappers, and synthetic queues over fundamentally unhardened foundations.
-- **The Production Synthesis Advantage**: In contrast, taking the crystallized Markdown specifications and directing an agent to compile a brand-new production service from scratch within a standardized enterprise chassis (see [[Standardizing Service Infrastructure with Reusable Blocks]]) takes minutes. The new service inherits all production invariants—structured logging, telemetry, security middleware, and zero-allocation data layouts—from the very first line of code.
+Because the agent has a clear specification, frozen tests, and standard boilerplate templates, building the clean version takes less than an hour. The resulting service has clean boundaries, zero dead code, and proper error handling from the first commit.
 
 ---
 
-## 3. The Scorched Earth Prototyping Lifecycle
+## 3. The 5-Stage Disposable Prototyping Workflow
 
-To prevent exploratory code from leaking into production pipelines, organizations must institutionalize a disciplined, four-stage lifecycle:
+To keep exploratory code from leaking into production, follow a disciplined 5-stage lifecycle:
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   THE SCORCHED EARTH PROTOTYPING PROTOCOL              │
-│                                                                        │
-│   STAGE 1: HYPOTHESIS FORMULATION                                      │
-│   Define the single technical question & boundary non-goals            │
-│                              │                                         │
-│                              ▼                                         │
-│   STAGE 2: RAPID UNCONSTRAINED PROBING                                 │
-│   Agent writes disposable code on throwaway branch (`prototype/*`)     │
-│                              │                                         │
-│                              ▼                                         │
-│   STAGE 3: KNOWLEDGE CRYSTALLIZATION                                   │
-│   Document discovered invariants in Markdown & generate test vectors   │
-│                              │                                         │
-│                              ▼                                         │
-│   STAGE 4: SCORCHED EARTH DELETION                                     │
-│   `git branch -D prototype/*` ──► Delete all exploratory code          │
-│                              │                                         │
-│                              ▼                                         │
-│   STAGE 5: FIRST-PRINCIPLES PRODUCTION SYNTHESIS                       │
-│   Agent compiles production service under Ironclad Test Oracle         │
-└────────────────────────────────────────────────────────────────────────┘
+1. Define Hypothesis ──► What specific question must this spike answer?
+           │
+           ▼
+2. Rapid Exploration  ──► Agent writes throwaway code on `prototype/*` branch.
+           │
+           ▼
+3. Capture Knowledge  ──► Document invariants and write failing test cases.
+           │
+           ▼
+4. Delete Prototype   ──► Delete temporary branch (`git branch -D`).
+           │
+           ▼
+5. Clean Synthesis    ──► Agent compiles production service to pass the tests.
 ```
 
-### Stage 1: Hypothesis Formulation
-Before invoking an agent to build a prototype, the engineer explicitly documents:
-1. The exact technical hypothesis to test (e.g., *"Can we ingest 10,000 WebSocket events/sec with under 50ms latency using Framework Z?"*).
-2. What the prototype explicitly **ignores** (authentication, long-term persistence, UI styling, multi-region failover).
-
-### Stage 2: Rapid Unconstrained Probing
-The prototype is authored in an ephemeral environment:
-- Dedicated scratch directory or isolated git branch (`prototype/hypothesis-x`).
-- Linters and strict architectural gates are relaxed to maximize generative speed.
-- The model is encouraged to iterate aggressively until the hypothesis is resolved.
-
-### Stage 3: Knowledge Crystallization
-The engineer extracts domain truth from the experiment:
-- Invariants, state machine transitions, and data schemas are written into [[In-Flight Documentation as the Primary Framework for Coding Agents|In-Flight Markdown Specifications]].
-- Discovered failure modes and edge cases are formulated as deterministic regression test vectors for the [[Testing in the Model, Agent, LLM Era|Test Oracle]].
-
-### Stage 4: Scorched Earth Deletion
-The exploratory codebase is ruthlessly deleted:
-- The temporary branch is force-deleted (`git branch -D`).
-- No pull request is ever opened for prototype code.
-- No code artifacts from this stage are preserved in the repository history.
-
-### Stage 5: Clean Production Synthesis
-The engineer and agent build the production implementation from scratch:
-- Anchored in the frozen living Markdown specifications.
-- Constrained by the ironclad test oracle.
-- Structured inside the official organizational production templates.
+1. **Define the Hypothesis**: Write down the single question the spike must answer, and explicitly list what is out of scope (e.g. *"We are testing Stripe webhook idempotency; ignore auth and frontend styling"*).
+2. **Rapid Exploration**: Let the agent write code without strict linting or boilerplate constraints on an isolated branch.
+3. **Capture Knowledge**: Record edge cases, unexpected status codes, and data models discovered during the experiment.
+4. **Delete the Code**: Discard the exploratory implementation completely.
+5. **Clean Synthesis**: Instruct the agent to generate the production service cleanly against your test suite.
 
 ---
 
-## 4. Architectural Guardrails and CI/CD Enforcement
+## 4. Tracer Bullets and Recognition Mode
 
-Discipline cannot rely solely on human willpower; it must be mechanically enforced by delivery automation:
+Writing an exhaustive, 20-page architectural specification from scratch is exhausting. Human brains struggle to anticipate every edge case in advance ($O(N)$ mental effort).
 
-1. **Branch Protection & CI Isolation**:
-   - Automated CI rules reject any pull request originating from branches matching `prototype/*` or `scratch/*`.
-   - Code from prototype directories is blocked from artifact packaging pipelines.
-2. **Zero In-Tree Prototype Directories**:
-   - Prototypes must never live inside production microservice repositories where their classes can be imported by production code. They must reside in ephemeral standalone sandboxes.
-3. **Escaping the Permanent V1 Prototype Trap**:
-   - As documented in empirical research on AI code generation (such as GitClear's 2024 analysis), undisciplined AI usage doubles code churn and traps teams in a "permanent V1 prototype" cycle. Enforcing total prototype deletion ensures that production repositories contain only high-signal, fully tested, and deeply understood architecture (see [[Software Entropy and the Zero-Friction Trap|architectural containment under friction-free generation]]).
+However, human engineers are extraordinarily good at **recognition** ($O(1)$ intuition): looking at a working piece of code and immediately spotting flaws, missing error handlers, or clumsy abstractions.
 
----
-
-## Tracer Bullets and the Assembly Line: From Precedent to High-Throughput Delegation
-
-The economics of prototyping are deeply tied to cognitive ergonomics and workflow progression:
-
-### 1. Recognition vs. Generation Asymmetry ($O(1)$ vs. $O(N)$)
-One of the most exhausting traps in software design is attempting to write a 100% complete, flawless specification upfront:
-* **Generative Mode ($O(N)$ Mental Fatigue)**: Staring at a blank document trying to anticipate every compiler error, interface nuance, and domain edge case burns immense mental energy.
-* **Recognition Mode ($O(1)$ Intuitive Critique)**: Looking at an existing, concrete draft or working prototype and immediately recognizing structural flaws, non-idiomatic abstractions, or unhandled errors is rapid, intuitive, and low-friction.
-
-### 2. The Tracer Bullet Lifecycle
-```mermaid
-sequenceDiagram
-    participant Conductor as Human Architect
-    participant Agent as Autonomous Agent
-    participant Harness as Repository Harness
-
-    Conductor->>Agent: 1. Bounded prompt / rapid prototype ("Tracer Bullet")
-    Agent->>Conductor: 2. Concrete draft & test feedback
-    Conductor->>Conductor: 3. Deep code inspection ("Read the Code")
-    Conductor->>Harness: 4. Crystallize pattern into Skill, Rule & Test Gate
-    loop The Assembly Line (High-Throughput Delegation)
-        Conductor->>Agent: 5. Execute 20 similar tasks via hardened Skill
-        Agent->>Harness: 6. Automated verification (Tests & Linters)
-        Harness-->>Conductor: 7. Clean diffs & green gates
-    end
+```text
+1. Prompt Agent for Tracer Bullet ──► Quick, rough vertical slice
+                 │
+                 ▼
+2. Human Recognition Pass         ──► Review code, spot missing edge cases & design flaws
+                 │
+                 ▼
+3. Codify Rules & Tests           ──► Add rules to `.agents/rules/` and freeze test assertions
+                 │
+                 ▼
+4. High-Throughput Delegation     ──► Agent generates remaining implementations cleanly
 ```
 
-1. **Instance 1: Read the Code**: On the very first instance of a new architectural pattern (such as introducing a new database access strategy, a domain event handler, or an external API gateway), human judgment cannot be bypassed. The architect reads the generated code line by line, scrutinizing structural boundaries and naming idioms.
-2. **Crystallize the Recipe**: The lessons, corrections, and discovered invariants from that first instance are immediately codified into an in-repo **Skill** (`.agents/skills/`), an explicit **Rule** (`.agents/rules/`), and an automated **Test Oracle**.
-3. **The Assembly Line**: For the subsequent 20 to 50 instances of the pattern, execution transitions to the automated assembly line. The agent executes the hardened procedure deterministically under [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering|The Conductor]], freeing the human from reading repetitive boilerplate.
+1. **Deploy a Tracer Bullet**: Have the agent generate a quick, rough vertical implementation of the new pattern.
+2. **Inspect the Code**: Read the generated code critically. Spotting what's wrong with concrete code takes five minutes, whereas imagining it in the abstract would take hours.
+3. **Codify the Pattern**: Turn your feedback into an explicit project guideline, an operational skill, and an automated test.
+4. **Delegate the Rest**: Now that the recipe is proven, let the agent generate the remaining instances across the codebase with high confidence.
 
 ---
 
-## Practical Working Rules
+## Practical Rules for Teams
 
-### For Exploratory Prototyping
-- Always declare what the prototype does **not** test before generating a single line.
-- Use synthetic or sanitized mock data; never connect exploratory prototypes to live production databases.
-- Treat every line of prototype code as disposable scrap.
-- Focus 100% of effort on answering the research hypothesis.
-
-### For Production Transition
-- Never "clean up" or "harden" a prototype; always delete it and synthesize production code cleanly from scratch.
-- The transition from PoC to production is a **knowledge transfer (Markdown specs & test vectors)**, not a code migration.
-- If a prototype takes 30 minutes to generate, synthesizing the production service under an ironclad test harness takes 45 minutes—and saves six months of debugging technical debt.
+1. **Name prototype branches explicitly**: Use prefixes like `prototype/` or `spike/`, and configure CI to block merges from these branches into `main`.
+2. **Never connect prototypes to real customer data**: Always use sanitized mock data or isolated sandboxes.
+3. **Measure time in hours, not weeks**: If a prototype takes more than a single day to build with an agent, the scope is too broad. Break it into smaller hypotheses.
+4. **Treat prototype code as disposable scrap**: Never feel bad about deleting an agent's code. The value was what you learned, not the syntax on disk.
 
 ---
 
-## Relationship to the Knowledge Graph
+## Related Notes
 
-- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The operational dynamic of deploying tracer bullets to trigger recognition mode ($O(1)$) and establishing assembly line delegation.
-- **[[Testing in the Model, Agent, LLM Era]]**: Foundational hub establishing the ironclad test oracle as the mandatory prerequisite for synthesizing production code after prototypes are discarded.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living Markdown blueprints as the only enduring asset preserved from exploratory prototyping.
-- **[[Refactoring Legacy Systems with AI Agents]]**: Deconstructs the Frankenstein Intermediate Phase that occurs when teams attempt to patch prototypes rather than executing clean breaks.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Explains how the uncontrolled propagation of disposable prototypes into production leads to catastrophic architectural decay and code churn.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Explores the psychological shift from manual coding to rapid empirical counter-prototyping and architectural directorship.
-- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological liberation of operating with zero sunk cost attachment to code.
-- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: The production chassis and service templates utilized to cleanly synthesize production microservices after prototype deletion.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Demonstrates that rapid prototyping only yields value if the delivery system can safely enforce production verification gates.
+- **[[Testing in the Model, Agent, LLM Era]]**: Using automated test oracles to verify production implementations after prototypes are deleted.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How capturing discovered invariants during prototyping preserves knowledge across agent sessions.
+- **[[Refactoring Legacy Systems with AI Agents]]**: Avoiding the Frankenstein intermediate hybrid trap when moving from experiments to production.
+- **[[Software Entropy and the Zero-Friction Trap]]**: Why shipping unhardened prototypes directly to production destroys long-term codebase health.
+- **[[AI Changes the Role and Training of Software Engineers]]**: How engineering shifts from typing code to empirical counter-prototyping and architectural design.
+- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Using standardized service templates to quickly synthesize production services after discarding prototypes.
+- **[[AI Productivity Is Limited by the Delivery System]]**: Why rapid prototyping speed only helps if your CI/CD and deployment pipeline can safely enforce quality gates.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological relief of letting go of sunk cost and treating code as disposable.
