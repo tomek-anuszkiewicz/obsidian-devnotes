@@ -7,7 +7,7 @@ tags:
   - prompt-engineering
   - cognitive-science
   - knowledge-representation
-  - epistemology
+  - latent-representation
   - ai-insights
 aliases:
   - How Prompts Crystallize Implicit Knowledge
@@ -87,7 +87,7 @@ When an engineer engages with an advanced LLM within an [[Agentic Coding Harness
 1. The engineer articulates an informal, grounded intuition born from recent, messy, real-world work (for example, observing that human typing fatigue historically acted as a shield against over-abstraction, whereas an AI's zero friction causes rapid software entropy).
 2. The agent responds not with a generic acknowledgment, but by **crystallizing that intuition into a structured, mature architectural thesis**—counteracting [[AI, Averaged Decisions, and Premature Convergence on Solutions|premature convergence on averaged solutions]] through deep cross-disciplinary synthesis.
 
-This raises an epistemological question fundamental to human-AI collaboration, closely tied to [[How Context Narrows an AI's Solution Space|how context structures an AI's solution space]]:
+This raises a foundational question about intelligence and collaboration, closely tied to [[How Context Narrows an AI's Solution Space|how context structures an AI's solution space]]:
 > **Where does this insight actually come from?**
 > Is the model merely retrieving something someone already wrote? Is it just echoing the prompt? Or did that specific insight not exist anywhere in textual form until the prompt forced its synthesis?
 
