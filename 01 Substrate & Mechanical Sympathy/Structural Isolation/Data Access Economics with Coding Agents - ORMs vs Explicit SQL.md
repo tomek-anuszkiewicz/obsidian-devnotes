@@ -40,7 +40,7 @@ AGENTIC REVERSED TRADEOFF:
   Marginal Code Cost ≈ 0 ──► Explicit SQL & Flat Projections Economically Feasible
                                  │
                                  ▼
-                             Direct Engine Sympathy, Measurable Execution Plans,
+                             Direct Engine Alignment, Measurable Execution Plans,
                              Deterministic Contract Testing Oracles
 ```
 
