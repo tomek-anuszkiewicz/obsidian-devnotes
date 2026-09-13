@@ -42,7 +42,7 @@ aliases:
   +─────────────────────────────────────────┬─────────────────────────────────────────+
                                             │
                                             ▼
-  [ CUSTOM COMPILED MEDIA / ARTIFACT ] ─► Tailored for the Operator's Cognitive Substrate
+  [ CUSTOM COMPILED MEDIA / ARTIFACT ] ─► Tailored for the Operator's Mental Models
                                             │
                                             ▼
   +───────────────────────────────────────────────────────────────────────────────────+
