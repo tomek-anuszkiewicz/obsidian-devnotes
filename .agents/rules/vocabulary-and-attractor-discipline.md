@@ -43,6 +43,21 @@ Due to associative attractor drift, models tend to turn this term into an empty 
    - In Layer 5 (Human Ergonomics/Organization): use **systems efficiency**, **direct hardware optimization**, **low-level systems comprehension**.
    - In Layer 1 (outside historical definition): use **hardware-aware optimization**, **substrate efficiency**, **execution engine alignment**.
 
+### 2.2 The "Hardware Sympathy" & Synthetic Mutant Attractor Ban
+When models are constrained from using "mechanical sympathy", associative attention frequently generates mutant linguistic attractors such as **hardware sympathy**, **substrate sympathy**, **execution sympathy**, **engine sympathy**, or **cache sympathy**.
+
+These synthetic terms are empty linguistic gravity wells that lack conceptual grounding.
+
+1. **Absolute Ban Across All Public Notes**:
+   - The term `hardware sympathy` as well as all synthetic `* sympathy` mutants (`substrate sympathy`, `execution sympathy`, `engine sympathy`, `cache sympathy`) are **strictly prohibited** across all public notes, frontmatter tags, aliases, and referential sections.
+2. **Strict Heading Ban**:
+   - No Markdown heading (`#`, `##`, `###`, etc.) may ever contain `hardware sympathy` or any `* sympathy` variation.
+3. **Mandated Substitutions**:
+   - For *hardware sympathy* / *substrate sympathy* → use **substrate alignment**, **hardware reality**, **low-level execution efficiency**, **hardware-aware optimization**.
+   - For *engine sympathy* → use **database engine alignment**, **direct query plans**, **execution engine optimization**.
+   - For *cache sympathy* → use **instruction cache locality**, **cache-conscious layout**, **spatial/temporal locality**.
+   - For *execution sympathy* → use **execution discipline**, **runtime efficiency**, **systemic parsimony**.
+
 ---
 
 ## 3. Lexical Diversity & Ban on High-Register Jargon Monoculture
@@ -51,6 +66,8 @@ The agent must avoid over-indexing on pseudo-academic buzzwords. The following w
 
 | Banned / Quarantined Term | Mandated Replacement (Universal Engineering Construct) |
 | :--- | :--- |
+| `hardware sympathy` | `substrate alignment`, `hardware reality`, `low-level execution efficiency` |
+| `substrate / engine / cache sympathy` | `substrate efficiency`, `engine alignment`, `cache locality` |
 | `epistemic debt` | `knowledge debt`, `architectural drift`, `unverified cognitive debt` |
 | `epistemic burden / friction` | `cognitive load`, `verification drag`, `investigation friction` |
 | `epistemic authority` | `authoritative validation`, `ground truth oracle`, `authoritative baseline` |
