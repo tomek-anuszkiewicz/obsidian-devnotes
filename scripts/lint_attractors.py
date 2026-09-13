@@ -26,15 +26,16 @@ VAULT_ROOT = Path(__file__).resolve().parent.parent
 
 # 1. Banned / Quarantined Jargon across ALL public notes
 QUARANTINED_JARGON = [
+    (r"\bsubstrates?\b", "Banned term 'substrate'. Use direct engineering terms like 'hardware execution', 'platform layer', 'runtime environment', or 'engine'."),
     (r"\bepistem\w*\b", "Replace academic 'epistemic/epistemological' with standard engineering terms (e.g. knowledge drift, cognitive burden, authoritative validation, knowledge diff)."),
     (r"\bteleological\w*\b", "Avoid inflated philosophical term 'teleological'; describe intentionality or design goals directly."),
-    (r"\bhardware[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic attractor 'hardware sympathy/empathy'. Replace with 'hardware-aligned', 'substrate alignment', or 'cache-conscious'."),
-    (r"\b(?:substrate|engine|cache|execution)[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic sympathy/empathy mutant. Generalize to substrate alignment, engine efficiency, cache locality, or execution discipline."),
+    (r"\bhardware[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic attractor 'hardware sympathy/empathy'. Replace with 'hardware-aligned', 'hardware efficiency', or 'cache-conscious'."),
+    (r"\b(?:substrate|engine|cache|execution)[- ](?:sympathy|sympathetic|empathy|empathetic)\b", "Banned synthetic sympathy/empathy mutant. Generalize to hardware alignment, engine efficiency, cache locality, or execution discipline."),
     (r"\bbike[- ]?shed\w*\b", "Banned colloquial jargon 'bikeshedding'. Replace with practical terms like 'petty style debates', 'cosmetic formatting debates', or 'superficial nitpicking'."),
     (r"\bfriction\s+boundar\w*\b", "Banned pseudo-academic phrase 'friction boundary'. Replace with 'friction point', 'clash point', or 'roadblock'."),
 ]
 
-# 2. Hardware terms quarantined to Layer 1 (Substrate & Mechanical Sympathy)
+# 2. Hardware terms quarantined to Layer 1 (Code Architecture & Hardware Execution)
 HARDWARE_TERMS = [
     r"\bL1i\b",
     r"\bL1\s+cache\b",
@@ -173,7 +174,7 @@ def scan_vault(verbose: bool = False):
                             "line": line_num,
                             "type": "HARDWARE_LEAKAGE",
                             "match": hw_matches[0],
-                            "message": "Hardware execution term leaked outside Layer 1 (Substrate). Generalize to system-level abstraction (e.g. instruction locality, working set size).",
+                            "message": "Hardware execution term leaked outside Layer 1 (Code Architecture & Hardware Execution). Generalize to system-level abstraction (e.g. instruction locality, working set size).",
                             "snippet": line[:100]
                         })
 
@@ -225,7 +226,7 @@ def scan_vault(verbose: bool = False):
                         "line": line_num,
                         "type": "LAYER_QUARANTINE_VIOLATION",
                         "match": "mechanical sympathy",
-                        "message": "'mechanical sympathy' is quarantined strictly to Layer 1 (Substrate) and system charters. Generalize to hardware reality, systems efficiency, or low-level comprehension.",
+                        "message": "'mechanical sympathy' is quarantined strictly to Layer 1 (Code Architecture & Hardware Execution) and system charters. Generalize to hardware reality, systems efficiency, or low-level comprehension.",
                         "snippet": line[:100]
                     })
 
