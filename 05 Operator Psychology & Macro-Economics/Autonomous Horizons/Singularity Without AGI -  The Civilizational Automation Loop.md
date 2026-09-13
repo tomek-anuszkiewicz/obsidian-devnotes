@@ -35,7 +35,7 @@ aliases:
                                      |
                                      v
 +-------------------------------------------------------------------------+
-| [ Next-Gen Compute Substrate ] (Faster silicon, higher energy efficiency)|
+| [ Next-Gen Compute Hardware ] (Faster silicon, higher energy efficiency) |
 +------------------------------------|------------------------------------+
                                      |
                                      +---> (Feeds back to step 1)
