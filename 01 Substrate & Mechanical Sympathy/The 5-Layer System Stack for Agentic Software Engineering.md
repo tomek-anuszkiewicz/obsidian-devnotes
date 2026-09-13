@@ -61,7 +61,7 @@ When autonomous reasoning models become the primary producers of implementation 
          │ Enforces mathematical and empirical correctness gates
          ▼
   LAYER 1: SUBSTRATE & MECHANICAL SYMPATHY
-  ├── Memory & Cache Dynamics (L1i / L1d Locality, Zero-Allocation Paths)
+  ├── Hardware & Execution Engines (Hardware & Software Engine Efficiency, Zero-Allocation Paths)
   ├── Structural Isolation (1:1 Operation-to-File Layout, Flat Dispatch)
   └── Code as Compiled Artifact (In-Flight Living Docs, Ephemeral Syntax)
 ```
