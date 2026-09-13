@@ -11,18 +11,18 @@ tags:
 aliases:
   - LLM Infrastructure Architecture
   - Model Gateway and Execution Setup
-  - Decoupling Cognitive Work from Compute Substrates
+  - Decoupling Cognitive Work from Execution Infrastructure
 ---
 
 # Model Access and Execution Infrastructure
 
 > [!IMPORTANT]
-> **The Cognitive Substrate Decoupling Axiom**: Production agentic systems enforce a strict four-way separation of concerns:
+> **The Cognitive Decoupling Axiom**: Production agentic systems enforce a strict four-way separation of concerns:
 > $$\text{Workflow Logic (Agent)} \neq \text{Cognitive Unit (Model)} \neq \text{Broker / Router (Gateway)} \neq \text{Physical Execution (Inference Engine)}$$
 > Just as virtualization and container orchestration decoupled compiled software artifacts from physical bare-metal servers, modern execution infrastructure decouples agentic reasoning from specific model vendors. An agent dynamically provisions cognitive capacity—routing cheap classifications to local hardware, code generation to specialized weights, and multi-step verification to frontier reasoning clusters.
 
 ```text
-Agent Workflow (Logic) ──► Model Gateway (Broker) ──► Inference Substrate (Compute) ◄──► Model Weights (Cognition)
+Agent Workflow (Logic) ──► Model Gateway (Broker) ──► Inference Engine (Compute) ◄──► Model Weights (Cognition)
 ```
 
 ---
@@ -32,13 +32,13 @@ Agent Workflow (Logic) ──► Model Gateway (Broker) ──► Inference Subs
 Modern AI systems systematically separate the [[Agent Deployment and Execution Models|agent application]] from the underlying model that performs a given reasoning task:
 
 1. **Decoupling Logic from Cognition**: The agent defines the workflow state machine, memory, and tool invocations; the model provides raw stochastic reasoning for an individual step; the gateway brokers delivery; and the inference infrastructure determines where physical compute occurs.
-2. **Dynamic Cognitive Arbitrage**: An agent does not remain tethered to a single monolithic LLM. It routes each discrete sub-task to the most cost-effective and latency-appropriate substrate—using small, fast models for categorization and triage, specialized models for synthesis, and frontier reasoning clusters for architectural planning.
+2. **Dynamic Cognitive Arbitrage**: An agent does not remain tethered to a single monolithic LLM. It routes each discrete sub-task to the most cost-effective and latency-appropriate compute tier—using small, fast models for categorization and triage, specialized models for synthesis, and frontier reasoning clusters for architectural planning.
 3. **Four-Tier Abstraction Hierarchy**: Model infrastructure spans four complementary architectural roles: **Enterprise AI Platforms** (governance, IAM, compliance), **Model Gateways/Brokers** (routing, retries, cost controls), **Dedicated Inference Clouds** (high-throughput GPU/ASIC compute), and **Local/Edge Runtimes** (hardware-adjacent private execution).
 4. **Provider and Hardware Independence**: Applications interact with standardized API facades (e.g., LiteLLM, OpenRouter, or private gateways) rather than proprietary SDKs, insulating codebases from provider deprecations, rate limits, and regional outages.
 5. **Multi-Model Consensus and Verification**: High-stakes decisions are verified through heterogeneous cross-model review (e.g., comparing answers from Claude, GPT, and Gemini or pitting generator models against independent critic models) to suppress single-model systematic bias.
 6. **Data Sovereignty and Air-Gapped Fallbacks**: Sensitive workloads, intellectual property, and compliance-restricted data are routed to internal private weights or local runtimes (vLLM, Ollama), while non-sensitive exploratory tasks burst into commercial cloud endpoints.
 7. **Latency and Token Cost Hedging**: Gateways execute automated fallback policies, hedge requests across multiple inference providers hosting identical open weights, and exploit provider price-performance differentials dynamically.
-8. **The Unified Agent Control Plane**: In long-running autonomous development workflows, model routing becomes a first-class cognitive action: the agent itself evaluates task difficulty, token budgets, and verification requirements to select its own downstream execution substrate.
+8. **The Unified Agent Control Plane**: In long-running autonomous development workflows, model routing becomes a first-class cognitive action: the agent itself evaluates task difficulty, token budgets, and verification requirements to select its own downstream execution backend.
 
 ---
 
@@ -135,7 +135,7 @@ Between raw local execution and hyperscaler enterprise platforms sits the manage
 Their core value proposition is **operating optimized open-weight model inference without requiring teams to manage physical GPU clusters**:
 - **Hardware Acceleration**: Running weights on specialized ASICs (e.g., Groq LPUs, Cerebras wafer-scale engines) delivering ultra-high token streaming speeds (300–800+ tokens/sec).
 - **Speculative Decoding & Custom Kernels**: High-throughput vLLM/TensorRT-LLM optimizations delivering lower latency than standard cloud virtual machines.
-- **Substrate Redundancy**: The exact same open model (e.g., Llama, Qwen, DeepSeek) can be targeted across multiple independent inference clouds:
+- **Provider Redundancy**: The exact same open model (e.g., Llama, Qwen, DeepSeek) can be targeted across multiple independent inference clouds:
 
 ```text
                    Llama / Qwen
