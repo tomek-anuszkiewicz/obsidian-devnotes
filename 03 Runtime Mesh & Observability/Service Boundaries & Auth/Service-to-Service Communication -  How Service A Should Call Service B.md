@@ -13,6 +13,8 @@ aliases:
   - Inter-Service Calling Patterns
 ---
 
+# Service-to-Service Communication — How Service A Should Call Service B
+
 > [!IMPORTANT] Executive Architectural Thesis: Inter-Service Calling Strategies & Contract Ownership
 > In distributed microservice systems, inter-service communication must balance developer velocity against architectural autonomy:
 > $$\text{Inter-Service Coupling} = f(\text{Contract Ownership}, \text{Transport Abstraction}, \text{Error Translation}, \text{Resilience Policies})$$
