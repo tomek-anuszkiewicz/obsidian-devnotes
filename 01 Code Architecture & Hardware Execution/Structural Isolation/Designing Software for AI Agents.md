@@ -7,187 +7,160 @@ tags:
   - agentic-coding
   - modularity
   - observability
-  - mechanical-sympathy
 aliases:
   - Agent-Oriented Software Design
   - Building Software for AI Consumption
   - Principles of Agentic System Design
+  - Designing Discoverable Codebases
 ---
 
 # Designing Software for AI Agents
 
-## The Core Thesis: Mechanical Discoverability Over Human Brevity
+## Core Thesis: Discoverability and Explicit Contracts Beat Clever Shortcuts
 
-Autonomous coding agents do not eliminate the necessity of disciplined software architecture; **they make architectural rigor far more urgent**. When AI models can generate and modify hundreds of lines of code in seconds, structural ambiguities that once took months for human developers to stumble into will cascade across an entire repository in days.
+Autonomous coding agents don't make software architecture obsolete; **they make good architecture more important than ever**.
+
+When human developers build on top of a messy, ambiguous codebase, they waste hours in meetings and Slack threads deciphering implicit conventions. When an AI agent works on that same messy codebase, it burns thousands of tokens, hallucinates non-existent patterns, and casually spreads bugs across twenty files in seconds.
 
 ```text
-HISTORICAL HUMAN-CENTRIC ARCHITECTURE:
-  Goal: Minimize typing, conserve developer working memory
-  Mechanisms: Ambient containers, deep inheritance, reflection, magic interceptors
-  Cost: High implicit complexity, invisible runtime graphs
+HISTORICAL HUMAN-CENTRIC CODEBASE:
+- Minimized typing to save human fingers
+- Relied on implicit conventions, ambient context, deep inheritance, and runtime reflection
+- High hidden complexity; easy to break things accidentally
 
-AGENTIC-CENTRIC ARCHITECTURE:
-  Goal: Maximize mechanical discoverability, bound reasoning scopes
-  Mechanisms: 1:1 operation-to-file hierarchy, explicit execution pipelines, deterministic oracles
-  Cost: Modest local verbosity, but zero ambient surprises and bounded blast radius
+AGENT-FRIENDLY CODEBASE:
+- Maximizes discoverability and explicit contracts
+- Uses 1:1 operation files, clear pipeline stages, and deterministic test oracles
+- Code may be slightly more verbose, but has zero ambient magic and an isolated blast radius
 ```
 
-An agent-friendly system is designed to provide immediate, deterministic answers to four foundational questions:
-1. **Locality of Change**: *Where exactly should this mutation occur?*
-2. **Behavioral Invariant**: *What contract is expected, and what must never be broken?*
-3. **Verification Oracle**: *How can correctness be proven mechanically within seconds?*
-4. **Blast Radius Enclosure**: *What parts of the system are physically isolated from this change?*
-
-The objective is not to optimize code for a specific foundation model version, but to build architectures that can be navigated, modified, and verified deterministically by any intelligent participant—human or synthetic.
+An agent-friendly system provides fast, unambiguous answers to four simple questions:
+1. **Where does the change belong?** (Locality)
+2. **What contract must never break?** (Invariants)
+3. **How do we prove it works in seconds?** (Test Oracle)
+4. **What parts of the system are safe from side effects?** (Blast Radius)
 
 ---
 
-## Generative Sprawl & The 3 Mechanical Enclosures
+## Code Length Is Not the Same as Cognitive Complexity
 
-While human developers are naturally constrained by biological friction (typing fatigue, diff aversion, context-switching drag), AI agents possess **zero generative friction**. Left unconstrained, an agent will effortlessly create sprawling intermediate classes, nested interfaces, and multi-file dependencies.
+One of the biggest mistakes teams make when designing software for agents is trying to make code as short as possible.
 
-To contain zero-friction generation, architecture must transition from polite guidelines to **hard mechanical enclosures**:
+An agent can reason through **twenty simple, explicit classes** with 100% accuracy. But it will fail constantly when trying to understand **five short classes** whose behavior depends on dynamic runtime scanning, reflection magic, or undocumented middleware ordering (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
+
+### The Explicit Execution Standard
+
+Compare these two approaches:
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│ 1. THE 1:1 STRUCTURAL HIERARCHY (One Operation, One File)   │
-│    Every domain command, query, or handler lives in its own │
-│    dedicated file. Editing Operation A physically cannot    │
-│    corrupt Operation B.                                     │
-├─────────────────────────────────────────────────────────────┤
-│ 2. HARD FILE CEILINGS (e.g., 500–800 Lines Max)             │
-│    Mechanically enforced by linters. Prevents the emergence │
-│    of "god files" and bounds prompt context requirements.   │
-├─────────────────────────────────────────────────────────────┤
-│ 3. CONSTRAINED TOUCHPOINT BUDGETS                           │
-│    Tasks are bounded to 1–2 files per mutation step. Cross- │
-│    module imports are blocked at the build boundary.        │
-└─────────────────────────────────────────────────────────────┘
+MAGIC / IMPLICIT APPROACH (Confuses Agents):
+// Where is authorization handled? Which filter runs first?
+// Does this mutate a database transaction? Nobody knows without reading framework docs.
+[CustomMagicFilter]
+public Response Handle(Request req) => _service.DoThing(req);
+
+EXPLICIT PIPELINE (Clear to Humans and Agents):
+function handle_checkout(command: CheckoutCommand) -> CheckoutResult:
+    check_user_permission(command.user_id, Permission.CHECKOUT)
+    validate_cart_contract(command.cart)
+    
+    transaction:
+        order = order_repository.create(command)
+        outbox.record(OrderPlacedEvent(order.id))
+        
+    return CheckoutResult.success(order.id)
 ```
 
-For the exhaustive theoretical analysis of this dynamic, see **[[Software Entropy and the Zero-Friction Trap|the treatise on software entropy and generative sprawl]]**.
+In the explicit version, the order of execution, transaction boundaries, and side effects are plainly visible in the code. Any agent reading this file immediately understands the workflow without searching through ten framework configuration files.
+
+### Centralize Infrastructure, Keep Domain Flow Visible
+
+This doesn't mean you should duplicate boilerplate everywhere. Standard infrastructure—like mapping exceptions to HTTP error envelopes or generating trace IDs—belongs in centralized middleware.
+
+The boundary is simple:
+- **Centralize generic technical plumbing** (logging formats, network serializers, metrics).
+- **Keep domain logic and operational sequence explicit** (authorization, state transitions, validation, transaction boundaries).
 
 ---
 
-## Predictable, Discoverable Execution Over Ambient Magic
+## Monoliths vs. Microservices: Trade-offs for Agents
 
-In an agentic codebase, **code length is not equivalent to cognitive complexity**. An agent can reliably reason through twenty explicit, self-contained classes, but will fail completely when navigating five ultra-short classes whose behavior depends on assembly scanning, ambient reflection, or undocumented middleware ordering.
+Agents don't care about architectural fashion. They care about **bounded reasoning scope and fast feedback loops**:
 
-### The Explicit Execution Standard:
-```text
-// EXPLICIT EXECUTION (High Semantic Locality):
-operation_pipeline:
-    check_authorization(command, current_user)
-    validate_contract(command)
-    execute_transaction:
-        result = handler.process(command)
-        event_outbox.record(result.domain_events)
-    return result
-```
-
-This explicit structure is essential whenever operational sequence, transaction boundaries, and side-effects define business correctness, avoiding [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code|costly hidden abstractions]].
-
-### Centralized Infrastructure vs. Hidden Semantics:
-This principle does not advocate duplicating generic plumbing everywhere. Standard infrastructure—such as mapping recognized domain exceptions to standard HTTP error envelopes (RFC 7807) or injecting distributed tracing spans—is legitimately handled by centralized middleware. 
-
-The boundary is clear:
-- **Centralize generic, uniform infrastructure mechanics** (telemetry timers, wire format serializers).
-- **Keep domain-relevant policy explicit and visible** (authorization checks, business validations, tenant isolation, transaction boundaries).
-
----
-
-## System Granularity: Monoliths vs. Microservices
-
-Autonomous agents alter the practical boundaries between monolithic and distributed architectures:
-
-| Architectural Style | Advantages for Agents | Operational Liabilities for Agents |
+| Architectural Pattern | Why Agents Like It | Risks to Watch Out For |
 | :--- | :--- | :--- |
-| **Modular Monolith** | Single repository, unified local test environment, rapid full-system builds, compile-time contract enforcement. | Risk of leaking dependencies across module boundaries if structural isolation is weak; context bloat if boundaries are blurry. |
-| **Microservices** | Tightly bounded reasoning scopes, explicit external REST/gRPC contracts, small standalone codebases, independent blast radius. | Distributed contract drift, asynchronous queue reconciliation, multi-repo PR coordination, network failure cascades. |
+| **Modular Monolith** | Single repository, instant local compilation, fast integration tests, compile-time type safety across modules. | Weak module boundaries let agents create tangled cross-domain dependencies; context bloat if the repo is huge. |
+| **Microservices** | Small, focused codebases; explicit REST/gRPC interfaces; isolated blast radius. | Distributed contract drift; difficult multi-repo changes; testing requires complex local Docker harnesses. |
 
-### The Pragmatic Rule:
-Agents do not inherently prefer monoliths or microservices. **They thrive in architectures where the reasoning scope, public contracts, and verification procedures are self-contained.** A modular monolith with strict build-enforced boundaries (e.g., package/namespace isolation) provides the ideal combination: local in-process verification without distributed network complexity.
+A well-structured **modular monolith with strictly enforced build boundaries** is often the sweet spot: it gives you the tight operational isolation of microservices without the pain of distributed network debugging.
 
 ---
 
 ## Explicit Communication Boundaries
 
-Modules must communicate through explicit, structured contracts rather than sharing internal state, direct database tables, or mutable domain models.
+Modules should communicate through clear, typed contracts rather than reaching into each other's internal classes or database tables:
 
-### 1. CQRS Command and Query Contracts
-Represent operational intent through immutable, structured messages:
+1. **CQRS-Style Commands and Queries**: Express intent through immutable data structures (`CancelOrderCommand`, `GetCustomerSummaryQuery`).
+2. **Discrete Operation Handlers**: Give each operation its own dedicated handler file (`CancelOrderHandler`). When a request comes in, the path from the API endpoint to the handler is a direct, 1:1 line.
+3. **Avoid Kitchen-Sink Facades**: A single `OrderService` containing 40 unrelated methods creates a massive file that wastes agent context and invites merge conflicts. Break operations into focused handlers.
+
+---
+
+## Model Data to Eliminate Guesswork
+
+When designing domain models, make invalid states impossible to represent:
+
+- **Ban Multi-Purpose Nulls**: Never let `null` mean both *"value hasn't been fetched yet"* and *"value does not exist"*.
+- **Eliminate Magic Sentinel Values**: Never use `0` or `-1` to represent infinite retries or disabled features; use explicit enums or optional types.
+- **Stop Context-Dependent Fields**: A property named `amount` shouldn't mean wholesale supplier cost in one file and retail customer price in another. Name them `supplier_cost_cents` and `customer_price_cents`.
+- **Use Enums Instead of Vague Booleans**: Replace boolean flags like `is_active` with explicit lifecycle states (`AccountStatus.SUSPENDED_FOR_NONPAYMENT`).
+
+> **Do not minimize the number of fields in your models. Minimize the number of possible interpretations.**
+
+---
+
+## Break Multi-Step Workflows into Explicit Data Stages
+
+Avoid the anti-pattern of passing a giant, mutable `Context` object through 15 methods, where fields are mysteriously added, modified, or overwritten along the way.
+
+Instead, structure complex pipelines as a sequence of typed transformations:
+
 ```text
-record CancelOrderCommand(
-    order_id: UUID,
-    operator_id: UUID,
-    cancellation_reason: String
-)
+RawSupplierQuote
+      │
+      ▼
+[Validation Stage]    ──► ValidatedSupplierData
+      │
+      ▼
+[Normalization Stage] ──► NormalizedCostModel
+      │
+      ▼
+[Pricing Rules]       ──► CustomerFinalPrice
+      │
+      ▼
+[Audit Generator]     ──► AuditedPriceRecord
 ```
 
-### 2. Module Boundaries: Facades, Handlers, and Dispatchers
-Organizations have three primary architectural choices for intra-system boundaries:
-- **Module Facade**: Exposes a single public gateway interface (e.g., `OrdersModuleFacade`). Highly discoverable, but risks becoming an unmaintainable "kitchen sink" interface.
-- **Granular Operation Handlers**: Exposes discrete public handlers per command (e.g., `CancelOrderHandler`). Minimizes coupling and makes call paths 1:1, but increases public type counts.
-- **Command Dispatcher / Mediator**: Provides uniform execution pipelines and decouples callers from handlers, but introduces runtime indirection that requires agents to use semantic search to locate handler implementations.
-
-The chosen mechanism must ensure that **the path from request to implementation is mechanically discoverable** without relying on runtime guesswork.
+Each stage takes an immutable, typed input and produces an immutable, typed output. If a bug appears in the pricing rules, the agent can inspect and test that single stage in isolation without worrying about side effects.
 
 ---
 
-## Modeling Data to Eliminate Interpretive Ambiguity
+## Practical Architectural Rules
 
-Codebases written for agents must eliminate semantic ambiguity in data models:
-- **Ban Multi-Purpose Nulls**: Never use `null` to represent both "value not yet loaded" and "value does not exist."
-- **Eliminate Sentinel Overloading**: Never allow `0` or `-1` to represent both a valid numerical value and a business state (e.g., infinite retries).
-- **Prevent Context-Dependent Fields**: A field must never represent supplier wholesale cost in one context and customer retail price in another.
-- **Prefer Expressive Enums Over Booleans**: Replace ambiguous flags (`is_valid`, `is_pending`) with explicit lifecycle states (`AccountState.PENDING_EMAIL_VERIFICATION`).
-
-> **Do not minimize the number of fields in a model. Minimize the number of possible interpretations.**
-
----
-
-## Decomposing Workflows into Explicit Data Stages
-
-Avoid passing a single, massive mutable context object (e.g., `OrderContext`) through dozens of processing steps where fields are incrementally populated and overwritten.
-
-Decompose complex pipelines into discrete, immutable stages:
-```text
-SupplierRawQuote
-  ──► [Validation Stage]     ──► ValidatedSupplierData
-  ──► [Normalization Stage]  ──► NormalizedCostModel
-  ──► [Currency Stage]       ──► LocalizedCurrencyPricing
-  ──► [Policy Engine]        ──► CustomerFinalPrice
-  ──► [Audit Generator]      ──► AuditedPriceCalculation
-```
-
-Each stage has an explicit, strongly typed input and output. Provenance is visible, intermediate state cannot leak, and agents can verify or refactor individual transformation stages in complete isolation.
-
----
-
-## Practical Architectural Checklist
-
-1. **Verify Discoverability**: Can a new developer or agent locate the implementation of any API endpoint in under 30 seconds using standard text or symbol search?
-2. **Enforce Mechanical Boundaries**: Are file line limits (500–800 lines) and 1:1 operation-to-file layouts verified automatically in CI?
-3. **Expose Business Flow**: Are authorization gates, transaction boundaries, and business validations explicitly visible in the operation flow?
-4. **Isolate Domain Decisions**: Are business rules separated into pure, side-effect-free decision components?
-5. **Stage Complex Transformations**: Are multi-step business pipelines decomposed into immutable, typed stages rather than mutating a shared global context?
+1. **Keep the path from request to code direct**: Any engineer or agent should be able to jump from an API endpoint to its business handler in under 10 seconds using symbol search.
+2. **Enforce 1:1 operation files**: Give every distinct command and query its own dedicated file to prevent collateral damage (see [[Software Entropy and the Zero-Friction Trap|controlling generative code entropy]]).
+3. **Make transaction and error boundaries visible**: Don't hide database commits or rollbacks behind magic attributes; keep state changes explicit.
+4. **Decompose complex state transitions**: Use typed pipeline stages instead of mutating a giant shared dictionary or context object.
+5. **Back architecture with automated test suites**: Ensure the test runner gives instant pass/fail feedback so agents can verify their work autonomously (see [[Testing in the Model, Agent, LLM Era|automated test verification]]).
 
 ---
 
 ## Related Notes
 
-- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Practical patterns for constraining ORM complexity and schema operations under agentic workflows.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy code scaffolding with in-flight documentation as the primary agent framework.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Explores the zero-friction generation dilemma and why mechanical 1:1 file constraints are required.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why implicit meta-layers, reflection, and runtime magic disorient agentic reasoning.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebases adapt their structures to be easily maintained, navigated, and verified by agents.
-
----
-
-## Relationship to the Knowledge Graph
-
-- **[[Designing APIs for LLM-Generated Integration Code]]**: Designing strongly typed, machine-discoverable client boundaries.
-- **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Module boundary isolation that enables agents to reason about domain slices independently.
-- **[[AI Changes the Economics of Technical Debt]]**: Operational justifications for refactoring systems into agent-friendly patterns.
-- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: Patterns for embedding models directly into production execution pipelines with deterministic envelopes.
-- **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Placing agent-oriented system design in Layer 1 (Structural Isolation) and Layer 2 (Governance & Harness).
+- **[[Software Entropy and the Zero-Friction Trap]]**: Why unconstrained agents create complexity sprawl and how mechanical isolation keeps codebases clean.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why magic frameworks, reflection, and hidden indirection derail agentic reasoning.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebase structure, file layouts, and naming conventions adapt when machines write the code.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy framework scaffolding with structured markdown specs and Operation Cards.
+- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Structuring persistence layers and contract tests for agentic workflows.
+- **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Implementing module boundaries that preserve local reasoning while allowing distributed scaling.
+- **[[Testing in the Model, Agent, LLM Era]]**: How deterministic automated tests act as the essential verification floor for agentic development.
