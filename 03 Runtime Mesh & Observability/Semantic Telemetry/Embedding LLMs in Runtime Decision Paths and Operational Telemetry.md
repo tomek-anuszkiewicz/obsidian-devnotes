@@ -204,8 +204,8 @@ The model translates noisy, qualitative language into **strongly typed, structur
 ## Relationship to the Knowledge Graph
 
 - **[[OpenTelemetry]]**: The distributed telemetry, trace context, and span standards that provide structured inputs for conversational supervisory agents.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Managing reliable, observable communication boundaries between microservices.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Managing reliable, observable communication boundaries between microservices.
 - **[[Designing Software for AI Agents]]**: Architectural patterns for building structured tool interfaces and safe execution boundaries for runtime agents.
 - **[[Introduction to Workflow Orchestration]]**: State-machine orchestration engines that execute deterministic decision envelopes.
-- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: The empirical runtime counterpart to static mathematical proofs, capturing unmodeled physical side-effects and heisenbugs through live telemetry.
-- **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: The transition from passive reactive systems to proactive autonomous agents monitoring runtime state.
+- **[[Formal Verification and Runtime Safety Boundaries]]**: The empirical runtime counterpart to static mathematical proofs, capturing unmodeled physical side-effects and heisenbugs through live telemetry.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: The transition from passive reactive systems to proactive autonomous agents monitoring runtime state.

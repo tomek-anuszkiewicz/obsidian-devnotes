@@ -304,6 +304,6 @@ The system may simply have provided the wrong context.
 
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Explores how models prematurely converge on conventional solutions instead of exploring divergent solution trees.
 - **[[How Context Narrows an AI's Solution Space]]**: Examines the interaction between contextual filtering and search space pruning.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How human engineering prompts act as search seeds that steer reasoning models toward novel intersections.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How human engineering prompts act as search seeds that steer reasoning models toward novel intersections.
 - **[[LLM Coding Agents Reliability]]**: Empirical analysis of where reasoning chains break down during multi-step software tasks.
 - **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: Details how reasoning models are trained on verifiable agent trajectories and process supervision.

@@ -1,5 +1,5 @@
 ---
-title: Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma
+title: Formal Verification and Runtime Safety Boundaries
 tags:
   - formal-verification
   - neurosymbolic-ai
@@ -9,6 +9,7 @@ tags:
   - system-correctness
   - verification-oracles
 aliases:
+  - Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma
   - The Negative Proof Dilemma
   - Formal Proofs vs Dynamic Testing
   - Neurosymbolic Verification
@@ -16,13 +17,13 @@ aliases:
   - The Frame Problem in Software Verification
 ---
 
-# Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma
+# Formal Verification and Runtime Safety Boundaries
 
 A common dream in software engineering is mathematical certainty: using theorem provers and formal methods to prove that code is provably bug-free. With modern reasoning LLMs acting as proof search engines (generating tactic scripts for proof assistants like Lean 4 or Coq), automated formal verification is suddenly becoming accessible outside academic research labs.
 
 However, formal proof brings a dangerous illusion: **proving that a function satisfies a mathematical specification does not prove that it behaves safely in production**. 
 
-This is the **Negative Proof Dilemma**. A formal proof guarantees that specified inputs produce specified outputs. It tells you nothing about unmodeled side effects: whether the routine leaks memory, starves threads, exhausts file descriptors, or degrades under concurrent traffic.
+This is the **Runtime Verification Gap**: a formal proof guarantees that specified inputs produce specified outputs under modeled assumptions. It tells you nothing about unmodeled side effects: whether the routine leaks memory, starves threads, exhausts file descriptors, or degrades under concurrent traffic.
 
 Reliable autonomous engineering requires a **dual-harness architecture**: pairing formal logical proofs with rigorous empirical testing, memory profiling, and runtime telemetry.
 
@@ -68,7 +69,7 @@ As explored in [[Testing in the Model, Agent, LLM Era|automated test harnesses]]
 
 ---
 
-## 2. The Four Vectors of the Negative Proof Dilemma
+## 2. The Four Vectors of the Runtime Verification Gap
 
 Computers are not abstract calculators; they are physical machines sharing finite memory, CPU cores, network sockets, and disks. The disconnect between mathematical abstraction and production reality manifests across four distinct vectors:
 

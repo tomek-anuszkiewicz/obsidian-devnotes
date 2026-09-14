@@ -651,5 +651,5 @@ The latter may become increasingly scarce — and increasingly valuable.
 - **[[AI May Break the Old Economic Model of the Open Web]]**: How AI scraping and synthetic content destruction disincentivize original human publishing.
 - **[[The Most Valuable Software Training Data May Be Private]]**: Why private enterprise data repositories become the last bastions of original, high-signal knowledge.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: How deterministic verification prevents synthetic code from degrading future models (Model Collapse).
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Extracting non-obvious insights from noisy knowledge spaces using targeted prompts.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Extracting non-obvious insights from noisy knowledge spaces using targeted prompts.
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: Using personal AI models to filter repetitive web content and surface only novel or contradictory insights.

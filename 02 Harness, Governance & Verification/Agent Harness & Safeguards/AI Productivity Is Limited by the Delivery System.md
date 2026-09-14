@@ -160,7 +160,7 @@ When the delivery pipeline is automated, safe, and reversible, agentic coding tr
 
 ## Relationship to the Knowledge Graph
 
-- **[[Agent Advantage -  Relentless, Methodical Work]]**: Connects individual agent execution capacity to the higher-level organizational delivery system that either amplifies or constrains it.
+- **[[Agent Advantage - Relentless, Methodical Work]]**: Connects individual agent execution capacity to the higher-level organizational delivery system that either amplifies or constrains it.
 - **[[Early AI Adoption as Organizational Readiness]]**: Details how preparing deployment pipelines and testing harnesses is required before AI agents can deliver business value.
 - **[[Testing in the Model, Agent, LLM Era]]**: Explores the modern verification pipelines necessary to keep delivery loops safe at high agentic velocity.
 - **[[Competitive advantage in the age of commodity AI]]**: Analyzes why organizational execution speed and tight reality feedback loops form the true competitive moat.

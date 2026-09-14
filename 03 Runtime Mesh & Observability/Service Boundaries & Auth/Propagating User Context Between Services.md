@@ -200,6 +200,6 @@ Avoiding generic, opaque `403 Forbidden` responses ensures that operational moni
 - **[[User Context in Asynchronous Systems]]**: Propagating user identity, security claims, and tracing through message brokers and background jobs.
 - **[[Service vs User Authorization Models]]**: Disentangling acting user credentials from underlying service principal permissions.
 - **[[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]**: Secure cryptographic token exchange (OAuth2 On-Behalf-Of) between microservices.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Transporting trace and user context headers across HTTP/gRPC boundaries.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Transporting trace and user context headers across HTTP/gRPC boundaries.
 - **[[OpenTelemetry]]**: Tracing context flow across distributed boundaries.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Embedding standardized context propagation middleware into service templates.

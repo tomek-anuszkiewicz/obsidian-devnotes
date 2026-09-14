@@ -83,7 +83,7 @@ tool use and agent environments
 feedback from real-world AI work
 ```
 
-The next generation of models may improve not only because they are larger, but because training loops incorporate [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight|latent space synthesis and emergent capabilities]].
+The next generation of models may improve not only because they are larger, but because training loops incorporate [[How Targeted Prompts Steer Model Solution Spaces|latent space synthesis and emergent capabilities]].
 
 ## The First Phase Was Mostly Scaling
 

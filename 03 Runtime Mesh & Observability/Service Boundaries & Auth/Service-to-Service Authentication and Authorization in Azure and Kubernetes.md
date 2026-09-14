@@ -103,7 +103,7 @@ These services may need to call:
 
 The main design question is not only:
 
-> Can Service A reach Service B (governed by [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]])?
+> Can Service A reach Service B (governed by [[Service-to-Service Communication - How Service A Should Call Service B|service-to-service communication]])?
 
 It is also:
 
@@ -1729,7 +1729,7 @@ Or more concisely:
 ## Relationship to the Knowledge Graph
 
 - **[[Service vs User Authorization Models]]**: Architectural foundations of machine-to-machine versus user-delegated authorization.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Applying workload identity to synchronous and asynchronous RPC channels.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Applying workload identity to synchronous and asynchronous RPC channels.
 - **[[Propagating User Context Between Services]]**: Propagating OAuth/OIDC claims safely across microservice chains.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Packaging identity tokens and certificate rotation into standardized platform libraries.
 - **[[User Context in Asynchronous Systems]]**: Managing identity and tenant scope in detached, event-driven message queues.

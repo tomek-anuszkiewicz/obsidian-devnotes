@@ -1487,9 +1487,9 @@ The difference may depend less on how intelligent the model becomes and more on 
 
 - **[[The AI Agent as a Personal Behavioral and Communication Coach]]**: Using personal conversational telemetry to construct an objective feedback loop for deliberate practice.
 - **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]**: Architectural implementation and context retrieval patterns for personal digital replicas.
-- **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: Granting personal agent models autonomous agency to negotiate and transact on behalf of their users.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Granting personal agent models autonomous agency to negotiate and transact on behalf of their users.
 - **[[The Most Valuable Software Training Data May Be Private]]**: The sensitive privacy, security, and IP governance questions surrounding personal operational histories.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling personal agent models to interact with authenticated web services via standardized tool contracts.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How deep interaction prompts elicit individualized cognitive models from foundation models.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How deep interaction prompts elicit individualized cognitive models from foundation models.
 - **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: How personal digital models act as cognitive filters when encountering external knowledge bases.
 - **[[AI Era Software Engineering Recruitment]]**: How longitudinal personal performance models upend conventional resume screening and interview evaluations.

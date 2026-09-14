@@ -87,7 +87,7 @@ Teams are commonly organized around:
 - bounded business domains.
     
 
-A feature that crosses several services usually crosses several teams, requiring clear contracts for [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]].
+A feature that crosses several services usually crosses several teams, requiring clear contracts for [[Service-to-Service Communication - How Service A Should Call Service B|service-to-service communication]].
 
 Its delivery may require:
 

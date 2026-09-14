@@ -1,5 +1,5 @@
 ---
-title: Software Entropy and the "Zero-Friction" Trap
+title: Software Decay and the Hidden Costs of Frictionless AI Code
 tags:
   - software-architecture
   - ai-agents
@@ -11,6 +11,8 @@ tags:
   - code-duplication
   - refactoring
 aliases:
+  - Software Entropy and the "Zero-Friction" Trap
+  - Software Entropy and the Zero-Friction Trap
   - Software Entropy & The "Zero-Friction" Trap
   - The Human Friction Advantage
   - Mechanical Isolation for AI Agents
@@ -19,9 +21,9 @@ aliases:
   - Re-evaluating Duplication in AI Era
 ---
 
-# Software Entropy and the "Zero-Friction" Trap
+# Software Decay and the Hidden Costs of Frictionless AI Code
 
-## Core Thesis: Human Laziness Was a Feature, Not a Bug
+## Human Laziness Was a Feature, Not a Bug
 
 For fifty years, software systems were quietly protected by an invisible architectural shield: **human friction**.
 
@@ -70,7 +72,7 @@ When an engineering team stops reviewing code carefully and lets agents churn ou
    A subtle concurrency deadlock or distributed state corruption hits production at 2 AM.
                 │
                 ▼
-4. THE TOTAL INSOLVENCY DEADLOCK ("KAPLICA")
+4. THE TOTAL INSOLVENCY DEADLOCK
    - Humans cannot fix it: Tracing the bug across 200 tangled, synthetic files is impossible.
    - Current AI models cannot fix it: The context window gets swamped by the contradictions
      and spaghetti abstractions created by earlier sessions.

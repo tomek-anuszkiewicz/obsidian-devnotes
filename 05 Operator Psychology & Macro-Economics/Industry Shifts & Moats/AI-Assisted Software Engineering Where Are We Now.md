@@ -416,6 +416,6 @@ The central shift can be summarized as:
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why delivery speed depends on end-to-end organizational throughput rather than code generation alone.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical frameworks for moving beyond autocomplete into bounded, reviewable agent executions.
 - **[[Early AI Adoption as Organizational Readiness]]**: How early experimentation builds structural capabilities before advanced models arrive.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Managing code sprawl and architectural drift when generation friction approaches zero.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Managing code sprawl and architectural drift when generation friction approaches zero.
 - **[[Testing in the Model, Agent, LLM Era]]**: Shifting engineering responsibility from writing code to building deterministic verification oracles.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating in-flight markdown blueprints and contracts to establish living empirical field literature.

@@ -186,7 +186,7 @@ Commit 6: chore: delete obsolete legacy pricing procedures
 ## Related Notes
 
 - **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification hub explaining the Frozen Oracle Rule and why characterization tests are critical during refactoring.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why unconstrained code generation without disciplined boundaries accelerates legacy decay.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why unconstrained code generation without disciplined boundaries accelerates legacy decay.
 - **[[AI Changes the Economics of Technical Debt]]**: How reducing the generative cost of rewrites alters the ROI of modernizing legacy systems.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How capturing explicit architectural rejections prevents agents from reintroducing flawed legacy patterns.
 - **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Deciding when to patch legacy components versus when to tear them down and regenerate.
@@ -194,4 +194,4 @@ Commit 6: chore: delete obsolete legacy pricing procedures
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: How automated refactoring transforms developer morale from learned helplessness to active stewardship.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Why agents exhibit status-quo anchoring bias and defend flawed intermediate architectures.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: How runtime observers and telemetry monitor shadow services during live migrations.
-- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Why formal tests cannot prove the absence of unstated side effects, establishing the necessity of differential shadow mirroring.
+- **[[Formal Verification and Runtime Safety Boundaries]]**: Why formal tests cannot prove the absence of unstated side effects, establishing the necessity of differential shadow mirroring.

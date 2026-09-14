@@ -1,5 +1,5 @@
 ---
-title: Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems
+title: Proxy Metrics and Operational Invariants in AI Systems
 tags:
   - ai-decision-systems
   - statistical-bias
@@ -9,13 +9,14 @@ tags:
   - machine-learning
   - algorithmic-fairness
 aliases:
+  - Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems
   - The House on the Hill Paradox
   - Proxy Variable Trap in Decision Models
   - Ecological Fallacy in AI Systems
   - Statistical Bias vs Causal Invariants
 ---
 
-# Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems
+# Proxy Metrics and Operational Invariants in AI Systems
 
 > [!IMPORTANT]
 > **Executive Architectural Thesis**: Autonomous AI decision systems optimize for mathematical correlation over historical distributions, frequently committing the **Ecological Fallacy**: deducing individual characteristics solely from aggregate group statistics. Dropping protected features fails because high-dimensional latent spaces readily reconstruct them via correlated proxy variables, while operational deployment creates autophagous feedback loops that reinforce prior intervention biases. Robust software engineering requires ascending Pearl's Ladder of Causation, enforcing the invariant that **no aggregate statistical proxy may ever override or substitute for a directly measurable causal invariant**.

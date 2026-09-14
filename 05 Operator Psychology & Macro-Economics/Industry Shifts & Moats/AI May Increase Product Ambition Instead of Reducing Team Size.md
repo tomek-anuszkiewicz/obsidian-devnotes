@@ -78,7 +78,7 @@ more ambitious products
 
 AI may reduce the amount of labor required per unit of functionality while simultaneously increasing product ambition, proving that [[AI Productivity Is Limited by the Delivery System|delivery systems bound organizational output]] rather than sheer typing speed.
 
-As teams scale their scope, protecting against [[Software Entropy and the Zero-Friction Trap|software entropy]] becomes the defining architectural challenge. The important question is therefore not only:
+As teams scale their scope, protecting against [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy]] becomes the defining architectural challenge. The important question is therefore not only:
 
 > How many people will be required to build today's software?
 

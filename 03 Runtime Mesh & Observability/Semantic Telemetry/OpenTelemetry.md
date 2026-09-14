@@ -214,7 +214,7 @@ Tail sampling requires routing all spans of a distributed trace to the same Coll
 
 - **[[AI Productivity Is Limited by the Delivery System]]**: Observability as the mandatory feedback loop validating agentic deployments in production.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: Using OpenTelemetry spans, metrics, and logs as runtime inputs for supervisory conversational agents.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Propagating W3C trace context across distributed HTTP, gRPC, and message brokers.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Propagating W3C trace context across distributed HTTP, gRPC, and message brokers.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Injecting zero-code telemetry and collectors into service runtime templates.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Tracing workflows as they transition between local in-memory calls and distributed queues.
 - **[[Propagating User Context Between Services]]**: Managing baggage and distributed trace headers across heterogeneous microservice meshes.

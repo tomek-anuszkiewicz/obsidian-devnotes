@@ -47,8 +47,8 @@ Whenever creating, modifying, or refactoring notes in this Obsidian vault, the a
 7. **Piped Canonical Hub Wikilink Standard**:
    - When embedding inline wikilinks to canonical domain hubs in body prose:
      - **Never Paste Raw Unpiped Hub Titles into Sentences**:
-       - ❌ *Incorrect*: `This accelerates the decay described in [[Software Entropy and the Zero-Friction Trap]] across teams.`
+       - ❌ *Incorrect*: `This accelerates the decay described in [[Software Decay and the Hidden Costs of Frictionless AI Code]] across teams.`
      - **Always Use Natural Piped Anchors (`[[Hub Title|natural phrase]]`)**:
-       - ✅ *Correct*: `This accelerates the decay described in [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]] across teams.`
+       - ✅ *Correct*: `This accelerates the decay described in [[Software Decay and the Hidden Costs of Frictionless AI Code|analyses of generative code entropy]] across teams.`
      - **Exceptions**: Raw unpiped links are permitted only in formal root charters (`_Explore.md`, `Preamble.md`) and dedicated referential sections (`## Related Notes` / `## Relationship to the Knowledge Graph`).
 

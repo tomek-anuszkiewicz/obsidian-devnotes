@@ -180,7 +180,7 @@ Writing an exhaustive specification from scratch imposes heavy cognitive fatigue
 - **[[Testing in the Model, Agent, LLM Era]]**: Using automated test oracles to verify production implementations after prototypes are deleted.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How capturing discovered invariants during prototyping preserves knowledge across agent sessions.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Avoiding the Frankenstein intermediate hybrid trap when moving from experiments to production.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why shipping unhardened prototypes directly to production destroys long-term codebase health.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why shipping unhardened prototypes directly to production destroys long-term codebase health.
 - **[[AI Changes the Role and Training of Software Engineers]]**: How engineering shifts from typing code to empirical counter-prototyping and architectural design.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Using standardized service templates to quickly synthesize production services after discarding prototypes.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why rapid prototyping speed only helps if your CI/CD and deployment pipeline can safely enforce quality gates.

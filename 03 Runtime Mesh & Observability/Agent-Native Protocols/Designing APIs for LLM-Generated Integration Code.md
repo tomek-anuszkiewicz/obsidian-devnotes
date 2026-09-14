@@ -262,6 +262,6 @@ The same contract-first principles govern non-REST protocols:
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Extends API contracts directly into browser DOM environments via `navigator.modelContext`.
 - **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Exposing domain primitives and validation invariants rather than monolithic UI features.
 - **[[Designing Software for AI Agents]]**: General architectural principles for making software discoverable, verifiable, and navigable for coding agents.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Inter-service contract governance, synchronous vs. asynchronous topologies, and dependency boundaries.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Inter-service contract governance, synchronous vs. asynchronous topologies, and dependency boundaries.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Providing native MCP servers and sandbox test suites alongside API contracts.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How application integration paradigms evolve when agents write and maintain client code.

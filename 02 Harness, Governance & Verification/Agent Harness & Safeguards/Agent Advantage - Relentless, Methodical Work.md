@@ -1,5 +1,5 @@
 ---
-title: Agent Advantage — Relentless, Methodical Work
+title: Agent Advantage - Relentless, Methodical Work
 tags:
   - ai-agents
   - productivity
@@ -8,6 +8,7 @@ tags:
   - developer-experience
   - endurance
 aliases:
+  - Agent Advantage -  Relentless, Methodical Work
   - Methodical Execution Advantage
   - Relentless Agent Work
   - Tireless Procedural Execution
@@ -15,7 +16,7 @@ aliases:
   - Lowering the Cost of Thoroughness
 ---
 
-# Agent Advantage — Relentless, Methodical Work
+# Agent Advantage - Relentless, Methodical Work
 
 > [!IMPORTANT]
 > **The Foundational Asymmetry**: **The greatest advantage of autonomous software agents is not superhuman insight, but inexhaustible procedural stamina.** Humans understand good engineering practices (staged migrations, compatibility shims, exhaustive regression tests, documentation updates, cleanup passes), but routinely take shortcuts because repeating these steps across dozens of components induces extreme cognitive fatigue. **An agent repeats the disciplined protocol one hundred times with identical mechanical rigor on the last iteration as on the first**, provided a human architect defines what "the right thing" means.
@@ -56,7 +57,7 @@ Most software disasters do not stem from architectural ignorance. Teams know the
 - Implement automated rollback scripts and shadow telemetry,
 - Remove temporary feature flags and clean up obsolete scaffolding.
 
-The breakdown occurs because each step imposes friction. Humans are naturally motivated by adding visible capabilities, while cleanup and verification offer little immediate reward. As repetition increases, human attention degrades. Together, these skipped steps trigger compounding decay (see [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]]).
+The breakdown occurs because each step imposes friction. Humans are naturally motivated by adding visible capabilities, while cleanup and verification offer little immediate reward. As repetition increases, human attention degrades. Together, these skipped steps trigger compounding decay (see [[Software Decay and the Hidden Costs of Frictionless AI Code|analyses of generative code entropy]]).
 
 An agent has no ego, no boredom, and no physiological fatigue. It executes the fiftieth migration script with the same precision as the first.
 

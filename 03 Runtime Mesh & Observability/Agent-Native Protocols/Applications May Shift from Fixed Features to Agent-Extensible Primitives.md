@@ -249,4 +249,4 @@ When applications stop trying to be everything to everyone, they become smaller,
 - **[[Designing APIs for LLM-Generated Integration Code]]**: Exposing discoverable, typed capabilities rather than rigid pre-built feature paths.
 - **[[Unbundling of Enterprise Software]]**: How composable domain primitives replace rigid monolithic suites in enterprise workflows.
 - **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]**: User-owned data vaults and identity layers providing the context for personal agent extensions.
-- **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: Systems that take autonomous initiative using composable application primitives.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Systems that take autonomous initiative using composable application primitives.

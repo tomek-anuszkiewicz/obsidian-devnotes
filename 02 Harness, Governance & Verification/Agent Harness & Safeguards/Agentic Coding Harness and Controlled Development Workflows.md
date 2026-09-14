@@ -1039,7 +1039,7 @@ These patterns form the deterministic operating scaffolding within which [[The C
 - **[[Agent Deployment and Execution Models]]**: Infrastructure environments where controlled agent harnesses operate.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Harness circuit breakers and constraint tiering to prevent multi-objective rule thrashing.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Converting runtime harness execution failures into permanent repository rules.
-- **[[Software Entropy and the Zero-Friction Trap|software entropy and code sprawl]]**: Harness enforcement of mechanical boundaries (file size, touched files) to prevent code sprawl.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and code sprawl]]**: Harness enforcement of mechanical boundaries (file size, touched files) to prevent code sprawl.
 - **[[Testing in the Model, Agent, LLM Era|automated testing harnesses]]**: Using deterministic compiler and test verification within the harness loop.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Harnesses providing prompt context to crystallize targeted model reasoning.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Harnesses providing prompt context to crystallize targeted model reasoning.
 

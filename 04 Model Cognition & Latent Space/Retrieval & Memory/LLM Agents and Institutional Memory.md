@@ -66,7 +66,7 @@ There is an important distinction between:
 - **being able to retrieve an answer**, and
 - **having a shared mental model of the system** (the absence of which creates the cognitive alienation described in [[Reviewing AI-Generated Code|the intractable bug trap]]).
 
-Agents are very effective at the first. A healthy engineering team still needs to deliberately maintain the second to prevent [[Software Entropy and the Zero-Friction Trap|software entropy and team alienation]].
+Agents are very effective at the first. A healthy engineering team still needs to deliberately maintain the second to prevent [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and team alienation]].
 
 ## Team size and knowledge redundancy
 

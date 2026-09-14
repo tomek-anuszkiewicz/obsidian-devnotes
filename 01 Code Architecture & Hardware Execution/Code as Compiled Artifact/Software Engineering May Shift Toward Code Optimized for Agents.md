@@ -240,7 +240,7 @@ Abstractions must justify their existence by genuinely reducing architectural co
 - **[[Designing Software for AI Agents]]**: Practical architectural blueprints for organizing repositories with 1:1 file structures and predictable boundaries.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models easily write technical boilerplate but silently break subtle business rules buried in messy code.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing bloated framework scaffolding with living Markdown specifications in the repository.
-- **[[Software Entropy and the Zero-Friction Trap]]**: How zero-friction code generation accelerates architectural rot unless controlled by strict modular boundaries.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How zero-friction code generation accelerates architectural rot unless controlled by strict modular boundaries.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why convention-over-configuration and reflection magic become toxic in agent workflows.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Pragmatic trade-offs between centralized packages and local, specialized code generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: How executable test suites serve as the primary constraint on machine-generated code.

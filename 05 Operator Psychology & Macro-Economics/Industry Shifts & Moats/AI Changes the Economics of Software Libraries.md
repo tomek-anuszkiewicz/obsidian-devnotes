@@ -67,7 +67,7 @@ This directly influences how organizations manage [[Designing Internal Packages 
 
 ## Libraries That Mainly Save Typing Are Under Pressure
 
-Some libraries exist primarily to reduce boilerplate, but when code is disposable, maintaining external dependencies can silently compound [[Software Entropy and the Zero-Friction Trap|software entropy]].
+Some libraries exist primarily to reduce boilerplate, but when code is disposable, maintaining external dependencies can silently compound [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy]].
 
 Examples may include:
 
@@ -713,5 +713,5 @@ That shift may become one of the most important changes in how software dependen
 - **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Re-evaluating shared library architecture when code generation is cheap.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: The trade-off between pulling a shared dependency and letting agents generate self-contained code.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why third-party black-box libraries can hinder agentic reasoning.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Using localized duplication rather than heavy external libraries to limit blast radius.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using localized duplication rather than heavy external libraries to limit blast radius.
 - **[[AI May Create a New Market for Small, Custom Business Software]]**: How cheap implementation enables bespoke, zero-dependency software solutions.

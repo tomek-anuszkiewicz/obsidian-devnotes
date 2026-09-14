@@ -148,7 +148,7 @@ Each stage takes an immutable, typed input and produces an immutable, typed outp
 ## Practical Architectural Rules
 
 1. **Keep the path from request to code direct**: Any engineer or agent should be able to jump from an API endpoint to its business handler in under 10 seconds using symbol search.
-2. **Enforce 1:1 operation files**: Give every distinct command and query its own dedicated file to prevent collateral damage (see [[Software Entropy and the Zero-Friction Trap|controlling generative code entropy]]).
+2. **Enforce 1:1 operation files**: Give every distinct command and query its own dedicated file to prevent collateral damage (see [[Software Decay and the Hidden Costs of Frictionless AI Code|controlling generative code entropy]]).
 3. **Make transaction and error boundaries visible**: Don't hide database commits or rollbacks behind magic attributes; keep state changes explicit.
 4. **Decompose complex state transitions**: Use typed pipeline stages instead of mutating a giant shared dictionary or context object.
 5. **Back architecture with automated test suites**: Ensure the test runner gives instant pass/fail feedback so agents can verify their work autonomously (see [[Testing in the Model, Agent, LLM Era|automated test verification]]).
@@ -157,7 +157,7 @@ Each stage takes an immutable, typed input and produces an immutable, typed outp
 
 ## Related Notes
 
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why unconstrained agents create complexity sprawl and how mechanical isolation keeps codebases clean.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why unconstrained agents create complexity sprawl and how mechanical isolation keeps codebases clean.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why magic frameworks, reflection, and hidden indirection derail agentic reasoning.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebase structure, file layouts, and naming conventions adapt when machines write the code.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing heavy framework scaffolding with structured markdown specs and Operation Cards.

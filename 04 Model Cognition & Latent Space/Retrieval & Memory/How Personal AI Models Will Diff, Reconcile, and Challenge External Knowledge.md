@@ -120,7 +120,7 @@ When the agent discovers a conflict between external ideas and the user's intern
 
 ```text
 AGENT TO USER:
-"In your note [[Software Entropy and the Zero-Friction Trap]], you mandate a strict 1:1 file 
+"In your note [[Software Decay and the Hidden Costs of Frictionless AI Code]], you mandate a strict 1:1 file 
 hierarchy and an 800-line limit to contain AI code bloat.
 
 However, the external vault you just ingested argues that hard line limits create artificial 
@@ -273,5 +273,5 @@ To prevent the personal knowledge base from becoming a hermetically sealed echo 
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Details the scarcity of original thought and explains why semantic filtering against repetition is critical.
 - **[[AI Changes the Role and Training of Software Engineers]]**: Discusses the cognitive transformation from manual reading and typing to high-level questioning and conceptual synthesis.
 - **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: Details how agents transpile long-form books and articles to adapt external knowledge to the reader's existing mental models.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted prompts allow agents to synthesize non-obvious relationships across disparate knowledge manifolds.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How targeted prompts allow agents to synthesize non-obvious relationships across disparate knowledge manifolds.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: How actively surfacing contradictions prevents personal thinking from collapsing into the averaged prior of generic consensus.

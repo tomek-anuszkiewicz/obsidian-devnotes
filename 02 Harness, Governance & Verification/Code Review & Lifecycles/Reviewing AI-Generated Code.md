@@ -65,7 +65,7 @@ The most dangerous failure mode in agentic development is skimming:
 
 It is remarkably easy to scroll through a diff, nod along, and click "Approve" without actually reconstructing the runtime execution flow in your head. 
 
-This creates a slow-burning disaster. When an agent writes code without thorough human review, it accelerates [[Software Entropy and the Zero-Friction Trap|software entropy and frictionless code sprawl]]. Within a few months, the repository becomes an **alien codebase**: an application where every file compiles and passes tests, but no living engineer understands how the pieces interact or why specific decisions were made.
+This creates a slow-burning disaster. When an agent writes code without thorough human review, it accelerates [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and frictionless code sprawl]]. Within a few months, the repository becomes an **alien codebase**: an application where every file compiles and passes tests, but no living engineer understands how the pieces interact or why specific decisions were made.
 
 When an inevitable production issue arises that exceeds the model's reasoning window—such as a distributed race condition, database connection pool exhaustion, or inconsistent state transitions—the agent will thrash and fail. If the human engineer also abdicated understanding during review, the team is completely stranded.
 
@@ -163,7 +163,7 @@ As emphasized in [[Why Business Logic Is the Hardest Part of Agentic Coding|veri
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How maintaining lightweight documentation during development provides the context needed for effective review.
 - **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: The decision framework for handling review feedback: whether to patch, regenerate, or fix the spec.
 - **[[Testing in the Model, Agent, LLM Era]]**: Why automated tests are essential for verification, but insufficient as a substitute for human architectural understanding.
-- **[[Software Entropy and the Zero-Friction Trap]]**: How rubber-stamping effortless code generation leads directly to unmaintainable systems.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How rubber-stamping effortless code generation leads directly to unmaintainable systems.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules and business edge cases require human review rather than surface-level syntax checks.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Managing the cognitive fatigue and vigilance required when reviewing high volumes of machine-generated code.
 - **[[AI Changes the Role and Training of Software Engineers]]**: How engineering roles are shifting from typing code to system design, verification, and critical review.

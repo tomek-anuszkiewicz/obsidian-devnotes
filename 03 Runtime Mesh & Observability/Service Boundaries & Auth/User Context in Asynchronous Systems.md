@@ -195,6 +195,6 @@ User context carries very different semantics depending on whether the message i
 
 - **[[Propagating User Context Between Services]]**: Synchronous vs asynchronous user context propagation patterns.
 - **[[Service vs User Authorization Models]]**: Handling user privileges and elevation in deferred, asynchronous batch operations.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Passing context over message brokers (Kafka/RabbitMQ) vs synchronous calls.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Passing context over message brokers (Kafka/RabbitMQ) vs synchronous calls.
 - **[[OpenTelemetry]]**: Preserving distributed trace IDs across message queue producer-consumer boundaries.
 - **[[Introduction to Workflow Orchestration]]**: Stateful context preservation in multi-step asynchronous workflow orchestrators.

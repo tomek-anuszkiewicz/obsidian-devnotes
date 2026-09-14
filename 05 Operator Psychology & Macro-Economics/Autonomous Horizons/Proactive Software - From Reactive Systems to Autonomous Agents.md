@@ -1,5 +1,5 @@
 ---
-title: Proactive Software — From Reactive Systems to Autonomous Agents
+title: Proactive Software - From Reactive Systems to Autonomous Agents
 tags:
   - proactive-agents
   - autonomous-systems
@@ -8,11 +8,12 @@ tags:
   - system-design
   - user-experience
 aliases:
+  - Proactive Software -  From Reactive Systems to Autonomous Agents
   - Reactive to Proactive Software
   - Autonomous Proactive Agents
 ---
 
-# Proactive Software — From Reactive Systems to Autonomous Agents
+# Proactive Software - From Reactive Systems to Autonomous Agents
 
 > [!IMPORTANT]
 > **Executive Architectural Thesis**: For six decades, software has functioned as a reactive system—idling until explicitly triggered by a human click, API RPC, or static cron threshold. The agentic paradigm inverts this dynamic into **Proactive Software**: systems that continuously observe operational telemetry, synthesize cross-silo context, formulate causal hypotheses, and execute guarded interventions before humans notice a defect. Operating within graduated blast-radius gates, proactive agents transition human engineers from reactive operators into policy directors defining safety invariants.
@@ -1046,4 +1047,4 @@ That may ultimately be one of the most important consequences of agentic computi
 - **[[How AI Agents May Control Computers, Applications, and the Web]]**: The transition from human-driven command loops to autonomous agent execution cycles.
 - **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]**: Utilizing personal user preferences and behavioral context to guide proactive background actions.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling background agents to trigger web application workflows safely and deterministically.
-- **[[Singularity Without AGI -  The Civilizational Automation Loop]]**: How proactive software systems network into autonomous, self-reinforcing economic feedback loops.
+- **[[Networked Automation Loops and Software Output Without AGI]]**: How proactive software systems network into autonomous, self-reinforcing economic feedback loops.

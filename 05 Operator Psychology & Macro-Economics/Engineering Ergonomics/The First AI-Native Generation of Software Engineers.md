@@ -633,7 +633,7 @@ They may need to become an intentional part of engineering education and profess
 - **[[AI May Become an Irreversible Part of Software Development]]**: Why the adoption threshold permanently alters engineering culture and workflows.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The fundamental shift from manual syntax typing to problem framing, architectural review, and critical questioning.
 - **[[The Future of School When Knowledge Becomes Abundant]]**: Re-evaluating computer science education when basic code authoring is a ubiquitous commodity.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Instilling architectural discipline and boundary enforcement in engineers who never experienced physical typing fatigue.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Instilling architectural discipline and boundary enforcement in engineers who never experienced physical typing fatigue.
 - **[[AI Era Software Engineering Recruitment]]**: Redesigning hiring evaluations away from leetcode puzzles toward high-level system reasoning and agent orchestration.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Retaining foundational debugging instincts and systems comprehension in an AI-native workforce.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: How the loss of tactile implementation craft reshapes developer satisfaction and identity.

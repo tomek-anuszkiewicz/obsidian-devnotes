@@ -56,7 +56,7 @@ flowchart TD
 
 Since the dawn of personal computing, human-computer interaction in programming has been tethered to the physical keyboard. This mechanical constraint shaped the entire psychology of software engineering:
 
-* **Typing Resistance as an Unconscious Brake**: As explored in [[Software Entropy and the Zero-Friction Trap]], human typing fatigue historically acted as a natural filter against runaway boilerplate. However, it also acted as a ceiling on architectural throughput. An architect with a clear mental model of five interconnected service boundaries had to spend hours typing DTOs, interfaces, and test fixtures before validating the core premise.
+* **Typing Resistance as an Unconscious Brake**: As explored in [[Software Decay and the Hidden Costs of Frictionless AI Code]], human typing fatigue historically acted as a natural filter against runaway boilerplate. However, it also acted as a ceiling on architectural throughput. An architect with a clear mental model of five interconnected service boundaries had to spend hours typing DTOs, interfaces, and test fixtures before validating the core premise.
 * **The High-Bandwidth Voice Channel**: Voice dictation achieves 150–200 words per minute of natural, high-fidelity technical intent. When paired with frontier language models capable of parsing associative speech, speech disfluencies, and dense domain terminology, the engineer can externalize complex requirements, edge cases, and non-goals in seconds.
 * **Shifting from Tactile Authoring to Orchestration**: The human engineer no longer expends metabolic energy on semicolon placement, brace matching, or method signature formatting. That energy is preserved entirely for system-level reasoning: evaluating contracts, maintaining invariants, and stress-testing failure boundaries.
 
@@ -281,7 +281,7 @@ The conductor diagnoses the root cause: *What rule, skill, or architectural test
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]**: The executable test harness that enforces the conductor's non-negotiable architectural standards.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The broader industry and educational transformation reflecting the cognitive shift from code typist to architectural conductor.
 - **[[Multi-Agent Software Development]]**: Coordinating multi-operator teams and agent topologies within structured execution harnesses.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Explains why unconstrained agentic generation degrades into code bloat unless guided by bounded conductor intent and mechanical isolation.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Explains why unconstrained agentic generation degrades into code bloat unless guided by bounded conductor intent and mechanical isolation.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural implementation of in-repo rules, negative bounds, and deterministic verification loops directed by the conductor.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: The organizational mechanism of immediate friction codification, turning transient agent failures into persistent procedural memory.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Tactical execution of tracer bullets and exploratory spikes to resolve technical ambiguity before assembling production code.

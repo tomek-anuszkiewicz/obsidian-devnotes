@@ -92,7 +92,7 @@ but also complete interaction trajectories:
 - and which final outcome was accepted.
     
 
-This creates a feedback loop between model adoption and model capability, driving the [[Singularity Without AGI -  The Civilizational Automation Loop|civilizational automation loop]].
+This creates a feedback loop between model adoption and model capability, driving the [[Networked Automation Loops and Software Output Without AGI|civilizational automation loop]].
 
 > Today's unsuccessful attempts to use agents can become part of the training signal that makes tomorrow's agents successful, connecting directly to [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction learning]].
 

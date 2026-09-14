@@ -225,7 +225,7 @@ By ensuring that every code repair back-propagates into project specifications a
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How to turn agent failures into project-level rules and eval benchmarks.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How defining what an agent must NOT do is often more effective than micro-managing step-by-step implementations.
 - **[[Developing Features with AI Coding Agents]]**: Best practices for breaking down feature requests into verifiable specifications before prompting agents.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why unconstrained code patching without architectural resets accelerates technical debt.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why unconstrained code patching without architectural resets accelerates technical debt.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing closed-loop execution harnesses that constrain agent repairs.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain requirements and business edge cases are the primary source of agent failure.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Applying the regeneration and clean-slate approach to modernizing legacy codebases.

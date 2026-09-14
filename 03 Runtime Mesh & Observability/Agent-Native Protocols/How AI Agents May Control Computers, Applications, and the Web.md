@@ -218,4 +218,4 @@ When an agent browses the web or ingests incoming emails while possessing tool e
 - **[[Designing APIs for LLM-Generated Integration Code]]**: Designing programmatic tool surfaces that eliminate the need for brittle visual computer-use models.
 - **[[Introduction to Workflow Orchestration]]**: Managing multi-step durable processes across decoupled application tools.
 - **[[AI May Break the Old Economic Model of the Open Web]]**: How autonomous agents navigating web services disrupt advertising and page-impression monetization.
-- **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: Systems that take autonomous initiative using composable application primitives.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Systems that take autonomous initiative using composable application primitives.

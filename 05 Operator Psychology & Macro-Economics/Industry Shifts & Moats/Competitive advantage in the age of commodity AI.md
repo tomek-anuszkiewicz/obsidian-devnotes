@@ -459,11 +459,11 @@ And a company's accumulated history — its code, decisions, incidents, experime
 ## Relationship to the Knowledge Graph
 
 - **[[AI Changes the Role and Training of Software Engineers]]**: Details why asking extraordinary questions is the primary moat when code generation is free.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How deep practitioner prompts act as crystallization seeds in neural networks.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How deep practitioner prompts act as crystallization seeds in neural networks.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Escaping the commodity trap by avoiding the averaged prior of default model answers.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why competitive advantage shifts from generation speed to organizational delivery throughput.
 - **[[The Most Valuable Software Training Data May Be Private]]**: Private corporate memory as the only defensible differentiator against public model parity.
 - **[[LLM Agents and Institutional Memory]]**: How captured organizational context prevents commoditized reasoning failures.
 - **[[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week]]**: How the rapid agentic cloning of web apps dissolves implementation moats and shifts value to distribution, state, and real-world friction.
-- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: How organizational complexity and centralized roadmaps destroy the agility needed to exploit commodity AI advantages.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: How organizational complexity and centralized roadmaps destroy the agility needed to exploit commodity AI advantages.
 

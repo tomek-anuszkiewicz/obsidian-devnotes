@@ -205,5 +205,5 @@ Now, whenever an agent opens that file in the future, the historical context is 
 ## Relationship to the Knowledge Graph
 
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Situating living documentation and comments in [[The 5-Layer System Stack for Agentic Software Engineering|Layer 1 (Code Architecture & Hardware Execution)]].
-- **[[Software Entropy and the Zero-Friction Trap]]**: Using negative comments to stop AI from over-simplifying critical edge cases.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using negative comments to stop AI from over-simplifying critical edge cases.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing business decisions and domain context rather than just raw code.

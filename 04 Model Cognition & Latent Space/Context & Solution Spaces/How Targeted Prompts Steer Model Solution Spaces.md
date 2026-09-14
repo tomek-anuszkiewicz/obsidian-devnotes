@@ -1,5 +1,5 @@
 ---
-title: Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight
+title: How Targeted Prompts Steer Model Solution Spaces
 tags:
   - llm
   - emergence
@@ -10,6 +10,7 @@ tags:
   - latent-representation
   - ai-insights
 aliases:
+  - Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight
   - How Prompts Crystallize Implicit Knowledge
   - Latent Space Synthesis in LLMs
   - Where Do Deep Agent Insights Come From
@@ -17,7 +18,7 @@ aliases:
   - Emergence vs Retrieval in Neural Networks
 ---
 
-# Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight
+# How Targeted Prompts Steer Model Solution Spaces
 
 > *"Ask extraordinary questions, get extraordinary answers.*  
 > *Ask average questions, get average answers."*
@@ -202,5 +203,5 @@ This loop resolves the persistent **authorship dilemma** (*"Did I author this in
 - **[[AI Changes the Role and Training of Software Engineers]]**: Explores the cognitive transformation of the engineer into an cognitive catalyst and introduces the Defense Test.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Analyzes the psychological tension of authorship debt and cognitive vigilance exhaustion.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Explains how unguided models default to mediocre averages and how targeted prompts prevent premature convergence.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Serves as the primary case study where real-world debugging friction crystallized into an architectural isolation thesis.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Serves as the primary case study where real-world debugging friction crystallized into an architectural isolation thesis.
 - **[[How Context Narrows an AI's Solution Space]]**: Details the underlying attention dynamics that shape how context focuses latent space navigation.

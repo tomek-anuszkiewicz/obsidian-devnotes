@@ -184,7 +184,7 @@ When an agent needs to touch this component later, loading this single card give
 2. **Use markdown cards as structural guardrails**: Treat structured docs as the primary guide for where code belongs, what dependencies are allowed, and what errors to expect.
 3. **Pair specs with automated tests**: Markdown sets the intent; the test suite provides the hard pass/fail verification that keeps the agent honest.
 4. **Protect your token budget**: Feed agents compact architectural cards rather than dumping the whole repository into context.
-5. **Keep future changes safe from entropy**: Documenting "what must not break" alongside new code prevents future agent sessions from quietly unraveling design choices (see [[Software Entropy and the Zero-Friction Trap|controlling generative code entropy]]).
+5. **Keep future changes safe from entropy**: Documenting "what must not break" alongside new code prevents future agent sessions from quietly unraveling design choices (see [[Software Decay and the Hidden Costs of Frictionless AI Code|controlling generative code entropy]]).
 
 ---
 
@@ -195,5 +195,5 @@ When an agent needs to touch this component later, loading this single card give
 - **[[Reviewing AI-Generated Code]]**: How engineers use concise in-flight documentation and targeted diff reviews to maintain deep systems understanding.
 - **[[AI-Generated Architectural Documentation from Code]]**: The reverse process—extracting high-level architectural maps from existing codebases to bootstrap initial specs.
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: Why non-derivable business intent belongs in code comments and companion markdown cards.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Using standardized spec cards as intentional engineering discipline to stop sprawling agent-generated complexity.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using standardized spec cards as intentional engineering discipline to stop sprawling agent-generated complexity.
 - **[[Designing Software for AI Agents]]**: Core architectural patterns that make code discoverable, isolated, and simple for agents to modify safely.

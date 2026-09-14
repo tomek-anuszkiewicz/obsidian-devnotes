@@ -71,7 +71,7 @@ aliases:
 
 ## Context
 
-As an organization, we repeatedly solve the same technical problems across many services, requiring disciplined patterns for [[Service-to-Service Communication -  How Service A Should Call Service B|service-to-service communication]].
+As an organization, we repeatedly solve the same technical problems across many services, requiring disciplined patterns for [[Service-to-Service Communication - How Service A Should Call Service B|service-to-service communication]].
 
 Examples include:
 
@@ -1281,6 +1281,6 @@ The preferred outcome is a paved road rather than a walled garden:
 
 - **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Building modular shared libraries that avoid framework lock-in.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing shared package dependencies against localized, agent-generated code.
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Standardizing communication clients while letting applications own their dependencies.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Standardizing communication clients while letting applications own their dependencies.
 - **[[OpenTelemetry]]**: Standardizing observability pipelines across heterogeneous enterprise services.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Providing uniform hosting and configuration blocks across monolithic modules.

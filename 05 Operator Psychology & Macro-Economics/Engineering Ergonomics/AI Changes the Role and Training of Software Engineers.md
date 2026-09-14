@@ -221,7 +221,7 @@ This cognitive tension is resolved through four structural mechanisms:
 2. **Tacit Knowledge Compilation**:
    - Following Michael Polanyi's foundational observation on tacit knowledge (*"we know more than we can tell"*), experienced practitioners accumulate decades of **tacit knowledge**—instinctive architectural intuition regarding concurrency traps, memory pressure, abstraction leaks, and structural fragility.
    - Translating vast tacit intuition into formal, structured documentation or rigorous taxonomy historically required immense, exhausting effort.
-   - The model acts as an **cognitive compiler**: the practitioner injects an unpolished, intuitive empirical seed, and the model projects that seed across its multi-dimensional training manifold, returning explicit terminology and formal conceptual lattices (see [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]). The insight is not foreign; it is the practitioner's tacit intuition rendered into explicit syntax.
+   - The model acts as an **cognitive compiler**: the practitioner injects an unpolished, intuitive empirical seed, and the model projects that seed across its multi-dimensional training manifold, returning explicit terminology and formal conceptual lattices (see [[How Targeted Prompts Steer Model Solution Spaces]]). The insight is not foreign; it is the practitioner's tacit intuition rendered into explicit syntax.
 
 3. **Recognition as an Active Cognitive Act (Verification Taste)**:
    - Reading an agentic proposal and recognizing that it is correct, invariant, and mechanically sound is not passive absorption.
@@ -320,9 +320,9 @@ With zero-cost code generation and unbounded curiosity comes a new danger: the t
 ## Relationship to the Agentic Knowledge Graph
 
 - **[[Competitive advantage in the age of commodity AI]]**: Details why asking extraordinary questions is the primary moat when code generation is free.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Explains how practitioner prompts act as crystallization seeds in neural latent manifolds.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Explains how practitioner prompts act as crystallization seeds in neural latent manifolds.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Explores the transition from complexity masking to automated straightening of legacy monoliths.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Highlights the need for mechanical isolation to prevent zero-friction sprawl.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Highlights the need for mechanical isolation to prevent zero-friction sprawl.
 - **[[AI Changes the Economics of Technical Debt]]**: Explains how reduced typing friction reshapes technical debt repayment.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological shift from tactile coding flow to relentless supervisory vigilance and potential burnout.
 

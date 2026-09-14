@@ -96,7 +96,7 @@ For example:
 - How should this feature support the company's broader strategy?
     
 
-If people analyzed the problem themselves or discussed it during a meeting, these questions would emerge naturally, or they can be unlocked when [[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight|targeted prompts force latent space synthesis]].
+If people analyzed the problem themselves or discussed it during a meeting, these questions would emerge naturally, or they can be unlocked when [[How Targeted Prompts Steer Model Solution Spaces|targeted prompts force latent space synthesis]].
 
 The initial requirement A would gradually become a more precise requirement B.
 
@@ -770,8 +770,8 @@ Therefore, the first answer produced by an LLM should often be treated as:
 - **[[Competitive advantage in the age of commodity AI]]**: Details why accepting averaged LLM answers commoditizes strategy and why cognitive audacity creates defensible moats.
 - **[[How Context Narrows an AI's Solution Space]]**: Explores the computational and attention mechanisms that prematurely restrict the model's exploratory boundaries.
 - **[[How Reasoning Models Explore and Evaluate Solutions]]**: Analyzes tree search, multi-path generation, and how reasoning models evaluate divergent alternatives.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted practitioner prompts act as crystallization seeds to force models outside the averaged prior.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How targeted practitioner prompts act as crystallization seeds to force models outside the averaged prior.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Details the *Frankenstein Intermediate Phase* where LLMs anchor on legacy git history and rationalize flawed hybrid complexity.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Analyzes the compounding hallucination risk when reviewers force agents off their high-probability manifold through ad-hoc local mandates.
 - **[[AI Changes the Role and Training of Software Engineers]]**: Explains why senior engineers must lead by framing non-obvious questions rather than accepting default proposals.
-- **[[Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems]]**: Analyzes how models substitute aggregate statistical proxies for causal reality, committing the ecological fallacy and trapping decision pipelines in self-fulfilling feedback loops.
+- **[[Proxy Metrics and Operational Invariants in AI Systems]]**: Analyzes how models substitute aggregate statistical proxies for causal reality, committing the ecological fallacy and trapping decision pipelines in self-fulfilling feedback loops.

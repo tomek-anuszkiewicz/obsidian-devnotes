@@ -167,7 +167,7 @@ When directing an agent to work on database code:
 
 - **[[Designing Software for AI Agents]]**: How clean architectural boundaries and explicit schemas make systems easier for agents to modify safely.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why heavy, dynamic ORM abstractions create maintenance hazards compared to explicit, inspectable code.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing sprawling, unchecked database complexity when agents can generate code effortlessly.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing sprawling, unchecked database complexity when agents can generate code effortlessly.
 - **[[Testing in the Model, Agent, LLM Era]]**: How automated contract tests and integration suites act as the non-negotiable verification gate for persistence layers.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Isolating domain business rules from underlying database persistence mechanisms.
 - **[[AI Changes the Economics of Technical Debt]]**: Analyzing how near-zero generation costs change the build-versus-abstract calculation in data pipelines.

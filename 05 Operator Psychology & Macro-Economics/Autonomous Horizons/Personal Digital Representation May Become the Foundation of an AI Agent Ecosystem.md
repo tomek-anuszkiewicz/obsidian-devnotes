@@ -1006,7 +1006,7 @@ The future personal AI may therefore be best understood not as **an assistant th
 ## Relationship to the Knowledge Graph
 
 - **[[The Implications of Having a Digital Model of Yourself]]**: The privacy, autonomy, and psychological ramifications of high-fidelity personal agent representations.
-- **[[Proactive Software -  From Reactive Systems to Autonomous Agents]]**: Empowering personal agents to anticipate user needs and execute cross-system tasks autonomously.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Empowering personal agents to anticipate user needs and execute cross-system tasks autonomously.
 - **[[LLM Agents and Institutional Memory]]**: Bridging personal decision models into collective organizational memory and team workflows.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling personal agents to seamlessly authenticate and operate browser applications on behalf of the user.
 - **[[How Modern LLM Systems Build Context, Reason, and Stay Constrained|Context Management and Conversational Grounding in LLM Workflows]]**: Retaining grounding and long-term memory across extended agent interactions.

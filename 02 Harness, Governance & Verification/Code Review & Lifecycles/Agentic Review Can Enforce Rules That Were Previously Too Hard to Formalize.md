@@ -68,7 +68,7 @@ However, the most expensive bugs and architectural decay stem from **semantic vi
 - *"Business validation must remain explicit in domain handlers rather than buried in database triggers or ORM lifecycle hooks."*
 - *"Do not introduce speculative fields or unrequested configuration flags."*
 
-Writing custom AST linters for these rules is notoriously difficult and brittle. As a result, enforcement historically depended on senior engineers catching them in review—a process that inevitably degrades under deadline pressure, accelerating [[Software Entropy and the Zero-Friction Trap|uncontrolled code sprawl]].
+Writing custom AST linters for these rules is notoriously difficult and brittle. As a result, enforcement historically depended on senior engineers catching them in review—a process that inevitably degrades under deadline pressure, accelerating [[Software Decay and the Hidden Costs of Frictionless AI Code|uncontrolled code sprawl]].
 
 ---
 
@@ -144,6 +144,6 @@ When an agent catches five pull requests violating the same boundary, stop askin
 - **[[LLMs as a Code Review Team]]**: Configuring specialized review personas to systematically evaluate pull requests.
 - **[[Reviewing AI-Generated Code]]**: How human reviewers focus on domain intent while machines handle mechanical and semantic checks.
 - **[[Testing in the Model, Agent, LLM Era]]**: The foundational balance between deterministic test oracles and semantic guidelines.
-- **[[Agent Advantage -  Relentless, Methodical Work]]**: Why inexhaustible procedural consistency makes agents ideal for checking complex rule sets.
+- **[[Agent Advantage - Relentless, Methodical Work]]**: Why inexhaustible procedural consistency makes agents ideal for checking complex rule sets.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How post-incident lessons are codified into living repository guidelines.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Using semantic review gates to prevent unmonitored code generation from degrading system health.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using semantic review gates to prevent unmonitored code generation from degrading system health.

@@ -81,7 +81,7 @@ Instead of producing clean code, the agent falls into the **Constraint Oscillati
 2. It discovers or is notified that the change violates **Driver B** (e.g., a hard 500-line limit or single-responsibility rule).
 3. It refactors to satisfy **Driver B**, which inadvertently violates **Driver C** (e.g., architectural boundary or interface immutability).
 4. It patches **Driver C**, re-triggering the violation of **Driver A**.
-5. The agent enters an infinite loop, burning tokens while thrashing back and forth between competing constraints, accelerating [[Software Entropy and the Zero-Friction Trap|software entropy and codebase instability]].
+5. The agent enters an infinite loop, burning tokens while thrashing back and forth between competing constraints, accelerating [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and codebase instability]].
 
 ---
 
@@ -184,6 +184,6 @@ Reserve the model's limited attention window exclusively for semantic, contextua
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Explains why blindly appending rules to `AGENTS.md` creates redundant, contradictory bloat.
 - **[[Reviewing AI-Generated Code]]**: Diagnosing when an agent hits its reasoning horizon and starts thrashing superficial patches during review.
 - **[[How Context Narrows an AI's Solution Space]]**: How constraints narrow search spaces constructively, and the tipping point where over-constraint causes attention breakdown.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Imposing mechanical constraints without overloading prompt context.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Imposing mechanical constraints without overloading prompt context.
 - **[[LLM Coding Agents Reliability]]**: The statistical inevitability of compound errors when agents attempt to satisfy dozens of simultaneous rules.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Using concise semantic blueprints to focus agent attention rather than spraying dozens of generic rules.

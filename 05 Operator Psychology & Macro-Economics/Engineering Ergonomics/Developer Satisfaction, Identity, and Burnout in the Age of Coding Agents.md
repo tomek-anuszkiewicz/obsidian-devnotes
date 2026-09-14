@@ -236,10 +236,10 @@ To overcome the dissonance of "authorship debt," engineers must recognize that *
 ## Relationship to the Knowledge Graph
 
 - **[[AI Changes the Role and Training of Software Engineers]]**: Explores the macro transition from manual coding to architectural questioning, cognitive catalysis, and the defense test.
-- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Details how corporate framework monopolies and centralized innovation suppress individual engineering agency, accelerating developer burnout.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: Details how corporate framework monopolies and centralized innovation suppress individual engineering agency, accelerating developer burnout.
 - **[[Reviewing AI-Generated Code]]**: Outlines the practical techniques for managing review attention and avoiding the catastrophic "dead in the water" trap.
 - **[[The First AI-Native Generation of Software Engineers]]**: Examines how junior developers will form their engineering identity in a world where code authoring is entirely delegated.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Explores how mechanical boundaries protect human attention and prevent agent-generated code sprawl.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Explores how mechanical boundaries protect human attention and prevent agent-generated code sprawl.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why pushing developers to review faster without human sustainability creates systemic quality collapse.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Explains how grounded human intuition acts as a crystallization seed in latent space, resolving the dilemma of authorship debt.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Explains how grounded human intuition acts as a crystallization seed in latent space, resolving the dilemma of authorship debt.
 

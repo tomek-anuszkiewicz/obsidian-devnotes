@@ -19,7 +19,7 @@ aliases:
 
 ## Core Thesis: Decouple Your Module Boundaries from Process Boundaries
 
-A modular monolith does not mean every piece of code must run inside the exact same operating system process on every server. Instead, it serves as the most practical bridge between simple in-process development and distributed services (see [[Service-to-Service Communication -  How Service A Should Call Service B|service communication patterns]]).
+A modular monolith does not mean every piece of code must run inside the exact same operating system process on every server. Instead, it serves as the most practical bridge between simple in-process development and distributed services (see [[Service-to-Service Communication - How Service A Should Call Service B|service communication patterns]]).
 
 The architectural power of this approach comes from decoupling four boundaries that teams often conflate:
 
@@ -199,10 +199,10 @@ Stage 8: Extract Standalone Microservices ONLY where distinct team ownership or
 
 ## Related Notes
 
-- **[[Service-to-Service Communication -  How Service A Should Call Service B]]**: Guidelines for choosing between synchronous RPC, asynchronous messaging, and event streaming.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Guidelines for choosing between synchronous RPC, asynchronous messaging, and event streaming.
 - **[[Designing Software for AI Agents]]**: Structuring module boundaries and explicit handlers so agents can navigate code easily.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Providing reusable platform infrastructure without locking application code into rigid frameworks.
 - **[[Propagating User Context Between Services]]**: Managing security tokens and user identity across in-process and remote module boundaries.
 - **[[OpenTelemetry]]**: Tracing requests as they traverse in-memory dispatchers, message queues, and external services.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing sprawling, unchecked cross-module dependencies when using AI coding agents.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing sprawling, unchecked cross-module dependencies when using AI coding agents.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Deciding when to build a shared internal dispatcher package versus generating local boilerplate.

@@ -151,6 +151,6 @@ Forcing negative constraints breaks the dot-product attraction and compels the m
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Explores how models prematurely lock onto consensus answers; Context Attractors represent the conversational-history manifestation of premature convergence.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Details what happens when too many rules compete in context; Context Attractors explain how a single rule or motif cannibalizes attention from all other constraints.
 - **[[How Context Narrows an AI's Solution Space]]**: Context is necessary to prune irrelevant solutions, but unchecked Attention Gravity narrows the space to a single distorted point.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: How targeted prompts can overcome passive attractors by seeding crystallization in under-explored regions of latent space.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How targeted prompts can overcome passive attractors by seeding crystallization in under-explored regions of latent space.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The engineering execution framework that enforces short, task-scoped sessions to prevent session bloat and memory compaction crashes.
-- **[[Statistical Bias, Proxy Variables, and Causal Invariants in AI Systems]]**: Demonstrates how historical attractors and proxy variables trigger self-fulfilling feedback loops in autonomous decision pipelines.
+- **[[Proxy Metrics and Operational Invariants in AI Systems]]**: Demonstrates how historical attractors and proxy variables trigger self-fulfilling feedback loops in autonomous decision pipelines.

@@ -1016,5 +1016,5 @@ It may be that AI finally makes it possible for teachers and schools to stop spe
 - **[[AI Changes the Role and Training of Software Engineers]]**: Elevating curiosity, problem framing, and verifiable critical thinking over rote memorization.
 - **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: How individuals use agentic knowledge synthesis tools to digest long-form books, papers, and complex domains.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Training students to distinguish primary empirical truth from derivative synthetic repetition.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: The art of prompting as an inquiry methodology for navigating complex knowledge spaces.
-- **[[Singularity Without AGI -  The Civilizational Automation Loop]]**: The societal and institutional adaptations required as machine intelligence democratizes specialized skills.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: The art of prompting as an inquiry methodology for navigating complex knowledge spaces.
+- **[[Networked Automation Loops and Software Output Without AGI]]**: The societal and institutional adaptations required as machine intelligence democratizes specialized skills.

@@ -152,7 +152,7 @@ This maintenance risk is backed up by large-scale industry data. The **GitClear 
 - **Refactoring Dropped by 50%**: Teams executed significantly fewer structural cleanups, opting instead to generate new code alongside old code.
 - **Duplication Rose by 81%**: Copy-paste sprawl and redundant logic increased substantially.
 
-Without explicit architectural constraints, zero-friction generation accelerates structural decay (see [[Software Entropy and the Zero-Friction Trap|generative code entropy]]), pushing projects into a state of permanent prototype churn rather than durable production engineering (see [[How AI Changes Prototyping and the Path from PoC to Production]]).
+Without explicit architectural constraints, zero-friction generation accelerates structural decay (see [[Software Decay and the Hidden Costs of Frictionless AI Code|generative code entropy]]), pushing projects into a state of permanent prototype churn rather than durable production engineering (see [[How AI Changes Prototyping and the Path from PoC to Production]]).
 
 ---
 
@@ -218,7 +218,7 @@ Registering these dissents directly into the repository documentation creates a 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical harness designs that enforce negative constraints and boundary rules automatically during development loops.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: How negative bounding prevents prompt bloat and eliminates rule conflicts in agent workflows.
 - **[[How Context Narrows an AI's Solution Space]]**: The mechanics of pruning an agent's solution space using clear structural constraints.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why friction-free code generation accelerates technical debt when negative boundaries are absent.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why friction-free code generation accelerates technical debt when negative boundaries are absent.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Contrasting disposable exploratory spikes with the disciplined permanence needed for production systems.
 - **[[AI Changes the Economics of Technical Debt]]**: How unmanaged code generation compounds maintenance debt and alters the cost of structural refactoring.
 - **[[Designing Software for AI Agents]]**: Designing clean, explicit module boundaries that prevent agents from misinterpreting system intent.

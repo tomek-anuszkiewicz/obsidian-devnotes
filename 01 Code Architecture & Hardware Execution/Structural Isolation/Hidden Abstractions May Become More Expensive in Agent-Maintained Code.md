@@ -186,7 +186,7 @@ When you use the same domain vocabulary everywhere:
 ## Related Notes
 
 - **[[Designing Software for AI Agents]]**: Foundational patterns for designing transparent, discoverable architectures that agents can navigate without guessing.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why localized, explicit code is safer from entropy than clever, tightly coupled abstractions.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why localized, explicit code is safer from entropy than clever, tightly coupled abstractions.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How code organization shifts from keystroke-saving shortcuts to machine-verifiable structures.
 - **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Building modular internal libraries without hijacking application execution flow.
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Eliminating hidden query translation and unexpected N+1 queries through explicit data access.

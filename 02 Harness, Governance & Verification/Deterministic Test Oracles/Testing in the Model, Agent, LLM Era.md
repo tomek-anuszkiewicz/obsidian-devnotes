@@ -255,6 +255,6 @@ Mutation testing is the ultimate quality check for agent-generated test suites.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Pairing deterministic test oracles with concise markdown specs to steer coding agents.
 - **[[Developing Features with AI Coding Agents]]**: Tactical guide for vertical-slice implementation and freezing business acceptance tests.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Using characterization test oracles and shadow traffic mirroring to safely modernize legacy systems.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Enforcing mechanical isolation and test gates to stop runaway agent code sprawl.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Enforcing mechanical isolation and test gates to stop runaway agent code sprawl.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Capturing rejected designs and historical bugs as permanent regression tests in the oracle.
-- **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Combining formal mathematical proofs with empirical test oracles for mission-critical invariants.
+- **[[Formal Verification and Runtime Safety Boundaries]]**: Combining formal mathematical proofs with empirical test oracles for mission-critical invariants.

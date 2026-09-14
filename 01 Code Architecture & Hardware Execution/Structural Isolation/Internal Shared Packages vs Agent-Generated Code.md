@@ -171,6 +171,6 @@ Modern engineering teams balance shared infrastructure and local code across thr
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Providing reusable platform infrastructure while keeping application code transparent.
 - **[[AI Changes the Economics of Software Libraries]]**: How near-zero generation costs alter the trade-off between external dependencies and local code.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why magic frameworks and implicit reflection make code harder for agents to navigate.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why localized code duplication can provide a safer blast radius than shared package coupling.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why localized code duplication can provide a safer blast radius than shared package coupling.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebases adapt their structure when machines write and maintain the implementation.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using automated conformance test suites as unambiguous architectural guardrails.

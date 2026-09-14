@@ -1134,5 +1134,5 @@ The fixed application around it becomes optional.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing decoupled enterprise capabilities directly to agents via browser protocols.
 - **[[Designing APIs for LLM-Generated Integration Code]]**: The API design principles that allow AI agents to bridge disparate, unbundled enterprise tools effortlessly.
 - **[[From AI-Assisted Teams to Cross-System Feature Ownership]]**: Empowering vertical feature teams to manage specialized tools without bureaucratic IT gatekeeping.
-- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: Examines how monolithic enterprise architectures and centralized framework monopolies maintain incidental complexity against unbundling pressures.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: Examines how monolithic enterprise architectures and centralized framework monopolies maintain incidental complexity against unbundling pressures.
 

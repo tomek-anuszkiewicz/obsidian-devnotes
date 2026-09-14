@@ -55,7 +55,7 @@ Proposed Pull Request Diff
 ## Core Invariants
 
 1. **Hypothesis Generation Over Vague Opinions**: An agentic reviewer must not post speculative comments (*"This might be slow"*). The reviewer must formulate a concrete hypothesis, generate a reproducer test or benchmark, execute it, and report only when the failure is empirically demonstrated.
-2. **Relentless Stamina Over Raw Genius**: The primary value of an automated review agent is not superhuman intelligence, but **infinite patience**. An agent applies the same rigorous 30-point security checklist on Friday evening across a 2,000-line diff with the exact same focus as on Monday morning (see [[Agent Advantage -  Relentless, Methodical Work]]).
+2. **Relentless Stamina Over Raw Genius**: The primary value of an automated review agent is not superhuman intelligence, but **infinite patience**. An agent applies the same rigorous 30-point security checklist on Friday evening across a 2,000-line diff with the exact same focus as on Monday morning (see [[Agent Advantage - Relentless, Methodical Work]]).
 3. **Specialized Personas Over Monolithic Prompts**: Asking a single general prompt to review an entire pull request causes attention dilution. Route diffs to focused specialists: Database, Security, Concurrency, API Compatibility, and Performance.
 4. **Strict Separation of Reviewer and Fixer**: The reviewer agent must remain strictly read-only (`inspect, execute tests, profile`). Giving the reviewer write permissions to fix the code creates confirmation bias: the model bends the code to validate its own assumptions. Fixing must be delegated to an independent agent.
 5. **Noise Filtering and Synthesis**: Multiple reviewers run the risk of spamming pull requests with low-value nitpicks. A synthesizer agent must deduplicate findings, filter out unverified observations, and format findings into structured checks.
@@ -217,8 +217,8 @@ Rather than posting twenty uncoordinated comments on a pull request, use a **Syn
 
 - **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: How LLM reviewers enforce nuanced architectural and domain guidelines that static linters miss.
 - **[[Reviewing AI-Generated Code]]**: Best practices for human reviewers overseeing agent-authored pull requests.
-- **[[Agent Advantage -  Relentless, Methodical Work]]**: Why procedural stamina and consistency make agents ideal for high-volume review tasks.
+- **[[Agent Advantage - Relentless, Methodical Work]]**: Why procedural stamina and consistency make agents ideal for high-volume review tasks.
 - **[[Testing in the Model, Agent, LLM Era]]**: Combining automated review agents with deterministic test suites and frozen oracles.
 - **[[Multi-Agent Software Development]]**: Coordinating specialized agent roles across the software development lifecycle.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Integrating automated review checkpoints into CI/CD pipelines.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Using automated review gates to prevent unmonitored code generation from degrading code quality.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using automated review gates to prevent unmonitored code generation from degrading code quality.

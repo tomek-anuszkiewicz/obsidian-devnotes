@@ -163,5 +163,5 @@ if payment.batch_settlement_id is not null:
 
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Keeping domain decisions isolated from database queries and persistence layers.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Ensuring business domain logic is explicit and discoverable rather than buried in framework middleware.
-- **[[Software Entropy and the Zero-Friction Trap]]**: Preventing zero-friction code generation from introducing silent business errors.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing zero-friction code generation from introducing silent business errors.
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Placing business logic authority in Layer 5 (Human Intent) and Layer 2 (Verification Gates).

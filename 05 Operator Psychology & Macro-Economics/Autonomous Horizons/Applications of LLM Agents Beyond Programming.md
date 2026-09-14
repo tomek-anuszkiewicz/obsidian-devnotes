@@ -51,7 +51,7 @@ aliases:
 
 ---
 
-LLMs and agents can be useful far beyond code generation, opening new vistas for [[Proactive Software -  From Reactive Systems to Autonomous Agents|proactive autonomous systems]]. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
+LLMs and agents can be useful far beyond code generation, opening new vistas for [[Proactive Software - From Reactive Systems to Autonomous Agents|proactive autonomous systems]]. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
 
 ## Potential use cases
 

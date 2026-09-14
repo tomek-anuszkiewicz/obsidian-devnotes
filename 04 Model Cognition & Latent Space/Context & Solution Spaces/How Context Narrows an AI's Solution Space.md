@@ -611,6 +611,6 @@ For the complete architectural blueprint detailing how context retrieval, tree-o
 - **[[How LLM Systems Build Context]]**: Examines the technical architecture of context windows, retrieval mechanisms, and working memory.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: The breakdown of the solution space when too many competing constraints saturate agent attention.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes how narrow context can prematurely bias the model toward conventional answers.
-- **[[Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight]]**: Details how targeted practitioner prompts navigate and unlock the latent solution space.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Details how targeted practitioner prompts navigate and unlock the latent solution space.
 - **[[How Reasoning Models Explore and Evaluate Solutions]]**: How test-time compute and reasoning chains systematically explore pruned solution spaces.
 - **[[Retrieval-Augmented Generation and Context Architecture]]**: Practical retrieval strategies for providing precision context without saturating attention.

@@ -37,7 +37,7 @@ Focused Files + Explicit Boundaries ──► Low Context Overhead ──► Fir
 ## Core Invariants
 
 1. **Technical Debt Becomes Measurable**: Debt ceases to be an abstract complaint. It is measured directly in agent operational metrics: token cost per feature, number of failed iterations, diff size, and human review minutes.
-2. **The Zero-Friction Trap**: When humans write code, physical typing effort and cognitive fatigue act as natural friction against adding unnecessary layers. Because agents experience zero friction, they casually generate bloated wrappers, duplicate helpers, and touch a dozen files in a single prompt unless strictly bounded (see [[Software Entropy and the Zero-Friction Trap|the zero-friction trap]]).
+2. **The Zero-Friction Trap**: When humans write code, physical typing effort and cognitive fatigue act as natural friction against adding unnecessary layers. Because agents experience zero friction, they casually generate bloated wrappers, duplicate helpers, and touch a dozen files in a single prompt unless strictly bounded (see [[Software Decay and the Hidden Costs of Frictionless AI Code|the zero-friction trap]]).
 3. **Hard Structural Boundaries Over Polite Guidelines**: Written guidelines cannot prevent agents from generating sprawl. Clean systems enforce hard structural rules: one file per operation, hard line-count ceilings (e.g. 500 lines max), and strict limits on touched files per task.
 4. **The 70/30 Capacity Allocation**: Teams that dedicate 100% of newly unlocked AI velocity to new features rapidly suffocate under accumulated code sprawl. Sustainable organizations allocate 30% of agent bandwidth to automated background maintenance and refactoring.
 
@@ -129,10 +129,10 @@ By dedicating a fixed fraction of agent cycles to continuous background cleanup,
 
 ## Related Notes
 
-- **[[Software Entropy and the Zero-Friction Trap]]**: Why friction-free code generation accelerates complexity and how to bound agent blast radius.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why friction-free code generation accelerates complexity and how to bound agent blast radius.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Practical workflows for using agents to systematically modernise legacy applications.
-- **[[Agent Advantage -  Relentless, Methodical Work]]**: How agents excel at tedious, high-volume maintenance tasks that human engineers resist.
+- **[[Agent Advantage - Relentless, Methodical Work]]**: How agents excel at tedious, high-volume maintenance tasks that human engineers resist.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why faster code generation exposes downstream testing, review, and deployment bottlenecks.
 - **[[Designing Software for AI Agents]]**: Structural conventions and architectural patterns that make codebases easy for agents to navigate.
 - **[[Reviewing AI-Generated Code]]**: How human reviewers guard against subtle duplication and speculative abstractions introduced by agents.
-- **[[Institutional Complexity and the Suppression of Grassroots Engineering Innovation]]**: How organizational complexity and bureaucracy perpetuate unaddressed technical debt.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: How organizational complexity and bureaucracy perpetuate unaddressed technical debt.

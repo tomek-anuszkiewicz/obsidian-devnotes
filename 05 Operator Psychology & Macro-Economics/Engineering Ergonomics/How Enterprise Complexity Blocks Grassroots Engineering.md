@@ -1,5 +1,5 @@
 ---
-title: Institutional Complexity and the Suppression of Grassroots Engineering Innovation
+title: How Enterprise Complexity Blocks Grassroots Engineering
 tags:
   - software-architecture
   - engineering-ergonomics
@@ -8,6 +8,7 @@ tags:
   - technical-debt
   - developer-agency
 aliases:
+  - Institutional Complexity and the Suppression of Grassroots Engineering Innovation
   - Institutional Complexity and Grassroots Innovation
   - The Monopolization of R&D in Enterprise Engineering
   - The Anatomy of Enterprise Complexity Fetishism
@@ -15,7 +16,7 @@ aliases:
   - Negative Tribal Knowledge and Status Preservation
 ---
 
-# Institutional Complexity and the Suppression of Grassroots Engineering Innovation
+# How Enterprise Complexity Blocks Grassroots Engineering
 
 > [!IMPORTANT]
 > **Executive Architectural Thesis**: The primary pathology of enterprise technology is not technical incompetence, but the **institutional monopolization of innovation**. Large engineering organizations permit modernization only through centralized, multi-year committee roadmaps while actively penalizing grassroots problem-solving by frontline engineers. Incidental complexity—such as sprawling, unpartitioned multi-terabyte datastores mixing hot transactional working sets with cold audit history—is celebrated as a status symbol to justify team headcounts, promotion packets, and cloud budgets. First-principles simplification is perceived as a political threat because parsimonious architectures dismantle the heroic monuments built by incumbent hierarchies.
