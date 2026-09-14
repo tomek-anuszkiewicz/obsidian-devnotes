@@ -614,7 +614,7 @@ issue when multiplexing async task handlers under high core concurrency."
 Direct Ingestion into Knowledge Inbox (10-second human review)
 ```
 
-1. **Automated Audio-to-Text Ingestion**: An agent pipeline watches target channels or feeds, pulling raw transcripts immediately upon publication.
+1. **Automated Audio-to-Text Ingestion**: An agent pipeline (such as [[Always-On Autonomous Agents - The 24-7 Local Operating System|a persistent 24/7 background agent]]) watches target channels or feeds, pulling raw transcripts immediately upon publication.
 2. **Topological Comparison Against the Personal Vault**: Utilizing the mechanisms established in [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]], the agent compares incoming claims against the user's documented invariants and [[Negative Knowledge and Explicit Architectural Dissents|architectural dissents]].
 3. **Triaging the Information Manifold**:
    - **Consensus ($K^+$)**: Recycled points are silently pruned or logged as validation datapoints.
@@ -647,6 +647,7 @@ The latter may become increasingly scarce — and increasingly valuable.
 
 ## Relationship to the Knowledge Graph
 
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]**: The practical execution architecture for running 24/7 background agent daemons that ingest, diff, and curate intelligence feeds without recurring cloud token costs.
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: Explores why neural networks degrade without uncurated, empirical contact with the physical and business world.
 - **[[AI May Break the Old Economic Model of the Open Web]]**: How AI scraping and synthetic content destruction disincentivize original human publishing.
 - **[[The Most Valuable Software Training Data May Be Private]]**: Why private enterprise data repositories become the last bastions of original, high-signal knowledge.
