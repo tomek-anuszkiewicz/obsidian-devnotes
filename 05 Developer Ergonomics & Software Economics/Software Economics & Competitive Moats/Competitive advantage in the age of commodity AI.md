@@ -445,7 +445,7 @@ and more like:
 
 The model itself may increasingly become a commodity.
 
-The surrounding system does not have to.
+The surrounding system does not have to. When models are treated as interchangeable execution commodities, organizations maintain sovereignty and operational efficiency by controlling their private state and deploying hybrid local-cloud inference topologies (see [[Local vs Cloud and Hybrid Model Execution|analyses of local vs cloud model execution]]).
 
 ## Core Architectural Principles
 The strongest form of the argument is:
@@ -457,6 +457,7 @@ And a company's accumulated history — its code, decisions, incidents, experime
 
 ## Relationship to the Knowledge Graph
 
+- **[[Local vs Cloud and Hybrid Model Execution]]**: The concrete infrastructure, hardware tiers, and economic calculations for treating commoditized models as interchangeable execution runtimes.
 - **[[AI Changes the Role and Training of Software Engineers]]**: Details why asking extraordinary questions is the primary moat when code generation is free.
 - **[[How Targeted Prompts Steer Model Solution Spaces]]**: How deep practitioner prompts act as crystallization seeds in neural networks.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Escaping the commodity trap by avoiding the averaged prior of default model answers.
