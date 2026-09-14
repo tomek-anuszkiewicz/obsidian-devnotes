@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Indexes the Obsidian knowledge vault into the local Qdrant RAG vector database.
 
@@ -9,11 +9,11 @@
 
 .PARAMETER Strict
     If specified, strictly indexes only the 5 canonical layers:
-      • 01 Substrate & Mechanical Sympathy
+      • 01 Code Architecture & Hardware Execution
       • 02 Harness, Governance & Verification
       • 03 Runtime Mesh & Observability
-      • 04 Model Cognition & Latent Space
-      • 05 Operator Psychology & Macro-Economics
+      • 04 Context Architecture & Model Steering
+      • 05 Developer Ergonomics & Software Economics
     Default: Universal mode (dynamically discovers all numbered folders '^[0-9]{2}').
 
 .PARAMETER Reindex
@@ -80,11 +80,11 @@ if ($ListSources) {
 
 # 3. Canonical 5-Layer System Stack (Strict List)
 $CanonicalLayers = @(
-    '01 Substrate & Mechanical Sympathy',
+    '01 Code Architecture & Hardware Execution',
     '02 Harness, Governance & Verification',
     '03 Runtime Mesh & Observability',
-    '04 Model Cognition & Latent Space',
-    '05 Operator Psychology & Macro-Economics'
+    '04 Context Architecture & Model Steering',
+    '05 Developer Ergonomics & Software Economics'
 )
 
 Write-Host ""

@@ -7,13 +7,13 @@ tags:
   - mechanical-sympathy
   - verification-harness
   - runtime-observability
-  - model-cognition
-  - engineering-psychology
+  - context-architecture
+  - developer-ergonomics
 aliases:
   - The 5-Layer System Stack
   - 5-Layer Agent Architecture
   - System Stack for Autonomous Coding
-  - From Silicon to Operator Psychology
+  - From Silicon to Developer Ergonomics
   - Architectural Taxonomy of Agentic Engineering
 ---
 
@@ -31,22 +31,22 @@ When autonomous reasoning models become the primary producers of implementation 
 │              THE 5-LAYER AGENTIC SOFTWARE ENGINEERING STACK            │
 └────────────────────────────────────────────────────────────────────────┘
 
-  LAYER 5: OPERATOR PSYCHOLOGY & MACRO-ECONOMICS
+  LAYER 5: DEVELOPER ERGONOMICS & SOFTWARE ECONOMICS
   ├── Engineering Ergonomics (The Invariant Director, Burnout, Coaching)
-  ├── Industry Shifts & Moats (Commodity Code, Private Corpora as Moats)
-  └── Autonomous Horizons (Digital Models of Self, Autonomous Enterprise)
+  ├── Software Economics & Competitive Moats (Commodity Code, Private Corpora as Moats)
+  └── Autonomous Systems & Workflows (Digital Models of Self, Autonomous Enterprise)
          ▲
          │ Directs intent, sets boundary invariants, captures economic value
          ▼
-  LAYER 4: MODEL COGNITION & LATENT SPACE
-  ├── Context & Solution Spaces (Context Compaction, Solution Pruning)
+  LAYER 4: CONTEXT ARCHITECTURE & MODEL STEERING
+  ├── Context Windows & Attention (Context Compaction, Attention Budgets)
   ├── Guardrails & Constraints (Rule Saturation, Safety Invariants)
-  └── Retrieval & Memory (RAG Master Architecture, Institutional Memory)
+  └── RAG & Knowledge Retrieval (RAG Master Architecture, Institutional Memory)
          ▲
          │ Ingests living context, synthesizes implementation candidates
          ▼
   LAYER 3: RUNTIME MESH & OBSERVABILITY
-  ├── Semantic Telemetry (OpenTelemetry, Conversational Observability)
+  ├── Observability & Runtime Telemetry (OpenTelemetry, Conversational Observability)
   ├── Service Boundaries & Auth (Zero-Trust Identity, Context Propagation)
   └── Agent-Native Protocols (WebMCP, Toolkits, Autonomous Canary Probes)
          ▲
@@ -109,9 +109,9 @@ The third layer governs the live execution environment: distributed microservice
 
 ---
 
-## Layer 4: Model Cognition & Latent Space
+## Layer 4: Context Architecture & Model Steering
 
-The fourth layer governs the reasoning mechanics, context window constraints, retrieval architectures, and latent space navigation of large foundation models.
+The fourth layer governs the reasoning mechanics, context window constraints, retrieval architectures, and steering dynamics of large foundation models.
 
 ### Core Architectural Invariants:
 1. **Context as the Sovereign Bottleneck**: The context window is the primary working memory of the agent. Raw prompt bloat triggers attention degradation and retrieval failures. As formalized in [[Retrieval-Augmented Generation and Context Architecture|the RAG and Context Master Architecture]], high-performance cognition requires hybrid dense/sparse retrieval, cross-encoder reranking, and dynamic context compaction.
@@ -121,9 +121,9 @@ The fourth layer governs the reasoning mechanics, context window constraints, re
 
 ---
 
-## Layer 5: Operator Psychology & Macro-Economics
+## Layer 5: Developer Ergonomics & Software Economics
 
-The uppermost layer governs the human operator, psychological resilience, organizational design, and the macro-economic forces transforming the global software industry.
+The uppermost layer governs the human engineer, cognitive workflows, team structures, and the software economics transforming the modern tech industry.
 
 ### Core Architectural Invariants:
 1. **The Invariant Director**: The professional identity of the software engineer undergoes a permanent shift: from manual syntax typist to **System Director, Invariant Architect, and Verification Guardian**, as explored in [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]].
@@ -162,6 +162,6 @@ The 5-Layer Stack operates as a continuous, bidirectional cybernetic loop:
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The canonical anchor for Layer 2 (Harness, Governance & Verification); defines the deterministic execution boundary.
 - **[[Testing in the Model, Agent, LLM Era]]**: The verification cornerstone of Layer 2; establishes deterministic test suites as living architectural blueprints.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: The canonical anchor for Layer 3 (Runtime Mesh & Observability); formalizes conversational telemetry and runtime supervisory agents.
-- **[[Retrieval-Augmented Generation and Context Architecture]]**: The canonical anchor for Layer 4 (Model Cognition & Latent Space); governs context window allocation and memory retrieval.
-- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The canonical anchor for Layer 5 (Operator Psychology & Macro-Economics); addresses the cognitive and identity transformation of the engineer.
+- **[[Retrieval-Augmented Generation and Context Architecture]]**: The canonical anchor for Layer 4 (Context Architecture & Model Steering); governs context window allocation and memory retrieval.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The canonical anchor for Layer 5 (Developer Ergonomics & Software Economics); addresses the cognitive and identity transformation of the engineer.
 - **[[Competitive advantage in the age of commodity AI]]**: The economic foundation of Layer 5; analyzes why private domain corpora and delivery systems form the ultimate defensible moats.

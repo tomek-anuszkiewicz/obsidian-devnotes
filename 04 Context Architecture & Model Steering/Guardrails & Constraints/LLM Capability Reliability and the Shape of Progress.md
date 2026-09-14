@@ -17,7 +17,7 @@ created: 2026-08-23
 # LLM Capability, Reliability, and the Shape of Progress
 
 > [!IMPORTANT]
-> **Core Architectural Takeaway**: Model capability and operational system reliability evolve along decoupled trajectories. While single-attempt benchmark scores and task horizons expand exponentially, autonomous multi-step execution suffers from geometric error compounding ($P = p^N$). Production reliability cannot be achieved by awaiting base model infallibility; it requires bounding untrusted probabilistic model cognition inside deterministic verification harnesses, automated feedback loops, and immutable mechanical oracles.
+> **Core Architectural Takeaway**: Model capability and operational system reliability evolve along decoupled trajectories. While single-attempt benchmark scores and task horizons expand exponentially, autonomous multi-step execution suffers from geometric error compounding ($P = p^N$). Production reliability cannot be achieved by awaiting base model infallibility; it requires bounding untrusted probabilistic model inference inside deterministic verification harnesses, automated feedback loops, and immutable mechanical oracles.
 
 ```text
        ASYMPTOTIC CAPABILITY VS OPERATIONAL RELIABILITY DIVERGENCE
