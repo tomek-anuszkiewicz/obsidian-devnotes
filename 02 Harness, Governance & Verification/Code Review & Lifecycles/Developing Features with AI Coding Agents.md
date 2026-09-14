@@ -85,19 +85,25 @@ Before writing any code, instruct the agent to inspect the codebase and answer:
 
 *Hard Rule*: Zero file modifications during this step. The output is purely a technical summary.
 
-### Step 2: Behavioral Specification & Decision Tables
-Do not rely on long narrative descriptions of business logic. Use structured decision tables that map inputs and states directly to expected outputs:
+### Step 2: Behavioral Specification, Decision Tables & State Graphs
+Do not rely on sprawling narrative prose to describe business logic or state transitions. Natural language prose is inherently ambiguous; large language models frequently extrapolate unstated requirements or hallucinate missing branches. 
+
+Instead, leverage **Decision Tables and State-Machine Transition Graphs**—representations that AI coding agents interpret with near-zero hallucination:
 
 ```text
-Current State    Event / Input            Expected Result          Side Effects
-────────────────────────────────────────────────────────────────────────────────────────────
-Active           Cancel Requested         Status: CancelPending    Send cancellation email
-Active           Payment Fails (Attempt 1)Status: Active           Schedule retry in 24h
-Active           Payment Fails (Attempt 3)Status: Suspended        Emit SubscriptionSuspendedEvent
-Suspended        Payment Succeeds         Status: Active           Emit SubscriptionReactivatedEvent
+Current State    Event / Input            Condition / Guard        Expected Result          Side Effects
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Active           Cancel Requested         Within Grace Period      Status: CancelPending    Send cancellation email
+Active           Cancel Requested         Outside Grace Period     Status: Active (Error)   Emit ErrorNotification
+Active           Payment Fails            Attempt < 3              Status: Active           Schedule retry in 24h
+Active           Payment Fails            Attempt >= 3             Status: Suspended        Emit SubscriptionSuspended
+Suspended        Payment Succeeds         -                        Status: Active           Emit ReactivatedEvent
 ```
 
-Decision tables force clarity: every branch is explicit, preventing the agent from guessing how to handle edge cases.
+Why decision tables and state graphs are high-leverage agent oracles:
+1. **Combinatorial Explicitness**: Every row represents an exact, bounded tuple: `(CurrentState, Event, Guard) -> (NextState, SideEffect)`. The model has zero freedom to invent unapproved transition paths.
+2. **Deterministic Test Synthesis**: An agent can convert a 10-row decision table into 10 parametrized acceptance tests in seconds, ensuring 100% boundary condition coverage.
+3. **Cognitive Ergonomics for Humans**: A human engineer can audit a decision table in 60 seconds, immediately spotting unhandled edge cases (e.g. *"What happens if Cancel is requested while payment retry is scheduled?"*).
 
 ### Step 3 & 4: Acceptance Tests & Human Sign-Off
 The agent translates the decision table into automated acceptance tests. Before any implementation begins, a human engineer reviews the tests:
@@ -107,11 +113,11 @@ The agent translates the decision table into automated acceptance tests. Before 
 
 Once approved, the tests are locked. The agent is strictly forbidden from altering test assertions during implementation.
 
-### Step 5: The Vertical Slice
-Instead of having the agent generate five controllers, eight DTOs, three service interfaces, and database migrations simultaneously, have it implement **one complete transaction**:
-1. One API route.
-2. One application command handler.
-3. One database query or update.
+### Step 5: The Vertical Slice and The Minimal Frame
+Instead of having the agent generate five controllers, eight DTOs, three service interfaces, and database migrations simultaneously, have it implement **one complete transaction** (or in stateful/low-level systems, one **Minimal Frame** per [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices|atomic operational slice]]):
+1. One API route or dispatch step.
+2. One application command handler or state transition.
+3. One database query or physical memory update.
 4. Verify that this single path compiles, runs, and passes its corresponding acceptance test.
 
 If the module boundaries or database mappings feel awkward, refactoring one thin slice takes two minutes. If you waited until twenty files were generated, restructuring would take hours.
@@ -133,12 +139,14 @@ This surfaces hidden landmines before the code reaches human review (see [[Revie
 3. **Freeze test files during generation**: In automated agent harnesses, mark test directories as read-only while the agent writes implementation code.
 4. **Implement thin slices**: If an agent's pull request touches more than 6 files for a new feature, you probably didn't slice it thinly enough.
 5. **Separate refactoring from features**: If building a feature requires cleaning up existing code, do the refactoring in a separate, dedicated commit first.
+6. **Repro-First Defect Resolution**: Whenever fixing a bug or regression, enforce the rule: **zero production code edits without a failing test**. The agent must first author an isolated reproduction test in the test suite that reproduces the failure (red). Only once the failure is empirically confirmed may the agent touch production code to make the test pass (green).
 
 ---
 
 ## Related Notes
 
 - **[[Reviewing AI-Generated Code]]**: Best practices for auditing agent-generated code with a focus on risk and human mental models.
+- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Proving system boundaries on atomic operational primitives before scaling out.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules and decision tables are essential for keeping agents on track.
 - **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification hub explaining why automated tests must remain immutable during implementation.
 - **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: How to triage whether to fix bugs in code or upstream in the specification.
@@ -146,3 +154,4 @@ This surfaces hidden landmines before the code reaches human review (see [[Revie
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specifications alongside code during feature development.
 - **[[LLMs as a Code Review Team]]**: Using independent agent reviewers to audit features before human sign-off.
 - **[[AI Changes the Economics of Technical Debt]]**: Why clean, modular architecture directly accelerates feature delivery speed with agents.
+
