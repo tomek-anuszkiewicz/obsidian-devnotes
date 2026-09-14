@@ -122,7 +122,7 @@ The commercial software market frequently advertises generic **"Agentic Work OS"
 
 ### The Abstraction Penalty for Software Engineering
 For real software engineering and low-level systems work, generic SaaS agent frameworks introduce severe friction:
-- **Lowest Common Denominator**: Built for generic office tasks; completely unaware of mechanical compiler invariants, memory bounds, or concurrency guarantees.
+- **Lowest Common Denominator**: Built for generic office tasks; completely unaware of mechanical compiler invariants, memory bounds, or concurrency guarantees. Whereas generic corporate SaaS platforms attempt to sell high-overhead dashboards, engineering practitioners deploy [[Always-On Autonomous Agents - The 24-7 Local Operating System|local-first autonomous agent operating systems]] running on low-cost local appliances under strict blast radius containment.
 - **Debugging the Wrapper**: Engineers spend more time troubleshooting orchestration framework bugs and proprietary JSON schemas than shipping production features.
 - **Lack of Deterministic Verification**: Generic platforms rely on conversational consensus between multiple LLMs rather than binding execution to real compilers and test oracles.
 
@@ -142,6 +142,8 @@ Elite agentic engineering converges on a **tailored, repository-native harness**
 
 ## Relationship to the Knowledge Graph
 
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]**: Architecture, security guardrails, and personal OS workflows for persistent 24/7 background agent daemons.
+- **[[Dynamic Model Routing and Inference Gateways]]**: Decoupling the execution harness from concrete model endpoints via automated fallbacks and multi-tier routing.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural harness philosophy, self-healing feedback loops, and controlled plan-and-approval workflows.
 - **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The high-bandwidth operational model of directing in-repository harnesses via voice and rule codification.
 - **[[Agent Deployment and Execution Models]]**: Cloud, local, and hybrid deployment patterns for agent harnesses.
