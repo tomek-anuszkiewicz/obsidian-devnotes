@@ -45,5 +45,11 @@ Whenever creating, updating, or refactoring architectural notes and documentatio
      - Modern statically typed ecosystems.
      - Dynamic and distributed runtimes.
 
-5. **Acknowledge Detail Depth Without Sacrificing Agnosticism**:
-   - Some notes dive deeply into mechanical sympathy (cache alignment, memory fences, kernel context switches, vectorization). Such technical depth is highly encouraged, but it must be framed through **universal computer architecture and OS principles** rather than specific programming language APIs.
+5. **Hardware Execution Quarantine by Architectural Layer**:
+   - Physical microarchitectural execution details (`L1 / L1i cache`, `cache lines`, `branch predictor`, `TLB miss`, `instruction cache thrashing`) are quarantined strictly to Layer 1 (`01 Code Architecture & Hardware Execution/`) notes dedicated to physical execution dynamics and the root system charters.
+   - Across Layers 2, 3, 4, and 5 (Harness, Telemetry, Model Cognition, Operator Ergonomics), abstract hardware details into universal software engineering constructs:
+     - Use **instruction locality** or **working set size** instead of *L1i cache lines*.
+     - Use **sequential memory throughput** or **spatial locality** instead of *64-byte cache line packing*.
+     - Use **branch prediction efficiency** or **state machine compactness** instead of *hardware branch predictor saturation*.
+     - Use **execution blast radius** instead of *cache invalidation*.
+   - When notes dive deeply into mechanical execution (cache alignment, memory fences, kernel context switches, vectorization), such depth must always be framed through **universal computer architecture and operating system principles** rather than language-specific APIs.
