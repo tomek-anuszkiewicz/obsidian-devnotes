@@ -75,9 +75,16 @@ When refactoring or expanding existing notes, use early repository commits (such
 The practitioner voice standard applies strictly to the entire file system structure—including folder names, note file titles, and internal markdown headings. Academic treatises, philosophical jargon, and theatrical metaphors are strictly prohibited.
 
 1. **Directory Naming Standards (Engineering Domains & Subsystems)**:
-   - Directory names across all layers must represent concrete, recognizable software engineering disciplines, architectural layers, or subsystems:
-     - ✅ *Compliant*: `Deterministic Test Oracles`, `Agent Harness & Safeguards`, `Code Review & Lifecycles`, `Runtime Mesh & Observability`, `Structural Isolation`.
-     - ❌ *Banned*: Theatrical, mythical, or sci-fi epic monikers (e.g. `The Ironclad Oracle`, `The Epistemic Gateway`, `The Neural Citadel`, `Cognitive Sanctum`).
+   - Directory names across all layers must represent concrete, recognizable software engineering disciplines, architectural layers, or subsystems matching the standard of top engineering blogs:
+     - ✅ *Canonical 5-Layer Stack Directories*:
+       - `01 Code Architecture & Hardware Execution/`
+       - `02 Harness, Governance & Verification/`
+       - `03 Runtime Mesh & Observability/`
+       - `04 Context Architecture & Model Steering/`
+       - `05 Developer Ergonomics & Software Economics/`
+     - ✅ *Compliant Subsystems*: `Deterministic Test Oracles`, `Agent Harness & Safeguards`, `Code Review & Lifecycles`, `Context Windows & Attention`, `RAG & Knowledge Retrieval`, `Observability & Runtime Telemetry`, `Autonomous Systems & Workflows`, `Software Economics & Competitive Moats`, `Structural Isolation`.
+     - ❌ *Banned Academic Departments & Mathematical Jargon*: `Model Cognition`, `Latent Space`, `Operator Psychology`, `Macro-Economics`, `Solution Spaces`.
+     - ❌ *Banned Theatrical & Mythical Labels*: `The Ironclad Oracle`, `The Epistemic Gateway`, `The Neural Citadel`, `Autonomous Horizons`, `Cognitive Sanctum`.
    - Every directory name must survive the *Coffee & Tech Talk Test*: it should read like a legitimate subsystem or component directory in a serious production codebase.
 
 2. **File Naming Standards (Mechanisms, Patterns & Trade-offs)**:

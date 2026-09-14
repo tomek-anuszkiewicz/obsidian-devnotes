@@ -14,11 +14,11 @@ Whenever creating, modifying, editing, or refactoring notes across this Obsidian
 ### 1. Absolute Prohibition: Never Link from Public to Private
 - **NEVER** insert a wikilink (`[[...]]`), markdown link, or explicit reference from any public note to any note located in `_Private/` or any other private/untracked directory.
 - Public notes comprise all files in:
-  - `01 Substrate & Mechanical Sympathy/`
+  - `01 Code Architecture & Hardware Execution/`
   - `02 Harness, Governance & Verification/`
   - `03 Runtime Mesh & Observability/`
-  - `04 Model Cognition & Latent Space/`
-  - `05 Operator Psychology & Macro-Economics/`
+  - `04 Context Architecture & Model Steering/`
+  - `05 Developer Ergonomics & Software Economics/`
   - Root navigational notes (e.g., `_Explore.md`, `Preamble.md`, `The 5-Layer System Stack for Agentic Software Engineering.md`).
 - Even mentioning the title of a private note inside double brackets (`[[...]]`) in a public file is strictly prohibited.
 
