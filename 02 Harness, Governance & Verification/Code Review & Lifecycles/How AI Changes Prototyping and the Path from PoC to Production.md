@@ -128,29 +128,38 @@ To keep exploratory code from leaking into production, follow a disciplined 5-st
 
 ---
 
-## 4. Tracer Bullets and Recognition Mode
+## 4. Tracer Bullets, Minimal Frames, and the Specification Illusion
 
-Writing an exhaustive, 20-page architectural specification from scratch is exhausting. Human brains struggle to anticipate every edge case in advance ($O(N)$ mental effort).
+A persistent failure mode in system engineering is the **Illusion of the Exhaustive Upfront Specification**: believing that an architect can sit down and draft a flawless, complete 30-page blueprint before any code is generated.
 
-However, human engineers are extraordinarily good at **recognition** ($O(1)$ intuition): looking at a working piece of code and immediately spotting flaws, missing error handlers, or clumsy abstractions.
+In complex, non-linear, or stateful systems (e.g. cycle-exact kernels, custom memory schedulers, distributed brokers), **nobody understands every edge case in advance**:
+- Bus arbitration race conditions, sub-clock phase latching, and unexpected library edge cases only reveal themselves when code physically runs against hardware or external test vectors.
+- **Documentation is an iterative compass, never an upfront holy grail**. Trying to specify every state transition in natural language prose leads to specification paralysis.
 
 ```text
-1. Prompt Agent for Tracer Bullet ──► Quick, rough vertical slice
+THE SPECIFICATION DISCOVERY PIPELINE:
+1. Short Hypothesis & Bounded Constraints (Not a 30-page upfront doc)
                  │
                  ▼
-2. Human Recognition Pass         ──► Review code, spot missing edge cases & design flaws
+2. Deploy Tracer Bullet / Prove Minimal Frame (Atomic slice execution)
                  │
                  ▼
-3. Codify Rules & Tests           ──► Add rules to `.agents/rules/` and freeze test assertions
+3. Empirical Reality Check (External test vectors & hardware diffs)
                  │
                  ▼
-4. High-Throughput Delegation     ──► Agent generates remaining implementations cleanly
+4. Freeze Discovered Invariants into Decision Tables & State Graphs
+                 │
+                 ▼
+5. Autonomous Scale-Out via In-Flight Documentation
 ```
 
-1. **Deploy a Tracer Bullet**: Have the agent generate a quick, rough vertical implementation of the new pattern.
-2. **Inspect the Code**: Read the generated code critically. Spotting what's wrong with concrete code takes five minutes, whereas imagining it in the abstract would take hours.
-3. **Codify the Pattern**: Turn your feedback into an explicit project guideline, an operational skill, and an automated test.
-4. **Delegate the Rest**: Now that the recipe is proven, let the agent generate the remaining instances across the codebase with high confidence.
+### The Recognition Advantage: $O(1)$ vs $O(N)$
+Writing an exhaustive specification from scratch imposes heavy cognitive fatigue ($O(N)$ mental effort). However, human engineers excel at **recognition** ($O(1)$ intuition): inspecting an existing concrete code execution or minimal frame draft and immediately identifying structural flaws, missing error handlers, or non-idiomatic abstractions.
+
+1. **Deploy a Tracer Bullet or Minimal Frame**: Have the agent generate an atomic operational slice (see [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]).
+2. **Inspect the Execution Reality**: Read the generated code and test outputs critically. Spotting flaws in concrete execution takes minutes, whereas predicting them in the abstract is near-impossible.
+3. **Capture via Decision Tables and State Graphs**: As invariants are discovered, record them not as ambiguous paragraphs, but as compact decision tables and state-machine transition graphs that agents interpret with near-zero hallucination.
+4. **Delegate Scale-Out**: With the recipe and tables proven, delegate the remaining sibling operations across the subsystem with high confidence.
 
 ---
 
@@ -160,11 +169,14 @@ However, human engineers are extraordinarily good at **recognition** ($O(1)$ int
 2. **Never connect prototypes to real customer data**: Always use sanitized mock data or isolated sandboxes.
 3. **Measure time in hours, not weeks**: If a prototype takes more than a single day to build with an agent, the scope is too broad. Break it into smaller hypotheses.
 4. **Treat prototype code as disposable scrap**: Never feel bad about deleting an agent's code. The value was what you learned, not the syntax on disk.
+5. **Use decision tables over prose specs**: When codifying lessons learned from a prototype, map discovered state transitions into explicit decision truth tables.
 
 ---
 
 ## Related Notes
 
+- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Validating system boundaries on atomic operational slices before scaling out.
+- **[[Developing Features with AI Coding Agents]]**: Applying decision tables and vertical slices to enterprise business features.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using automated test oracles to verify production implementations after prototypes are deleted.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: How capturing discovered invariants during prototyping preserves knowledge across agent sessions.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Avoiding the Frankenstein intermediate hybrid trap when moving from experiments to production.
@@ -173,3 +185,4 @@ However, human engineers are extraordinarily good at **recognition** ($O(1)$ int
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Using standardized service templates to quickly synthesize production services after discarding prototypes.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why rapid prototyping speed only helps if your CI/CD and deployment pipeline can safely enforce quality gates.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological relief of letting go of sunk cost and treating code as disposable.
+
