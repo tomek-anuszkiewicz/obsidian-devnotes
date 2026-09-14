@@ -54,6 +54,7 @@ HARDWARE_ALLOWLIST_SUBSTRINGS = [
     os.path.normpath(".agents/rules/information-hierarchy.md"),
     os.path.normpath(".agents/rules/vocabulary-and-attractor-discipline.md"),
     os.path.normpath(".agents/rules/language-agnostic-architecture.md"),
+    os.path.normpath(".agents/rules/practitioner-voice-and-tone.md"),
     os.path.normpath("scripts/"),
 ]
 
