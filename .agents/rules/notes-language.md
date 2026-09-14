@@ -34,8 +34,8 @@ All notes, documentation, architectural guidelines, research logs, and markdown 
 6. **Mandatory Audio Note Transcription**:
    - Whenever the user provides an audio recording or voice note in their message, the agent must **always start the response with a faithful transcription** of the audio message (in the original spoken language) before addressing the request, answering questions, or updating notes.
 
-7. **Vocabulary Discipline & Attractor Mitigation**:
-   - Strictly adhere to `vocabulary-and-attractor-discipline.md`: avoid inflated academic jargon (e.g. *epistemic*), maintain domain containment for microarchitectural terms, use piped inline wikilinks for canonical hubs, and verify changes with `python scripts/lint_attractors.py --strict`.
+7. **Practitioner Voice & Tone**:
+   - Strictly adhere to `practitioner-voice-and-tone.md`: write from the perspective of an experienced software engineer and lead architect, adhering to the explanatory standard of an in-depth engineering blog post or technical video deep-dive rather than an academic dissertation.
 
 8. **Automated Polish Language Quality Gate & Hooks**:
    - The workspace enforces English-only files through automated multi-tier tooling in `scripts/check_polish.py`.
