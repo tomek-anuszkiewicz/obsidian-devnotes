@@ -16,7 +16,7 @@ aliases:
 # Proactive Software - From Reactive Systems to Autonomous Agents
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: For six decades, software has functioned as a reactive system—idling until explicitly triggered by a human click, API RPC, or static cron threshold. The agentic paradigm inverts this dynamic into **Proactive Software**: systems that continuously observe operational telemetry, synthesize cross-silo context, formulate causal hypotheses, and execute guarded interventions before humans notice a defect. Operating within graduated blast-radius gates, proactive agents transition human engineers from reactive operators into policy directors defining safety invariants.
+> **Core Architectural Takeaway**: For six decades, software has functioned as a reactive system—idling until explicitly triggered by a human click, API RPC, or static cron threshold. The agentic paradigm inverts this dynamic into **Proactive Software**: systems that continuously observe operational telemetry, synthesize cross-silo context, formulate causal hypotheses, and execute guarded interventions before humans notice a defect. Operating within graduated blast-radius gates, proactive agents transition human engineers from reactive operators into policy directors defining safety invariants.
 
 ```text
            REACTIVE EXECUTION VS PROACTIVE AUTONOMOUS REASONING

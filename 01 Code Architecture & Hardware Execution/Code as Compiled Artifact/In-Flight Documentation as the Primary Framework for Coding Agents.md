@@ -23,8 +23,7 @@ aliases:
 
 # In-Flight Documentation as the Primary Framework for Coding Agents
 
-## Core Thesis
-
+## Core Principles & Architecture
 In traditional software development, documentation was usually an afterthought. Developers rarely enjoyed writing design docs after spending days writing code, so documentation lagged behind reality or was abandoned altogether. Systems relied on framework conventions, class hierarchies, and tribal knowledge to keep developers aligned.
 
 When building systems with AI coding agents, that workflow inverts:

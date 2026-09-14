@@ -14,7 +14,7 @@ aliases:
 # AI May Become an Irreversible Part of Software Development
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: AI coding tools begin as optional tactical accelerators, but inexorably transform into an **irreversible structural ratchet**. Once organizations adapt their headcount ratios, sprint commitments, repository surface area, and architectural granularity to agentic throughput, returning to unassisted development becomes economically and mathematically impossible. The expansion of product ambition and the natural atrophy of manual syntax authoring permanently anchor the software industry to probabilistic machine intelligence governed by deterministic test harnesses.
+> **Core Architectural Takeaway**: AI coding tools begin as optional tactical accelerators, but inexorably transform into an **irreversible structural ratchet**. Once organizations adapt their headcount ratios, sprint commitments, repository surface area, and architectural granularity to agentic throughput, returning to unassisted development becomes economically and mathematically impossible. The expansion of product ambition and the natural atrophy of manual syntax authoring permanently anchor the software industry to probabilistic machine intelligence governed by deterministic test harnesses.
 
 ```text
            THE STRUCTURAL RATCHET OF TECHNOLOGICAL IRREVERSIBILITY
@@ -750,8 +750,7 @@ Just as high-level languages did not eliminate all low-level programming, AI wil
 
 But it may move manual implementation into a narrower specialist role.
 
-## Working Hypothesis
-
+## Architectural Analysis & Trade-offs
 > After a certain level of adoption, AI stops being a reversible productivity experiment and becomes part of the organization's operating model.
 
 A stronger version is:

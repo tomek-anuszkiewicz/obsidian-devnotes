@@ -15,7 +15,7 @@ aliases:
 # How Should Companies Use the Productivity Gains from AI
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: If an enterprise responds to AI-driven productivity gains by cutting engineering headcount, it triggers an immediate game-theoretic trap: **defensive sandbagging and underground automation**. When engineering efficiency is penalized with redundancy, engineers rationally obscure their agentic workflows, hide effective prompts, and protect manual toil as employment security. To achieve sustainable compounding leverage, organizations must reinvest the productivity dividend into ambitious product surface areas, aggressive technical debt paydown, and comprehensive test oracles, aligning economic incentives with technological acceleration.
+> **Core Architectural Takeaway**: If an enterprise responds to AI-driven productivity gains by cutting engineering headcount, it triggers an immediate game-theoretic trap: **defensive sandbagging and underground automation**. When engineering efficiency is penalized with redundancy, engineers rationally obscure their agentic workflows, hide effective prompts, and protect manual toil as employment security. To achieve sustainable compounding leverage, organizations must reinvest the productivity dividend into ambitious product surface areas, aggressive technical debt paydown, and comprehensive test oracles, aligning economic incentives with technological acceleration.
 
 ```text
           GAME THEORY OF AI PRODUCTIVITY DIVIDENDS IN ENTERPRISES

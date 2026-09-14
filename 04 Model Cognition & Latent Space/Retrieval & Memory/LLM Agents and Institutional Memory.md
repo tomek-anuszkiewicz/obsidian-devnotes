@@ -20,7 +20,7 @@ aliases:
 # LLM Agents and Institutional Memory in Software Teams
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: LLM agents and Vector RAG provide **information accessibility, not shared institutional understanding**. By drastically lowering the friction of querying legacy codebases, agents eliminate the natural economic pressure to refactor and simplify architecture, masking escalating systemic complexity. While training models on corporate archives (tickets, commit histories, communication logs) enables powerful code archaeology into historical intent and Conway's Law, raw ingestion risks baking historical technical debt and cynical shortcuts into the model's generative prior. Sustainable engineering requires treating agents as cognitive diagnostic tools while preserving human-comprehensible architectural boundaries.
+> **Core Architectural Takeaway**: LLM agents and Vector RAG provide **information accessibility, not shared institutional understanding**. By drastically lowering the friction of querying legacy codebases, agents eliminate the natural economic pressure to refactor and simplify architecture, masking escalating systemic complexity. While training models on corporate archives (tickets, commit histories, communication logs) enables powerful code archaeology into historical intent and Conway's Law, raw ingestion risks baking historical technical debt and cynical shortcuts into the model's generative prior. Sustainable engineering requires treating agents as cognitive diagnostic tools while preserving human-comprehensible architectural boundaries.
 
 ```text
            INFORMATION ACCESSIBILITY VS SHARED INSTITUTIONAL UNDERSTANDING

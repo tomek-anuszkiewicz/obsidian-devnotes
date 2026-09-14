@@ -17,8 +17,7 @@ aliases:
 
 # AI-Generated Architectural Documentation from Code
 
-## Core Thesis
-
+## Core Principles & Architecture
 In software engineering, large language models are usually discussed as code writers. But models are equally powerful in the reverse direction: **extracting, reconstructing, and maintaining high-level architectural documentation from existing codebases**.
 
 This is especially critical when dealing with legacy repositories where:

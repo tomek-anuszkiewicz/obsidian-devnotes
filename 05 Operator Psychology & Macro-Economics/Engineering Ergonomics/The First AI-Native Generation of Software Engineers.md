@@ -15,7 +15,7 @@ aliases:
 # The First AI-Native Generation of Software Engineers
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: The software industry is undergoing an unprecedented demographic fracture: the **Transitional Generation** (who built deep mental models through decades of manual, unassisted coding) is being succeeded by the **First AI-Native Generation** (who have never known software development without generative agents). While AI-native engineers possess unmatched top-down orchestration agility—managing sprawling multi-repo architectures with ease—they face the **Supervision-Execution Paradox**: evaluating, verifying, and taking legal accountability for mechanical systems they have never manually built from first principles.
+> **Core Architectural Takeaway**: The software industry is undergoing an unprecedented demographic fracture: the **Transitional Generation** (who built deep mental models through decades of manual, unassisted coding) is being succeeded by the **First AI-Native Generation** (who have never known software development without generative agents). While AI-native engineers possess unmatched top-down orchestration agility—managing sprawling multi-repo architectures with ease—they face the **Supervision-Execution Paradox**: evaluating, verifying, and taking legal accountability for mechanical systems they have never manually built from first principles.
 
 ```text
            THE GENERATIONAL MENTAL MODEL FRACTURE
@@ -584,8 +584,7 @@ It should not remove the need to understand:
 
 The profession can safely lose some execution skills only if it preserves evaluation skills.
 
-## Working Hypothesis
-
+## Architectural Analysis & Trade-offs
 > The current generation uses AI on top of skills developed without AI. The next generation will need to develop the ability to supervise AI without necessarily following the same path.
 
 A stronger version is:

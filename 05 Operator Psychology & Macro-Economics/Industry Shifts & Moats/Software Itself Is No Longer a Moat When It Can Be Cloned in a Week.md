@@ -18,7 +18,7 @@ aliases:
 # Software Itself Is No Longer a Moat When It Can Be Cloned in a Week
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: For four decades, the capital, time, and engineering friction required to write software formed a formidable moat: spending millions of dollars over an eighteen-month build cycle guaranteed a durable protective buffer. In the agentic era, autonomous coding swarms can observe a web interface, reverse-engineer API schemas, infer relational data structures, and synthesize a functional full-stack replica within days. Consequently, raw software syntax and CRUD architecture have a competitive half-life approaching zero. Durable defensibility has migrated entirely away from the codebase to **proprietary operational state, hardware integrations, regulatory licenses, distribution networks, and immutable verification harnesses**.
+> **Core Architectural Takeaway**: For four decades, the capital, time, and engineering friction required to write software formed a formidable moat: spending millions of dollars over an eighteen-month build cycle guaranteed a durable protective buffer. In the agentic era, autonomous coding swarms can observe a web interface, reverse-engineer API schemas, infer relational data structures, and synthesize a functional full-stack replica within days. Consequently, raw software syntax and CRUD architecture have a competitive half-life approaching zero. Durable defensibility has migrated entirely away from the codebase to **proprietary operational state, hardware integrations, regulatory licenses, distribution networks, and immutable verification harnesses**.
 
 ```text
             THE COLLAPSE OF THE PURE IMPLEMENTATION MOAT

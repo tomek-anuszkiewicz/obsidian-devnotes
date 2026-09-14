@@ -15,7 +15,7 @@ aliases:
 
 # Service-to-Service Authentication and Authorization in Azure and Kubernetes
 
-> [!IMPORTANT] Executive Architectural Thesis: Multi-Layered Workload Security in Cloud & Mesh Topologies
+> [!IMPORTANT] Architectural Invariant: Multi-Layered Workload Security in Cloud & Mesh Topologies
 > Robust microservice and workload security requires decoupling network reachability from cryptographic identity and policy enforcement:
 > $$\text{Workload Security} = \text{Network Reachability (L3/L4)} \times \text{Cryptographic Identity (mTLS / SPIFFE / OIDC)} \times \text{Granular Policy (L7 Scopes / App Roles)}$$
 > IP addresses, Kubernetes Service DNS names, and internal private endpoints provide *connectivity*, but they provide **zero proof of caller identity**. Relying on network perimeters alone invites lateral movement during container compromises. Zero-trust service-to-service architectures eliminate long-lived shared secrets in favor of **ephemeral workload identities** (e.g., Kubernetes projected service account tokens federated with cloud IAM like Entra Workload Identity) or **transparent service mesh mTLS (SPIFFE/SAN)**—enforcing mutual cryptographic authentication at the transport layer while validating business permissions at Layer 7.

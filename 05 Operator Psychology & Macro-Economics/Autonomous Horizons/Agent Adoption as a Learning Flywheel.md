@@ -14,7 +14,7 @@ aliases:
 # Agent Adoption as a Learning Flywheel
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Organizational agent competence does not compound by waiting passively for foundation models to achieve perfection; it compounds through the active **Agent Adoption Flywheel**. High-value training data has shifted from static code snapshots to complete multi-turn interaction trajectories (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`). Every failed agent execution must be harvested to harden deterministic test harnesses, decouple monolithic codebases, and log proprietary execution traces that prepare the organization for next-generation frontier models.
+> **Core Architectural Takeaway**: Organizational agent competence does not compound by waiting passively for foundation models to achieve perfection; it compounds through the active **Agent Adoption Flywheel**. High-value training data has shifted from static code snapshots to complete multi-turn interaction trajectories (`Goal -> Plan -> Action -> Error -> Diagnosis -> Correction -> Test Pass`). Every failed agent execution must be harvested to harden deterministic test harnesses, decouple monolithic codebases, and log proprietary execution traces that prepare the organization for next-generation frontier models.
 
 ```text
                   THE AGENT ADOPTION & LEARNING FLYWHEEL

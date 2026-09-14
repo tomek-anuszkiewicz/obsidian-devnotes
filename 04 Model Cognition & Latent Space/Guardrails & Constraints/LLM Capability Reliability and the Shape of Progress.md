@@ -17,7 +17,7 @@ created: 2026-08-23
 # LLM Capability, Reliability, and the Shape of Progress
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Model capability and operational system reliability evolve along decoupled trajectories. While single-attempt benchmark scores and task horizons expand exponentially, autonomous multi-step execution suffers from geometric error compounding ($P = p^N$). Production reliability cannot be achieved by awaiting base model infallibility; it requires bounding untrusted probabilistic model cognition inside deterministic verification harnesses, automated feedback loops, and immutable mechanical oracles.
+> **Core Architectural Takeaway**: Model capability and operational system reliability evolve along decoupled trajectories. While single-attempt benchmark scores and task horizons expand exponentially, autonomous multi-step execution suffers from geometric error compounding ($P = p^N$). Production reliability cannot be achieved by awaiting base model infallibility; it requires bounding untrusted probabilistic model cognition inside deterministic verification harnesses, automated feedback loops, and immutable mechanical oracles.
 
 ```text
        ASYMPTOTIC CAPABILITY VS OPERATIONAL RELIABILITY DIVERGENCE
@@ -45,7 +45,7 @@ created: 2026-08-23
 1. **Decoupling Capability from Operational Reliability**: High scores on static benchmarks (e.g., SWE-bench) prove that an LLM *can* solve an isolated problem, not that it will *reliably* repeat that success across varying contexts or edge conditions.
 2. **Geometric Degradation Across Execution Horizons**: In unmitigated multi-step autonomous workflows, success degrades exponentially ($P_{\text{success}} = p^N$). Even a high per-step accuracy ($p = 0.95$) yields a catastrophic $35.8\%$ completion rate across a 20-step execution trajectory.
 3. **The Threat of Soft Hallucinations**: As parameter scales and reasoning tokens increase, crude syntactical hallucinations vanish, replaced by subtle semantic deceits—plausible API parameter inversions, hallucinated configuration flags, and incorrect business rules that easily bypass superficial human review.
-4. **Harness-Centric Engineering Over Model Waiting**: Reliable software systems do not wait for theoretical model infallibility. They treat probabilistic reasoning engines as untrusted worker components bounded by deterministic gatekeepers, compiler type checks, and [[Automated Regression Suites]].
+4. **Harness-Centric Engineering Over Model Waiting**: Reliable software systems do not wait for theoretical model infallibility. They treat probabilistic reasoning engines as untrusted worker components bounded by deterministic gatekeepers, compiler type checks, and [[Testing in the Model, Agent, LLM Era|automated regression suites]].
 5. **Differential Progress Velocities**: Coding and tool use improve along steep curves, but uncertainty calibration and boundary recognition improve slowly. Production architectures must bridge this gap mechanically.
 
 ## Capability is not reliability

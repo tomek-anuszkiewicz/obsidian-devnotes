@@ -19,8 +19,7 @@ aliases:
 
 # The 5-Layer System Stack for Agentic Software Engineering
 
-## Thesis
-
+## Architectural Summary
 The integration of autonomous artificial intelligence into software engineering cannot be understood merely as an upgrade to text editors or developer tooling. It represents a fundamental structural reordering of the entire computing stack—from how transistors execute machine instructions to how human organizations organize intellectual capital.
 
 Historically, software engineering models (such as the OSI 7-layer model or classical compiler pipelines) were designed around a single immutable constraint: **the human brain writing and reading syntactic text**. Abstractions were invented to conserve human keystrokes, mitigate human short-term memory limits, and structure bureaucratic human teams.

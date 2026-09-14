@@ -20,8 +20,7 @@ aliases:
 
 # AI May Replace Some Source Generators with Explicit Generated Code
 
-## Core Thesis
-
+## Core Principles & Architecture
 For decades, software engineering relied on metaprogramming—runtime reflection, compile-time macros, annotation processors, and custom source generators—to solve a human problem: **writing and maintaining repetitive boilerplate code by hand is tedious and error-prone**.
 
 To avoid typing thousands of lines of mechanical assignments, teams built an entire secondary layer of tooling:

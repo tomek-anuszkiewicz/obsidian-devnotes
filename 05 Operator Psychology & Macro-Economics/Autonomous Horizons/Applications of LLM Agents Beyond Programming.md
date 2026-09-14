@@ -15,7 +15,7 @@ aliases:
 # Applications of LLM Agents Beyond Programming
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Confining LLM agents to source-code generation neglects their highest-leverage capability: **cross-system semantic reconciliation**. Modern enterprise software suffers from systemic entropy because three parallel layers of reality continuously diverge: what we *claim* the system does (ADRs, runbooks), what it is *configured* to do (IaC, timeouts, flags), and what it *actually* does (live DOM rendering, telemetry, distributed traces). While each artifact compiles cleanly in isolation, their combination introduces catastrophic architectural mismatches. Equipped with browser automation and telemetry APIs, autonomous agents act as continuous semantic reconciliation engines that diagnose and repair cross-domain divergence.
+> **Core Architectural Takeaway**: Confining LLM agents to source-code generation neglects their highest-leverage capability: **cross-system semantic reconciliation**. Modern enterprise software suffers from systemic entropy because three parallel layers of reality continuously diverge: what we *claim* the system does (ADRs, runbooks), what it is *configured* to do (IaC, timeouts, flags), and what it *actually* does (live DOM rendering, telemetry, distributed traces). While each artifact compiles cleanly in isolation, their combination introduces catastrophic architectural mismatches. Equipped with browser automation and telemetry APIs, autonomous agents act as continuous semantic reconciliation engines that diagnose and repair cross-domain divergence.
 
 ```text
             THE TRI-LAYER SEMANTIC RECONCILIATION ENGINE

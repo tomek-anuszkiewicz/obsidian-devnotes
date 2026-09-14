@@ -14,7 +14,7 @@ aliases:
 
 # User Context in Asynchronous Systems
 
-> [!IMPORTANT] Executive Architectural Thesis: Temporal Decoupling and Credential-Free Asynchronous Context
+> [!IMPORTANT] Architectural Invariant: Temporal Decoupling and Credential-Free Asynchronous Context
 > Asynchronous messaging breaks the temporal and security assumptions of synchronous HTTP. Passing live bearer tokens across message brokers introduces catastrophic security and operational failure modes: **token expiration during queue lag**, **credential leakage in broker logs and Dead Letter Queues (DLQs)**, and **replay vulnerabilities**.  
 > The correct architectural pattern decouples **identity assertion** from **authorization mechanics**:
 > 1. **Zero Live Tokens**: Enqueue lean, immutable audit context (`initiatedByUserId`, `tenantId`, `correlationId`) inside an execution envelope without credentials.

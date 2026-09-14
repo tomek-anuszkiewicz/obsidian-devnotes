@@ -17,7 +17,7 @@ aliases:
 
 # Programming Languages May Evolve Differently in the Age of AI
 
-## Core Thesis: Verbosity Is Cheap, Ambiguity Is Expensive
+## Core Principle: Verbosity Is Cheap, Ambiguity Is Expensive
 
 For half a century, programming languages evolved around human physical limits: typing fatigue, short-term memory, and visual scanning speed.
 

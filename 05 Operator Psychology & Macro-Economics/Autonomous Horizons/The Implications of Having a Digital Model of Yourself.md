@@ -15,7 +15,7 @@ aliases:
 # The Implications of Having a Digital Model of Yourself
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: A persistent personal digital twin transcends simple episodic search; it is an active, predictive psychological and operational model of identity. Continuous synthesis of communications, code repositories, financial flows, and behavioral patterns creates a dual-faced cognitive entity: an outward-facing **fiduciary shield** that defends against asymmetric corporate extraction, and an inward-facing **reflexive mirror** that dismantles self-deception by confronting the human operator with empirical behavioral reality. Because a model complete enough to protect you is potent enough to exploit you, sovereign cryptographic custody and zero-knowledge execution are non-negotiable architectural invariants.
+> **Core Architectural Takeaway**: A persistent personal digital twin transcends simple episodic search; it is an active, predictive psychological and operational model of identity. Continuous synthesis of communications, code repositories, financial flows, and behavioral patterns creates a dual-faced cognitive entity: an outward-facing **fiduciary shield** that defends against asymmetric corporate extraction, and an inward-facing **reflexive mirror** that dismantles self-deception by confronting the human operator with empirical behavioral reality. Because a model complete enough to protect you is potent enough to exploit you, sovereign cryptographic custody and zero-knowledge execution are non-negotiable architectural invariants.
 
 ```text
            THE DUAL-FACED FIDUCIARY TWIN (SHIELD & REFLEXIVE MIRROR)

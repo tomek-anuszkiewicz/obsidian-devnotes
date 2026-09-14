@@ -15,7 +15,7 @@ aliases:
 # Fresh Contact With Reality May Become the Training Bottleneck
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: As web-scraped linguistic datasets reach saturation and become contaminated by recursive synthetic prose, the rate-limiting bottleneck for frontier intelligence shifts from token volume to **fresh, empirical contact with reality**. Closed synthetic reflection loops cannot bootstrap genuine ground truth; without external friction, models suffer from autophagic mode collapse and ungrounded hallucinations. The definitive training and operational moat belongs to closed-loop architectures that interface directly with physical sensors, real-world execution environments, compilers, and hardware telemetry where physical reality acts as the immutable verification oracle.
+> **Core Architectural Takeaway**: As web-scraped linguistic datasets reach saturation and become contaminated by recursive synthetic prose, the rate-limiting bottleneck for frontier intelligence shifts from token volume to **fresh, empirical contact with reality**. Closed synthetic reflection loops cannot bootstrap genuine ground truth; without external friction, models suffer from autophagic mode collapse and ungrounded hallucinations. The definitive training and operational moat belongs to closed-loop architectures that interface directly with physical sensors, real-world execution environments, compilers, and hardware telemetry where physical reality acts as the immutable verification oracle.
 
 ```text
             THE DIALECTIC OF SYNTHETIC DECAY VS. REALITY GROUNDING

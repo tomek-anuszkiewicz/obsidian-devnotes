@@ -15,7 +15,7 @@ aliases:
 # LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: LLM coding agents are probabilistic change generators, not autonomous engineering authorities. While mechanical errors (compilation, syntax, type mismatches) are deterministically trapped by build systems, semantic near-misses—where code compiles cleanly, passes tautological tests, and persuasively rationalizes a broken domain invariant—represent the primary failure mode. Operational reliability requires decoupling functional generation from independent invariant auditing within a deterministic control harness anchored by human code comprehension.
+> **Core Architectural Takeaway**: LLM coding agents are probabilistic change generators, not autonomous engineering authorities. While mechanical errors (compilation, syntax, type mismatches) are deterministically trapped by build systems, semantic near-misses—where code compiles cleanly, passes tautological tests, and persuasively rationalizes a broken domain invariant—represent the primary failure mode. Operational reliability requires decoupling functional generation from independent invariant auditing within a deterministic control harness anchored by human code comprehension.
 
 ```text
            TWO-PASS VERIFICATION & MECHANICAL AUDIT HARNESS

@@ -19,7 +19,7 @@ aliases:
 # Proxy Metrics and Operational Invariants in AI Systems
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Autonomous AI decision systems optimize for mathematical correlation over historical distributions, frequently committing the **Ecological Fallacy**: deducing individual characteristics solely from aggregate group statistics. Dropping protected features fails because high-dimensional latent spaces readily reconstruct them via correlated proxy variables, while operational deployment creates autophagous feedback loops that reinforce prior intervention biases. Robust software engineering requires ascending Pearl's Ladder of Causation, enforcing the invariant that **no aggregate statistical proxy may ever override or substitute for a directly measurable causal invariant**.
+> **Core Architectural Takeaway**: Autonomous AI decision systems optimize for mathematical correlation over historical distributions, frequently committing the **Ecological Fallacy**: deducing individual characteristics solely from aggregate group statistics. Dropping protected features fails because high-dimensional latent spaces readily reconstruct them via correlated proxy variables, while operational deployment creates autophagous feedback loops that reinforce prior intervention biases. Robust software engineering requires ascending Pearl's Ladder of Causation, enforcing the invariant that **no aggregate statistical proxy may ever override or substitute for a directly measurable causal invariant**.
 
 ```text
            STATISTICAL CORRELATION VS CAUSAL INVARIANT VERIFICATION

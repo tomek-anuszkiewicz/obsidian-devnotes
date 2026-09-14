@@ -21,7 +21,7 @@ aliases:
 # Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: The shift to agent-driven software engineering introduces an acute psychological crisis: substituting the tactile craft of manual coding with relentless supervisory oversight destroys the natural cognitive resting buffers of programming. Operating in a state of perpetual high-intensity vigilance—auditing massive alien diffs produced in seconds—induces severe **review fatigue** and tempting **rubber-stamp apathy**. Sustainable engineering requires shedding anthropomorphic expectations of the machine and offloading adversarial verification from human working memory to deterministic mechanical test harnesses.
+> **Core Architectural Takeaway**: The shift to agent-driven software engineering introduces an acute psychological crisis: substituting the tactile craft of manual coding with relentless supervisory oversight destroys the natural cognitive resting buffers of programming. Operating in a state of perpetual high-intensity vigilance—auditing massive alien diffs produced in seconds—induces severe **review fatigue** and tempting **rubber-stamp apathy**. Sustainable engineering requires shedding anthropomorphic expectations of the machine and offloading adversarial verification from human working memory to deterministic mechanical test harnesses.
 
 ```text
            THE COGNITIVE SHIFT: FROM MEDITATIVE FLOW TO VIGILANCE EXHAUSTION

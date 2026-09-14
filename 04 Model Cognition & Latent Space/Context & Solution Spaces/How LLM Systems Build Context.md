@@ -15,7 +15,7 @@ aliases:
 
 # How LLM Systems Build Context
 
-> [!IMPORTANT] Executive Architectural Thesis: Context Assembly as the Core Determinant of Model Capability
+> [!IMPORTANT] Architectural Invariant: Context Assembly as the Core Determinant of Model Capability
 > The effective capability and reliability of an LLM application is primarily determined by its **Context Assembly Pipeline**, not merely the raw parameter weights of the underlying model. An LLM never reasons over an isolated user prompt; instead, the runtime harness dynamically compiles a multi-layered working context from:
 > 1. **System & Safety Invariants** (authoritative baseline instructions and non-negotiable boundaries),
 > 2. **Session & Conversational State** (turn history and user episodic memory),

@@ -28,7 +28,7 @@ aliases:
 # Retrieval-Augmented Generation and Context Architecture
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Retrieval-Augmented Generation (RAG) is fundamentally a **Context Minimization Architecture**, not merely a workaround for finite context windows. Blindly dumping monolithic codebases into million-token windows degrades transformer attention density ("Lost in the Middle"), explodes inference costs, and inflates agent loop latency. Production-grade software engineering demands multi-stage retrieval: AST-aware structural chunking, hybrid fusion (dense embeddings + sparse BM25 lexical search), cross-encoder reranking, and graph-relational traversal to inject dense, high-signal invariants at the precise point of decision.
+> **Core Architectural Takeaway**: Retrieval-Augmented Generation (RAG) is fundamentally a **Context Minimization Architecture**, not merely a workaround for finite context windows. Blindly dumping monolithic codebases into million-token windows degrades transformer attention density ("Lost in the Middle"), explodes inference costs, and inflates agent loop latency. Production-grade software engineering demands multi-stage retrieval: AST-aware structural chunking, hybrid fusion (dense embeddings + sparse BM25 lexical search), cross-encoder reranking, and graph-relational traversal to inject dense, high-signal invariants at the precise point of decision.
 
 ```text
            HYBRID CONTEXT RETRIEVAL & MINIMIZATION PIPELINE
@@ -71,8 +71,7 @@ aliases:
 
 ---
 
-## Thesis
-
+## Architectural Summary
 Language models operate within bounded, expensive, and attention-diluting context windows. While modern frontier models offer theoretical context capacities of millions of tokens, blindly dumping entire source files, repositories, or documentation sets into a prompt creates catastrophic operational failure: latency spikes, exorbitant token costs, attention dilution ("Lost in the Middle"), and hallucinations.
 
 **Retrieval-Augmented Generation (RAG)** is the fundamental architectural pattern that decouples a model's operational knowledge from its static weights or raw context limits. Rather than forcing the model to remember everything or ingest monolithic files, RAG dynamically retrieves precise, high-signal semantic fragments and injects them into the model’s reasoning path at the exact moment of decision, forming the operational context foundation for [[Agentic Coding Harness and Controlled Development Workflows|agentic development harnesses]].

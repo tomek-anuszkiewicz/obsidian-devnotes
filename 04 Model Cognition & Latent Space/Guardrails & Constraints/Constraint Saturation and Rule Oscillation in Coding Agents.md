@@ -17,7 +17,7 @@ aliases:
 
 # Constraint Saturation and Rule Oscillation in Coding Agents
 
-> [!IMPORTANT] Executive Architectural Thesis: Attention Capacity Limits and Rule Oscillation in Coding Agents
+> [!IMPORTANT] Architectural Invariant: Attention Capacity Limits and Rule Oscillation in Coding Agents
 > System prompts and agent rulebooks are subject to strict attention capacity limits. Appending guidelines to patch past agent mistakes follows an exponential decay curve: if an agent satisfies each independent rule with probability $p=0.95$, its probability of simultaneously obeying $M=30$ rules plummets to $0.95^{30} \approx 21.4\%$:
 > $$P(\text{Full Compliance}) = \prod_{i=1}^M p_i \approx p^M$$
 > Beyond a critical threshold, adding rules triggers **Constraint Oscillation (Rule Thrashing / Whack-a-Mole Engineering)**: the agent refactors to satisfy Rule $A$, inadvertently violates Rule $B$, patches $B$ only to violate $C$, and loops indefinitely. Eliminating rule thrashing requires **Lexicographical Constraint Tiering** (correctness > domain invariants > operational budgets > style), **Sequential Single-Objective Passes**, and **offloading formatting and mechanical invariants to deterministic compilers and linters**.

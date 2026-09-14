@@ -17,7 +17,7 @@ aliases:
 
 # Context Attractors and Recency Bias in Long-Horizon Agent Sessions
 
-> [!IMPORTANT] Executive Architectural Thesis: Attention Gravity and Context Attractor Dynamics
+> [!IMPORTANT] Architectural Invariant: Attention Gravity and Context Attractor Dynamics
 > In extended multi-turn agent sessions, the self-attention mechanism ($\text{softmax}(QK^T / \sqrt{d_k})V$) produces an emergent cognitive failure mode known as **Attention Gravity**. As specific motifs are repeatedly debated and cited, their token representations saturate the Key-Value (KV) cache. Subsequent query vectors ($Q$) are irresistibly pulled toward these high-density keys ($K$), transforming the motif into a **Context Attractor** that the agent treats as a universal explanation for every subsequent unrelated problem.  
 > Paradoxically, **automated conversation compaction worsens this attractor**: recursive summarizers extract the dominant motif due to its sheer prominence and promote it to an explicit system-prompt invariant. Preventing cognitive monoculture requires **atomic turn-bounded sessions (the 15-Turn Strike Team)**, **hard session resets via committed markdown artifacts**, and **simple FIFO window pruning** over recursive synthetic summarization.
 

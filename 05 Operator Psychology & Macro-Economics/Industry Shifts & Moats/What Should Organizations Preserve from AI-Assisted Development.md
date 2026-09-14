@@ -15,7 +15,7 @@ aliases:
 # What Should Organizations Preserve from AI-Assisted Development
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: When code generation approaches zero marginal cost, treating raw code syntax as the primary intellectual property to preserve is a fundamental category error. Code becomes an ephemeral, easily regenerated artifact; what an enterprise must systematically preserve is the **upstream intent and downstream verification**: Architectural Decision Records (ADRs), domain invariant specifications, rejected hypotheses, and immutable test oracles. If the intent and test oracles survive, the entire codebase can be deleted and re-synthesized overnight. Preserving the reasoning trajectory inoculates organizations against catastrophic institutional amnesia.
+> **Core Architectural Takeaway**: When code generation approaches zero marginal cost, treating raw code syntax as the primary intellectual property to preserve is a fundamental category error. Code becomes an ephemeral, easily regenerated artifact; what an enterprise must systematically preserve is the **upstream intent and downstream verification**: Architectural Decision Records (ADRs), domain invariant specifications, rejected hypotheses, and immutable test oracles. If the intent and test oracles survive, the entire codebase can be deleted and re-synthesized overnight. Preserving the reasoning trajectory inoculates organizations against catastrophic institutional amnesia.
 
 ```text
            THE RESIDUAL ARTIFACT PYRAMID IN AGENTIC DEVELOPMENT

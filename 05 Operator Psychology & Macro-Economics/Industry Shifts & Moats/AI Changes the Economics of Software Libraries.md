@@ -15,7 +15,7 @@ aliases:
 # AI Changes the Economics of Software Libraries
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: For decades, external libraries were imported primarily to avoid the labor of manual typing: *"I do not want to spend two weeks writing this boilerplate."* When AI coding agents reduce code synthesis costs to near zero, this economic calculus inverts. Convenience libraries—packages that merely wrap trivial data structures, model mappings, or utility functions—become negative-ROI liabilities that introduce supply-chain vulnerabilities and upgrade churn. Conversely, libraries that encapsulate battle-tested cryptographic primitives, hardware-accelerated kernels, or complex protocol state machines remain indispensable engineering assets.
+> **Core Architectural Takeaway**: For decades, external libraries were imported primarily to avoid the labor of manual typing: *"I do not want to spend two weeks writing this boilerplate."* When AI coding agents reduce code synthesis costs to near zero, this economic calculus inverts. Convenience libraries—packages that merely wrap trivial data structures, model mappings, or utility functions—become negative-ROI liabilities that introduce supply-chain vulnerabilities and upgrade churn. Conversely, libraries that encapsulate battle-tested cryptographic primitives, hardware-accelerated kernels, or complex protocol state machines remain indispensable engineering assets.
 
 ```text
            THE RE-EVALUATION OF SOFTWARE LIBRARIES IN THE AGENTIC ERA

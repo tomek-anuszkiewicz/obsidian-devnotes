@@ -14,7 +14,7 @@ aliases:
 
 # How Reasoning Models Explore and Evaluate Solutions
 
-> [!IMPORTANT] Executive Architectural Thesis: Trajectory Exploration, Process Supervision, and Search Completeness
+> [!IMPORTANT] Architectural Invariant: Trajectory Exploration, Process Supervision, and Search Completeness
 > Reasoning capability in frontier models is not a hard-coded symbolic algorithm; it is a **learned behavioral policy trained via test-time trajectory exploration and reinforcement learning**.  
 > - **Search-Space Failure Outweighs Reasoning Failure**: An agent or evaluator model may evaluate candidates $A, B, C$ with flawless mathematical rigor; however, if the globally optimal architectural pattern $D$ was omitted during the initial expansion phase, the system commits a locally optimal failure.
 > - **Outcome vs Process Supervision**: Outcome Reward Models (ORMs) verify only the destination, rewarding accidentally correct guesses that used broken logic. Process Reward Models (PRMs) score individual intermediate deduction steps, preventing error propagation.

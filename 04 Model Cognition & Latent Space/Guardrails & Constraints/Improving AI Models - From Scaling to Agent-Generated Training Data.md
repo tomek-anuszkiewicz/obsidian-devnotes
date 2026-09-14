@@ -14,7 +14,7 @@ aliases:
 
 # Improving AI Models — From Scaling to Agent-Generated Training Data
 
-> [!IMPORTANT] Executive Architectural Thesis: Multi-Curve Compounding and Trajectory Reinforcement Learning
+> [!IMPORTANT] Architectural Invariant: Multi-Curve Compounding and Trajectory Reinforcement Learning
 > Frontier AI model capability is no longer driven primarily by raw pre-training parameter and dataset scaling ($N \times D \times C$). As public web scrapings approach exhaustion, the primary driver of performance has shifted to **multi-curve compounding**:
 > 1. **Test-Time Compute Scaling**: Allocating variable inference compute to explore solution trees, verify intermediate steps, and self-correct before emitting tokens.
 > 2. **Deterministic Synthetically Verified Data**: Using mechanical ground-truth oracles (compilers, unit tests, formal verification engines) to generate and filter massive synthetic reasoning corpora without model collapse.

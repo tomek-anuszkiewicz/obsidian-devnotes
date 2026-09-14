@@ -14,7 +14,7 @@ aliases:
 
 # AI, Averaged Decisions, and Premature Convergence on Solutions
 
-> [!IMPORTANT] Executive Architectural Thesis: Overcoming Premature Convergence and Statistical Averaging
+> [!IMPORTANT] Architectural Invariant: Overcoming Premature Convergence and Statistical Averaging
 > Large Language Models naturally optimize for statistical plausibility across their general pre-training distribution. When presented with underspecified requirements, an LLM will rarely pause to expose ambiguities; instead, it silently fills conceptual gaps with conventional defaults disguised as technical implementation details:
 > $$\text{Underspecified Requirements} + \text{Capable Model} = \text{Invisible Strategic Decisions Made by AI}$$
 > This produces **premature convergence on the market average**—a solution that is coherent, polished, and technically plausible, yet strategically undifferentiated. Counteracting premature convergence requires shifting the agent's interaction model from **Answer Oracle** (`Question -> Complete Answer`) to **Exploratory Engine** (`Question -> Decomposition -> Missing Invariants -> Multi-Path Divergence -> Trade-Off Matrix -> Human Selection`).

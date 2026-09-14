@@ -18,7 +18,7 @@ created: 2026-08-23
 # AI-Era Software Engineering Recruitment
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Whiteboard algorithmic puzzles (LeetCode) are obsolete; they test skills that foundation models execute in seconds while failing to evaluate the primary failure mode of modern engineering: **rubber-stamping plausible AI hallucinations**. Recruitment in the agentic era must invert from syntax memorization to **adversarial verification and system decomposition**. Engineering organizations must screen for candidates who can transform ambiguous domain requirements into rigid specifications, identify subtle semantic drift in AI-generated diffs, and take uncompromising operational ownership of the resulting software.
+> **Core Architectural Takeaway**: Whiteboard algorithmic puzzles (LeetCode) are obsolete; they test skills that foundation models execute in seconds while failing to evaluate the primary failure mode of modern engineering: **rubber-stamping plausible AI hallucinations**. Recruitment in the agentic era must invert from syntax memorization to **adversarial verification and system decomposition**. Engineering organizations must screen for candidates who can transform ambiguous domain requirements into rigid specifications, identify subtle semantic drift in AI-generated diffs, and take uncompromising operational ownership of the resulting software.
 
 ```text
            RECRUITMENT EVOLUTION: SYNTAX RECALL VS INVARIANT AUDITING
@@ -56,8 +56,7 @@ AGENTIC ERA SCREENING (Invariant & Verification Paradigm):
 
 ---
 
-## Central thesis
-
+## Core Architectural Principles
 The main hiring question is no longer simply:
 
 > Can this candidate write the code independently?

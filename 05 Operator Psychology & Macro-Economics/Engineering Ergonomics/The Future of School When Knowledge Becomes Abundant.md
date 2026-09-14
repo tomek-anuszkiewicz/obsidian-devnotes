@@ -15,7 +15,7 @@ aliases:
 # The Future of School When Knowledge Becomes Abundant
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Institutional schooling was historically engineered to solve a singular physical bottleneck: the scarcity of knowledgeable instructors and authoritative texts. When frontier models provide every human with an infinitely patient, personalized 1:1 Socratic tutor, the 19th-century factory model of broadcast curricula, synchronized age cohorts, and rote regurgitation collapses. Education inverts from **information transmission** to **critical discernment, adversarial verification, and empirical experimentation**, shifting human teachers from lecture broadcasters to high-touch behavioral and ethical mentors.
+> **Core Architectural Takeaway**: Institutional schooling was historically engineered to solve a singular physical bottleneck: the scarcity of knowledgeable instructors and authoritative texts. When frontier models provide every human with an infinitely patient, personalized 1:1 Socratic tutor, the 19th-century factory model of broadcast curricula, synchronized age cohorts, and rote regurgitation collapses. Education inverts from **information transmission** to **critical discernment, adversarial verification, and empirical experimentation**, shifting human teachers from lecture broadcasters to high-touch behavioral and ethical mentors.
 
 ```text
            EDUCATION PARADIGM INVERSION: BROADCAST VS SOCRATIC MENTORSHIP

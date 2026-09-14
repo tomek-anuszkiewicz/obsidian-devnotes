@@ -15,7 +15,7 @@ aliases:
 # AI May Break the Old Economic Model of the Open Web
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: For thirty years, the commercial engine of the open web relied on a reciprocal economic contract: **creators published public information in exchange for search referral traffic and programmatic ad monetization**. Generative search engines and LLM synthesis break this compact by delivering answers directly in-place—severing referral traffic while capturing 100% of the economic surplus. This zero-click dynamic forces human creators into defensive enclosure (paywalls, gated communities, anti-bot firewalls), starving the public web of authoritative research and triggering autophagous model degradation.
+> **Core Architectural Takeaway**: For thirty years, the commercial engine of the open web relied on a reciprocal economic contract: **creators published public information in exchange for search referral traffic and programmatic ad monetization**. Generative search engines and LLM synthesis break this compact by delivering answers directly in-place—severing referral traffic while capturing 100% of the economic surplus. This zero-click dynamic forces human creators into defensive enclosure (paywalls, gated communities, anti-bot firewalls), starving the public web of authoritative research and triggering autophagous model degradation.
 
 ```text
            THE BREAKAGE OF THE OPEN WEB ECONOMIC COMPACT

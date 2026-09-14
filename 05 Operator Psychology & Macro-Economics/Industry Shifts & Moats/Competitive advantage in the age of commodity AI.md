@@ -17,7 +17,7 @@ aliases:
 # Competitive Advantage in the Age of Commodity AI
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: When frontier AI models become broadly accessible commodity APIs trained on the open internet, raw code generation and general cognitive horsepower cease to function as defensible enterprise moats. Relying on default model outputs induces premature convergence into mediocre uniformity. True competitive advantage migrates outward to the operational boundaries: **proprietary closed-loop telemetry, immutable verification oracles, verified institutional ground truth, deep fiduciary distribution, and the human capacity for extraordinary inquiry** that drives agentic fleets beyond statistical defaults.
+> **Core Architectural Takeaway**: When frontier AI models become broadly accessible commodity APIs trained on the open internet, raw code generation and general cognitive horsepower cease to function as defensible enterprise moats. Relying on default model outputs induces premature convergence into mediocre uniformity. True competitive advantage migrates outward to the operational boundaries: **proprietary closed-loop telemetry, immutable verification oracles, verified institutional ground truth, deep fiduciary distribution, and the human capacity for extraordinary inquiry** that drives agentic fleets beyond statistical defaults.
 
 ```text
            THE DEFRACTURING OF DEFENSIVE MOATS IN THE COMMODITY AI ERA
@@ -447,8 +447,7 @@ The model itself may increasingly become a commodity.
 
 The surrounding system does not have to.
 
-## Core thesis
-
+## Core Architectural Principles
 The strongest form of the argument is:
 
 > In the age of AI, competitive advantage may increasingly come not from owning the best solution, but from owning the better system for creating, deploying, measuring, and continuously improving solutions.

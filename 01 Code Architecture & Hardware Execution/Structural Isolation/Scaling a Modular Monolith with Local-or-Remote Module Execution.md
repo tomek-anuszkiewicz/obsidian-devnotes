@@ -17,7 +17,7 @@ aliases:
 
 # Scaling a Modular Monolith with Local-or-Remote Module Execution
 
-## Core Thesis: Decouple Your Module Boundaries from Process Boundaries
+## Core Principle: Decouple Your Module Boundaries from Process Boundaries
 
 A modular monolith does not mean every piece of code must run inside the exact same operating system process on every server. Instead, it serves as the most practical bridge between simple in-process development and distributed services (see [[Service-to-Service Communication - How Service A Should Call Service B|service communication patterns]]).
 

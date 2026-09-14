@@ -14,7 +14,7 @@ aliases:
 
 # How LLM Systems Enforce Safety and Higher-Level Instructions
 
-> [!IMPORTANT] Executive Architectural Thesis: Multi-Layer Defense-in-Depth Safety Architecture
+> [!IMPORTANT] Architectural Invariant: Multi-Layer Defense-in-Depth Safety Architecture
 > Safety, security, and compliance in LLM systems cannot be achieved through a single mechanism. Relying solely on system prompts fails against adversarial jailbreaks; relying solely on post-training alignment fails when laws, policies, or organizational rules change faster than model weights.  
 > Production-grade governance requires a **Multi-Layer Defense-in-Depth Architecture**:
 > 1. **Strict Instruction Hierarchy**: Platform rules permanently outrank application instructions, which outrank user prompts, which outrank untrusted retrieved text (`Platform > App > User > RAG`).

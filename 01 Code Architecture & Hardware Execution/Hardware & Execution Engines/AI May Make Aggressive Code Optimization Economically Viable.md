@@ -20,7 +20,7 @@ aliases:
 
 # AI May Make Aggressive Code Optimization Economically Viable
 
-## The Core Thesis: The Inverted Economics of Software Performance
+## Core Principle: The Inverted Economics of Software Performance
 
 For over five decades, software engineering operated under an unquestioned economic trade-off: **trading machine execution efficiency for human developer productivity**.
 

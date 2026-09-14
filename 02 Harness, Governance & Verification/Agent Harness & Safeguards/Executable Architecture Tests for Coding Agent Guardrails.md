@@ -131,7 +131,7 @@ Modern agentic environments load instructions from workspace configurations. How
 - All `.agents/rules/*.md` $\le 23,000$ bytes (guaranteeing zero truncation across all sessions).
 
 ### Pillar 6: Documentation Graph Integrity
-When an agent refactors code, renames modules, or updates design documents, markdown wikilinks frequently break. The architecture test reads all design documents, extracts all links, url-decodes targets, and asserts that every target file exists on disk. It also asserts a minimum link threshold, ensuring the team maintains an interconnected small-world knowledge graph (see [[Vault Linking and Graph Integrity Rule]]).
+When an agent refactors code, renames modules, or updates design documents, markdown wikilinks frequently break. The architecture test reads all design documents, extracts all links, url-decodes targets, and asserts that every target file exists on disk. It also asserts a minimum link threshold, ensuring the team maintains an interconnected small-world knowledge graph (see [[vault-linking-and-graph-integrity|graph integrity rules]]).
 
 ### Pillar 7: Anti-Tamper Invariance Contracts
 When an agent introduces a regression that breaks a golden benchmark or reference hash, the easiest path to green is to modify the expected constant in the test. The architecture test inspects all golden test suites to ensure they contain explicit anti-tamper contract headers and asserts that test failure messages explicitly forbid updating hashes without human root-cause approval.

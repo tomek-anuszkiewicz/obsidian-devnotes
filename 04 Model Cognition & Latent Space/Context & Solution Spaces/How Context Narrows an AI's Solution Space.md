@@ -16,7 +16,7 @@ aliases:
 
 # How Context Narrows an AI's Solution Space
 
-> [!IMPORTANT] Executive Architectural Thesis: Context as a Geometric Bounding Manifold
+> [!IMPORTANT] Architectural Invariant: Context as a Geometric Bounding Manifold
 > Context is not passive text storage; it acts as a **geometric bounding manifold that dynamically prunes candidate solution trajectories before detailed reasoning begins**.  
 > - **The Pruning Mechanism**: Injecting jurisdiction, organizational invariants, interface boundaries, and operational constraints eliminates trillions of theoretically possible but practically invalid token paths from the model's high-dimensional latent space.
 > - **Hard Constraints vs Soft Norms**: Robust architectures strictly separate *Hard Invariants* (immutable laws, memory boundaries, security policies) from *Soft Norms* (corporate boilerplate, temporary conventions). Treating soft norms as hard constraints prematurely collapses the search space onto mediocre industry averages.

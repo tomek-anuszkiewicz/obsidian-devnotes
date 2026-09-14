@@ -15,7 +15,7 @@ aliases:
 # AI May Create a New Market for Small, Custom Business Software
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: For decades, small and medium-sized businesses (SMBs) were trapped between two unpalatable choices: expensive, rigid off-the-shelf enterprise SaaS (which forced businesses to contort their operations to fit standardized vendor schemas) or bespoke software agencies (costing \$50,000–\$200,000, financially out of reach). AI coding agents collapse the capital cost of software creation by two orders of magnitude, unlocking a massive **hyper-custom long tail of micro-software**. The dominant commercial opportunity is not building another monolithic CRM, but deploying agents to synthesize lightweight, self-healing glue around messy existing business artifacts (spreadsheets, emails, and local databases).
+> **Core Architectural Takeaway**: For decades, small and medium-sized businesses (SMBs) were trapped between two unpalatable choices: expensive, rigid off-the-shelf enterprise SaaS (which forced businesses to contort their operations to fit standardized vendor schemas) or bespoke software agencies (costing \$50,000–\$200,000, financially out of reach). AI coding agents collapse the capital cost of software creation by two orders of magnitude, unlocking a massive **hyper-custom long tail of micro-software**. The dominant commercial opportunity is not building another monolithic CRM, but deploying agents to synthesize lightweight, self-healing glue around messy existing business artifacts (spreadsheets, emails, and local databases).
 
 ```text
            THE HYPER-CUSTOM MICRO-SOFTWARE UNLOCK FOR SMBs
@@ -858,8 +858,7 @@ Employees may create or adjust automations themselves with AI assistance.
 
 These groups may compete in some areas and complement one another in others.
 
-## Working Hypothesis
-
+## Architectural Analysis & Trade-offs
 > AI may make tailored software and automation affordable for small businesses that previously depended on manual work, spreadsheets, or poorly fitting SaaS products.
 
 A stronger version is:

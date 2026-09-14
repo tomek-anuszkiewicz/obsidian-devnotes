@@ -15,7 +15,7 @@ aliases:
 # AI May Increase Product Ambition Instead of Reducing Team Size
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: The prevailing macroeconomic assumption that *"10x developer productivity necessitates 10x fewer software engineers"* is a manifestation of the **Lump of Labor Fallacy**. Because market demand for software is highly elastic, collapsing the marginal cost of code creation does not trigger organizational downsizing; it triggers the **Jevons Paradox**. Time saved on boilerplate plumbing and routine CRUD is immediately reinvested into expanding product ambition, surface area, and architectural sophistication—enabling lean engineering strike teams to conquer domains that previously required enterprise-scale headcount.
+> **Core Architectural Takeaway**: The prevailing macroeconomic assumption that *"10x developer productivity necessitates 10x fewer software engineers"* is a manifestation of the **Lump of Labor Fallacy**. Because market demand for software is highly elastic, collapsing the marginal cost of code creation does not trigger organizational downsizing; it triggers the **Jevons Paradox**. Time saved on boilerplate plumbing and routine CRUD is immediately reinvested into expanding product ambition, surface area, and architectural sophistication—enabling lean engineering strike teams to conquer domains that previously required enterprise-scale headcount.
 
 ```text
            THE JEVONS PARADOX IN SOFTWARE ENGINEERING VELOCITY
@@ -929,8 +929,7 @@ highly ambitious market leaders
 
 ---
 
-## Working Hypothesis
-
+## Architectural Analysis & Trade-offs
 > AI will significantly reduce the labor required to build software at today's standard, but it will also increase the number of economically viable software projects, the expected quality of software, and the ambition of leading organizations.
 
 A stronger version is:

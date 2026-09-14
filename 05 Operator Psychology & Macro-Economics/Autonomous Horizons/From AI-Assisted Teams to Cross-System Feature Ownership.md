@@ -15,7 +15,7 @@ aliases:
 # From AI-Assisted Teams to Cross-System Feature Ownership
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: Traditional software organizations are structured around Conway's Law: siloed service and component teams created because human cognitive bandwidth could not hold multiple sprawling codebases simultaneously. As coding agents collapse the cognitive and mechanical cost of navigating unfamiliar code, the primary bottleneck shifts from implementation to cross-team coordination and review queues. Engineering topologies must transition from horizontal component silos to **Cross-System Vertical Feature Ownership**, where individual engineers drive vertical outcomes across multiple repositories while platform teams maintain automated verification oracles and immutable architectural guardrails.
+> **Core Architectural Takeaway**: Traditional software organizations are structured around Conway's Law: siloed service and component teams created because human cognitive bandwidth could not hold multiple sprawling codebases simultaneously. As coding agents collapse the cognitive and mechanical cost of navigating unfamiliar code, the primary bottleneck shifts from implementation to cross-team coordination and review queues. Engineering topologies must transition from horizontal component silos to **Cross-System Vertical Feature Ownership**, where individual engineers drive vertical outcomes across multiple repositories while platform teams maintain automated verification oracles and immutable architectural guardrails.
 
 ```text
            SILOED REPOSITORY CONWAY'S LAW VS VERTICAL FEATURE OWNERSHIP
@@ -634,8 +634,7 @@ Failed models will be abandoned.
 
 The future organization may therefore be discovered experimentally rather than planned theoretically.
 
-## Working Hypothesis
-
+## Architectural Analysis & Trade-offs
 A reasonable hypothesis is:
 
 > First, teams will learn to use AI effectively inside current structures. As agents become capable of executing larger units of work, coordination and ownership boundaries will become more visible bottlenecks. This pressure may eventually produce new models of cross-system responsibility.

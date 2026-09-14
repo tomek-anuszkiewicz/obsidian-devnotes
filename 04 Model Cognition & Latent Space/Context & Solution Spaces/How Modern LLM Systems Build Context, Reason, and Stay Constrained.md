@@ -14,7 +14,7 @@ aliases:
 
 # How Modern LLM Systems Build Context, Reason, and Stay Constrained
 
-> [!IMPORTANT] Executive Architectural Thesis: The Autonomous AI Agent as a Distributed Cognitive State Machine
+> [!IMPORTANT] Architectural Invariant: The Autonomous AI Agent as a Distributed Cognitive State Machine
 > A production AI agent is not a stateless text generator (`Prompt -> LLM -> Output`); it is a **distributed cognitive state machine**. The observable intelligence, reliability, and safety of the system emerge from the orchestration loop that wraps the underlying language model:
 > 1. **Context Preparation & Normative Bounding**: Dynamically gathering jurisdictional constraints, system invariants, episodic memory, and retrieved domain context before reasoning begins.
 > 2. **Test-Time Compute & Tree Exploration**: Utilizing internal reasoning tokens and deliberate path-branching to explore alternative solution trajectories and challenge premature assumptions.

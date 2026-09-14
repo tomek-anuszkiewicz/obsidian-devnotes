@@ -19,7 +19,7 @@ aliases:
 
 # Data Access Economics with Coding Agents: ORMs vs Explicit SQL
 
-## Core Thesis: The Inverted Economics of Database Access
+## Core Principle: The Inverted Economics of Database Access
 
 For decades, software teams defaulted to heavy Object-Relational Mappers (ORMs) not because ORMs generate better queries, but because writing data access code by hand is soul-crushing work:
 - Handcrafting hundreds of Data Transfer Objects (DTOs) and row mappers,

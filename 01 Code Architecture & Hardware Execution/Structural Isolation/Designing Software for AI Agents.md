@@ -16,7 +16,7 @@ aliases:
 
 # Designing Software for AI Agents
 
-## Core Thesis: Discoverability and Explicit Contracts Beat Clever Shortcuts
+## Core Principle: Discoverability and Explicit Contracts Beat Clever Shortcuts
 
 Autonomous coding agents don't make software architecture obsolete; **they make good architecture more important than ever**.
 

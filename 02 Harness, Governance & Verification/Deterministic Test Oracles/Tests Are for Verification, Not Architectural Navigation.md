@@ -31,7 +31,7 @@ Automated Tests (The Oracle)    ──► VERIFICATION: Deterministic pass/fail 
 
 ---
 
-## Core Thesis: Verification vs. Navigation
+## Core Principle: Verification vs. Navigation
 
 In classical software engineering, developers often claimed: *"Clean code and comprehensive unit tests are self-documenting."*
 

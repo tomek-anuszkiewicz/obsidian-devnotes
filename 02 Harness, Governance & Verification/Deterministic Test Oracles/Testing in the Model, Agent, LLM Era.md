@@ -28,7 +28,7 @@ Living Markdown Specs ──► AI Agent Writes Code ──► Disposable Code �
 
 ---
 
-## Core Thesis: Tests Are the True Guardrails for Coding Agents
+## Core Principle: Tests Are the True Guardrails for Coding Agents
 
 In software engineering with AI coding agents, the economics of testing and writing code invert:
 

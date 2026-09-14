@@ -18,7 +18,7 @@ status: evergreen
 # AI-Assisted Software Engineering — Where Are We Now?
 
 > [!IMPORTANT]
-> **Executive Architectural Thesis**: AI-assisted programming has escaped the novelty phase of tab-autocomplete, yet has not settled into a mature engineering discipline. We are navigating an **infrastructure transition** analogous to the advent of high-level compilers and cloud/DevOps. AI does not eliminate software engineering; it displaces the primary bottleneck from mechanical syntax emission to **specification soundness, context architecture, deterministic verification, and delivery governance**. Because LLMs are probabilistic generators that author plausible near-misses, unharnessed code generation merely accelerates technical debt unless bounded by rigid mechanical verification oracles.
+> **Core Architectural Takeaway**: AI-assisted programming has escaped the novelty phase of tab-autocomplete, yet has not settled into a mature engineering discipline. We are navigating an **infrastructure transition** analogous to the advent of high-level compilers and cloud/DevOps. AI does not eliminate software engineering; it displaces the primary bottleneck from mechanical syntax emission to **specification soundness, context architecture, deterministic verification, and delivery governance**. Because LLMs are probabilistic generators that author plausible near-misses, unharnessed code generation merely accelerates technical debt unless bounded by rigid mechanical verification oracles.
 
 ```text
            THE HISTORICAL ABSTRACTION ELEVATION IN SOFTWARE

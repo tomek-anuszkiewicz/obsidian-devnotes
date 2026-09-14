@@ -17,7 +17,7 @@ aliases:
 
 # Designing Internal Packages as an Explicit, Composable Framework
 
-## Core Thesis: The Framework Provides Building Blocks; The Application Composes Them
+## Core Principle: The Framework Provides Building Blocks; The Application Composes Them
 
 Internal shared libraries and private packages (whether distributed via npm, NuGet, Maven, Cargo, or Go modules) inevitably form an organization's corporate application framework.
 

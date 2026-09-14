@@ -17,7 +17,7 @@ aliases:
 
 # Hidden Abstractions May Become More Expensive in Agent-Maintained Code
 
-## Core Thesis: Semantic Locality Beats Keystroke Conservation
+## Core Principle: Semantic Locality Beats Keystroke Conservation
 
 In software systems maintained and refactored by AI agents, **Semantic Locality** matters far more than traditional DRY (Don't Repeat Yourself) metrics.
 
