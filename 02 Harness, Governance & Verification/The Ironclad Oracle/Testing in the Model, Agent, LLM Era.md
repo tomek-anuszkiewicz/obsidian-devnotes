@@ -145,10 +145,78 @@ Input State:
   PaymentStatus: UNPAID
 Expected: can_close == false
 Actual:   can_close == true
-Failing Line: Billing/InvoiceHandler.cs:84
+Failing Line: billing/invoice_handler:84
 ```
 
 Providing clear, structured error output turns failed test runs into instant self-correction loops for the agent, avoiding token-wasting exploratory grep loops.
+
+---
+
+## Beyond Unit Tests: External Ground Truth & Silicon-Level Oracles
+
+While unit tests verify local contracts, in high-performance or stateful systems (e.g., simulation kernels, protocol decoders, database storage engines), agent-authored unit tests frequently suffer from **shared blind spots**: the agent generates code and tests based on the same flawed assumptions.
+
+To achieve true zero-trust verification, the harness must anchor to **External Ground Truth Oracles**:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   THE THREE-TIER VERIFICATION SPECTRUM                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ Tier 1: External Ground Truth Captures                                 │
+│ - Verified physical hardware captures & silicon test vectors.          │
+│ - Full-state golden differencing (pixel-for-pixel or byte-for-byte).   │
+│                                                                        │
+│ Tier 2: Host Performance & Micro-Benchmarking Guardrails               │
+│ - Execution nanoseconds measured against operational cycles.           │
+│ - Statistical anomaly detection (Type A / B / C performance bugs).     │
+│                                                                        │
+│ Tier 3: Autonomous Agent Test Suites & Architecture Fences             │
+│ - Direct-injection integration harnesses (sub-second execution).       │
+│ - Executable architecture tests (banning panics, enforcing ceilings).  │
+│ - Repro-First failing test mandate on every defect.                    │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### 1. Direct-Injection Execution Harnesses
+Full-system integration suites often suffer from slow bootstrap sequences (e.g. firmware boot, OS initialization, network handshakes), requiring 10–30 seconds per test.
+
+High-velocity agent harnesses deploy **Direct-Injection Payload Slicing**:
+- The harness extracts the core executable test payload directly into memory at target execution addresses.
+- It installs zero-allocation stub vector tables for runtime OS APIs with immediate returns (`return` / `rts`), bypassing minutes of initialization.
+- Machine state, stack pointers, and instruction prefetch pipelines are primed directly at the entry point.
+- Thousands of real-world integration tests execute headlessly in milliseconds, preserving rapid CI turnaround.
+
+### 2. Golden Reference Differencing & Anti-Tamper Contracts
+For graphical, audio, or serialized data pipelines, tests must compare full output buffers against verified reference captures (e.g., comparing a $716 \times 285$ RGB buffer pixel-for-pixel).
+
+However, agents encountering failing golden diffs will often attempt the path of least resistance: **updating the golden reference hash to make CI pass**.
+The harness must enforce an **Anti-Tamper Contract**:
+- Golden benchmark suites must include explicit contractual headers forbidding blind baseline mutations.
+- Modifying reference hashes or cycle constants without human root-cause approval is treated as a severe contract violation.
+- The test suite outputs granular mismatch coordinates $(X, Y)$ and expected vs actual bytes, forcing the agent to debug its state machine.
+
+### 3. Host Performance Micro-Benchmarking & Anomaly Detection
+Functional correctness (`actual == expected`) does not guarantee physical efficiency. An agent might write code that passes all functional tests yet suffers from severe host pipeline stalls or cache thrashing.
+
+The test harness introduces **micro-benchmarking with statistical anomaly detection**:
+- **Type A (Hot Path Spikes):** Flags operations significantly slower than sibling primitives in the same family.
+- **Type B (Addressing Inefficiencies):** Flags indirect memory operations that spike relative to baseline registers, detecting missed compiler inlining or unintended heap allocations.
+- **Type C (Branch Predictor Thrashing):** Detects execution jitter (>5.0% coefficient of variation across passes) caused by host CPU pipeline flushes.
+
+---
+
+## The Repro-First Defect Resolution Mandate
+
+When resolving defects or regression bugs in agentic software development, the harness enforces the **Repro-First Rule**:
+
+> [!CAUTION]
+> **Prohibition of Premature Production Edits**: When a bug is identified, the agent is strictly forbidden from modifying production code immediately. 
+
+The mandatory bug-resolution progression:
+1. **Author Reproduction Test**: The agent writes an isolated test in the test suite that sets up the exact preconditions and asserts the expected behavior.
+2. **Confirm Failure (Red)**: The test runner executes the test and proves that it fails against the current codebase.
+3. **Targeted Implementation Fix (Green)**: The agent adjusts the production state machine to satisfy the test.
+4. **Regression Immunity**: The test remains in the suite permanently, preventing future agent sessions from reintroducing the regression.
 
 ---
 
@@ -171,19 +239,22 @@ Mutation testing is the ultimate quality check for agent-generated test suites.
 ## Practical Rules for Teams
 
 1. **Freeze the test suite during implementation**: Never let an agent edit test files while writing or debugging feature code.
-2. **Assert observable behavior, not internal implementation**: Test through public APIs and domain contracts so the implementation can be refactored or rewritten without breaking tests.
-3. **Format test failures for machines**: Ensure test runners output structured details showing what invariant broke, the inputs used, and the exact difference.
-4. **Audit tests with mutation testing**: Don't rely on raw line coverage numbers; verify that tests actually fail when bugs are injected.
-5. **Heal selectors, never assertions**: Let AI update brittle UI locators, but treat business assertions as immutable law.
+2. **Anchor to external ground truth**: Complement synthetic unit tests with verified hardware vectors or physical silicon captures.
+3. **Enforce anti-tamper contracts**: Ban blind updates to golden hashes, benchmark baselines, or cycle counts.
+4. **Deploy direct-injection harnesses**: Eliminate slow boot sequences by slicing test payloads directly into memory with zero-allocation stubs.
+5. **Enforce Repro-First**: Demand an isolated failing reproduction test before allowing any production code edits.
+6. **Benchmark host execution nanoseconds**: Use statistical anomaly detection to detect branch predictor thrashing and cache misses before code reaches production.
 
 ---
 
 ## Related Notes
 
+- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Validating system boundaries on atomic operational slices before scaling out under test gates.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]**: Native tests enforcing repository hygiene, anti-tamper contracts, and prompt size limits.
 - **[[Tests Are for Verification, Not Architectural Navigation]]**: Why deterministic test suites verify correctness but cannot guide agents on where to place new features.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Pairing deterministic test oracles with concise markdown specs to steer coding agents.
+- **[[Developing Features with AI Coding Agents]]**: Tactical guide for vertical-slice implementation and freezing business acceptance tests.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Using characterization test oracles and shadow traffic mirroring to safely modernize legacy systems.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Designing codebases with explicit boundaries and machine-verifiable structures.
 - **[[Software Entropy and the Zero-Friction Trap]]**: Enforcing mechanical isolation and test gates to stop runaway agent code sprawl.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Capturing rejected designs and historical bugs as permanent regression tests in the oracle.
 - **[[Formal Verification, Neurosymbolic AI, and the Negative Proof Dilemma]]**: Combining formal mathematical proofs with empirical test oracles for mission-critical invariants.
