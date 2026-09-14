@@ -102,7 +102,7 @@ They integrate:
 Their primary value is enterprise governance: applications interact with an internal platform facade, allowing corporate policy to dictate model availability, auditability, and security compliance without altering application code.
 
 ### 2. Model Gateways and Brokers
-Gateways—such as **OpenRouter**, **LiteLLM**, and **Cloudflare AI Gateway**—provide a unified API facade across heterogeneous model vendors.
+Gateways—such as **OpenRouter**, **LiteLLM**, and **Cloudflare AI Gateway**—provide a unified API facade across heterogeneous model vendors, operating via [[Dynamic Model Routing and Inference Gateways|dynamic routing algorithms and reverse proxy gateways]].
 
 Instead of writing bespoke client integrations for OpenAI, Anthropic, Google, DeepSeek, and open-weight hosters, the application communicates through a singular protocol interface:
 
@@ -147,7 +147,7 @@ Their core value proposition is **operating optimized open-weight model inferenc
 ```
 
 ### 4. Local and Edge Model Runtimes
-Local runtimes—such as **Ollama**, **vLLM**, **llama.cpp**, **LM Studio**, and **NVIDIA NIM**—execute models directly on developer workstations, on-prem servers, or edge devices.
+Local runtimes—such as **Ollama**, **vLLM**, **llama.cpp**, **LM Studio**, and **NVIDIA NIM**—execute models directly on developer workstations, on-prem servers, or [[Local vs Cloud and Hybrid Model Execution|unified memory architecture appliances]].
 
 ```text
 Application
@@ -164,6 +164,7 @@ Key architectural benefits:
 - **Deterministic Unit Economics**: Zero per-token marginal cost once physical hardware is provisioned.
 - **Offline Resilience**: Agent workflows remain operational regardless of internet connectivity or cloud provider degradation.
 - **Fine-Grained Quantization**: Deploying specialized 4-bit/8-bit quantized models optimized for specific local cache and memory footprints.
+- **Hardware-Ergonomic Coexistence**: Transitioning from noisy, high-wattage desktop rigs to whisper-quiet 100W–150W appliances running 24/7 background loops.
 
 ---
 
@@ -235,6 +236,8 @@ This multi-model strategy neutralizes vendor-specific blindspots, hallucination 
 
 ## Relationship to the Knowledge Graph
 
+- **[[Dynamic Model Routing and Inference Gateways]]**: Algorithmic implementation of the gateway broker layer, detailing 5 routing levels, fallback cassettes, and optimistic local execution.
+- **[[Local vs Cloud and Hybrid Model Execution]]**: The hardware physics, unified memory architectures (DGX Spark, Mac Studio, Strix Halo), and TCO dynamics governing local vs cloud inference.
 - **[[Agent Deployment and Execution Models]]**: Detailed operational runtime topologies for hosting, isolating, and scaling autonomous agent processes.
 - **[[Exploring Agent Harnesses]]**: Comparative architectural analysis of CLI-based, cloud-hosted, and headless harness environments.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The deterministic state-machine orchestration layer running on top of model execution infrastructure.
