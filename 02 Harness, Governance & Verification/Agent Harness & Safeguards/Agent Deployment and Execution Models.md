@@ -97,7 +97,8 @@ Config C: Air-Gapped / High-Sovereignty
 | **Shared agent running PR reviews in CI** | Managed or self-hosted agent triggered via webhooks |
 | **Code must never leave corporate network** | Self-hosted model inference on private cluster |
 | **Control inference without buying physical GPU hardware** | Self-hosted inference on rented private GPU cloud compute |
-| **Strict air-gapped data sovereignty** | Fully on-premises stack (weights, harness, executor) |
+| **Strict air-gapped data sovereignty** | Fully on-premises stack via [[Local vs Cloud and Hybrid Model Execution|dedicated local UMA appliances]] |
+| **24/7 background personal automation** | Persistent local daemons via [[Always-On Autonomous Agents - The 24-7 Local Operating System|autonomous agentic operating systems]] |
 | **Minimal operational and infrastructure overhead** | Managed agent with vendor API |
 
 ---
@@ -127,6 +128,9 @@ By isolating the executor into disposable execution sandboxes, engineering organ
 
 ## Relationship to the Knowledge Graph
 
+- **[[Local vs Cloud and Hybrid Model Execution]]**: Comparing physical hardware tiers (dGPU vs UMA), thermal ergonomics, and economic TCO across local and cloud deployment models.
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]**: Architecture, security guardrails, and blast radius containment for 24/7 persistent background daemons.
+- **[[Dynamic Model Routing and Inference Gateways]]**: Decoupling deployment runtimes from concrete model endpoints via multi-tier routing and proxy gateways.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The control harness executing on top of local or cloud deployment models.
 - **[[Model Access and Execution Infrastructure]]**: Gateway patterns, routing, latency, and quota orchestration for deployed coding agents.
 - **[[Multi-Agent Software Development]]**: Multi-agent team orchestration running across distributed execution nodes.
