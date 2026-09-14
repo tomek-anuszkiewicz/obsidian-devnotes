@@ -42,16 +42,17 @@ can give voice commands to pc
 
 browser automation and control
 browser use
-### Open Claw Start
-I need to host it or run locally in docker
-But in general I need to connect it to an LLM, directly or using open router
+### Open Claw & Local Autonomous Agent Infrastructure
+- Architectural Reference: [[Always-On Autonomous Agents - The 24-7 Local Operating System]]
+- Hardware & TCO Foundations: [[Local vs Cloud and Hybrid Model Execution]]
+- Inference Router & Gateway: [[Dynamic Model Routing and Inference Gateways]]
+- Hosting locally in Docker or on dedicated UMA appliance (NVIDIA DGX Spark, Mac Studio, AMD Strix Halo)
+- Connecting via local OpenAI-compatible endpoint (LiteLLM Proxy, vLLM, Ollama) or hybrid cloud fallback
+- Daily workflows:
+  - Curated news & intelligence feeds with positive/negative preference learning (see [[Finding Original Knowledge in an Internet Full of Repetition]])
+  - Autonomous email triage, task extraction, and contextual draft generation
+  - Private smart home orchestration and autonomous deal surveillance
 
-use LLMs to prepare news feed - filter out fakes, duplicates, keep only important news
-
-On YouTube there are plenty of videos explaining how to use it in daily workflows:
-- explore news and create my personal news feed
-- assist with my emails
-- assist with job search
 
 Perplexity
 CodeRabbit
