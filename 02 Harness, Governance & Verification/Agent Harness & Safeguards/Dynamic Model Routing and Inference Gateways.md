@@ -274,7 +274,7 @@ When building model routers, practitioners must avoid critical traps:
    - *Anti-Pattern:* Forcing an underpowered local model (e.g., 3B) to generate complex domain architectures to save $0.05 on API calls.
    - *Consequence:* The developer spends 45 minutes untangling hallucinated interfaces and broken state machines. Human engineering time costs $100+/hour; saving pennies on tokens while burning engineering hours is economic self-sabotage.
 3. **Unverified Optimistic Merges:**
-   - Optimistic local execution is valid **only if verified by deterministic oracles** (see [[Deterministic Test Oracles and Verification]]). Routing to a local model without an automated test harness guarantees silent code regression.
+   - Optimistic local execution is valid **only if verified by deterministic oracles** (see [[Testing in the Model, Agent, LLM Era|deterministic test oracles]]). Routing to a local model without an automated test harness guarantees silent code regression.
 
 ---
 
@@ -284,5 +284,5 @@ When building model routers, practitioners must avoid critical traps:
 - [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: How 24/7 background agent daemons leverage local inference gateways for continuous operations.
 - [[Agent Deployment and Execution Models]]: The fundamental three-plane separation between model inference, agent orchestration, and tool execution environments.
 - [[Agentic Coding Harness and Controlled Development Workflows]]: Establishing deterministic guardrails and blast radius boundaries for autonomous local execution.
-- [[Deterministic Test Oracles and Verification]]: The mechanical requirements for test oracles serving as objective judges during optimistic execution escalation.
+- [[Testing in the Model, Agent, LLM Era]]: The mechanical requirements for test oracles serving as objective judges during optimistic execution escalation.
 - [[Competitive advantage in the age of commodity AI]]: Why intelligent orchestration and proprietary data pipelines outcompete raw reliance on generic foundation models.
