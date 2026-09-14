@@ -177,7 +177,7 @@ Recording team meetings, interviews, or client negotiations without explicit leg
 - **The Protocol**:
   1. Never record non-consensual conversations.
   2. For solo practice (e.g., rehearsing pitches, preparing for interviews), record freely into private, local models.
-  3. When analyzing public or recorded team meetings, use **local-first transcription engines** (e.g., Whisper.cpp running entirely on local device hardware) to prevent sensitive corporate conversations or confidential personnel data from leaking to third-party model providers.
+  3. When analyzing public or recorded team meetings, use **local-first transcription engines** (e.g., Whisper running entirely on [[Local vs Cloud and Hybrid Model Execution|local UMA hardware appliances]] or orchestrated by [[Always-On Autonomous Agents - The 24-7 Local Operating System|24/7 background agent daemons]]) to prevent sensitive corporate conversations or confidential personnel data from leaking to third-party model providers.
 
 ---
 
@@ -203,6 +203,8 @@ This behavioral coaching loop directly connects with broader shifts in technical
 
 ## Relationship to the Knowledge Graph
 
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]**: The persistent background daemon architecture that executes continuous personal coaching and behavioral analysis loops locally.
+- **[[Local vs Cloud and Hybrid Model Execution]]**: The physical hardware appliances, acoustics, and air-gapped data sovereignty guarantees enabling private behavioral telemetry.
 - **[[AI Era Software Engineering Recruitment]]**: How behavioral simulation and interpersonal deconstruction prepare engineers for agent-era hiring loops.
 - **[[The Implications of Having a Digital Model of Yourself]]**: Using personal conversational telemetry to construct a faithful behavioral model for coaching and self-reflection.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Reducing the psychological toll of workplace friction through calibrated communication.
