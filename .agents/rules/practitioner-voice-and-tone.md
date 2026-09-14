@@ -67,3 +67,28 @@ True intellectual rigor comes from **accurate mental models, causal depth, and c
 ## 5. Stylistic Baseline: Early Repository History
 
 When refactoring or expanding existing notes, use early repository commits (such as commit `f909d7a`) as an original truth anchor and stylistic baseline. Early versions authored directly from practitioner discussions prioritized directness, simplicity, and practical engineering relevance before synthetic model attractors introduced layers of academic obfuscation.
+
+---
+
+## 6. Nomenclature & Taxonomy: File, Directory, and Heading Naming Standards
+
+The practitioner voice standard applies strictly to the entire file system structure—including folder names, note file titles, and internal markdown headings. Academic treatises, philosophical jargon, and theatrical metaphors are strictly prohibited.
+
+1. **Directory Naming Standards (Engineering Domains & Subsystems)**:
+   - Directory names across all layers must represent concrete, recognizable software engineering disciplines, architectural layers, or subsystems:
+     - ✅ *Compliant*: `Deterministic Test Oracles`, `Agent Harness & Safeguards`, `Code Review & Lifecycles`, `Runtime Mesh & Observability`, `Structural Isolation`.
+     - ❌ *Banned*: Theatrical, mythical, or sci-fi epic monikers (e.g. `The Ironclad Oracle`, `The Epistemic Gateway`, `The Neural Citadel`, `Cognitive Sanctum`).
+   - Every directory name must survive the *Coffee & Tech Talk Test*: it should read like a legitimate subsystem or component directory in a serious production codebase.
+
+2. **File Naming Standards (Mechanisms, Patterns & Trade-offs)**:
+   - Note file names must describe concrete technical mechanics, architecture patterns, failure modes, economic trade-offs, or developer workflows:
+     - ✅ *Compliant*: `Formal Verification and Runtime Safety Boundaries.md`, `Software Decay and the Hidden Costs of Frictionless AI Code.md`, `How Targeted Prompts Steer Model Solution Spaces.md`, `Proxy Metrics and Operational Invariants in AI Systems.md`.
+     - ❌ *Banned*: Academic dissertation titles, philosophical tracts, or stacked abstract nouns (e.g. `...and the Negative Proof Dilemma.md`, `Software Entropy and the Zero-Friction Trap.md`, `Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight.md`).
+   - Avoid double-spacing, pretentious Latinates, or theatrical buzzwords in filenames.
+
+3. **Section Headings & Callout Nomenclature**:
+   - Internal headings (`#`, `##`, `###`) and callout blocks (`> [!NOTE]`, `> [!IMPORTANT]`) must use grounded, active engineering language:
+     - ✅ *Compliant*: `> **Core Architectural Takeaway**:`, `> [!NOTE] Key Architecture Invariant:`, `## Core Engineering Mechanism`, `## Operational Realities & Decisions`, `## Production Failure Modes`.
+     - ❌ *Banned*: Academic dissertation tags, e.g. `> **Executive Architectural Thesis**:`, `> [!IMPORTANT] Executive Architectural Thesis:`, `## Working Hypothesis`, `## Central thesis`, `## Final Thesis`, `## Core thesis`.
+   - Never treat note sections as academic defense theses or formal proofs; treat them as actionable engineering guides and decision frameworks.
+
