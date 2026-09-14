@@ -21,7 +21,7 @@ Whenever creating, modifying, or refactoring notes in this Obsidian vault, the a
    - Hub notes must systematically catalog and contextually link downward to their member concepts and cross-link to adjacent hubs.
 
 3. **Automatic Bidirectional Maintenance**:
-   - **Outbound Linking**: When creating or modifying a note, identify the **2 to 4 most conceptually relevant peer notes** across the 5-Layer System Stack (`01 Substrate & Mechanical Sympathy/`, `02 Harness, Governance & Verification/`, `03 Runtime Mesh & Observability/`, `04 Model Cognition & Latent Space/`, `05 Operator Psychology & Macro-Economics/`) and link to them directly both inline and referentially.
+   - **Outbound Linking**: When creating or modifying a note, identify the **2 to 4 most conceptually relevant peer notes** across the 5-Layer System Stack (`01 Code Architecture & Hardware Execution/`, `02 Harness, Governance & Verification/`, `03 Runtime Mesh & Observability/`, `04 Model Cognition & Latent Space/`, `05 Operator Psychology & Macro-Economics/`) and link to them directly both inline and referentially.
    - **Inbound Linking**: If a newly created or updated note provides a prerequisite, logical continuation, or counterpoint to an existing note, update that peer note to link back.
 
 4. **Zero Broken Links & Zero Orphans**:
@@ -43,4 +43,12 @@ Whenever creating, modifying, or refactoring notes in this Obsidian vault, the a
    - **Rationale**:
      - *Leak Prevention*: Prevents private note titles, cognitive profiles, personal strategies, or confidential topics from leaking into public graph views, Obsidian Publish deployments, or open-source repositories.
      - *Broken Link Prevention*: In cloned or published versions of the vault where `_Private/` is gitignored, any outbound link to a private note renders as an orphaned, broken link, violating Principle 4 (*Zero Broken Links*).
+
+7. **Piped Canonical Hub Wikilink Standard**:
+   - When embedding inline wikilinks to canonical domain hubs in body prose:
+     - **Never Paste Raw Unpiped Hub Titles into Sentences**:
+       - ❌ *Incorrect*: `This accelerates the decay described in [[Software Entropy and the Zero-Friction Trap]] across teams.`
+     - **Always Use Natural Piped Anchors (`[[Hub Title|natural phrase]]`)**:
+       - ✅ *Correct*: `This accelerates the decay described in [[Software Entropy and the Zero-Friction Trap|analyses of generative code entropy]] across teams.`
+     - **Exceptions**: Raw unpiped links are permitted only in formal root charters (`_Explore.md`, `Preamble.md`) and dedicated referential sections (`## Related Notes` / `## Relationship to the Knowledge Graph`).
 
