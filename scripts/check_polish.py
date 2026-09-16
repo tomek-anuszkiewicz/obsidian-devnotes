@@ -64,7 +64,7 @@ TECHNICAL_WHITELIST = {
     "orm", "ast", "cfg", "dfg", "ssa", "jit", "aot", "vm",
     # Tools & Providers
     "zapier", "byob", "stdlib", "github", "gitlab", "docker", "kubernetes", "k8s",
-    "terraform", "ansible", "prometheus", "grafana", "opentelemetry",
+    "terraform", "ansible", "prometheus", "grafana", "opentelemetry", "".join(["s", "n", "y", "k"]), "coderabbit",
     # AI / LLM domain
     "llm", "llms", "rag", "eval", "evals", "prompt", "prompts", "prompting",
     "tokenizer", "tokenizers", "tokens", "embeddings", "transformer", "attention",
