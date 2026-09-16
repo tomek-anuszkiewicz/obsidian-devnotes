@@ -1,5 +1,5 @@
 ---
-title: Building Determinism from Stochastic Foundations - Agent Harness Architecture
+title: Building Determinism from Unpredictable Models - Agent Harness Architecture
 tags:
   - agentic-harness
   - deterministic-systems
@@ -9,7 +9,7 @@ tags:
   - context-rot
   - verification-asymmetry
 aliases:
-  - Building Determinism from Stochastic Foundations
+  - Building Determinism from Unpredictable Models
   - Agent Harness Architecture
   - Deterministic Agent Harness
   - The Control Inversion Illusion
@@ -17,10 +17,10 @@ aliases:
   - Inner Loop vs Outer Loop Harness
 ---
 
-# Building Determinism from Stochastic Foundations: Agent Harness Architecture
+# Building Determinism from Unpredictable Models: Agent Harness Architecture
 
 > [!IMPORTANT]
-> **The Control Inversion Illusion**: Developers often perceive autonomous agents as an inverted protocol client where a reasoning model directs execution by commanding local scripts. In reality, the architecture is strictly hierarchical: **the remote model possesses planning autonomy but zero execution authority**. The local agent harness is the sovereign host and master process. Reliable, production-grade agentic systems do not attempt to make the stochastic model deterministic through prompt persuasion; they engineer a deterministic runtime cage that treats model outputs as untrusted, speculative proposals subject to cheap, binary verification.
+> **The Control Inversion Illusion**: Developers often perceive autonomous agents as an inverted protocol client where a reasoning model directs execution by commanding local scripts. In reality, the architecture is strictly hierarchical: **the remote model possesses planning autonomy but zero execution authority**. The local agent harness is the sovereign host and master process. Reliable, production-grade agentic systems do not attempt to make the unpredictable model deterministic through prompt persuasion; they engineer a deterministic runtime cage that treats model outputs as untrusted, speculative proposals subject to cheap, binary verification.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -77,7 +77,7 @@ When an agent executes three or four intermediate steps successfully, the attent
 ### Sycophantic Paralysis (Defensive Drift)
 Conversely, when an operator intervenes with strong critical feedback regarding an invalid edit, the model registers a massive negative loss signal in the local conversation context. Rather than responding with balanced technical discernment, the model overcorrects into extreme defensive alignment: it apologizes profusely, abandons valid architectural paths, and ceases taking autonomous action, repeatedly asking permission for benign read-only operations.
 
-> **Architectural Axiom**: The reasoning model is an inherently stochastic component. System-level determinism cannot be persuaded into existence; it must be mechanically imposed by the surrounding harness.
+> **Architectural Axiom**: The reasoning model is an inherently unpredictable, non-deterministic component. System-level determinism cannot be persuaded into existence; it must be mechanically imposed by the surrounding harness.
 
 ---
 
@@ -110,7 +110,7 @@ Production harnesses resolve this tension through a **three-tier Pyramid of Cont
 | **3. Semantic (Flexible)** | Idiomatic phrasing, documentation depth, tone, localized naming conventions. | **Asynchronous LLM judges, off-band review agents**. | Token cost, non-blocking, tolerant of acceptable variance. |
 
 ### Verification Asymmetry (The NP-Class Advantage of Harnesses)
-Generating correct software architecture is a difficult, stochastic, and computationally expensive search process. In contrast, **verifying software correctness is asymmetrically fast, cheap, and deterministic**. 
+Generating correct software architecture is an unpredictable, computationally expensive search process. In contrast, **verifying software correctness is asymmetrically fast, cheap, and deterministic**. 
 
 A model may spend 30 seconds reasoning across an AST to implement a concurrency fix; a native test runner can verify whether the code compiles and passes regression assertions in 200 milliseconds. A robust harness exploits this asymmetry: it never asks an LLM to evaluate whether its own code compiles or whether tests pass. The harness treats model proposals strictly as unverified hypotheses, subjecting them to binary, non-negotiable verification gates before persisting state.
 
@@ -223,11 +223,11 @@ Protect developer velocity and context limits by migrating prose style, document
 ## Relationship to the Knowledge Graph
 
 ### Upward Architectural Anchor
-- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack]]: Anchors Layer 2 (*Harness, Governance & Verification*) by formalizing the deterministic boundary separating stochastic model predictions from physical execution environments.
+- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack]]: Anchors Layer 2 (*Harness, Governance & Verification*) by formalizing the deterministic boundary separating unpredictable model predictions from physical execution environments.
 
 ### Downward and Peer Conceptual Links
 - [[Agentic Coding Harness and Controlled Development Workflows|Controlled Development Workflows]]: Details the practical orchestration patterns, vertical slice generation, and negative bounding techniques governed by the harness.
 - [[Exploring Agent Harnesses|Exploring Agent Harnesses]]: Provides an expansive structural breakdown of harness components, host runtimes, and execution models.
 - [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps|Active Backlog Pruning and Context Hygiene]]: Explores the context compaction mechanisms necessary to prevent attention decay and context rot in extended workflows.
 - [[Executable Architecture Tests for Coding Agent Guardrails|Executable Architecture Tests]]: Analyzes automated structural oracles that enforce hard architectural fences at the harness level.
-- [[Tests Are for Verification, Not Architectural Navigation|Tests Are for Verification, Not Architectural Navigation]]: Examines the NP-asymmetry of software testing as an absolute, deterministic validation oracle against stochastic generation.
+- [[Tests Are for Verification, Not Architectural Navigation|Tests Are for Verification, Not Architectural Navigation]]: Examines the NP-asymmetry of software testing as an absolute, deterministic validation oracle against unpredictable model generation.
