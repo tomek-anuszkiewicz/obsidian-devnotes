@@ -17,11 +17,11 @@ OUTPUT_FILE = REPO_ROOT / "_Restoration" / "vault_to_original_mapping.md"
 MAPPING_JSON = REPO_ROOT / "_Restoration" / "vault_to_original_mapping.json"
 
 VAULT_DIRS = [
-    "01 Code Architecture & Hardware Execution",
-    "02 Harness, Governance & Verification",
-    "03 Runtime Mesh & Observability",
-    "04 Context Architecture & Model Steering",
-    "05 Developer Ergonomics & Software Economics"
+    "01 Architecture & Code",
+    "02 Testing & Code Review",
+    "03 Systems & Infrastructure",
+    "04 Prompts, Context & Models",
+    "05 Engineering Economics & Future"
 ]
 
 

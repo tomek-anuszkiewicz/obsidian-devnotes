@@ -21,7 +21,7 @@ Whenever creating, modifying, or refactoring notes in this Obsidian vault, the a
    - Hub notes must systematically catalog and contextually link downward to their member concepts and cross-link to adjacent hubs.
 
 3. **Automatic Bidirectional Maintenance**:
-   - **Outbound Linking**: When creating or modifying a note, identify the **2 to 4 most conceptually relevant peer notes** across the 5-Layer System Stack (`01 Code Architecture & Hardware Execution/`, `02 Harness, Governance & Verification/`, `03 Runtime Mesh & Observability/`, `04 Context Architecture & Model Steering/`, `05 Developer Ergonomics & Software Economics/`) and link to them directly both inline and referentially.
+   - **Outbound Linking**: When creating or modifying a note, identify the **2 to 4 most conceptually relevant peer notes** across the 5-Layer System Stack (`01 Architecture & Code/`, `02 Testing & Code Review/`, `03 Systems & Infrastructure/`, `04 Prompts, Context & Models/`, `05 Engineering Economics & Future/`) and link to them directly both inline and referentially.
    - **Inbound Linking**: If a newly created or updated note provides a prerequisite, logical continuation, or counterpoint to an existing note, update that peer note to link back.
 
 4. **Zero Broken Links & Zero Orphans**:

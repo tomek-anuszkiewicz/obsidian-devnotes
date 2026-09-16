@@ -21,11 +21,11 @@ The vault's knowledge graph is structured across **The 5-Layer System Stack for 
 
 | Layer | Focus Domain | Canonical Hub Note | Core Architectural Mission |
 | :--- | :--- | :--- | :--- |
-| **Layer 1** | Code Architecture & Hardware Execution | [[Software Engineering May Shift Toward Code Optimized for Agents]] | Instruction cache density, 1:1 operation isolation, flat dispatch over dynamic OOP |
-| **Layer 2** | Harness, Governance & Verification | [[Agentic Coding Harness and Controlled Development Workflows]]<br>[[Testing in the Model, Agent, LLM Era]] | Deterministic test oracles, controlled state machines, runtime safety boundaries |
-| **Layer 3** | Runtime Mesh & Observability | [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] | Conversational telemetry, OpenTelemetry spans, autonomous canary probes |
-| **Layer 4** | Context Architecture & Model Steering | [[Retrieval-Augmented Generation and Context Architecture]] | Context window compaction, hybrid retrieval, token budget management |
-| **Layer 5** | Developer Ergonomics & Software Economics | [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]<br>[[Competitive advantage in the age of commodity AI]] | The invariant director, deliberate coaching, software commoditization & moats |
+| **Layer 1** | Architecture & Code | [[Software Engineering May Shift Toward Code Optimized for Agents]] | Instruction cache density, 1:1 operation isolation, flat dispatch over dynamic OOP |
+| **Layer 2** | Testing & Code Review | [[Agentic Coding Harness and Controlled Development Workflows]]<br>[[Testing in the Model, Agent, LLM Era]] | Deterministic test oracles, controlled state machines, runtime safety boundaries |
+| **Layer 3** | Systems & Infrastructure | [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] | Conversational telemetry, OpenTelemetry spans, autonomous canary probes |
+| **Layer 4** | Prompts, Context & Models | [[Retrieval-Augmented Generation and Context Architecture]] | Context window compaction, hybrid retrieval, token budget management |
+| **Layer 5** | Engineering Economics & Future | [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]<br>[[Competitive advantage in the age of commodity AI]] | The invariant director, deliberate coaching, software commoditization & moats |
 
 ---
 

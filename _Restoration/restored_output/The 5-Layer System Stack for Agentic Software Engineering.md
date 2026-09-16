@@ -30,35 +30,35 @@ To build reliable systems in this environment, we need a clear architectural tax
 │              THE 5-LAYER AGENTIC SOFTWARE ENGINEERING STACK            │
 └────────────────────────────────────────────────────────────────────────┘
 
-  LAYER 5: DEVELOPER ERGONOMICS & SOFTWARE ECONOMICS
+  LAYER 5: ENGINEERING ECONOMICS & FUTURE
   ├── Engineering Roles (The Invariant Director, Verification Guardian)
   ├── Autonomous Workflows (Personal News Feeds, Dependency Bumpers, Browser Automation)
   └── Software Economics (Commodity Code, Private Operational Corpora as Moats)
          ▲
          │ Directs intent, sets boundary invariants, captures economic value
          ▼
-  LAYER 4: CONTEXT ARCHITECTURE & MODEL STEERING
+  LAYER 4: PROMPTS, CONTEXT & MODELS
   ├── Context Windows & Attention Budgets (Compaction, Active Backlog Pruning)
   ├── Code Graphs & AST Retrieval (Graphify, GitNexus, Obsidian Export)
   └── Agent Protocols & Tooling (Model Context Protocol, SQL Data API Builder)
          ▲
          │ Ingests living context, synthesizes implementation candidates
          ▼
-  LAYER 3: RUNTIME MESH & OBSERVABILITY
+  LAYER 3: SYSTEMS & INFRASTRUCTURE
   ├── Distributed Runtime (AKS, Istio, Envoy, CQRS, Sagas, Event Topologies)
   ├── Resilience & Policies (Polly Circuit Breakers, Rate Limiting)
   └── Operational Telemetry (OpenTelemetry Spans, Conversational Triage, Trend Alerts)
          ▲
          │ Emits distributed execution truth, closes operational feedback loop
          ▼
-  LAYER 2: HARNESS, GOVERNANCE & VERIFICATION
+  LAYER 2: TESTING & CODE REVIEW
   ├── Deterministic Test Oracles (Unit, Snapshot/Verify, Dynamic Fuzzing)
   ├── Executable Architecture Guardrails (Line Ceilings, No Panics, Bounded Contexts)
   └── Ephemeral Testing & Multi-Agent PR Review (Signadot, Telepresence, Consensus Loops)
          ▲
          │ Enforces deterministic correctness gates before merge
          ▼
-  LAYER 1: CODE ARCHITECTURE & HARDWARE EXECUTION
+  LAYER 1: ARCHITECTURE & CODE
   ├── Memory Layout & Zero-Alloc Paths (Span<T>, MemoryPool, Ref Structs)
   ├── Vertical Slice Isolation (1:1 Operation-to-File, CQRS Commands vs God Services)
   └── Hardware-Aware Execution (Loop Unrolling, L1i Density, Source Generators)
@@ -68,7 +68,7 @@ This stack organizes knowledge by **layers of authority**: from the physical har
 
 ---
 
-## Layer 1: Code Architecture & Hardware Execution
+## Layer 1: Architecture & Code
 
 At the foundation lies physical silicon: CPU execution pipelines, cache hierarchies, memory allocations, and query planners. 
 
@@ -145,7 +145,7 @@ var jsonOptions = new JsonSerializerOptions
 
 ---
 
-## Layer 2: Harness, Governance & Verification
+## Layer 2: Testing & Code Review
 
 An autonomous agent without an unyielding verification harness is a liability. Model intelligence does not guarantee system correctness; **deterministic test oracles** do.
 
@@ -246,7 +246,7 @@ Do not push agent-written code directly to production without a structured revie
 
 ---
 
-## Layer 3: Runtime Mesh, Distributed Transactions & Observability
+## Layer 3: Systems & Infrastructure
 
 When code reaches production, the operational runtime takes over. Systems must be resilient to partial failure and transparent to automated inspection.
 
@@ -315,7 +315,7 @@ Telemetry volume in distributed systems is overwhelming. A human cannot read 50 
 
 ---
 
-## Layer 4: Context Architecture, Retrieval & Steering
+## Layer 4: Prompts, Context & Models
 
 Context windows are the working memory of an agent. Raw prompt bloat degrades attention, induces hallucinations, and inflates API costs. High-performance agent operations require disciplined context architecture.
 
@@ -353,7 +353,7 @@ When you put too many guidelines into a single prompt, the model starts oscillat
 
 ---
 
-## Layer 5: Developer Ergonomics, Autonomous Workflows & Economics
+## Layer 5: Engineering Economics & Future
 
 The top layer focuses on the human engineer's interface, autonomous background systems, and the economic landscape of modern software engineering.
 
