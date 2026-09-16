@@ -98,11 +98,86 @@ CORE PRINCIPLES (from practitioner-voice-and-tone.md):
 Output exclusively raw markdown with full technical depth and natural practitioner cadence."""
 
 
-def restore_note_content(client: genai.Client, raw_content: str, model_name: str = "gemini-3.8-flash") -> str:
+def get_original_baseline(input_path: Path) -> str:
+    """Retrieve the original baseline content from commit f909d7a for a given note."""
+    mapping_file = RESTORATION_DIR / "vault_to_original_mapping.json"
+    f909_path = None
+
+    # 1. Try reading from precomputed mapping JSON
+    if mapping_file.exists():
+        try:
+            import json
+            mappings = json.loads(mapping_file.read_text(encoding="utf-8"))
+            rel_posix = input_path.relative_to(REPO_ROOT).as_posix() if input_path.is_relative_to(REPO_ROOT) else input_path.name
+            for m in mappings:
+                if m.get("current_path") == rel_posix or Path(m.get("current_path", "")).name == input_path.name:
+                    if m.get("status") == "ORIGINAL_EXISTS":
+                        f909_path = m.get("f909_path")
+                    break
+        except Exception:
+            pass
+
+    # 2. Fallback: Check if file exists in _Restoration/original_notes/
+    if not f909_path:
+        local_orig = RESTORATION_DIR / "original_notes" / input_path.name
+        if local_orig.exists():
+            return local_orig.read_text(encoding="utf-8", errors="ignore")
+
+    # 3. Fallback: Search f909d7a directly by basename
+    if not f909_path:
+        import subprocess
+        try:
+            raw = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "f909d7a"], encoding="utf-8")
+            for line in raw.splitlines():
+                if Path(line.strip()).name == input_path.name:
+                    f909_path = line.strip()
+                    break
+        except Exception:
+            pass
+
+    if f909_path:
+        import subprocess
+        try:
+            return subprocess.check_output(["git", "show", f"f909d7a:{f909_path}"], encoding="utf-8", errors="ignore")
+        except Exception as e:
+            print(f"  [WARN] Failed to fetch git show f909d7a:{f909_path}: {e}", file=sys.stderr)
+
+    return None
+
+
+def restore_note_content(client: genai.Client, raw_content: str, original_baseline: str = None, model_name: str = "gemini-3.8-flash") -> str:
     """Restore a single note using an isolated Gemini call with high thinking."""
     frontmatter, body = split_frontmatter(raw_content)
 
-    user_prompt = f"Rewrite this technical note in the Practitioner Voice and Tone. Maintain full depth, all sections, all trade-offs, and all code examples. Do NOT summarize or shorten:\n\n{body}"
+    if original_baseline:
+        orig_fm, orig_body = split_frontmatter(original_baseline)
+        user_prompt = f"""# TASK: Practitioner Tone Restoration & Intelligent Delta Merge
+
+You are provided with two versions of this engineering note:
+
+======================================================================
+1. ORIGINAL GROUND-TRUTH BASELINE (Commit f909d7a - ChatGPT)
+======================================================================
+{orig_body}
+
+======================================================================
+2. CURRENT VAULT VERSION (Edited)
+======================================================================
+{body}
+
+======================================================================
+DIRECTIVES FOR THE SYNTHESIZED NOTE
+======================================================================
+1. THE ORIGINAL BASELINE IS YOUR ANCHOR:
+   - Match the calm, grounded, authoritative voice of the original.
+   - PRESERVE ALL ORIGINAL CODE SNIPPETS, SCHEMAS, INTERFACES, AND DATA MODELS. Do not summarize or delete any code examples.
+2. DELTA MERGE:
+   - If the CURRENT VERSION introduces genuine, high-value technical observations, edge cases, trade-offs, or contemporary perspectives not present in the original, integrate them cleanly into the flow.
+   - REJECT and DISCARD all purple prose, academic buzzwords, sensationalist hooks, and forced "Core Invariants" templates.
+3. OUTPUT:
+   - Output exclusively the unified, fully detailed markdown note with rich technical depth."""
+    else:
+        user_prompt = f"Rewrite this technical note in the Practitioner Voice and Tone. Maintain full depth, all sections, all trade-offs, and all code examples. Do NOT summarize or shorten:\n\n{body}"
 
     config = types.GenerateContentConfig(
         system_instruction=build_system_instruction(),
@@ -128,14 +203,22 @@ def restore_note_content(client: genai.Client, raw_content: str, model_name: str
     return frontmatter + restored_body + "\n"
 
 
-def process_file(client: genai.Client, input_path: Path, output_dir: Path, in_place: bool = False, model_name: str = "gemini-3.8-flash"):
+def process_file(client: genai.Client, input_path: Path, output_dir: Path, in_place: bool = False, model_name: str = "gemini-3.8-flash", with_original: bool = False):
     """Process a single markdown file."""
     print(f"\n>> Processing: {input_path.name}")
     raw_content = input_path.read_text(encoding="utf-8", errors="ignore")
     orig_words = len(raw_content.split())
 
+    orig_baseline = None
+    if with_original:
+        orig_baseline = get_original_baseline(input_path)
+        if orig_baseline:
+            print(f"  [ANCHOR] Found original baseline from f909d7a ({len(orig_baseline.split())} words)")
+        else:
+            print("  [ANCHOR] No baseline found in f909d7a (treating as new note)")
+
     try:
-        restored_content = restore_note_content(client, raw_content, model_name=model_name)
+        restored_content = restore_note_content(client, raw_content, original_baseline=orig_baseline, model_name=model_name)
     except Exception as e:
         print(f"  [ERROR] Gemini call failed for {input_path.name}: {e}", file=sys.stderr)
         return False
@@ -164,6 +247,7 @@ def main():
     parser.add_argument("--api-key", "-k", type=str, help="Gemini API key")
     parser.add_argument("--model", "-m", type=str, default="gemini-3.8-flash", help="Gemini model name (default: gemini-3.8-flash)")
     parser.add_argument("--reference-test", action="store_true", help="Run restoration test on all files in _Restoration/original_notes/")
+    parser.add_argument("--with-original", action="store_true", help="Merge with historical ChatGPT baseline from f909d7a as ground-truth anchor")
 
     args = parser.parse_args()
 
@@ -199,10 +283,10 @@ def main():
         print("Specify --file, --dir, or --reference-test. Run with --help for options.")
         sys.exit(1)
 
-    print(f"Starting restoration batch ({len(targets)} note(s)) using {args.model} [thinking_level=HIGH]...")
+    print(f"Starting restoration batch ({len(targets)} note(s)) using {args.model} [thinking_level=HIGH, with_original={args.with_original}]...")
     success_count = 0
     for t in targets:
-        if process_file(client, t, out_dir, in_place=args.in_place, model_name=args.model):
+        if process_file(client, t, out_dir, in_place=args.in_place, model_name=args.model, with_original=args.with_original):
             success_count += 1
 
     print(f"\nFinished: {success_count}/{len(targets)} notes successfully processed.")
