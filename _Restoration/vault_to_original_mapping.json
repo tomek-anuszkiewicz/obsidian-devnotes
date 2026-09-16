@@ -1,0 +1,974 @@
+[
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/AI May Replace Some Source Generators with Explicit Generated Code.md",
+    "original_name": "AI May Replace Some Source Generators with Explicit Generated Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/AI May Replace Some Source Generators with Explicit Generated Code.md",
+    "current_words": 1373,
+    "original_words": 1601
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/AI-Generated Architectural Documentation from Code.md",
+    "original_name": "AI-Generated Architectural Documentation from Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/AI-Generated Architectural Documentation from Code.md",
+    "current_words": 1494,
+    "original_words": 2421
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Comments May Become More Valuable in AI-Generated Code.md",
+    "original_name": "Comments May Become More Valuable in AI-Generated Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/Comments May Become More Valuable in AI-Generated Code.md",
+    "current_words": 1532,
+    "original_words": 1249
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/In-Flight Documentation as the Primary Framework for Coding Agents.md",
+    "current_words": 1726,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Programming Languages May Evolve Differently in the Age of AI.md",
+    "original_name": "Programming Languages May Evolve Differently in the Age of AI.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/Programming Languages May Evolve Differently in the Age of AI.md",
+    "current_words": 1328,
+    "original_words": 2144
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "original_name": "Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Code as Compiled Artifact/Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "current_words": 2123,
+    "original_words": 2283
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/AI May Make Aggressive Code Optimization Economically Viable.md",
+    "original_name": "AI May Make Aggressive Code Optimization Economically Viable.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Hardware & Execution Engines/AI May Make Aggressive Code Optimization Economically Viable.md",
+    "current_words": 2133,
+    "original_words": 1708
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 3b7cc52 refactor(notes): generalize EF Core note into language-agnostic Data Access Economics note",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Data Access Economics with Coding Agents - ORMs vs Explicit SQL.md",
+    "current_words": 1436,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: e2f465b feat(notes): create Designing Internal Packages as an Explicit Composable Framework",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Designing Internal Packages as an Explicit, Composable Framework.md",
+    "current_words": 1451,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Designing Software for AI Agents.md",
+    "original_name": "Designing Software for AI Agents.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Designing Software for AI Agents.md",
+    "current_words": 1239,
+    "original_words": 1418
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "original_name": "Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "current_words": 1358,
+    "original_words": 2509
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 172a62b feat(notes): create Internal Shared Packages vs Agent-Generated Code",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Internal Shared Packages vs Agent-Generated Code.md",
+    "current_words": 1272,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Scaling a Modular Monolith with Local-or-Remote Module Execution.md",
+    "original_name": "Scaling a Modular Monolith with Local-or-Remote Module Execution.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Scaling a Modular Monolith with Local-or-Remote Module Execution.md",
+    "current_words": 1345,
+    "original_words": 2468
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Software Decay and the Hidden Costs of Frictionless AI Code.md",
+    "current_words": 1708,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/Why Business Logic Is the Hardest Part of Agentic Coding.md",
+    "original_name": "Why Business Logic Is the Hardest Part of Agentic Coding.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Code Architecture & Hardware Execution/Structural Isolation/Why Business Logic Is the Hardest Part of Agentic Coding.md",
+    "current_words": 1133,
+    "original_words": 442
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "_Explore.md",
+    "original_name": "_Explore.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "01 Code Architecture & Hardware Execution/The 5-Layer System Stack for Agentic Software Engineering.md",
+    "current_words": 2007,
+    "original_words": 884
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/AI Productivity Is Limited by the Delivery System.md",
+    "original_name": "AI Productivity Is Limited by the Delivery System.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/AI Productivity Is Limited by the Delivery System.md",
+    "current_words": 1236,
+    "original_words": 1510
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 8e7a2c8 feat(notes): codify Active Backlog Pruning and Context Hygiene in Agentic Roadmaps",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Active Backlog Pruning and Context Hygiene in Agentic Roadmaps.md",
+    "current_words": 1608,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/Agent Advantage -  Relentless, Methodical Work.md",
+    "original_name": "Agent Advantage -  Relentless, Methodical Work.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Agent Advantage - Relentless, Methodical Work.md",
+    "current_words": 1285,
+    "original_words": 1734
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Agent Deployment and Execution Models.md",
+    "original_name": "Agent Deployment and Execution Models.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Agent Deployment and Execution Models.md",
+    "current_words": 1224,
+    "original_words": 2788
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Agentic Coding Harness and Controlled Development Workflows.md",
+    "original_name": "Agentic Coding Harness and Controlled Development Workflows.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Agentic Coding Harness and Controlled Development Workflows.md",
+    "current_words": 6992,
+    "original_words": 4053
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Agentic Software Development Workflows.md",
+    "original_name": "Agentic Software Development Workflows.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Agentic Software Development Workflows.md",
+    "current_words": 1210,
+    "original_words": 2632
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 18cd2be feat(notes): add agent harness determinism and control pyramid architecture note",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Building Determinism from Unpredictable Models - Agent Harness Architecture.md",
+    "current_words": 2254,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: e604286 feat(notes): add Dynamic Model Routing and Inference Gateways architectural note",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Dynamic Model Routing and Inference Gateways.md",
+    "current_words": 1979,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 2dc62fa feat(notes): codify Executable Architecture Tests for Coding Agent Guardrails",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Executable Architecture Tests for Coding Agent Guardrails.md",
+    "current_words": 1669,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Exploring Agent Harnesses.md",
+    "original_name": "Exploring Agent Harnesses.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Exploring Agent Harnesses.md",
+    "current_words": 1401,
+    "original_words": 1532
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Model Access and Execution Infrastructure.md",
+    "original_name": "Model Access and Execution Infrastructure.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Model Access and Execution Infrastructure.md",
+    "current_words": 1677,
+    "original_words": 1126
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Multi-Agent Software Development.md",
+    "original_name": "Multi-Agent Software Development.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/Multi-Agent Software Development.md",
+    "current_words": 2074,
+    "original_words": 2400
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: f219b16 feat(notes): codify The Living Engineering Chronicle and Context-Safe Logging pattern",
+    "current_path": "02 Harness, Governance & Verification/Agent Harness & Safeguards/The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction.md",
+    "current_words": 1580,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/AI Changes the Economics of Technical Debt.md",
+    "original_name": "AI Changes the Economics of Technical Debt.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/AI Changes the Economics of Technical Debt.md",
+    "current_words": 1216,
+    "original_words": 257
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize.md",
+    "original_name": "Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize.md",
+    "current_words": 1298,
+    "original_words": 2174
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification.md",
+    "original_name": "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification.md",
+    "current_words": 1879,
+    "original_words": 2097
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Designing Software Architecture with LLM Assistance.md",
+    "original_name": "Designing Software Architecture with LLM Assistance.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Designing Software Architecture with LLM Assistance.md",
+    "current_words": 1420,
+    "original_words": 3314
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Developing Features with AI Coding Agents.md",
+    "original_name": "Developing Features with AI Coding Agents.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Developing Features with AI Coding Agents.md",
+    "current_words": 1450,
+    "original_words": 487
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/How AI Changes Prototyping and the Path from PoC to Production.md",
+    "original_name": "How AI Changes Prototyping and the Path from PoC to Production.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/How AI Changes Prototyping and the Path from PoC to Production.md",
+    "current_words": 1808,
+    "original_words": 361
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/LLMs as a Code Review Team.md",
+    "original_name": "LLMs as a Code Review Team.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/LLMs as a Code Review Team.md",
+    "current_words": 1543,
+    "original_words": 2562
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Refactoring Legacy Systems with AI Agents.md",
+    "original_name": "Refactoring Legacy Systems with AI Agents.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Refactoring Legacy Systems with AI Agents.md",
+    "current_words": 2020,
+    "original_words": 344
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Reviewing AI-Generated Code.md",
+    "original_name": "Reviewing AI-Generated Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/Reviewing AI-Generated Code.md",
+    "current_words": 1508,
+    "original_words": 347
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 8834d88 feat(notes): codify The Minimal Frame Pattern for agentic system engineering",
+    "current_path": "02 Harness, Governance & Verification/Code Review & Lifecycles/The Minimal Frame Pattern - Proving System Topology on Atomic Slices.md",
+    "current_words": 1928,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: b0db6de feat(verification): create formal verification, neurosymbolic ai, and negative proof dilemma note",
+    "current_path": "02 Harness, Governance & Verification/Deterministic Test Oracles/Formal Verification and Runtime Safety Boundaries.md",
+    "current_words": 1638,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Learning Coding Agents Through Failure-Driven Instructions.md",
+    "original_name": "Learning Coding Agents Through Failure-Driven Instructions.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Deterministic Test Oracles/Learning Coding Agents Through Failure-Driven Instructions.md",
+    "current_words": 1757,
+    "original_words": 1504
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: d359ac1 feat(notes): create negative knowledge and explicit architectural dissents note",
+    "current_path": "02 Harness, Governance & Verification/Deterministic Test Oracles/Negative Knowledge and Explicit Architectural Dissents.md",
+    "current_words": 2086,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/Testing in the Model, Agent, LLM Era.md",
+    "original_name": "Testing in the Model, Agent, LLM Era.md",
+    "match_type": "Direct Name Match",
+    "current_path": "02 Harness, Governance & Verification/Deterministic Test Oracles/Testing in the Model, Agent, LLM Era.md",
+    "current_words": 2428,
+    "original_words": 2362
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 6711843 feat(notes): create Tests Are for Verification, Not Architectural Navigation note",
+    "current_path": "02 Harness, Governance & Verification/Deterministic Test Oracles/Tests Are for Verification, Not Architectural Navigation.md",
+    "current_words": 1141,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: db19239 add three new notes on the future of education, software, and AI agent ecosystems",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/Applications May Shift from Fixed Features to Agent-Extensible Primitives.md",
+    "current_words": 1927,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Designing APIs for LLM-Generated Integration Code.md",
+    "original_name": "Designing APIs for LLM-Generated Integration Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/Designing APIs for LLM-Generated Integration Code.md",
+    "current_words": 1759,
+    "original_words": 1447
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/How AI Agents May Control Computers, Applications, and the Web.md",
+    "original_name": "How AI Agents May Control Computers, Applications, and the Web.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/How AI Agents May Control Computers, Applications, and the Web.md",
+    "current_words": 1711,
+    "original_words": 2219
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Introduction to Workflow Orchestration.md",
+    "original_name": "Introduction to Workflow Orchestration.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/Introduction to Workflow Orchestration.md",
+    "current_words": 2183,
+    "original_words": 3234
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/New Developer Technologies May Need to Be Agent-Ready from Day One.md",
+    "original_name": "New Developer Technologies May Need to Be Agent-Ready from Day One.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/New Developer Technologies May Need to Be Agent-Ready from Day One.md",
+    "current_words": 1547,
+    "original_words": 2023
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs.md",
+    "current_words": 1744,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "03 Runtime Mesh & Observability/Agent-Native Protocols/WebMCP - Turning Web Applications into Agent-Native Toolkits.md",
+    "current_words": 1849,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "03 Runtime Mesh & Observability/Observability & Runtime Telemetry/Embedding LLMs in Runtime Decision Paths and Operational Telemetry.md",
+    "current_words": 1815,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/OpenTelemetry.md",
+    "original_name": "OpenTelemetry.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Observability & Runtime Telemetry/OpenTelemetry.md",
+    "current_words": 1487,
+    "original_words": 2999
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Propagating User Context Between Services.md",
+    "original_name": "Propagating User Context Between Services.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/Propagating User Context Between Services.md",
+    "current_words": 1380,
+    "original_words": 1152
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Service vs User Authorization Models.md",
+    "original_name": "Service vs User Authorization Models.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/Service vs User Authorization Models.md",
+    "current_words": 1396,
+    "original_words": 930
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Service-to-Service Authentication and Authorization in Azure and Kubernetes.md",
+    "original_name": "Service-to-Service Authentication and Authorization in Azure and Kubernetes.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/Service-to-Service Authentication and Authorization in Azure and Kubernetes.md",
+    "current_words": 4977,
+    "original_words": 4235
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Service-to-Service Communication -  How Service A Should Call Service B.md",
+    "original_name": "Service-to-Service Communication -  How Service A Should Call Service B.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/Service-to-Service Communication - How Service A Should Call Service B.md",
+    "current_words": 5102,
+    "original_words": 4238
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Standardizing Service Infrastructure with Reusable Blocks.md",
+    "original_name": "Standardizing Service Infrastructure with Reusable Blocks.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/Standardizing Service Infrastructure with Reusable Blocks.md",
+    "current_words": 3801,
+    "original_words": 3004
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/User Context in Asynchronous Systems.md",
+    "original_name": "User Context in Asynchronous Systems.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Runtime Mesh & Observability/Service Boundaries & Auth/User Context in Asynchronous Systems.md",
+    "current_words": 1416,
+    "original_words": 843
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/AI, Averaged Decisions, and Premature Convergence on Solutions.md",
+    "original_name": "AI, Averaged Decisions, and Premature Convergence on Solutions.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/AI, Averaged Decisions, and Premature Convergence on Solutions.md",
+    "current_words": 3269,
+    "original_words": 2536
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 7211343 feat(cognition): create context attractors and attention gravity note",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/Context Attractors and Recency Bias in Long-Horizon Agent Sessions.md",
+    "current_words": 1556,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/How Context Narrows an AI's Solution Space.md",
+    "original_name": "How Context Narrows an AI's Solution Space.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/How Context Narrows an AI's Solution Space.md",
+    "current_words": 2697,
+    "original_words": 1816
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/How LLM Systems Build Context.md",
+    "original_name": "How LLM Systems Build Context.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/How LLM Systems Build Context.md",
+    "current_words": 2721,
+    "original_words": 1961
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/How Modern LLM Systems Build Context, Reason, and Stay Constrained.md",
+    "original_name": "How Modern LLM Systems Build Context, Reason, and Stay Constrained.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/How Modern LLM Systems Build Context, Reason, and Stay Constrained.md",
+    "current_words": 956,
+    "original_words": 488
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/How Reasoning Models Explore and Evaluate Solutions.md",
+    "original_name": "How Reasoning Models Explore and Evaluate Solutions.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/How Reasoning Models Explore and Evaluate Solutions.md",
+    "current_words": 1407,
+    "original_words": 665
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "04 Context Architecture & Model Steering/Context Windows & Attention/How Targeted Prompts Steer Model Solution Spaces.md",
+    "current_words": 2112,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/Constraint Saturation and Rule Oscillation in Coding Agents.md",
+    "current_words": 1896,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/How LLM Systems Enforce Safety and Higher-Level Instructions.md",
+    "original_name": "How LLM Systems Enforce Safety and Higher-Level Instructions.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/How LLM Systems Enforce Safety and Higher-Level Instructions.md",
+    "current_words": 1478,
+    "original_words": 721
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/Improving AI Models - From Scaling to Agent-Generated Training Data.md",
+    "original_name": "Improving AI Models - From Scaling to Agent-Generated Training Data.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/Improving AI Models - From Scaling to Agent-Generated Training Data.md",
+    "current_words": 2349,
+    "original_words": 1625
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/LLM Capability Reliability and the Shape of Progress.md",
+    "original_name": "LLM Capability Reliability and the Shape of Progress.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/LLM Capability Reliability and the Shape of Progress.md",
+    "current_words": 2128,
+    "original_words": 1790
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/LLM Coding Agents Reliability.md",
+    "original_name": "LLM Coding Agents Reliability.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/LLM Coding Agents Reliability.md",
+    "current_words": 3141,
+    "original_words": 1778
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: c4f5e29 feat(cognition): add statistical bias, proxy variables, and causal invariants note",
+    "current_path": "04 Context Architecture & Model Steering/Guardrails & Constraints/Proxy Metrics and Operational Invariants in AI Systems.md",
+    "current_words": 1636,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "04 Context Architecture & Model Steering/RAG & Knowledge Retrieval/How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge.md",
+    "current_words": 2840,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/LLM Agents and Institutional Memory.md",
+    "original_name": "LLM Agents and Institutional Memory.md",
+    "match_type": "Direct Name Match",
+    "current_path": "04 Context Architecture & Model Steering/RAG & Knowledge Retrieval/LLM Agents and Institutional Memory.md",
+    "current_words": 2481,
+    "original_words": 1285
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: cfbaabd feat(rag): consolidate 4 fragmented RAG notes into canonical context architecture master hub",
+    "current_path": "04 Context Architecture & Model Steering/RAG & Knowledge Retrieval/Retrieval-Augmented Generation and Context Architecture.md",
+    "current_words": 2449,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Agent Adoption as a Learning Flywheel.md",
+    "original_name": "Agent Adoption as a Learning Flywheel.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/Agent Adoption as a Learning Flywheel.md",
+    "current_words": 2418,
+    "original_words": 1881
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/Applications of LLM Agents Beyond Programming.md",
+    "original_name": "Applications of LLM Agents Beyond Programming.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/Applications of LLM Agents Beyond Programming.md",
+    "current_words": 1679,
+    "original_words": 1121
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/From AI-Assisted Teams to Cross-System Feature Ownership.md",
+    "original_name": "From AI-Assisted Teams to Cross-System Feature Ownership.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/From AI-Assisted Teams to Cross-System Feature Ownership.md",
+    "current_words": 2823,
+    "original_words": 2211
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Singularity Without AGI -  The Civilizational Automation Loop.md",
+    "original_name": "Singularity Without AGI -  The Civilizational Automation Loop.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/Networked Automation Loops and Software Output Without AGI.md",
+    "current_words": 3859,
+    "original_words": 3328
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem.md",
+    "original_name": "Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem.md",
+    "current_words": 3366,
+    "original_words": 2468
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Proactive Software -  From Reactive Systems to Autonomous Agents.md",
+    "original_name": "Proactive Software -  From Reactive Systems to Autonomous Agents.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/Proactive Software - From Reactive Systems to Autonomous Agents.md",
+    "current_words": 3255,
+    "original_words": 2728
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/The Implications of Having a Digital Model of Yourself.md",
+    "original_name": "The Implications of Having a Digital Model of Yourself.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Autonomous Systems & Workflows/The Implications of Having a Digital Model of Yourself.md",
+    "current_words": 5233,
+    "original_words": 4350
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI Changes the Role and Training of Software Engineers.md",
+    "original_name": "AI Changes the Role and Training of Software Engineers.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/AI Changes the Role and Training of Software Engineers.md",
+    "current_words": 4158,
+    "original_words": 251
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI Era Software Engineering Recruitment.md",
+    "original_name": "AI Era Software Engineering Recruitment.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/AI Era Software Engineering Recruitment.md",
+    "current_words": 2754,
+    "original_words": 2214
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: ff9bc84 feat(notes): add Always-On Autonomous Agents - The 24-7 Local Operating System architectural note",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/Always-On Autonomous Agents - The 24-7 Local Operating System.md",
+    "current_words": 2177,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents.md",
+    "current_words": 2794,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 2f49522 feat(notes): add architectural treatise on institutional complexity and grassroots innovation suppression",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/How Enterprise Complexity Blocks Grassroots Engineering.md",
+    "current_words": 2480,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "_Explore.md",
+    "original_name": "_Explore.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs.md",
+    "current_words": 2289,
+    "original_words": 884
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: 3f82473 feat(notes): add deliberate behavioral coaching and performance simulation note",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/The AI Agent as a Personal Behavioral and Communication Coach.md",
+    "current_words": 2086,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: c73eb64 feat(notes): introduce The Conductor Pattern and link with cognitive ergonomics",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering.md",
+    "current_words": 2749,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/The First AI-Native Generation of Software Engineers.md",
+    "original_name": "The First AI-Native Generation of Software Engineers.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/The First AI-Native Generation of Software Engineers.md",
+    "current_words": 2740,
+    "original_words": 1994
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/The Future of School When Knowledge Becomes Abundant.md",
+    "original_name": "The Future of School When Knowledge Becomes Abundant.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Engineering Ergonomics/The Future of School When Knowledge Becomes Abundant.md",
+    "current_words": 3372,
+    "original_words": 2569
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI Changes the Economics of Software Libraries.md",
+    "original_name": "AI Changes the Economics of Software Libraries.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI Changes the Economics of Software Libraries.md",
+    "current_words": 2511,
+    "original_words": 1948
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Become an Irreversible Part of Software Development.md",
+    "original_name": "AI May Become an Irreversible Part of Software Development.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI May Become an Irreversible Part of Software Development.md",
+    "current_words": 2932,
+    "original_words": 2389
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Break the Old Economic Model of the Open Web.md",
+    "original_name": "AI May Break the Old Economic Model of the Open Web.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI May Break the Old Economic Model of the Open Web.md",
+    "current_words": 2922,
+    "original_words": 2365
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Create a New Market for Small, Custom Business Software.md",
+    "original_name": "AI May Create a New Market for Small, Custom Business Software.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI May Create a New Market for Small, Custom Business Software.md",
+    "current_words": 3269,
+    "original_words": 2719
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "original_name": "AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "current_words": 3383,
+    "original_words": 2808
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/AI-Assisted Software Engineering Where Are We Now.md",
+    "original_name": "AI-Assisted Software Engineering Where Are We Now.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/AI-Assisted Software Engineering Where Are We Now.md",
+    "current_words": 3819,
+    "original_words": 3053
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Competitive advantage in the age of commodity AI.md",
+    "original_name": "Competitive advantage in the age of commodity AI.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Competitive advantage in the age of commodity AI.md",
+    "current_words": 2796,
+    "original_words": 1727
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/Early AI Adoption as Organizational Readiness.md",
+    "original_name": "Early AI Adoption as Organizational Readiness.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Early AI Adoption as Organizational Readiness.md",
+    "current_words": 2403,
+    "original_words": 1864
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Finding Original Knowledge in an Internet Full of Repetition.md",
+    "original_name": "Finding Original Knowledge in an Internet Full of Repetition.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Finding Original Knowledge in an Internet Full of Repetition.md",
+    "current_words": 2641,
+    "original_words": 1662
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Fresh Contact With Reality May Become the Training Bottleneck.md",
+    "original_name": "Fresh Contact With Reality May Become the Training Bottleneck.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Fresh Contact With Reality May Become the Training Bottleneck.md",
+    "current_words": 3117,
+    "original_words": 2601
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/How Should Companies Use the Productivity Gains from AI.md",
+    "original_name": "How Should Companies Use the Productivity Gains from AI.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/How Should Companies Use the Productivity Gains from AI.md",
+    "current_words": 865,
+    "original_words": 343
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: c24d3f3 feat(notes): add Local vs Cloud and Hybrid Model Execution architectural note",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Local vs Cloud and Hybrid Model Execution.md",
+    "current_words": 2804,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Software Itself Is No Longer a Moat When It Can Be Cloned in a Week.md",
+    "current_words": 1600,
+    "original_words": 0
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/The Most Valuable Software Training Data May Be Private.md",
+    "original_name": "The Most Valuable Software Training Data May Be Private.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/The Most Valuable Software Training Data May Be Private.md",
+    "current_words": 1981,
+    "original_words": 1483
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Unbundling of Enterprise Software.md",
+    "original_name": "Unbundling of Enterprise Software.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/Unbundling of Enterprise Software.md",
+    "current_words": 3517,
+    "original_words": 3007
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/What Should Organizations Preserve from AI-Assisted Development.md",
+    "original_name": "What Should Organizations Preserve from AI-Assisted Development.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Developer Ergonomics & Software Economics/Software Economics & Competitive Moats/What Should Organizations Preserve from AI-Assisted Development.md",
+    "current_words": 1150,
+    "original_words": 466
+  }
+]
