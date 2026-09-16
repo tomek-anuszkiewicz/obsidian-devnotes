@@ -88,8 +88,8 @@ Raw technical video lectures and podcasts often suffer from an 80/20 problem: 80
     - "Leader election requires an absolute majority of active nodes"
     - "Log entries flow strictly unidirectionally from leader to follower"
   relations:
-    - "[[Distributed Storage Invariants]]"
-    - "[[Kafka Topic Topology and Partitioning]]"
+    - "[[Standardizing Service Infrastructure with Reusable Blocks]]"
+    - "[[Service-to-Service Communication - How Service A Should Call Service B]]"
   status: draft
   ---
   ```
