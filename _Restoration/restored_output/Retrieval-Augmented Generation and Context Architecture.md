@@ -136,7 +136,7 @@ Retrieval shifts from a static single-shot database lookup to an interactive inv
 4. Load Architectural Decision Record `ADR-019`.
 5. Synthesize the root cause using the complete trail.
 
-*(Note: While agentic RAG works well for deep forensic debugging, routine refactoring cannot afford multi-hop network queries for every change. Day-to-day code edits depend heavily on zero-latency, co-located context anchors, as detailed in [[The Increasing Value of Comments in AI-Generated Code]].)*
+*(Note: While agentic RAG works well for deep forensic debugging, routine refactoring cannot afford multi-hop network queries for every change. Day-to-day code edits depend heavily on zero-latency, co-located context anchors, as detailed in [[Comments May Become More Valuable in AI-Generated Code]].)*
 
 ### Generation 4: Graph RAG (Relational and Topological Knowledge)
 Codebases are directed graphs, not flat prose. Graph RAG builds an explicit knowledge graph where symbols, database tables, team boundaries, and design records are joined by typed edges:
@@ -272,6 +272,6 @@ Running RAG in real-world development workflows reveals three recurring failure 
 - **[[How Personal AI Models Reconcile External Knowledge]]**: Using local RAG indices to run semantic diffs against external documentation and updates.
 - **[[How LLM Systems Build Context]]**: The mechanics of context window management, attention budgets, and retrieval scheduling.
 - **[[Designing Software for AI Agents]]**: Structuring software systems to provide clean, modular AST boundaries for chunking and retrieval.
-- **[[The Increasing Value of Comments in AI-Generated Code]]**: Comparing multi-hop agentic retrieval (Git blame, ticket lookups) with zero-latency co-located context embedded directly in source code.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: Comparing multi-hop agentic retrieval (Git blame, ticket lookups) with zero-latency co-located context embedded directly in source code.
 - **[[LLM Agents and Institutional Memory]]**: Capturing and retaining institutional systems knowledge using versioned, shared RAG indices.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing browser state, DOM layouts, and network telemetry directly to client-side RAG agents.

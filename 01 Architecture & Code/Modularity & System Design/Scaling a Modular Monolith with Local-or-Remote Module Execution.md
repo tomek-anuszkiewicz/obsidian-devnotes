@@ -704,7 +704,7 @@ By following this path, you defer the operational complexity of distributed syst
 ## Related Notes
 
 - **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Architectural guidance on choosing between synchronous RPC, asynchronous queues, and streaming event buses.
-- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: Instrumenting distributed trace contexts across in-memory dispatchers, message brokers, and downstream network endpoints.
+- **[[OpenTelemetry]]**: Instrumenting distributed trace contexts across in-memory dispatchers, message brokers, and downstream network endpoints.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Structuring host configurations, dependency injection extensions, and platform harnesses across specialized deployment roles.
 - **[[Propagating User Context Between Services]]**: Handling user identity, ambient security claims, and authorization tokens across modular and distributed boundaries.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing unchecked cross-boundary dependencies and architectural drift when using code-generation tools.

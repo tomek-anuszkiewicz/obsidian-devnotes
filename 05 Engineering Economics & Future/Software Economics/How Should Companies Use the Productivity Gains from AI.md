@@ -110,7 +110,7 @@ improve software quality, and enter markets that were previously uneconomical.
 
 Defensive cost cutting is simple to measure on a quarterly balance sheet, but it fundamentally misapplies Jevons Paradox to software engineering. Historically, when the unit cost of creating software drops, the total demand for software does not stay flat—it explodes. Lowering the friction of implementation makes it economically viable to automate secondary and tertiary business processes that were previously left to manual spreadsheets. Choosing to reduce headcount instead of expanding scope abandons this upside.
 
-Reinvesting capacity into [[Product Ambition Expansion in the Age of AI|greater product ambition]] requires genuine organizational capability:
+Reinvesting capacity into [[AI May Increase Product Ambition Instead of Reducing Team Size|greater product ambition]] requires genuine organizational capability:
 
 - Continuous generation of validated product hypotheses.
 - Sales, marketing, and operational capacity capable of absorbing faster delivery cycles.
@@ -167,7 +167,7 @@ Avoid becoming complete pass-through consumers of model output. When an agent-ge
 
 ## Relationship to the Knowledge Graph
 
-- **[[Product Ambition Expansion in the Age of AI]]**: The economic rationale for redirecting developer bandwidth into higher feature ambition and broader product scope instead of headcount reduction.
+- **[[AI May Increase Product Ambition Instead of Reducing Team Size]]**: The economic rationale for redirecting developer bandwidth into higher feature ambition and broader product scope instead of headcount reduction.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why local coding acceleration provides zero enterprise value unless test infrastructure, compliance gates, and deployment pipelines scale to match.
 - **[[Early AI Adoption as Organizational Readiness]]**: How organizational trust, open communication, and psychological safety dictate whether AI tooling is adopted productively or rejected defensively.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological impact of agentic workflows on developer autonomy, ownership, and sustainable workload distribution.

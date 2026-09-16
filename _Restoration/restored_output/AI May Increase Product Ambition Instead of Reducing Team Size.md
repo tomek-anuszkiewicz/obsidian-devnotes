@@ -1,5 +1,5 @@
 ---
-title: "Product Ambition Expansion in the Age of AI"
+title: "AI May Increase Product Ambition Instead of Reducing Team Size"
 tags:
   - future-of-work
   - economics
@@ -12,7 +12,7 @@ aliases:
   - Product Ambition in AI Era
 ---
 
-# Product Ambition Expansion in the Age of AI
+# AI May Increase Product Ambition Instead of Reducing Team Size
 
 A common assumption about AI in software engineering is straightforward:
 

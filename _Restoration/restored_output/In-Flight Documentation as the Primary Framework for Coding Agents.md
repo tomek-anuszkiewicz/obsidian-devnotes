@@ -30,7 +30,7 @@ In traditional software development, writing documentation is usually an afterth
 When you integrate AI coding agents into your daily engineering workflow, that dynamic completely flips:
 
 1. **Documentation is generated in-flight**: While an agent writes an implementation, its context window is already packed with the relevant Abstract Syntax Trees (ASTs), type definitions, boundary conditions, and edge cases. Asking the model to summarize those design decisions into an operational specification right then costs almost zero human time and negligible compute.
-2. **Markdown replaces framework boilerplate as the primary scaffold**: Large language models navigate concise, structured markdown specifications and explicit contracts far more reliably than deep object-oriented inheritance trees, dynamic reflection, or framework metaclass magic (see [[The Cost of Hidden Abstractions in Agent-Maintained Code]]).
+2. **Markdown replaces framework boilerplate as the primary scaffold**: Large language models navigate concise, structured markdown specifications and explicit contracts far more reliably than deep object-oriented inheritance trees, dynamic reflection, or framework metaclass magic (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 3. **Specs stop probabilistic drift**: Left unconstrained, LLMs exhibit stochastic behavior—they hallucinate utility functions, pull in unapproved third-party dependencies, and drift away from architectural patterns. An explicit markdown spec narrows the solution space, turning what would be open-ended guesswork into bounded, predictable code generation.
 4. **Context efficiency beats file dumping**: Handing an agent a 40-line specification card consumes a tiny fraction of its context window compared to dumping twenty raw source files into the prompt and asking the model to infer system intent from implementation details.
 
@@ -191,9 +191,9 @@ When an agent needs to maintain or modify this module down the road, loading thi
 ## Relationship to the Knowledge Graph
 
 - **[[Testing in the Model, Agent, LLM Era]]**: Explains how automated compilers and test suites serve as the non-negotiable verification layer backing up markdown specifications.
-- **[[Optimizing Software Engineering and Code for Agents]]**: Details how codebase layouts, module boundaries, and explicit interface contracts change when agents become the primary readers and writers of code.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Details how codebase layouts, module boundaries, and explicit interface contracts change when agents become the primary readers and writers of code.
 - **[[Reviewing AI-Generated Code]]**: How engineers use concise in-flight documentation and targeted diff reviews to maintain deep systems understanding without manually writing every implementation detail.
 - **[[AI-Generated Architectural Documentation from Code]]**: The reverse pattern—extracting high-level architectural models from existing production codebases to bootstrap baseline specifications.
-- **[[The Increasing Value of Comments in AI-Generated Code]]**: Why non-derivable domain intent, hardware quirks, and business rules belong in inline code comments and companion markdown cards.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: Why non-derivable domain intent, hardware quirks, and business rules belong in inline code comments and companion markdown cards.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Using standardized spec cards as an engineering control to stop sprawling, unmaintainable agent-generated complexity.
 - **[[Designing Software for AI Agents]]**: Core architectural patterns that make code discoverable, isolated, and simple for agents to safely modify.

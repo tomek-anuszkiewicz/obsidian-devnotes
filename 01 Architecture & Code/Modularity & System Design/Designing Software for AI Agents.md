@@ -314,8 +314,8 @@ This rule should be applied thoughtfully. Do not introduce boilerplate mapping t
 ## Related Notes
 
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How generative velocity accelerates structural entropy and why mechanical boundaries are necessary.
-- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: The hidden costs of dynamic reflection, implicit magic, and deep indirection when machines maintain code.
-- **[[Optimizing Software Engineering and Code for Agents]]**: How layouts, typing disciplines, and structural patterns adapt for automated readers.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: The hidden costs of dynamic reflection, implicit magic, and deep indirection when machines maintain code.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How layouts, typing disciplines, and structural patterns adapt for automated readers.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Structuring project context, interfaces, and specifications for agentic workflows.
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Evaluating persistence layers, contract testing, and query maintainability with coding agents.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Implementing module boundaries that preserve unified local reasoning while allowing distributed runtime execution.

@@ -431,7 +431,7 @@ The core paradigm shift comes down to this:
 - **[[Reliability of LLM Coding Agents]]**: Empirical analysis of model reliability, common failure modes, and operational constraints in production repositories.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why organizational deployment frequency and review capacity dictate real-world delivery speed more than raw code generation.
 - **[[Designing APIs for LLM-Generated Integration Code]]**: Architectural principles for designing strongly typed, machine-discoverable client interfaces that minimize agent hallucinations.
-- **[[Optimizing Software Engineering and Code for Agents]]**: How file structures, modularity, and abstraction patterns evolve when coding agents are the primary maintainers.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How file structures, modularity, and abstraction patterns evolve when coding agents are the primary maintainers.
 - **[[Testing in the Model, Agent, LLM Era]]**: Shifting engineering focus from writing syntax to building deterministic verification oracles and mutation suites.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Managing code bloat, technical debt, and architectural drift when generation friction approaches zero.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Structuring living markdown blueprints and architectural decision records to anchor agent reasoning.

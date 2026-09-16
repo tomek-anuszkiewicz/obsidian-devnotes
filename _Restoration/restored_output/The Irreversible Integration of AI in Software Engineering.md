@@ -476,5 +476,5 @@ Our strategic mandate as system architects is not to fight the adoption curve in
 - **[[AI Changes the Role and Training of Software Engineers]]**: How the irreversibility of AI shifts core engineering competency from manual syntax authoring to architectural design, verification harnesses, and systemic risk management.
 - **[[The First AI-Native Generation of Software Engineers]]**: The emergence and onboarding of developers who have never built commercial software without an agentic harness.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical patterns for maintaining strict human oversight, reproducibility, and deterministic control over stochastic coding agents.
-- **[[Optimizing Software Engineering and Code for Agents]]**: How codebases, documentation schemes, and project layouts restructure themselves to optimize machine comprehension over purely biological readability.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How codebases, documentation schemes, and project layouts restructure themselves to optimize machine comprehension over purely biological readability.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Identifying and safeguarding essential institutional knowledge, domain invariants, and verification capabilities as the development lifecycle automates.

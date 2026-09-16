@@ -1,5 +1,5 @@
 ---
-title: "The Increasing Value of Comments in AI-Generated Code"
+title: "Comments May Become More Valuable in AI-Generated Code"
 tags:
   - ai-agents
   - software-engineering
@@ -345,7 +345,7 @@ As AI systems handle more day-to-day software development, our definition of wha
 ## Related Notes
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain nuances and commercial realities resist clean structural abstraction.
-- **[[Optimizing Software Engineering and Code for Agents]]**: Designing codebases for machine legibility, explicit interfaces, and isolated context.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Designing codebases for machine legibility, explicit interfaces, and isolated context.
 - **[[Designing Software for AI Agents]]**: Repository patterns that allow agents to reason across code boundaries without context exhaustion.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining active Markdown context specifications alongside inline comments.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic test harnesses to validate the business constraints that comments document.

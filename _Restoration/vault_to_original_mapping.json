@@ -5,8 +5,17 @@
     "original_name": "AI-Generated Architectural Documentation from Code.md",
     "match_type": "Direct Name Match",
     "current_path": "01 Architecture & Code/Code Generation & Tooling/AI-Generated Architectural Documentation from Code.md",
-    "current_words": 3818,
+    "current_words": 3820,
     "original_words": 2421
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Comments May Become More Valuable in AI-Generated Code.md",
+    "original_name": "Comments May Become More Valuable in AI-Generated Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Architecture & Code/Code Generation & Tooling/Comments May Become More Valuable in AI-Generated Code.md",
+    "current_words": 2473,
+    "original_words": 1249
   },
   {
     "status": "POST_F909_CREATION",
@@ -14,44 +23,35 @@
     "original_name": null,
     "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
     "current_path": "01 Architecture & Code/Code Generation & Tooling/In-Flight Documentation as the Primary Framework for Coding Agents.md",
-    "current_words": 2066,
+    "current_words": 2069,
     "original_words": 0
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "01 Architecture & Code/Code Generation & Tooling/Language Evolution in the Era of Autonomous Coding.md",
-    "current_words": 3323,
-    "original_words": 0
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Programming Languages May Evolve Differently in the Age of AI.md",
+    "original_name": "Programming Languages May Evolve Differently in the Age of AI.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Architecture & Code/Code Generation & Tooling/Programming Languages May Evolve Differently in the Age of AI.md",
+    "current_words": 3340,
+    "original_words": 2144
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "01 Architecture & Code/Code Generation & Tooling/Optimizing Software Engineering and Code for Agents.md",
-    "current_words": 3317,
-    "original_words": 0
-  },
-  {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/AI May Replace Some Source Generators with Explicit Generated Code.md",
+    "original_name": "AI May Replace Some Source Generators with Explicit Generated Code.md",
+    "match_type": "Git Rename Traced",
     "current_path": "01 Architecture & Code/Code Generation & Tooling/Replacing Source Generators with Explicit Generated Code.md",
-    "current_words": 2665,
-    "original_words": 0
+    "current_words": 2670,
+    "original_words": 1601
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "01 Architecture & Code/Code Generation & Tooling/The Increasing Value of Comments in AI-Generated Code.md",
-    "current_words": 2462,
-    "original_words": 0
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "original_name": "Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Architecture & Code/Code Generation & Tooling/Software Engineering May Shift Toward Code Optimized for Agents.md",
+    "current_words": 3330,
+    "original_words": 2283
   },
   {
     "status": "POST_F909_CREATION",
@@ -59,7 +59,7 @@
     "original_name": null,
     "match_type": "Created in commit: 3b7cc52 refactor(notes): generalize EF Core note into language-agnostic Data Access Economics note",
     "current_path": "01 Architecture & Code/Modularity & System Design/Data Access Economics with Coding Agents - ORMs vs Explicit SQL.md",
-    "current_words": 1932,
+    "current_words": 1933,
     "original_words": 0
   },
   {
@@ -68,7 +68,7 @@
     "original_name": null,
     "match_type": "Created in commit: e2f465b feat(notes): create Designing Internal Packages as an Explicit Composable Framework",
     "current_path": "01 Architecture & Code/Modularity & System Design/Designing Internal Packages as an Explicit, Composable Framework.md",
-    "current_words": 2075,
+    "current_words": 2070,
     "original_words": 0
   },
   {
@@ -77,8 +77,17 @@
     "original_name": "Designing Software for AI Agents.md",
     "match_type": "Direct Name Match",
     "current_path": "01 Architecture & Code/Modularity & System Design/Designing Software for AI Agents.md",
-    "current_words": 2730,
+    "current_words": 2733,
     "original_words": 1418
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "original_name": "Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "match_type": "Direct Name Match",
+    "current_path": "01 Architecture & Code/Modularity & System Design/Hidden Abstractions May Become More Expensive in Agent-Maintained Code.md",
+    "current_words": 3470,
+    "original_words": 2509
   },
   {
     "status": "POST_F909_CREATION",
@@ -86,7 +95,7 @@
     "original_name": null,
     "match_type": "Created in commit: 172a62b feat(notes): create Internal Shared Packages vs Agent-Generated Code",
     "current_path": "01 Architecture & Code/Modularity & System Design/Internal Shared Packages vs Agent-Generated Code.md",
-    "current_words": 1705,
+    "current_words": 1708,
     "original_words": 0
   },
   {
@@ -95,7 +104,7 @@
     "original_name": "Scaling a Modular Monolith with Local-or-Remote Module Execution.md",
     "match_type": "Direct Name Match",
     "current_path": "01 Architecture & Code/Modularity & System Design/Scaling a Modular Monolith with Local-or-Remote Module Execution.md",
-    "current_words": 4073,
+    "current_words": 4066,
     "original_words": 2468
   },
   {
@@ -104,16 +113,7 @@
     "original_name": null,
     "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "01 Architecture & Code/Modularity & System Design/Software Decay and the Hidden Costs of Frictionless AI Code.md",
-    "current_words": 2130,
-    "original_words": 0
-  },
-  {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "01 Architecture & Code/Modularity & System Design/The Cost of Hidden Abstractions in Agent-Maintained Code.md",
-    "current_words": 3458,
+    "current_words": 2133,
     "original_words": 0
   },
   {
@@ -122,17 +122,17 @@
     "original_name": "Why Business Logic Is the Hardest Part of Agentic Coding.md",
     "match_type": "Direct Name Match",
     "current_path": "01 Architecture & Code/Modularity & System Design/Why Business Logic Is the Hardest Part of Agentic Coding.md",
-    "current_words": 1524,
+    "current_words": 1527,
     "original_words": 442
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/AI May Make Aggressive Code Optimization Economically Viable.md",
+    "original_name": "AI May Make Aggressive Code Optimization Economically Viable.md",
+    "match_type": "Git Rename Traced",
     "current_path": "01 Architecture & Code/Performance & Optimization/The Economics of Aggressive Code Optimization with AI.md",
-    "current_words": 3587,
-    "original_words": 0
+    "current_words": 3591,
+    "original_words": 1708
   },
   {
     "status": "POST_F909_CREATION",
@@ -153,13 +153,13 @@
     "original_words": 257
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification.md",
+    "original_name": "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification.md",
+    "match_type": "Git Rename Traced",
     "current_path": "02 Testing & Code Review/Code Review & Refactoring/Correcting AI Code - Patch, Regenerate, or Respecify.md",
     "current_words": 3821,
-    "original_words": 0
+    "original_words": 2097
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -180,13 +180,13 @@
     "original_words": 487
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize.md",
+    "original_name": "Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize.md",
+    "match_type": "Git Rename Traced",
     "current_path": "02 Testing & Code Review/Code Review & Refactoring/Enforcing Hard-to-Formalize Architectural Rules with Agents.md",
     "current_words": 2797,
-    "original_words": 0
+    "original_words": 2174
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -291,7 +291,7 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: 18cd2be feat(notes): add agent harness determinism and control pyramid architecture note",
     "current_path": "02 Testing & Code Review/Harnesses & Workflows/Building Determinism from Unpredictable Models.md",
     "current_words": 2488,
     "original_words": 0
@@ -345,7 +345,7 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: f219b16 feat(notes): codify The Living Engineering Chronicle and Context-Safe Logging pattern",
     "current_path": "02 Testing & Code Review/Harnesses & Workflows/The Living Engineering Chronicle and Context Compaction.md",
     "current_words": 2177,
     "original_words": 0
@@ -356,7 +356,7 @@
     "original_name": null,
     "match_type": "Created in commit: b0db6de feat(verification): create formal verification, neurosymbolic ai, and negative proof dilemma note",
     "current_path": "02 Testing & Code Review/Testing & Verification/Formal Verification and Runtime Safety Boundaries.md",
-    "current_words": 1905,
+    "current_words": 1907,
     "original_words": 0
   },
   {
@@ -405,13 +405,13 @@
     "original_words": 1447
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/New Developer Technologies May Need to Be Agent-Ready from Day One.md",
+    "original_name": "New Developer Technologies May Need to Be Agent-Ready from Day One.md",
+    "match_type": "Git Rename Traced",
     "current_path": "03 Systems & Infrastructure/APIs & Integrations/Designing Developer Technologies for Agent-Readiness.md",
-    "current_words": 3224,
-    "original_words": 0
+    "current_words": 3227,
+    "original_words": 2023
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -426,7 +426,7 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "03 Systems & Infrastructure/APIs & Integrations/Personal AI Subscriptions and Unified Model Access.md",
     "current_words": 2788,
     "original_words": 0
@@ -435,7 +435,7 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: db19239 add three new notes on the future of education, software, and AI agent ecosystems",
     "current_path": "03 Systems & Infrastructure/APIs & Integrations/Shifting from Fixed Features to Agent-Extensible Primitives.md",
     "current_words": 2277,
     "original_words": 0
@@ -450,13 +450,13 @@
     "original_words": 0
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Introduction to Workflow Orchestration.md",
+    "original_name": "Introduction to Workflow Orchestration.md",
+    "match_type": "Git Rename Traced",
     "current_path": "03 Systems & Infrastructure/APIs & Integrations/Workflow Orchestration in Agentic Systems.md",
     "current_words": 4706,
-    "original_words": 0
+    "original_words": 3234
   },
   {
     "status": "POST_F909_CREATION",
@@ -464,17 +464,17 @@
     "original_name": null,
     "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
     "current_path": "03 Systems & Infrastructure/Observability & Monitoring/Embedding LLMs in Runtime Decision Paths and Operational Telemetry.md",
-    "current_words": 3427,
+    "current_words": 3413,
     "original_words": 0
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "03 Systems & Infrastructure/Observability & Monitoring/OpenTelemetry as the Runtime Truth for Autonomous Agents.md",
-    "current_words": 6581,
-    "original_words": 0
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/OpenTelemetry.md",
+    "original_name": "OpenTelemetry.md",
+    "match_type": "Direct Name Match",
+    "current_path": "03 Systems & Infrastructure/Observability & Monitoring/OpenTelemetry.md",
+    "current_words": 6576,
+    "original_words": 2999
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -482,7 +482,7 @@
     "original_name": "Propagating User Context Between Services.md",
     "match_type": "Direct Name Match",
     "current_path": "03 Systems & Infrastructure/Services & Security/Propagating User Context Between Services.md",
-    "current_words": 1746,
+    "current_words": 1739,
     "original_words": 1152
   },
   {
@@ -495,13 +495,13 @@
     "original_words": 930
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Architecture Guidelines/Service-to-Service Authentication and Authorization in Azure and Kubernetes.md",
+    "original_name": "Service-to-Service Authentication and Authorization in Azure and Kubernetes.md",
+    "match_type": "Git Rename Traced",
     "current_path": "03 Systems & Infrastructure/Services & Security/Service-to-Service Authentication in Distributed Runtimes.md",
     "current_words": 6489,
-    "original_words": 0
+    "original_words": 4235
   },
   {
     "status": "POST_F909_CREATION",
@@ -509,7 +509,7 @@
     "original_name": null,
     "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "03 Systems & Infrastructure/Services & Security/Service-to-Service Communication - How Service A Should Call Service B.md",
-    "current_words": 7029,
+    "current_words": 7015,
     "original_words": 0
   },
   {
@@ -518,7 +518,7 @@
     "original_name": "Standardizing Service Infrastructure with Reusable Blocks.md",
     "match_type": "Direct Name Match",
     "current_path": "03 Systems & Infrastructure/Services & Security/Standardizing Service Infrastructure with Reusable Blocks.md",
-    "current_words": 4792,
+    "current_words": 4778,
     "original_words": 3004
   },
   {
@@ -527,7 +527,7 @@
     "original_name": "User Context in Asynchronous Systems.md",
     "match_type": "Direct Name Match",
     "current_path": "03 Systems & Infrastructure/Services & Security/User Context in Asynchronous Systems.md",
-    "current_words": 1332,
+    "current_words": 1325,
     "original_words": 843
   },
   {
@@ -536,7 +536,7 @@
     "original_name": "AI, Averaged Decisions, and Premature Convergence on Solutions.md",
     "match_type": "Direct Name Match",
     "current_path": "04 Prompts, Context & Models/Context Management/AI, Averaged Decisions, and Premature Convergence on Solutions.md",
-    "current_words": 4052,
+    "current_words": 4054,
     "original_words": 2536
   },
   {
@@ -639,19 +639,19 @@
     "original_words": 0
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Insight/LLM Coding Agents Reliability.md",
+    "original_name": "LLM Coding Agents Reliability.md",
+    "match_type": "Git Rename Traced",
     "current_path": "04 Prompts, Context & Models/Guardrails & Safety/Reliability of LLM Coding Agents.md",
     "current_words": 3071,
-    "original_words": 0
+    "original_words": 1778
   },
   {
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "04 Prompts, Context & Models/RAG & Retrieval/How Personal AI Models Reconcile External Knowledge.md",
     "current_words": 2888,
     "original_words": 0
@@ -689,7 +689,7 @@
     "original_name": "Applications of LLM Agents Beyond Programming.md",
     "match_type": "Direct Name Match",
     "current_path": "05 Engineering Economics & Future/Autonomous Workflows/Applications of LLM Agents Beyond Programming.md",
-    "current_words": 2369,
+    "current_words": 2355,
     "original_words": 1121
   },
   {
@@ -702,22 +702,13 @@
     "original_words": 2211
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
-    "current_path": "05 Engineering Economics & Future/Autonomous Workflows/Networked Automation Loops and Software Output Without AGI.md",
-    "current_words": 4728,
-    "original_words": 0
-  },
-  {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem.md",
+    "original_name": "Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem.md",
+    "match_type": "Git Rename Traced",
     "current_path": "05 Engineering Economics & Future/Autonomous Workflows/Personal Digital Models as the Foundation of Agent Ecosystems.md",
     "current_words": 3971,
-    "original_words": 0
+    "original_words": 2468
   },
   {
     "status": "POST_F909_CREATION",
@@ -726,6 +717,15 @@
     "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "05 Engineering Economics & Future/Autonomous Workflows/Proactive Software - From Reactive Systems to Autonomous Agents.md",
     "current_words": 3651,
+    "original_words": 0
+  },
+  {
+    "status": "POST_F909_CREATION",
+    "f909_path": null,
+    "original_name": null,
+    "match_type": "Created in commit: Unknown",
+    "current_path": "05 Engineering Economics & Future/Autonomous Workflows/Singularity Without AGI - The Civilizational Automation Loop.md",
+    "current_words": 4737,
     "original_words": 0
   },
   {
@@ -743,7 +743,7 @@
     "original_name": "AI Changes the Role and Training of Software Engineers.md",
     "match_type": "Direct Name Match",
     "current_path": "05 Engineering Economics & Future/Developer Experience/AI Changes the Role and Training of Software Engineers.md",
-    "current_words": 2918,
+    "current_words": 2920,
     "original_words": 251
   },
   {
@@ -788,7 +788,7 @@
     "original_name": null,
     "match_type": "Created in commit: e52ea25 feat(restoration): complete full batch restoration of all 108 vault notes with baseline delta-merge and audit report",
     "current_path": "05 Engineering Economics & Future/Developer Experience/Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs.md",
-    "current_words": 5085,
+    "current_words": 5093,
     "original_words": 0
   },
   {
@@ -804,7 +804,7 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "match_type": "Created in commit: c73eb64 feat(notes): introduce The Conductor Pattern and link with cognitive ergonomics",
     "current_path": "05 Engineering Economics & Future/Developer Experience/The Conductor Pattern for High-Bandwidth Engineering.md",
     "current_words": 3371,
     "original_words": 0
@@ -828,13 +828,13 @@
     "original_words": 2569
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Create a New Market for Small, Custom Business Software.md",
+    "original_name": "AI May Create a New Market for Small, Custom Business Software.md",
+    "match_type": "Git Rename Traced",
     "current_path": "05 Engineering Economics & Future/Software Economics/A New Market for Small, Custom Business Software.md",
-    "current_words": 4939,
-    "original_words": 0
+    "current_words": 4943,
+    "original_words": 2719
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -842,26 +842,35 @@
     "original_name": "AI Changes the Economics of Software Libraries.md",
     "match_type": "Direct Name Match",
     "current_path": "05 Engineering Economics & Future/Software Economics/AI Changes the Economics of Software Libraries.md",
-    "current_words": 3013,
+    "current_words": 3014,
     "original_words": 1948
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "05 Engineering Economics & Future/Software Economics/AI-Assisted Software Engineering - Where Are We Now.md",
-    "current_words": 4694,
-    "original_words": 0
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "original_name": "AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "match_type": "Direct Name Match",
+    "current_path": "05 Engineering Economics & Future/Software Economics/AI May Increase Product Ambition Instead of Reducing Team Size.md",
+    "current_words": 4447,
+    "original_words": 2808
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "LLM Using/AI-Assisted Software Engineering Where Are We Now.md",
+    "original_name": "AI-Assisted Software Engineering Where Are We Now.md",
+    "match_type": "Git Rename Traced",
+    "current_path": "05 Engineering Economics & Future/Software Economics/AI-Assisted Software Engineering - Where Are We Now.md",
+    "current_words": 4696,
+    "original_words": 3053
+  },
+  {
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/Competitive advantage in the age of commodity AI.md",
+    "original_name": "Competitive advantage in the age of commodity AI.md",
+    "match_type": "Git Rename Traced",
     "current_path": "05 Engineering Economics & Future/Software Economics/Competitive Advantage in the Age of Commodity AI.md",
     "current_words": 2452,
-    "original_words": 0
+    "original_words": 1727
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -891,13 +900,13 @@
     "original_words": 2601
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Break the Old Economic Model of the Open Web.md",
+    "original_name": "AI May Break the Old Economic Model of the Open Web.md",
+    "match_type": "Git Rename Traced",
     "current_path": "05 Engineering Economics & Future/Software Economics/How AI Breaks the Economic Model of the Open Web.md",
     "current_words": 4765,
-    "original_words": 0
+    "original_words": 2365
   },
   {
     "status": "ORIGINAL_EXISTS",
@@ -905,7 +914,7 @@
     "original_name": "How Should Companies Use the Productivity Gains from AI.md",
     "match_type": "Direct Name Match",
     "current_path": "05 Engineering Economics & Future/Software Economics/How Should Companies Use the Productivity Gains from AI.md",
-    "current_words": 1528,
+    "current_words": 1532,
     "original_words": 343
   },
   {
@@ -921,28 +930,19 @@
     "status": "POST_F909_CREATION",
     "f909_path": null,
     "original_name": null,
-    "match_type": "Created in commit: Unknown",
-    "current_path": "05 Engineering Economics & Future/Software Economics/Product Ambition Expansion in the Age of AI.md",
-    "current_words": 4434,
-    "original_words": 0
-  },
-  {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
     "match_type": "Created in commit: def7e7e Refactor vault into 4-pillar domain taxonomy",
     "current_path": "05 Engineering Economics & Future/Software Economics/Software Itself Is No Longer a Moat When It Can Be Cloned in a Week.md",
     "current_words": 1954,
     "original_words": 0
   },
   {
-    "status": "POST_F909_CREATION",
-    "f909_path": null,
-    "original_name": null,
-    "match_type": "Created in commit: Unknown",
+    "status": "ORIGINAL_EXISTS",
+    "f909_path": "Future/AI May Become an Irreversible Part of Software Development.md",
+    "original_name": "AI May Become an Irreversible Part of Software Development.md",
+    "match_type": "Git Rename Traced",
     "current_path": "05 Engineering Economics & Future/Software Economics/The Irreversible Integration of AI in Software Engineering.md",
-    "current_words": 4164,
-    "original_words": 0
+    "current_words": 4166,
+    "original_words": 2389
   },
   {
     "status": "ORIGINAL_EXISTS",

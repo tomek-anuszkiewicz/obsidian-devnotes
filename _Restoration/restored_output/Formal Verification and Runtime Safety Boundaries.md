@@ -208,4 +208,4 @@ Static verification cannot anticipate dynamic operational conditions. High-relia
 - **[[Refactoring Legacy Systems with AI Agents]]**: Using shadow execution and differential testing to safely rewrite critical system components.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: How runtime telemetry and tracing serve as the ground truth when static checks end.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How defining systems through explicit exclusions guards against unmodeled failure modes.
-- **[[Optimizing Software Engineering and Code for Agents]]**: Designing transparent, testable architectures that are easy for both agents and automated verifiers to evaluate.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Designing transparent, testable architectures that are easy for both agents and automated verifiers to evaluate.

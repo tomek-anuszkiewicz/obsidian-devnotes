@@ -443,6 +443,6 @@ AI eliminates the justification for importing dependencies merely to avoid typin
 
 - [[Designing Internal Packages as an Explicit, Composable Framework]]: Balancing code duplication against shared package infrastructure in internal platform engineering.
 - [[Internal Shared Packages vs Agent-Generated Code]]: The explicit trade-offs between shared internal dependencies and localized, agent-maintained code.
-- [[The Cost of Hidden Abstractions in Agent-Maintained Code]]: Why black-box libraries, dynamic dispatch, and excessive indirection degrade AI reasoning.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]: Why black-box libraries, dynamic dispatch, and excessive indirection degrade AI reasoning.
 - [[Software Decay and the Hidden Costs of Frictionless AI Code]]: Managing the blast radius, dependency rot, and operational drift that accompany rapid code synthesis.
 - [[A New Market for Small, Custom Business Software]]: How dropping implementation costs enables targeted, zero-dependency software architecture.

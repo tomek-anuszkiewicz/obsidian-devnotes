@@ -741,4 +741,4 @@ It is that software can finally take over the repetitive burden of basic informa
 - **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]**: Techniques for using agent-based synthesis tools to deconstruct papers, systems documentation, and complex technical domains.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Training learners to bypass synthetic derivative spam and verify primary empirical sources.
 - **[[How Targeted Prompts Steer Model Solution Spaces]]**: Using structured technical prompting as an inquiry tool to map and navigate deep knowledge topologies.
-- **[[Networked Automation Loops and Software Output Without AGI]]**: The institutional changes required as automation lowers the cost of specialized technical execution.
+- **[[Singularity Without AGI - The Civilizational Automation Loop]]**: The institutional changes required as automation lowers the cost of specialized technical execution.

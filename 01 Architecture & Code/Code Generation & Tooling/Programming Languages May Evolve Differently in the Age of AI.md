@@ -1,5 +1,5 @@
 ---
-title: "Language Evolution in the Era of Autonomous Coding"
+title: "Programming Languages May Evolve Differently in the Age of AI"
 tags:
   - programming-languages
   - language-design
@@ -14,8 +14,10 @@ aliases:
   - Context-Native Languages
   - The Language Feature Inertia Gap
 ---
+  - "Programming Languages May Evolve Differently in the Age of AI"
+  - "Language Evolution in the Era of Autonomous Coding"
 
-# Language Evolution in the Era of Autonomous Coding
+# Programming Languages May Evolve Differently in the Age of AI
 
 Programming languages have historically evolved around human constraints. Every major syntax evolution, compiler feature, and standard library idiom was shaped by human biological limits: typing fatigue, working memory capacity, visual scanning speed, and our tendency to make subtle mistakes during manual refactoring.
 
@@ -201,7 +203,7 @@ Explicit code is cheap for agents to produce. Magic behavior, on the other hand,
 - Static type contracts instead of convention-based routing,
 - Explicit boundary mappings instead of implicit runtime conversions.
 
-We can afford explicit intent because we are no longer paying the human typing tax for it (see [[The Cost of Hidden Abstractions in Agent-Maintained Code]]).
+We can afford explicit intent because we are no longer paying the human typing tax for it (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ---
 
@@ -517,10 +519,10 @@ To position systems and teams for this shift:
 
 ## Related Notes
 
-- **[[Optimizing Software Engineering and Code for Agents]]**: How code organization, file sizing, and explicit boundaries change when agents write the bulk of the implementation.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How code organization, file sizing, and explicit boundaries change when agents write the bulk of the implementation.
 - **[[Designing Developer Technologies for Agent-Readiness]]**: Why new tools, libraries, and compiler features must provide structured context packages for agents to overcome training data inertia.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Using structured markdown blueprints to provide the semantic intent that drives agent code generation.
-- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: Why clever, implicit runtime abstractions trip up agents and why explicit, transparent code wins.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why clever, implicit runtime abstractions trip up agents and why explicit, transparent code wins.
 - **[[Reviewing AI-Generated Code]]**: How human code review pivots to verifying invariants and architecture rather than cosmetic syntax checks.
 - **[[Replacing Source Generators with Explicit Generated Code]]**: How agents make transparent, visible code generation preferable to opaque compile-time macros.
 - **[[Testing in the Model, Agent, LLM Era]]**: How deterministic automated tests and compiler type checks provide the non-negotiable floor for agent-authored code.

@@ -1,5 +1,5 @@
 ---
-title: "The Cost of Hidden Abstractions in Agent-Maintained Code"
+title: "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
 tags:
   - software-architecture
   - ai-agents
@@ -14,7 +14,6 @@ aliases:
   - Mechanically Expandable Abstractions
   - Domain Vocabulary Alignment
 ---
-  - "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
 
 Modern software engineering often tries to strip repetitive mechanics out of application code. Instead of hand-rolling validation, authorization, retries, database transactions, logging, distributed tracing, and error mapping inside every single endpoint or command handler, we delegate them to reusable framework mechanisms:
 
@@ -667,7 +666,7 @@ Code written this way is slightly more explicit than systems built around deep i
 
 - [[Designing Software for AI Agents]]
 - [[Software Decay and the Hidden Costs of Frictionless AI Code]]
-- [[Optimizing Software Engineering and Code for Agents]]
+- [[Software Engineering May Shift Toward Code Optimized for Agents]]
 - [[Designing Internal Packages as an Explicit, Composable Framework]]
 - [[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]
 - [[Internal Shared Packages vs Agent-Generated Code]]

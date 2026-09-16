@@ -87,7 +87,7 @@ In practice, there is no magic involved. The compounding reliability comes from 
 - Building deterministic execution harnesses, test suites, and sandboxes.
 - Designing stable, machine-readable tool interfaces.
 
-This dynamic connects directly to how [[Improving AI Models - From Scaling to Agent-Generated Training Data|agent-generated data improves frontier models]] and powers [[Networked Automation Loops and Software Output Without AGI|networked automation loops]].
+This dynamic connects directly to how [[Improving AI Models - From Scaling to Agent-Generated Training Data|agent-generated data improves frontier models]] and powers [[Singularity Without AGI - The Civilizational Automation Loop|networked automation loops]].
 
 ---
 
@@ -478,4 +478,4 @@ Adoption drives the execution flywheel forward.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Turning operational agent errors into version-controlled organizational memory.
 - **[[The Most Valuable Software Training Data May Be Private]]**: Why internal repository trajectories form proprietary capability flywheels.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural harness that captures feedback and powers the learning loop.
-- **[[Networked Automation Loops and Software Output Without AGI]]**: The macro-scale economic and architectural implications of connected, semi-autonomous code execution loops.
+- **[[Singularity Without AGI - The Civilizational Automation Loop]]**: The macro-scale economic and architectural implications of connected, semi-autonomous code execution loops.

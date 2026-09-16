@@ -18,7 +18,7 @@ For decades, small and mid-sized businesses (SMBs) faced an unworkable trade-off
 
 AI coding agents change the baseline economics of software construction. When the cost of synthesizing, testing, and adapting code drops by an order of magnitude, custom software becomes viable for businesses that previously relied on manual labor.
 
-This does not mean every local business needs a massive, greenfield web application. In practice, modern systems are shifting from [[Shifting from Fixed Features to Agent-Extensible Primitives|fixed features to agent-extensible primitives]], and small engineering teams can tackle much broader operational scope without adding headcount, as explored in [[Product Ambition Expansion in the Age of AI]]. 
+This does not mean every local business needs a massive, greenfield web application. In practice, modern systems are shifting from [[Shifting from Fixed Features to Agent-Extensible Primitives|fixed features to agent-extensible primitives]], and small engineering teams can tackle much broader operational scope without adding headcount, as explored in [[AI May Increase Product Ambition Instead of Reducing Team Size]]. 
 
 Often, the most effective technical solution is small, surgical, and embedded directly into existing workflows:
 
@@ -671,7 +671,7 @@ This unlocks a wide market for independent builders and agile engineering teams 
 
 ## Relationship to the Knowledge Graph
 
-- **[[Product Ambition Expansion in the Age of AI]]**: How lower software costs expand custom development into previously uneconomic business niches.
+- **[[AI May Increase Product Ambition Instead of Reducing Team Size]]**: How lower software costs expand custom development into previously uneconomic business niches.
 - **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving from hardcoded feature sets to modular primitives that can be dynamically extended by agents.
 - **[[Unbundling of Enterprise Software]]**: Replacing sprawling, one-size-fits-all SaaS platforms with lightweight, purpose-built tools.
 - **[[AI Changes the Economics of Software Libraries]]**: Building lightweight custom systems without enterprise library bloat.

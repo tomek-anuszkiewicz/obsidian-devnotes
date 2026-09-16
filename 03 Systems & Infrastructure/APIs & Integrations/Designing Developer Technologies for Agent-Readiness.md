@@ -566,8 +566,8 @@ Writing clean software is no longer enough. Maintainers must package the machine
 ## Related Notes
 
 - [[Designing Software for AI Agents]]: Foundations of building discoverable, strongly typed, and verifiable software architectures for coding agents.
-- [[The Cost of Hidden Abstractions in Agent-Maintained Code]]: Why implicit metaprogramming and dynamic runtime conventions confuse coding agents.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]: Why implicit metaprogramming and dynamic runtime conventions confuse coding agents.
 - [[Designing APIs for LLM-Generated Integration Code]]: Structuring API contracts and agent-native interface bundles to eliminate model hallucinations.
-- [[Language Evolution in the Era of Autonomous Coding]]: Analyzing how programming languages and compiler features face identical adoption inertia in model weights.
+- [[Programming Languages May Evolve Differently in the Age of AI]]: Analyzing how programming languages and compiler features face identical adoption inertia in model weights.
 - [[AI Changes the Economics of Software Libraries]]: The shifting economic balance between third-party package dependencies, bespoke generated code, and platform stability.
 - [[WebMCP - Turning Web Applications into Agent-Native Toolkits]]: Applying agent-native discovery and tool contracts directly to browser runtime environments.

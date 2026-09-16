@@ -303,5 +303,5 @@ Service B logs both identities in its audit trail.
 - **[[User Context in Asynchronous Systems]]**: Managing identity, security claims, and execution boundaries across message brokers, event streams, and workers.
 - **[[Service-to-Service Authentication in Distributed Runtimes]]**: Practical implementation of mTLS, workload identity, and managed service identities.
 - **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Transport patterns, resiliency strategies, and header propagation across HTTP and gRPC boundaries.
-- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: Best practices for tracing context propagation across microservice architectures.
+- **[[OpenTelemetry]]**: Best practices for tracing context propagation across microservice architectures.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Embedding standardized context propagation middleware into shared service templates.

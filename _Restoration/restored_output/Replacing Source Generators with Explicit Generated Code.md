@@ -488,9 +488,9 @@ Where the primary role of a tool was simply saving keystrokes on repetitive appl
 
 ## Related Notes
 
-- [[Optimizing Software Engineering and Code for Agents]]
-- [[The Cost of Hidden Abstractions in Agent-Maintained Code]]
+- [[Software Engineering May Shift Toward Code Optimized for Agents]]
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]
 - [[The Economics of Aggressive Code Optimization with AI]]
 - [[In-Flight Documentation as the Primary Framework for Coding Agents]]
-- [[Language Evolution in the Era of Autonomous Coding]]
+- [[Programming Languages May Evolve Differently in the Age of AI]]
 - [[Testing in the Model, Agent, LLM Era]]

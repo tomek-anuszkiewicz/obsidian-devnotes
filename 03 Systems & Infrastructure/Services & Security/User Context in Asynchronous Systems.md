@@ -164,5 +164,5 @@ User context carries very different meaning depending on whether a message repre
 - **[[Propagating User Context Between Services]]**: Synchronous HTTP propagation patterns vs. asynchronous messaging envelopes.
 - **[[Service vs User Authorization Models]]**: Choosing between machine identity (mTLS/IAM) and user context for distributed operations.
 - **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Evaluating synchronous RPC against message broker architectures.
-- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: Propagating W3C `traceparent` headers across asynchronous queue boundaries.
+- **[[OpenTelemetry]]**: Propagating W3C `traceparent` headers across asynchronous queue boundaries.
 - **[[Workflow Orchestration in Agentic Systems]]**: Context preservation and durability in multi-step asynchronous workflow engines.

@@ -541,9 +541,9 @@ To:
 
 ## Related Notes
 
-- **[[Optimizing Software Engineering and Code for Agents]]**: Foundational overview of code architectures designed for machine generation, flat dispatch patterns, and hardware cache alignment.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Foundational overview of code architectures designed for machine generation, flat dispatch patterns, and hardware cache alignment.
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: In-depth analysis of how agents shift database access from heavy ORM abstractions toward explicit, high-performance SQL.
 - **[[Testing in the Model, Agent, LLM Era]]**: Architectural guide to constructing automated test oracles, invariant assertions, and performance gates.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Managing binary bloat, sprawl, and long-term maintainability when code generation friction is eliminated.
 - **[[Replacing Source Generators with Explicit Generated Code]]**: How dynamic, on-demand agent specialization replaces static compile-time source generators.
-- **[[Language Evolution in the Era of Autonomous Coding]]**: How low-level memory efficiency, systems programming, and performance engineering become accessible to ordinary enterprise services.
+- **[[Programming Languages May Evolve Differently in the Age of AI]]**: How low-level memory efficiency, systems programming, and performance engineering become accessible to ordinary enterprise services.

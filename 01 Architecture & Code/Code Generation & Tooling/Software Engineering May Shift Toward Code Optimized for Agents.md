@@ -1,5 +1,5 @@
 ---
-title: "Optimizing Software Engineering and Code for Agents"
+title: "Software Engineering May Shift Toward Code Optimized for Agents"
 tags:
   - software-engineering
   - ai-agents
@@ -13,8 +13,10 @@ aliases:
   - Source Code as Machine-Maintained Artifact
   - The Deeper Shift in Software Engineering
 ---
+  - "Software Engineering May Shift Toward Code Optimized for Agents"
+  - "Optimizing Software Engineering and Code for Agents"
 
-# Optimizing Software Engineering and Code for Agents
+# Software Engineering May Shift Toward Code Optimized for Agents
 
 As large language models and coding agents generate an increasing share of production software, a fundamental question emerges for software architects:
 
@@ -474,7 +476,7 @@ The most profound shift driven by AI agents is not merely that code is produced 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why models write technical boilerplate easily but struggle with implicit domain rules.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Structuring living repository specifications to constrain agent generation.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How low-friction generation accelerates architectural entropy without rigorous boundaries.
-- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: The trade-offs of convention-over-configuration and reflection in agent workflows.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: The trade-offs of convention-over-configuration and reflection in agent workflows.
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing centralized libraries against localized, specialized code generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using executable test suites as the primary bounding mechanism for machine-generated modifications.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Techniques for converting complex legacy code into explicit, machine-legible architectures.

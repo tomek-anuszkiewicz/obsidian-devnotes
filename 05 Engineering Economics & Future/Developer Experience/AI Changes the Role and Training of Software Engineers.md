@@ -280,7 +280,7 @@ Disciplined curiosity, backed by rigorous verification, turns coding agents into
 - **[[The First AI-Native Generation of Software Engineers]]**: How early-career engineers develop intuition when entry-level tasks are automated.
 - **[[Reviewing AI-Generated Code]]**: Code review as the essential synchronization checkpoint and primary learning vehicle.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Living documentation as the top-down cognitive layer for understanding systems.
-- **[[Optimizing Software Engineering and Code for Agents]]**: Structuring codebases for machine readability and verification.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Structuring codebases for machine readability and verification.
 - **[[AI Era Software Engineering Recruitment]]**: Shifting hiring rubrics from syntax authoring to system modeling, diff auditing, and domain boundary design.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Managing the transition from hands-on typing flow to continuous supervisory review.
 - **[[The Conductor Pattern for High-Bandwidth Engineering]]**: Eliminating input bottlenecks via dictation and rapid feedback loops.

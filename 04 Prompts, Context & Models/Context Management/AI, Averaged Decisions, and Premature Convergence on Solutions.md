@@ -524,6 +524,6 @@ The first design returned by a language model should almost never be the final a
 - [[How Targeted Prompts Steer Model Solution Spaces]] — Practical techniques for using targeted prompt constraints to guide models out of their default probability distributions.
 - [[Designing Software Architecture with LLM Assistance]] — Operational patterns for using LLMs during architectural design while preventing superficial completeness.
 - [[Refactoring Legacy Systems with AI Agents]] — How language models anchor on existing git history and patterns when modernizing legacy codebases.
-- [[Optimizing Software Engineering and Code for Agents]] — Examining system architectures optimized for automated machine maintenance rather than manual human editing.
+- [[Software Engineering May Shift Toward Code Optimized for Agents]] — Examining system architectures optimized for automated machine maintenance rather than manual human editing.
 - [[AI Changes the Role and Training of Software Engineers]] — Why senior engineering requires shifting from syntax generation to problem framing and trade-off verification.
 - [[Proxy Metrics and Operational Invariants in AI Systems]] — The operational risks of letting automated systems optimize for proxy metrics over causal system performance.

@@ -194,9 +194,9 @@ Mechanical comments waste token space and obscure meaningful intent.
 
 ## Related Notes
 
-- **[[The Increasing Value of Comments in AI-Generated Code]]**: How intentional comments protect non-obvious business rules from automated refactoring sweeps.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: How intentional comments protect non-obvious business rules from automated refactoring sweeps.
 - **[[Designing Software for AI Agents]]**: Architectural guidelines for isolating pure decision components from technical I/O infrastructure.
-- **[[Optimizing Software Engineering and Code for Agents]]**: Why hidden abstractions and indirect framework magic make business logic harder for agents to understand.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Why hidden abstractions and indirect framework magic make business logic harder for agents to understand.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Capturing business decisions and domain context rather than just generated code.
 - **[[LLM Agents and Institutional Memory]]**: How institutional history and tribal knowledge prevent agents from misinterpreting business requirements.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic test suites to lock down business assumptions against agent drift.
@@ -206,6 +206,6 @@ Mechanical comments waste token space and obscure meaningful intent.
 ## Relationship to the Knowledge Graph
 
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Keeping domain decisions isolated from database queries and persistence layers.
-- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: Ensuring business domain logic is explicit and discoverable rather than buried in framework middleware.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Ensuring business domain logic is explicit and discoverable rather than buried in framework middleware.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing zero-friction code generation from introducing silent business errors.
 - **[[The 5-Layer System Stack for Agentic Software Engineering]]**: Placing business logic authority in Layer 5 (Human Intent) and Layer 2 (Verification Gates).
