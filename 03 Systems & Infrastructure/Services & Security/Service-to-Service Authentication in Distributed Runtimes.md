@@ -9,11 +9,10 @@ tags:
   - microservices
   - mtls
 aliases:
+  - "Service-to-Service Authentication and Authorization in Azure and Kubernetes"
   - S2S Auth in Azure and K8s
   - Service Authentication Patterns
 ---
-  - "Service-to-Service Authentication and Authorization in Azure and Kubernetes"
-
 # Service-to-Service Authentication in Distributed Runtimes
 
 When designing communication between microservices, a common trap is conflating network reachability with workload identity. An IP address, a Kubernetes Service DNS name (`inventory-api.orders.svc.cluster.local`), or a private virtual network subnet lets packets flow between hosts, but it provides zero cryptographic proof of who the caller actually is. 

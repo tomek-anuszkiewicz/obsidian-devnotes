@@ -8,12 +8,11 @@ tags:
   - product-management
   - software-engineering
 aliases:
+  - "AI May Increase Product Ambition Instead of Reducing Team Size"
+  - "Product Ambition Expansion in the Age of AI"
   - Jevons Paradox in Software Engineering
   - Product Ambition in AI Era
 ---
-  - "AI May Increase Product Ambition Instead of Reducing Team Size"
-  - "Product Ambition Expansion in the Age of AI"
-
 # AI May Increase Product Ambition Instead of Reducing Team Size
 
 A common assumption about AI in software engineering is straightforward:

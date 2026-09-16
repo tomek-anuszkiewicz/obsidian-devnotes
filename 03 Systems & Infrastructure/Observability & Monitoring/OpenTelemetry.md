@@ -9,13 +9,12 @@ tags:
   - microservices
   - infrastructure
 aliases:
+  - "OpenTelemetry as the Runtime Truth for Autonomous Agents"
   - OpenTelemetry Architecture
   - OTel Signals and Collector
   - Decoupling Telemetry Production from Storage Backends
   - Distributed Tracing and Context Propagation
 ---
-  - "OpenTelemetry as the Runtime Truth for Autonomous Agents"
-
 # OpenTelemetry
 
 ## 1. What OpenTelemetry Is

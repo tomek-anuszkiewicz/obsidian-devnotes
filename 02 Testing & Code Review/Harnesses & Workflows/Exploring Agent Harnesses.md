@@ -15,6 +15,8 @@ aliases:
   - Harness Component Taxonomy
 ---
 
+# Exploring Agent Harnesses
+
 When evaluating automated engineering workflows with modern LLMs, focusing solely on the foundation model is a category error. A model such as GPT-4o, Claude 3.7 Sonnet, or Gemini 2.5 Pro is an interchangeable reasoning backend. What actually determines whether an agent can autonomously write production code, resolve incidents, or refactor a service is the **agent harness** wrapping that model.
 
 The harness serves as the execution environment. It defines how context is assembled, which tools the model can invoke, how long it is permitted to iterate, how execution errors are caught, and how changes are verified against reality before touching human review.

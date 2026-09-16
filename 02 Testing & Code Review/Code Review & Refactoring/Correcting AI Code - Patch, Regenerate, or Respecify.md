@@ -8,6 +8,7 @@ tags:
   - prompt-engineering
   - refactoring
 aliases:
+  - "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification"
   - Patch vs Regenerate vs Respecify
   - Fixing AI-Generated Code
   - The Defect Attribution Hierarchy
@@ -15,8 +16,6 @@ aliases:
   - Upstream Defect Resolution
   - Co-Evolution of Code and Specs
 ---
-  - "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification"
-
 # Correcting AI Code - Patch, Regenerate, or Respecify
 
 When an autonomous coding agent delivers code with a bug or a structural flaw, a developer's immediate reflex is usually to jump into the IDE and start editing lines manually. In an agentic workflow, that instinct is often counterproductive.

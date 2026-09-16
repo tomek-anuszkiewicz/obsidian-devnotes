@@ -15,6 +15,8 @@ aliases:
   - The Delivery Bottleneck
 ---
 
+# AI Productivity Is Limited by the Delivery System
+
 AI can significantly accelerate how quickly code is written. Models can generate boilerplate, draft unit tests, implement well-defined functions, and stub out API endpoints in seconds. However, the business value of that speed is bounded by the delivery system surrounding it.
 
 A software organization does not deliver value when code is written. It delivers value when a change successfully runs in production, behaves as intended, and provides a clear signal about whether it solved the user's problem.

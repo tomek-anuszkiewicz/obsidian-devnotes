@@ -12,6 +12,8 @@ aliases:
   - Solution Exploration and Verification in LLMs
 ---
 
+# How Reasoning Models Explore and Evaluate Solutions
+
 Reasoning quality depends not only on whether a model can follow a promising path, but also on whether it explores enough alternatives, evaluates them well, and verifies the final choice.
 
 When evaluating reasoning models or building agent harnesses around them, teams often treat reasoning breakdowns as failures of raw model intelligence. In practice, reasoning failures usually stem from distinct, structural failure modes: generating candidate solutions from an incomplete search space, relying solely on final-outcome verification, or starving the model of critical upstream context.

@@ -15,6 +15,8 @@ aliases:
   - The Specification-First Feature Loop
 ---
 
+# Developing Features with AI Coding Agents
+
 When you hand an AI coding agent an underspecified prompt—such as *"add a subscription billing module with Stripe integration"*—the failure pattern is predictable. The agent writes twenty files at once, invents unstated domain assumptions, overlooks critical edge cases, and writes unit tests that pass only because they assert against mock-heavy trivialities.
 
 Building complex, production-grade features with coding agents requires treating the agent as a fast implementation engine constrained by explicit architectural boundaries. The process must follow a structured pipeline:

@@ -17,6 +17,8 @@ aliases:
   - Production Synthesis vs Prototype Patching
 ---
 
+# How AI Changes Prototyping and the Path from PoC to Production
+
 AI coding agents dramatically reduce the cost of answering technical and product questions. In an afternoon, an engineer working with an agent can:
 
 - Build a vertical prototype across the stack

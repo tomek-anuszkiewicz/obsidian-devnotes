@@ -9,13 +9,12 @@ tags:
   - end-user-programming
   - generative-ui
 aliases:
+  - "Applications May Shift from Fixed Features to Agent-Extensible Primitives"
   - Agent-Extensible Applications
   - Malleable Software in the Agent Era
   - From Monolithic Apps to Agent Primitives
   - The Shift to Malleable Domain Engines
 ---
-  - "Applications May Shift from Fixed Features to Agent-Extensible Primitives"
-
 # Shifting from Fixed Features to Agent-Extensible Primitives
 
 Software is fundamentally shifting away from monolithic, closed SaaS feature bundles toward malleable, domain-specific execution engines. In the traditional model, product teams have to anticipate every edge-case workflow, pay to host compute-heavy models in the cloud, and hand-craft every button and form. That path inevitably leads to bloated interfaces that still fail to address the long tail of what users actually need. 

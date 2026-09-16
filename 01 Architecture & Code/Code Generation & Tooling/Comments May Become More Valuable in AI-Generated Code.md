@@ -9,13 +9,15 @@ tags:
   - intent-specification
   - code-comments
 aliases:
+  - "Comments May Become More Valuable in AI-Generated Code"
+  - "The Increasing Value of Comments in AI-Generated Code"
   - Code Comments in AI Era
   - Semantic Value of Comments in AI Code
   - Comments as Local Context Retrieval
   - Negative Knowledge Comments in Agentic Code
 ---
-  - "Comments May Become More Valuable in AI-Generated Code"
-  - "The Increasing Value of Comments in AI-Generated Code"
+
+# Comments May Become More Valuable in AI-Generated Code
 
 The traditional rule for writing comments has long been summarized simply:
 

@@ -8,11 +8,10 @@ tags:
   - smb
   - software-markets
 aliases:
+  - "AI May Create a New Market for Small, Custom Business Software"
   - Hyper-Custom Business Software
   - Long Tail of Software Created by AI
 ---
-  - "AI May Create a New Market for Small, Custom Business Software"
-
 # A New Market for Small, Custom Business Software
 
 For decades, small and mid-sized businesses (SMBs) faced an unworkable trade-off when evaluating software. On one side was rigid, multi-tenant SaaS. While relatively cheap per seat, it forced companies to warp their day-to-day operations around standardized vendor schemas and locked critical operational data behind subscription tiers. On the other side was custom software development: hiring a bespoke digital agency or consultancy. With project quotes routinely running between \$50,000 and \$200,000 before ongoing maintenance retainers, bespoke engineering was completely out of reach for companies operating on thin margins.

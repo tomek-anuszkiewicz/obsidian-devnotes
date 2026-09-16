@@ -8,14 +8,13 @@ tags:
   - maintainability
   - developer-experience
 aliases:
+  - "Software Engineering May Shift Toward Code Optimized for Agents"
+  - "Optimizing Software Engineering and Code for Agents"
   - Agent-Optimized Codebases
   - Designing Code for LLM Maintainers
   - Source Code as Machine-Maintained Artifact
   - The Deeper Shift in Software Engineering
 ---
-  - "Software Engineering May Shift Toward Code Optimized for Agents"
-  - "Optimizing Software Engineering and Code for Agents"
-
 # Software Engineering May Shift Toward Code Optimized for Agents
 
 As large language models and coding agents generate an increasing share of production software, a fundamental question emerges for software architects:

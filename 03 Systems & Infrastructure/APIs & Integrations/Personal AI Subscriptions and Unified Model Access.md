@@ -10,14 +10,13 @@ tags:
   - software-architecture
   - data-gravity
 aliases:
+  - "Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs"
   - The Unified AI Subscription
   - Managed Personal RAG and Portable APIs
   - Bring Your Own Brain Architecture
   - Convergence of Personal AI and Developer APIs
   - BYOB AI Economics
 ---
-  - "Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs"
-
 # Personal AI Subscriptions and Unified Model Access
 
 For years, AI providers maintained an artificial split between consumer chat products ($20/month for a web tab) and developer platforms (metered API consoles requiring credit card billing and usage alerts). That split was a packaging artifact of early market discovery, not a technical requirement. 

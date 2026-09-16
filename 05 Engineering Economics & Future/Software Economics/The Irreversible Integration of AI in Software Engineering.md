@@ -7,11 +7,10 @@ tags:
   - industry-trends
   - ai-adoption
 aliases:
+  - "AI May Become an Irreversible Part of Software Development"
   - Irreversibility of AI in Software
   - AI as Core Development Infrastructure
 ---
-  - "AI May Become an Irreversible Part of Software Development"
-
 # The Irreversible Integration of AI in Software Engineering
 
 AI may begin as an optional productivity tool, but after a certain level of adoption it becomes an integral part of how an engineering organization operates.

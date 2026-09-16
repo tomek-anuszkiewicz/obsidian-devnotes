@@ -62,7 +62,7 @@ Those are completely different challenges.
 
 ---
 
-# Knowledge Is No Longer the Main Scarcity
+# The Future of School When Knowledge Becomes Abundant
 
 Information has been functionally abundant for decades. The Internet already provides nearly friction-free access to:
 

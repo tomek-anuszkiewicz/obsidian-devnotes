@@ -8,6 +8,7 @@ tags:
   - context-engineering
   - software-evolution
 aliases:
+  - "The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction"
   - The Living Engineering Chronicle
   - Engineering Diary Pattern
   - Context-Safe Append Logging
@@ -15,8 +16,6 @@ aliases:
   - DIARY Pattern
   - Out-of-Context Tooling
 ---
-  - "The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction"
-
 # The Living Engineering Chronicle and Context Compaction
 
 When you run long-horizon software projects with coding agents, standard documentation patterns fall apart quickly. If you rely entirely on Git commit history or static Architecture Decision Records (ADRs), your project will eventually suffer from catastrophic amnesia. 

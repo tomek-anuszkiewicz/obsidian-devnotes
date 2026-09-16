@@ -14,6 +14,8 @@ aliases:
   - The Control Hierarchy of Agent Execution
 ---
 
+# How AI Agents May Control Computers, Applications, and the Web
+
 For decades, interacting with a computer has largely meant navigating graphical user interfaces. Software engineers designed screens for human eyes and fingers:
 
 ```text

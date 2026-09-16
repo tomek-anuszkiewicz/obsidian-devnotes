@@ -15,7 +15,7 @@ aliases:
   - The Strategic Triad Heuristic
 ---
 
-# Internal Shared Packages vs. Agent-Generated Code
+# Internal Shared Packages vs Agent-Generated Code
 
 ## The Core Question: Reusable Implementation vs. Repeatable Instruction
 

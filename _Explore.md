@@ -12,7 +12,7 @@ aliases:
   - Research Backlog
 ---
 
-# The 5-Layer System Stack & The 7 Canonical Hubs
+# _Explore
 
 The vault's knowledge graph is structured across **The 5-Layer System Stack for Agentic Software Engineering**, anchored by **7 Canonical Hub Notes (Single Sources of Truth)**:
 

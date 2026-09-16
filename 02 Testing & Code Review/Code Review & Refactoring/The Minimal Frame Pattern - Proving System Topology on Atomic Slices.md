@@ -16,7 +16,7 @@ aliases:
   - Upgrade the Harness Never Touch the Code
 ---
 
-# The Minimal Frame Pattern: Proving System Topology on Atomic Slices
+# The Minimal Frame Pattern - Proving System Topology on Atomic Slices
 
 > **The Minimal Frame Principle**: If you prompt an AI coding agent to implement an entire stateful subsystem from a broad specification, the result looks deceptively complete. The model will generate dozens of files that compile cleanly, satisfy trivial mock tests, and then fail completely the moment you run them under sustained execution. Concurrency breaks, clock-step state machines drift, circular references leak memory, and bus arbitration deadlocks.
 >

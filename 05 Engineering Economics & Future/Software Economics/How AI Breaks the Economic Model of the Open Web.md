@@ -8,10 +8,12 @@ tags:
   - ai
   - copyright
 aliases:
+  - "AI May Break the Old Economic Model of the Open Web"
   - Future of Open Web Under AI
   - Collapse of Ad-Supported Web Model
 ---
-  - "AI May Break the Old Economic Model of the Open Web"
+
+# How AI Breaks the Economic Model of the Open Web
 
 Generative AI is doing something far more disruptive than upgrading search engines: it is dismantling the economic engine that has funded the open web for the last thirty years.
 

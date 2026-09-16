@@ -17,7 +17,7 @@ aliases:
   - Database Contract Tests for Agents
 ---
 
-# Data Access Economics with Coding Agents: ORMs vs Explicit SQL
+# Data Access Economics with Coding Agents - ORMs vs Explicit SQL
 
 ## Core Principle: The Inverted Economics of Database Access
 

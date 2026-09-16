@@ -8,13 +8,12 @@ tags:
   - microservices
   - background-processing
 aliases:
+  - "Introduction to Workflow Orchestration"
   - Workflow Orchestration Concepts
   - Durable Execution and Orchestration
   - Decoupling Process Durability from Stochastic Reasoning
   - Distributed Process State and Agent Workflows
 ---
-  - "Introduction to Workflow Orchestration"
-
 # Workflow Orchestration in Agentic Systems
 
 A workflow orchestrator coordinates the individual actions that make up a business process. 

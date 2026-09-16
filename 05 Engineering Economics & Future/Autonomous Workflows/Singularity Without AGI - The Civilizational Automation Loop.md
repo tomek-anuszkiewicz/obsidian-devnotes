@@ -8,13 +8,12 @@ tags:
   - ai-systems
   - feedback-loops
 aliases:
+  - "Networked Automation Loops and Software Output Without AGI"
   - Singularity Without AGI — The Civilizational Automation Loop
   - Singularity Without AGI -  The Civilizational Automation Loop
   - Civilizational Automation Loop
   - Narrow AI Singularity
 ---
-  - "Networked Automation Loops and Software Output Without AGI"
-
 # Singularity Without AGI - The Civilizational Automation Loop
 
 The popular conception of a technological singularity centers on a cinematic inflection point: a monolithic Artificial General Intelligence wakes up, becomes vastly smarter than humanity overnight, and recursively rewrites its own cognitive architecture in an exponential flash.

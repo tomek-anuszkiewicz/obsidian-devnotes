@@ -8,14 +8,16 @@ tags:
   - simplicity
   - software-engineering
 aliases:
+  - "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
+  - "The Cost of Hidden Abstractions in Agent-Maintained Code"
   - Cost of Hidden Abstractions with Agents
   - Explicit vs Magic Abstractions in AI Era
   - Semantic Locality in Agentic Architecture
   - Mechanically Expandable Abstractions
   - Domain Vocabulary Alignment
 ---
-  - "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
-  - "The Cost of Hidden Abstractions in Agent-Maintained Code"
+
+# Hidden Abstractions May Become More Expensive in Agent-Maintained Code
 
 Modern software engineering often tries to strip repetitive mechanics out of application code. Instead of hand-rolling validation, authorization, retries, database transactions, logging, distributed tracing, and error mapping inside every single endpoint or command handler, we delegate them to reusable framework mechanisms:
 

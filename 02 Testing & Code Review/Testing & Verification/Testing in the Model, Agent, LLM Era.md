@@ -17,6 +17,8 @@ aliases:
   - Machine-Facing Test Diagnostics
 ---
 
+# Testing in the Model, Agent, LLM Era
+
 The classical test pyramid is still useful, but it is no longer a complete description of how we verify software in an agent-driven development process. Its foundational economic principle remains sound: prefer cheap, fast, deterministic verification where possible, and use slower, more expensive, integrated verification selectively. However, AI changes both the economics of test creation and the operational role tests play throughout the development lifecycle.
 
 When code generation is cheap, the limiting factor in software engineering shifts from typing implementation code to defining behavioral boundaries, isolating regressions, and validating system execution under realistic constraints.

@@ -9,13 +9,12 @@ tags:
   - information-diet
   - learning
 aliases:
+  - "How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge"
   - The Cognitive Diff
   - Vault-to-Vault Knowledge Synthesis
   - Agentic Knowledge Filtering
   - Reconciling External Knowledge with Personal Models
 ---
-  - "How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge"
-
 # How Personal AI Models Reconcile External Knowledge
 
 > [!IMPORTANT]

@@ -12,6 +12,8 @@ aliases:
   - Agent-Generated Training Data
 ---
 
+# Improving AI Models - From Scaling to Agent-Generated Training Data
+
 The historical narrative around AI model progress is often framed as a brute-force exercise: more parameters, larger datasets, and massive compute clusters. 
 
 That mental model is increasingly outdated. 

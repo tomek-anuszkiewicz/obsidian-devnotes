@@ -14,7 +14,7 @@ aliases:
 created: 2026-08-23
 ---
 
-# LLM Capability, Reliability, and the Shape of Progress
+# LLM Capability Reliability and the Shape of Progress
 
 ## Summary
 

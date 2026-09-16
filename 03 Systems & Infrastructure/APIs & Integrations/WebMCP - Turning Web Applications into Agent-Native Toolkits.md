@@ -17,7 +17,7 @@ aliases:
   - The In-Browser Semantic Tool Protocol
 ---
 
-# WebMCP: Turning Web Applications into Agent-Native Toolkits
+# WebMCP - Turning Web Applications into Agent-Native Toolkits
 
 For the last thirty years, we have built web applications under a single design constraint: the client on the other side of the DOM is a human operating a mouse, keyboard, or touchscreen. When we wanted autonomous agents to interact with these same web applications, our first instinct was to bolt vision models onto the problem. We had models capture full viewport screenshots, burn thousands of vision tokens per step, calculate coordinates across shifting responsive layouts, and fire synthetic DOM click events. 
 

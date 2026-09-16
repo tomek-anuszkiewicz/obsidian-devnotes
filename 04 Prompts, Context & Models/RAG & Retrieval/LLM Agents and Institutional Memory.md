@@ -17,7 +17,7 @@ aliases:
   - Conway's Law in AI Weights
 ---
 
-# LLM Agents and Institutional Memory in Software Teams
+# LLM Agents and Institutional Memory
 
 ## The Core Distinction: Information Retrieval vs. Shared Mental Models
 

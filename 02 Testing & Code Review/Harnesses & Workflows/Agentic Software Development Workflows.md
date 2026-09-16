@@ -15,6 +15,8 @@ aliases:
   - The System Around the Model
 ---
 
+# Agentic Software Development Workflows
+
 AI coding agents can interact with a codebase in fundamentally different ways. When evaluating an agent setup, the critical distinction is rarely the underlying foundation model alone; it is the **workflow state machine that governs its execution loop**.
 
 The exact same model can act as a careless code generator, a disciplined test-driven implementer, a system architect, an adversarial reviewer, a surgical refactoring engine, or a semi-autonomous engineer. What dictates the outcome is how you structure the agent's context, constraints, tool access, and verification loops.

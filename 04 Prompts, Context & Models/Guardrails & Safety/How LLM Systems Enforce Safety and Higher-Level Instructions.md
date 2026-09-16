@@ -12,6 +12,8 @@ aliases:
   - Instruction Hierarchy and Policy Enforcement
 ---
 
+# How LLM Systems Enforce Safety and Higher-Level Instructions
+
 Safety and higher-level constraints in an LLM system cannot be managed from a single place. Relying exclusively on a system prompt breaks down against adversarial jailbreaks; relying exclusively on post-training alignment fails when enterprise policies and legal statutes change faster than training runs; and relying purely on output filters fails because unsafe tool actions may have already executed.
 
 Production-grade governance requires a defense-in-depth architecture that combines parameter alignment, strict context hierarchies, pre-inference classifiers, deterministic execution sandboxes, and post-inference evaluators.

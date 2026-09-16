@@ -13,6 +13,8 @@ aliases:
   - Distributed Stochastic Reasoning Nodes
 ---
 
+# Multi-Agent Software Development
+
 Modern agentic development has moved well past the model of a single coding agent running in an interactive chat loop. The real architectural shift is happening around multi-agent workflows: running agents in parallel, sequentially, competitively, or as a coordinated team.
 
 This introduces a concrete distributed systems problem: not just *what prompt should an agent run*, but *how many agents do we need, how should we partition the work, what state should be isolated versus shared, and how do we validate and merge their outputs without breaking the codebase?*

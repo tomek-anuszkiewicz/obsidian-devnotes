@@ -16,6 +16,8 @@ aliases:
   - Lowering the Cost of Thoroughness
 ---
 
+# Agent Advantage - Relentless, Methodical Work
+
 One of the most important advantages of software agents is not intelligence in the usual sense. 
 
 It is persistence.

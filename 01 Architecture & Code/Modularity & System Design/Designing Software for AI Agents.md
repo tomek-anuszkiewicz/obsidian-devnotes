@@ -14,7 +14,7 @@ aliases:
   - Designing Discoverable Codebases
 ---
 
-# Designing Software for AI Agents: Architectural Predictability and Explicit Boundaries
+# Designing Software for AI Agents
 
 Good architecture becomes significantly more critical when autonomous agents generate changes at high speed. 
 

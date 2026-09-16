@@ -9,6 +9,7 @@ tags:
   - context-rot
   - verification-asymmetry
 aliases:
+  - "Building Determinism from Unpredictable Models - Agent Harness Architecture"
   - Building Determinism from Unpredictable Models
   - Agent Harness Architecture
   - Deterministic Agent Harness
@@ -16,8 +17,6 @@ aliases:
   - Pyramid of Control
   - Inner Loop vs Outer Loop Harness
 ---
-  - "Building Determinism from Unpredictable Models - Agent Harness Architecture"
-
 # Building Determinism from Unpredictable Models
 
 > [!IMPORTANT]

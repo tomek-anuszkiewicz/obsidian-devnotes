@@ -8,12 +8,14 @@ tags:
   - proprietary-data
   - business-models
 aliases:
+  - "Competitive advantage in the age of commodity AI"
   - Commodity AI Moats
   - Defensibility in the AI Era
   - Cheap Code and the Moat of Extraordinary Questions
   - Forcing LLMs Outside Established Schemas
 ---
-  - "Competitive advantage in the age of commodity AI"
+
+# Competitive Advantage in the Age of Commodity AI
 
 As foundation models become broadly available as commodity APIs, simply having access to a capable model ceases to be a meaningful competitive advantage. When [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week|software can be cloned in days]], raw code generation is no longer a defensible barrier.
 

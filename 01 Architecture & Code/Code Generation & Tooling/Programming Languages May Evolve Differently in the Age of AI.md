@@ -8,15 +8,14 @@ tags:
   - compilers
   - software-engineering
 aliases:
+  - "Programming Languages May Evolve Differently in the Age of AI"
+  - "Language Evolution in the Era of Autonomous Coding"
   - AI-Era Programming Language Evolution
   - Languages Designed for LLM Generation
   - Verbosity Is Cheap Ambiguity Is Expensive
   - Context-Native Languages
   - The Language Feature Inertia Gap
 ---
-  - "Programming Languages May Evolve Differently in the Age of AI"
-  - "Language Evolution in the Era of Autonomous Coding"
-
 # Programming Languages May Evolve Differently in the Age of AI
 
 Programming languages have historically evolved around human constraints. Every major syntax evolution, compiler feature, and standard library idiom was shaped by human biological limits: typing fatigue, working memory capacity, visual scanning speed, and our tendency to make subtle mistakes during manual refactoring.

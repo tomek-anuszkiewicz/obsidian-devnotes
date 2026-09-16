@@ -13,6 +13,8 @@ aliases:
   - Autonomous Proactive Agents
 ---
 
+# Proactive Software - From Reactive Systems to Autonomous Agents
+
 Traditional software is mostly reactive.
 
 A user clicks a button, submits a form, calls an API endpoint, creates a ticket, or triggers a predefined event. The system executes a known procedure and returns a result.

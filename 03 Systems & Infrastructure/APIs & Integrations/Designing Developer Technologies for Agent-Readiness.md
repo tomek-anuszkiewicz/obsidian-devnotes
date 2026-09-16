@@ -8,13 +8,12 @@ tags:
   - software-ecosystems
   - api-design
 aliases:
+  - "New Developer Technologies May Need to Be Agent-Ready from Day One"
   - Agent-Ready Developer Tools
   - Agent First Frameworks
   - The In-Context Bootstrap Requirement for New Technologies
   - Agent Experience as Developer Experience
 ---
-  - "New Developer Technologies May Need to Be Agent-Ready from Day One"
-
 # Designing Developer Technologies for Agent-Readiness
 
 The adoption of programming languages, libraries, frameworks, and language features has always depended on far more than technical quality. A new technology cannot survive on architectural elegance alone; it historically had to build an entire human-facing ecosystem:

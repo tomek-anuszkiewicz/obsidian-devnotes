@@ -9,6 +9,7 @@ tags:
   - database-optimization
   - economics
 aliases:
+  - "AI May Make Aggressive Code Optimization Economically Viable"
   - Code Optimization with AI
   - Economics of Aggressive Code Optimization
   - Hardware and Software Engine Optimization
@@ -17,8 +18,6 @@ aliases:
   - The Microbenchmark Illusion and 80/20 Production Skew
   - Hardware Awareness in the Agentic Era
 ---
-  - "AI May Make Aggressive Code Optimization Economically Viable"
-
 # The Economics of Aggressive Code Optimization with AI
 
 For decades, software engineering has traded machine efficiency for human developer productivity. 

@@ -8,11 +8,10 @@ tags:
   - agent-ecosystem
   - knowledge-management
 aliases:
+  - "Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem"
   - The Personal Model
   - Digital Representation in Agent Ecosystems
 ---
-  - "Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem"
-
 # Personal Digital Models as the Foundation of Agent Ecosystems
 
 Today, most AI assistants start almost from scratch every time you open them.

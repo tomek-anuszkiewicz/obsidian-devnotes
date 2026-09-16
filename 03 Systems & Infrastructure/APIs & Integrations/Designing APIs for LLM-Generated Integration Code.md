@@ -14,6 +14,8 @@ aliases:
   - Agent-Native Interface Bundles
 ---
 
+# Designing APIs for LLM-Generated Integration Code
+
 When you use an LLM coding agent to build an integration, the goal is rarely for the model to hand-roll raw HTTP requests or guess endpoint paths. 
 
 Instead, a well-structured system allows the agent to:

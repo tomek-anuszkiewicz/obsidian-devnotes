@@ -15,7 +15,7 @@ status: evergreen
 created: 2026-08-23
 ---
 
-# AI-Era Software Engineering Recruitment
+# AI Era Software Engineering Recruitment
 
 ## Central Thesis
 

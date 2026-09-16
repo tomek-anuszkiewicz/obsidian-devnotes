@@ -13,7 +13,7 @@ aliases:
   - Empirical Grounding and Scope
 ---
 
-# Preamble — Scope, Empirical Grounding, and Evolution of This Vault
+# Preamble
 
 > **Current as of:** September 11, 2026
 

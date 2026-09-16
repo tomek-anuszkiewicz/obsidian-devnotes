@@ -19,7 +19,7 @@ aliases:
   - The Vault as an Cognitive Benchmark
 ---
 
-# Systems Engineering Playbook: Agentic Harnesses, Distributed Systems Architecture, High-Performance Runtimes, and Knowledge Ingestion
+# Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs
 
 ---
 

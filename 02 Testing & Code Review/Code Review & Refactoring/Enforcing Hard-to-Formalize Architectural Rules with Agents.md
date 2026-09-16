@@ -9,13 +9,15 @@ tags:
   - compliance
   - review
 aliases:
+  - "Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize"
   - Natural-Language Rules as Executable Policies
   - Agentic Review Rules
   - Semantic Code Review
   - The Semantic Verification Continuum
   - Human Review Intuition as Executable Policy
 ---
-  - "Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize"
+
+# Enforcing Hard-to-Formalize Architectural Rules with Agents
 
 Traditional software quality automation works best when a rule can be expressed precisely.
 

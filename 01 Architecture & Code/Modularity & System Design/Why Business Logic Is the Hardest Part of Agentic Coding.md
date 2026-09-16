@@ -13,7 +13,7 @@ aliases:
   - Business Semantics vs Technical Complexity
 ---
 
-# Business Logic Is Harder Than Technical Complexity in Agentic Development
+# Why Business Logic Is the Hardest Part of Agentic Coding
 
 When you pair with autonomous coding models, a stark asymmetry quickly becomes obvious: technical infrastructure is remarkably easy for an agent to build, while business logic remains an active minefield.
 
