@@ -2,3 +2,4 @@
 _Private/
 __pycache__/
 *.pyc
+.env
