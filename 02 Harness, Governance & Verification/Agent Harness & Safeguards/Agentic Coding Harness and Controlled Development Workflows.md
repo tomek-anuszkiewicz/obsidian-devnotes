@@ -54,7 +54,7 @@ aliases:
 
 ## Executive Summary & Core Architectural Invariants
 
-1. **Harness as the Deterministic Counterweight**: Large language models operate probabilistically and carry zero skin in the game; they do not experience fear, fatigue, or remorse when deleting files. The surrounding harness must provide the rigid, unyielding physical laws: enforcing clean Git checkpoints, tool permission white-lists, and hard line ceilings.
+1. **Harness as the Deterministic Counterweight**: Large language models operate probabilistically and carry zero skin in the game; they do not experience fear, fatigue, or remorse when deleting files. The surrounding harness provides the rigid, unyielding physical laws ([[Building Determinism from Stochastic Foundations - Agent Harness Architecture|establishing deterministic execution cages over stochastic foundations]]): enforcing clean Git checkpoints, tool permission white-lists, and hard line ceilings.
 2. **Negative Bounding Over Prescriptive Micromanagement**: Affirmative guidance ("do X, then Y, then Z") leaves an infinite unconstrained perimeter. Grant the agent wide implementation autonomy while erecting 2 to 3 rigid negative fences (e.g., forbidden package additions, forbidden heap allocations in hot paths, forbidden schema mutations).
 3. **Strict Separation of Operational Phases**: Never allow an agent to interleave planning, synthesis, and verification in a chaotic single turn. Enforce discrete phase gates: **Specification $\rightarrow$ Plan $\rightarrow$ Frozen Test Oracles $\rightarrow$ Vertical Slice Synthesis $\rightarrow$ Adversarial Review**.
 4. **Deterministic Tools for Deterministic Checks**: Never ask an LLM to "verify" code through pure cognitive inspection if a native compiler, linter, or test runner can provide a binary, zero-cost `PASS / FAIL` signal. The LLM generates hypotheses; deterministic tools verify truth.
@@ -1029,6 +1029,7 @@ These patterns form the deterministic operating scaffolding within which [[The C
 
 ## Relationship to the Knowledge Graph
 
+- **[[Building Determinism from Stochastic Foundations - Agent Harness Architecture]]**: Formalizes the host/client control inversion, the 3-tier Pyramid of Control, inner-vs-outer loops, and Gen 3 state-graph orchestration.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Eliminating completed task retention in active roadmaps to protect prompt context budgets.
 - **[[The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction]]**: Preserving historical engineering narratives via out-of-context CLI append tooling and milestone compaction.
 - **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Proving system boundaries on atomic operational primitives before scaling out under harness rules.

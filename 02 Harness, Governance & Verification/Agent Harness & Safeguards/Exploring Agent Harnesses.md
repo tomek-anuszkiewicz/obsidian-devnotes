@@ -64,7 +64,7 @@ Autocomplete ──► Chat Assistant ──► Tool-Using Agent ──► Agent
                      (Gemini / Claude / GPT / Local)
 ```
 
-The harness bridges the gap between probabilistic token generation and physical execution reality.
+The harness bridges the gap between probabilistic token generation and physical execution reality by [[Building Determinism from Stochastic Foundations - Agent Harness Architecture|establishing deterministic execution cages over stochastic foundations]].
 
 ---
 
@@ -142,6 +142,7 @@ Elite agentic engineering converges on a **tailored, repository-native harness**
 
 ## Relationship to the Knowledge Graph
 
+- **[[Building Determinism from Stochastic Foundations - Agent Harness Architecture]]**: Analyzes the dual control planes, session drift dynamics (context rot, sycophancy), the Pyramid of Control, and Generation 3 state-graph orchestration.
 - **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]**: Architecture, security guardrails, and personal OS workflows for persistent 24/7 background agent daemons.
 - **[[Dynamic Model Routing and Inference Gateways]]**: Decoupling the execution harness from concrete model endpoints via automated fallbacks and multi-tier routing.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The architectural harness philosophy, self-healing feedback loops, and controlled plan-and-approval workflows.
