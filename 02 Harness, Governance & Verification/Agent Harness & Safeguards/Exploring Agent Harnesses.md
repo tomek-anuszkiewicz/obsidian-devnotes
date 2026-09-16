@@ -64,7 +64,7 @@ Autocomplete ──► Chat Assistant ──► Tool-Using Agent ──► Agent
                      (Gemini / Claude / GPT / Local)
 ```
 
-The harness bridges the gap between probabilistic token generation and physical execution reality by [[Building Determinism from Unpredictable Models - Agent Harness Architecture|establishing deterministic execution cages around unpredictable models]].
+The harness bridges the gap between text generation and actual software execution, [[Building Determinism from Unpredictable Models - Agent Harness Architecture|turning unpredictable model output into reliable engineering workflows]].
 
 ---
 
@@ -122,12 +122,12 @@ The commercial software market frequently advertises generic **"Agentic Work OS"
 
 ### The Abstraction Penalty for Software Engineering
 For real software engineering and low-level systems work, generic SaaS agent frameworks introduce severe friction:
-- **Lowest Common Denominator**: Built for generic office tasks; completely unaware of mechanical compiler invariants, memory bounds, or concurrency guarantees. Whereas generic corporate SaaS platforms attempt to sell high-overhead dashboards, engineering practitioners deploy [[Always-On Autonomous Agents - The 24-7 Local Operating System|local-first autonomous agent operating systems]] running on low-cost local appliances under strict blast radius containment.
+- **Lowest Common Denominator**: Built for generic office tasks; completely unaware of compiler checks, memory constraints, or concurrency guarantees. While generic enterprise SaaS tools focus on high-overhead dashboards, engineering teams tend to prefer [[Always-On Autonomous Agents - The 24-7 Local Operating System|local-first autonomous agent workflows]] running on dedicated local hardware where execution boundaries are tightly controlled.
 - **Debugging the Wrapper**: Engineers spend more time troubleshooting orchestration framework bugs and proprietary JSON schemas than shipping production features.
 - **Lack of Deterministic Verification**: Generic platforms rely on conversational consensus between multiple LLMs rather than binding execution to real compilers and test oracles.
 
 ### The In-Repository Sweet Spot
-Elite agentic engineering converges on a **tailored, repository-native harness**:
+High-performing software teams converge on a **tailored, repository-native harness**:
 - **Version-Controlled Rules**: Plain Markdown policies (`AGENTS.md`, `.agents/rules/`) that evolve alongside the codebase in Git.
 - **Native Tool Integration**: Direct execution of local compilers, test harnesses, and static analyzers through standard tool protocols (such as MCP or shell execution).
 - **In-Tree Procedural Skills**: Specialized operational scripts and domain runbooks stored directly inside `.agents/skills/`.
@@ -135,7 +135,7 @@ Elite agentic engineering converges on a **tailored, repository-native harness**
 
 > [!TIP]
 > **The Harness Reflection Principle**:  
-> *"The agentic harness mirrors the cognitive rhythm of the person driving it."*  
+> *"An agent harness mirrors the working tempo of the engineer driving it."*  
 > An in-repository harness is not an opaque corporate dashboard; it is a purpose-built execution harness directly externalizing the architect's mental model, verification standards, and operational tempo.
 
 ---
