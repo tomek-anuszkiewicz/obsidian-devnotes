@@ -1,3 +1,8 @@
+---
+trigger: always_on
+description: Enforce the Inverted Pyramid model, leading core thesis, and progressive cognitive disclosure across all notes and architectural documentation.
+---
+
 # Information Hierarchy & Inverted Pyramid Rule
 
 Whenever creating, modifying, updating, or refactoring notes and architectural documentation in this Obsidian vault, the agent must strictly structure content according to the **Inverted Pyramid model** and **top-down cognitive hierarchy**. This ensures that the most valuable, transformative, and decisive insights lead the document rather than being buried at the bottom.

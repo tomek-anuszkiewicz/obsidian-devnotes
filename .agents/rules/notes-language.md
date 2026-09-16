@@ -1,3 +1,8 @@
+---
+trigger: always_on
+description: Enforce English exclusively for all notes and documentation, language mirroring in chat, and audio note transcription.
+---
+
 # Notes Language Rule
 
 All notes, documentation, architectural guidelines, research logs, and markdown files in this workspace must be written exclusively in **English**.
