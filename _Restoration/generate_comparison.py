@@ -2,8 +2,9 @@
 """
 _Restoration/generate_comparison.py
 
-Generates a side-by-side Markdown/HTML table comparing the original input notes
-with the restored notes produced by Gemini 3.8 Flash (High Thinking).
+Generates a native Markdown comparison table for Obsidian:
+Original reference notes vs. Restored notes produced by Gemini 3.8 Flash (High Thinking).
+Uses native Markdown pipe tables with <br> and <pre><code> so Obsidian renders perfectly in all modes.
 """
 
 import html
@@ -17,89 +18,99 @@ REST_DIR = RESTORATION_DIR / "restored_output"
 OUTPUT_FILE = RESTORATION_DIR / "comparison_side_by_side.md"
 
 
-def markdown_to_html_cell(text: str) -> str:
-    """Converts a section of markdown into safe HTML for table cells."""
-    lines = text.strip().splitlines()
-    out = []
-    in_code = False
-    code_lines = []
-
-    for line in lines:
-        if line.startswith("```"):
-            if in_code:
-                escaped_code = html.escape("\n".join(code_lines))
-                out.append(f"<pre style='background-color: var(--background-secondary); padding: 8px; border-radius: 4px; overflow-x: auto;'><code>{escaped_code}</code></pre>")
-                in_code = False
-                code_lines = []
-            else:
-                in_code = True
-                code_lines = []
-            continue
-
-        if in_code:
-            code_lines.append(line)
-            continue
-
-        stripped = line.strip()
-        if not stripped:
-            continue
-
-        if stripped.startswith("### "):
-            out.append(f"<h4 style='margin-top: 10px; margin-bottom: 4px; color: var(--text-accent);'>{html.escape(stripped[4:])}</h4>")
-        elif stripped.startswith("## "):
-            out.append(f"<h3 style='margin-top: 14px; margin-bottom: 6px; color: var(--text-accent);'>{html.escape(stripped[3:])}</h3>")
-        elif stripped.startswith("# "):
-            out.append(f"<h2 style='margin-top: 16px; margin-bottom: 8px; color: var(--text-accent);'>{html.escape(stripped[2:])}</h2>")
-        elif stripped.startswith("- ") or stripped.startswith("* "):
-            out.append(f"<li style='margin-left: 18px;'>{html.escape(stripped[2:])}</li>")
-        elif re.match(r"^\d+\.\s+", stripped):
-            content = re.sub(r"^\d+\.\s+", "", stripped)
-            out.append(f"<li style='margin-left: 18px;'>{html.escape(content)}</li>")
-        else:
-            out.append(f"<p style='margin-bottom: 8px; line-height: 1.45;'>{html.escape(stripped)}</p>")
-
-    if in_code and code_lines:
-        escaped_code = html.escape("\n".join(code_lines))
-        out.append(f"<pre style='background-color: var(--background-secondary); padding: 8px; border-radius: 4px; overflow-x: auto;'><code>{escaped_code}</code></pre>")
-
-    return "\n".join(out)
-
-
-def split_into_sections(content: str):
-    """Splits markdown into major sections based on ## headings."""
+def strip_frontmatter(content: str) -> str:
+    """Strip YAML frontmatter from document."""
     if content.startswith("---"):
         parts = content.split("---", 2)
         if len(parts) >= 3:
-            content = parts[2].strip()
+            return parts[2].strip()
+    return content.strip()
 
+
+def split_into_blocks(content: str):
+    """Split content into heading-based sections."""
+    text = strip_frontmatter(content)
     sections = []
-    current_title = "Overview / Introduction"
-    current_body = []
+    current_title = "Overview & Core Premise"
+    current_lines = []
 
-    for line in content.splitlines():
-        if line.startswith("## "):
-            if current_body:
-                sections.append((current_title, "\n".join(current_body).strip()))
-                current_body = []
-            current_title = line[3:].strip()
+    heading_regex = re.compile(r"^(#{1,3})\s+(.+)$")
+
+    for line in text.splitlines():
+        match = heading_regex.match(line.strip())
+        if match:
+            if current_lines:
+                sections.append((current_title, "\n".join(current_lines).strip()))
+                current_lines = []
+            current_title = match.group(2).strip()
         else:
-            current_body.append(line)
+            current_lines.append(line)
 
-    if current_body:
-        sections.append((current_title, "\n".join(current_body).strip()))
+    if current_lines:
+        sections.append((current_title, "\n".join(current_lines).strip()))
 
     return sections
 
 
-def generate_comparison_markdown():
-    orig_files = sorted(list(ORIG_DIR.glob("*.md")))
-    md_output = []
+def format_table_cell(text: str) -> str:
+    """Format a block of text to be completely safe inside a Markdown pipe table cell."""
+    if not text:
+        return "*(No matching section)*"
 
-    md_output.append("# Side-by-Side Restoration Comparison: Original vs. Restored Notes\n")
-    md_output.append("> [!NOTE]\n")
-    md_output.append("> This document provides a direct, row-by-row comparative evaluation of the reference notes.\n")
-    md_output.append("> Left column: Original reference note (pre-deconstruction).\n")
-    md_output.append("> Right column: Restored note synthesized by **Gemini 3.8 Flash (High Thinking)**.\n\n")
+    lines = text.strip().splitlines()
+    out = []
+    in_code = False
+    code_buf = []
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Handle code blocks
+        if stripped.startswith("```"):
+            if in_code:
+                code_text = html.escape("\n".join(code_buf)).replace("\n", "<br>")
+                out.append(f"<pre><code>{code_text}</code></pre>")
+                in_code = False
+                code_buf = []
+            else:
+                in_code = True
+                code_buf = []
+            continue
+
+        if in_code:
+            code_buf.append(line)
+            continue
+
+        if not stripped:
+            continue
+
+        # Handle lists
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            clean_item = stripped[2:].replace("|", "&#124;")
+            out.append(f"&bull; {clean_item}")
+        elif re.match(r"^\d+\.\s+", stripped):
+            clean_item = stripped.replace("|", "&#124;")
+            out.append(clean_item)
+        else:
+            clean_line = stripped.replace("|", "&#124;")
+            out.append(clean_line)
+
+    if in_code and code_buf:
+        code_text = html.escape("\n".join(code_buf)).replace("\n", "<br>")
+        out.append(f"<pre><code>{code_text}</code></pre>")
+
+    return "<br><br>".join(out)
+
+
+def generate_comparison():
+    orig_files = sorted(list(ORIG_DIR.glob("*.md")))
+    md_lines = []
+
+    md_lines.append("# Side-by-Side Restoration Comparison: Original vs. Restored Notes\n")
+    md_lines.append("> [!NOTE]")
+    md_lines.append("> Row-by-row comparative evaluation of the 6 reference notes.")
+    md_lines.append("> Left column: Original reference note (ChatGPT baseline).")
+    md_lines.append("> Right column: Restored note synthesized by **Gemini 3.8 Flash (High Thinking)**.\n")
 
     for orig_path in orig_files:
         rest_path = REST_DIR / orig_path.name
@@ -115,39 +126,32 @@ def generate_comparison_markdown():
 
         title = orig_path.stem
 
-        md_output.append(f"\n---\n\n## Note: {title}\n")
-        md_output.append(f"**Metrics**: Original: **{orig_words} words** | Restored: **{rest_words} words** | Compression: **-{reduction:.1f}%**\n\n")
+        md_lines.append(f"## Note: {title}\n")
+        md_lines.append(f"**Metrics**: Original: **{orig_words} words** | Restored: **{rest_words} words** | Compression: **-{reduction:.1f}%**\n")
 
-        orig_sections = split_into_sections(orig_text)
-        rest_sections = split_into_sections(rest_text)
+        orig_blocks = split_into_blocks(orig_text)
+        rest_blocks = split_into_blocks(rest_text)
 
-        max_len = max(len(orig_sections), len(rest_sections))
+        max_len = max(len(orig_blocks), len(rest_blocks))
 
-        md_output.append("<table style='width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 24px;'>\n")
-        md_output.append("  <tr style='background-color: var(--background-secondary-alt); border-bottom: 2px solid var(--background-modifier-border);'>\n")
-        md_output.append(f"    <th style='width: 50%; padding: 10px; text-align: left; font-size: 1.05em;'>Original Input Note ({orig_words} words)</th>\n")
-        md_output.append(f"    <th style='width: 50%; padding: 10px; text-align: left; font-size: 1.05em;'>Restored Note - Gemini Flash High-Thinking ({rest_words} words)</th>\n")
-        md_output.append("  </tr>\n")
+        md_lines.append(f"| Original Note ({orig_words} words) | Restored Note - Gemini Flash ({rest_words} words) |")
+        md_lines.append("| :--- | :--- |")
 
         for i in range(max_len):
-            orig_sec = orig_sections[i] if i < len(orig_sections) else ("", "")
-            rest_sec = rest_sections[i] if i < len(rest_sections) else ("", "")
+            orig_title, orig_body = orig_blocks[i] if i < len(orig_blocks) else ("", "")
+            rest_title, rest_body = rest_blocks[i] if i < len(rest_blocks) else ("", "")
 
-            orig_cell_html = f"<strong style='color: var(--text-accent);'>{html.escape(orig_sec[0])}</strong><hr style='margin: 4px 0 8px 0;'>{markdown_to_html_cell(orig_sec[1])}" if orig_sec[1] else "<em>(No matching section)</em>"
-            rest_cell_html = f"<strong style='color: var(--text-accent);'>{html.escape(rest_sec[0])}</strong><hr style='margin: 4px 0 8px 0;'>{markdown_to_html_cell(rest_sec[1])}" if rest_sec[1] else "<em>(No matching section)</em>"
+            orig_cell = f"**{orig_title.replace('|', '&#124;')}**<br><br>{format_table_cell(orig_body)}" if orig_title or orig_body else "*(End of original note)*"
+            rest_cell = f"**{rest_title.replace('|', '&#124;')}**<br><br>{format_table_cell(rest_body)}" if rest_title or rest_body else "*(End of restored note)*"
 
-            row_bg = "background-color: var(--background-primary);" if i % 2 == 0 else "background-color: var(--background-secondary);"
+            # Must be a single line per table row in Markdown
+            md_lines.append(f"| {orig_cell} | {rest_cell} |")
 
-            md_output.append(f"  <tr style='{row_bg}; border-bottom: 1px solid var(--background-modifier-border);'>\n")
-            md_output.append(f"    <td style='vertical-align: top; padding: 12px; border-right: 1px solid var(--background-modifier-border);'>\n{orig_cell_html}\n    </td>\n")
-            md_output.append(f"    <td style='vertical-align: top; padding: 12px;'>\n{rest_cell_html}\n    </td>\n")
-            md_output.append("  </tr>\n")
+        md_lines.append("\n---\n")
 
-        md_output.append("</table>\n\n")
-
-    OUTPUT_FILE.write_text("\n".join(md_output), encoding="utf-8")
-    print(f"[SUCCESS] Generated side-by-side comparison file at: {OUTPUT_FILE}")
+    OUTPUT_FILE.write_text("\n".join(md_lines), encoding="utf-8")
+    print(f"[SUCCESS] Generated native markdown table at: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
-    generate_comparison_markdown()
+    generate_comparison()
