@@ -37,10 +37,10 @@ UNCONSTRAINED AGENT CODING (THE ZERO-FRICTION TRAP):
 Zero fatigue + instant generation ──► Massive boilerplate, speculative wrappers, 20-file touchpoints.
 
 THE ARCHITECTURAL DEFENSE:
-Mechanical constraints (1:1 files, hard line limits, strict touchpoint budgets) ──► Stops entropy cold.
+Automated repository guardrails (1:1 files, line limits, touchpoint budgets) ──► Prevents code sprawl.
 ```
 
-An AI coding agent has **zero friction**. It experiences no physical fatigue, feels no mental drag, and generates 500 lines of speculative scaffolding just as casually as 5 lines. When the cost of generating code drops to zero, **software entropy explodes** unless engineering teams enforce rigid mechanical boundaries (see [[Designing Software for AI Agents|designing software for agents]]).
+An AI coding agent works without human fatigue. It experiences no physical drag and generates 500 lines of speculative scaffolding just as easily as 5 lines. When generating code costs almost zero effort, codebase sprawl accelerates unless teams enforce hard repository boundaries (see [[Designing Software for AI Agents|designing software for agents]]).
 
 ---
 
@@ -118,15 +118,15 @@ When prompted without strict rules, an LLM defaults to those exact patterns. It 
 
 ---
 
-## The Solution: Strict Mechanical Guardrails
+## The Solution: Automated Guardrails in CI
 
-Because agents cannot feel cognitive overload, you cannot stop code sprawl with polite guidelines like *"please keep files clean"*. You must enforce **hard mechanical constraints that break the build when violated**:
+Because agents do not feel fatigue or maintainability pain, you cannot prevent code sprawl with polite guidelines like *"please keep files clean"*. You must enforce **hard programmatic constraints that fail the build when violated**:
 
 ```text
 SOFT GUIDELINES (FAIL WITH AGENTS):
 "Please keep classes focused and avoid touching too many files."
 
-HARD MECHANICAL GATES (SUCCEED WITH AGENTS):
+HARD AUTOMATED GATES (SUCCEED WITH AGENTS):
 "1:1 file hierarchy. Hard 500-line ceiling per file. Max 2 files modified per task. CI fails on violation."
 ```
 
@@ -164,7 +164,7 @@ When guided by strict architectural rules, **an agent can actually reduce softwa
 
 ## Practical Rules for Teams
 
-1. **Enforce mechanical limits in CI**: Put strict line limits and import boundaries into your linter so agents cannot generate runaway files.
+1. **Enforce automated limits in CI**: Put strict file size caps and import boundaries into your linter so agents cannot generate bloated files.
 2. **Limit task blast radius**: Never let an agent edit dozens of files at once; restrict tasks to 1–2 files per commit.
 3. **Prefer localized duplication over clever shared helpers**: Keep domain operations self-contained so that changes in one flow never break another.
 4. **Demand full rewrites over dirty patches**: When fixing a bug, instruct the agent to fix the root cause and update all call sites properly rather than adding band-aids.
