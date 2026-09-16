@@ -88,7 +88,7 @@ def run_audit():
             t = target.strip()
             if not t:
                 continue
-            if t in ["wikilinks", "^\]", "Target File", "...", "Note Title", "Target Note", "Hub Title"]:
+            if t in ["wikilinks", r"^\]", "^]", "Target File", "...", "Note Title", "Target Note", "Hub Title"]:
                 continue
             if t in all_private_valid:
                 public_to_private.append((p.relative_to(REPO_ROOT).as_posix(), t))
@@ -115,7 +115,7 @@ def run_audit():
             t = target.strip()
             if not t:
                 continue
-            if t in ["wikilinks", "^\]", "Target File", "...", "Note Title", "Target Note", "Hub Title"]:
+            if t in ["wikilinks", r"^\]", "^]", "Target File", "...", "Note Title", "Target Note", "Hub Title"]:
                 continue
             if t not in all_valid_for_private:
                 private_broken.append((p.relative_to(REPO_ROOT).as_posix(), t))
