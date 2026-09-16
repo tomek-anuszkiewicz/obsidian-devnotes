@@ -11,6 +11,7 @@ aliases:
   - AI Coding Agents — Historical Perspective
   - State of AI-Assisted Programming
   - AI Coding Agents â€” Historical Perspective
+  - "AI-Assisted Software Engineering Where Are We Now"
 created: 2026-08-23
 status: evergreen
 ---

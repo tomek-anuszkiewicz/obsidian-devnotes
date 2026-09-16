@@ -16,6 +16,7 @@ aliases:
   - Convergence of Personal AI and Developer APIs
   - BYOB AI Economics
 ---
+  - "Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs"
 
 # Personal AI Subscriptions and Unified Model Access
 

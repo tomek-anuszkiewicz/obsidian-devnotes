@@ -14,6 +14,7 @@ aliases:
   - From Monolithic Apps to Agent Primitives
   - The Shift to Malleable Domain Engines
 ---
+  - "Applications May Shift from Fixed Features to Agent-Extensible Primitives"
 
 # Shifting from Fixed Features to Agent-Extensible Primitives
 

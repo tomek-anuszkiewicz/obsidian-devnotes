@@ -14,6 +14,8 @@ aliases:
   - Context-Native Languages
   - The Language Feature Inertia Gap
 ---
+  - "Programming Languages May Evolve Differently in the Age of AI"
+  - "Language Evolution in the Era of Autonomous Coding"
 
 # Programming Languages May Evolve Differently in the Age of AI
 

@@ -14,6 +14,7 @@ aliases:
   - Agentic Knowledge Filtering
   - Reconciling External Knowledge with Personal Models
 ---
+  - "How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge"
 
 # How Personal AI Models Reconcile External Knowledge
 

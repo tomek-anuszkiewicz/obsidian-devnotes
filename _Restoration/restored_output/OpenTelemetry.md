@@ -14,6 +14,7 @@ aliases:
   - Decoupling Telemetry Production from Storage Backends
   - Distributed Tracing and Context Propagation
 ---
+  - "OpenTelemetry as the Runtime Truth for Autonomous Agents"
 
 # OpenTelemetry
 

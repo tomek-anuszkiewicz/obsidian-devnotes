@@ -15,6 +15,7 @@ aliases:
   - The Semantic Verification Continuum
   - Human Review Intuition as Executable Policy
 ---
+  - "Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize"
 
 Traditional software quality automation works best when a rule can be expressed precisely.
 

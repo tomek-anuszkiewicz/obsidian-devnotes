@@ -13,6 +13,7 @@ aliases:
   - The In-Context Bootstrap Requirement for New Technologies
   - Agent Experience as Developer Experience
 ---
+  - "New Developer Technologies May Need to Be Agent-Ready from Day One"
 
 # Designing Developer Technologies for Agent-Readiness
 

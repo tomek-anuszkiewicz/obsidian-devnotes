@@ -10,6 +10,7 @@ aliases:
   - Irreversibility of AI in Software
   - AI as Core Development Infrastructure
 ---
+  - "AI May Become an Irreversible Part of Software Development"
 
 # The Irreversible Integration of AI in Software Engineering
 

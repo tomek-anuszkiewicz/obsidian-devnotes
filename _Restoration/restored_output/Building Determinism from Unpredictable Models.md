@@ -16,6 +16,7 @@ aliases:
   - Pyramid of Control
   - Inner Loop vs Outer Loop Harness
 ---
+  - "Building Determinism from Unpredictable Models - Agent Harness Architecture"
 
 # Building Determinism from Unpredictable Models
 

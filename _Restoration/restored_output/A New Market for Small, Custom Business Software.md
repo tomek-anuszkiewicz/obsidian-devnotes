@@ -11,6 +11,7 @@ aliases:
   - Hyper-Custom Business Software
   - Long Tail of Software Created by AI
 ---
+  - "AI May Create a New Market for Small, Custom Business Software"
 
 # A New Market for Small, Custom Business Software
 

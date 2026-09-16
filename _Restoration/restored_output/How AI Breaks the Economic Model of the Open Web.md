@@ -11,6 +11,7 @@ aliases:
   - Future of Open Web Under AI
   - Collapse of Ad-Supported Web Model
 ---
+  - "AI May Break the Old Economic Model of the Open Web"
 
 Generative AI is doing something far more disruptive than upgrading search engines: it is dismantling the economic engine that has funded the open web for the last thirty years.
 

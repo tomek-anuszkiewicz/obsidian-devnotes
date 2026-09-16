@@ -17,6 +17,7 @@ aliases:
   - The Microbenchmark Illusion and 80/20 Production Skew
   - Hardware Awareness in the Agentic Era
 ---
+  - "AI May Make Aggressive Code Optimization Economically Viable"
 
 # The Economics of Aggressive Code Optimization with AI
 

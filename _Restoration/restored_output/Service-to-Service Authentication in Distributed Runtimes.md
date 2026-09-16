@@ -12,6 +12,7 @@ aliases:
   - S2S Auth in Azure and K8s
   - Service Authentication Patterns
 ---
+  - "Service-to-Service Authentication and Authorization in Azure and Kubernetes"
 
 # Service-to-Service Authentication in Distributed Runtimes
 

@@ -14,6 +14,8 @@ aliases:
   - Comments as Local Context Retrieval
   - Negative Knowledge Comments in Agentic Code
 ---
+  - "Comments May Become More Valuable in AI-Generated Code"
+  - "The Increasing Value of Comments in AI-Generated Code"
 
 The traditional rule for writing comments has long been summarized simply:
 

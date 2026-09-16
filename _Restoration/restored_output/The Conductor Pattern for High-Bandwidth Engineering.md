@@ -16,6 +16,7 @@ aliases:
   - Immediate Friction Codification
   - The Symphony Problem
   - Multi-Operator Agentic Engineering
+  - "The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering"
 created: 2026-09-12
 ---
 

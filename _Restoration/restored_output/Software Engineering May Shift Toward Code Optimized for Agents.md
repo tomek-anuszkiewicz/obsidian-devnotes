@@ -13,6 +13,8 @@ aliases:
   - Source Code as Machine-Maintained Artifact
   - The Deeper Shift in Software Engineering
 ---
+  - "Software Engineering May Shift Toward Code Optimized for Agents"
+  - "Optimizing Software Engineering and Code for Agents"
 
 # Software Engineering May Shift Toward Code Optimized for Agents
 

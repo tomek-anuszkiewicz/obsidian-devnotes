@@ -15,6 +15,7 @@ aliases:
   - DIARY Pattern
   - Out-of-Context Tooling
 ---
+  - "The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction"
 
 # The Living Engineering Chronicle and Context Compaction
 

@@ -13,6 +13,7 @@ aliases:
   - Civilizational Automation Loop
   - Narrow AI Singularity
 ---
+  - "Networked Automation Loops and Software Output Without AGI"
 
 # Singularity Without AGI - The Civilizational Automation Loop
 

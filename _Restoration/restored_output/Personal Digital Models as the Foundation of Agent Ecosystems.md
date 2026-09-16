@@ -11,6 +11,7 @@ aliases:
   - The Personal Model
   - Digital Representation in Agent Ecosystems
 ---
+  - "Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem"
 
 # Personal Digital Models as the Foundation of Agent Ecosystems
 

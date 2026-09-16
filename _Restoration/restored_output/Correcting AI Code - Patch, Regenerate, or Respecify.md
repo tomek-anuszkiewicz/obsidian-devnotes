@@ -15,6 +15,7 @@ aliases:
   - Upstream Defect Resolution
   - Co-Evolution of Code and Specs
 ---
+  - "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification"
 
 # Correcting AI Code - Patch, Regenerate, or Respecify
 

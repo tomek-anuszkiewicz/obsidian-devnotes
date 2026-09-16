@@ -14,6 +14,8 @@ aliases:
   - Mechanically Expandable Abstractions
   - Domain Vocabulary Alignment
 ---
+  - "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
+  - "The Cost of Hidden Abstractions in Agent-Maintained Code"
 
 Modern software engineering often tries to strip repetitive mechanics out of application code. Instead of hand-rolling validation, authorization, retries, database transactions, logging, distributed tracing, and error mapping inside every single endpoint or command handler, we delegate them to reusable framework mechanisms:
 
