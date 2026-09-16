@@ -5,37 +5,63 @@ description: Enforce language-agnostic abstractions, ubiquitous engineering conc
 
 # Language-Agnostic Architecture & Generalized Technology Abstractions Rule
 
-Whenever creating, updating, or refactoring architectural notes and documentation in this Obsidian vault, the agent must treat software architecture as **language-agnostic**, **concept-driven**, and **grounded in universal abstractions**.
+Whenever creating, updating, or refactoring architectural notes and documentation across this Obsidian vault, the agent must treat software architecture as **language-agnostic**, **concept-driven**, and **grounded in universal software engineering abstractions**. Notes in this vault document durable system physics, transactional invariants, and memory hierarchies—not transient framework idioms.
 
 ---
 
-## Core Requirements & Operating Principles
+## 1. Core Operating Principle: Architecture Above Implementation
 
-1. **Operate on Universal Abstractions**:
-   - Frame systems around ubiquitous software engineering concepts rather than platform-specific implementations:
-     - Use **databases** (relational, document, key-value) instead of specific database engines.
-     - Use **cloud platforms** or **compute providers** instead of vendor-specific branding.
-     - Use **services**, **application runtimes**, and **service meshes** instead of framework-bound servers.
-     - Use **persistence layers** or **Object-Relational Mappers (ORMs)** instead of *Entity Framework* or *Hibernate*.
-     - Use **object mapping utilities** or **declarative transformers** instead of *AutoMapper* or *MapStruct*.
-     - Use **serialization / deserialization pipelines** instead of *Serde* or *Newtonsoft.Json*.
-     - Use **compile-time metaprogramming** or **compiler-integrated code generators** instead of *Roslyn source generators*.
-     - Use **mutation testing harnesses** instead of *Stryker.NET*.
-   - Treat systems as composable data flows, state machines, transactional boundaries, memory hierarchies, and messaging topologies.
+Frameworks, libraries, and vendor branding decay rapidly; fundamental systems dynamics remain invariant. Architectural documentation must decouple runtime physics from implementation-specific baggage:
 
-2. **Avoid Concrete Language-Specific Source Code Snippets**:
-   - Unless a note is explicitly dedicated to a low-level systems analysis where exact compiler output or byte layout is the core subject, **avoid presenting concrete source code snippets in specific languages (such as C#, Java, Python, Go, Rust, or C++)**.
-   - Instead of language-specific implementation code, prefer:
-     - **Conceptual pseudo-code** or **algorithmic step descriptions**.
-     - **ASCII architectural diagrams** and **data-flow schemas**.
-     - **Mermaid flowcharts / statecharts**.
-     - **Mathematical formulations** (e.g., complexity metrics, cost models, latency envelopes).
-   - If code is unavoidable, keep it strictly agnostic pseudo-code without language-specific syntax or library imports.
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ 1. UNIVERSAL ARCHITECTURAL ABSTRACTIONS                     │
+│    Data flows, transactional boundaries, memory hierarchy. │
+├─────────────────────────────────────────────────────────────┤
+│ 2. AGNOSTIC REPRESENTATION FORMATS                          │
+│    ASCII flowcharts, Mermaid statecharts, pseudocode.       │
+├─────────────────────────────────────────────────────────────┤
+│ 3. MULTI-ECOSYSTEM EQUILIBRIUM                              │
+│    Balanced grounding across systems, managed & dynamic.    │
+└─────────────────────────────────────────────────────────────┘
+```
 
-3. **Multi-Ecosystem Breadth (When Concrete Tools Must Be Cited)**:
-   - When grounding an abstract concept with real-world examples, **never fixate on a single language or ecosystem** (especially avoiding `.NET` / `C#` bias).
-   - Always present a balanced spectrum across distinct language paradigms:
-     - Systems programming (manual memory / static compilation).
-     - Managed garbage-collected enterprise runtimes.
-     - Modern statically typed ecosystems.
-     - Dynamic and distributed runtimes.
+---
+
+## 2. Abstraction Mapping & Universal Primitives
+
+Always frame architectural discussions around universal software engineering concepts rather than platform-specific implementations:
+
+| Avoid Specific Implementation / Vendor Branding | Prefer Universal Engineering Abstraction |
+| :--- | :--- |
+| *Entity Framework*, *Hibernate*, *Prisma* | **Persistence Layer / Object-Relational Mapping (ORM)** |
+| *AutoMapper*, *MapStruct* | **Object Projection Utility / Declarative Data Transformer** |
+| *Newtonsoft.Json*, *Serde*, *Jackson* | **Serialization & Deserialization Pipeline** |
+| *Roslyn Source Generators*, *Java Annotation Processors* | **Compile-Time Metaprogramming / Integrated Code Generators** |
+| *Stryker.NET*, *PIT Mutation* | **Mutation Testing Harness** |
+| *ASP.NET Core*, *Spring Boot*, *Express* | **Application Runtime / HTTP Service Mesh / Host Process** |
+| *Postgres*, *SQL Server*, *Oracle* | **Relational Database Engine / ACID Transaction Manager** |
+| *Redis*, *Memcached* | **In-Memory Key-Value Cache / Ephemeral State Store** |
+| *AWS SQS*, *Kafka*, *RabbitMQ* | **Distributed Log / Partitioned Streaming Bus / Message Broker** |
+
+---
+
+## 3. Code Presentation Standards
+
+### 1. Rejection of Language-Specific Implementation Dumps
+- Unless a note is explicitly dedicated to a low-level compiler optimization, instruction set analysis, or byte layout study, **avoid presenting concrete source code snippets in specific languages (such as C#, Java, Python, Go, Rust, or C++)**.
+- Language-specific syntax dates quickly, introduces syntactical bike-shedding, and triggers cognitive bias toward particular vendor stacks.
+
+### 2. Preferred Agnostic Mediums
+Instead of concrete source code, express technical mechanisms through:
+- **Conceptual Pseudo-code**: Algorithmic step descriptions using clean, language-neutral syntax without framework imports.
+- **ASCII Architectural Diagrams**: Explicit data-flow topologies, transactional boundaries, and state transitions.
+- **Mermaid Diagrams**: Flowcharts, statecharts, and sequence flows illustrating invariant lifecycles.
+- **Mathematical Formulations**: Complexity metrics ($O(N)$ bounds), queueing models, latency percentiles (p99/p99.9), and cost ratios.
+
+### 3. Multi-Ecosystem Breadth (When Citing Real Tools)
+When grounding abstract concepts with real-world industry examples, **never fixate on a single language or ecosystem** (specifically avoiding singular `.NET` / `C#` bias). Always present a balanced spectrum across distinct computational paradigms:
+- **Systems & Bare-Metal Programming**: Manual memory management, zero-cost abstractions, static compilation.
+- **Managed Enterprise Runtimes**: Garbage-collected, JIT-compiled runtimes with rich standard libraries.
+- **Modern Statically Typed Languages**: Expressive type systems, structural concurrency, immutable defaults.
+- **Dynamic & Distributed Environments**: Scripting runtimes, event-loop engines, distributed actor systems.

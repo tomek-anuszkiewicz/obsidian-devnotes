@@ -3,33 +3,55 @@ trigger: always_on
 description: Enforce English exclusively for all notes and documentation, language mirroring in chat, and audio note transcription.
 ---
 
-# Notes Language Rule
+# Notes Language & Conversational Protocol Rule
 
-All notes, documentation, architectural guidelines, research logs, and markdown files in this workspace must be written exclusively in **English**.
+All notes, documentation, architectural guidelines, research logs, schemas, and markdown files in this workspace must be written and persisted exclusively in **English**. Simultaneously, the agent must maintain strict **language mirroring** during live chat dialogues to ensure conversational cohesion.
 
-## Requirements
+---
 
-1. **Exclusively English Notes**:
-   - All note titles, headings, frontmatter metadata (titles, tags, aliases), body content, bullet points, tables, code comments, and quotes must be written in English.
-   - Never write Polish or other non-English text directly into note files (except when documenting specific foreign-language proper nouns or citations where strictly necessary).
+## 1. Core Operating Architecture: Bilingual Interface, Monolingual Vault
 
-2. **User Input Translation & Spoken Audio Handling**:
-   - **Spoken Audio Notes**: Whenever the user submits an audio recording or voice note, the agent must always start its response with a faithful transcription of the spoken audio in the original spoken language (e.g. Polish) per [`audio-transcription.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/audio-transcription.md).
-   - **Translating into Notes**: All user input, notes, quotes, and thoughts provided in Polish (or another language) must be translated into clean, natural, idiomatic English before being incorporated into any vault document.
+To eliminate cognitive friction and maintain publishable epistemic integrity, the agent strictly separates interactive discussion from persisted knowledge storage:
 
-3. **Conversational Consistency & Language Mirroring**:
-   - Chat dialogue must strictly mirror the language used by the user. When the user speaks or writes in Polish, the agent must converse and respond exclusively in Polish. When the user speaks in English, the agent responds in English.
-   - Never switch or mix languages mid-dialogue. Conceptual exploration, Q&A, and brainstorming require cognitive cohesion; language-mixing creates mental friction and degrades the depth of the resulting context.
-   - The English-only mandate applies strictly to persisted workspace notes and documentation files. Keep the conversational exploration 100% aligned with the user's spoken language, then translate and distill the refined concepts into English when creating or updating notes.
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ 1. USER INTERFACE LAYER (CONVERSATIONAL DIALOGUE)           │
+│    Mirror user's language (e.g., 100% Polish or English).   │
+├─────────────────────────────────────────────────────────────┤
+│ 2. TRANSLATION & CONCEPTUAL DISTILLATION PIPELINE           │
+│    Translate user insights into idiomatic, technical English.│
+├─────────────────────────────────────────────────────────────┤
+│ 3. PERSISTED KNOWLEDGE BASE (THE OBSIDIAN VAULT)            │
+│    100% English notes, frontmatter, diagrams, and wikilinks. │
+└─────────────────────────────────────────────────────────────┘
+```
 
-4. **Domain Abstraction (No Emulator or Hardware Leaks)**:
-   - Always abstract low-level details (such as vintage computing, emulators, or CPU opcodes discussed in chat) into universal software engineering principles per [`language-agnostic-architecture.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/language-agnostic-architecture.md).
+---
 
-5. **Vault Cohesion & Reinforcing Established Thinking**:
-   - Actively inspect existing notes across the 5-Layer Stack to maintain conceptual continuity and strengthen the knowledge graph with Obsidian `[[Note Title]]` links.
+## 2. Mandatory Language Protocols
 
-6. **Practitioner Voice & Tone**:
-   - Adhere to [`practitioner-voice-and-tone.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/practitioner-voice-and-tone.md): write from the perspective of an experienced lead engineer and architect using the explanatory standard of an in-depth engineering blog post or technical video deep-dive.
+### 1. Exclusively English Notes
+- All note titles, YAML frontmatter (titles, tags, aliases), section headings, body paragraphs, bullet points, table cells, code comments, and ASCII diagram labels must be written in English.
+- **Never write Polish or non-English text directly into note files**, with the sole exception of proper nouns or official non-English citations where strictly unavoidable.
 
-7. **Verification Tooling**:
-   - Compliance can be verified using the standalone script: `python scripts/check_polish.py --vault`.
+### 2. Spoken Audio Note Handling
+- When the user submits an audio recording or voice note:
+  1. Always lead the response with a faithful, word-for-word transcript in the original spoken language per [`audio-transcription.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/audio-transcription.md).
+  2. Translate user insights, requirements, and mental models into idiomatic English before persisting them into vault notes.
+
+### 3. Conversational Consistency & Language Mirroring
+- **Strict Language Mirroring**: The chat dialogue must strictly mirror the language used by the user:
+  - When the user writes or speaks in Polish, the agent must converse, explain, and debate exclusively in Polish.
+  - When the user writes or speaks in English, the agent responds in English.
+- **Zero Language-Mixing**: Never switch languages or mix languages mid-dialogue. Conceptual brainstorming requires cognitive continuity; arbitrary language switching causes cognitive friction and degrades context depth.
+- The English-only mandate applies strictly to persisted workspace notes and documentation files.
+
+### 4. Universal Domain Abstraction
+- Abstract low-level conversation details (such as vintage computing, emulators, or CPU opcodes discussed in chat) into universal software engineering principles per [`language-agnostic-architecture.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/language-agnostic-architecture.md).
+
+### 5. Automated Verification & Quality Gates
+- Compliance is enforced via the repository scanner:
+  ```bash
+  python scripts/check_polish.py --vault
+  ```
+- Any staged file containing Polish text will fail the automated pre-commit hook.
