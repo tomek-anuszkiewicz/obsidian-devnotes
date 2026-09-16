@@ -346,11 +346,11 @@ Solving that problem requires looking beyond the model to the engineering of the
 
 ## Related Documentation and Architecture Patterns
 
-- [[Building Determinism from Unpredictable Models - Agent Harness Architecture]]: The dual control planes, managing session drift (context rot, sycophancy), the Pyramid of Control, and Generation 3 state-graph orchestration.
+- [[Building Determinism from Unpredictable Models]]: The dual control planes, managing session drift (context rot, sycophancy), the Pyramid of Control, and Generation 3 state-graph orchestration.
 - [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: System architecture, security guardrails, and personal OS workflows for continuous background agent daemons.
 - [[Dynamic Model Routing and Inference Gateways]]: Decoupling the execution harness from specific model endpoints using automated fallbacks and multi-tier routing.
 - [[Agentic Coding Harness and Controlled Development Workflows]]: Self-healing feedback loops, controlled plan-and-approval workflows, and practical harness implementations.
-- [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]: Orchestrating multi-agent, in-repository harnesses via voice and clear rule codification.
+- [[The Conductor Pattern for High-Bandwidth Engineering]]: Orchestrating multi-agent, in-repository harnesses via voice and clear rule codification.
 - [[Agent Deployment and Execution Models]]: Trade-offs across local, cloud, and hybrid deployment runtimes for autonomous agents.
 - [[Multi-Agent Software Development]]: Coordinating specialized, decoupled agent topologies within a shared execution harness.
 - [[Model Access and Execution Infrastructure]]: Managing token budgets, inference latency, provider rate limits, and routing infrastructure.

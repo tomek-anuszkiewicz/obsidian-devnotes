@@ -86,7 +86,7 @@ Unless the formal specification models the entire operating system, network stac
 ### 2. Runtime Resource Consumption
 Formal proofs evaluate abstract states, not runtime overhead:
 - **Hidden Allocations**: A verified functional algorithm might be mathematically elegant while allocating millions of short-lived objects on the heap, triggering brutal garbage collection pauses and stop-the-world spikes.
-- **Cache and Locality Degradation**: As explored in [[AI May Make Aggressive Code Optimization Economically Viable]], an algorithm proven correct in mathematical terms might thrash CPU caches (L1/L2 misses) or fragment virtual memory. An unverified, flat imperative loop with array-backed memory locality will routinely outperform it by an order of magnitude.
+- **Cache and Locality Degradation**: As explored in [[The Economics of Aggressive Code Optimization with AI]], an algorithm proven correct in mathematical terms might thrash CPU caches (L1/L2 misses) or fragment virtual memory. An unverified, flat imperative loop with array-backed memory locality will routinely outperform it by an order of magnitude.
 - **Worst-Case Latency**: A proof may verify that a function terminates, but reveal nothing about hidden $O(N^2)$ scaling on skewed, real-world production inputs.
 
 ### 3. Concurrency and Memory Model Hazards
@@ -204,8 +204,8 @@ Static verification cannot anticipate dynamic operational conditions. High-relia
 
 - **[[Testing in the Model, Agent, LLM Era]]**: The canonical verification hub establishing deterministic test oracles and testing boundaries in agent workflows.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specs alongside automated oracles to prevent specification decay.
-- **[[AI May Make Aggressive Code Optimization Economically Viable]]**: Why mathematically correct algorithms can fail if they disregard execution efficiency and memory locality.
+- **[[The Economics of Aggressive Code Optimization with AI]]**: Why mathematically correct algorithms can fail if they disregard execution efficiency and memory locality.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Using shadow execution and differential testing to safely rewrite critical system components.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: How runtime telemetry and tracing serve as the ground truth when static checks end.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How defining systems through explicit exclusions guards against unmodeled failure modes.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Designing transparent, testable architectures that are easy for both agents and automated verifiers to evaluate.
+- **[[Optimizing Software Engineering and Code for Agents]]**: Designing transparent, testable architectures that are easy for both agents and automated verifiers to evaluate.

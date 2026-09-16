@@ -276,5 +276,5 @@ Just as engineering teams select different database engines, caching tiers, and 
 - **[[Local vs Cloud and Hybrid Model Execution]]**: Trade-offs between local unified memory hardware, self-hosted clusters, and cloud inference APIs.
 - **[[Agent Deployment and Execution Models]]**: Isolation models, state durability, and operational architectures for scaling agent runtimes.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Building deterministic execution harnesses and verification loops around LLM code generation.
-- **[[Introduction to Workflow Orchestration]]**: Managing long-running durable task graphs, retries, and checkpointing across distributed services.
+- **[[Workflow Orchestration in Agentic Systems]]**: Managing long-running durable task graphs, retries, and checkpointing across distributed services.
 - **[[Testing in the Model, Agent, LLM Era]]**: Test strategies, evaluation frameworks, and deterministic oracles for validating non-deterministic model outputs.

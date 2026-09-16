@@ -200,7 +200,7 @@ This loop answers the common identity question: *"Did I design this architecture
 
 ## Knowledge Graph References
 
-*   **[[Competitive advantage in the age of commodity AI]]**: Why structuring high-signal, non-consensus queries is the primary defensible moat when raw code generation is ubiquitous.
+*   **[[Competitive Advantage in the Age of Commodity AI]]**: Why structuring high-signal, non-consensus queries is the primary defensible moat when raw code generation is ubiquitous.
 *   **[[AI Changes the Role and Training of Software Engineers]]**: The shift of the software engineer from typing boilerplate to acting as an architectural catalyst, including the Whiteboard Defense Test.
 *   **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Managing the cognitive overhead of continuous code review, authorship ambiguity, and verification fatigue.
 *   **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: The mechanics behind why models default to the statistical middle of their training data, and how targeted constraints prevent low-variance outputs.

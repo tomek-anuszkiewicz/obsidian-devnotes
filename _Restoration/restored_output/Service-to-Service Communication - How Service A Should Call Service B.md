@@ -105,9 +105,9 @@ To keep services decoupled and prevent shared libraries from turning into unmain
 ### The Shared Platform Should Own
 
 - Standard HTTP client factory instrumentation and connection lifecycle management.
-- Distributed trace-context propagation (such as W3C `traceparent` headers via [[OpenTelemetry]]).
+- Distributed trace-context propagation (such as W3C `traceparent` headers via [[OpenTelemetry as the Runtime Truth for Autonomous Agents]]).
 - Correlation identifiers and shared telemetry enrichment.
-- Standard authentication and authorization handlers (workload identity, mTLS, token acquisition, and token caching as detailed in [[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]).
+- Standard authentication and authorization handlers (workload identity, mTLS, token acquisition, and token caching as detailed in [[Service-to-Service Authentication in Distributed Runtimes]]).
 - Guidelines for [[Propagating User Context Between Services|propagating user context]] (tenant IDs, actor claims, audit context).
 - PII-safe logging rules and error envelope formatting (e.g., RFC 7807 Problem Details).
 - Base resilience mechanics (standardized Polly policies, retry backoffs, connection timeouts).
@@ -1303,9 +1303,9 @@ To summarize the relationship in three sentences:
 
 ## Related Notes
 
-- **[[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]**: Workload identity, token exchange, and mutual TLS for inter-service communication.
+- **[[Service-to-Service Authentication in Distributed Runtimes]]**: Workload identity, token exchange, and mutual TLS for inter-service communication.
 - **[[Service vs User Authorization Models]]**: Distinguishing caller identity from acting-on-behalf-of user delegation.
 - **[[Propagating User Context Between Services]]**: Propagating trace context, tenant IDs, and user identity across synchronous calls.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Designing remote-capable contracts that can execute locally or over HTTP/gRPC.
 - **[[Designing APIs for LLM-Generated Integration Code]]**: Designing strongly typed API contracts that automated tools and agents can reliably consume.
-- **[[OpenTelemetry]]**: Instrumenting inter-service requests with standardized W3C trace context headers.
+- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: Instrumenting inter-service requests with standardized W3C trace context headers.

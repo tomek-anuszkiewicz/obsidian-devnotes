@@ -21,10 +21,10 @@ Generative models and autonomous agents are beginning to decouple that stack. Th
 - durable systems of record;
 - business rules and permissions;
 - analytical and operational capabilities;
-- [[Introduction to Workflow Orchestration|workflow orchestration]];
+- [[Workflow Orchestration in Agentic Systems|workflow orchestration]];
 - user interfaces generated on the fly for a specific task.
 
-AI reduces the defensibility of large, rigid applications without eliminating the underlying systems that store data, enforce policy, and commit transactions. This shift opens the door for [[AI May Create a New Market for Small, Custom Business Software|small custom business software]] and accelerates the move toward [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]]. 
+AI reduces the defensibility of large, rigid applications without eliminating the underlying systems that store data, enforce policy, and commit transactions. This shift opens the door for [[A New Market for Small, Custom Business Software|small custom business software]] and accelerates the move toward [[Shifting from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]]. 
 
 The future is less about tearing out every enterprise platform and more about fundamentally changing how those platforms are composed and operated, illustrating why [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week|static software is no longer a defensive moat]].
 
@@ -705,8 +705,8 @@ Agents will assemble those capabilities into customized workflows on demand. The
 
 ## Relationship to the Knowledge Graph
 
-- **[[AI May Create a New Market for Small, Custom Business Software]]**: How cheap agentic development makes bespoke, right-sized applications economical against monolithic platforms.
-- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Exposing core platform capabilities as composable primitives that agents can orchestrate into custom flows.
+- **[[A New Market for Small, Custom Business Software]]**: How cheap agentic development makes bespoke, right-sized applications economical against monolithic platforms.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Exposing core platform capabilities as composable primitives that agents can orchestrate into custom flows.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing decoupled enterprise capabilities directly to agents via standard protocols.
 - **[[Designing APIs for LLM-Generated Integration Code]]**: API design guidelines that allow agents to write stable, reliable integration glue between headless systems.
 - **[[From AI-Assisted Teams to Cross-System Feature Ownership]]**: How unbundling enterprise tools allows vertical engineering teams to manage systems without administrative gatekeeping.

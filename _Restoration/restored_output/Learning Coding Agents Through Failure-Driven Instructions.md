@@ -532,6 +532,6 @@ Through this disciplined dual-loop architecture, an organization systematically 
 - [[Constraint Saturation and Rule Oscillation in Coding Agents]] — Managing prompt density and avoiding failure modes when models are given too many conflicting rules.
 - [[Negative Knowledge and Explicit Architectural Dissents]] — Documenting and retrieving rejected approaches to keep agents on approved paths.
 - [[How LLM Systems Build Context]] — Context window management, working memory constraints, and token optimization strategies.
-- [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]] — Operational strategies for determining whether to fix code locally or update the specification.
-- [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]] — Leveraging secondary agent workflows to catch nuanced architectural violations before human review.
+- [[Correcting AI Code - Patch, Regenerate, or Respecify]] — Operational strategies for determining whether to fix code locally or update the specification.
+- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]] — Leveraging secondary agent workflows to catch nuanced architectural violations before human review.
 - [[Testing in the Model, Agent, LLM Era]] — Structuring test suites to serve as high-signal, automated feedback loops for generative models.

@@ -460,5 +460,5 @@ Early AI readiness is not about picking the winning model today. It is about str
 - [[Agentic Coding Harness and Controlled Development Workflows]]: Designing isolated sandbox environments, deterministic test loops, and rollback harnesses for autonomous agents.
 - [[How AI Changes Prototyping and the Path from PoC to Production]]: Moving beyond brittle exploratory scripts to hardened, testable production workflows.
 - [[Agent Adoption as a Learning Flywheel]]: Structuring development teams to extract continuous operational intelligence from agent execution failures.
-- [[Competitive advantage in the age of commodity AI]]: Why defensibility shifts to proprietary contextual data and delivery infrastructure when foundation models are available as utilities.
+- [[Competitive Advantage in the Age of Commodity AI]]: Why defensibility shifts to proprietary contextual data and delivery infrastructure when foundation models are available as utilities.
 - [[Introduction to RAG]]: The architectural patterns, indexing pipelines, and retrieval mechanisms required to ground foundation models in enterprise data.

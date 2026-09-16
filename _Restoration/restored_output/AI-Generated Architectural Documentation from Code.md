@@ -737,7 +737,7 @@ Each layer validates, constrains, and enriches the others. The end state is not 
 - [[In-Flight Documentation as the Primary Framework for Coding Agents]]: Generating concise architectural blueprints concurrently during code authoring to guide future agents.
 - [[Tests Are for Verification, Not Architectural Navigation]]: Why deterministic test suites verify functionality but cannot guide agents on architectural boundaries.
 - [[Reviewing AI-Generated Code]]: How senior engineers pivot from line-by-line syntax checks to reviewing structural invariants and architectural diffs.
-- [[Comments May Become More Valuable in AI-Generated Code]]: Why non-derivable domain intent recorded in code comments feeds directly into generated architectural documentation.
+- [[The Increasing Value of Comments in AI-Generated Code]]: Why non-derivable domain intent recorded in code comments feeds directly into generated architectural documentation.
 - [[LLM Agents and Institutional Memory]]: Preserving institutional engineering knowledge and system rationale across team transitions.
-- [[Software Engineering May Shift Toward Code Optimized for Agents]]: How codebases adapt their layout and boundaries to make semantic extraction and automated maintenance seamless.
+- [[Optimizing Software Engineering and Code for Agents]]: How codebases adapt their layout and boundaries to make semantic extraction and automated maintenance seamless.
 - [[Testing in the Model, Agent, LLM Era]]: The foundational verification layer that ensures reconstructed code and implementations adhere to specifications.

@@ -344,4 +344,4 @@ Agents change the economics of software quality. By making thoroughness cheaper 
 - [[Testing in the Model, Agent, LLM Era]] — How methodical agents excel at generating characterization test suites and mapping combinatorial state spaces.
 - [[AI Changes the Economics of Technical Debt]] — How lowering the cost of mechanical refactoring shifts the balance on long-neglected codebase maintenance.
 - [[Refactoring Legacy Systems with AI Agents]] — Practical workflows for safe, step-by-step extraction of complex domain logic from legacy monolithic architectures.
-- [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]] — Using persistent programmatic checks to enforce structural invariants during pull request reviews.
+- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]] — Using persistent programmatic checks to enforce structural invariants during pull request reviews.

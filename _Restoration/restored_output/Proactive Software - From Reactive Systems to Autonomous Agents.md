@@ -589,6 +589,6 @@ Software is shifting from a passive tool operated by humans into an active parti
 
 - [[Designing APIs for LLM-Generated Integration Code]] – Principles for building deterministic, machine-readable interfaces that agents can safely inspect and execute.
 - [[How AI Agents May Control Computers, Applications, and the Web]] – Architectural execution layers for computer-use and browser-based agent automation.
-- [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]] – Context modeling and authorization boundaries for agents acting on behalf of individual operators.
+- [[Personal Digital Models as the Foundation of Agent Ecosystems]] – Context modeling and authorization boundaries for agents acting on behalf of individual operators.
 - [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] – Exposing structured web application capabilities directly to autonomous background loops.
 - [[Networked Automation Loops and Software Output Without AGI]] – How decoupled, proactive automation loops coordinate to handle complex engineering workflows without general intelligence.

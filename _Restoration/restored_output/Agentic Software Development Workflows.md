@@ -788,7 +788,7 @@ The most important architectural responsibility in agentic software engineering 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical mechanics for building plan-and-approval harnesses and self-healing test loops.
 - **[[Developing Features with AI Coding Agents]]**: Tactical patterns for vertical-slice delivery and managing frozen business test contracts.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic test suites as the primary verification oracle for agentic execution.
-- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]**: Using multi-agent review to enforce subtle architectural and organizational invariants.
+- **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]**: Using multi-agent review to enforce subtle architectural and organizational invariants.
 - **[[LLMs as a Code Review Team]]**: Implementing adversarial multi-agent review pipelines to surface regressions before merge.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Identifying when to lean into unconstrained vibe coding for disposable spikes versus when to switch to strict engineering harnesses.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specifications and architecture markdown files to prevent context degradation across long sessions.

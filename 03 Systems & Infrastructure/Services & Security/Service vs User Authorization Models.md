@@ -228,6 +228,6 @@ Capturing both `technicalActor` and `initiatedByUserId` allows security teams to
 
 * **[[Propagating User Context Between Services]]**: Wire protocols, HTTP header propagation (`X-Correlation-ID`, baggage), and context extraction across synchronous network hops.
 * **[[User Context in Asynchronous Systems]]**: Managing identity, token lifetimes, and claim propagation across message queues, pub/sub topics, and background workers.
-* **[[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]**: Practical implementation of machine identities using mTLS, SPIFFE/SPIRE, and cloud workload identity credentials.
+* **[[Service-to-Service Authentication in Distributed Runtimes]]**: Practical implementation of machine identities using mTLS, SPIFFE/SPIRE, and cloud workload identity credentials.
 * **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Embedding standard context extraction, token validation, and audit emission into shared service templates.
 * **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enforcing dual-actor authorization boundaries when autonomous AI agents invoke tools and execute actions on behalf of authenticated users.

@@ -315,6 +315,6 @@ Investing in frontier models and AI developer tooling while leaving an archaic d
 - **[[Agent Advantage - Relentless, Methodical Work]]**: Explores the operational profile of AI agents as methodical task executors and how their value is constrained by the organizational system surrounding them.
 - **[[Early AI Adoption as Organizational Readiness]]**: Examines the operational and cultural changes engineering teams must make to absorb automated development workflows.
 - **[[Testing in the Model, Agent, LLM Era]]**: Details the automated verification strategies, integration tests, and runtime harnesses required to validate probabilistic code at scale.
-- **[[Competitive advantage in the age of commodity AI]]**: Analyzes why access to models is a commodity, while proprietary delivery velocity and tight reality feedback loops form the true competitive moat.
+- **[[Competitive Advantage in the Age of Commodity AI]]**: Analyzes why access to models is a commodity, while proprietary delivery velocity and tight reality feedback loops form the true competitive moat.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Outlines the mechanical harness architecture and verification gates necessary to keep agent-generated changes stable.
 - **[[AI Changes the Economics of Technical Debt]]**: Explains how unmerged code inventory, rapid branch divergence, and automated code generation accelerate technical debt if not continuously integrated.

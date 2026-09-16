@@ -248,7 +248,7 @@ By anchoring high-volume, continuous, and privacy-sensitive execution locally wh
 
 - [[Agent Deployment and Execution Models]]: The structural separation between inference runtimes, agent orchestration loops, and sandboxed tool execution environments.
 - [[Agentic Coding Harness and Controlled Development Workflows]]: Setting up deterministic guardrails and managing blast radius boundaries for autonomous local execution.
-- [[Competitive advantage in the age of commodity AI]]: Why defensibility shifts away from interchangeable foundation models toward proprietary operational state and tight feedback loops.
+- [[Competitive Advantage in the Age of Commodity AI]]: Why defensibility shifts away from interchangeable foundation models toward proprietary operational state and tight feedback loops.
 - [[Finding Original Knowledge in an Internet Full of Repetition]]: Architecting agent ingestion pipelines that strip out synthetic internet noise to focus on high-entropy technical signal.
 - [[The Most Valuable Software Training Data May Be Private]]: Why proprietary system execution traces, incident write-ups, and private git histories are the most valuable assets for training specialized engineering models.
 - [[The 5-Layer System Stack for Agentic Software Engineering]]: The end-to-end systems architecture spanning physical silicon, local inference servers, harness controls, and developer interaction planes.

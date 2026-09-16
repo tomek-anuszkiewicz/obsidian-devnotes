@@ -34,7 +34,7 @@ business requirement
 → final implementation
 ```
 
-This is not merely syntax. It is an end-to-end trace of **how an engineering team reasoned through constraints toward a stable solution**. In an environment where foundation models are commoditizing code generation, [[Competitive advantage in the age of commodity AI|competitive advantage depends on private telemetry and reasoning traces]]. Inside corporate firewalls lies the [[LLM Agents and Institutional Memory|institutional memory]] that public repositories discard. Because [[What Should Organizations Preserve from AI-Assisted Development|organizations must deliberately preserve decision rationales]], these private histories provide the direct, [[Fresh Contact With Reality May Become the Training Bottleneck|fresh contact with reality]] that synthetic training data lacks.
+This is not merely syntax. It is an end-to-end trace of **how an engineering team reasoned through constraints toward a stable solution**. In an environment where foundation models are commoditizing code generation, [[Competitive Advantage in the Age of Commodity AI|competitive advantage depends on private telemetry and reasoning traces]]. Inside corporate firewalls lies the [[LLM Agents and Institutional Memory|institutional memory]] that public repositories discard. Because [[What Should Organizations Preserve from AI-Assisted Development|organizations must deliberately preserve decision rationales]], these private histories provide the direct, [[Fresh Contact With Reality May Become the Training Bottleneck|fresh contact with reality]] that synthetic training data lacks.
 
 ---
 
@@ -357,7 +357,7 @@ The final tier carries the highest engineering value, and it is the hardest to a
 ## Related Concepts
 
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: Why private empirical engineering logs outvalue degraded, synthetic public web content.
-- **[[Competitive advantage in the age of commodity AI]]**: How proprietary corporate code repositories and execution traces form defensible competitive moats.
+- **[[Competitive Advantage in the Age of Commodity AI]]**: How proprietary corporate code repositories and execution traces form defensible competitive moats.
 - **[[LLM Agents and Institutional Memory]]**: Capturing internal PR debates, incident post-mortems, and architectural decision records into actionable agent memory.
 - **[[Agent Adoption as a Learning Flywheel]]**: Transforming daily operational engineering traces into proprietary fine-tuning pipelines.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: The retreat of unique, high-signal engineering truth behind enterprise firewalls.

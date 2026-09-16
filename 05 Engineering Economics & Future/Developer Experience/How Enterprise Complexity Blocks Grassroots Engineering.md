@@ -230,4 +230,4 @@ During interviews or technical advisory sessions, ask leadership about their rel
 * [[Unbundling of Enterprise Software]]: The macroeconomic and architectural forces breaking down bloated enterprise platforms in favor of lean, specialized applications.
 * [[Refactoring Legacy Systems with AI Agents]]: Hands-on patterns for using agentic harnesses, differential testing, and golden-master suites to safely dismantle enterprise monoliths.
 * [[AI Changes the Economics of Technical Debt]]: How high-throughput AI verification shifts the return on investment when tackling legacy tech debt and unblocking neglected systems.
-* [[Competitive advantage in the age of commodity AI]]: Why real engineering leverage is shifting away from massive team headcounts and toward small, autonomous, systems-focused architects.
+* [[Competitive Advantage in the Age of Commodity AI]]: Why real engineering leverage is shifting away from massive team headcounts and toward small, autonomous, systems-focused architects.

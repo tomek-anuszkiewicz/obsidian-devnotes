@@ -148,7 +148,7 @@ The agent targets critical operational questions directly:
 
 ### Diagnostic Sandboxing and Safety Boundaries
 To use agents safely in production diagnostics, you must establish strict architectural boundaries:
-- **Read-Only Telemetry Bridges**: The agent should query Prometheus, inspect [[OpenTelemetry]] traces, query Elasticsearch, and read GitHub commit histories, but it must lack permissions to mutate production infrastructure directly.
+- **Read-Only Telemetry Bridges**: The agent should query Prometheus, inspect [[OpenTelemetry as the Runtime Truth for Autonomous Agents]] traces, query Elasticsearch, and read GitHub commit histories, but it must lack permissions to mutate production infrastructure directly.
 - **Bounded Remediation Proposals**: When an agent suggests an action (such as rolling back a deployment, cycling a connection pool, or flipping a flag), that remediation must pass through human-in-the-loop review or an automated, verified deployment pipeline with pre-configured rollback capabilities.
 
 ---
@@ -309,7 +309,7 @@ As infrastructure, applications, observability, and documentation become fully d
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing direct semantic toolkits and structured actions to in-browser agents rather than relying on brittle DOM scraping.
 - **[[How AI Agents May Control Computers, Applications, and the Web]]**: How agents interact with operating systems, graphical interfaces, and external browser environments.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing the runtime harnesses, testing loops, and deterministic sandboxes necessary for reliable agent execution.
-- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Moving beyond rigid, hardcoded enterprise UIs toward composable software primitives orchestrated by autonomous agents.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving beyond rigid, hardcoded enterprise UIs toward composable software primitives orchestrated by autonomous agents.
 - **[[LLM Agents and Institutional Memory]]**: Indexing historical incident reviews, ticketing workflows, and design discussions to provide deep architectural context during live incidents.
-- **[[OpenTelemetry]]**: The open telemetry standard that provides the distributed traces, metrics, and logs required for agentic root-cause analysis.
+- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: The open telemetry standard that provides the distributed traces, metrics, and logs required for agentic root-cause analysis.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: Integrating LLM-based semantic reasoning directly into live production paths, triage pipelines, and security analysis.

@@ -171,9 +171,9 @@ This economic reality requires engineers and architects to rethink how they eval
 
 ## Knowledge Graph Connections
 
-* **[[Competitive advantage in the age of commodity AI]]**: Explores how defensibility moves away from routine code generation toward asking the right domain questions, controlling distribution channels, and owning proprietary data assets.
+* **[[Competitive Advantage in the Age of Commodity AI]]**: Explores how defensibility moves away from routine code generation toward asking the right domain questions, controlling distribution channels, and owning proprietary data assets.
 * **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: Explains why real-world empirical feedback loops consistently outperform synthetic models and clones trapped in the rearview mirror.
 * **[[The Most Valuable Software Training Data May Be Private]]**: Details why private transactional state, enterprise operational histories, and domain-specific edge cases remain inaccessible to public scraping agents.
-* **[[AI May Create a New Market for Small, Custom Business Software]]**: Analyzes how collapsing implementation costs make bespoke, hyper-specialized software solutions economically viable for niche domains.
-* **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Covers the migration away from static, easily cloned UI features toward flexible, low-level platform primitives designed for agentic interaction.
+* **[[A New Market for Small, Custom Business Software]]**: Analyzes how collapsing implementation costs make bespoke, hyper-specialized software solutions economically viable for niche domains.
+* **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Covers the migration away from static, easily cloned UI features toward flexible, low-level platform primitives designed for agentic interaction.
 * **[[AI Changes the Economics of Software Libraries]]**: Examines how low-cost code generation alters the classic engineering trade-offs between building in-house, buying third-party software, and synthesizing bespoke utility libraries.

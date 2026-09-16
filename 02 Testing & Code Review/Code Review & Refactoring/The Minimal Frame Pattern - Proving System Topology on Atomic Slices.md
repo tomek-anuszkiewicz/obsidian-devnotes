@@ -375,7 +375,7 @@ The Minimal Frame Pattern bridges the gap between high-level architectural desig
 
 - **[[Developing Features with AI Coding Agents]]**: How vertical slices apply to enterprise business domains, and how they contrast with minimal operational frames.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Using disposable exploratory probes to prove the minimal frame without taking on permanent prototype debt.
-- **[[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]**: The working habits of the architect as constraint setter and sparring partner rather than a mechanical typist.
+- **[[The Conductor Pattern for High-Bandwidth Engineering]]**: The working habits of the architect as constraint setter and sparring partner rather than a mechanical typist.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using external ground-truth test oracles to anchor minimal frames to real-world system behavior.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The runtime infrastructure needed to enforce guardrails and self-healing agent loops.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Capturing specifications during the minimal frame proof rather than trying to draft perfect docs upfront.

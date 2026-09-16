@@ -597,5 +597,5 @@ When used properly, LLMs make it remarkably cheap to explore design options, eva
 - [[Designing Software for AI Agents]]: Architectural principles that make codebases easy for autonomous agents to navigate, modify, and test.
 - [[AI, Averaged Decisions, and Premature Convergence on Solutions]]: Why LLMs naturally default to conventional, averaged designs and how to force divergent thinking.
 - [[How AI Changes Prototyping and the Path from PoC to Production]]: Using rapid disposable spikes to test architectural hypotheses before committing to production builds.
-- [[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]: Deciding when to fix code locally versus revisiting foundational architectural decisions.
+- [[Correcting AI Code - Patch, Regenerate, or Respecify]]: Deciding when to fix code locally versus revisiting foundational architectural decisions.
 - [[Testing in the Model, Agent, LLM Era]]: Establishing automated, deterministic test harnesses to verify architectural invariants.

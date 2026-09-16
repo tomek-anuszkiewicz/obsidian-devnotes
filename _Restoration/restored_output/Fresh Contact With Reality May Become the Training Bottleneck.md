@@ -96,7 +96,7 @@ Human activity produces this information continuously because human practitioner
 
 ## Deliberately Commissioning New Training Experiences
 
-Rather than passively waiting for original engineering work to leak onto public blogs or open-source repositories—a supply that is dwindling as [[AI May Break the Old Economic Model of the Open Web|the open web model erodes]]—model developers may deliberately commission fresh human problem-solving experience strictly for dataset curation.
+Rather than passively waiting for original engineering work to leak onto public blogs or open-source repositories—a supply that is dwindling as [[How AI Breaks the Economic Model of the Open Web|the open web model erodes]]—model developers may deliberately commission fresh human problem-solving experience strictly for dataset curation.
 
 A controlled data-generation experiment looks like this:
 

@@ -193,6 +193,6 @@ The major reliability breakthroughs in autonomous systems are coming just as muc
 ## Relationship to the Knowledge Graph
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical implementations of this orchestration loop as an executable state machine with deterministic gates and feedback loops.
-- **[[LLM Coding Agents Reliability]]**: An analysis of where agent loops fail in production—specifically around context drift, tool misuse, and compounding errors across multi-step execution.
+- **[[Reliability of LLM Coding Agents]]**: An analysis of where agent loops fail in production—specifically around context drift, tool misuse, and compounding errors across multi-step execution.
 - **[[Introduction to RAG]]**: Core retrieval architectures and indexing patterns that power the context planning and retrieval stages.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: How to expose clean, structured tool interfaces directly from web environments to ground agent actions reliably.

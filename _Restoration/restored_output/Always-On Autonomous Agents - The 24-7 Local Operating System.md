@@ -228,7 +228,7 @@ By allowing the agent to handle the heavy lifting of data ingestion, correlation
 
 - [[Local vs Cloud and Hybrid Model Execution]]: Architectural breakdown of unified memory footprints and the operational economics supporting continuous local inference.
 - [[Agentic Coding Harness and Controlled Development Workflows]]: Sandboxing, tool-scoping, and blast-radius management for coding agent runtimes.
-- [[LLM Coding Agents Reliability]]: Real-world failure modes, prompt injection vectors, and engineering techniques for dealing with stochastic model execution.
+- [[Reliability of LLM Coding Agents]]: Real-world failure modes, prompt injection vectors, and engineering techniques for dealing with stochastic model execution.
 - [[Finding Original Knowledge in an Internet Full of Repetition]]: Designing semantic delta filters to sift high-signal technical content out of low-effort web noise.
 - [[Agent Deployment and Execution Models]]: Decoupling your system into three distinct planes: Inference, Orchestrator State, and Tool Execution environments.
 - [[The AI Agent as a Personal Behavioral and Communication Coach]]: Leveraging persistent, background loops to refine personal communications and operational efficiency.

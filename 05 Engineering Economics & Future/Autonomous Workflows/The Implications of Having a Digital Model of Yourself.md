@@ -14,7 +14,7 @@ aliases:
 
 # The Implications of Having a Digital Model of Yourself
 
-A sufficiently rich personal AI memory will eventually become something much more significant than a searchable archive of our lives. Over time, it becomes the operational foundation for a [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal agent ecosystem]]—an active, predictive digital model of the person.
+A sufficiently rich personal AI memory will eventually become something much more significant than a searchable archive of our lives. Over time, it becomes the operational foundation for a [[Personal Digital Models as the Foundation of Agent Ecosystems|personal agent ecosystem]]—an active, predictive digital model of the person.
 
 Such a model continuously integrates telemetry across daily life:
 
@@ -118,7 +118,7 @@ Human autobiographical memory is inherently flawed. It is:
 - rewritten by current beliefs,
 - heavily prone to rationalization.
 
-A digital model running over decades observes tens of thousands of real-world interactions without those cognitive distortions. It functions as a **statistical mirror**, enabling systems for [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge|diffing and reconciling external knowledge against personal reality]].
+A digital model running over decades observes tens of thousands of real-world interactions without those cognitive distortions. It functions as a **statistical mirror**, enabling systems for [[How Personal AI Models Reconcile External Knowledge|diffing and reconciling external knowledge against personal reality]].
 
 Consider the gap between self-perception and empirical telemetry:
 
@@ -1024,11 +1024,11 @@ The dividing line does not come down to the model's intelligence. It comes down 
 ## Relationship to the Knowledge Graph
 
 - **[[The AI Agent as a Personal Behavioral and Communication Coach]]**: Using personal conversational telemetry to construct an objective feedback loop for deliberate practice.
-- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]**: Architectural implementation and context retrieval patterns for personal digital replicas.
+- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]**: Architectural implementation and context retrieval patterns for personal digital replicas.
 - **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Granting personal agent models autonomous agency to negotiate and transact on behalf of their users.
 - **[[The Most Valuable Software Training Data May Be Private]]**: The sensitive privacy, security, and IP governance questions surrounding personal operational histories.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Enabling personal agent models to interact with authenticated web services via standardized tool contracts.
 - **[[How Targeted Prompts Steer Model Solution Spaces]]**: How deep interaction prompts elicit individualized cognitive models from foundation models.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: How personal digital models act as cognitive filters when encountering external knowledge bases.
+- **[[How Personal AI Models Reconcile External Knowledge]]**: How personal digital models act as cognitive filters when encountering external knowledge bases.
 - **[[AI Era Software Engineering Recruitment]]**: How longitudinal personal performance models upend conventional resume screening and interview evaluations.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Navigating professional identity and operational agency when agents handle core execution.

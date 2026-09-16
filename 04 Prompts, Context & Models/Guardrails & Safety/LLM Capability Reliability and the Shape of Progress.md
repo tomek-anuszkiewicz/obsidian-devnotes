@@ -418,16 +418,16 @@ The model provides probabilistic reasoning and code generation. The **[[Agentic 
 
 ## Related Notes
 
-- **[[LLM Coding Agents Reliability]]**: Practical failure modes, soft hallucinations, and architectural recovery paths for autonomous coding agents.
+- **[[Reliability of LLM Coding Agents]]**: Practical failure modes, soft hallucinations, and architectural recovery paths for autonomous coding agents.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing deterministic control environments, test harnesses, and execution sandboxes for agents.
 - **[[Testing in the Model, Agent, LLM Era]]**: Adapting testing strategies, mutation testing, and deterministic verification for non-deterministic model outputs.
-- **[[Subtle Hallucinations in LLM-Assisted Programming]]**: Identifying semantic deceits, incorrect library parameters, and plausible bugs in generated code.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Identifying semantic deceits, incorrect library parameters, and plausible bugs in generated code.
 - **[[How Reasoning Models Explore and Evaluate Solutions]]**: Test-time compute, Monte Carlo tree search, and verification heuristics in frontier reasoning architectures.
-- **[[Designing APIs for LLM-Generated Code]]**: Structuring internal libraries and interfaces to reduce agent error rates through strict type safety and clear contracts.
+- **[[Designing APIs for LLM-Generated Integration Code]]**: Structuring internal libraries and interfaces to reduce agent error rates through strict type safety and clear contracts.
 - **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: How synthetic execution data, RL environments, and self-correction loops train frontier models.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why raw model capability cannot translate to organizational throughput without mature CI/CD and verification pipelines.
 - **[[LLM Agents and Institutional Memory]]**: Preserving architectural intent, operational context, and technical decisions across extended agent sessions.
-- **[[Evaluating Coding Agents]]**: Designing contamination-resistant benchmarks, regression suites, and realistic testbeds for coding agents.
+- **[[Exploring Agent Harnesses]]**: Designing contamination-resistant benchmarks, regression suites, and realistic testbeds for coding agents.
 
 ---
 

@@ -221,7 +221,7 @@ Those commits document the agent's internal trial-and-error cycle, not the archi
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How unconstrained code generation without disciplined boundaries accelerates technical debt.
 - **[[AI Changes the Economics of Technical Debt]]**: How reducing the generative cost of rewrites shifts the trade-offs of modernizing legacy systems.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: How capturing explicit architectural rejections prevents agents from reintroducing discarded legacy patterns.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Deciding when to patch legacy components versus when to tear them down and regenerate.
+- **[[Correcting AI Code - Patch, Regenerate, or Respecify]]**: Deciding when to patch legacy components versus when to tear them down and regenerate.
 - **[[Designing Software for AI Agents]]**: Target architectural patterns (focused files, explicit boundaries) that make modernized systems easy for agents to maintain.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: How automated refactoring shifts engineering effort from manual maintenance to active system design.
 - **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Understanding why agents anchor to existing code patterns and defend messy intermediate architectures.

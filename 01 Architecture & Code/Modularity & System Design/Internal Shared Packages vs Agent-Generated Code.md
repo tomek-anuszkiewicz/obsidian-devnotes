@@ -199,7 +199,7 @@ Run through these questions before spinning up a new internal repository and pac
 - **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Designing clean, composable internal libraries that avoid hijacking application startup.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Providing platform infrastructure components while keeping application code explicit and transparent.
 - **[[AI Changes the Economics of Software Libraries]]**: How near-zero generation costs alter the trade-offs between third-party dependencies and local code.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why heavy reflection and magic framework abstractions make code harder for agents to navigate.
+- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: Why heavy reflection and magic framework abstractions make code harder for agents to navigate.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Why localized code duplication can provide a safer operational blast radius than shared package coupling.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How application architectures adapt when coding agents write and maintain the implementations.
+- **[[Optimizing Software Engineering and Code for Agents]]**: How application architectures adapt when coding agents write and maintain the implementations.
 - **[[Testing in the Model, Agent, LLM Era]]**: Using automated conformance test suites as architectural guardrails for agent-generated code.

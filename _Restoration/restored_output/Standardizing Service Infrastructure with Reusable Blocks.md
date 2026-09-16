@@ -82,7 +82,7 @@ This creates a legitimate need for standardization. The core architectural quest
 Standardization initiatives often stall because two distinct engineering problems get conflated into one:
 
 ### 1. Repeated Implementation (Code Reuse)
-Teams write similar boilerplate across repositories: setting up logging sinks, configuring [[OpenTelemetry]] pipelines, establishing HTTP client factories, wiring health checks, configuring database connection strings, binding queue consumers, and standardizing exception-handling middleware. This duplication leads to divergent implementations and wasted effort.
+Teams write similar boilerplate across repositories: setting up logging sinks, configuring [[OpenTelemetry as the Runtime Truth for Autonomous Agents]] pipelines, establishing HTTP client factories, wiring health checks, configuring database connection strings, binding queue consumers, and standardizing exception-handling middleware. This duplication leads to divergent implementations and wasted effort.
 
 ### 2. Required Operational Consistency (Platform Conformance)
 The organization requires guarantees that every deployed service functions correctly as a node in the platform. Infrastructure operators need logs with uniform fields, traces that traverse network hops without losing parent context, metric names and labels that match centralized dashboards, predictable health-check status codes, and uniform telemetry metadata indicating environment, region, and commit SHA.
@@ -771,4 +771,4 @@ Build a paved road rather than a walled garden. Make the safe, standard path tra
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing shared package dependencies against localized, agent-generated code.
 - **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Standardizing communication clients while letting applications own their dependencies.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Applying standardized composition patterns across modular monolith architectures.
-- **[[OpenTelemetry]]**: The vendor-neutral observability standard for traces, metrics, and logs across distributed systems.
+- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: The vendor-neutral observability standard for traces, metrics, and logs across distributed systems.

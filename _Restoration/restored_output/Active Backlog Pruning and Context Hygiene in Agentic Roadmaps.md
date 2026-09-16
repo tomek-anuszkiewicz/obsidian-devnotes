@@ -268,7 +268,7 @@ Active Backlog Pruning is a core discipline of context engineering. In agentic d
 ### Related Notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The broader harness framework detailing file responsibilities, state transitions, and execution loops.
-- **[[The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction]]**: The companion pattern detailing where pruned historical narratives are preserved and how they are accessed without prompt bloat.
+- **[[The Living Engineering Chronicle and Context Compaction]]**: The companion pattern detailing where pruned historical narratives are preserved and how they are accessed without prompt bloat.
 - **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: How decomposed roadmap steps are validated on atomic operational slices before scale-out.
 - **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: Explains how stale text in prompts pollutes attention and degrades model decisions.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]**: Automated test suites that enforce repository hygiene, line ceilings, and file rules.

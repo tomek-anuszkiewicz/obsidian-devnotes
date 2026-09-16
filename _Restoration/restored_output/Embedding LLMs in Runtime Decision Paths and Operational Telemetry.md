@@ -84,7 +84,7 @@ Relying entirely on AI-generated summaries introduces a subtle failure mode: das
 
 ## Conversational Observability: Eliminating the "Dashboard Stare"
 
-Distributed architectures generate an overwhelming volume of telemetry: Prometheus time-series counters, structured JSON logs, and distributed trace graphs powered by [[OpenTelemetry]].
+Distributed architectures generate an overwhelming volume of telemetry: Prometheus time-series counters, structured JSON logs, and distributed trace graphs powered by [[OpenTelemetry as the Runtime Truth for Autonomous Agents]].
 
 ### The Pathology of the Dashboard Stare
 When an incident fires across a service mesh, the triage process typically breaks down like this:
@@ -488,9 +488,9 @@ If junior engineers only ever read AI-generated summaries, they struggle to buil
 
 ## Architectural Graph References
 
-* **[[OpenTelemetry]]**: The underlying distributed tracing, metrics, and log context structures that feed supervisory agents.
+* **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: The underlying distributed tracing, metrics, and log context structures that feed supervisory agents.
 * **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Network protocols, retries, and circuit-breaking patterns that shape runtime telemetry graphs.
 * **[[Designing Software for AI Agents]]**: Interface contracts, structured tool definitions, and isolation patterns for operational models.
-* **[[Introduction to Workflow Orchestration]]**: State machines, sagas, and long-running execution engines that consume structured decision payloads.
+* **[[Workflow Orchestration in Agentic Systems]]**: State machines, sagas, and long-running execution engines that consume structured decision payloads.
 * **[[Formal Verification and Runtime Safety Boundaries]]**: Deterministic assertions and runtime invariant checks that constrain probabilistic models in production.
 * **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Moving from passive metric dashboards to proactive supervisory systems monitoring production state.

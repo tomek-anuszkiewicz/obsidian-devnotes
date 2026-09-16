@@ -26,7 +26,7 @@ aliases:
 
 # Agentic Coding Harness and Controlled Development Workflows
 
-> See also: [[Agent Deployment and Execution Models]], [[Building Determinism from Unpredictable Models - Agent Harness Architecture]]
+> See also: [[Agent Deployment and Execution Models]], [[Building Determinism from Unpredictable Models]]
 
 ## Core Idea
 
@@ -412,7 +412,7 @@ Maintains the immediate plan for upcoming work. High-assurance workflows enforce
 - The moment a step is verified and committed, it is deleted from `ROADMAP.md`. High-level capabilities are summarized in a brief "Baseline Deliverables" list at the top, keeping the file small and forward-looking.
 
 ### `DIARY.md` & Out-of-Context Tooling
-Because the active roadmap prunes completed work, project evolution and technical decisions must be captured in an append-only engineering diary (`DIARY.md`; see [[The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction]]).
+Because the active roadmap prunes completed work, project evolution and technical decisions must be captured in an append-only engineering diary (`DIARY.md`; see [[The Living Engineering Chronicle and Context Compaction]]).
 
 Each entry captures four key areas:
 1. Affected Subsystems;
@@ -958,12 +958,12 @@ Start simple and add process only as your requirements demand:
 ---
 
 ### Related Notes
-- [[Building Determinism from Unpredictable Models - Agent Harness Architecture]]
+- [[Building Determinism from Unpredictable Models]]
 - [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]
-- [[The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction]]
+- [[The Living Engineering Chronicle and Context Compaction]]
 - [[Negative Knowledge and Explicit Architectural Dissents]]
 - [[Executable Architecture Tests for Coding Agent Guardrails]]
-- [[The Conductor Pattern - Cognitive Ergonomics of High-Bandwidth Agentic Engineering]]
+- [[The Conductor Pattern for High-Bandwidth Engineering]]
 - [[Agent Deployment and Execution Models]]
 - [[Constraint Saturation and Rule Oscillation in Coding Agents]]
 - [[Learning Coding Agents Through Failure-Driven Instructions]]

@@ -179,7 +179,7 @@ The second agent functions as an attention aid. It points your focus directly to
 
 - **[[LLMs as a Code Review Team]]**: Practical workflows for configuring multi-agent reviewer teams to assist human auditors.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living technical specifications during development to provide the context needed for review.
-- **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Decision frameworks for handling review feedback: when to edit manually, re-prompt, or revise the specification.
+- **[[Correcting AI Code - Patch, Regenerate, or Respecify]]**: Decision frameworks for handling review feedback: when to edit manually, re-prompt, or revise the specification.
 - **[[Testing in the Model, Agent, LLM Era]]**: Why automated verification is necessary, and where test suites fail to catch deep architectural flaws.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: The operational consequences of unchecked, frictionless code generation and rubber-stamped pull requests.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules, edge cases, and business invariants require deep human review rather than surface-level checks.

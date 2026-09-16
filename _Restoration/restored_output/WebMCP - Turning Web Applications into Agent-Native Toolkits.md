@@ -324,6 +324,6 @@ To manage this shift without breaking application backends, engineering teams mu
 *   **[[Designing APIs for LLM-Generated Integration Code]]**: WebMCP extends client-side API design directly into the browser DOM, eliminating the boundary between web UI and programmatic interfaces.
 *   **[[How AI Agents May Control Computers, Applications, and the Web]]**: Tracing the evolution of agent control surfaces from fragile, vision-based screenshot automation to native, deterministic semantic protocols.
 *   **[[Agentic Coding Harness and Controlled Development Workflows]]**: How deterministic runtime execution surfaces improve the stability of automated testing and coding loops.
-*   **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]**: Moving from rigid, button-centric user interfaces toward composable, agent-addressable primitives.
-*   **[[AI May Break the Old Economic Model of the Open Web]]**: Analyzing the collapse of pageview-based ad metrics and viewport impression tracking when agentic tools replace manual human browsing.
-*   **[[Personal AI Subscriptions May Unify Model Access, Managed RAG, and Portable APIs]]**: How portable user credentials and local context layers intersect with client-side WebMCP agents.
+*   **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving from rigid, button-centric user interfaces toward composable, agent-addressable primitives.
+*   **[[How AI Breaks the Economic Model of the Open Web]]**: Analyzing the collapse of pageview-based ad metrics and viewport impression tracking when agentic tools replace manual human browsing.
+*   **[[Personal AI Subscriptions and Unified Model Access]]**: How portable user credentials and local context layers intersect with client-side WebMCP agents.

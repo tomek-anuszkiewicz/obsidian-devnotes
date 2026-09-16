@@ -236,7 +236,7 @@ Structured Markdown Card Ingested into Knowledge Inbox (10-second human review)
 ### Operational Mechanics
 
 1. **Continuous Audio Ingestion**: An always-on background worker (see [[Always-On Autonomous Agents - The 24-7 Local Operating System]]) monitors target technical feeds, downloading audio tracks and processing them through speech-to-text engines immediately upon release.
-2. **Topological Claim Comparison**: The agent extracts atomic assertions from the transcript and compares them against the engineer's personal vault (using the techniques from [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]).
+2. **Topological Claim Comparison**: The agent extracts atomic assertions from the transcript and compares them against the engineer's personal vault (using the techniques from [[How Personal AI Models Reconcile External Knowledge]]).
 3. **Triaging the Information Space**:
    - **Consensus Space ($K^+$)**: Well-trodden architectural axioms are ignored or aggregated into a confidence counter.
    - **Known Anti-patterns ($K^-$)**: Discredited practices or buzzwords cataloged in [[Negative Knowledge and Explicit Architectural Dissents]] are filtered out immediately.
@@ -498,6 +498,6 @@ A closed loop of model-to-model synthetic text generation eventually degrades in
 
 - [[The Most Valuable Software Training Data May Be Private]]: Explores why closed operational systems (incident logs, internal pull requests, architecture threads) contain the dense empirical signal the public web lacks.
 - [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: System architecture for running persistent, local background agents that ingest, transcribe, and diff external data streams.
-- [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]: Mechanics of using personal knowledge bases to diff incoming content streams against an established worldview.
+- [[How Personal AI Models Reconcile External Knowledge]]: Mechanics of using personal knowledge bases to diff incoming content streams against an established worldview.
 - [[Negative Knowledge and Explicit Architectural Dissents]]: The design rationale for explicitly logging anti-patterns, rejected approaches, and failures as first-class knowledge objects.
-- [[AI May Break the Old Economic Model of the Open Web]]: Examines how the proliferation of synthetic web scraping breaks open web publishing incentives, driving the best operational data behind corporate firewalls.
+- [[How AI Breaks the Economic Model of the Open Web]]: Examines how the proliferation of synthetic web scraping breaks open web publishing incentives, driving the best operational data behind corporate firewalls.

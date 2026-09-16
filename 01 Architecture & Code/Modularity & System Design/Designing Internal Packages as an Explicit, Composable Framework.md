@@ -47,7 +47,7 @@ The framework provides building blocks. The application explicitly selects, conf
 
 **The Decision Invariant**: Build a shared package when it makes systems easier to understand, operate, and maintain. Rely on local code, clear documentation, and automated conformance tests when a package would obscure more than it simplifies (see [[Internal Shared Packages vs Agent-Generated Code]]).
 
-When building systems alongside AI coding agents, magic shared packages become severe engineering bottlenecks. Coding agents cannot reliably navigate ambient framework hooks, reflection-based classpath scanning, or implicit dependency injection containers without guessing and hallucinating side effects (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
+When building systems alongside AI coding agents, magic shared packages become severe engineering bottlenecks. Coding agents cannot reliably navigate ambient framework hooks, reflection-based classpath scanning, or implicit dependency injection containers without guessing and hallucinating side effects (see [[The Cost of Hidden Abstractions in Agent-Maintained Code]]).
 
 ---
 
@@ -200,9 +200,9 @@ Before writing a shared library, run your design through this diagnostic checkli
 ## Related Notes
 
 - **[[Internal Shared Packages vs Agent-Generated Code]]**: Determining when to build a shared binary library versus letting coding agents generate and maintain locally owned implementations.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: The hidden costs of magic frameworks, implicit reflection, and inheritance hierarchies when working with automated coding tools.
+- **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: The hidden costs of magic frameworks, implicit reflection, and inheritance hierarchies when working with automated coding tools.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Building an organizational paved road using modular infrastructure components without hijacking the application startup lifecycle.
 - **[[Designing Software for AI Agents]]**: Architectural design patterns that favor explicit composition and local transparency over ambient framework behavior.
 - **[[AI Changes the Economics of Software Libraries]]**: How cheap, accurate code generation shifts the engineering calculus between maintaining shared packages and writing bespoke local code.
-- **[[OpenTelemetry]]**: Implementing distributed tracing, metrics, and structured logging without wrapping standard APIs in proprietary internal abstractions.
+- **[[OpenTelemetry as the Runtime Truth for Autonomous Agents]]**: Implementing distributed tracing, metrics, and structured logging without wrapping standard APIs in proprietary internal abstractions.
 - **[[Testing in the Model, Agent, LLM Era]]**: Applying automated conformance test suites to validate architectural boundaries and network behaviors without forcing shared runtime dependencies.

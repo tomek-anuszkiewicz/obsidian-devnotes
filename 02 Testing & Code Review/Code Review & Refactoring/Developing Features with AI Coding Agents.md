@@ -245,7 +245,7 @@ Never allow an agent to define both the implementation and the criteria for corr
 *   **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Proving system boundaries on atomic operational primitives before scaling out.
 *   **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain rules and decision tables are essential for keeping agents on track.
 *   **[[Testing in the Model, Agent, LLM Era]]**: The architectural rationale for why verification suites must remain immutable during agent implementation passes.
-*   **[[Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification]]**: Decision frameworks for fixing bugs in code versus updating upstream specifications.
+*   **[[Correcting AI Code - Patch, Regenerate, or Respecify]]**: Decision frameworks for fixing bugs in code versus updating upstream specifications.
 *   **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical harness architectures that automatically enforce vertical slice workflows.
 *   **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specifications alongside code during feature development.
 *   **[[LLMs as a Code Review Team]]**: Using specialized agent review passes to audit features before human sign-off.

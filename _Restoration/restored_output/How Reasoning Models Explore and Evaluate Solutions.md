@@ -243,5 +243,5 @@ A bad answer rarely means the reasoning engine itself is broken. More often, the
 - [[How Context Narrows an AI's Solution Space]]: How grounding data acts as a constraint filter on the model's token distribution.
 - [[AI, Averaged Decisions, and Premature Convergence on Solutions]]: Why models default to median answers without explicit exploration prompts.
 - [[How Targeted Prompts Steer Model Solution Spaces]]: Using structural prompting to force models out of conventional reasoning ruts.
-- [[LLM Coding Agents Reliability]]: Real-world telemetry on where multi-step reasoning breaks down during production code refactoring.
+- [[Reliability of LLM Coding Agents]]: Real-world telemetry on where multi-step reasoning breaks down during production code refactoring.
 - [[Improving AI Models - From Scaling to Agent-Generated Training Data]]: How process supervision and synthetic reasoning trajectories power modern reasoning models.

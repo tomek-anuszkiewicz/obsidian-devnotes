@@ -313,4 +313,4 @@ When implementing dynamic routing systems, watch out for these three common trap
 * [[Agent Deployment and Execution Models]]: The architectural boundary between orchestration runtimes, model inference gateways, and sandboxed execution environments.
 * [[Agentic Coding Harness and Controlled Development Workflows]]: Constructing deterministic harnesses, sandboxes, and safe blast-radius boundaries for autonomous coding tasks.
 * [[Testing in the Model, Agent, LLM Era]]: Constructing the deterministic test oracles and harness fixtures required to validate optimistic local execution.
-* [[Competitive advantage in the age of commodity AI]]: Why smart orchestration, dynamic routing, and continuous domain evaluation provide deeper defensibility than raw model access.
+* [[Competitive Advantage in the Age of Commodity AI]]: Why smart orchestration, dynamic routing, and continuous domain evaluation provide deeper defensibility than raw model access.

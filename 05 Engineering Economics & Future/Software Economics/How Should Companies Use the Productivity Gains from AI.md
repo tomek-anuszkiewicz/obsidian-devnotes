@@ -77,7 +77,7 @@ This dynamic creates a toxic culture of shadow automation. When automation happe
 
 To prevent this, leadership must establish a credible, transparent productivity dividend. Instead of using developer velocity as a pretext for headcount cuts, organizations need to realign incentives. This alignment directly mitigates the risks of [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents|developer alienation, identity loss, and burnout]], ensuring that gains are reinvested into:
 
-- Ambitious new product initiatives that were previously backlogged, as well as greenfield exploration such as [[AI May Create a New Market for Small, Custom Business Software|small custom business software]].
+- Ambitious new product initiatives that were previously backlogged, as well as greenfield exploration such as [[A New Market for Small, Custom Business Software|small custom business software]].
 - Paying down long-standing architectural debt, decomposing brittle monoliths, and cleaning up neglected code paths.
 - Building rigorous automated test harnesses, formal verification suites, and regression oracles.
 - Reducing operational pressure by lowering on-call pager fatigue and eliminating recurring production alerts.
@@ -110,7 +110,7 @@ improve software quality, and enter markets that were previously uneconomical.
 
 Defensive cost cutting is simple to measure on a quarterly balance sheet, but it fundamentally misapplies Jevons Paradox to software engineering. Historically, when the unit cost of creating software drops, the total demand for software does not stay flat—it explodes. Lowering the friction of implementation makes it economically viable to automate secondary and tertiary business processes that were previously left to manual spreadsheets. Choosing to reduce headcount instead of expanding scope abandons this upside.
 
-Reinvesting capacity into [[AI May Increase Product Ambition Instead of Reducing Team Size|greater product ambition]] requires genuine organizational capability:
+Reinvesting capacity into [[Product Ambition Expansion in the Age of AI|greater product ambition]] requires genuine organizational capability:
 
 - Continuous generation of validated product hypotheses.
 - Sales, marketing, and operational capacity capable of absorbing faster delivery cycles.
@@ -167,11 +167,11 @@ Avoid becoming complete pass-through consumers of model output. When an agent-ge
 
 ## Relationship to the Knowledge Graph
 
-- **[[AI May Increase Product Ambition Instead of Reducing Team Size]]**: The economic rationale for redirecting developer bandwidth into higher feature ambition and broader product scope instead of headcount reduction.
+- **[[Product Ambition Expansion in the Age of AI]]**: The economic rationale for redirecting developer bandwidth into higher feature ambition and broader product scope instead of headcount reduction.
 - **[[AI Productivity Is Limited by the Delivery System]]**: Why local coding acceleration provides zero enterprise value unless test infrastructure, compliance gates, and deployment pipelines scale to match.
 - **[[Early AI Adoption as Organizational Readiness]]**: How organizational trust, open communication, and psychological safety dictate whether AI tooling is adopted productively or rejected defensively.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: The psychological impact of agentic workflows on developer autonomy, ownership, and sustainable workload distribution.
-- **[[Competitive advantage in the age of commodity AI]]**: Why proprietary tooling, domain-specific evaluation sets, and delivery systems matter far more than access to commodity foundation models.
+- **[[Competitive Advantage in the Age of Commodity AI]]**: Why proprietary tooling, domain-specific evaluation sets, and delivery systems matter far more than access to commodity foundation models.
 - **[[From AI-Assisted Teams to Cross-System Feature Ownership]]**: How to reorganize engineering teams to take advantage of expanded individual capacity across the entire delivery lifecycle.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]**: Protecting junior career ladders, internal systems debugging capability, and critical architectural judgment during agent rollout.
-- **[[AI May Create a New Market for Small, Custom Business Software]]**: How dramatically reduced implementation costs unlock hyper-specialized internal tools that were previously economically unfeasible.
+- **[[A New Market for Small, Custom Business Software]]**: How dramatically reduced implementation costs unlock hyper-specialized internal tools that were previously economically unfeasible.

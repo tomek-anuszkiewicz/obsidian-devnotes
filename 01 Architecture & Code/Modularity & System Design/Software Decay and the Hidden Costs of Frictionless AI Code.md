@@ -209,8 +209,8 @@ When you back the agent with strict architectural constraints, comprehensive tes
 ## Related Notes
 
 *   **[[Designing Software for AI Agents]]**: Foundational patterns for structuring codebases so agents can safely inspect, modify, and test code without causing architectural sprawl.
-*   **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why complex metaprogramming and opaque abstractions degrade agent context windows, and why flat, explicit code wins.
-*   **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How repo structures, file organizations, and component boundaries change when machines generate the bulk of your commits.
+*   **[[The Cost of Hidden Abstractions in Agent-Maintained Code]]**: Why complex metaprogramming and opaque abstractions degrade agent context windows, and why flat, explicit code wins.
+*   **[[Optimizing Software Engineering and Code for Agents]]**: How repo structures, file organizations, and component boundaries change when machines generate the bulk of your commits.
 *   **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Using targeted, concise Markdown documentation as structural rails to keep agents from drifting off-task.
 *   **[[Refactoring Legacy Systems with AI Agents]]**: How the absence of typing fatigue enables agents to perform the wide-ranging, exhaustive code migrations that human teams avoid.
 *   **[[Negative Knowledge and Explicit Architectural Dissents]]**: Documenting rejected designs, failed patterns, and past architectural dissents to stop agents from reintroducing known anti-patterns.

@@ -541,5 +541,5 @@ Executable architecture tests are the operational backbone of an agent-ready cod
 - **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: How to use minimal vertical slices and architecture tests to validate system topology before scaling out code generation.
 - **[[Testing in the Model, Agent, LLM Era]]**: Why automated test suites must remain immutable artifacts that agents cannot edit to satisfy failing runs.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Managing prompt context sizes, pruning dead context, and preventing instruction drift.
-- **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Why language fences ban complex metaprogramming in favor of flat, readable code that both models and humans can debug.
+- **[[Replacing Source Generators with Explicit Generated Code]]**: Why language fences ban complex metaprogramming in favor of flat, readable code that both models and humans can debug.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: How modularizing rule files and enforcing byte limits prevents models from getting confused by conflicting prompt instructions.

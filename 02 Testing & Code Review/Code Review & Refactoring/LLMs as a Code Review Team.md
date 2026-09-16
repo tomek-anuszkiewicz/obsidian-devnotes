@@ -750,7 +750,7 @@ Automated agents are not infallible. But they are **relentless, specialized, che
 
 ## Related Notes
 
-- [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]
+- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]]
 - [[Reviewing AI-Generated Code]]
 - [[Agent Advantage - Relentless, Methodical Work]]
 - [[Testing in the Model, Agent, LLM Era]]

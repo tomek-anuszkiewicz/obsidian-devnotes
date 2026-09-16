@@ -84,7 +84,7 @@ Over a few sprints, the harness gets weighed down with:
 
 Early on, adding a handful of rules helps eliminate basic mistakes. But past a certain density, **stacking more rules makes the agent less reliable, not more**.
 
-The agent gets trapped in **Constraint Oscillation** (also called *rule thrashing* or *whack-a-mole engineering*), tanking [[LLM Coding Agents Reliability|coding agent reliability]]:
+The agent gets trapped in **Constraint Oscillation** (also called *rule thrashing* or *whack-a-mole engineering*), tanking [[Reliability of LLM Coding Agents|coding agent reliability]]:
 
 1. The agent refactors code to hit **Driver A** (e.g., inlining a routine to eliminate an allocation on a hot path).
 2. The harness test suite or linter reports a violation of **Driver B** (e.g., a hard 400-line-per-file limit or a single-responsibility modularity check).
@@ -216,5 +216,5 @@ Save the model's limited attention window for business domain architecture and s
 - **[[Reviewing AI-Generated Code]]**: Spotting when an agent hits its reasoning limit and starts generating superficial patches back and forth during reviews.
 - **[[How Context Narrows an AI's Solution Space]]**: Using constraints constructively to narrow search spaces, and identifying the tipping point where over-constraint degrades attention.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Enforcing mechanical constraints via deterministic tooling without polluting prompt context.
-- **[[LLM Coding Agents Reliability]]**: The math behind compound error rates when models are forced to juggle dozens of concurrent rules.
+- **[[Reliability of LLM Coding Agents]]**: The math behind compound error rates when models are forced to juggle dozens of concurrent rules.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing long lists of generic rules with lean, task-specific semantic blueprints to focus model attention.

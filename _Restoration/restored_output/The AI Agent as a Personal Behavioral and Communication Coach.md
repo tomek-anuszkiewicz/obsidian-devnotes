@@ -238,7 +238,7 @@ Treating your communication as an instrumented system integrates directly with b
 
 - **Evolving Recruitment Dynamics**: As code generation models handle an increasing share of boilerplate implementation, engineering hiring loops are shifting focus toward high-stress trade-off analysis, cross-functional debate, and behavioral resilience. Practicing these scenarios through deliberate simulation directly targets the modern hiring patterns covered in [[AI Era Software Engineering Recruitment]].
 - **Neutralizing Workplace Burnout**: In practice, true engineering burnout rarely comes from shipping clean code or solving hard technical puzzles. It comes from chronic organizational friction, unproductive meetings, and unmanaged interpersonal conflict. Building robust, non-defensive communication reflexes lowers emotional overhead and directly tackles the systemic issues analyzed in [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]].
-- **Cognitive Soft-Skill Diffing**: In the same way you can diff technical specifications using [[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]], you can run structural diffs between your negotiation or debate transcripts and gold-standard transcripts from elite negotiators. This exposes communicative blind spots before they cost you political capital or organizational momentum.
+- **Cognitive Soft-Skill Diffing**: In the same way you can diff technical specifications using [[How Personal AI Models Reconcile External Knowledge]], you can run structural diffs between your negotiation or debate transcripts and gold-standard transcripts from elite negotiators. This exposes communicative blind spots before they cost you political capital or organizational momentum.
 
 ---
 
@@ -259,6 +259,6 @@ Treating your communication as an instrumented system integrates directly with b
 - **[[AI Era Software Engineering Recruitment]]**: How behavioral simulation and interpersonal deconstruction prepare engineers for agent-era hiring loops.
 - **[[The Implications of Having a Digital Model of Yourself]]**: Using personal conversational telemetry to construct a faithful behavioral model for coaching and self-reflection.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Reducing the psychological toll of workplace friction through calibrated communication.
-- **[[How Personal AI Models Will Diff, Reconcile, and Challenge External Knowledge]]**: The cognitive counterpart: diffing interpersonal communication habits against gold-standard dialogue models.
+- **[[How Personal AI Models Reconcile External Knowledge]]**: The cognitive counterpart: diffing interpersonal communication habits against gold-standard dialogue models.
 - **[[AI Changes the Role and Training of Software Engineers]]**: The broader transition where communicative and architectural steering supersedes manual implementation.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]**: Cultivating authentic, high-signal personal communication amidst generic corporate discourse.

@@ -355,7 +355,7 @@ The greatest risk to an engineering organization today is not an engineer who wr
 
 ## Related Notes
 
-- [[LLM Coding Agents Reliability]] — Managing nondeterminism and failure profiles in automated code generation.
+- [[Reliability of LLM Coding Agents]] — Managing nondeterminism and failure profiles in automated code generation.
 - [[Agentic Coding Harness and Controlled Development Workflows]] — Building deterministic guardrails, validation sandboxes, and verification loops around coding agents.
 - [[LLM Agents and Institutional Memory]] — Retaining architecture rationale and preventing codebase drift across human and agent workflows.
 - [[Designing APIs for LLM-Generated Integration Code]] — Structuring libraries, contracts, and interfaces to minimize agent hallucination.

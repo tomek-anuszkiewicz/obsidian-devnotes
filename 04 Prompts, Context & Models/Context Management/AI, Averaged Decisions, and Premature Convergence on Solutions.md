@@ -518,12 +518,12 @@ The first design returned by a language model should almost never be the final a
 
 ## Related Notes
 
-- [[Competitive advantage in the age of commodity AI]] — Why accepting default AI recommendations commoditizes technical strategy and how deliberate architectural variance builds defensibility.
+- [[Competitive Advantage in the Age of Commodity AI]] — Why accepting default AI recommendations commoditizes technical strategy and how deliberate architectural variance builds defensibility.
 - [[How Context Narrows an AI's Solution Space]] — Analysis of the attention mechanisms and prompt constraints that restrict a model's exploratory paths.
 - [[How Reasoning Models Explore and Evaluate Solutions]] — A deep dive into search algorithms, multi-path exploration, and how models evaluate alternatives.
 - [[How Targeted Prompts Steer Model Solution Spaces]] — Practical techniques for using targeted prompt constraints to guide models out of their default probability distributions.
 - [[Designing Software Architecture with LLM Assistance]] — Operational patterns for using LLMs during architectural design while preventing superficial completeness.
 - [[Refactoring Legacy Systems with AI Agents]] — How language models anchor on existing git history and patterns when modernizing legacy codebases.
-- [[Software Engineering May Shift Toward Code Optimized for Agents]] — Examining system architectures optimized for automated machine maintenance rather than manual human editing.
+- [[Optimizing Software Engineering and Code for Agents]] — Examining system architectures optimized for automated machine maintenance rather than manual human editing.
 - [[AI Changes the Role and Training of Software Engineers]] — Why senior engineering requires shifting from syntax generation to problem framing and trade-off verification.
 - [[Proxy Metrics and Operational Invariants in AI Systems]] — The operational risks of letting automated systems optimize for proxy metrics over causal system performance.

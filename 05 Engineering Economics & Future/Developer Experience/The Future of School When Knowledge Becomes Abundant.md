@@ -517,7 +517,7 @@ The job of educational technology is not to make the work effortless. Its job is
 
 # A Personal Learning Model Could Persist for Life
 
-As explored in concepts around [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem|personal digital representations and lifelong models]], an educational assistant could maintain an evolving representation of what a person actually understands.
+As explored in concepts around [[Personal Digital Models as the Foundation of Agent Ecosystems|personal digital representations and lifelong models]], an educational assistant could maintain an evolving representation of what a person actually understands.
 
 Instead of a static transcript listing letter grades from a decade ago, a personal model tracks an updated map of technical competencies:
 
