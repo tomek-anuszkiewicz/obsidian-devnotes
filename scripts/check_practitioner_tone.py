@@ -84,19 +84,23 @@ BANNED_HEADING_PATTERNS = [
     (re.compile(r"^#+\s+.*(final thesis)\b", re.IGNORECASE), "Academic 'Final Thesis' in heading"),
     (re.compile(r"^#+\s+.*(core thesis)\b", re.IGNORECASE), "Academic 'Core thesis' in heading (use direct descriptive title)"),
     (re.compile(r"^#+\s+.*(stochastic foundations)\b", re.IGNORECASE), "Paper jargon 'Stochastic Foundations' in heading (use 'Unpredictable Models')"),
+    (re.compile(r"^#+\s+.*(mechanical autonomy flags)\b", re.IGNORECASE), "Cliché 'mechanical autonomy flags' in heading (use 'Runtime Autonomy Flags')"),
 ]
 
 BANNED_CALLOUT_PATTERNS = [
     (re.compile(r"executive\s+architectural\s+thesis", re.IGNORECASE), "Academic callout label 'Executive Architectural Thesis'"),
 ]
 
-# 4. Forbidden Synthetic Academic Jargon in Body Text
+# 4. Forbidden Synthetic Academic Jargon & Model Clichés in Body Text
 BANNED_VOCABULARY_PATTERNS = [
     (re.compile(r"\b(epistemic)\b", re.IGNORECASE), "Synthetic academic attractor 'epistemic'"),
     (re.compile(r"\b(teleological)\b", re.IGNORECASE), "Synthetic academic attractor 'teleological'"),
     (re.compile(r"\b(ontological)\b", re.IGNORECASE), "Synthetic academic attractor 'ontological'"),
     (re.compile(r"\b(hermeneutic)\b", re.IGNORECASE), "Synthetic academic attractor 'hermeneutic'"),
     (re.compile(r"\b(desiderata)\b", re.IGNORECASE), "Academic Latinate 'desiderata'"),
+    (re.compile(r"\b(mechanical exoskeleton)\b", re.IGNORECASE), "Model cliché 'mechanical exoskeleton' (use 'execution environment' or 'runtime harness')"),
+    (re.compile(r"\b(mechanically imposed)\b", re.IGNORECASE), "Model cliché 'mechanically imposed' (use 'enforced programmatically')"),
+    (re.compile(r"\b(mechanical sophistication)\b", re.IGNORECASE), "Model cliché 'mechanical sophistication' (use 'runtime architecture')"),
 ]
 
 

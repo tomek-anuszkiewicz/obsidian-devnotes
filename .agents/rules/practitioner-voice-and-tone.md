@@ -38,9 +38,9 @@ Every document across the vault must meet the readability, energy, and clarity o
 
 ## 3. Thought Density Without Vocabulary Inflation
 
-True intellectual rigor comes from **accurate mental models, causal depth, and clear mechanical explanations**—never from high-register buzzwords or synthetic academic vocabulary.
+True intellectual rigor comes from **accurate mental models, causal depth, and clear runtime explanations**—never from high-register buzzwords or synthetic academic vocabulary.
 
-1. **Explain the Real Physical & System Mechanics**:
+1. **Explain the Underlying System Mechanics**:
    - Replace vague theoretical jargon with what actually happens under the hood:
      - *What happens in CPU instruction and data caches, branch predictors, or memory allocations?*
      - *What does the database query planner, transaction log, or indexing engine do?*
@@ -56,6 +56,15 @@ True intellectual rigor comes from **accurate mental models, causal depth, and c
      - Use **confidence score** or **model variance** instead of *epistemic certitude*.
      - Use **non-deterministic behavior** or **unstable predictions** instead of *stochastic drift*.
    - Technical terms like *probabilistic* or *stochastic* are valid when discussing mathematical sampling or temperature mechanics, but never use them as dramatic, high-register rhetorical flourish in titles, headings, or summaries.
+4. **Discipline with "Mechanical / Mechanically" (Banning the AI Crutch)**:
+   - The words *"mechanical"* and *"mechanically"* easily degenerate into a lazy AI verbal tic and rhetorical filler across software architecture and workflow notes.
+   - Never use *"mechanical"* as a generic, dramatic synonym for *automated*, *hardcoded*, *programmatic*, *runtime*, or *compiler-enforced*.
+   - Replace repetitive mechanical clichés with precise engineering terminology:
+     - Use **programmatic constraints**, **compiler-enforced checks**, or **runtime guards** instead of *mechanical constraints* or *mechanical boundaries*.
+     - Use **enforced programmatically**, **enforced by code**, or **automatically verified** instead of *mechanically enforced* or *mechanically imposed*.
+     - Use **execution runtime**, **runtime harness**, or **tooling harness** instead of *mechanical exoskeleton*.
+     - Use **runtime architecture** or **tooling design** instead of *mechanical sophistication*.
+   - Reserve the word *mechanical* strictly for physical hardware execution dynamics (such as *mechanical sympathy* with CPU caches and bus widths in Layer 1). Everywhere else, use concrete software engineering words.
 
 ---
 
