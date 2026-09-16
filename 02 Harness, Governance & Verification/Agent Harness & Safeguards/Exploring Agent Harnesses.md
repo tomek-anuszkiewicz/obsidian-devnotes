@@ -136,7 +136,7 @@ Elite agentic engineering converges on a **tailored, repository-native harness**
 > [!TIP]
 > **The Harness Reflection Principle**:  
 > *"The agentic harness mirrors the cognitive rhythm of the person driving it."*  
-> An in-repository harness is not an opaque corporate dashboard; it is a mechanical exoskeleton directly externalizing the architect's mental model, verification standards, and operational tempo.
+> An in-repository harness is not an opaque corporate dashboard; it is a purpose-built execution harness directly externalizing the architect's mental model, verification standards, and operational tempo.
 
 ---
 

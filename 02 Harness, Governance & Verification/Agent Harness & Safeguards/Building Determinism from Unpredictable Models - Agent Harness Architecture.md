@@ -77,7 +77,7 @@ When an agent executes three or four intermediate steps successfully, the attent
 ### Sycophantic Paralysis (Defensive Drift)
 Conversely, when an operator intervenes with strong critical feedback regarding an invalid edit, the model registers a massive negative loss signal in the local conversation context. Rather than responding with balanced technical discernment, the model overcorrects into extreme defensive alignment: it apologizes profusely, abandons valid architectural paths, and ceases taking autonomous action, repeatedly asking permission for benign read-only operations.
 
-> **Architectural Axiom**: The reasoning model is an inherently unpredictable, non-deterministic component. System-level determinism cannot be persuaded into existence; it must be mechanically imposed by the surrounding harness.
+> **Architectural Axiom**: The reasoning model is an inherently unpredictable, non-deterministic component. System-level determinism cannot be persuaded into existence; it must be enforced programmatically by the surrounding runtime harness.
 
 ---
 
@@ -209,7 +209,7 @@ When an agent pursues a failing technical approach that spans multiple tool iter
 ```
 This isolates the agent's attention from error noise while preserving negative operational memory.
 
-### 3. Mechanical Autonomy Flags Over Conversational Persuasion
+### 3. Runtime Autonomy Flags Over Conversational Persuasion
 Never instruct an agent in a prompt to "be careful with files" or "remember to ask before making destructive edits." Configure deterministic boundary flags directly at the runtime harness layer:
 - Force read-only directory mounts on sensitive configuration paths.
 - Enforce automated approval policies tied to test results (`--auto-approve=tests-pass-only`).
