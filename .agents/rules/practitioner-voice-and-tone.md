@@ -49,6 +49,13 @@ True intellectual rigor comes from **accurate mental models, causal depth, and c
 2. **High Thought Density Through Contrast and Trade-offs**:
    - Deliver dense value by contrasting competing architectural patterns, exposing hidden failure modes, and demonstrating subtle edge cases.
    - Density must be achieved through sharp technical substance, not by stacking adjectives or coining pretentious neologisms.
+3. **Plain-Spoken Engineering Over Statistical & Paper Jargon**:
+   - Avoid paper-inflated rhetoric such as *"stochastic foundations"*, *"probabilistic substrates"*, *"epistemic divergence"*, or *"stochastic primitives"*.
+   - Use straightforward, grounded engineering language:
+     - Use **unpredictable models**, **unreliable components**, or **flaky outputs** instead of *stochastic foundations* or *probabilistic substrates*.
+     - Use **confidence score** or **model variance** instead of *epistemic certitude*.
+     - Use **non-deterministic behavior** or **unstable predictions** instead of *stochastic drift*.
+   - Technical terms like *probabilistic* or *stochastic* are valid when discussing mathematical sampling or temperature mechanics, but never use them as dramatic, high-register rhetorical flourish in titles, headings, or summaries.
 
 ---
 
@@ -90,12 +97,12 @@ The practitioner voice standard applies strictly to the entire file system struc
 2. **File Naming Standards (Mechanisms, Patterns & Trade-offs)**:
    - Note file names must describe concrete technical mechanics, architecture patterns, failure modes, economic trade-offs, or developer workflows:
      - ✅ *Compliant*: `Formal Verification and Runtime Safety Boundaries.md`, `Software Decay and the Hidden Costs of Frictionless AI Code.md`, `How Targeted Prompts Steer Model Solution Spaces.md`, `Proxy Metrics and Operational Invariants in AI Systems.md`.
-     - ❌ *Banned*: Academic dissertation titles, philosophical tracts, or stacked abstract nouns (e.g. `...and the Negative Proof Dilemma.md`, `Software Entropy and the Zero-Friction Trap.md`, `Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight.md`).
+     - ❌ *Banned*: Academic dissertation titles, philosophical tracts, or stacked abstract nouns (e.g. `...and the Negative Proof Dilemma.md`, `Software Entropy and the Zero-Friction Trap.md`, `Emergence, Latent Space Synthesis, and How Targeted Prompts Crystallize Insight.md`, `Building Determinism from Stochastic Foundations.md`).
    - Avoid double-spacing, pretentious Latinates, or theatrical buzzwords in filenames.
+   - Avoid high-flown academic or statistical metaphors in titles (e.g., avoid "Stochastic Foundations" -> prefer "Unpredictable Models" or "Unreliable Components").
 
 3. **Section Headings & Callout Nomenclature**:
    - Internal headings (`#`, `##`, `###`) and callout blocks (`> [!NOTE]`, `> [!IMPORTANT]`) must use grounded, active engineering language:
      - ✅ *Compliant*: `> **Core Architectural Takeaway**:`, `> [!NOTE] Key Architecture Invariant:`, `## Core Engineering Mechanism`, `## Operational Realities & Decisions`, `## Production Failure Modes`.
      - ❌ *Banned*: Academic dissertation tags, e.g. `> **Executive Architectural Thesis**:`, `> [!IMPORTANT] Executive Architectural Thesis:`, `## Working Hypothesis`, `## Central thesis`, `## Final Thesis`, `## Core thesis`.
    - Never treat note sections as academic defense theses or formal proofs; treat them as actionable engineering guides and decision frameworks.
-

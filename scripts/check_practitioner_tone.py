@@ -71,6 +71,8 @@ BANNED_FILENAME_PATTERNS = [
     (re.compile(r"\b(crystallize insight)\b", re.IGNORECASE), "Synthetic academic phrase 'Crystallize Insight' in filename"),
     (re.compile(r"\b(civilizational automation loop)\b", re.IGNORECASE), "Speculative sci-fi title 'Civilizational Automation Loop' in filename"),
     (re.compile(r"\b(suppression of grassroots)\b", re.IGNORECASE), "Sociological dissertation phrasing in filename"),
+    (re.compile(r"\b(stochastic foundations)\b", re.IGNORECASE), "Academic paper jargon 'Stochastic Foundations' in filename (use 'Unpredictable Models' or 'Unreliable Components')"),
+    (re.compile(r"\b(probabilistic substrates?)\b", re.IGNORECASE), "Academic paper jargon 'Probabilistic Substrate' in filename (use 'Unpredictable Models')"),
     (re.compile(r"-\s\s+", re.IGNORECASE), "Double-space artifact around dash in filename"),
 ]
 
@@ -81,6 +83,7 @@ BANNED_HEADING_PATTERNS = [
     (re.compile(r"^#+\s+.*(central thesis)\b", re.IGNORECASE), "Academic 'Central thesis' in heading"),
     (re.compile(r"^#+\s+.*(final thesis)\b", re.IGNORECASE), "Academic 'Final Thesis' in heading"),
     (re.compile(r"^#+\s+.*(core thesis)\b", re.IGNORECASE), "Academic 'Core thesis' in heading (use direct descriptive title)"),
+    (re.compile(r"^#+\s+.*(stochastic foundations)\b", re.IGNORECASE), "Paper jargon 'Stochastic Foundations' in heading (use 'Unpredictable Models')"),
 ]
 
 BANNED_CALLOUT_PATTERNS = [
