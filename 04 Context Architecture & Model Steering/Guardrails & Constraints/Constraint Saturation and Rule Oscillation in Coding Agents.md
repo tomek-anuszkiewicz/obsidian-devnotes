@@ -40,8 +40,8 @@ aliases:
 |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HARNESS-LEVEL MITIGATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
 |                                                                                                    |
 |  1. Lexicographical Tiering: Tier 1 (Correctness) > Tier 2 (Boundary) > Tier 3 (Perf) > Tier 4     |
-|  2. Sequential Passes: Pass 1: Semantic Logic ──► Pass 2: Refinement ──► Pass 3: Tool Compliance   |
-|  3. Mechanical Offloading: Offload formatting, import sorting, and linting to deterministic tools   |
+|  2. Sequential Passes: Pass 1: Core Logic ──► Pass 2: Refinement ──► Pass 3: Tool Checks         |
+|  3. Tool Offloading: Offload formatting, import sorting, and linting to automated tools            |
 |                                                                                                    |
 +----------------------------------------------------------------------------------------------------+
 ```
@@ -58,10 +58,10 @@ aliases:
    System rules must be prioritized into strict, non-negotiable tiers (Tier 1: Functional Correctness > Tier 2: Domain Boundaries > Tier 3: Performance Budgets > Tier 4: Cosmetic Formatting). Agents must be explicitly instructed never to sacrifice Tier 1 correctness or Tier 2 boundaries to satisfy Tier 4 conventions.
 
 4. **Single-Objective Sequential Passes Over Monolithic Generation**:
-   Attempting to generate code that is simultaneously functionally complete, memory-optimized, styled, and documented in a single turn exceeds cognitive limits. Production workflows decompose execution into sequential passes: Semantic Logic $\to$ Optimization $\to$ Mechanical Compliance.
+   Attempting to generate code that is simultaneously functionally complete, performant, styled, and documented in a single prompt quickly breaks down. Production workflows break the task into focused passes: Business Logic $\to$ Performance Refinement $\to$ Formatting and Linting.
 
-5. **Deterministic Mechanical Offloading**:
-   Rules that can be checked by mechanical compilers, AST formatters, or static analysis tools (linting, line limits, import sorting) must be eliminated from system prompts. Natural language instructions must be reserved exclusively for semantic, contextual architectural invariants.
+5. **Offload Predictable Checks to Tooling**:
+   Rules that can be checked by compilers, code formatters, or static analysis tools (linting, line limits, import sorting) should not live in prompt instructions. Natural language prompts should be reserved for domain logic and high-level architectural constraints that tools cannot verify.
 
 ---
 
@@ -127,7 +127,7 @@ To defeat constraint saturation, engineering harnesses must stop treating prompt
 Never present 30 rules as flat peers. The harness must enforce an explicit **lexicographical priority order**:
 
 ```text
-TIER 1: Inviolable Mechanical Invariants
+TIER 1: Inviolable Technical Invariants
 └── Compilation, green test suites, type safety, memory correctness.
 
 TIER 2: Core Domain & Security Invariants
@@ -150,9 +150,9 @@ Never inject the entire repository rulebook into every prompt. Rules should be *
 ### 3. Sequential Multi-Pass Decomposition (Separation of Concerns)
 Instead of forcing a single agent to produce code that is simultaneously functionally complete, zero-allocation, beautifully formatted, fully documented, and strictly bounded:
 Decompose execution into discrete, single-objective pipeline stages:
-1. **Pass 1 (Semantics)**: Implement correct business logic and pass behavioral tests (ignoring line counts and micro-optimizations).
+1. **Pass 1 (Core Logic)**: Implement correct business logic and pass behavioral tests (ignoring line counts and micro-optimizations).
 2. **Pass 2 (Refinement)**: Optimize memory and execution performance within the verified logic.
-3. **Pass 3 (Compliance & Formatting)**: Clean up formatting, verify file boundaries, and run static linters.
+3. **Pass 3 (Formatting & Linters)**: Clean up formatting, verify file boundaries, and run static linters.
 
 Each pass has a single evaluative driver, eliminating multi-objective thrashing.
 
@@ -162,19 +162,19 @@ The harness must monitor file diffs across retry iterations:
 - The harness halts autonomous execution and generates an escalation artifact:
   > *"Rule Oscillation Detected: The agent is thrashing between [Rule A: Line Limit] and [Rule B: Zero Allocations]. Human arbitration required."*
 
-### 5. Offloading Rules to Mechanical Compilers and Formatters
-Every rule enforced by an LLM prompt costs attention and token bandwidth. If a rule can be enforced by a deterministic mechanical tool (automated code formatters, static AST linters, compiler flags, architecture unit test runners), **it must be removed from the prompt**.
-Reserve the model's limited attention window exclusively for semantic, contextual architectural decisions that cannot be verified by a deterministic compiler.
+### 5. Offloading Rules to Compilers, Linters, and Formatters
+Every rule enforced by an LLM prompt costs attention and token budget. If a rule can be enforced by an automated tool (code formatters, static linters, compiler flags, architecture unit tests), **it should not live in the prompt**.
+Reserve the model's prompt context for domain architecture and design decisions that automated linters cannot verify.
 
 ---
 
 ## Key Principles
 
 1. **Rule volume has diminishing and eventually negative returns**: Beyond a certain threshold, adding rules induces thrashing rather than compliance.
-2. **Rule failure is driven by bounded context capacity**: Agents fail multi-objective optimization not because rules contradict in theory, but because transformer attention degrades under constraint saturation.
+2. **Rule failure is driven by bounded context capacity**: Agents fail multi-objective optimization not because rules contradict in theory, but because model attention degrades under constraint saturation.
 3. **Prioritize hierarchically**: Define explicit constraint tiers so the agent never sacrifices correctness for aesthetic guidelines.
 4. **Decompose multi-objective tasks into single-objective passes**: Run correctness, performance, and formatting in sequential stages.
-5. **Install harness circuit breakers**: Mechanically detect oscillatory edits and escalate to human arbitration before burning token budgets.
+5. **Install harness circuit breakers**: Programmatically detect oscillating edits and escalate to human review before burning token budgets.
 
 ---
 
