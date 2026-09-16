@@ -1,6 +1,6 @@
 # Reference Style Baseline: Original Ground-Truth Engineering Notes
 
-This document contains 6 original, uncorrupted reference notes written from the perspective of a Senior Technical Lead / Principal Architect. 
+This document contains 9 original, uncorrupted reference notes written from the perspective of a Senior Technical Lead / Principal Architect. 
 
 ## Purpose for the AI Model / Custom Gem
 Use these notes as the **gold standard style and tone reference** (few-shot context). When rewriting, restoring, or creating new architectural notes, strictly mirror the voice, structure, and communication traits demonstrated in these documents:
@@ -15,6 +15,792 @@ Use these notes as the **gold standard style and tone reference** (few-shot cont
 3. **Structure & Visuals**:
    - Clean, organic headings matched to the problem.
    - Minimalist, functional data-flow diagrams rather than shouting ASCII decorative banners.
+
+---
+
+# Reference Note: Agent Deployment and Execution Models
+
+---
+title: Agent Deployment and Execution Models
+tags:
+  - ai-agents
+  - agentic-coding
+  - llm
+  - cloud
+  - infrastructure
+  - software-engineering
+  - deployment
+  - software-development
+aliases:
+  - Agent deployment models
+  - Local and managed agents
+  - Agent hosting
+---
+
+# Agent Deployment and Execution Models
+
+> See also: [[Agentic Coding Harness and Controlled Development Workflows]]
+
+## Core idea
+
+The **agent workflow** and the **place where the agent runs** are separate architectural concerns.
+
+A useful decomposition is:
+
+```text
+1. Model
+   Where does LLM inference happen?
+
+2. Orchestrator / harness
+   Where does the agent loop, workflow and state machine run?
+
+3. Executor
+   Where do files, Git, shell commands, builds and tests actually run?
+```
+
+These three components do not have to run in the same place.
+
+For example, a model may run in a provider cloud while the harness and tool execution run on a developer workstation. A cloud orchestrator may also control a self-hosted executor inside a private network.
+
+The main deployment models are:
+
+1. local agents;
+2. managed remote agents;
+3. self-hosted agents;
+4. hybrid agents.
+
+## Local agents
+
+A local coding agent runs its harness or execution loop on the developer's machine.
+
+Typical examples are CLI or IDE coding agents that operate directly on a local checkout.
+
+```text
+Developer workstation
+        |
+        ├── agent harness
+        ├── repository
+        ├── filesystem
+        ├── Git
+        ├── compiler
+        ├── tests
+        └── local tools
+               |
+               v
+          remote LLM API
+```
+
+The LLM inference may still happen remotely, but file access, shell commands, builds and tests are performed locally.
+
+### Advantages
+
+- direct access to the developer's checkout;
+- simple interactive debugging;
+- low setup cost;
+- easy experimentation;
+- the agent sees the same environment as the developer;
+- useful for pair-programming-style work.
+
+### Limitations
+
+The agent is normally tied to that workstation.
+
+If the machine is turned off or disconnected, the local execution loop stops unless some separate remote service keeps it alive.
+
+This makes local agents particularly suitable for:
+
+- interactive coding;
+- exploratory work;
+- debugging;
+- small tasks;
+- developer-specific workflows.
+
+## Managed remote agents
+
+A managed agent runs its agent loop and usually its execution environment in cloud infrastructure provided by a vendor.
+
+Instead of depending on a developer workstation, the agent receives controlled access to repositories, documentation, tools, APIs and credentials.
+
+```text
+Git repositories ─────┐
+Documentation ────────┤
+Issue tracker ────────┤
+CI/CD ────────────────┤
+Internal APIs / MCP ──┤
+                      v
+              Managed Agent Runtime
+                      |
+              isolated workspace
+                      |
+              build / test / Git
+```
+
+The developer who starts the task does not have to keep a workstation running.
+
+Managed sessions can therefore support:
+
+- long-running tasks;
+- asynchronous work;
+- overnight execution;
+- scheduled maintenance;
+- CI-triggered work;
+- webhook-triggered work;
+- repository-wide analysis;
+- pull-request review.
+
+## Why managed agents are attractive for teams
+
+For an individual developer, a local agent is often the simplest choice.
+
+For a team, a remote or managed agent can become **shared development infrastructure**.
+
+Instead of:
+
+```text
+Developer A → local agent A
+Developer B → local agent B
+Developer C → local agent C
+```
+
+the organization can provide:
+
+```text
+               Shared Agent Platform
+                 /       |       \
+                /        |        \
+          Developer A Developer B Developer C
+```
+
+The shared platform can enforce the same:
+
+- repository instructions;
+- tools;
+- model selection;
+- permissions;
+- architecture rules;
+- workflows;
+- verification commands;
+- tracing;
+- cost policies;
+- credentials.
+
+This reduces the risk that every developer maintains a slightly different local setup.
+
+A managed agent can therefore behave more like CI infrastructure than like an IDE extension.
+
+## Event-driven and unattended work
+
+A remote agent can be started manually, but it can also be invoked by infrastructure events.
+
+For example:
+
+```text
+Jira issue becomes "Ready"
+          |
+          v
+      start agent
+          |
+          v
+    analyze repository
+          |
+          v
+      create plan
+          |
+      human approval
+          |
+          v
+    implement on branch
+          |
+          v
+      run verification
+          |
+          v
+       create PR
+```
+
+Possible triggers include:
+
+```text
+GitHub / GitLab webhook
+CI event
+scheduled job
+issue tracker event
+manual API request
+message queue event
+```
+
+The merge or production deployment can still remain protected by normal CI, branch protection and human approval.
+
+## Managed agent platforms
+
+Several vendors provide managed infrastructure for running agents remotely.
+
+### Anthropic Claude Managed Agents
+
+Claude Managed Agents provide a pre-built Claude agent harness together with managed execution infrastructure.
+
+An agent configuration can include concepts such as:
+
+- model;
+- system prompt;
+- tools;
+- MCP servers;
+- skills;
+- multi-agent configuration.
+
+The important characteristic is that the organization configures the Anthropic-managed harness rather than implementing the complete agent loop itself.
+
+A managed session can operate in a vendor-managed execution environment or, depending on the setup, use execution infrastructure controlled by the organization.
+
+This model is attractive when a team wants:
+
+- the Claude agent runtime;
+- long-running sessions;
+- remote execution;
+- shared configuration;
+- managed lifecycle;
+- minimal custom orchestration code.
+
+### Microsoft Foundry Hosted Agents
+
+Microsoft Foundry Hosted Agents support hosting an agent application in Microsoft-managed infrastructure.
+
+This model is particularly interesting when the development team wants to own more of the agent implementation.
+
+A team can write the agent or workflow in code and let the platform provide infrastructure concerns such as:
+
+- compute;
+- scaling;
+- identity;
+- session state;
+- telemetry;
+- deployment lifecycle.
+
+For a .NET team, the development path can be close to:
+
+```text
+dotnet run
+    |
+    v
+local agent/workflow
+    |
+    v
+container or source deployment
+    |
+    v
+Foundry Hosted Agent
+```
+
+The important distinction is:
+
+```text
+Managed harness
+    = configure a vendor-provided agent loop
+
+Hosted custom agent
+    = write your own agent logic and let a platform host it
+```
+
+### Other provider ecosystems
+
+Similar patterns also exist across other cloud and agent ecosystems.
+
+The exact APIs differ, but the architectural choices are usually the same:
+
+- use a provider-managed agent runtime;
+- run a custom agent on managed compute;
+- self-host the entire agent stack.
+
+The deployment model should be selected independently from the model provider whenever possible.
+
+## Writing the agent loop yourself
+
+Using a ready-made agent harness is not mandatory.
+
+The agent loop can be implemented directly in an ordinary programming language such as:
+
+- Python;
+- C#;
+- TypeScript;
+- Go.
+
+At its simplest:
+
+```python
+while not state.finished:
+    response = call_model(
+        messages=state.messages,
+        tools=available_tools
+    )
+
+    if response.requests_tool:
+        result = execute_tool(response.tool_call)
+        state.messages.append(result)
+    else:
+        state.finished = True
+```
+
+A production harness can then add:
+
+```text
+state machine
+DAG execution
+parallel branches
+retries
+timeouts
+budgets
+human approval gates
+tool permissions
+context management
+checkpoints
+persistent state
+tracing
+model routing
+subagents
+```
+
+This gives the organization control over the workflow while treating models as replaceable execution components.
+
+```text
+Custom Python/.NET harness
+          |
+          +--> Claude
+          |
+          +--> OpenAI model
+          |
+          +--> Gemini
+          |
+          +--> local model
+```
+
+## Deterministic orchestration with probabilistic workers
+
+A useful design principle is:
+
+> **Keep the workflow deterministic where possible and use LLM inference inside the steps that require judgment.**
+
+For example:
+
+```text
+Task
+ |
+ v
+Plan Agent
+ |
+ v
+Human Approval
+ |
+ v
+Implementation Agent
+ |
+ v
+dotnet build
+ |
+ v
+dotnet test
+ |
+ +-------------------+
+ |                   |
+pass                fail
+ |                   |
+ v                   v
+Review Agent      Repair Agent
+ |                   |
+ +---------<---------+
+ |
+ v
+Draft PR
+```
+
+The transitions, retry limits and approval requirements can be enforced by code.
+
+The individual agents remain probabilistic.
+
+This is stronger than encoding the entire process only as natural-language instructions such as:
+
+```text
+plan first;
+then implement;
+then test;
+then review.
+```
+
+Text instructions guide model behavior. A state machine can make invalid transitions impossible.
+
+## Frameworks for custom orchestration
+
+A custom agent loop does not require a graph framework, but frameworks can help once the workflow becomes complex.
+
+Possible approaches include:
+
+- a simple custom state machine;
+- LangGraph;
+- Microsoft Agent Framework workflows;
+- Temporal;
+- Durable Functions;
+- queue-based worker orchestration;
+- a custom DAG engine.
+
+The important decision is not which framework is used, but which parts are:
+
+- deterministic workflow logic;
+- probabilistic model decisions;
+- external tool execution;
+- persistent state;
+- human approval.
+
+For a small system, plain application code may be easier to understand than a large orchestration framework.
+
+## Hosting a custom agent
+
+A custom agent application is ultimately a service, worker or container and can be hosted using ordinary cloud infrastructure.
+
+Possible environments include:
+
+### Azure
+
+- Azure Container Apps;
+- Azure Kubernetes Service;
+- Azure Functions;
+- Durable Functions;
+- virtual machines;
+- Microsoft Foundry Hosted Agents.
+
+### AWS
+
+- ECS;
+- EKS;
+- Lambda;
+- EC2.
+
+### Google Cloud
+
+- Cloud Run;
+- GKE;
+- Compute Engine.
+
+### General-purpose infrastructure
+
+- Kubernetes;
+- Docker hosts;
+- virtual machines;
+- serverless container platforms;
+- internal company infrastructure.
+
+The appropriate host depends on whether the agent needs:
+
+- long-running processes;
+- persistent filesystem state;
+- queues;
+- scheduling;
+- webhook endpoints;
+- isolated sandboxes;
+- private network access;
+- access to internal repositories;
+- access to internal package feeds;
+- databases or internal APIs.
+
+## Self-hosted agents
+
+A self-hosted agent runs the agent loop in infrastructure controlled by the organization.
+
+```text
+Company infrastructure
+        |
+        ├── orchestrator
+        ├── agent workers
+        ├── repository access
+        ├── internal services
+        └── build environment
+                 |
+                 v
+             LLM API
+```
+
+This provides strong control over the agent execution environment, including:
+
+- networking;
+- secrets;
+- filesystem access;
+- runtime versions;
+- build infrastructure;
+- observability;
+- data retention for the agent runtime.
+
+It also means the organization must operate more infrastructure.
+
+This model can be attractive when the agent needs access to private systems that should not be exposed to an external execution environment.
+
+However, **self-hosting the agent does not imply self-hosting the model**.
+
+If the agent still calls an external LLM API, then prompts, selected repository content, diffs, compiler output, test failures and other context sent to the model cross the organization's trust boundary.
+
+## Data sovereignty and fully private agents
+
+For organizations with strict confidentiality requirements, the privacy boundary must be analyzed separately from the agent deployment boundary.
+
+A useful rule is:
+
+> **The location of the agent does not determine the privacy boundary. The location of model inference does.**
+
+There are several important deployment levels.
+
+### Self-hosted agent with an external model API
+
+```text
+Company infrastructure
+        |
+        ├── harness
+        ├── executor
+        ├── repository
+        └── internal tools
+                 |
+                 v
+          External LLM API
+```
+
+The repository and execution environment may remain inside the company network, but any context sent to the model leaves that environment.
+
+This can still be acceptable when the organization trusts contractual, technical and retention guarantees offered by the model provider.
+
+It is **not** sufficient for a policy that requires source code and prompts to never reach an external model provider.
+
+### Self-hosted stack on rented private GPU infrastructure
+
+An organization does not necessarily have to buy and operate its own physical GPU servers.
+
+It can deploy its own inference stack on rented GPU compute while still avoiding a vendor-hosted LLM API.
+
+```text
+Company systems
+        |
+        ├── repositories
+        ├── documentation / RAG
+        ├── harness
+        ├── executor
+        └── internal services
+                 |
+                 v
+        Private GPU environment
+                 |
+                 ├── inference server
+                 └── self-hosted model
+```
+
+The GPU environment can be implemented using virtual machines, Kubernetes, dedicated hosts or other rented compute.
+
+Typical controls can include:
+
+- private VPC / VNet networking;
+- no public ingress;
+- restricted or disabled egress;
+- private endpoints;
+- organization-controlled identity and access policies;
+- organization-controlled encryption keys;
+- private model and artifact storage;
+- internal logging and telemetry.
+
+This removes dependence on a model provider's inference API, but the physical infrastructure is still operated by the cloud or hosting provider.
+
+For many organizations, this is a useful middle ground between SaaS model APIs and owning a GPU datacenter.
+
+### Fully on-premises or isolated deployment
+
+The strongest sovereignty model is to run the complete stack on infrastructure physically controlled by the organization.
+
+```text
+Company datacenter
+        |
+        ├── repositories
+        ├── documentation / RAG
+        ├── harness
+        ├── executor
+        ├── inference server
+        ├── GPU cluster
+        └── model weights
+```
+
+This can be deployed with no dependency on an external inference service and, if required, without Internet access.
+
+Such a design is appropriate when the requirement is literally:
+
+> Source code, prompts, retrieved context and model inputs must not leave organization-controlled infrastructure.
+
+The trade-off is significantly higher operational responsibility, including:
+
+- GPU procurement and capacity planning;
+- model serving;
+- model upgrades;
+- scaling;
+- observability;
+- security patching;
+- inference optimization;
+- reliability and redundancy.
+
+### The model becomes part of the infrastructure decision
+
+Strict data-sovereignty requirements can also constrain model selection.
+
+If a model is available only through a vendor API, then an organization that forbids external inference cannot use it for protected workloads.
+
+The organization may instead need a model whose weights can be deployed in its own environment.
+
+This creates an important trade-off:
+
+```text
+Maximum model choice
+        |
+        v
+External model APIs
+        |
+        | increasing infrastructure control
+        v
+Self-hosted inference on rented GPU compute
+        |
+        v
+Fully on-premises inference
+
+Maximum data sovereignty
+```
+
+The cost of strict sovereignty is therefore not only infrastructure cost. It can also reduce access to closed models that are available only as managed services.
+
+## Hybrid architecture
+
+The model, orchestrator and executor do not need to run together.
+
+For example:
+
+```text
+Cloud orchestrator
+       |
+       v
+remote agent loop
+       |
+       v
+self-hosted executor
+       |
+       +-- private repository
+       +-- internal build infrastructure
+       +-- private databases
+```
+
+Another example:
+
+```text
+Vendor LLM
+    |
+    v
+Company-hosted harness
+    |
+    v
+Company-hosted executor
+```
+
+A hybrid setup can combine:
+
+- cloud model inference;
+- centrally managed orchestration;
+- private local execution.
+
+This can be useful when the organization wants cloud-scale orchestration but must keep some execution close to internal systems.
+
+## Local and managed agents can coexist
+
+Local versus managed should not be treated as an exclusive choice.
+
+A development organization can use both:
+
+```text
+Local agent
+    |
+    +-- interactive development
+    +-- debugging
+    +-- exploratory work
+    +-- developer-specific tasks
+
+Managed agent
+    |
+    +-- shared team workflows
+    +-- unattended tasks
+    +-- scheduled maintenance
+    +-- repository-wide analysis
+    +-- PR review
+    +-- CI-triggered work
+```
+
+A developer may use a local agent while actively modifying code and send larger or unattended tasks to a remote agent.
+
+## Security and permissions
+
+Deployment location does not remove the need for least privilege.
+
+A shared cloud agent should not automatically receive access to every repository, environment or production credential.
+
+Permissions should be scoped by role.
+
+For example:
+
+```text
+Planner
+  read repository
+  read documentation
+  read issue tracker
+
+Implementer
+  read/write feature branch
+  build
+  test
+
+Reviewer
+  read repository
+  read diff
+  no write access
+
+Release Agent
+  deployment permissions
+```
+
+The ability to share an agent across a team makes centralized identity and permission management more important, not less.
+
+## Choosing a deployment model
+
+A simple decision guide:
+
+| Need | Good starting point |
+| --- | --- |
+| Interactive personal coding | Local agent |
+| IDE/CLI pair programming | Local agent |
+| Long-running unattended work | Managed or self-hosted agent |
+| Shared agent for a team | Managed or self-hosted agent |
+| Webhook / CI-triggered execution | Managed or self-hosted agent |
+| Maximum control over agent execution | Self-hosted agent |
+| Private internal execution | Self-hosted or hybrid agent |
+| Code must not reach an external model provider | Self-hosted model inference |
+| Avoid buying GPUs while controlling model inference | Private rented GPU infrastructure |
+| No protected data may leave organization-controlled infrastructure | Fully self-hosted stack |
+| Maximum data sovereignty | On-premises or isolated inference |
+| Minimal operational overhead | Managed agent |
+| Fully custom workflow | Custom-hosted agent |
+| Deterministic workflow guarantees | Custom orchestrator |
+| Provider portability | Custom harness |
+
+## Final principles
+
+1. The model, harness and executor are separate architectural components.
+2. Local agents are the simplest option for interactive development.
+3. Managed agents are especially valuable as shared team infrastructure.
+4. Remote execution enables unattended, scheduled and event-driven work.
+5. A custom agent loop can be written in ordinary application code.
+6. A custom harness can be hosted on general-purpose cloud infrastructure or a specialized agent platform.
+7. Use managed infrastructure when operational simplicity matters more than full control.
+8. Use self-hosting when networking, security or execution requirements demand it.
+9. Self-hosting the agent does not imply self-hosting the model.
+10. The model inference location determines whether prompts and selected code cross the organizational trust boundary.
+11. Strict data-sovereignty requirements may require both self-hosted agent infrastructure and self-hosted model inference.
+12. Rented private GPU infrastructure can provide a middle ground between external model APIs and fully on-premises deployment.
+13. Keep deterministic workflow rules in code when they must be enforced.
+14. Local, managed and hybrid agents can coexist in the same development organization.
 
 ---
 
@@ -3823,6 +4609,2329 @@ explicit, composable, mechanically discoverable behavior
 In software increasingly written and maintained by agents, the cost of repetition may fall while the cost of hidden semantics becomes much more visible.
 
 That could change what we consider "clean" architecture.
+
+---
+
+# Reference Note: Introduction to Workflow Orchestration
+
+---
+title: Introduction to Workflow Orchestration
+tags:
+  - orchestration
+  - distributed-systems
+  - software-architecture
+  - durable-execution
+  - microservices
+  - background-processing
+aliases:
+  - Workflow Orchestration Concepts
+  - Durable Execution and Orchestration
+---
+
+## Core Idea
+
+A workflow orchestrator coordinates actions that together form a process.
+
+It decides:
+
+- what should happen;
+    
+- in what order;
+    
+- under which conditions;
+    
+- what to do after a failure;
+    
+- when to retry;
+    
+- when to wait;
+    
+- when human approval is required;
+    
+- how the state of a long-running process should be maintained.
+    
+
+A useful distinction is:
+
+```text
+Business services:
+know how to perform business operations
+
+Background workers:
+execute work
+
+Workflow orchestrator:
+knows when, why, and in what order operations should happen
+
+LLM:
+helps with decisions that require interpretation
+
+Observability:
+shows what happened and why
+```
+
+These responsibilities can exist in the same application, but they represent different architectural concerns.
+
+---
+
+# Background Execution Is Not Workflow Orchestration
+
+Many applications need to execute work outside the request that initiated it.
+
+Examples include:
+
+- generating reports;
+    
+- sending emails;
+    
+- rebuilding indexes;
+    
+- refreshing caches;
+    
+- processing uploaded files;
+    
+- running scheduled maintenance;
+    
+- retrying transient failures.
+    
+
+A **background job executor** is designed primarily to run such work reliably.
+
+Typical capabilities include:
+
+- queues;
+    
+- workers;
+    
+- persistence;
+    
+- retries;
+    
+- delayed execution;
+    
+- recurring jobs;
+    
+- concurrency limits.
+    
+
+Conceptually:
+
+```text
+Application
+    ↓
+enqueue work
+    ↓
+background job storage / queue
+    ↓
+worker
+    ↓
+execute operation
+```
+
+This is an execution mechanism.
+
+It answers:
+
+> How and when should this piece of work run?
+
+A workflow orchestrator answers a different question:
+
+> Why should this operation happen, and what should happen before or after it?
+
+That distinction becomes increasingly important as processes grow.
+
+---
+
+# When Background Jobs Accidentally Become a Workflow Engine
+
+A background execution system can technically be used to chain many operations together.
+
+For example:
+
+```text
+Create order
+    ↓
+Reserve stock
+    ↓
+Capture payment
+    ↓
+Wait for confirmation
+    ↓
+Arrange shipment
+    ↓
+Notify customer
+```
+
+The problem appears when this process is implicitly represented by a mixture of:
+
+- background jobs;
+    
+- continuations;
+    
+- scheduled checks;
+    
+- retries;
+    
+- database flags;
+    
+- events;
+    
+- callbacks;
+    
+- manually chained methods.
+    
+
+The system may still work, but the business process becomes difficult to see.
+
+It becomes harder to answer:
+
+- Where is the process now?
+    
+- Which steps completed?
+    
+- What is it waiting for?
+    
+- Why was this job created?
+    
+- What happens after a failure?
+    
+- Can the workflow resume?
+    
+- Which operations can be safely retried?
+    
+- Where is the complete process actually defined?
+    
+
+The issue is therefore not whether a background job system **can execute** a multi-step process.
+
+It usually can.
+
+The question is whether it is the right abstraction for **representing that process explicitly**.
+
+---
+
+# Execution Versus Orchestration
+
+A useful architectural rule is:
+
+```text
+Service:
+knows how to perform an operation
+
+Orchestrator:
+knows when and why the operation should be performed
+```
+
+A service may expose capabilities such as:
+
+```text
+reserve stock
+capture payment
+generate report
+create invoice
+prepare deployment
+create support ticket
+send notification
+```
+
+The orchestrator composes those capabilities into processes.
+
+It may manage:
+
+- ordering;
+    
+- branching;
+    
+- waiting;
+    
+- retries;
+    
+- timeouts;
+    
+- compensation;
+    
+- human approval;
+    
+- communication between systems;
+    
+- long-running process state.
+    
+
+For example:
+
+```text
+New support message
+    ↓
+Classify request
+    ↓
+Is it a bug?
+    ├── No → route to normal support
+    └── Yes
+          ↓
+       Search for duplicate issues
+          ↓
+       Prepare issue draft
+          ↓
+       Human approval
+          ↓
+       Create issue
+          ↓
+       Notify requester
+```
+
+The individual applications know how to search issues, create an issue, or send a notification.
+
+The orchestrator owns the process connecting them.
+
+---
+
+# Main Classes of Orchestration Tools
+
+"Orchestrator" is a broad term.
+
+Different tools solve different versions of the problem.
+
+## 1. Background Job Executors
+
+These systems primarily execute asynchronous work inside or near an application.
+
+Typical responsibilities:
+
+```text
+enqueue
+schedule
+retry
+persist
+execute
+```
+
+They are a good fit when:
+
+- work belongs mostly to one application;
+    
+- execution should happen outside the HTTP request;
+    
+- retries are useful;
+    
+- scheduled or recurring work is required;
+    
+- the process itself is simple.
+    
+
+Their main abstraction is usually a **job**.
+
+They are execution-oriented rather than process-oriented.
+
+---
+
+## 2. Integration and Workflow Automation
+
+Examples of this category include tools such as:
+
+- n8n;
+    
+- Make;
+    
+- Zapier;
+    
+- Pipedream.
+    
+
+Their main purpose is connecting systems and APIs.
+
+Typical flow:
+
+```text
+Trigger
+    ↓
+Read data
+    ↓
+Transform data
+    ↓
+Call API
+    ↓
+Evaluate condition
+    ↓
+Perform another action
+```
+
+They work particularly well for:
+
+- webhooks;
+    
+- scheduled automations;
+    
+- Slack and email workflows;
+    
+- GitHub automation;
+    
+- CRM integration;
+    
+- API composition;
+    
+- lightweight business workflows;
+    
+- workflows containing occasional LLM calls.
+    
+
+In many of these systems, the visual diagram is itself the executable workflow:
+
+```text
+Diagram
+    ↓
+Workflow definition
+    ↓
+Execution
+```
+
+This makes the process highly visible.
+
+---
+
+## 3. Durable Workflow Orchestrators
+
+Another class focuses on **durable, long-running processes**.
+
+Examples include:
+
+- Temporal;
+    
+- Camunda;
+    
+- Azure Durable Functions;
+    
+- AWS Step Functions.
+    
+
+These systems become useful when a workflow may:
+
+- run for hours, days, or months;
+    
+- wait for external events;
+    
+- survive application restarts;
+    
+- retry failed operations;
+    
+- execute compensation logic;
+    
+- maintain durable process state;
+    
+- coordinate multiple services.
+    
+
+For example:
+
+```text
+Create order
+    ↓
+Reserve stock
+    ↓
+Request payment
+    ↓
+Wait for payment confirmation
+    ↓
+Arrange shipment
+    ↓
+Wait for carrier response
+    ↓
+Notify customer
+```
+
+The important concept here is **durability**.
+
+The process itself is persisted.
+
+The orchestrator can know:
+
+```text
+payment requested
+payment confirmation pending
+shipment not started yet
+```
+
+even if the process has been waiting for several days or the underlying services have restarted.
+
+This is fundamentally different from merely putting another job into a queue.
+
+---
+
+## 4. LLM and Agent Orchestration
+
+Another category focuses primarily on controlling the internal behavior of an LLM application or agent.
+
+Examples include:
+
+- LangGraph;
+    
+- LangChain;
+    
+- Semantic Kernel;
+    
+- AutoGen;
+    
+- CrewAI;
+    
+- Dify.
+    
+
+These tools may coordinate:
+
+- prompts;
+    
+- model calls;
+    
+- tools;
+    
+- retrieval;
+    
+- agent state;
+    
+- memory;
+    
+- branching;
+    
+- loops;
+    
+- multiple agents;
+    
+- human approval;
+    
+- structured outputs.
+    
+
+For example:
+
+```text
+Receive request
+    ↓
+Understand intent
+    ↓
+Retrieve documentation
+    ↓
+Do we have enough information?
+    ├── No → call another tool
+    └── Yes
+          ↓
+       Generate proposal
+```
+
+The main object being orchestrated is no longer simply a business service.
+
+It may be the model's interaction with tools and information.
+
+This creates an important distinction:
+
+```text
+Business workflow orchestrator:
+coordinates the overall business process
+
+Agent orchestrator:
+coordinates the model's reasoning and tool usage
+```
+
+The two can be combined.
+
+A business workflow may call an agent as one step.
+
+---
+
+## 5. Observability and Evaluation
+
+Some systems are adjacent to orchestration rather than orchestrators themselves.
+
+For LLM applications, observability platforms can capture:
+
+- prompts;
+    
+- model calls;
+    
+- tool calls;
+    
+- intermediate steps;
+    
+- token usage;
+    
+- latency;
+    
+- errors;
+    
+- agent trajectories;
+    
+- evaluations.
+    
+
+A useful mental distinction is:
+
+```text
+Workflow automation:
+What happened across systems?
+
+Agent framework:
+How does the agent decide what to do?
+
+Agent observability:
+What did the agent actually do, and how well did it work?
+```
+
+These concerns often appear together, but they should not be confused.
+
+---
+
+
+## 6. Agent Execution Environments and Sandboxes
+
+Another class of infrastructure becomes important when an agent needs to do more than call a small set of predefined APIs.
+
+A coding or computer-use agent may need capabilities such as:
+
+- a filesystem;
+- a shell;
+- Git;
+- package managers;
+- compilers and runtimes;
+- long-running processes;
+- development servers;
+- network access;
+- temporary credentials;
+- isolated CPU, memory, and disk.
+
+Giving an LLM direct access to the machine hosting the application is usually a poor security boundary.
+
+Instead, the agent can operate inside an isolated execution environment.
+
+Examples of this category include systems such as **Daytona**.
+
+Daytona's main abstraction is a programmatically managed sandbox: an isolated runtime that behaves much more like a disposable computer than a single `run_code` function.
+
+Conceptually:
+
+```text
+Agent framework:
+decides what the agent should do
+
+Agent sandbox/runtime:
+provides an isolated computer in which the agent can do it
+```
+
+For example, a coding-agent loop might look like:
+
+```text
+Receive task
+    ↓
+Create sandbox
+    ↓
+Clone repository
+    ↓
+Agent inspects code
+    ↓
+Modify files
+    ↓
+Build / run tests
+    ↓
+Inspect result
+    ↓
+Modify again if necessary
+    ↓
+Produce commit / patch / pull request
+    ↓
+Destroy or retain sandbox
+```
+
+The sandbox does **not** normally decide that this is the correct sequence.
+
+That responsibility belongs to the agent framework, coding agent, or outer workflow.
+
+The sandbox provides the environment in which those actions can safely execute.
+
+This creates another important distinction:
+
+```text
+Workflow orchestrator:
+coordinates the overall process
+
+Agent framework:
+coordinates model reasoning and tool usage
+
+Agent sandbox/runtime:
+executes broad computer operations inside an isolation boundary
+```
+
+### Why Sandboxes Matter Especially for Coding Agents
+
+For many business agents, the safest interface is a narrow set of explicit capabilities:
+
+```text
+find_customer
+create_support_ticket
+prepare_refund_request
+request_deployment
+```
+
+A coding agent is different.
+
+Software development inherently requires a very broad operation space:
+
+```text
+read arbitrary repository files
+write files
+run shell commands
+install dependencies
+compile code
+run tests
+start applications
+inspect processes
+use developer tools
+```
+
+Trying to represent every possible development operation as a predefined business tool would be impractical.
+
+Therefore the security boundary can move from **restricting every operation** to **restricting the environment in which broad operations are allowed**.
+
+For example:
+
+```text
+Business agent
+    ↓
+Restricted business capabilities
+    ↓
+Production systems
+```
+
+versus:
+
+```text
+Coding agent
+    ↓
+Broad computer capabilities
+    ↓
+Isolated sandbox
+    ↓
+Controlled artifact / commit / pull request
+    ↓
+Review and validation
+    ↓
+Real system
+```
+
+This is an important agent architecture pattern.
+
+The agent may be highly capable inside the sandbox while still having tightly controlled ways of affecting external systems.
+
+### Sandboxes Are Not Orchestrators
+
+It is easy to confuse a sandbox platform with an agent platform because both may appear in the same system.
+
+But they solve different problems.
+
+A sandbox primarily answers:
+
+> Where can this generated or agent-directed computation safely run?
+
+An agent framework primarily answers:
+
+> What should the model do next?
+
+A workflow orchestrator primarily answers:
+
+> Why is this step happening, what preceded it, and what should happen afterward?
+
+These layers can be combined.
+
+For example:
+
+```text
+GitHub issue
+    ↓
+Workflow orchestrator
+    ↓
+Coding agent / agent framework
+    ↓
+Create Daytona sandbox
+    ↓
+Clone repository
+    ↓
+Investigate → edit → build → test loop
+    ↓
+Produce pull request
+    ↓
+Review agent
+    ↓
+Human approval
+    ↓
+Merge / deployment workflow
+```
+
+Daytona owns mainly the isolated execution environment in this picture.
+
+The surrounding workflow still needs something else to own process state, decisions, approvals, retries, and business policy.
+
+### Sandboxes and Parallel Agents
+
+Sandbox infrastructure also becomes useful when many agents work concurrently.
+
+Instead of multiple agents modifying the same workspace, each task can receive its own isolated environment:
+
+```text
+Task A → Agent A → Sandbox A → branch A
+Task B → Agent B → Sandbox B → branch B
+Task C → Agent C → Sandbox C → branch C
+```
+
+This provides a natural boundary for:
+
+- filesystem state;
+- dependencies;
+- running processes;
+- experiments;
+- credentials;
+- resource limits;
+- cleanup.
+
+The orchestration problem then becomes deciding which tasks should exist, how they depend on one another, and how their outputs should be reviewed or combined.
+
+The sandbox solves a different problem: giving every task a disposable execution environment.
+
+---
+
+# Deterministic and Agentic Workflow
+
+Not every workflow needs an agent.
+
+A deterministic process may look like:
+
+```text
+Receive invoice
+    ↓
+Validate file
+    ↓
+Extract data
+    ↓
+Store invoice
+    ↓
+Notify accounting
+```
+
+If the next action is already known, normal workflow logic is usually enough.
+
+An agentic step becomes useful when interpretation is required:
+
+```text
+Receive support request
+    ↓
+Understand intent
+    ↓
+Decide which information is relevant
+    ↓
+Search appropriate systems
+    ↓
+Propose next action
+```
+
+A useful combined model is:
+
+```text
+Deterministic workflow
+        ↓
+LLM-assisted decision
+        ↓
+Deterministic validation
+        ↓
+Controlled action
+```
+
+The LLM does not need to own the entire process.
+
+It can simply handle the parts where normal rules become difficult to express.
+
+---
+
+# LLM as a Component of the Workflow
+
+Good LLM tasks include:
+
+- classifying unstructured text;
+    
+- extracting structured information;
+    
+- summarizing;
+    
+- comparing documents;
+    
+- identifying likely duplicates;
+    
+- translating intent into structured commands;
+    
+- ranking alternatives;
+    
+- proposing a next action;
+    
+- drafting content.
+    
+
+For example:
+
+```json
+{
+  "requestType": "bug_report",
+  "component": "authentication",
+  "confidence": 0.92,
+  "suggestedAction": "create_issue"
+}
+```
+
+This output can then enter normal deterministic software.
+
+```text
+LLM proposes
+    ↓
+Workflow validates
+    ↓
+Authorization checks permissions
+    ↓
+Human approves if necessary
+    ↓
+Normal code executes
+```
+
+This is usually safer and easier to reason about than giving the model unrestricted control.
+
+---
+
+# Tools Should Represent Capabilities
+
+An important architectural principle is that orchestration should operate on explicit business capabilities.
+
+Bad interface:
+
+```text
+execute_arbitrary_sql
+```
+
+Better interfaces:
+
+```text
+find_customer
+create_support_ticket
+prepare_refund_request
+request_deployment
+```
+
+Similarly, external orchestrators should ideally not depend on the internal background-job representation of an application.
+
+Instead, the application can expose a stable contract:
+
+```http
+POST /orders/{id}/reserve-stock
+POST /reports
+POST /deployments
+POST /support-tickets
+```
+
+The service may internally use:
+
+```text
+background job executor
+local queue
+worker service
+message broker
+database transaction
+```
+
+but those are implementation details.
+
+Conceptually:
+
+```text
+Orchestrator
+    ↓
+Business API
+    ↓
+Application
+    ↓
+Local execution mechanism
+```
+
+This separation makes it easier to replace infrastructure without redesigning the workflow.
+
+---
+
+# Long-Running Operations
+
+A long-running operation should usually not keep an HTTP request open.
+
+Instead of:
+
+```text
+POST request
+    ↓
+wait 10 minutes
+    ↓
+response
+```
+
+the service can expose a job-style API:
+
+```http
+POST /report-jobs
+```
+
+Response:
+
+```json
+{
+  "jobId": "report-123",
+  "status": "queued"
+}
+```
+
+The workflow can later query:
+
+```http
+GET /report-jobs/report-123
+```
+
+or continue after receiving an event:
+
+```text
+ReportGenerated
+```
+
+The important point is that the **business capability** is exposed through the service contract.
+
+The fact that a background worker executes it internally does not need to leak outside the service.
+
+---
+
+# REST, Messaging, and Orchestration Solve Different Problems
+
+REST and messaging are communication mechanisms.
+
+An orchestrator is a process-control mechanism.
+
+They complement each other.
+
+A practical split is:
+
+|Need|Typical mechanism|
+|---|---|
+|Read current state|REST|
+|Execute short command|REST|
+|Submit long-running operation|Job API|
+|Reliable asynchronous command|Message broker|
+|Notify that something happened|Event|
+|Coordinate multiple steps|Orchestrator|
+
+For example:
+
+```text
+Orchestrator
+    ↓
+Command: GenerateReport
+    ↓
+Message broker
+    ↓
+Report service
+    ↓
+Event: ReportGenerated
+    ↓
+Orchestrator continues
+```
+
+Messaging reduces temporal coupling because the receiving system does not need to be available at exactly the moment the operation is requested.
+
+But the broker still does not necessarily know the overall business process.
+
+That remains the orchestrator's responsibility.
+
+---
+
+# Retries Require Idempotency
+
+Distributed workflows frequently retry operations.
+
+Retries may occur because of:
+
+- timeouts;
+    
+- network failures;
+    
+- process restarts;
+    
+- lost responses;
+    
+- temporary service failures.
+    
+
+This creates an important ambiguity:
+
+```text
+Did the operation fail before execution?
+
+or
+
+Did the operation succeed and only the response get lost?
+```
+
+Therefore, orchestrated operations should preferably be idempotent.
+
+For example:
+
+```http
+POST /payments
+Idempotency-Key: order-123-payment
+```
+
+Repeated execution using the same key should not charge the customer multiple times.
+
+Reliable orchestration and idempotent business operations strongly complement each other.
+
+---
+
+# Human Approval Is a Workflow State
+
+Human approval is useful when an action is:
+
+- destructive;
+    
+- expensive;
+    
+- difficult to reverse;
+    
+- externally visible;
+    
+- low-confidence;
+    
+- legally important;
+    
+- financially important.
+    
+
+For example:
+
+```text
+LLM prepares action
+    ↓
+Workflow enters waiting_for_approval
+    ↓
+Human approves / edits / rejects
+    ↓
+Workflow continues
+```
+
+Human involvement should not necessarily be treated as an exception.
+
+In many workflows it is simply another legitimate state.
+
+---
+
+# Workflow State and Observability
+
+A workflow should make its state explicit.
+
+For example:
+
+```json
+{
+  "workflowId": "support-451",
+  "status": "waiting_for_approval",
+  "currentStep": "issue_review"
+}
+```
+
+It should ideally be possible to answer:
+
+- What started the process?
+    
+- Which steps completed?
+    
+- What is it waiting for?
+    
+- Why did it fail?
+    
+- Which retries occurred?
+    
+- Which external actions were executed?
+    
+- Can the process resume?
+    
+- Which LLM inputs and outputs affected the decision?
+    
+
+For workflows involving models, useful additional data includes:
+
+- prompt version;
+    
+- model version;
+    
+- context supplied to the model;
+    
+- structured model output;
+    
+- latency;
+    
+- token usage;
+    
+- evaluation results.
+    
+
+This becomes increasingly important because LLM decisions are inherently less predictable than ordinary deterministic code.
+
+---
+
+# A Layered Architecture
+
+These mechanisms are not necessarily competitors.
+
+They can form layers.
+
+For example:
+
+```text
+Slack / Email / GitHub / Timer
+              ↓
+      Workflow Orchestrator
+              ↓
+      LLM-assisted decision
+              ↓
+  Validation / Human Approval
+              ↓
+       Business Service API
+              ↓
+       Application Logic
+              ↓
+  Background Job Executor
+              ↓
+            Worker
+```
+
+A more complex architecture might additionally contain:
+
+```text
+Agent framework:
+complex LLM decision process
+
+Agent sandbox/runtime:
+isolated computer environment for agent actions
+
+Durable orchestrator:
+long-running business process
+
+Message broker:
+reliable asynchronous communication
+
+Background worker:
+local execution
+
+Observability platform:
+tracing and evaluation
+```
+
+The important point is that each component solves a different problem.
+
+---
+
+# Choosing the Right Level of Orchestration
+
+A simple local task may require only:
+
+```text
+background queue
+    ↓
+worker
+```
+
+An integration workflow may require:
+
+```text
+workflow automation
+    ↓
+several APIs
+```
+
+A critical multi-day business process may require:
+
+```text
+durable workflow orchestrator
+    ↓
+multiple services
+```
+
+A complex LLM application may require:
+
+```text
+agent framework
+    ↓
+models + tools + retrieval
+```
+
+An autonomous coding or computer-use agent may additionally require:
+
+```text
+agent framework
+    ↓
+agent sandbox / runtime
+    ↓
+filesystem + shell + processes + tools
+```
+
+And these can be composed:
+
+```text
+Durable business workflow
+          ↓
+Agent performs ambiguous analysis
+          ↓
+Agent may use isolated sandbox for broad computation
+          ↓
+Workflow validates result
+          ↓
+Service API / controlled artifact
+          ↓
+Local background execution
+```
+
+There is no reason for one tool to own every layer.
+
+---
+
+# Mental Model
+
+The most useful distinction is:
+
+```text
+Background job executor:
+runs work reliably
+
+Integration orchestrator:
+connects systems and coordinates steps
+
+Durable workflow orchestrator:
+maintains long-running process state
+
+Agent framework:
+coordinates model reasoning and tool usage
+
+Agent sandbox/runtime:
+provides isolated compute in which agents can act
+
+LLM:
+handles ambiguity and language-based judgment
+
+Service API:
+exposes controlled business capabilities
+
+Message broker:
+provides reliable asynchronous communication
+
+Observability:
+shows what happened and why
+```
+
+The architectural principle behind all of them is:
+
+> Make the business process explicit and observable, while keeping execution mechanisms as implementation details.
+
+Background execution is not orchestration.
+
+Messaging is not orchestration.
+
+An LLM is not necessarily an orchestrator.
+
+An agent is not necessarily the owner of the business process.
+
+A sandbox is not an agent or a workflow orchestrator.
+
+They are separate building blocks that can be composed into a reliable system.
+
+The goal is not to replace normal software with one universal workflow or autonomous agent.
+
+The goal is to use the right abstraction at each level:
+
+```text
+deterministic code where the rules are known,
+orchestration where processes span multiple steps,
+durability where processes must survive time and failure,
+sandboxes where agents require broad but isolated execution capabilities,
+and LLMs where interpretation provides real value.
+```
+
+---
+
+# Reference Note: LLMs as a Code Review Team
+
+---
+title: LLMs as a Code Review Team
+tags:
+  - code-review
+  - ai-agents
+  - software-engineering
+  - multi-agent
+  - quality-assurance
+  - testing
+aliases:
+  - Multi-Agent Code Review
+  - Continuous Engineering Verification with LLMs
+---
+
+LLMs can change code review from a mostly human, manually executed activity into a continuous system of specialized reviewers.
+
+The most useful model is not:
+
+> One AI reads a pull request and gives its opinion.
+
+A more interesting model is:
+
+> A team of specialized agents continuously examines changes, forms hypotheses about potential problems, and uses deterministic tools to verify them.
+
+The role of humans then shifts toward reviewing important findings, resolving ambiguity, making architectural decisions, and accepting responsibility for the final change.
+
+---
+
+## The Most Important Property May Be Relentlessness
+
+One of the biggest advantages of an automated reviewer is not intelligence.
+
+It is relentlessness.
+
+A human reviewer gets tired.
+
+After reviewing many pull requests, large diffs, repetitive changes, or hundreds of similar files, attention inevitably decreases.
+
+An agent does not care that:
+
+- this is the twentieth pull request today;
+    
+- the diff contains 150 files;
+    
+- the same validation pattern appears for the hundredth time;
+    
+- a checklist contains 40 items;
+    
+- the issue it is looking for occurs only once every few thousand changes.
+    
+
+It can apply the same procedure every time.
+
+This makes agents especially useful for review work that is:
+
+- repetitive;
+    
+- systematic;
+    
+- easy to forget;
+    
+- rare but important;
+    
+- dependent on large amounts of context.
+    
+
+A human may know that every new endpoint should verify authorization, propagate cancellation, validate input, preserve backward compatibility, update telemetry, and contain relevant tests.
+
+Knowing the rules does not mean remembering every rule during every review.
+
+An agent can.
+
+This may be one of the strongest reasons to introduce AI review even when human reviewers are already very experienced.
+
+---
+
+## Code Review Does Not Need One General Reviewer
+
+A single prompt such as:
+
+```text
+Review this pull request.
+```
+
+asks one model to simultaneously reason about too many unrelated concerns.
+
+A better design is a team of specialized reviewers.
+
+For example:
+
+```text
+Review Router
+    |
+    +-- Correctness Reviewer
+    +-- Test Reviewer
+    +-- Security Reviewer
+    +-- API Compatibility Reviewer
+    +-- Database Reviewer
+    +-- Performance Reviewer
+    +-- Concurrency Reviewer
+    +-- Architecture Reviewer
+```
+
+Not every reviewer needs to run for every change.
+
+A lightweight routing agent can inspect the diff and decide which specialists are relevant.
+
+For example:
+
+```text
+DTO / controller / public contract changed
+        ->
+API Compatibility Reviewer
+```
+
+or:
+
+```text
+EF / SQL / migration changed
+        ->
+Database Reviewer
+```
+
+or:
+
+```text
+authentication / authorization changed
+        ->
+Security Reviewer
+```
+
+Correctness and test reviewers may run almost always, while expensive specialists run conditionally.
+
+This keeps both cost and noise under control.
+
+---
+
+## Different Reviewers Should Have Different Instructions
+
+Each reviewer can have its own playbook.
+
+A database reviewer may inspect:
+
+- query count;
+    
+- N+1 queries;
+    
+- indexes;
+    
+- transaction boundaries;
+    
+- query plans;
+    
+- excessive materialization;
+    
+- unnecessary round trips;
+    
+- locking behavior.
+    
+
+An API reviewer may inspect:
+
+- backward compatibility;
+    
+- serialization changes;
+    
+- optional versus required fields;
+    
+- enum compatibility;
+    
+- HTTP semantics;
+    
+- authorization;
+    
+- versioning.
+    
+
+A performance reviewer may inspect:
+
+- allocations;
+    
+- algorithmic complexity;
+    
+- reflection;
+    
+- unnecessary abstractions;
+    
+- excessive LINQ;
+    
+- repeated parsing;
+    
+- synchronization;
+    
+- database access;
+    
+- hot-path behavior.
+    
+
+A correctness reviewer may concentrate on:
+
+- boundary conditions;
+    
+- missing cases;
+    
+- null handling;
+    
+- exception paths;
+    
+- inconsistent state;
+    
+- assumptions that no longer hold.
+    
+
+This is much easier to improve than one enormous global prompt.
+
+---
+
+## The Reviewer Should Form Hypotheses, Not Just Opinions
+
+LLMs are useful at spotting suspicious patterns, but a review becomes much more valuable when an agent can verify its own suspicions.
+
+Instead of:
+
+```text
+This code might be slow.
+```
+
+the reviewer should try:
+
+```text
+Hypothesis:
+The new implementation introduces O(n²) behavior.
+
+Experiment:
+Run a benchmark for 1k, 10k and 100k elements.
+
+Result:
+main:  38 ms
+PR:    4.7 s
+
+Conclusion:
+Confirmed performance regression.
+```
+
+The same principle applies to correctness.
+
+```text
+Reviewer suspects a bug
+        |
+        v
+generate reproduction test
+        |
+        v
+run against main
+        |
+        v
+run against PR
+        |
+        v
+report only if confirmed
+```
+
+This creates a useful distinction:
+
+> LLMs generate hypotheses. Deterministic tools provide evidence.
+
+---
+
+## Reviewers Can Use the Existing Engineering Toolchain
+
+AI review does not replace CI.
+
+It orchestrates and interprets it.
+
+A reviewer can use:
+
+```text
+dotnet test
+static analyzers
+CodeQL
+coverage
+BenchmarkDotNet
+dotnet-counters
+dotnet-trace
+SQL EXPLAIN
+linters
+integration tests
+property-based tests
+fuzz tests
+```
+
+The agent can decide which tool is relevant, execute it, interpret the result, and attach the evidence to the finding.
+
+Instead of:
+
+> This allocation could become expensive.
+
+it can report:
+
+```text
+main:
+2.1 µs
+0 B allocated
+
+PR:
+3.8 µs
+320 B allocated
+
+The method is called approximately 5 million times per day.
+```
+
+The discussion then becomes much less subjective.
+
+---
+
+## Agents Can Also Create Tests During Review
+
+A powerful reviewer should be allowed to create temporary tests.
+
+For example:
+
+```text
+Potential bug detected
+        |
+create regression test
+        |
+test passes on main
+        |
+test fails on PR
+        |
+finding confirmed
+```
+
+The test itself can become part of the suggested fix.
+
+This turns review into something closer to automated investigation.
+
+The reviewer is not merely saying:
+
+> I think this is wrong.
+
+It is saying:
+
+> I can demonstrate a case where this is wrong.
+
+---
+
+## Reviewer and Fixer Should Be Separate Roles
+
+It may be useful to deliberately separate finding problems from changing code.
+
+For example:
+
+```text
+Reviewer
+    read
+    search
+    run tests
+    run benchmarks
+    no write access
+```
+
+and:
+
+```text
+Fixer
+    read
+    edit
+    run tests
+```
+
+The workflow becomes:
+
+```text
+Reviewer:
+I suspect a bug.
+
+Validator:
+Confirmed by this test.
+
+Fixer:
+Here is a proposed patch.
+
+Validator:
+The test now passes.
+
+Human:
+Approve or reject.
+```
+
+This reduces the risk that the same agent unconsciously rationalizes the solution it has just created.
+
+It also makes permissions easier to control.
+
+---
+
+## Independent Reviewers May Be Valuable
+
+Review does not necessarily have to be performed by the same model that produced the code.
+
+It may be useful to deliberately introduce diversity:
+
+```text
+Model A generates code.
+
+Model B reviews correctness.
+
+Model C reviews security.
+
+Model D tries to find counterexamples.
+```
+
+Different models may have different failure modes.
+
+Even using the same model with independent contexts can help because one reviewer is not anchored by the reasoning that produced the implementation.
+
+The analogy is similar to having another engineer examine the change without first hearing a long explanation of why the author thinks it is correct.
+
+---
+
+## A Review Router Can Control Cost
+
+Running ten powerful models on every typo would be wasteful.
+
+A router can classify a change first.
+
+For example:
+
+```text
+Change classification:
+
+documentation only
+    -> no technical review
+
+test-only change
+    -> correctness + test reviewer
+
+database migration
+    -> correctness + database + compatibility
+
+authentication change
+    -> correctness + security + tests
+
+hot-path implementation
+    -> correctness + performance + tests
+```
+
+The router itself can use a cheap model.
+
+Expensive reasoning is reserved for changes where it matters.
+
+---
+
+## A Final Reviewer Can Synthesize the Findings
+
+Multiple reviewers create another problem: noise.
+
+Seven agents producing thirty comments can make a pull request worse rather than better.
+
+A final synthesizer can therefore collect all findings and perform:
+
+```text
+deduplication
+confidence filtering
+severity ranking
+cross-checking
+evidence validation
+```
+
+A possible pipeline is:
+
+```text
+7 reviewers
+
+24 candidate findings
+
+9 duplicates / overlapping findings removed
+
+5 low-confidence findings discarded
+
+4 findings disproved by tests
+
+6 findings presented to the developer
+```
+
+The final review can use a common format:
+
+```text
+Severity: HIGH
+Confidence: HIGH
+
+Problem:
+...
+
+Evidence:
+...
+
+Impact:
+...
+
+Suggested fix:
+...
+
+Reviewer:
+database-performance
+```
+
+This makes AI review much less noisy.
+
+---
+
+## Confidence Should Matter
+
+Not every observation deserves a pull-request comment.
+
+A useful policy could be:
+
+```text
+HIGH severity + HIGH confidence
+    -> inline comment / request changes
+
+MEDIUM severity + HIGH confidence
+    -> normal comment
+
+LOW confidence
+    -> review summary only
+
+LOW severity + LOW confidence
+    -> suppress
+```
+
+This is particularly important because an AI reviewer that produces too many false positives will quickly be ignored.
+
+The goal is not maximum number of findings.
+
+The goal is high-value findings.
+
+---
+
+## Reviewers Can Learn From Human Decisions
+
+Every review interaction creates useful feedback.
+
+For each finding the system can record:
+
+```text
+accepted
+rejected
+false positive
+already known
+fixed
+ignored
+disputed
+```
+
+Over time this becomes a dataset for improving the reviewer instructions.
+
+For example, the team may discover that the performance reviewer frequently complains about allocations in paths that are executed once per request and have no measurable impact.
+
+Its instructions can then be changed:
+
+```text
+Do not report allocation differences unless:
+
+- the code is demonstrably hot,
+- the difference is measurable,
+- or the allocation has another significant consequence.
+```
+
+The review process itself can therefore become an optimization loop.
+
+---
+
+## Review Quality Can Be Measured
+
+AI review creates the possibility of measuring reviewer effectiveness much more systematically.
+
+Useful metrics include:
+
+```text
+findings generated
+findings accepted
+findings rejected
+false-positive rate
+confirmed bugs found
+security problems found
+regressions found
+tests generated
+findings confirmed by tests
+time per review
+cost per review
+```
+
+A reviewer can then be evaluated like another engineering component.
+
+For example:
+
+```text
+Security Reviewer
+
+1,240 PRs reviewed
+87 findings
+72 accepted
+9 rejected
+6 inconclusive
+
+precision: ~83%
+```
+
+The question becomes less:
+
+> Is this prompt good?
+
+and more:
+
+> How effective is this reviewer?
+
+---
+
+## GitHub Is a Natural Platform for This Model
+
+GitHub already provides most of the infrastructure required to build such a system.
+
+A reviewer can react to events such as:
+
+```text
+pull request created
+new commit pushed
+review requested
+comment created
+check completed
+```
+
+There are several ways to integrate an AI reviewer.
+
+---
+
+## GitHub Actions
+
+The simplest architecture is often:
+
+```text
+Pull Request
+     |
+GitHub Actions
+     |
+AI Reviewer
+```
+
+The important advantage is that the agent can operate in the same environment as ordinary CI.
+
+It can:
+
+```text
+checkout repository
+build
+run tests
+generate temporary tests
+run benchmarks
+inspect artifacts
+```
+
+This is particularly attractive when verification requires executing the code.
+
+---
+
+## GitHub Apps
+
+An external reviewer such as CodeRabbit can instead run as a GitHub App.
+
+The architecture becomes:
+
+```text
+GitHub
+   |
+webhook
+   |
+External Review Service
+   |
+GitHub API
+   |
+PR review / comments / checks
+```
+
+The service may run completely outside GitHub.
+
+It can listen for events such as:
+
+```text
+pull_request.opened
+pull_request.synchronize
+issue_comment
+review_comment
+```
+
+and react automatically.
+
+From the developer's perspective, the application behaves almost like another reviewer.
+
+It can add:
+
+- inline comments;
+    
+- review summaries;
+    
+- suggested changes;
+    
+- approvals;
+    
+- requests for changes;
+    
+- status checks.
+    
+
+This is the model used by many external analysis and review products.
+
+---
+
+## Reviewers Can Also Be Invoked On Demand
+
+Not everything needs to run automatically.
+
+A developer could request specialized investigation directly from a pull request:
+
+```text
+@review-bot performance
+```
+
+or:
+
+```text
+/review security
+```
+
+or even:
+
+```text
+@review-bot investigate whether this query causes an N+1 problem
+```
+
+This creates an interesting hybrid between a reviewer and an engineering assistant.
+
+The pull request itself becomes the workspace in which humans and agents collaborate.
+
+---
+
+## GitHub Checks May Be Better Than Comments
+
+Not every result needs to appear as another PR conversation.
+
+Reviewers can publish checks such as:
+
+```text
+Build                     PASS
+Tests                     PASS
+Security Review           PASS
+API Compatibility         PASS
+Performance Review        FAIL
+Database Review           PASS
+```
+
+Detailed findings can live inside the check.
+
+This reduces comment noise and gives the review system a more structured interface.
+
+Selected checks could eventually become required for merge.
+
+Care is needed, however.
+
+An unreliable LLM reviewer should not become a merge gate merely because it exists.
+
+---
+
+## External Reviewers Can Be Independent Services
+
+There does not need to be one central AI-review system.
+
+A repository could eventually have:
+
+```text
+GitHub Copilot
+Company Architecture Reviewer
+Security vendor
+Performance service
+CodeQL
+Sonar
+Dependency scanner
+Business Rules Reviewer
+```
+
+All of them independently observe the same pull request.
+
+GitHub effectively becomes an event bus and shared collaboration surface.
+
+Different reviewers may be:
+
+- SaaS products;
+    
+- internal company services;
+    
+- GitHub Actions;
+    
+- custom agents;
+    
+- deterministic analyzers;
+    
+- LLM-based systems.
+    
+
+Their results meet in the pull request.
+
+---
+
+## Private Companies Can Build Their Own Reviewer
+
+A company can create a private GitHub App and run its reviewer in its own infrastructure.
+
+For example:
+
+```text
+GitHub
+   |
+webhook
+   |
+Company Review Platform
+   |
+   +-- LLM
+   +-- internal documentation
+   +-- architecture decisions
+   +-- Jira
+   +-- production telemetry
+   +-- Grafana
+   +-- test infrastructure
+```
+
+This reviewer could know things that a general-purpose SaaS reviewer cannot know.
+
+For example:
+
+> This endpoint technically works, but service X is being retired and new code must use service Y.
+
+or:
+
+> This query operates on a table containing 900 million rows in production, so this seemingly harmless scan is dangerous.
+
+The value of the reviewer grows significantly when it has access to organizational context.
+
+---
+
+## Permissions Should Be Deliberately Limited
+
+A reviewer does not necessarily need permission to modify code.
+
+A conservative integration could have:
+
+```text
+Repository contents: read
+Pull requests: read/write
+Checks: write
+Actions: read
+```
+
+while explicitly denying:
+
+```text
+Repository contents: write
+Administration: write
+Secrets
+```
+
+A system that only investigates and comments requires much less trust than an autonomous coding agent.
+
+Writing code can be delegated to a separate fixer with stronger permissions.
+
+---
+
+## Human Review Does Not Necessarily Disappear
+
+AI review may instead change what humans review.
+
+Today humans often spend time checking things such as:
+
+```text
+Did someone forget a null check?
+Is cancellation propagated?
+Is this method tested?
+Is this API backward compatible?
+Did someone accidentally introduce N+1?
+```
+
+These are valuable checks, but they consume attention.
+
+Agents can perform them relentlessly.
+
+Humans can spend more attention on:
+
+- whether the business behavior is correct;
+    
+- whether the abstraction makes sense;
+    
+- whether the product should behave this way at all;
+    
+- long-term architecture;
+    
+- trade-offs;
+    
+- organizational context;
+    
+- risk acceptance.
+    
+
+The review becomes layered:
+
+```text
+machines check everything they can check repeatedly
+
+humans concentrate on what requires judgment
+```
+
+---
+
+# Code Review May Become Continuous Engineering Verification
+
+The most important shift may therefore be conceptual.
+
+Traditional review is approximately:
+
+```text
+developer writes code
+        |
+human reads diff
+        |
+human notices some problems
+        |
+merge
+```
+
+Agentic review can become:
+
+```text
+developer or agent creates change
+        |
+multiple reviewers inspect it
+        |
+reviewers form hypotheses
+        |
+tests and tools verify them
+        |
+findings are challenged and filtered
+        |
+fixes are proposed
+        |
+tests verify the fixes
+        |
+human reviews the remaining decisions
+```
+
+The goal is no longer merely:
+
+> Have somebody read the code before merge.
+
+It becomes:
+
+> Continuously attempt to prove that the change is wrong before it reaches production.
+
+That is where LLM reviewers may be particularly powerful.
+
+They are not perfect.
+
+But they can be **relentless, specialized, cheap to duplicate, able to investigate suspicious changes, and willing to run the same verification procedure every single time**.
+
+For code review, those properties may matter almost as much as raw intelligence.
 
 ---
 
