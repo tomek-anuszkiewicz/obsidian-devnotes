@@ -167,13 +167,13 @@ Active backlog pruning should not depend solely on human discipline; it must be 
 
 ## 6. Synthesis & Relationship to the Knowledge Graph
 
-Active Backlog Pruning is a fundamental pillar of context engineering in agentic software development. It recognizes that in LLM-driven development, **context is an expensive, easily polluted resource**. By ruthlessly deleting completed tasks from prompt-facing files and offloading history to dedicated chronicles, the harness preserves model reasoning sharpness across multi-week engineering campaigns.
+Active Backlog Pruning is a fundamental pillar of context management in agentic software development. In model-driven development, **prompt context is a finite resource that degrades when cluttered with obsolete history**. By clearing completed tasks from active plan files and offloading history to dedicated chronicles, the harness keeps model attention sharp across long-running projects.
 
 ### Related Notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: The broader harness framework detailing file responsibilities, state transitions, and execution loops.
 - **[[The Living Engineering Chronicle - Context-Safe Logging, Evolution, and Compaction]]**: The companion pattern detailing where pruned historical narratives are preserved and how they are accessed without prompt bloat.
 - **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: How decomposed roadmap steps are validated on atomic operational slices before scale-out.
-- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: The underlying cognitive mechanics explaining why stale text in prompts corrupts model decision-making.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: Explains how stale text in prompts pollutes attention and degrades model decisions.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]**: Automated test suites that enforce repository hygiene, line ceilings, and file rules.
-- **[[How Context Narrows an AI's Solution Space]]**: Theoretical analysis of attention dilution and solution-space collapse in large context windows.
+- **[[How Context Narrows an AI's Solution Space]]**: Analysis of attention dilution and context bloat in large prompts.
