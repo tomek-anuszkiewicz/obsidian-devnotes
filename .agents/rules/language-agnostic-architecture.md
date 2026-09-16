@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: Enforce language-agnostic abstractions, ubiquitous engineering concepts, avoidance of concrete source code snippets, and elimination of specific language or emulator references across notes.
+description: Enforce language-agnostic abstractions, ubiquitous engineering concepts, avoidance of concrete source code snippets, and multi-ecosystem breadth across notes.
 ---
 
 # Language-Agnostic Architecture & Generalized Technology Abstractions Rule
@@ -23,13 +23,8 @@ Whenever creating, updating, or refactoring architectural notes and documentatio
      - Use **mutation testing harnesses** instead of *Stryker.NET*.
    - Treat systems as composable data flows, state machines, transactional boundaries, memory hierarchies, and messaging topologies.
 
-2. **Strict Ban on Domain Leaks (No Emulators, Amiga, or CPU Quirks)**:
-   - The operator frequently works on low-level emulation and vintage hardware. **Do NOT leak these terms into general architectural notes.**
-   - Strictly avoid references to **Amiga**, **emulators**, **68000**, **opcodes**, or hardware quirks when explaining general principles.
-   - Always abstract these examples into broad software engineering constructs (e.g., *high-performance compute kernels*, *legacy monolithic backbones*, *stateful runtime loops*, *low-level systems programming*).
-
-3. **Avoid Concrete Language-Specific Source Code Snippets**:
-   - Unless a note is explicitly dedicated to a low-level mechanical sympathy analysis where exact compiler output or byte layout is the core subject, **avoid presenting concrete source code snippets in specific languages (such as C#, Java, Python, Go, Rust, or C++)**.
+2. **Avoid Concrete Language-Specific Source Code Snippets**:
+   - Unless a note is explicitly dedicated to a low-level systems analysis where exact compiler output or byte layout is the core subject, **avoid presenting concrete source code snippets in specific languages (such as C#, Java, Python, Go, Rust, or C++)**.
    - Instead of language-specific implementation code, prefer:
      - **Conceptual pseudo-code** or **algorithmic step descriptions**.
      - **ASCII architectural diagrams** and **data-flow schemas**.
@@ -37,19 +32,10 @@ Whenever creating, updating, or refactoring architectural notes and documentatio
      - **Mathematical formulations** (e.g., complexity metrics, cost models, latency envelopes).
    - If code is unavoidable, keep it strictly agnostic pseudo-code without language-specific syntax or library imports.
 
-4. **Multi-Ecosystem Breadth (When Concrete Tools Must Be Cited)**:
+3. **Multi-Ecosystem Breadth (When Concrete Tools Must Be Cited)**:
    - When grounding an abstract concept with real-world examples, **never fixate on a single language or ecosystem** (especially avoiding `.NET` / `C#` bias).
    - Always present a balanced spectrum across distinct language paradigms:
      - Systems programming (manual memory / static compilation).
      - Managed garbage-collected enterprise runtimes.
      - Modern statically typed ecosystems.
      - Dynamic and distributed runtimes.
-
-5. **Hardware Execution Quarantine by Architectural Layer**:
-   - Physical microarchitectural execution details (`L1 / L1i cache`, `cache lines`, `branch predictor`, `TLB miss`, `instruction cache thrashing`) are quarantined strictly to Layer 1 (`01 Code Architecture & Hardware Execution/`) notes dedicated to physical execution dynamics and the root system charters.
-   - Across Layers 2, 3, 4, and 5 (Harness, Telemetry, Model Cognition, Operator Ergonomics), abstract hardware details into universal software engineering constructs:
-     - Use **instruction locality** or **working set size** instead of *L1i cache lines*.
-     - Use **sequential memory throughput** or **spatial locality** instead of *64-byte cache line packing*.
-     - Use **branch prediction efficiency** or **state machine compactness** instead of *hardware branch predictor saturation*.
-     - Use **execution blast radius** instead of *cache invalidation*.
-   - When notes dive deeply into mechanical execution (cache alignment, memory fences, kernel context switches, vectorization), such depth must always be framed through **universal computer architecture and operating system principles** rather than language-specific APIs.
