@@ -38,7 +38,7 @@ To build reliable systems in this environment, we need a clear architectural tax
          │ Directs intent, sets boundary invariants, captures economic value
          ▼
   LAYER 4: PROMPTS, CONTEXT & MODELS
-  ├── Context Windows & Attention Budgets (Compaction, Active Backlog Pruning)
+  ├── Context Management & Attention Budgets (Compaction, Active Backlog Pruning)
   ├── Code Graphs & AST Retrieval (Graphify, GitNexus, Obsidian Export)
   └── Agent Protocols & Tooling (Model Context Protocol, SQL Data API Builder)
          ▲
@@ -52,7 +52,7 @@ To build reliable systems in this environment, we need a clear architectural tax
          │ Emits distributed execution truth, closes operational feedback loop
          ▼
   LAYER 2: TESTING & CODE REVIEW
-  ├── Deterministic Test Oracles (Unit, Snapshot/Verify, Dynamic Fuzzing)
+  ├── Testing & Verification (Unit, Snapshot/Verify, Dynamic Fuzzing)
   ├── Executable Architecture Guardrails (Line Ceilings, No Panics, Bounded Contexts)
   └── Ephemeral Testing & Multi-Agent PR Review (Signadot, Telepresence, Consensus Loops)
          ▲
