@@ -107,6 +107,29 @@ def generate_comparison():
     md_lines = []
 
     md_lines.append("# Side-by-Side Restoration Comparison: Original vs. Restored Notes\n")
+    md_lines.append("""<style>
+/* Force top vertical alignment in all Obsidian rendering modes */
+table th, table td,
+.markdown-rendered table td,
+.markdown-rendered table th,
+.markdown-preview-view table td,
+.markdown-preview-view table th,
+.cm-table-widget td,
+.cm-table-widget th,
+.cm-embed-block table td,
+.cm-embed-block table th {
+    vertical-align: top !important;
+}
+
+/* Equal 50/50 split for side-by-side comparison */
+.markdown-rendered table th,
+.markdown-rendered table td,
+table th,
+table td {
+    width: 50% !important;
+}
+</style>
+""")
     md_lines.append("> [!NOTE]")
     md_lines.append("> Row-by-row comparative evaluation of the 6 reference notes.")
     md_lines.append("> Left column: Original reference note (ChatGPT baseline).")

@@ -1,5 +1,28 @@
 # Side-by-Side Restoration Comparison: Original vs. Restored Notes
 
+<style>
+/* Force top vertical alignment in all Obsidian rendering modes */
+table th, table td,
+.markdown-rendered table td,
+.markdown-rendered table th,
+.markdown-preview-view table td,
+.markdown-preview-view table th,
+.cm-table-widget td,
+.cm-table-widget th,
+.cm-embed-block table td,
+.cm-embed-block table th {
+    vertical-align: top !important;
+}
+
+/* Equal 50/50 split for side-by-side comparison */
+.markdown-rendered table th,
+.markdown-rendered table td,
+table th,
+table td {
+    width: 50% !important;
+}
+</style>
+
 > [!NOTE]
 > Row-by-row comparative evaluation of the 6 reference notes.
 > Left column: Original reference note (ChatGPT baseline).
