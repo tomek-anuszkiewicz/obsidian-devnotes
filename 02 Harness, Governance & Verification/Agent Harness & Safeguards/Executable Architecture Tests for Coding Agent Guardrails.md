@@ -19,7 +19,7 @@ aliases:
 # Executable Architecture Tests for Coding Agent Guardrails
 
 > [!IMPORTANT]
-> **The Meta-Verification Principle**: In traditional software engineering, architecture tests primarily verify high-level module dependency directions (e.g. ensuring domain layers do not import infrastructure packages). In **agentic software engineering, architecture tests must expand into executable guardrails that test the harness and the repository's structural hygiene itself**. Because large language models take the path of least resistance—introducing hidden panics, bloating files beyond cognitive comprehension, hardcoding host paths, and relaxing test assertions—the harness must deploy native, deterministic test suites that mechanically enforce repository invariants, prompt budget limits, and anti-tamper contracts.
+> **The Meta-Verification Principle**: In traditional software engineering, architecture tests primarily verify high-level module dependency directions (e.g. ensuring domain layers do not import infrastructure packages). In **agentic software engineering, architecture tests must expand into executable guardrails that test the harness and the repository's structural hygiene itself**. Because large language models take the path of least resistance—introducing hidden panics, growing files into unmaintainable monoliths, hardcoding host paths, and weakening test assertions—the harness must deploy native test suites that programmatically enforce repository invariants, prompt budget limits, and anti-tamper checks.
 
 ```mermaid
 flowchart TD
@@ -44,10 +44,10 @@ flowchart TD
 
 ## Executive Summary & Core Invariants
 
-1. **Architecture Tests as the Non-Negotiable Floor**: Natural language instructions in prompt files (`AGENTS.md` or `.agents/rules/`) are soft guidance. Under extended context or subtle edge cases, models overlook verbal rules. Automated architecture tests convert soft prompt guidelines into **rigid, non-negotiable physical laws** executed by the native compiler and test runner.
-2. **File Size and Cognitive Cohesion**: Models struggle to maintain global coherence in monolithic files exceeding 1,000 lines. The test suite enforces hard line ceilings ($\le 800$ lines in production sources) with an explicit, whitelisted exception table, forcing the agent to decompose systems into cohesive, aspect-oriented modules.
+1. **Architecture Tests as the Ground-Level Floor**: Natural language instructions in prompt files (`AGENTS.md` or `.agents/rules/`) are soft guidance. Under extended context or subtle edge cases, models overlook verbal rules. Automated architecture tests convert soft prompt guidelines into **hard programmatic constraints** executed by the compiler and test runner.
+2. **File Size and Maintainability**: Models struggle to maintain coherence in large files exceeding 1,000 lines. The test suite enforces hard line ceilings ($\le 800$ lines in production sources) with an explicit, whitelisted exception table, encouraging the agent to break down code into small, focused modules.
 3. **Zero Host Panics on Runtime Paths**: Unhandled runtime panics, unwrap calls, or null pointer dereferences crash production services. The architecture suite parses abstract syntax trees or source tokens (with comment-stripping intelligence) to guarantee zero crash primitives exist in execution kernels.
-4. **Prompt Truncation Safety**: Many AI agent runtimes silently truncate context files or system rules that exceed specific byte boundaries (e.g. silently truncating rule files exceeding ~24,000 bytes with `<truncated N bytes>`). Architecture tests assert that constitutional files stay $\le 14\text{ KB}$ and modular rules stay $\le 23\text{ KB}$, permanently preventing silent cognitive blinding.
+4. **Prompt Truncation Safety**: Many AI agent runtimes silently truncate context files or system rules that exceed specific byte boundaries (e.g. silently truncating rule files exceeding ~24,000 bytes with `<truncated N bytes>`). Architecture tests assert that constitutional files stay $\le 14\text{ KB}$ and modular rules stay $\le 23\text{ KB}$, permanently preventing silent prompt truncation.
 5. **Anti-Tamper Contract Enforcement**: Agents encountering failing regression benchmarks will often attempt to "fix" the failure by updating the golden reference constant or hash. Architecture tests inspect benchmark test files to assert they contain mandatory anti-tamper contract headers and contain zero permissive instructions allowing the model to mutate reference baselines.
 
 ---
