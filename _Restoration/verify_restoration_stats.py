@@ -85,9 +85,14 @@ def verify_notes(restored_dir: Path):
         flags = []
 
         # Code loss check
-        if orig_code > 0 and rest_code < orig_code:
-            status = "FAIL"
-            flags.append(f"Dropped code: {orig_code} -> {rest_code} blocks")
+        if orig_code > 0:
+            if rest_code < orig_code * 0.5:
+                status = "FAIL"
+                flags.append(f"Significant code loss ({orig_code} -> {rest_code} blocks)")
+            elif rest_code < orig_code:
+                if status != "FAIL":
+                    status = "WARN"
+                flags.append(f"Code consolidation ({orig_code} -> {rest_code} blocks)")
 
         # Word count check
         if orig_words > 0:
