@@ -14,6 +14,9 @@ aliases:
 
 # User Context in Asynchronous Systems
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 Propagating user identity and context through asynchronous message brokers (RabbitMQ, Apache Kafka, Azure Service Bus, Amazon SQS) requires a fundamentally different architecture than passing bearer tokens between synchronous HTTP services.
 
 In an HTTP pipeline, requests execute immediately while the user is actively connected. In message-driven architectures, messages decouple producers and consumers across time, network, and security boundaries. Treating an asynchronous message like an HTTP request—by dumping a live token into message headers or payloads—introduces critical operational and security failures.

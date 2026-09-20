@@ -15,6 +15,9 @@ aliases:
 ---
 # Service-to-Service Authentication in Distributed Runtimes
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 When designing communication between microservices, a common trap is conflating network reachability with workload identity. An IP address, a Kubernetes Service DNS name (`inventory-api.orders.svc.cluster.local`), or a private virtual network subnet lets packets flow between hosts, but it provides zero cryptographic proof of who the caller actually is. 
 
 Relying on network-level reachability alone invites lateral movement: if an attacker gains execution inside any pod or container on that network, every downstream internal API is wide open. A solid service-to-service architecture separates packet routing from cryptographic authentication and fine-grained authorization.

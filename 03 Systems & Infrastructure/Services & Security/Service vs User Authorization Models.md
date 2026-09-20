@@ -16,6 +16,9 @@ aliases:
 
 # Service vs User Authorization Models
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 In distributed architectures, answering the question *"Is this request allowed?"* requires determining **which service owns the authorization rule** and **which identity is being authorized**.
 
 When a request crosses service boundaries, authorization is rarely a simple binary check against a single user ID. The upstream service is an active system component executing code, while the end user is the origin of the business intent. Decoupling service-level permissions from end-user authorization governs how services communicate securely across microservices and background workers.

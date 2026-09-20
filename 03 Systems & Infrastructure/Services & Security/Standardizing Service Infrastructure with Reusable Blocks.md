@@ -14,6 +14,9 @@ aliases:
 
 # Standardizing Service Infrastructure with Reusable Blocks
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 Organizations repeatedly face the challenge of standardizing service infrastructure across distributed architectures. Whether running independent microservices or deploying modules inside a [[Scaling a Modular Monolith with Local-or-Remote Module Execution|modular monolith]], teams solve the same fundamental problems across dozens of systems:
 
 - Application startup and dependency injection
