@@ -322,6 +322,7 @@ To manage this shift without breaking application backends, engineering teams mu
 ## Related Concepts
 
 *   **[[Designing APIs for LLM-Generated Integration Code]]**: WebMCP extends client-side API design directly into the browser DOM, eliminating the boundary between web UI and programmatic interfaces.
+*   **[[Token Optimization and Context Economics in Agentic Workflows]]**: How MCP serves as the universal abstraction boundary to eliminate heavy vision tokens and redundant exploratory tool calls.
 *   **[[How AI Agents May Control Computers, Applications, and the Web]]**: Tracing the evolution of agent control surfaces from fragile, vision-based screenshot automation to native, deterministic semantic protocols.
 *   **[[Agentic Coding Harness and Controlled Development Workflows]]**: How deterministic runtime execution surfaces improve the stability of automated testing and coding loops.
 *   **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving from rigid, button-centric user interfaces toward composable, agent-addressable primitives.
