@@ -318,7 +318,7 @@ For three decades, mainstream object-oriented ecosystems dogmatized the conventi
 When autonomous coding agents interact with a repository structured around the one-class-per-file dogma, this legacy layout becomes an active cognitive penalty:
 
 ```text
-THE ONE-CLASS-PER-FILE FRAGMENTATION TAX (POMDP)
+THE ONE-CLASS-PER-FILE FRAGMENTATION TAX (CONTEXT BLINDNESS)
 ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
 │ CancelOrderCommand   │  │ CancelOrderValidator │  │ CancelOrderResult    │
 │ (File 1: 15 lines)   │  │ (File 2: 30 lines)   │  │ (File 3: 12 lines)   │
@@ -326,20 +326,20 @@ THE ONE-CLASS-PER-FILE FRAGMENTATION TAX (POMDP)
            │                         │                         │
            ▼                         ▼                         ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ Agent inspects File 1 via tool call ──► Partial Observability Trap       │
+│ Agent inspects File 1 via tool call ──► Context Blindness (No Contracts) │
 │ Agent guesses Validator behavior ────► Incurs Context Poisoning in KV    │
 │ Agent inspects File 2 via tool call ──► Burns 800 tokens on JSON payload │
 │ Attention dispersed across 6 tool turns and redundant system prompts     │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-#### 1. Eliminating the Partial Observability Trap (POMDP $\to$ MDP)
-When an operation is fragmented across six distinct files (`Command`, `Validator`, `Handler`, `Result`, `Event`, and `RepositoryInterface`), the agent operates within a **Partially Observable Markov Decision Process** (POMDP):
-- When evaluating or generating the command handler, the model does not have the domain invariants or validator contracts in its active context window.
-- It is forced to formulate predictive assumptions about what those auxiliary files contain. If those assumptions deviate from reality, the agent produces invalid code or emits speculative hypotheses into the conversation history.
-- Once a flawed hypothesis enters the KV-cache, it acts as an artificial semantic attractor, biasing subsequent tool invocations and triggering [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions|context poisoning]].
+#### 1. Eliminating Context Blindness: Stop Agents from Guessing Missing Contracts
+When a single business operation is shattered across six distinct files (`Command`, `Validator`, `Handler`, `Result`, `Event`, and `Repository`), the agent is forced to fly blind:
+- **Blind-Spot Hallucinations**: While editing the handler, the model cannot see boundary invariants enforced in the validator. It either duplicates checks unnecessarily or assumes pre-conditions that do not exist.
+- **Hypothesis Poisoning**: Lacking auxiliary contracts in its active context, the agent formulates predictive guesses about sibling implementations. Once an incorrect assumption enters the conversation history and KV-cache, it acts as an artificial attractor, biasing every downstream tool invocation and code edit (triggering [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions|context poisoning]]).
+- **The Tool Roundtrip Tax**: Inspecting six isolated files burns tokens and agent turns on JSON tool schemas, directory navigation, and file boundaries rather than the domain logic itself.
 
-Co-locating the entire vertical slice into a single file converts the task into a **Fully Observable Process** (MDP). A single file read immediately loads the input contract, validation rules, state mutations, and output projections in one deterministic pass.
+Co-locating the entire vertical slice into a single file provides **instant operational visibility**. A single file read delivers the input payload, invariants, state mutations, and projection schemas in one deterministic shot—eliminating the need for the model to guess what sibling files contain.
 
 #### 2. Attention Density and Rotary Position Embeddings (RoPE)
 In transformer architectures, attention is governed by spatial and semantic proximity:
@@ -362,7 +362,7 @@ THE CONTEXT-PER-FILE VERTICAL SLICE
 └───────────────────────────────────────────────────┬──────────────────────┘
                                                     │
                                                     ▼
-                     Single-Pass Ingestion / Full Observability
+                 Single-Pass Ingestion / Complete Operational Visibility
                High RoPE Attention Density / Zero Tool Protocol Tax
 ```
 
