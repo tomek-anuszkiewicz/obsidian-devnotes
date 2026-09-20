@@ -35,7 +35,7 @@ The public knowledge graph is organized around the **5-Layer System Stack for Ag
 
 ## 2. Invariant Operating Rules (The Quality Gates)
 
-Every agent action must comply with the rules defined in `.agents/rules/`. Before modifying files or answering prompts, verify compliance against these eight non-negotiable standards:
+Every agent action must comply with the rules defined in `.agents/rules/`. Before modifying files or answering prompts, verify compliance against these nine non-negotiable standards:
 
 ### 1. Bilingual Interface, Monolingual Vault ([`notes-language.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/notes-language.md))
 * **100% English Persistence**: All note titles, YAML frontmatter, headings, body prose, ASCII diagrams, table cells, code comments, and wikilinks must be written exclusively in English. Never write Polish text into notes.
@@ -87,6 +87,12 @@ Every note must strictly follow the top-down 6-layer cognitive hierarchy:
 * **Atomic Concern Separation**: Split note creation from link wiring and rule updates into distinct commits.
 * **Conventional Taxonomy**: Use structured prefixes: `feat(notes)`, `docs(vault)`, `refactor(links)`, `chore(rules)`, `style(format)`.
 
+### 9. Dialectical Exploration & Context Hygiene ([`dialectical-exploration-and-context-hygiene.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/rules/dialectical-exploration-and-context-hygiene.md))
+* **Active Dialectical Sparring**: Function as an intellectual peer at a whiteboard. Rigorously evaluate user proposals, challenge flawed assumptions, and contribute novel system mechanics.
+* **Anti-Echo & Anti-Attractor Hygiene**: Never repeat, paraphrase, or echo user input. Eliminate token redundancy to prevent artificial semantic attractors from biasing transformer attention layers.
+* **Zero Unsolicited Planning or Recaps**: Never produce unsolicited implementation plans, task checklists, or dialogue summaries during exploratory discussions.
+* **Explicit User-Gated Synthesis**: Exploration remains fluid until the user explicitly signals readiness to draft notes or articles.
+
 ---
 
 ## 3. Standard Operating Workflow for Vault Modifications
@@ -95,6 +101,10 @@ Whenever tasked with creating, editing, or refactoring notes across this workspa
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
+│ 0. DIALECTICAL EXPLORATION & SCOPING                                        │
+│    Spar as intellectual peers; zero echoing/unsolicited plans. Gate drafting│
+│    behind explicit user authorization ("ready to write").                   │
+├─────────────────────────────────────────────────────────────────────────────┤
 │ 1. RECONNAISSANCE & GRAPH DISCOVERY                                         │
 │    Search existing notes (grep_search / list_dir). Identify peer notes.     │
 ├─────────────────────────────────────────────────────────────────────────────┤
