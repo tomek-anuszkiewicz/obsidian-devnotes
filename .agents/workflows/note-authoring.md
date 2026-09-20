@@ -23,23 +23,22 @@ This workflow defines the invariant, multi-phase execution pipeline for creating
 │ - Identify 2-4 peer notes for lateral wiring and canonical domain hub.      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ PHASE 2: INVERTED PYRAMID AUTHORING (Skills: info-hierarchy, practitioner)  │
-│ - Draft note in 100% English following the 6-layer cognitive hierarchy.     │
-│ - Lead with high-impact hook and economic inversion in lines 1-50.          │
-│ - Apply Practitioner Voice: direct, active, unhurried causal depth.         │
+│   - Draft note in 100% English following the 6-layer cognitive hierarchy.   │
+│   - Lead with high-impact hook and economic inversion in lines 1-50.        │
+│   - Apply Practitioner Voice: plain language, mechanisms over terminology.  │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ PHASE 3: DUAL-LAYER GRAPH WIRING (Skill: vault-linking)                     │
-│ - Embed 2-5 inline piped wikilinks ([[Target Note|natural phrase]]).        │
-│ - Add 3-6 curated links with 1-sentence analytical rationales in ## Related.│
-│ - Wire inbound links in 2-3 peer notes to preserve bidirectional integrity. │
+│ 3. DUAL-LAYER GRAPH WIRING (Skill: vault-linking)                           │
+│   Embed 2-5 inline piped links; add 3-6 curated links with rationales.      │
+│   Update peer notes with inbound links to maintain bidirectional topology.  │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ PHASE 4: MANDATORY TERMINAL AUDIT GATE (BLOCKING PRE-COMMIT VERIFICATION)   │
-│ - Run: python scripts/audit_workflow.py [files...]                          │
-│   Gate 1: Language Compliance (check_polish.py -> 0 violations)             │
-│   Gate 2: Privacy Membrane (0 references to _Private/)                      │
-│   Gate 3: Practitioner Voice & Banned Jargon (0 POMDP, RoPE, hedging)       │
-│   Gate 4: Graph Integrity (0 broken wikilinks to non-existent notes)        │
-│   Gate 5: Coffee & Tech Talk Test (Manual practitioner self-audit)          │
-│ - ANY FAILURE BLOCKS COMMIT AND MANDATES IMMEDIATE IN-PLACE REMEDIATION.    │
+│ 4. MANDATORY TERMINAL AUDIT GATE (BLOCKING PRE-COMMIT VERIFICATION)         │
+│   - Run: python scripts/audit_workflow.py [files...]                        │
+│     Gate 1: Language Compliance (check_polish.py -> 0 violations)           │
+│     Gate 2: Privacy Membrane (0 references to _Private/)                    │
+│     Gate 3: Practitioner Voice & Jargon (0 formalisms, 0 hedging, 0 jargon) │
+│     Gate 4: Graph Integrity (0 broken wikilinks to non-existent notes)      │
+│     Gate 5: Whiteboard / Peer Conversation Test (Manual self-audit)         │
+│   - ANY FAILURE BLOCKS COMMIT AND MANDATES IMMEDIATE IN-PLACE REMEDIATION.  │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ PHASE 5: ATOMIC GIT LEDGER RECORDING                                        │
 │ - Stage target files: git add [files...]                                    │
@@ -96,10 +95,10 @@ python scripts/audit_workflow.py [path/to/note.md]
 The script evaluates five deterministic gates:
 1. **Language Compliance**: Must return 0 Polish words or phrases.
 2. **One-Way Privacy Membrane**: Must have 0 references or links to `_Private/`.
-3. **Practitioner Voice Anti-Patterns**: Must have 0 banned academic formalisms (POMDP, Markov, thermodynamic entropy, RoPE) and 0 corporate hedging phrases.
+3. **Practitioner Writing Style**: Must have 0 academic formalisms, 0 corporate hedging phrases, 0 manufactured jargon, and 0 stacked abstractions.
 4. **Graph Link Integrity**: Every wikilink `[[Target Note]]` must resolve to an existing public note file in the vault.
-5. **The Coffee & Tech Talk Audit**: Perform a final qualitative read:  
-   *“Would a seasoned tech lead explain this system this way to a senior peer at a whiteboard over coffee, or during an engaging engineering conference talk?”*
+5. **The Whiteboard / Peer Conversation Audit**: Perform a final qualitative read:  
+   *“Could I say this sentence naturally to a senior engineer sitting next to me? Does it explain the underlying mechanics clearly instead of hiding behind terminology?”*
 
 > [!CAUTION]
 > If any audit check fails, **stop immediately**. Remediate the violations in-place and re-run the audit. Never bypass this gate.
