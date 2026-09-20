@@ -123,7 +123,7 @@ All multi-step operations (authoring, cluster refactoring, link rewiring) must f
 │    Execute: python scripts/audit_workflow.py [files...]                     │
 │    - Gate 1: Language Compliance (check_polish.py -> 0 violations)          │
 │    - Gate 2: Privacy Membrane (0 references to _Private/)                   │
-│    - Gate 3: Practitioner Voice & Banned Jargon (0 POMDP, RoPE, hedging)    │
+│    - Gate 3: Practitioner Voice & Banned Jargon (0 formalisms, 0 hedging)   │
 │    - Gate 4: Graph Integrity (0 broken wikilinks)                           │
 │    - Gate 5: Coffee & Tech Talk Test (Manual practitioner self-audit)       │
 │    ANY AUDIT FAILURE BLOCKS GIT COMMIT AND REQUIRES IMMEDIATE REMEDIATION.  │

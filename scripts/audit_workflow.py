@@ -90,7 +90,7 @@ def get_vault_files(root: Path) -> list:
 
 def audit_file(file_path: Path, all_titles: set) -> list:
     violations = []
-    is_public_note = not any(part in file_path.parts for part in ["_Private", ".agents", ".gemini", ".git"])
+    is_public_note = not any(part in file_path.parts for part in ["_Private", ".agents", ".gemini", ".git"]) and file_path.name != "AGENTS.md"
     rel_path = file_path.relative_to(REPO_ROOT) if file_path.is_relative_to(REPO_ROOT) else file_path
 
     try:
