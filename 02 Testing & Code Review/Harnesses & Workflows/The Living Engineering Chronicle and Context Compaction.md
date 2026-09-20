@@ -274,6 +274,7 @@ The Living Engineering Chronicle gives an agentic workflow the durable instituti
 ### Related Patterns and Systems
 
 * **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: The operational counterpart to this document. Explains how to prune active tasks while archiving completed work in the chronicle.
+* **[[Token Optimization and Context Economics in Agentic Workflows]]**: Framework for token conservation, out-of-context tooling economics, and asymmetric reasoning tiering across the agent loop.
 * **[[Agentic Coding Harness and Controlled Development Workflows]]**: The broader harness infrastructure, including automated checks, environment isolation, and skill execution.
 * **[[The Conductor Pattern for High-Bandwidth Engineering]]**: How a human lead uses the chronicle to maintain architectural continuity across multiple autonomous agent sessions.
 * **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: The practice of documenting architectural changes during implementation rather than writing docs after the fact.

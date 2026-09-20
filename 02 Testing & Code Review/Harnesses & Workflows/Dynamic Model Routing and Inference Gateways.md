@@ -309,6 +309,7 @@ When implementing dynamic routing systems, watch out for these three common trap
 ## Related Notes
 
 * [[Local vs Cloud and Hybrid Model Execution]]: The hardware realities, unified memory trade-offs, and economic thresholds that dictate local versus cloud inference.
+* [[Token Optimization and Context Economics in Agentic Workflows]]: The broader economic and architectural discipline of token conservation, reasoning tiering, and exact-hash proxy caching.
 * [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: Architecting continuous background daemons that leverage local gateways for steady-state workloads.
 * [[Agent Deployment and Execution Models]]: The architectural boundary between orchestration runtimes, model inference gateways, and sandboxed execution environments.
 * [[Agentic Coding Harness and Controlled Development Workflows]]: Constructing deterministic harnesses, sandboxes, and safe blast-radius boundaries for autonomous coding tasks.
