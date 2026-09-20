@@ -195,6 +195,82 @@ There is no single winner among facades, discrete handlers, and mediators. The n
 
 ---
 
+## File Topology: Co-Locating Vertical Slices for Agent Cognition
+
+Beyond logical module boundaries, physical file layout directly dictates how effectively an AI agent can reason about and modify a codebase.
+
+### The Horizontal Layering Trap (The POMDP Penalty)
+For decades, enterprise clean architecture paradigms enforced horizontal layering:
+```text
+src/
+├── Application/
+│   ├── Commands/      ──► CancelOrderCommand.cs
+│   ├── Handlers/      ──► CancelOrderCommandHandler.cs
+│   ├── Validators/    ──► CancelOrderCommandValidator.cs
+│   └── Results/       ──► CancelOrderResult.cs
+├── Domain/
+│   └── Entities/      ──► Order.cs
+└── Infrastructure/
+    └── Repositories/  ──► OrderRepository.cs
+```
+
+When an agent needs to add a new validation constraint or modify order cancellation logic in this structure:
+1. **Multi-Hop Exploration**: The agent must execute five to six independent tool calls (`view_file`, `grep_search`), navigating across disparate directory trees.
+2. **The Partial Observability Problem**: During intermediate turns, the agent operates in a **Partially Observable Markov Decision Process** (POMDP). When editing `CancelOrderCommandHandler.cs`, it cannot see `CancelOrderCommandValidator.cs` unless explicitly loaded. The agent frequently hallucinates validator rules or duplicates checks that already exist in sibling layers.
+3. **Attention Fragmentation and Protocol Bloat**: Each tool roundtrip consumes context window budget with tool-call schemas, JSON arguments, file paths, and environment prompts, dissipating the model's quadratic attention budget on protocol overhead rather than domain logic.
+
+### The Context-Per-File Pattern (Vertical Slice Co-location)
+In an agent-assisted codebase, structure operations as **cohesive vertical slices on disk**. Instead of scattering a single business use case across five directories, co-locate the command, its validation rules, the execution handler, local domain state mutations, and response contracts in a **single physical file**:
+
+```csharp
+// Features/Orders/CancelOrder.cs (250 LOC cohesive slice)
+
+public sealed record CancelOrderCommand(Guid OrderId, Guid UserId, string Reason);
+
+public sealed class CancelOrderValidator
+{
+    public ValidationResult Validate(CancelOrderCommand cmd)
+    {
+        if (cmd.OrderId == Guid.Empty) return ValidationResult.Fail("Invalid OrderId");
+        if (string.IsNullOrWhiteSpace(cmd.Reason)) return ValidationResult.Fail("Reason required");
+        return ValidationResult.Success();
+    }
+}
+
+public sealed class CancelOrderHandler
+{
+    private readonly IDbConnection _db;
+    private readonly IEventPublisher _events;
+
+    public CancelOrderHandler(IDbConnection db, IEventPublisher events)
+    {
+        _db = db;
+        _events = events;
+    }
+
+    public async Task<CancelOrderResult> Handle(CancelOrderCommand cmd, CancellationToken ct)
+    {
+        // Explicit domain execution, state mutation, and outbox event dispatch
+        // Fully observable in a single token ingestion pass
+    }
+}
+
+public sealed record CancelOrderResult(bool Succeeded, string? ErrorMessage);
+public sealed record OrderCancelledEvent(Guid OrderId, DateTime OccurredUtc);
+```
+
+#### Why Co-location Improves Agent Cognition:
+- **Full Observability in One Pass**: A single file read provides the complete lifecycle of the feature. The agent instantly sees input contracts, invariant checks, database mutations, and external events without speculative guessing.
+- **Attention Density (RoPE Sympathy)**: Positional embeddings preserve strong attention weights between adjacent tokens. Placing the validator and handler within the same file enables self-attention heads to correlate input parameters with mutation branches directly, without intervening tool-call noise.
+- **Atomic Modification & Verification**: When an agent modifies the feature, it emits a single, localized diff against one file, drastically reducing the risk of orphaned files, broken imports, or mismatched cross-file signatures.
+
+### The Bounded Cohesion Guardrail (200–500 LOC)
+Semantic co-location is not a license to create monolithic "God Files":
+- **The Failure Mode**: Dumping thirty unrelated operations, a 1,000-line database entity, and generic helper methods into a single 3,000-line file triggers *Lost in the Middle* attention degradation, high token consumption per read, and frequent Git merge conflicts.
+- **The Rule**: Each file should represent **one capability or focused feature slice**, strictly bounded to **200 to 500 lines of code**. If a slice exceeds 500 lines, extract reusable pure domain logic or split compound operations into distinct, dedicated feature files.
+
+---
+
 ## Model Data to Eliminate Interpretation
 
 Ambiguous domain models force both humans and agents to make guesses. When data semantics are implicit, agents often introduce subtle bugs by misinterpreting what a field represents under different conditions.
@@ -319,4 +395,6 @@ This rule should be applied thoughtfully. Do not introduce boilerplate mapping t
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Structuring project context, interfaces, and specifications for agentic workflows.
 - **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]**: Evaluating persistence layers, contract testing, and query maintainability with coding agents.
 - **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Implementing module boundaries that preserve unified local reasoning while allowing distributed runtime execution.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]**: Quantifying context economics, tool-use token overhead, and attentional limits in coding agent sessions.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: How multi-hop repository exploration creates artificial semantic attractors that derail agent execution.
 - **[[Testing in the Model, Agent, LLM Era]]**: How deterministic automated tests serve as the ground truth verification layer for agent-generated code.
