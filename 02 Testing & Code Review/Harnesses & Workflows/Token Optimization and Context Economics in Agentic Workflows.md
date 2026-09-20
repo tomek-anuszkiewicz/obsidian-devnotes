@@ -324,21 +324,59 @@ Deploying standard vector retrieval (cosine similarity over text embeddings) acr
   $$\text{Query: } \text{GetDependencies}(\text{process\_invoice}) \longrightarrow \text{Returns: } [ \text{OrderRepo}, \text{StripeClient}, \text{TaxCalculator} ]$$
   A single 200-token graph response provides the complete, authoritative dependency topology, replacing 10 speculative `grep_search` and `view_file` exploratory turns.
 
-### 5. Upstream Documentation MCPs: Eliminating Training Cutoff Drift
+### 5. Model Context Protocol (MCP) as the Universal Integration Substrate
+
+The **Model Context Protocol (MCP)** represents the universal abstraction boundary for agentic token conservation. Rather than building ad-hoc, proprietary tool harnesses, MCP provides a simple, open standard (JSON-RPC over `stdio` or `sse`) that completely decouples an agent's reasoning loop from the underlying execution substrate.
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│               MCP AS THE UNIVERSAL TOKEN-CONSERVATION BOUNDARY                   │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                  │
+│   THE UNIFORM AGENT VIEW (Clean JSON-RPC Tool Invocations)                       │
+│   ┌───────────────────────────────────────────────────────────────────────────┐  │
+│   │  agent.call_tool("mcp__repo_graph__get_subgraph", { symbol: "checkout" }) │  │
+│   │  agent.call_tool("mcp__dotnet_docs__get_sig", { type: "BlobClient" })     │  │
+│   │  agent.call_tool("mcp__cache__query_hash", { sha: "a1b2c3d" })           │  │
+│   └─────────────────────────────────────┬─────────────────────────────────────┘  │
+│                                         │ Standardized JSON-RPC (stdio / SSE)    │
+│                                         ▼                                        │
+│   THE ENCAPSULATED SUBSTRATES (Configured for Maximum Token Efficiency)          │
+│   ┌───────────────────────┬───────────────────────┬───────────────────────────┐  │
+│   │ ZERO-TOKEN CPU LOGIC  │ EXACT-HASH GATEWAYS   │ SURGICAL GRAPH & UPSTREAM │  │
+│   ├───────────────────────┼───────────────────────┼───────────────────────────┤  │
+│   │ • Local AST parsers   │ • Redis SHA-256 proxy │ • Graphify AST traversal  │  │
+│   │ • Regex log filters   │ • SQLite local cache  │ • Official framework docs │  │
+│   │ • Git worktree scripts│ • Instant 5ms reply   │ • 200-token chunk limits  │  │
+│   │ (Cost: $0.00 compute) │ (Cost: $0.00 / 0 tok) │ (Eliminates brute search) │  │
+│   └───────────────────────┴───────────────────────┴───────────────────────────┘  │
+│                                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### A. The Simplicity and Universality Invariant
+The fundamental power of MCP is that **any token-saving mechanism can be packaged into an MCP server in under 50 lines of code**:
+* To the model, every capability presents as a uniform, predictable tool signature.
+* To the engineer, the implementation behind that tool can be a zero-token local Python AST script, an internal Redis hash-cache, an AST dependency graph, or a live documentation server.
+* The agent requires zero awareness of whether an answer was derived from an in-memory database lookup or a compiled binary on CPU; it receives high-density truth at minimal token footprint.
+
+#### B. Upstream Documentation MCPs: Eliminating Training Cutoff Drift
 When coding against fast-evolving frameworks (.NET 9, Angular 19, modern cloud SDKs), models default to deprecated APIs ingrained in their training distributions. The agent writes obsolete code, encounters compiler failures, generates imaginary shims, and burns 80,000 tokens attempting to resolve the hallucination.
 
-Integrating official **Documentation Model Context Protocol (MCP) Servers** (e.g., for .NET, Azure, TypeScript, Angular) resolves this failure:
-- The agent executes a surgical lookup: `mcp__dotnet_docs__get_signature("DefaultAzureCredential")`.
-- The MCP returns the modern, authoritative API contract and code example in 250 tokens.
-- Modern, compiling code is produced on Turn 1.
-- **The MCP Caveat**: Avoid scraper MCPs that dump entire HTML documentation pages (thousands of tokens of navigation menus and footers) into the active prompt. MCPs must return chunked, signature-level extractions.
+Integrating official **Documentation MCP Servers** (e.g., for .NET, Azure, TypeScript, Angular) resolves this failure:
+* The agent executes a surgical lookup: `mcp__dotnet_docs__get_signature("DefaultAzureCredential")`.
+* The MCP returns the modern, authoritative API contract and code example in 250 tokens.
+* Modern, compiling code is produced on Turn 1.
+* **The Scraper Anti-Pattern**: Documentation MCPs must be implemented with surgical chunk extraction. An MCP that scrapes entire HTML pages (dumping thousands of tokens of navigation bars, headers, and footers into context) is an anti-pattern. High-leverage MCPs return only exact method signatures and minimal canonical examples.
 
-### 6. Dynamic Tool Schema Gating (Lazy vs. Eager MCP)
-Every tool exposed to an agent requires a comprehensive JSON Schema definition in the system prompt. Connecting 10 broad MCP servers (GitHub, PostgreSQL, Docker, Cloud SDKs, Jira, Slack) injects 70+ tool schemas into the system header, incurring a **10,000-token tax on every turn**.
-* **Eager Tools**: Restrict permanently loaded tools to core file manipulation and terminal execution (3 to 5 tools).
-* **Lazy / On-Demand Tools**: Specialist MCP servers (database inspectors, cloud deployment tooling, browser harnesses) must remain dormant until explicitly activated by a domain skill or workflow state.
+#### C. Dynamic Tool Schema Gating: Solving the Schema Bloat Tax
+While MCP standardizes tool connectivity, naive deployments trigger severe prompt pollution:
+* Every tool exposed through an MCP server requires a full JSON Schema definition in the agent's system prompt. Connecting 10 broad MCP servers (GitHub, PostgreSQL, Docker, Cloud SDKs, Jira, Slack) injects 70+ tool schemas into the system header, incurring a **10,000-token tax on every single conversational turn**.
+* **Eager vs. Lazy MCP Loading**:
+  - **Eager Tools (Core Set)**: Keep only 3 to 5 foundational tools permanently loaded (file read/write and terminal execution).
+  - **Lazy / On-Demand Tools**: Domain-specific MCP servers (database inspectors, cloud deployment tools, browser automation) remain dormant. They are injected into context dynamically only when a specialized skill or task phase explicitly activates them.
 
-### 7. LoRA Weight-Baking: Eliminating the "Style Prompt Tax"
+### 6. LoRA Weight-Baking: Eliminating the "Style Prompt Tax"
 For enterprises operating large, homogeneous codebases, repeating corporate architectural rules, naming conventions, and proprietary library guides across every prompt burns millions of tokens annually.
 
 **Parameter-Efficient Fine-Tuning (LoRA)**:
@@ -347,7 +385,7 @@ For enterprises operating large, homogeneous codebases, repeating corporate arch
 - System prompts are stripped of stylistic boilerplate: the model outputs the organization's dialect naturally at zero prompt token overhead.
 - **Maintenance Invariant**: LoRA adapters freeze style, not active state. They must be accompanied by fresh upstream Graph RAG for current dependencies, and must be retrained when core frameworks undergo major version upgrades.
 
-### 8. Syntactic Density: Explanatory Variables and Intent Comments as Attention Anchors
+### 7. Syntactic Density: Explanatory Variables and Intent Comments as Attention Anchors
 Source code formatting directly impacts transformer attention mechanics and reasoning token expenditure. When code relies on cryptic, deeply nested conditional structures:
 
 ```text
@@ -372,7 +410,7 @@ In vector space, tokens like `isVipCustomer` and `isEligibleForDiscount` act as 
 
 Similarly, **concise intent comments** (`// INVARIANT: ...`) explaining non-obvious business rules, vendor quirks, or hardware realities prevent the model from spending thousands of exploratory tokens reverse-engineering intent—or worse, "cleaning up" an essential edge-case workaround. As detailed in [[Comments May Become More Valuable in AI-Generated Code|intent-preserving documentation practices]], comments explaining *why* code exists sit directly in the active context window alongside the code being modified, eliminating speculative retrieval loops.
 
-### 9. Multimodal Token Physics: Visual Token Ingestion and Screenshot Bloat
+### 8. Multimodal Token Physics: Visual Token Ingestion and Screenshot Bloat
 Multimodal visual comprehension introduces an extreme, often invisible multiplier to context window consumption. Unlike text tokens that map to short character subwords, visual inputs are processed through Vision Transformer (ViT) encoders that partition raster images into grids of fixed-size pixel patches (e.g., $14 \times 14$ or $16 \times 16$ pixels):
 * **Resolution-to-Token Expansion**: A single 1080p full-screen browser or desktop capture decomposes into **1,500 to 4,000 visual tokens** depending on tiling strategy and detail modes (`detail: high`). A 4K capture or multi-monitor screenshot can exceed 6,000 tokens per invocation.
 * **The Multi-Turn Accumulation Spiral**: In UI automation, frontend styling, or browser subagent workflows, capturing a screenshot on every step triggers catastrophic historical accumulation:
@@ -460,8 +498,10 @@ Token conservation is not an exercise in micro-optimizing prompt words; it is th
 - **[[The Living Engineering Chronicle and Context Compaction]]**: Details out-of-context append logging (`DIARY.md`) and milestone compaction patterns to prevent long-term context inflation.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Explores the Zero-Retention Roadmap discipline, explaining why keeping completed tasks in active prompts poisons self-attention.
 - **[[Dynamic Model Routing and Inference Gateways]]**: Technical patterns for deploying reverse-proxy gateways (LiteLLM, Redis caches) and optimistic local execution cascades.
+- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Architectural patterns for replacing heavy vision token pipelines with in-browser semantic MCP tool registration.
 - **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: Analyzes the mathematical physics of Attention Gravity in the KV cache and why long, multi-turn chat sessions collapse model cognition.
 - **[[Local vs Cloud and Hybrid Model Execution]]**: Economic and hardware analysis of hosting high-frequency, zero-marginal-cost models locally on Unified Memory Architecture appliances versus frontier cloud APIs.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Deep-dive into documenting prohibited patterns and failed experiments to eliminate speculative agent exploration loops.
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: How intent-preserving comments sit directly alongside code to eliminate reverse-engineering token waste.
+
 
