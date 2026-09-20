@@ -23,16 +23,16 @@ aliases:
 > **Core Architectural Invariant: Tokens Are Attentional Budgets, Not Just Invoices**  
 > If you treat token consumption merely as a monthly API billing metric, your agentic architecture will fail in production. In transformer-based systems, every redundant token injected into the context window actively degrades model cognition through quadratic self-attention scaling ($O(N^2)$) and attention dispersion. 
 > 
-> High-performance agentic engineering operates under a strict economic law: **The Pareto Frontier of Cognitive Compute**. Approximately 80% of your token budget must be spent on deterministic execution, surgical code diffs, and compiler-verified tests. No more than 20% should ever be consumed by high-entropy architectural synthesis and planning. When an agent burns 80% of its tokens stumbling through file trees, ingesting stale documentation, or wrestling over private variable naming, your harness is broken.
+> High-performance agentic engineering operates under a strict economic law: **The 80/20 Law of Context Economics**. Approximately 80% of your token budget must be spent on deterministic execution, surgical code diffs, and compiler-verified tests. No more than 20% should ever be consumed by open-ended architectural design and exploratory planning. When an agent burns 80% of its tokens stumbling through file trees, ingesting stale documentation, or wrestling over private variable naming, your harness is broken.
 > 
-> True token efficiency treats context as active, perishable working memory. You achieve this by establishing **asymmetric reasoning tiering**, **aspect-oriented vertical file slicing**, **minimalist steering invariants**, **decoupled verification cadences**, **exact-hash gateway caching**, and **strict subagent synthetic I/O boundaries**.
+> True token efficiency treats context as active, perishable working memory. You achieve this by establishing **asymmetric reasoning tiering**, **vertical slice locality (feature folders)**, **minimalist steering invariants**, **decoupled verification cadences**, **exact-hash gateway caching**, and **strict subagent synthetic I/O boundaries**.
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────┐
 │                   THE 4-TIER TOKEN & CONTEXT CONSERVATION TOPOLOGY               │
 ├──────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                  │
-│   TIER 1: THE REASONING & STEERING PLANE (High-Entropy, Low-Volume)              │
+│   TIER 1: THE REASONING & STEERING PLANE (High-Stakes Design, Low-Volume Flow)   │
 │   ┌───────────────────────────────────────────────────────────────────────────┐  │
 │   │ • Frontier Model / Extended Thinking Budget (Architecture & Hard Trade-offs)│  │
 │   │ • Lean 5-Bullet Intent Roadmaps (Kill 4-page unread markdown essays)      │  │
@@ -52,7 +52,7 @@ aliases:
 │   TIER 3: THE EXECUTION & HARNESS PLANE (Deterministic, Zero-Token Compute)      │
 │   ┌───────────────────────────────────────────────────────────────────────────┐  │
 │   │ • Out-of-Context Tooling: Local Python/Shell AST scripts ($0.00 compute)  │  │
-│   │ • Aspect-Oriented Slicing: 150–500 LOC cohesive vertical slice on disk    │  │
+│   │ • Vertical Slice Locality: 150–500 LOC cohesive feature slice on disk     │  │
 │   │ • Hard Clean-Slate Isolation: Fresh task sessions & sterile git worktrees │  │
 │   │ • Subagent Sandboxing: Strict Synthetic I/O Contracts (Diffs only)        │  │
 │   └─────────────────────────────────────┬─────────────────────────────────────┘  │
@@ -157,7 +157,7 @@ If an exploratory approach fails, do not leave tombstones in the active branch. 
 │ Asymmetric Reasoning Tiering │ Frontier reasoning models for architecture;  │
 │                              │ zero-thinking execution models for code diffs│
 ├──────────────────────────────┼──────────────────────────────────────────────┤
-│ Aspect-Oriented Disk Layout  │ Vertical slice colocation (150–500 lines);   │
+│ Vertical Slice Locality      │ Colocate feature logic (150–500 lines);      │
 │                              │ eliminates the multi-turn navigation tax.    │
 ├──────────────────────────────┼──────────────────────────────────────────────┤
 │ Minimalist Steering          │ Declarative two-track invariants instead of  │
@@ -205,7 +205,7 @@ flowchart TD
 - **Deterministic Implementation**: Switch models. Route approved flight plans to high-speed execution models operating with minimal or zero thinking budgets. The model's mandate is mechanical execution: emit clean, compilable diffs conforming to the plan.
 - **Graded Planning**: Routine bug fixes and straightforward features must bypass high-thinking planning altogether.
 
-### 2. Aspect-Oriented Disk Layout (Vertical Slices vs. Clean Architecture Tax)
+### 2. Vertical Slice Locality: Eliminating the Multi-File Navigation Tax
 Enterprise Clean Architecture divides a single business capability across eight distinct directories: interfaces, controllers, commands, validators, handlers, domain entities, DTOs, and mappers.
 
 For a human developer with an IDE indexing symbols in RAM, this is manageable. For an autonomous agent operating over API boundaries, it is a catastrophic **Tool-Call Navigation Tax**:
@@ -215,7 +215,7 @@ For a human developer with an IDE indexing symbols in RAM, this is manageable. F
   before the agent writes its first line of code.
 
 **The Fix: Cohesive Vertical Slices**  
-Colocate the capability into an aspect-oriented vertical slice (e.g., `user_registration.py` or `RegisterInvoiceHandler.cs`) spanning 150 to 500 lines. The command, validation logic, domain invariants, database projection, and error types live together. 
+Colocate the capability into a cohesive vertical slice (e.g., `user_registration.py` or `RegisterInvoiceHandler.cs`) spanning 150 to 500 lines. The command, validation logic, domain invariants, database projection, and error types live together in a single file or dedicated feature folder. 
 * The agent calls `view_file` **exactly once**, ingests the entire spatial context in 2,000 tokens, and emits the patch in a single turn.
 * Avoid the opposite ditch: 3,000-line monolithic "God-Files" that exhaust input windows and invalidate prompt caches on every edit.
 
@@ -417,7 +417,7 @@ bool policyAllowsBypass = tenant.Policy?.AllowBypass ?? true;
 if (isEligibleForDiscount && policyAllowsBypass)
 ```
 
-In vector space, tokens like `isVipCustomer` and `isEligibleForDiscount` act as **dense semantic anchors**. The model immediately attends to the domain concept without burning internal chain-of-thought tokens on mechanical boolean deduction.
+In the model's self-attention layers, explicit variable names like `isVipCustomer` and `isEligibleForDiscount` act as **dense semantic anchors**. The model immediately attends to the domain concept without burning internal reasoning tokens on mechanical boolean deduction.
 
 Similarly, **concise intent comments** (`// INVARIANT: ...`) explaining non-obvious business rules, vendor quirks, or hardware realities prevent the model from spending thousands of exploratory tokens reverse-engineering intent—or worse, "cleaning up" an essential edge-case workaround. As detailed in [[Comments May Become More Valuable in AI-Generated Code|intent-preserving documentation practices]], comments explaining *why* code exists sit directly in the active context window alongside the code being modified, eliminating speculative retrieval loops.
 
