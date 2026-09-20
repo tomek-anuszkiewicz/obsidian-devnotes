@@ -349,6 +349,7 @@ As AI systems handle more day-to-day software development, our definition of wha
 ## Related Notes
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain nuances and commercial realities resist clean structural abstraction.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]**: How explanatory variables and intent comments act as dense semantic anchors to minimize thinking token budgets.
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Designing codebases for machine legibility, explicit interfaces, and isolated context.
 - **[[Designing Software for AI Agents]]**: Repository patterns that allow agents to reason across code boundaries without context exhaustion.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining active Markdown context specifications alongside inline comments.
