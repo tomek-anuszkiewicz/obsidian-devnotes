@@ -347,7 +347,33 @@ For enterprises operating large, homogeneous codebases, repeating corporate arch
 - System prompts are stripped of stylistic boilerplate: the model outputs the organization's dialect naturally at zero prompt token overhead.
 - **Maintenance Invariant**: LoRA adapters freeze style, not active state. They must be accompanied by fresh upstream Graph RAG for current dependencies, and must be retrained when core frameworks undergo major version upgrades.
 
+### 8. Syntactic Density: Explanatory Variables and Intent Comments as Attention Anchors
+Source code formatting directly impacts transformer attention mechanics and reasoning token expenditure. When code relies on cryptic, deeply nested conditional structures:
+
+```text
+// ANTI-PATTERN: Cryptic multi-clause boolean logic
+if (user.Flags & 0x08 != 0 && (order.Total > 500 || user.Tier == 3) && !order.IsTrial && (tenant.Policy == null || tenant.Policy.AllowBypass))
+```
+
+Evaluating this expression forces the model's self-attention heads to trace boolean precedence, bitwise masks, and null coalescing across multiple attention layers. In reasoning models, this burns **1,000–3,000 thinking tokens** simply verifying boolean truth tables. On models with lower reasoning budgets, it routinely produces De Morgan logic errors, inducing a multi-turn retry death loop.
+
+Decomposing complex expressions into well-named **explanatory boolean variables**:
+
+```text
+// CANONICAL PATTERN: Semantic Anchoring via Explanatory Variables
+bool isVipCustomer = (user.Flags & 0x08 != 0) && (order.Total > 500 || user.Tier == 3);
+bool isEligibleForDiscount = isVipCustomer && !order.IsTrial;
+bool policyAllowsBypass = tenant.Policy?.AllowBypass ?? true;
+
+if (isEligibleForDiscount && policyAllowsBypass)
+```
+
+In vector space, tokens like `isVipCustomer` and `isEligibleForDiscount` act as **dense semantic anchors**. The model immediately attends to the domain concept without burning internal chain-of-thought tokens on mechanical boolean deduction.
+
+Similarly, **concise intent comments** (`// INVARIANT: ...`) explaining non-obvious business rules, vendor quirks, or hardware realities prevent the model from spending thousands of exploratory tokens reverse-engineering intent—or worse, "cleaning up" an essential edge-case workaround. As detailed in [[Comments May Become More Valuable in AI-Generated Code|intent-preserving documentation practices]], comments explaining *why* code exists sit directly in the active context window alongside the code being modified, eliminating speculative retrieval loops.
+
 ---
+
 
 ## Tactical Execution & Developer Workflows
 
@@ -426,3 +452,5 @@ Token conservation is not an exercise in micro-optimizing prompt words; it is th
 - **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: Analyzes the mathematical physics of Attention Gravity in the KV cache and why long, multi-turn chat sessions collapse model cognition.
 - **[[Local vs Cloud and Hybrid Model Execution]]**: Economic and hardware analysis of hosting high-frequency, zero-marginal-cost models locally on Unified Memory Architecture appliances versus frontier cloud APIs.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Deep-dive into documenting prohibited patterns and failed experiments to eliminate speculative agent exploration loops.
+- **[[Comments May Become More Valuable in AI-Generated Code]]**: How intent-preserving comments sit directly alongside code to eliminate reverse-engineering token waste.
+
