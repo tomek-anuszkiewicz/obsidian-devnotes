@@ -372,8 +372,19 @@ In vector space, tokens like `isVipCustomer` and `isEligibleForDiscount` act as 
 
 Similarly, **concise intent comments** (`// INVARIANT: ...`) explaining non-obvious business rules, vendor quirks, or hardware realities prevent the model from spending thousands of exploratory tokens reverse-engineering intent—or worse, "cleaning up" an essential edge-case workaround. As detailed in [[Comments May Become More Valuable in AI-Generated Code|intent-preserving documentation practices]], comments explaining *why* code exists sit directly in the active context window alongside the code being modified, eliminating speculative retrieval loops.
 
----
+### 9. Multimodal Token Physics: Visual Token Ingestion and Screenshot Bloat
+Multimodal visual comprehension introduces an extreme, often invisible multiplier to context window consumption. Unlike text tokens that map to short character subwords, visual inputs are processed through Vision Transformer (ViT) encoders that partition raster images into grids of fixed-size pixel patches (e.g., $14 \times 14$ or $16 \times 16$ pixels):
+* **Resolution-to-Token Expansion**: A single 1080p full-screen browser or desktop capture decomposes into **1,500 to 4,000 visual tokens** depending on tiling strategy and detail modes (`detail: high`). A 4K capture or multi-monitor screenshot can exceed 6,000 tokens per invocation.
+* **The Multi-Turn Accumulation Spiral**: In UI automation, frontend styling, or browser subagent workflows, capturing a screenshot on every step triggers catastrophic historical accumulation:
+  $$\text{Turn 1: } 1 \text{ image } (2,500 \text{ tokens}) \longrightarrow \text{Turn 5: } 5 \text{ historical images } (12,500 \text{ tokens})$$
+  In a 10-turn browser debugging session, re-transmitting static historical images consumes upwards of 150,000 input tokens on stale visual state that has already been acted upon.
+* **The OCR Fallacy in Developer Workflows**: Capturing screenshots of IDE code or terminal stack traces is an acute anti-pattern. Beyond burning 60x more tokens than plain text, visual text extraction is subject to probabilistic font anti-aliasing errors, routinely hallucinating semicolons, quotes, and variable casing. Terminal outputs and compiler diagnostics must be transmitted strictly as raw stdout/stderr text streams.
+* **Mitigation Invariants**:
+  1. **Accessibility Tree / Clean DOM First**: For web and UI automation, prefer structured text representations (Accessibility Trees or concise semantic Markdown DOMs). An accessibility tree captures 100% of interactive elements in 200 tokens; a screenshot burns 2,500 tokens.
+  2. **Region-of-Interest (ROI) Cropping**: When visual inspection is required (e.g., validating a CSS color change or alignment), crop the image strictly to the target component ($200 \times 100$ px) rather than transmitting full desktop canvases.
+  3. **Ephemeral Visual Pruning**: Once an image is evaluated in a conversational step, strip the binary image payload from subsequent turns, substituting a concise 1-line textual summary: `[Visual Verification Passed: Modal centered, submit button active; image discarded]`.
 
+---
 
 ## Tactical Execution & Developer Workflows
 
