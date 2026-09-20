@@ -308,6 +308,72 @@ When an agent is asked to modify logic inside a local handler, it cannot reliabl
 
 Explicit, flat code keeps dependencies and side effects visible at the call site.
 
+### File Granularity: The "Class-Per-File" Dogma vs. Semantic Locality ("Context-Per-File")
+
+For three decades, mainstream object-oriented ecosystems dogmatized the convention of **one class per file**. This practice was not born from compiler efficiency or theoretical elegance; it was designed around human and operational limitations of the late 1990s:
+- Early IDEs struggled with indexing and text search across large unified source files.
+- Legacy version control systems (such as Visual SourceSafe or RCS) relied on exclusive, file-level checkouts, demanding file proliferation to avoid developer lock contention.
+- Human short-term memory favored scanning shallow directory trees of 20-line files over scrolling through a multi-type module.
+
+When autonomous coding agents interact with a repository structured around the one-class-per-file dogma, this legacy layout becomes an active cognitive penalty:
+
+```text
+THE ONE-CLASS-PER-FILE FRAGMENTATION TAX (POMDP)
+┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+│ CancelOrderCommand   │  │ CancelOrderValidator │  │ CancelOrderResult    │
+│ (File 1: 15 lines)   │  │ (File 2: 30 lines)   │  │ (File 3: 12 lines)   │
+└──────────┬───────────┘  └──────────┬───────────┘  └──────────┬───────────┘
+           │                         │                         │
+           ▼                         ▼                         ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Agent inspects File 1 via tool call ──► Partial Observability Trap       │
+│ Agent guesses Validator behavior ────► Incurs Context Poisoning in KV    │
+│ Agent inspects File 2 via tool call ──► Burns 800 tokens on JSON payload │
+│ Attention dispersed across 6 tool turns and redundant system prompts     │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 1. Eliminating the Partial Observability Trap (POMDP $\to$ MDP)
+When an operation is fragmented across six distinct files (`Command`, `Validator`, `Handler`, `Result`, `Event`, and `RepositoryInterface`), the agent operates within a **Partially Observable Markov Decision Process** (POMDP):
+- When evaluating or generating the command handler, the model does not have the domain invariants or validator contracts in its active context window.
+- It is forced to formulate predictive assumptions about what those auxiliary files contain. If those assumptions deviate from reality, the agent produces invalid code or emits speculative hypotheses into the conversation history.
+- Once a flawed hypothesis enters the KV-cache, it acts as an artificial semantic attractor, biasing subsequent tool invocations and triggering [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions|context poisoning]].
+
+Co-locating the entire vertical slice into a single file converts the task into a **Fully Observable Process** (MDP). A single file read immediately loads the input contract, validation rules, state mutations, and output projections in one deterministic pass.
+
+#### 2. Attention Density and Rotary Position Embeddings (RoPE)
+In transformer architectures, attention is governed by spatial and semantic proximity:
+- **Spatial Attenuation**: Positional encodings (such as RoPE) naturally preserve sharper attention gradients across tokens that share nearby sequence positions. When an input DTO and its mutation logic sit within 50 lines of each other, the self-attention heads ($Q \cdot K^T$) establish dense, high-signal representations.
+- **Protocol Overhead Elimination**: Scattering code across ten files forces the agent into iterative tool loops. Each `view_file` or `grep` invocation injects tool-call envelopes, parameter schemas, absolute file paths, and environment prompts. This structural noise dilutes the attention budget, forcing the transformer to attend across thousands of tokens of protocol boilerplate instead of direct domain relationships.
+
+#### 3. Single-Pass KV-Cache Prefill vs. Multi-Turn Fragmentation
+Reading a single cohesive file leverages provider-level prompt caching and single-pass prefill mechanics. Instead of stalling the agent loop across five sequential tool roundtrips—each incurring network latency, execution cost, and KV-cache expansion—the model consumes the complete operational context in a single token ingestion phase.
+
+```text
+THE CONTEXT-PER-FILE VERTICAL SLICE
+┌──────────────────────────────────────────────────────────────────────────┐
+│ File: CancelOrder.cs / cancel_order.go (250 LOC)                         │
+│ ┌──────────────────────────────────────────────────────────────────────┐ │
+│ │ • CancelOrderCommand (Input Schema)                                  │ │
+│ │ • CancelOrderValidator (Boundary Invariants & Authorization)         │ │
+│ │ • CancelOrderHandler (Transactional State Transition & Execution)    │ │
+│ │ • CancelOrderResult & OrderCancelledEvent (Outputs & Projections)    │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────┬──────────────────────┘
+                                                    │
+                                                    ▼
+                     Single-Pass Ingestion / Full Observability
+               High RoPE Attention Density / Zero Tool Protocol Tax
+```
+
+#### The Guardrail: Avoiding the "God-File" Monolith
+Co-locating code for semantic locality does not justify returning to unstructured, 3,000-line monolithic files. The *context-per-file* pattern fails when cohesion turns into unchecked accumulation:
+1. **Lost in the Middle**: When a file expands beyond 1,000–1,500 lines, transformer attention profiles begin degrading in the median layers, causing models to overlook business rules embedded mid-file.
+2. **Patch Collision and Diff Fragility**: Agentic tools rely on surgical text replacement and fuzzy match anchors. Editing a 250-line file carries near-zero risk of anchor collision; editing a 3,000-line file with repetitive structural syntax dramatically increases the likelihood of malformed diffs and corrupted line offsets.
+3. **Git Merge Contention**: In high-throughput workflows where multiple human developers and autonomous agents modify code concurrently, oversized files create frequent merge conflicts that halt automated CI/CD pipelines.
+
+The target architectural baseline is **bounded vertical cohesion**: co-locate all tightly coupled elements of a single capability (command, query, handler, validator, and local value objects) into a single physical file constrained to **200 to 500 lines of code**.
+
 ---
 
 ## The Hardware Dividend: Explicit Code Runs Faster
@@ -480,6 +546,8 @@ The most profound shift driven by AI agents is not merely that code is produced 
 - **[[Testing in the Model, Agent, LLM Era]]**: Using executable test suites as the primary bounding mechanism for machine-generated modifications.
 - **[[Refactoring Legacy Systems with AI Agents]]**: Techniques for converting complex legacy code into explicit, machine-legible architectures.
 - **[[Reviewing AI-Generated Code]]**: Structuring code reviews around failure boundaries, invariant preservation, and domain edge cases.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]**: Quantifying the token taxation, prompt caching dynamics, and attentional costs of agent-assisted software development.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: How fragmented code exploration creates artificial semantic attractors that derail model reasoning.
 - **[[The Economics of Aggressive Code Optimization with AI]]**: Unrolling abstractions and aligning explicit execution paths with CPU cache and database query planners.
 
 ---
