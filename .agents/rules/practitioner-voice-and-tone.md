@@ -92,3 +92,58 @@ Describe what actually happens under the hood:
 2. **File and Heading Naming Standards**:
    - Note file names and section headings must describe concrete technical mechanics, architecture patterns, failure modes, economic trade-offs, or developer workflows.
    - Treat headings as actionable engineering guides and decision frameworks rather than formal academic dissertations.
+
+---
+
+## 6. Hard Negative Constraints & Forbidden Anti-Patterns
+
+To counteract the default RLHF attractor toward academic posturing and corporate fluff, the agent must strictly enforce these negative constraints:
+
+### 1. Prohibition on Borrowed Academic Formalism
+- **NEVER** dress straightforward software engineering or context constraints in reinforcement learning, control theory, or statistical mechanics jargon unless the note is explicitly about training foundational models.
+- **Banned Academic Formalisms in Code Architecture**:
+  - ❌ *"Partially Observable Markov Decision Process (POMDP) / MDP transitions"* (when explaining that an agent cannot see other files).
+  - ❌ *"Rotary Position Embeddings (RoPE) / $Q \cdot K^T$ attention matrices"* (when explaining spatial token locality or prompt distance).
+  - ❌ *"Markov chains, probabilistic state spaces, or thermodynamic entropy"* (when explaining simple code smell or repository sprawl).
+  - ✅ State the operational truth: **context blindness**, **tool roundtrip tax**, **attention degradation across token distance**, **hallucinating missing contracts**, **KV-cache poisoning**.
+
+### 2. Prohibition on Academic Hedging and Fluff
+- **Banned Passive Hedging Phrases**:
+  - ❌ *"It is worth noting that..."*
+  - ❌ *"It could potentially be argued that..."*
+  - ❌ *"One must take into consideration..."*
+  - ❌ *"It is imperative to recognize..."*
+- **Mandatory Direct Formulation**:
+  - ✅ *"This pattern causes X because Y."*
+  - ✅ *"Bypassing this boundary breaks transactional consistency."*
+  - ✅ *"This abstraction increases memory allocations by 3x on hot paths."*
+
+### 3. Prohibition on Corporate Bureaucratese
+- **Banned Marketing & Corporate Buzzwords**:
+  - ❌ *"Holistic paradigm", "synergistic ergonomics", "seamless integration", "enterprise-grade efficacy"*.
+- **Ground in Concrete Runtime Reality**:
+  - ✅ CPU instructions, heap allocations, thread contention, p99 latency spikes, git merge collisions, token consumption.
+
+---
+
+## 7. Contrastive Calibration Matrix (The Lead Architect Test)
+
+When formulating explanations, calibrate phrasing against this contrastive standard:
+
+| Concept | ❌ Prohibited: Academic / Theoretical Posturing | ✅ Mandatory: Grounded Practitioner Reality |
+| :--- | :--- | :--- |
+| **Multi-File Fragmentation** | *"The model operates within a Partially Observable Markov Decision Process (POMDP), incurring state transition uncertainty."* | *"The agent is flying blind. Editing a handler without the validator in view forces the model to guess missing contracts, hallucinating invalid rules into the KV-cache."* |
+| **Token Proximity in Files** | *"Positional encodings such as RoPE ($Q \cdot K^T$) maintain sharp gradients in proximal sequence coordinates."* | *"Attention degrades across long sequence distances. Co-locating the contract and handler 50 lines apart delivers dense attention without wasting token budget on tool call envelopes."* |
+| **Premature Abstraction / DRY** | *"Over-indexing on DRY establishes cognitive coupling points that undermine structural modularity."* | *"Wrapping 15 lines of local mapping code in a generic base class creates high coupling. When an agent touches the base class, it risks breaking three unrelated endpoints."* |
+| **Dynamic Interceptors** | *"AOP decorators decouple ambient execution concerns from local syntactic representations."* | *"Dynamic interceptors hide runtime side-effects. An agent refactoring the local handler will miss the audit log and transaction boundary, causing silent data loss in production."* |
+
+---
+
+## 8. The Mandatory Pre-Persistence Coffee Test (Self-Correction Loop)
+
+Before writing, refactoring, or saving any note, section, or architectural guideline in this vault, the agent must execute this mental audit:
+
+> **The Coffee & Tech Talk Audit**:  
+> *"Would a seasoned principal architect or tech lead say this to a senior peer at a whiteboard over coffee, or during an engaging engineering conference talk? Or does this read like an academic thesis, a corporate memo, or a vendor sales pitch?"*
+
+If any sentence fails this test, the agent must **immediately rewrite it** to reflect concrete systems mechanics, operational failure modes, and measurable engineering trade-offs before persisting the file.
