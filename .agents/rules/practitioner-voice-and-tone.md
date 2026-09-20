@@ -54,20 +54,24 @@ Every note across the vault must meet the readability, momentum, and technical d
 
 ---
 
-## 3. Thought Density Through Substance
+## 3. Substantive Depth and Natural Explanatory Flow
 
-True intellectual rigor comes from **accurate mental models, causal depth, and clear explanations of underlying mechanics**—not from stacked adjectives or inflated vocabulary:
+True intellectual rigor comes from **accurate mental models, causal depth, and clear explanations of underlying mechanics**—not from artificial brevity or forced, telegraphic compression ("thought condensates"):
 
-### 1. Explain the Underlying System Mechanics
-Describe what actually happens under the hood:
+### 1. Natural Exposition Over Artificial Compression
+- **Give Ideas Room to Breathe**: Avoid squeezing complex ideas into breathless, hyper-dense bullet points. Allow natural, fluid prose and unhurried narrative exposition whenever a mechanism, failure mode, or architectural trade-off requires room to unfold.
+- **Unconstrained Elaboration When Warranted**: When a concept benefits from detailed walkthroughs, system context, or step-by-step reasoning, take the space needed to explain it thoroughly—just as a lead architect would at a whiteboard or in an in-depth engineering deep-dive. True depth is achieved through causal clarity, not syntactic compression.
+
+### 2. Grounded System Mechanics
+Explain what actually happens under the hood when relevant, rather than reciting a rigid checklist:
 - **Hardware & Memory**: CPU instruction and data caches (L1i vs. D-cache), branch predictors, memory bus saturation, mechanical sympathy.
 - **Data & Storage**: Query execution planners, write-ahead logs (WAL), indexing strategies, transactional isolation levels.
 - **Agentic & Model Execution**: Context window compaction, attention budgets, KV cache eviction, prompt caching, token economics.
 - **Distributed Networks**: Network partitions, concurrent writes, retry storms, head-of-line blocking, split-brain mitigation.
 
-### 2. High Thought Density Through Contrast and Trade-offs
-- Deliver dense value by contrasting competing architectural patterns, exposing hidden failure modes, and demonstrating subtle edge cases.
-- Frame decisions around concrete trade-offs: latency vs. throughput, memory overhead vs. CPU cycles, developer velocity vs. long-term maintenance cost.
+### 3. Contrast, Trade-Offs, and Failure Boundaries
+- Unpack architectural trade-offs with nuance rather than reductive soundbites: contrast competing patterns, walk through edge cases, and analyze failure boundaries.
+- Frame decisions around concrete systems realities: latency vs. throughput, memory overhead vs. CPU cycles, developer velocity vs. long-term maintenance cost.
 
 ---
 
