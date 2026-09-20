@@ -17,6 +17,9 @@ aliases:
 
 # Scaling a Modular Monolith with Local-or-Remote Module Execution
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 ## Core Principle: Decouple Module Boundaries from Process Boundaries
 
 A modular monolith does not mean every module must run inside the same operating system process across every server. It means keeping a single codebase, unified domain contracts, compiler-enforced boundaries, and coordinated deployments, while retaining the freedom to run selected workloads in separate deployment units as scaling demands shift.
