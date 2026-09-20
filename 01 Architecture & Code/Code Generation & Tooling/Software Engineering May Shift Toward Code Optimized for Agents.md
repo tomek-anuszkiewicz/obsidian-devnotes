@@ -41,9 +41,9 @@ We already accept this trade-off in other parts of the stack. We do not manually
 
 ---
 
-## What an LLM Generates Without Guidelines
+## Unguided Models Default to Statistical Averages, Not Systems Architecture
 
-When an LLM receives no project-specific architectural instructions, it does not search for an objectively optimal solution from first principles. It operates on statistical priors:
+When an LLM receives no project-specific architectural instructions, it does not design an optimal solution from first principles. It operates on statistical priors:
 
 ```text
   common training patterns
@@ -52,43 +52,41 @@ When an LLM receives no project-specific architectural instructions, it does not
 + model tuning toward safety and general clarity
 + prompt context
 ──────────────────────────────────────────────────
-→ generated solution
+→ generated solution (statistical average)
 ```
 
-The output naturally resembles a mainstream, broadly accepted solution. For instance, if you ask an agent to implement a backend feature in ASP.NET Core without constraints, it will default to:
-- Standard dependency injection container registrations,
-- `async`/`await` throughout the call chain,
-- Entity Framework Core with LINQ queries,
-- Controllers or Minimal APIs,
-- Standard Data Transfer Objects (DTOs),
-- Common validation attributes or fluent validators.
+The output naturally mirrors the mainstream center of gravity. Ask an unconstrained agent to implement a backend mutation service, and it defaults to generic statistical attractors across common ecosystems:
+- Deep dependency injection wiring and single-method service interfaces,
+- ORM queries with dynamic projection pipelines and ambient change tracking,
+- Generic controller boilerplate or convention-over-configuration routing,
+- Standard DTO mapping layers and dynamic reflection-based validators.
 
-The model does not pick these patterns because they are optimal for your specific system. They are simply the strongest statistical attractors in its training corpus. 
+The model does not choose these patterns because they fit your system's p99 latency targets, concurrency profiles, or transactional invariants. They are simply the densest gravitational clusters in public training data.
 
 Without explicit local guidelines, delegating a task to an agent means:
 
 > Use your broad internet priors and fill in missing architectural decisions yourself.
 
-This is where subtle defects emerge. The model produces an implementation that looks clean and idiomatic in isolation, but violates invariants that exist only within the private boundaries of your organization.
+This is where subtle production defects originate. The model generates code that looks clean and idiomatic in isolation, but silently violates invariants that exist only within the private operational boundaries of your organization.
 
-### The Training Paradox
+### The Training Paradox: Agents Trained on Human Workarounds
 
-This dynamic creates a notable tension: **agents are expected to write maintainable code, but they were trained almost exclusively on code written to accommodate human limitations.**
+This dynamic creates a fundamental tension: **agents are expected to write robust, maintainable code, but they were trained almost exclusively on code written to work around human biological limitations.**
 
-Humans hate typing repetitive boilerplate, get fatigued by parallel edits across multiple files, and make copy-paste errors. To cope, humans invented deeply nested base classes, dynamic reflection, aspect-oriented interceptors, and convention-over-configuration routing. 
+Humans hate typing repetitive boilerplate, suffer mental fatigue during parallel edits across six files, and make copy-paste errors. To cope, humans invented deeply nested base classes, dynamic reflection, aspect-oriented interceptors, and convention-over-configuration routing. 
 
-An agent, by contrast, generates fifty explicit lines as effortlessly as one. It suffers no physical fatigue. However, it struggles when runtime behavior is decoupled from visible code through ambient state, hidden reflection, or dynamic dispatch. Left unguided, an agent defaults to generating clever, human-centric abstractions that make the codebase harder for subsequent agent passes to parse and modify reliably.
+An autonomous agent, by contrast, generates fifty explicit lines as effortlessly as one. It suffers no typing fatigue. However, it fails when runtime behavior is decoupled from visible code through ambient state, hidden reflection, or dynamic dispatch. Left unguided, an agent defaults to generating clever, human-centric abstractions that make the codebase harder for subsequent agent passes to parse, debug, and modify reliably.
 
 ---
 
-## Mainstream Code Has a Built-In Advantage
+## Mainstream Idioms vs. Proprietary Frameworks: The Prior Knowledge Advantage
 
-Consider two codebases requiring an automated feature addition:
+Consider two production codebases requiring an automated feature addition:
 
 * **System A** relies on standard framework conventions and common open-source libraries.
 * **System B** uses an in-house application framework, custom messaging protocols, and bespoke infrastructure conventions.
 
-An agent can generate working code for either system if provided with adequate prompt instructions. However, an asymmetry appears when the code must later be analyzed, debugged, or refactored:
+An agent can generate working code for either system if provided with adequate prompt instructions. However, a stark asymmetry emerges when that code must later be debugged, profiled, or refactored under failure conditions:
 
 ```text
 Mainstream System:
@@ -98,15 +96,15 @@ Custom System:
 existing code + weak prior knowledge   → incomplete structural understanding
 ```
 
-With standard frameworks, the model easily infers the architectural intent because it has seen thousands of identical implementations. With custom infrastructure, the model sees *what* the code executes line-by-line, but often misses *why* the abstraction exists, increasing the likelihood that it will hallucinate invalid assumptions or bypass critical subsystems.
+With standard frameworks, the model easily infers architectural intent because it has ingested thousands of identical implementations. With custom infrastructure, the model sees *what* the code executes line-by-line, but misses *why* the bespoke abstraction exists—dramatically increasing the likelihood that it will hallucinate invalid assumptions or bypass critical subsystems.
 
 ---
 
-## Guidelines Are Invariants, Not Just Generation Prompts
+## Architectural Guidelines Are Hard Invariants, Not Optional Prompts
 
-Project guidelines do more than steer new code generation; they govern how future agents interpret existing code.
+Project guidelines do more than steer initial code generation; they govern how future agents interpret existing code during maintenance passes.
 
-Suppose an internal codebase routes business operations through a custom executor:
+Suppose an internal codebase routes business operations through an explicit executor:
 
 ```csharp
 await operation.ExecuteAsync(
@@ -114,20 +112,20 @@ await operation.ExecuteAsync(
     policy: Policies.CustomerMutation);
 ```
 
-An unguided agent examining this call site recognizes that the pattern is common across the repository. What it cannot deduce from syntax alone is that `ExecuteAsync` also establishes:
+An unguided agent examining this call site recognizes that the pattern is common across the repository. What it cannot deduce from syntax alone is the transactional invariant that `ExecuteAsync` enforces under the hood:
 
 ```text
 authorization check
-+ transaction boundaries
++ transactional boundary & write-ahead log
 + tenant isolation context
-+ audit log emissions
++ audit log emission
 + outbox event publication
-+ transient fault retry policies
++ transient fault retry policy (circuit breaker)
 ```
 
-Without that explicit context, an agent asked to "optimize data access" or "add a quick status update" might bypass `operation.ExecuteAsync` and call the database repository directly. The code compiles, passes basic unit tests, and silently breaks transactional integrity and auditing.
+Without explicit context, an agent asked to "optimize data access" or "add a quick status update" will treat `operation.ExecuteAsync` as unnecessary ceremony, bypass it, and call the database repository directly. The code compiles cleanly, passes basic unit tests, and silently causes catastrophic production failures: bypassing tenant isolation, dropping audit trails, and corrupting transaction boundaries.
 
-A concise guideline transforms how the model evaluates the file:
+A concise invariant guideline transforms how the model evaluates the file:
 
 ```text
 All business mutations must execute through OperationRunner.
@@ -135,45 +133,45 @@ All business mutations must execute through OperationRunner.
 OperationRunner establishes authorization, transaction boundaries,
 tenant context, auditing, and event publication.
 
-Direct persistence from application handlers is forbidden.
+Direct persistence from application handlers is strictly forbidden.
 ```
 
-This instruction alters the agent’s semantic comprehension. What previously looked like unnecessary ceremony is now recognized as an architectural invariant that must not be bypassed.
+This instruction alters the agent’s semantic comprehension. What previously looked like redundant boilerplate is now recognized as an unbreakable architectural invariant.
 
 ---
 
-## Shaping Long-Term Evolution: Rationale Over Rules
+## Rationale Over Rules: Teaching Agents the "Why" Behind Constraints
 
 Architectural documentation has historically answered: *How do we write software here?*
 
-In an agent-driven workflow, documentation must also answer: *How should future agents interpret and evolve this software?*
+In an agent-driven workflow, documentation must also answer: *How should future agents interpret and evolve this software when edge cases emerge?*
 
 Source code captures the current state. Guidelines specify the target direction. The rationale explains how to generalize the rule when novel edge cases appear. 
 
-A rule phrased as:
+A rigid rule phrased as:
 
 ```text
 DO use Repository pattern.
-DON'T use direct DbContext.
+DON'T use direct database context.
 ```
 
-fails when an agent encounters bulk operations, reporting queries, or streaming endpoints. A structured guideline provides the decision boundaries needed for edge cases:
+fails the moment an agent encounters bulk batch imports, streaming analytics, or complex read-heavy dashboards. A structured guideline provides the decision boundaries needed to navigate real-world trade-offs:
 
 ```text
-We optimize for explicit transaction management and testability over dynamic querying.
+We optimize for explicit transaction management and deterministic testability over dynamic querying.
 
 Therefore, prefer isolated Command Handlers with direct DTO mappings over generic repository layers.
 
-Exception: Complex reporting queries may bypass the command pipeline and query read-replicas directly via Dapper.
+Exception: Complex reporting queries and batch streaming jobs may bypass the command pipeline and query read-replicas directly via explicit SQL/Dapper to avoid ORM memory overhead.
 ```
 
-Supplying the rationale gives the agent enough context to extrapolate correctly when faced with requirements that fall outside standard examples.
+Supplying the architectural rationale equips the agent with the causal mental model needed to extrapolate correctly when requirements deviate from standard examples.
 
 ---
 
-## Agent-Friendly Does Not Mean Purely Mainstream
+## Predictable Beats Mainstream: Eliminating Ambient Magic
 
-A custom internal architecture is not inherently problematic for coding agents. The real operational divide is not between mainstream and proprietary; it is between predictable and erratic architectures:
+A bespoke internal architecture is not inherently hostile to coding agents. The real operational divide is not between mainstream and proprietary; it is between **predictable** and **erratic** architectures:
 
 ```text
 Regular      vs.  Irregular
@@ -183,15 +181,15 @@ Predictable  vs.  Exception-heavy
 ```
 
 An unconventional internal architecture remains agent-friendly if it exhibits:
-- Consistent structural patterns across services,
-- Explicit boundary declarations,
-- Canonical, end-to-end reference implementations,
+- Uniform structural patterns across all microservices,
+- Explicit boundary declarations at every call site,
+- Canonical, production-tested reference implementations in the repository,
 - Documented rationale for deviations from framework defaults,
-- Minimal undocumented "magic" or dynamic interceptors.
+- Zero undocumented "magic", ambient thread-local state, or dynamic reflection interceptors.
 
-Conversely, a mainstream framework can become hostile to agents if years of competing paradigms have left multiple ways of solving the same problem within the same repository.
+Conversely, a mainstream framework becomes actively toxic to agents when years of conflicting architectural fads leave three competing ways to solve the same problem in the same repository.
 
-> Agent-friendly code is not necessarily standard code. It is code whose operational rules are easy to infer and remain consistent across boundaries.
+> Agent-friendly code is not necessarily mainstream code. It is code whose operational rules are explicit, deterministic, and structurally uniform across boundaries.
 
 ---
 
@@ -250,13 +248,15 @@ In an agent-heavy environment, architecture that is not machine-readable in the 
 
 ## Rethinking Human-Centric Aesthetics: Explicitness over Cleverness
 
-Traditional clean-code literature pushed for terseness: reduce line count, eliminate visual repetition, and lean on syntactic abstractions. This optimized for human visual scanning and typing speed.
+## Explicitness Over Cleverness: Why "Clean Code" Idioms Confuse Agents
 
-Agents operate under a different cost profile:
-- Generating fifty lines of explicit, repetitive code costs almost nothing in time or effort.
-- Parsing hidden abstractions, ambient state, and dynamic middleware burns context tokens and introduces reasoning errors.
+Traditional clean-code literature pushed for extreme conciseness: reduce line counts, eliminate visual repetition, and lean heavily on syntactic sugar and dynamic abstractions. That philosophy optimized for human visual scanning and typing speed.
 
-Consider collection processing. A human often prefers a dense functional pipeline:
+Autonomous agents operate under a completely inverted cost profile:
+- **Zero Cost for Volume**: Generating fifty lines of explicit, procedural code costs almost zero time and zero developer effort.
+- **High Cost for Ambiguity**: Parsing nested abstractions, ambient context, and dynamic middleware burns context tokens and triggers subtle reasoning errors.
+
+Consider collection processing. A human engineer instinctively writes a dense, chained functional pipeline:
 
 ```csharp
 return orders
@@ -266,7 +266,7 @@ return orders
     .ToList();
 ```
 
-An agent might generate an explicit procedural loop:
+An agent maintaining a production service benefits immensely from an explicit procedural loop:
 
 ```csharp
 var validOrders = new List<Order>();
@@ -285,16 +285,14 @@ foreach (var order in orders)
 }
 ```
 
-To a developer focused on conciseness, the second block looks basic or verbose. But evaluated from an agent maintenance perspective, the procedural approach provides distinct structural advantages:
-- Control flow is straightforward and localized.
-- Inserting a new condition, metric emission, or early-exit branch requires no pipeline refactoring.
-- Breakpoints and line-by-line inspection remain trivial.
-- Exception stack traces point to concrete lines rather than anonymous compiler-generated iterator state machines.
-- Automated code transformations can isolate and edit branches without breaking chained functional signatures.
+To a developer trained on brevity, the procedural block looks verbose. But evaluated from systems engineering and agent maintenance realities, the explicit approach delivers concrete operational dividends:
+1. **Zero Delegate & GC Allocations**: Eliminates compiler-generated closure classes, delegate instantiations, and iterator state machines on hot execution paths.
+2. **Surgical Diff Patches**: When an agent must insert a metrics counter, an early exit, or a rate-limit check, modifying a flat loop is a trivial, localized 2-line diff. Modifying a chained pipeline requires rewriting method chains and lambda captures, dramatically increasing the risk of broken syntax or hallucinated type overloads.
+3. **Transparent Debugging & Profiling**: Breakpoints hit exact lines, and production stack traces pinpoint the exact instruction rather than an anonymous compiler-generated display class.
 
-### The Hidden Abstraction Problem
+### The Hidden Abstraction Trap: Dynamic Interception Breaks Agent Reasoning
 
-Dynamic runtime abstractions—such as aspect-oriented decorators, ambient dependency injection containers, and implicit convention routing—obscure the relationship between code and execution:
+Dynamic runtime abstractions—such as aspect-oriented decorators, ambient dependency injection containers, and implicit convention-based routing—sever the link between visible code and runtime execution:
 
 ```text
 Client Request ──► [Dynamic Middleware] ──► [Ambient Context] ──► [ORM Interceptor] ──► Local Handler
@@ -304,11 +302,11 @@ Client Request ──► [Dynamic Middleware] ──► [Ambient Context] ──
                                                                            blind to 3 ambient layers
 ```
 
-When an agent is asked to modify logic inside a local handler, it cannot reliably account for three layers of dynamic interception unless all relevant classes are loaded into its context window. This burns context budget and frequently leads to silent regressions: the generated code compiles cleanly, but breaks because an interceptor was relying on naming conventions or thread-local state.
+When an agent modifies logic inside a local handler, it cannot account for three layers of dynamic interception unless all interceptor definitions are loaded into its active context window. This burns token budget and guarantees silent production regressions: the generated code compiles cleanly, passes isolated mocks, and fails at runtime because an interceptor relied on convention-based naming or thread-local storage.
 
-Explicit, flat code keeps dependencies and side effects visible at the call site.
+Explicit, flat code keeps dependencies, side effects, and transactional boundaries visible directly at the call site.
 
-### File Granularity: The "Class-Per-File" Dogma vs. Semantic Locality ("Context-Per-File")
+### File Granularity: Killing the One-Class-Per-File Dogma for Semantic Locality
 
 For three decades, mainstream object-oriented ecosystems dogmatized the convention of **one class per file**. This practice was not born from compiler efficiency or theoretical elegance; it was designed around human and operational limitations of the late 1990s:
 - Early IDEs struggled with indexing and text search across large unified source files.
@@ -341,13 +339,15 @@ When a single business operation is shattered across six distinct files (`Comman
 
 Co-locating the entire vertical slice into a single file provides **instant operational visibility**. A single file read delivers the input payload, invariants, state mutations, and projection schemas in one deterministic shot—eliminating the need for the model to guess what sibling files contain.
 
-#### 2. Attention Density and Rotary Position Embeddings (RoPE)
-In transformer architectures, attention is governed by spatial and semantic proximity:
-- **Spatial Attenuation**: Positional encodings (such as RoPE) naturally preserve sharper attention gradients across tokens that share nearby sequence positions. When an input DTO and its mutation logic sit within 50 lines of each other, the self-attention heads ($Q \cdot K^T$) establish dense, high-signal representations.
-- **Protocol Overhead Elimination**: Scattering code across ten files forces the agent into iterative tool loops. Each `view_file` or `grep` invocation injects tool-call envelopes, parameter schemas, absolute file paths, and environment prompts. This structural noise dilutes the attention budget, forcing the transformer to attend across thousands of tokens of protocol boilerplate instead of direct domain relationships.
+#### 2. Attention Density: Spatial Proximity Beats Protocol Noise
+Transformer attention mechanisms are governed by token proximity and context budget:
+- **Spatial Attenuation in the Attention Matrix**: When an input contract, domain invariants, and mutation logic sit within 50 lines of each other in the same physical file, self-attention heads resolve cross-variable relationships with maximum fidelity. Scattering these components across five separate files forces tokens thousands of positions apart, degrading attention resolution across median model layers.
+- **Eliminating Tool Protocol Noise**: Every time an agent issues a `view_file` or `grep_search` call across fragmented files, the runtime injects JSON tool envelopes, parameter schemas, absolute file paths, and environment prompts. This structural noise dilutes the attention budget. The model spends precious attention compute processing tool call plumbing instead of resolving business rules and transactional boundaries.
 
-#### 3. Single-Pass KV-Cache Prefill vs. Multi-Turn Fragmentation
-Reading a single cohesive file leverages provider-level prompt caching and single-pass prefill mechanics. Instead of stalling the agent loop across five sequential tool roundtrips—each incurring network latency, execution cost, and KV-cache expansion—the model consumes the complete operational context in a single token ingestion phase.
+#### 3. Single-Pass Prefill: Slashing Multi-Turn Roundtrip Latency
+Consolidating the vertical slice into a single file activates provider-level prompt caching and a single-pass token prefill phase. 
+- In a fragmented repository, gathering the operational context requires four to six sequential tool roundtrips. Each turn introduces network latency (1–3 seconds), token serialization overhead, and incremental KV-cache bloat.
+- In a *context-per-file* slice, a single read ingests the complete operational surface in one deterministic turn. The agent moves immediately from reading to modifying code without stalling the development loop.
 
 ```text
 THE CONTEXT-PER-FILE VERTICAL SLICE
@@ -363,10 +363,10 @@ THE CONTEXT-PER-FILE VERTICAL SLICE
                                                     │
                                                     ▼
                  Single-Pass Ingestion / Complete Operational Visibility
-               High RoPE Attention Density / Zero Tool Protocol Tax
+                 High Attention Density / Zero Tool Protocol Tax
 ```
 
-#### The Guardrail: Avoiding the "God-File" Monolith
+#### The Guardrail: Avoiding the 3,000-Line Monolith Trap
 Co-locating code for semantic locality does not justify returning to unstructured, 3,000-line monolithic files. The *context-per-file* pattern fails when cohesion turns into unchecked accumulation:
 1. **Lost in the Middle**: When a file expands beyond 1,000–1,500 lines, transformer attention profiles begin degrading in the median layers, causing models to overlook business rules embedded mid-file.
 2. **Patch Collision and Diff Fragility**: Agentic tools rely on surgical text replacement and fuzzy match anchors. Editing a 250-line file carries near-zero risk of anchor collision; editing a 3,000-line file with repetitive structural syntax dramatically increases the likelihood of malformed diffs and corrupted line offsets.
@@ -376,23 +376,28 @@ The target architectural baseline is **bounded vertical cohesion**: co-locate al
 
 ---
 
-## The Hardware Dividend: Explicit Code Runs Faster
+## The Hardware Dividend: Explicit Code Unlocks Compiler Optimizations
 
-An unexpected side effect of writing explicit, non-dynamic code for agents is that it often aligns better with modern hardware and optimizing compilers.
+An unexpected side effect of writing explicit, non-dynamic code for agents is that it aligns directly with modern CPU architectures and optimizing compilers.
 
-Code written for maximum human brevity frequently relies on:
-- Virtual method dispatch and deep interface hierarchies,
-- Dynamic runtime proxies and reflection,
-- Complex generic wrappers,
-- Small, fragmented object allocations across the managed heap.
+Code written for human brevity frequently relies on:
+- Virtual method dispatch and deep interface inheritance trees,
+- Dynamic runtime proxies, reflection, and reflection-based serializers,
+- Complex generic wrappers and boxing conversions,
+- Small, fragmented object allocations scattered across the garbage-collected heap.
 
-Modern CPUs rely on branch prediction, instruction pipelining, and data locality. Flat, explicit code paths make it significantly easier for compilers and JIT engines to analyze execution flows:
+Modern CPUs rely on branch prediction, instruction pipelining, and cache line prefetching (L1i / D-cache). Flat, explicit code paths allow optimizing compilers and JIT engines to analyze execution flows deterministically:
 
 ```text
 Direct Static Call ──► Inlining ──► Constant Propagation ──► Dead Code Elimination ──► Optimal Register Allocation
 ```
 
-When code uses direct calls, static dispatch, and plain structs or records, down-level compilers can devirtualize method invocations, inline execution paths, and pack data structures contiguously into CPU cache lines. Dynamic dispatch through reflection or deeply nested middleware layers breaks this optimization pipeline. Code structured for straightforward agent comprehension often yields mechanical sympathy as a byproduct.
+When code uses direct calls, static dispatch, and contiguous value types:
+1. **Devirtualization & Inlining**: The compiler eliminates indirect branch calls (vtable lookups), inlining execution paths directly into the caller. This reduces instruction cache (L1i) misses and keeps the CPU execution pipeline saturated.
+2. **Cache Line Locality**: Plain, contiguous data structures pack bytes sequentially into CPU cache lines (64 bytes), avoiding pointer chasing across fragmented heap memory.
+3. **Dead Code Elimination**: Transparent control flow lets the compiler prove invariants at build time, stripping unreachable branches and allocating intermediate variables directly into CPU registers instead of spilling to the stack.
+
+Code structured for unambiguous agent comprehension yields mechanical sympathy as a natural byproduct.
 
 ---
 
@@ -435,55 +440,55 @@ The operational question becomes:
 
 ---
 
-## Code Review: The Intersection of Two Working Models
+## Code Review: Halting the Clash Between Human Habits and Machine Patterns
 
-Code review is where human aesthetic preferences clash with machine-optimized patterns:
+Code review is the primary fault line where human aesthetic habits clash with machine-optimized code:
 
-| Dimension | What the Agent Naturally Produces | What the Human Reviewer Instinctively Demands |
-| :--- | :--- | :--- |
-| **Density** | Explicit local steps, unrolled loops | Conciseness, one-liners, stream pipelines |
-| **Structure** | Isolated handlers, explicit DTOs | Unified generic base classes, deep reuse |
-| **Control Flow** | Direct procedural branches, guard clauses | Idiomatic functional syntax, syntactic sugar |
-| **Dependencies**| Explicit parameter passing | Ambient resolution, dynamic decorators |
-| **Optimization**| Flat execution, direct calls | Elegance, brevity, human visual comfort |
+| Dimension | What the Agent Naturally Produces | What the Human Reviewer Instinctively Demands | Operational Reality |
+| :--- | :--- | :--- | :--- |
+| **Density** | Explicit local steps, unrolled loops | Conciseness, one-liners, stream pipelines | Explicit loops reduce allocations and make git diffs surgical. |
+| **Structure** | Isolated vertical slices, dedicated DTOs | Unified generic base classes, deep reuse | Deep reuse introduces high coupling and cross-feature blast radius. |
+| **Control Flow** | Direct procedural branches, early exits | Idiomatic functional syntax, syntactic sugar | Early exits clarify invariants; functional chaining hides closure overhead. |
+| **Dependencies**| Explicit parameter passing at call sites | Ambient service locator, dynamic decorators | Explicit calls prevent hidden side-effects and context blindness. |
+| **Optimization**| Flat execution, direct calls | Elegance, brevity, human visual comfort | Flat execution unlocks compiler inlining and hardware cache locality. |
 
-### The Superficial Review Trap
+### The Superficial Review Trap: Stop Debating Cosmetics in PRs
 
-A common failure mode in teams integrating coding agents is spending review cycles policing cosmetics:
-- *"Why did the agent write an explicit `foreach` instead of a LINQ pipeline?"*
-- *"Why did it create a dedicated DTO instead of reusing an existing entity?"*
-- *"Why didn't it use this new language shorthand?"*
+A rampant failure mode in engineering teams adopting coding agents is wasting senior review bandwidth on cosmetic bike-shedding:
+- *"Why did the agent write an explicit `foreach` instead of a 1-line stream pipeline?"*
+- *"Why did it create a dedicated DTO instead of reusing an existing domain entity?"*
+- *"Why didn't it use this clever new language shorthand?"*
 
-When reviewers consume their attention on stylistic debates, they miss catastrophic production defects. Linters, formatters, and static analysis tools should handle style deterministically.
+When senior engineers spend their cognitive energy policing stylistic preferences, catastrophic production defects slip past undetected. Deterministic linters, formatters, and static analysis guardrails must enforce style automatically in CI.
 
-Human review must focus on **architectural consequences**:
-- **Algorithmic and Resource Bugs**: $O(n^2)$ loops over large inputs, unindexed queries, missing transaction rollbacks, memory leaks, and concurrency race conditions.
-- **Domain Invariants**: Misinterpreting a business state (e.g., treating an order as `Settled` instead of `Authorized`) or bypassing required regulatory workflows.
-- **Contract and Boundary Integrity**: Verifying that tenant isolation, authentication scopes, retry limits, and error handling behaviors are maintained.
+Senior human review must focus ruthlessly on **architectural invariants and runtime consequences**:
+1. **Algorithmic Complexity & Resource Saturation**: Scan for $O(n^2)$ loops over unbounded collections, unindexed database queries, missing connection disposal, and thread-pool starvation.
+2. **Domain Invariants & State Transitions**: Verify that business state transitions are valid (e.g., ensuring an order is never marked `Settled` without an authorized payment receipt) and regulatory boundaries are enforced.
+3. **Transactional Integrity & Blast Radii**: Confirm that tenant isolation keys, distributed outbox records, and audit log emissions cannot be bypassed under partial failure.
 
-### The Abstraction Feedback Loop
+### The Premature Abstraction Spiral
 
-There is a specific regression pattern that occurs when human reviewers apply traditional DRY principles to agent-generated code:
+A specific regression loop occurs when human reviewers apply traditional DRY dogmas to agent-generated code:
 
 ```text
 1. Agent generates explicit, flat code with local boilerplate.
        │
        ▼
-2. Human reviewer notices duplication: "Extract this into a generic base class."
+2. Human reviewer flags repetition: "Extract this into a generic base class."
        │
        ▼
-3. The codebase gains another layer of framework abstraction.
+3. The repository gains another layer of framework abstraction.
        │
        ▼
 4. A subsequent agent encounters the abstraction, misunderstands its hidden assumptions,
-   bypasses it or misuses it, and introduces a production defect.
+   bypasses it or misuses it, and triggers a production incident.
 ```
 
-Abstractions must justify their presence by genuinely reducing architectural complexity, not merely by shrinking line counts.
+Abstractions must justify their existence by genuinely isolating architectural complexity, not by shaving twenty lines of local boilerplate from a file.
 
 ---
 
-## Code Review Shifts Toward Verifying Consequences
+## Reviewing for Consequences: Invariants, Failure Modes, and Blast Radii
 
 As the day-to-day writing of code shifts toward agents, review evolves from style enforcement to the verification of intent, invariants, and failure modes.
 
@@ -501,9 +506,9 @@ and focuses on concrete questions:
 
 ---
 
-## Source Code as an Intermediate Representation
+## The Endgame: Human-Auditable, Machine-Maintained Codebases
 
-The relationship between developers and source code is shifting:
+The fundamental relationship between software engineers and source code has permanently inverted:
 
 ```text
 Historical Paradigm:
@@ -513,25 +518,23 @@ Emerging Paradigm:
 Human specifies ──► Agent writes ──► Human audits ──► Agent modifies
 ```
 
-In this workflow, the primary design target changes:
+In this operating model, the primary optimization target shifts:
 
 ```text
 Target Optimization:
-  Human Comprehension
+  Human Auditability
 + Agent Comprehension
-+ Agent Modification
-+ Predictable Generation Patterns
++ Deterministic Tool Modifications
++ Mechanical Hardware Sympathy
 ─────────────────────────────────────
-= Robust, Evolvable Systems
+= Robust, Evolvable Production Systems
 ```
 
-This is not an excuse for unchecked code bloat or chaotic, low-quality generation. It marks a shift away from personal stylistic preferences toward predictability, mechanical clarity, and semantic locality.
-
-The most profound shift driven by AI agents is not merely that code is produced faster. It is the gradual redefinition of what constitutes "good" code:
-- **Abstractions** are evaluated by how well they isolate complexity, not how many lines they save.
-- **Duplication** is tolerated when it prevents coupling, and eradicated only when it creates semantic drift.
-- **Documentation and Guidelines** are treated as functional parts of the runtime compiler, establishing invariants that steer agent reasoning.
-- **Code Reviews** move past stylistic policing to become the rigorous boundary where human architectural intent is enforced against machine-generated implementations.
+This is not an excuse for chaotic, unmaintainable code dumps. It represents a deliberate evolution from personal stylistic preferences toward predictability, mechanical clarity, and semantic locality:
+- **Abstractions** are judged by how effectively they isolate failure domains, never by how many lines of text they eliminate.
+- **Duplication** is tolerated when it isolates change, and eradicated only when it creates semantic synchronization risk across business rules.
+- **Architectural Guidelines** operate as functional compiler constraints, establishing hard invariants that govern agent reasoning across turns.
+- **Code Review** ceases to be stylistic policing and becomes the ultimate engineering gate where human architectural intent is enforced against machine-generated implementations.
 
 ---
 
