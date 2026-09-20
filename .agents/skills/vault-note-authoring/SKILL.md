@@ -27,7 +27,7 @@ This skill guides the autonomous agent through the end-to-end authoring and refa
      python scripts/audit_workflow.py [path/to/note.md]
      ```
    - Must return `ALL GATES PASSED [100% CLEAN]`.
-   - Perform mental Coffee & Tech Talk test.
+   - Perform mental Whiteboard / Peer Conversation test (explain mechanisms over terminology).
 6. **Phase 5: Atomic Git Ledger Recording**:
    - Commit with conventional taxonomy (`feat(notes): ...` or `refactor(notes): ...`).
    - Confirm clean working tree (`git status`).

@@ -1,3 +1,8 @@
+---
+name: practitioner-voice
+description: Practitioner writing style for software engineering notes — plain engineering language, explaining mechanisms over terminology, concrete examples, and technical skepticism.
+---
+
 # Practitioner Writing Style
 
 Write software-engineering notes as an experienced engineer talking to another experienced engineer.

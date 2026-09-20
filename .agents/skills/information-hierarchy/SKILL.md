@@ -85,7 +85,7 @@ The Essayist Narrative (Mandatory):
 
 ### 2. Thesis-Driven Headings as Steps
 - Every section heading must be an active, domain-specific engineering thesis that stands on its own.
-- Walk the reader through the 6 layers naturally using thesis headings. Refer to [`golden-exemplar.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/skills/practitioner-voice/resources/golden-exemplar.md) for the gold standard of organic top-down descent.
+- Walk the reader through the 6 layers naturally using thesis headings (exemplified in [[Software Engineering May Shift Toward Code Optimized for Agents]] for organic top-down descent).
 
 ---
 
