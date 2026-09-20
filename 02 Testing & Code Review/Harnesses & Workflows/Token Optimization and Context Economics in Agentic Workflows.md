@@ -514,3 +514,4 @@ Token conservation is not an exercise in micro-optimizing prompt words; it is th
 - **[[Local vs Cloud and Hybrid Model Execution]]**: Economic and hardware analysis of hosting high-frequency, zero-marginal-cost models locally on Unified Memory Architecture appliances versus frontier cloud APIs.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]**: Deep-dive into documenting prohibited patterns and failed experiments to eliminate speculative agent exploration loops.
 - **[[Comments May Become More Valuable in AI-Generated Code]]**: How intent-preserving comments sit directly alongside code to eliminate reverse-engineering token waste.
+- **[[Token Optimization and Context Economics in Agentic Workflows v2]]**: Companion practitioner synthesis emphasizing progressive disclosure, lean 5-bullet intent roadmaps, vertical slice locality, and subagent synthetic I/O boundaries.
