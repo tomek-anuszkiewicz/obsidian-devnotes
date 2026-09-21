@@ -1,33 +1,22 @@
 ---
 name: vault-note-authoring
-description: Canonical 6-phase workflow for authoring, refactoring, and verifying notes in the vault, culminating in the mandatory Terminal Audit Gate.
+description: Create or substantially revise public Obsidian vault notes with graph discovery, English-first engineering prose, link wiring, and the required audit. Use for new notes and deep note refactors, not small typo fixes.
 ---
 
-# Vault Note Authoring Workflow Skill
+# Vault Note Authoring
 
-This skill guides the autonomous agent through the end-to-end authoring and refactoring pipeline defined in `.agents/workflows/note-authoring.md`.
+Create a public, graph-connected note that is useful to a practicing software engineer and remains publishable without private context.
 
-## Workflow Phases & Required Actions
+## Procedure
 
-1. **Phase 0: Dialectical Exploration & Scoping**:
-   - Spar as technical peer; challenge assumptions; zero echoing; zero unsolicited plans.
-   - GATE: Explicit user mandate ("ready to write").
-2. **Phase 1: Reconnaissance & Topology Discovery**:
-   - Inspect existing domain notes via `grep_search` and `list_dir`. Identify 2–4 peers.
-3. **Phase 2: Inverted Pyramid Authoring**:
-   - Load `information-hierarchy`, `practitioner-voice`, and `language-agnostic-architecture`.
-   - Write 100% English, lead with hook in lines 1–50, maintain unhurried causal depth.
-4. **Phase 3: Dual-Layer Graph Wiring**:
-   - Load `vault-linking`.
-   - Add 2–5 inline piped links (`[[Note|text]]`) and 3–6 curated links in `## Related Notes`.
-   - Wire inbound links in 2–3 peer notes.
-5. **Phase 4: MANDATORY TERMINAL AUDIT GATE**:
-   - Execute:
-     ```powershell
-     python scripts/audit_workflow.py [path/to/note.md]
-     ```
-   - Must return `ALL GATES PASSED [100% CLEAN]`.
-   - Perform mental Whiteboard / Peer Conversation test (explain mechanisms over terminology).
-6. **Phase 5: Atomic Git Ledger Recording**:
-   - Commit with conventional taxonomy (`feat(notes): ...` or `refactor(notes): ...`).
-   - Confirm clean working tree (`git status`).
+1. Read [the detailed workflow](references/note-authoring-workflow.md) before authoring or deeply refactoring a note.
+2. Discover the relevant hub and lateral peers before choosing the note's position in the graph.
+3. Apply `information-hierarchy` and `practitioner-voice`; use `language-agnostic-architecture` when it clarifies durable system mechanics.
+4. Apply `vault-linking` to add useful outbound links and maintain relevant inbound links.
+5. Ensure persisted content is English-only and contains no reference to `_Private/`.
+6. Before a requested commit, run `python scripts/audit_workflow.py <note-path>` and resolve every failure. Commit only when the user asks.
+
+## Boundaries
+
+- Preserve unrelated working-tree changes.
+- Do not treat a passing automated audit as a substitute for checking whether the note explains mechanisms in plain engineering language.

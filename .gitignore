@@ -1,5 +1,4 @@
 .obsidian/graph.json
-_Private/
 __pycache__/
 *.pyc
 .env

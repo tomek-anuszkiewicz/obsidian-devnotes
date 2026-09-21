@@ -7,7 +7,7 @@ description: Master architectural orientation charter and operational guidelines
 
 This vault is a production-grade, graph-connected knowledge engine documenting runtime physics, system architecture, engineering economics, and verification harnesses for agentic software development.
 
-Autonomous agents (Antigravity, Gemini CLI, Claude Code, OpenAI Codex, or custom IDE assistants) do not treat this repository as an unstructured scratchpad. Every modification must satisfy hard structural invariants, zero-allocation context hygiene, and deterministic quality gates.
+Codex does not treat this repository as an unstructured scratchpad. Every modification must satisfy hard structural invariants, zero-allocation context hygiene, and deterministic quality gates.
 
 ---
 
@@ -33,7 +33,7 @@ The public knowledge graph is organized by **layers of authority**—from bare s
 
 ---
 
-## 2. The Agentic Governance Triad: Rules, Skills & Workflows
+## 2. Codex Governance: Contract, Skills & Hooks
 
 To optimize context window economics, prevent attention saturation, and enforce deterministic quality gates, agent operations are organized into a strict architectural triad:
 
@@ -41,16 +41,18 @@ To optimize context window economics, prevent attention saturation, and enforce 
 ┌──────────────────────────────────────────────────────────────────────────────────┐
 │                           THE AGENTIC GOVERNANCE TRIAD                           │
 ├──────────────────────────────────────────────────────────────────────────────────┤
-│ 1. RULES (Always-On Invariants)          │ .agents/rules/*.md                    │
-│    Hard non-negotiable boundaries. Zero tolerance. Injected into every prompt.    │
+│ 1. CONTRACT (Always-On Invariants)       │ AGENTS.md                              │
+│    Short, non-negotiable boundaries injected into every Codex task.               │
 ├──────────────────────────────────────────────────────────────────────────────────┤
 │ 2. SKILLS (On-Demand Domain Capabilities)│ .agents/skills/*/SKILL.md             │
 │    Stylistic heuristics, architectural patterns, and blueprints loaded on-demand. │
 ├──────────────────────────────────────────────────────────────────────────────────┤
-│ 3. WORKFLOWS (State Machines with Audits)│ .agents/workflows/*.md                │
-│    Deterministic execution pipelines culminating in the Mandatory Terminal Audit.│
+│ 3. HOOKS (Mechanical Enforcement)        │ .codex/hooks.json                      │
+│    Trusted lifecycle checks enforce deterministic conditions where supported.     │
 └──────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+The detailed documents in `.agents/rules/` explain the contract and its edge cases; they do not replace the always-on rules in this file. Reusable workflows belong in the relevant skill, with optional references stored beneath that skill.
 
 ---
 
@@ -100,9 +102,9 @@ Skills provide specialized domain heuristics, design patterns, and stylistic blu
 
 ---
 
-## 5. Standard Workflows & The Terminal Audit Gate (`.agents/workflows/`)
+## 5. Skill Workflows & The Terminal Audit Gate
 
-All multi-step operations (authoring, cluster refactoring, link rewiring) must follow formal state-machine workflows documented in `.agents/workflows/` (e.g., [`note-authoring.md`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/workflows/note-authoring.md)).
+For new or substantially refactored notes, use [`vault-note-authoring`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/skills/vault-note-authoring/SKILL.md). It owns the end-to-end authoring and audit procedure. Use [`vault-linking`](file:///d:/GoogleDrive/AI/Obsidian/Default/.agents/skills/vault-linking/SKILL.md) for graph rewiring and note moves.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -110,7 +112,7 @@ All multi-step operations (authoring, cluster refactoring, link rewiring) must f
 │    Spar as intellectual peers; zero echoing. Gate behind explicit mandate.  │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ 1. RECONNAISSANCE & GRAPH DISCOVERY                                         │
-│    Search existing notes (grep_search / list_dir). Identify peer notes.     │
+│    Search existing notes with the available repository search tools.        │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ 2. INVERTED PYRAMID AUTHORING (Skills: info-hierarchy, practitioner-voice)  │
 │    Draft note in 100% English following the 6-layer cognitive hierarchy.    │
