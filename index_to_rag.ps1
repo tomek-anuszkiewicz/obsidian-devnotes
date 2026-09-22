@@ -31,7 +31,26 @@ $IndexedDirectories = @(
     '04 Prompts, Context & Models',
     '05 Engineering Economics & Future'
 )
-$IndexStateFile = 'D:\AI\qdrant\rag-index.json'
+$EnvironmentFile = Join-Path $VaultRoot '.env'
+if (-not (Test-Path -LiteralPath $EnvironmentFile -PathType Leaf)) {
+    Write-Error "The .env file is missing. Define RAG_CACHE_FILE before indexing."
+    exit 1
+}
+
+$CacheFileDefinition = Get-Content -LiteralPath $EnvironmentFile |
+    Where-Object { $_ -match '^\s*RAG_CACHE_FILE\s*=' } |
+    Select-Object -First 1
+
+if ([string]::IsNullOrWhiteSpace($CacheFileDefinition)) {
+    Write-Error "RAG_CACHE_FILE is not defined in .env. Define it before indexing."
+    exit 1
+}
+
+$IndexStateFile = ($CacheFileDefinition -replace '^\s*RAG_CACHE_FILE\s*=\s*', '').Trim()
+if ([string]::IsNullOrWhiteSpace($IndexStateFile)) {
+    Write-Error "RAG_CACHE_FILE is empty in .env. Set it to the index state file path before indexing."
+    exit 1
+}
 
 # A numbered root directory is a new main section. Do not index it implicitly:
 # its inclusion must be a conscious change to the list above.
@@ -73,7 +92,7 @@ foreach ($DirectoryName in $IndexedDirectories) {
     $DirectoryPath = Join-Path $VaultRoot $DirectoryName
     $RagArgs = @(
         $DirectoryPath,
-        '--source', 'obsidian',
+        '--source', 'devnotes',
         '--index-json', $IndexStateFile
     )
 
