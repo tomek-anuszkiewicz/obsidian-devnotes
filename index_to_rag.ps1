@@ -3,8 +3,9 @@
     Updates the local RAG index for this vault's five main directories.
 
 .DESCRIPTION
-    This script has no options. It indexes only the explicitly listed main
-    directories below and excludes private and tool metadata directories.
+    This script has no options. It uses rag_qdrant to index only the explicitly
+    listed main directories below. rag_qdrant recursively scans each supplied
+    directory and enforces its own private and system-directory exclusions.
 
     A new numbered top-level directory is treated as a required script update:
     decide whether to add it to $IndexedDirectories or intentionally ignore it,
@@ -30,6 +31,7 @@ $IndexedDirectories = @(
     '04 Prompts, Context & Models',
     '05 Engineering Economics & Future'
 )
+$IndexStateFile = 'D:\AI\qdrant\rag-index.json'
 
 # A numbered root directory is a new main section. Do not index it implicitly:
 # its inclusion must be a conscious change to the list above.
@@ -55,37 +57,46 @@ if ($MissingIndexedDirectories.Count -gt 0) {
 }
 
 try {
-    $RagCommand = Get-Command amiga_rag -ErrorAction Stop
+    $RagCommand = Get-Command rag_qdrant -ErrorAction Stop
 } catch {
-    Write-Error "The amiga_rag command is not available on PATH. Install or expose it before indexing."
+    Write-Error "The rag_qdrant command is not available on PATH. Install or expose it before indexing."
     exit 1
 }
-
-$RagArgs = @(
-    $VaultRoot,
-    '--source', 'obsidian',
-    '--exclude', '_Private', 'private', '.obsidian', '.smart-env', '.agents', '.antigravity',
-    '--no-root-notes',
-    '--include-dirs'
-)
-$RagArgs += $IndexedDirectories
 
 Write-Host "Updating the RAG index from:" -ForegroundColor Cyan
 $IndexedDirectories | ForEach-Object { Write-Host "  - $_" }
 Write-Host "Using: $($RagCommand.Source)" -ForegroundColor DarkCyan
+Write-Host "Index state: $IndexStateFile" -ForegroundColor DarkCyan
+$RagInvocation = if ([string]::IsNullOrWhiteSpace($RagCommand.Path)) { $RagCommand.Name } else { $RagCommand.Path }
 
-& amiga_rag @RagArgs
-$RagSucceeded = $?
-$ExitCode = $LASTEXITCODE
+foreach ($DirectoryName in $IndexedDirectories) {
+    $DirectoryPath = Join-Path $VaultRoot $DirectoryName
+    $RagArgs = @(
+        $DirectoryPath,
+        '--source', 'obsidian',
+        '--index-json', $IndexStateFile
+    )
 
-if (-not $RagSucceeded -or ($null -ne $ExitCode -and $ExitCode -ne 0)) {
-    if ($null -eq $ExitCode) {
-        Write-Error "RAG indexing failed without returning an exit code."
-        exit 1
+    Write-Host "Indexing: $DirectoryName" -ForegroundColor Cyan
+
+    if ($RagCommand.CommandType -eq 'ExternalScript' -and $RagCommand.Path.EndsWith('.ps1', [System.StringComparison]::OrdinalIgnoreCase)) {
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $RagCommand.Path @RagArgs
+    } else {
+        & $RagInvocation @RagArgs
     }
 
-    Write-Error "RAG indexing failed with exit code $ExitCode."
-    exit $ExitCode
+    $RagSucceeded = $?
+    $ExitCode = $LASTEXITCODE
+
+    if (-not $RagSucceeded -or ($null -ne $ExitCode -and $ExitCode -ne 0)) {
+        if ($null -eq $ExitCode) {
+            Write-Error "RAG indexing failed for '$DirectoryName' without returning an exit code."
+            exit 1
+        }
+
+        Write-Error "RAG indexing failed for '$DirectoryName' with exit code $ExitCode."
+        exit $ExitCode
+    }
 }
 
 Write-Host "RAG index updated successfully." -ForegroundColor Green
