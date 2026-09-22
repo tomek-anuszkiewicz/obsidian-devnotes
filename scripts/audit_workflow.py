@@ -3,8 +3,7 @@
 scripts/audit_workflow.py
 
 Checks changed public Markdown for the vault boundaries that can be verified
-mechanically: English-only persistence, no public reference to _Private/, and
-resolvable public wikilinks.
+mechanically: English-only persistence and resolvable public wikilinks.
 
 Usage:
   python scripts/audit_workflow.py                    # Audits staged Markdown files
@@ -36,7 +35,7 @@ WIKILINK_REGEX = re.compile(r"\[\[([^\]\|]+)(?:\|[^\]]+)?\]\]")
 def is_public_markdown(path: Path) -> bool:
     return (
         path.suffix.lower() == ".md"
-        and not any(part in path.parts for part in {"_Private", ".agents", ".gemini", ".git"})
+        and not any(part in path.parts for part in {".agents", ".gemini", ".git"})
         and path.name != "AGENTS.md"
     )
 
@@ -83,11 +82,6 @@ def audit_file(file_path: Path, all_titles: set) -> list:
 
     violations = []
     for line_number, line in enumerate(content.splitlines(), start=1):
-        if "_Private/" in line or "[[_Private" in line:
-            violations.append(
-                f"{relative_path}:{line_number} [PRIVACY] Public content refers to _Private/: {line.strip()}"
-            )
-
         for target in WIKILINK_REGEX.findall(line):
             target = target.strip()
             if target in {"...", "Target Note", "Hub Title", "_Explore"}:

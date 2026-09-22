@@ -239,10 +239,6 @@ def handle_git_hook():
     total_violations = 0
 
     for f_str in files:
-        # Ignore private directory
-        if f_str.startswith("_Private") or "/_Private" in f_str or "\\_Private" in f_str:
-            continue
-
         f_path = REPO_ROOT / f_str
         if not f_path.exists() or not f_path.is_file():
             continue

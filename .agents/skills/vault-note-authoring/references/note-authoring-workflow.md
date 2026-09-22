@@ -1,16 +1,16 @@
-# Public Note Workflow
+# Faithful Rewrite Workflow
 
-Use this workflow for a new public note or a substantial revision after the user has asked to write.
+Use this workflow after the user has asked to rewrite an existing public note.
 
-## Find the useful context
+## Use only the supplied source
 
-Read the target note and search the nearby area of the vault. Identify an existing hub or peer only if it helps position the note, avoid duplication, or gives the reader a useful next step.
+Read the target note and [Rewrite prompt.md](../../../../Rewrite%20prompt.md). Do not inspect nearby notes, search the vault, add links, or change other files.
 
-## Write for the subject
+## Preserve the note's substance
 
-Use plain English and explain the mechanism before naming it. Let the subject choose the shape: a short operational note, an incident analysis, a comparison, or a longer explanation can all be appropriate. Add headings, examples, diagrams, summaries, and links when they improve understanding.
+Retain the existing ideas, claims, examples, and structure. Make only the wording changes needed to remove academic or AI-generated style. Prefer concrete descriptions, direct verbs, and natural engineering language. Do not add concepts, jargon, evidence, examples, links, summaries, or recommendations.
 
-Keep public content independent of `_Private/`. Use `vault-linking` for meaningful links and `language-agnostic-architecture` when the lesson should not depend on one ecosystem.
+Do not invoke other vault skills unless the user explicitly expands the task.
 
 ## Check the result
 
@@ -20,4 +20,4 @@ For a changed public note, run:
 python scripts/audit_workflow.py <note-path>
 ```
 
-Resolve language, privacy, and broken-public-link failures. Then read the note as an engineer: it should state what happens, why it matters, and any relevant trade-off without academic or ceremonial padding. Commit only when the user asks.
+Resolve language, privacy, and broken-public-link failures. Then compare the result with the source: it should preserve the same substance while sounding natural, direct, confident, and grounded. Commit only when the user asks.

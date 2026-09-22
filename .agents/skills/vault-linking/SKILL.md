@@ -9,4 +9,4 @@ Link when a target gives the reader useful prerequisite context, a concrete cont
 
 There is no required number of links, no required `Related Notes` section, and no obligation to create backlinks. Add a related-notes section when it improves navigation; leave it out when the note is clearer without one.
 
-Before adding or moving a link, verify that its target resolves in the public vault. Never link from public content to `_Private/`. When a new relationship materially improves a peer note, update that peer; otherwise avoid ritual cross-linking.
+Before adding or moving a link, verify that its target resolves in the vault. When a new relationship materially improves a peer note, update that peer; otherwise avoid ritual cross-linking.

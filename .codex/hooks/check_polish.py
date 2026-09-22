@@ -28,7 +28,7 @@ if payload.get("tool_name") != "apply_patch":
 
 command = payload.get("tool_input", {}).get("command", "")
 targets = re.findall(r"^\*\*\* (?:Add|Update) File: (.+)$", command, re.MULTILINE)
-public_markdown_targets = [target for target in targets if target.lower().endswith(".md") and "_Private" not in target]
+public_markdown_targets = [target for target in targets if target.lower().endswith(".md")]
 
 if not public_markdown_targets:
     raise SystemExit(0)
