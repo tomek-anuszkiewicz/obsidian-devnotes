@@ -1,185 +1,91 @@
 <#
 .SYNOPSIS
-    Indexes the Obsidian knowledge vault into the local Qdrant RAG vector database.
+    Updates the local RAG index for this vault's five main directories.
 
 .DESCRIPTION
-    Scans the 5-Layer System Stack (01..05+) and root navigational notes,
-    strictly enforcing the One-Way Privacy Membrane by guaranteeing that
-    _Private/ and any sensitive private notes are 100% excluded from RAG ingestion.
+    This script has no options. It indexes only the explicitly listed main
+    directories below and excludes private and tool metadata directories.
 
-.PARAMETER Strict
-    If specified, strictly indexes only the 5 canonical layers:
-      • 01 Code Architecture & Hardware Execution
-      • 02 Harness, Governance & Verification
-      • 03 Runtime Mesh & Observability
-      • 04 Context Architecture & Model Steering
-      • 05 Developer Ergonomics & Software Economics
-    Default: Universal mode (dynamically discovers all numbered folders '^[0-9]{2}').
-
-.PARAMETER Reindex
-    Force re-indexing of all files (ignores SHA256 cache).
-
-.PARAMETER Status
-    Check Qdrant database status and vector counts.
-
-.PARAMETER ListSources
-    List all indexed sources in the Qdrant database.
-
-.PARAMETER NoRootNotes
-    Do not index root-level notes (_Explore.md, Preamble.md).
-
-.PARAMETER AmigaRepo
-    Path to the Amiga emulator repository containing tools/rag.
-    Defaults to $env:AMIGA_REPO_DIR or 'D:\Programowanie\Amiga'.
+    A new numbered top-level directory is treated as a required script update:
+    decide whether to add it to $IndexedDirectories or intentionally ignore it,
+    then rerun the script.
 #>
 
-[CmdletBinding()]
-param(
-    [switch]$Strict,
-    [switch]$Reindex,
-    [switch]$Status,
-    [switch]$ListSources,
-    [switch]$NoRootNotes,
-    [string]$AmigaRepo = $env:AMIGA_REPO_DIR
-)
+param()
+
+if ($args.Count -gt 0) {
+    Write-Error "index_to_rag.ps1 accepts no arguments. Update its fixed configuration instead."
+    exit 1
+}
 
 $VaultRoot = $PSScriptRoot
 if (-not $VaultRoot) {
     $VaultRoot = (Get-Location).Path
 }
 
-# 1. Resolve Amiga repository root
-if (-not $AmigaRepo) {
-    $Candidate = "D:\Programowanie\Amiga"
-    if (Test-Path $Candidate) {
-        $AmigaRepo = $Candidate
-    }
-}
-
-if (-not (Test-Path $AmigaRepo)) {
-    Write-Error "Amiga repository not found at '$AmigaRepo'. Please set `$env:AMIGA_REPO_DIR or pass -AmigaRepo."
-    exit 1
-}
-
-$RagScript = Join-Path $AmigaRepo "tools\rag\bin\amiga_rag.ps1"
-if (-not (Test-Path $RagScript)) {
-    Write-Error "RAG launcher not found at '$RagScript'."
-    exit 1
-}
-
-# 2. Fast pass-through options
-if ($Status) {
-    & $RagScript --status
-    exit $LASTEXITCODE
-}
-
-if ($ListSources) {
-    & $RagScript --list-sources
-    exit $LASTEXITCODE
-}
-
-# 3. Canonical 5-Layer System Stack (Strict List)
-$CanonicalLayers = @(
-    '01 Code Architecture & Hardware Execution',
-    '02 Harness, Governance & Verification',
-    '03 Runtime Mesh & Observability',
-    '04 Context Architecture & Model Steering',
-    '05 Developer Ergonomics & Software Economics'
+$IndexedDirectories = @(
+    '01 Architecture & Code',
+    '02 Testing & Code Review',
+    '03 Systems & Infrastructure',
+    '04 Prompts, Context & Models',
+    '05 Engineering Economics & Future'
 )
 
-Write-Host ""
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host " 🧠 Obsidian Vault RAG Indexer (Qdrant & FastEmbed)" -ForegroundColor Cyan
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host " Vault Path:       $VaultRoot"
-Write-Host " RAG Tool:         $RagScript"
-Write-Host " Selection Mode:   " -NoNewline
-if ($Strict) {
-    Write-Host "STRICT (Explicit 5 Canonical Layers)" -ForegroundColor Yellow
-} else {
-    Write-Host "UNIVERSAL (All Numbered Layers ^[0-9]{2})" -ForegroundColor Green
+# A numbered root directory is a new main section. Do not index it implicitly:
+# its inclusion must be a conscious change to the list above.
+$UnexpectedMainDirectories = @(
+    Get-ChildItem -LiteralPath $VaultRoot -Directory |
+        Where-Object { $_.Name -match '^\d{2}(?:[ _-]|$)' -and $_.Name -notin $IndexedDirectories }
+)
+
+if ($UnexpectedMainDirectories.Count -gt 0) {
+    $Names = $UnexpectedMainDirectories.Name -join ', '
+    Write-Error "Unexpected main directory/directories: $Names. Update index_to_rag.ps1 to add or intentionally ignore them."
+    exit 1
 }
 
-# 4. Discover target folders
-$TargetFolders = @()
-if ($Strict) {
-    foreach ($layer in $CanonicalLayers) {
-        $p = Join-Path $VaultRoot $layer
-        if (Test-Path $p) {
-            $TargetFolders += $layer
-        } else {
-            Write-Warning "Canonical layer folder not found on disk: $layer"
-        }
-    }
-} else {
-    $allDirs = Get-ChildItem -Path $VaultRoot -Directory
-    foreach ($dir in $allDirs) {
-        # Check if folder name starts with 2 digits
-        if ($dir.Name -match '^[0-9]{2}') {
-            # Privacy Membrane Guard: Hard reject if name contains 'private' or starts with '_'
-            if ($dir.Name -like '*private*' -or $dir.Name.StartsWith('_')) {
-                Write-Warning "Skipping prohibited private directory: $($dir.Name)"
-                continue
-            }
-            $TargetFolders += $dir.Name
-        }
-    }
+$MissingIndexedDirectories = @(
+    $IndexedDirectories | Where-Object { -not (Test-Path -LiteralPath (Join-Path $VaultRoot $_) -PathType Container) }
+)
+
+if ($MissingIndexedDirectories.Count -gt 0) {
+    $Names = $MissingIndexedDirectories -join ', '
+    Write-Error "Configured main directory/directories are missing: $Names. Update index_to_rag.ps1 before indexing."
+    exit 1
 }
 
-# Sort folders alphabetically/numerically
-$TargetFolders = $TargetFolders | Sort-Object
-
-Write-Host " Target Layers:    $($TargetFolders.Count) layer folder(s):" -ForegroundColor Green
-foreach ($f in $TargetFolders) {
-    Write-Host "   • $f" -ForegroundColor DarkCyan
+try {
+    $RagCommand = Get-Command amiga_rag -ErrorAction Stop
+} catch {
+    Write-Error "The amiga_rag command is not available on PATH. Install or expose it before indexing."
+    exit 1
 }
 
-# 5. One-Way Privacy Membrane Enforcement
-$PrivateDir = Join-Path $VaultRoot "_Private"
-if (Test-Path $PrivateDir) {
-    Write-Host " Privacy Membrane: " -NoNewline
-    Write-Host "ACTIVE" -ForegroundColor Green -NoNewline
-    Write-Host " (Directory '_Private' is strictly excluded from RAG)" -ForegroundColor Yellow
-}
-
-# Safety assertion: verify zero private directories in target folders
-foreach ($f in $TargetFolders) {
-    if ($f -like '*private*' -or $f.StartsWith('_')) {
-        Write-Error "CRITICAL SAFETY VIOLATION: '$f' contains private pattern! Aborting."
-        exit 1
-    }
-}
-
-# 6. Build arguments for amiga_rag.ps1
 $RagArgs = @(
     $VaultRoot,
-    "--source", "obsidian",
-    "--exclude", "_Private", "private", ".obsidian", ".smart-env", ".agents", ".antigravity",
-    "--include-dirs"
+    '--source', 'obsidian',
+    '--exclude', '_Private', 'private', '.obsidian', '.smart-env', '.agents', '.antigravity',
+    '--no-root-notes',
+    '--include-dirs'
 )
-$RagArgs += $TargetFolders
+$RagArgs += $IndexedDirectories
 
-if ($Reindex) {
-    $RagArgs += "--reindex"
-}
+Write-Host "Updating the RAG index from:" -ForegroundColor Cyan
+$IndexedDirectories | ForEach-Object { Write-Host "  - $_" }
+Write-Host "Using: $($RagCommand.Source)" -ForegroundColor DarkCyan
 
-if ($NoRootNotes) {
-    $RagArgs += "--no-root-notes"
-}
-
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host ""
-
-# 7. Execute RAG indexing
-& $RagScript @RagArgs
+& amiga_rag @RagArgs
+$RagSucceeded = $?
 $ExitCode = $LASTEXITCODE
 
-if ($ExitCode -eq 0) {
-    Write-Host ""
-    Write-Host "✅ Obsidian Vault successfully indexed into Qdrant RAG database!" -ForegroundColor Green
-} else {
-    Write-Host ""
-    Write-Host "❌ Indexing failed with exit code $ExitCode." -ForegroundColor Red
+if (-not $RagSucceeded -or ($null -ne $ExitCode -and $ExitCode -ne 0)) {
+    if ($null -eq $ExitCode) {
+        Write-Error "RAG indexing failed without returning an exit code."
+        exit 1
+    }
+
+    Write-Error "RAG indexing failed with exit code $ExitCode."
+    exit $ExitCode
 }
 
-exit $ExitCode
+Write-Host "RAG index updated successfully." -ForegroundColor Green

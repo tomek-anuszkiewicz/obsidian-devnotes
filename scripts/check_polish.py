@@ -2,17 +2,15 @@
 """
 scripts/check_polish.py
 
-Automated Quality Gate for Detecting Polish Language Words and Phrases.
-Enforces .agents/rules/notes-language.md (Strict English mandate).
-Detects Polish vocabulary even without diacritics ('ogonki') using NLP library
-analysis (lingua-language-detector) combined with English dictionary verification.
+Checks persisted vault content for Polish words and phrases.
+Enforces .agents/rules/notes-language.md while preserving a technical whitelist
+to reduce false positives.
 
 Usage:
   1. Default scan (notes-language.md): python scripts/check_polish.py
   2. Single or multiple files:        python scripts/check_polish.py [file_path ...]
   3. Git staged files:                python scripts/check_polish.py --git
   4. Full vault scan:                 python scripts/check_polish.py --vault
-  5. Antigravity Lifecycle Hook:      python scripts/check_polish.py --hook
 """
 
 import sys
@@ -229,63 +227,6 @@ def scan_file(file_path: Path):
     return detect_polish_in_text(content)
 
 
-def handle_antigravity_hook():
-    """
-    Handles Antigravity PreToolUse lifecycle hook.
-    Reads JSON from stdin, inspects write_to_file / replace_file_content arguments.
-    Outputs decision to stdout.
-    """
-    try:
-        payload = json.load(sys.stdin)
-    except Exception as e:
-        print(json.dumps({"decision": "allow", "reason": f"Failed to parse hook payload: {e}"}))
-        return 0
-
-    tool_call = payload.get("toolCall", {})
-    name = tool_call.get("name", "")
-    args = tool_call.get("args", {})
-
-    content_to_check = []
-    target_file = args.get("TargetFile", "")
-
-    # Exclude private notes from check
-    if "_Private" in target_file:
-        print(json.dumps({"decision": "allow"}))
-        return 0
-
-    if name == "write_to_file":
-        code = args.get("CodeContent", "")
-        if code:
-            content_to_check.append(code)
-    elif name == "replace_file_content":
-        code = args.get("ReplacementContent", "")
-        if code:
-            content_to_check.append(code)
-    elif name == "multi_replace_file_content":
-        chunks = args.get("ReplacementChunks", [])
-        for chunk in chunks:
-            code = chunk.get("ReplacementContent", "")
-            if code:
-                content_to_check.append(code)
-
-    combined_text = "\n".join(content_to_check)
-    violations = detect_polish_in_text(combined_text)
-
-    if violations:
-        sample_words = ", ".join(repr(v[1]) for v in violations[:5])
-        reason = (
-            f"Polish language detected in file edit for {target_file}: [{sample_words}]. "
-            "Per .agents/rules/notes-language.md, all vault notes, documentation, "
-            "headings, body content, and code comments must be written exclusively in English. "
-            "Please translate concepts into English before proceeding."
-        )
-        print(json.dumps({"decision": "deny", "reason": reason}))
-    else:
-        print(json.dumps({"decision": "allow"}))
-
-    return 0
-
-
 def handle_git_hook():
     """Checks git staged files for Polish language violations."""
     cmd = ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"]
@@ -362,9 +303,6 @@ def scan_vault():
 
 
 def main():
-    if "--hook" in sys.argv:
-        return handle_antigravity_hook()
-
     if "--git" in sys.argv:
         return handle_git_hook()
 

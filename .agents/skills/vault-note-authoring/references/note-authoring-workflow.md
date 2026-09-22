@@ -1,29 +1,23 @@
-# Note Authoring and Synthesis Workflow
+# Public Note Workflow
 
-Use this workflow for a new public note or a substantial refactor. It is complete only after the required audit passes.
+Use this workflow for a new public note or a substantial revision after the user has asked to write.
 
-## 1. Scope and graph discovery
+## Find the useful context
 
-Confirm that the user has asked for writing. Search the relevant vault area, identify the canonical domain hub, and select two to four lateral peers. Place the note in the five-layer system stack before choosing its title and location.
+Read the target note and search the nearby area of the vault. Identify an existing hub or peer only if it helps position the note, avoid duplication, or gives the reader a useful next step.
 
-## 2. Draft from the top down
+## Write for the subject
 
-Use `information-hierarchy` and `practitioner-voice`. Lead with the core engineering claim and stakes, then explain mechanisms, substrate constraints, practical workflows, and graph relationships. Use `language-agnostic-architecture` when examples might otherwise depend on one language or framework.
+Use plain English and explain the mechanism before naming it. Let the subject choose the shape: a short operational note, an incident analysis, a comparison, or a longer explanation can all be appropriate. Add headings, examples, diagrams, summaries, and links when they improve understanding.
 
-Persist the note entirely in English: title, frontmatter, headings, prose, tables, diagrams, code comments, and wikilinks.
+Keep public content independent of `_Private/`. Use `vault-linking` for meaningful links and `language-agnostic-architecture` when the lesson should not depend on one ecosystem.
 
-## 3. Wire the graph
+## Check the result
 
-Use `vault-linking` to add two to five inline piped links and three to six curated links in `## Related Notes`, each with a concise rationale. Update two to three relevant peers with inbound links when doing so improves the graph rather than creating ritual cross-links.
-
-## 4. Audit before a requested commit
-
-Run:
+For a changed public note, run:
 
 ```powershell
 python scripts/audit_workflow.py <note-path>
 ```
 
-The audit must find no Polish-language violations, no `_Private/` references, no broken public wikilinks, and no prohibited style failures. Then perform a final practitioner review: each sentence should explain a concrete mechanism clearly enough to say to a senior engineer at a whiteboard.
-
-Fix failures in place and rerun the audit. Do not commit unless the user asks for it.
+Resolve language, privacy, and broken-public-link failures. Then read the note as an engineer: it should state what happens, why it matters, and any relevant trade-off without academic or ceremonial padding. Commit only when the user asks.
