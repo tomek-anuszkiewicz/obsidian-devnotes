@@ -10,7 +10,7 @@ aliases:
   - About This Knowledge Base
 ---
 
-# Preamble
+## Preamble
 
 This vault records practical observations about building and maintaining software with coding agents in the loop. It is a working engineering reference, not a product manual or a theory catalogue.
 
@@ -27,10 +27,3 @@ Notes may cover code design, verification, infrastructure, model context, or eng
 A note should earn its place by explaining a mechanism, a decision, an observed failure, or a trade-off. Measurements, incident details, experiments, and rejected approaches are welcome when they make the claim more useful.
 
 Claims can change. When new evidence contradicts an earlier note, update the note and explain the difference rather than preserving a tidy story.
-
-## Start here
-
-- [[_Explore]] maps the main areas and current entry points.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] is a navigation model for the vault, not a required note structure.
-- [[Negative Knowledge and Explicit Architectural Dissents]] collects useful failures and rejected approaches.
-- [[Agentic Coding Harness and Controlled Development Workflows]] shows how non-deterministic agent output can fit inside a controlled delivery process.
