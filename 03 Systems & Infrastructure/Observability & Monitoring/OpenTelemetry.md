@@ -1549,4 +1549,3 @@ The most important architectural distinction is therefore:
 And for Kubernetes logging specifically:
 
 > **Applications normally log to stdout/stderr. Kubernetes/container runtime captures those streams into node-local log files, and a node-level collector can forward them. Direct in-process OTLP log export should not be relied upon when logs must survive abrupt application crashes.**
-```

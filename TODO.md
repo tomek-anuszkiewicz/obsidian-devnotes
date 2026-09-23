@@ -10,3 +10,8 @@ jak dziala workflow, co sie wykonje podczas kazdej zmiany
 musimy wymusic audyty przy zmiane
 
 dodaj regule, ze sciezki do plikow w tym repo powinny byc wzgledne
+
+nowy podzial na kategorie
+skille - w tym linki
+dodawanie linkow
+rag

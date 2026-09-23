@@ -777,4 +777,3 @@ The question may soon stop being:
 It may become:
 
 > How do we remain in control once AI becomes indispensable?
-```

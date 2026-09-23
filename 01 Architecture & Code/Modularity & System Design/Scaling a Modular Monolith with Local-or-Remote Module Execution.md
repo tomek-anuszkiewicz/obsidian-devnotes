@@ -1004,4 +1004,3 @@ The most important warning is:
 And the safest deployment default is:
 
 > Keep instances broadly capable, activate responsibilities explicitly, and restrict connectors only when security, reliability or resource isolation provide a concrete reason.
-```

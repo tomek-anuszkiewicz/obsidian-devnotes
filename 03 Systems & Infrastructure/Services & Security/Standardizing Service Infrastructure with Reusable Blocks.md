@@ -1257,4 +1257,3 @@ Not necessarily:
 The preferred outcome is a paved road rather than a walled garden:
 
 > Make the correct path easy, visible, tested, and well supported—without hiding the application or making alternative implementations impossible.
-```

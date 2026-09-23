@@ -967,4 +967,3 @@ The long-term effect of LLMs on education may therefore not be that machines rep
 It may be that AI finally makes it possible for teachers and schools to stop spending so much of their effort on distributing information and instead concentrate on the much harder problem:
 
 > **helping people learn how to learn, discover what interests them, and turn knowledge into real capability.**
-```

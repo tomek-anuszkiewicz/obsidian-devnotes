@@ -800,4 +800,3 @@ A simple decision guide:
 12. Rented private GPU infrastructure can provide a middle ground between external model APIs and fully on-premises deployment.
 13. Keep deterministic workflow rules in code when they must be enforced.
 14. Local, managed and hybrid agents can coexist in the same development organization.
-```

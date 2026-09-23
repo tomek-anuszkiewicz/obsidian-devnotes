@@ -1759,4 +1759,3 @@ Or more concisely:
 > B owns the contract.  
 > A owns the dependency.  
 > The platform owns the communication standards.
-```

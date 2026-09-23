@@ -4,26 +4,40 @@ tags:
   - meta
   - software-engineering
   - agentic-systems
+  - public-notebook
+  - llm-assisted-writing
 aliases:
   - Preamble
   - Vault Preamble
   - About This Knowledge Base
 ---
 
-## Preamble
+# About This Vault
 
-This vault records practical observations about building and maintaining software with coding agents in the loop. It is a working engineering reference, not a product manual or a theory catalogue.
+This is a public notebook about software engineering, coding agents, and the systems around them. It records what I think is worth exploring now, not a set of final positions that I expect to defend forever.
 
-The useful question for every note is simple: what happens in a real system, what can fail, and what should an engineer do about it?
+The notes are snapshots. I may revise them when experience changes my mind, split them when one argument grows too broad, or keep contradictory notes when they capture a useful change in thinking.
+
+## How these notes were made
+
+Many notes began as discussions with an LLM. I supplied the questions, experiences, objections, and direction; the model helped expand, organize, and draft the text.
+
+That process has an important limitation. The overall argument may reflect a position I currently agree with while individual examples, numbers, technical details, or confident-sounding conclusions were introduced during the model's expansion. Not every note has been read line by line or independently fact-checked.
+
+Treat unsourced quantitative claims as provisional. Treat a note without an explicit review or evidence statement as a working draft, not as verified guidance.
 
 ## How to use the vault
 
-The folders group related topics, but they are not a required reading order or a fixed model for every problem. Start with the question you have, follow the links that clarify it, and ignore material that does not help.
+Start with the question you have, follow the links that clarify it, and ignore material that does not help. The folders group related topics; they are not a required reading order or a fixed model for every problem.
 
 Notes may cover code design, verification, infrastructure, model context, or engineering economics. The same problem can span several areas; the folder is there to make discovery easier, not to prescribe a conclusion.
 
+Some notes explain practices I would use in real engineering work. Others explore a hypothesis or follow a speculative idea further than current evidence supports. The text should make that distinction clear, but the vault is still being reviewed and does not do so consistently yet.
+
+The `06 Ideas & Speculation` section keeps exploratory writing separate from the main engineering notes. `Mild Speculation` starts from current systems or observed trends but extends beyond what the available evidence can establish. `Strong Speculation` follows a scenario much further and should be read as a thought experiment rather than a forecast.
+
 ## What belongs here
 
-A note should earn its place by explaining a mechanism, a decision, an observed failure, or a trade-off. Measurements, incident details, experiments, and rejected approaches are welcome when they make the claim more useful.
+A note should earn its place by explaining a mechanism, a decision, an observed failure, a trade-off, or a question that deserves further thought. Measurements, incident details, experiments, and rejected approaches make a claim more useful when they are real and clearly distinguished from illustrative examples.
 
-Claims can change. When new evidence contradicts an earlier note, update the note and explain the difference rather than preserving a tidy story.
+This vault is not meant to manufacture certainty. When evidence contradicts an earlier note, the useful response is to correct it and explain what changed rather than preserve a tidy story.

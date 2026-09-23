@@ -199,4 +199,3 @@ It is:
 - Distinguish confirmed facts from inferred assumptions.
     
 - Update documentation in the same diff as behavior.
-```

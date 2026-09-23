@@ -1712,4 +1712,3 @@ Or more concisely:
 > Network location is not identity.  
 > Identity is not authorization.  
 > Authentication should not require long-lived application secrets.
-```

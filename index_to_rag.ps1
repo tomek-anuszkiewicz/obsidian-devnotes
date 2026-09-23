@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Updates the local RAG index for this vault's five main directories.
+    Updates the local RAG index for this vault's six main directories.
 
 .DESCRIPTION
     This script has no options. It uses rag_qdrant to index only the explicitly
@@ -29,7 +29,8 @@ $IndexedDirectories = @(
     '02 Testing & Code Review',
     '03 Systems & Infrastructure',
     '04 Prompts, Context & Models',
-    '05 Engineering Economics & Future'
+    '05 Engineering Economics & Future',
+    '06 Ideas & Speculation'
 )
 $EnvironmentFile = Join-Path $VaultRoot '.env'
 if (-not (Test-Path -LiteralPath $EnvironmentFile -PathType Leaf)) {

@@ -1019,4 +1019,3 @@ Proactive systems can **find work worth doing**.
 That may ultimately be one of the most important consequences of agentic computing:
 
 > **Software changes from a passive tool operated by humans into an active participant that continuously observes its environment, identifies problems and opportunities, and initiates useful work.**
-```

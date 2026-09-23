@@ -242,8 +242,8 @@ def handle_git_hook():
         f_path = REPO_ROOT / f_str
         if not f_path.exists() or not f_path.is_file():
             continue
-        # Only check markdown and text files
-        if f_path.suffix.lower() not in {".md", ".txt"}:
+        # Only check markdown and text files (exclude scratchpads like TODO.md)
+        if f_path.suffix.lower() not in {".md", ".txt"} or f_path.name == "TODO.md":
             continue
 
         violations = scan_file(f_path)

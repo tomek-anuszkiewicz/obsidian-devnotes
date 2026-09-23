@@ -367,4 +367,3 @@ Using explicit types for intermediate steps keeps data provenance clear: an agen
 - Choose module facades, public handlers, or mediator dispatch according to discoverability, coupling, and consistency rather than fashion.
 
 Pair explicit architecture with automated unit and integration tests that run locally in seconds. A discoverable architecture directs an engineer or agent to where a change belongs; a fast, deterministic test suite provides the immediate feedback loop to prove the change is safe.
-```

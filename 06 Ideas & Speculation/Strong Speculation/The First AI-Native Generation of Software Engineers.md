@@ -620,4 +620,3 @@ The future engineer may write much less code manually, but still needs opportuni
 Those activities may stop happening automatically during normal work.
 
 They may need to become an intentional part of engineering education and professional development.
-```

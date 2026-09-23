@@ -705,4 +705,3 @@ If it is a repeatable instruction, an agent can generate the code.
 If correctness can be described externally, conformance tests can validate it.
 
 If one exact implementation must be trusted and maintained centrally, a package or service is still the better abstraction.
-```
