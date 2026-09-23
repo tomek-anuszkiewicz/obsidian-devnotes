@@ -723,3 +723,12 @@ They become training signals available inside the repository.
 And human review is not simply a final aesthetic check.
 
 It becomes the boundary where human intent is reconciled with code increasingly optimized for machine generation and machine modification.
+
+## Related Notes
+
+- [[Programming Languages May Evolve Differently in the Age of AI]] - How language features and compilers adapt to agent-authored code.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] - Why deep abstractions impose high cognitive and context costs.
+- [[Comments May Become More Valuable in AI-Generated Code]] - Communicating intent and domain invariants to future agents.
+- [[Reviewing AI-Generated Code]] - Code review practices that prioritize invariants and execution boundaries.
+- [[Designing Software for AI Agents]] - Architectural patterns optimized for agent comprehension and manipulation.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 (Harness & Execution) and Layer 4 (Verification & Guardrails).

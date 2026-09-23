@@ -481,3 +481,13 @@ The future limitation of LLM development may therefore not be a simple lack of d
 It may be:
 
 > **a lack of access to the private experience data that records how organizations actually solve complex problems.**
+
+---
+
+## Related Notes
+
+- [[What Should Organizations Preserve from AI-Assisted Development|What Should Organizations Preserve from AI-Assisted Development]] — Preserving the institutional intent, failed branches, review transcripts, and verification records behind generated code.
+- [[Fresh Contact With Reality May Become the Training Bottleneck|Fresh Contact With Reality May Become the Training Bottleneck]] — Why grounded interactions with compilers, networks, production telemetry, and human judgment are essential to escape synthetic collapse.
+- [[Improving AI Models - From Scaling to Agent-Generated Training Data|Improving AI Models - From Scaling to Agent-Generated Training Data]] — Generating verifiable post-training datasets through execution, search, and self-correction loops.
+- [[LLM Agents and Institutional Memory|LLM Agents and Institutional Memory]] — Architecture for embedding past decisions, incident postmortems, and codebase idioms into durable agent memory.
+- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack for Agentic Software Engineering]] — System-level governance connecting organizational telemetry, private data stores, and verified agent actions.

@@ -7,7 +7,6 @@ tags:
   - sql-server
   - entity-framework
   - testing
-  - database
   - persistence-layers
   - mechanical-sympathy
 aliases:
@@ -299,9 +298,9 @@ The likely outcome is not a return to putting the entire application in stored p
 
 - [[Designing Software Architecture with LLM Assistance]]
 - [[Designing Software for AI Agents]]
-- [[LLM Coding Agents Reliability]]
-- [[Agentic Harnesses for Software Development]]
-- [[Testing as Executable Documentation]]
+- [[Reliability of LLM Coding Agents]]
+- [[Agentic Coding Harness and Controlled Development Workflows]]
+- [[Executable Architecture Tests for Coding Agent Guardrails]]
 - [[Testing in the Model, Agent, LLM Era]]
 - [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]
 - [[Why Business Logic Is the Hardest Part of Agentic Coding]]

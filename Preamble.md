@@ -34,7 +34,7 @@ LLMs change that publishing constraint. I can externalize much more of my curren
 
 ## How to use the vault
 
-Start with the question you have, follow the links that clarify it, and ignore material that does not help. The folders group related topics; they are not a required reading order or a fixed model for every problem.
+Start with the question you have, follow the links that clarify it, and ignore material that does not help. The central architectural map for the technical layers is [[The 5-Layer System Stack for Agentic Software Engineering]]. The folders group related topics; they are not a required reading order or a fixed model for every problem.
 
 You do not need to read the vault from beginning to end. One intended use is to compare it with your own notes, decisions, or explicit beliefs. An agent can surface agreements, disagreements, unfamiliar ideas, and points worth discussing. The interesting result is the difference between two working models, not whether one person adopts the other person's entire collection of views.
 

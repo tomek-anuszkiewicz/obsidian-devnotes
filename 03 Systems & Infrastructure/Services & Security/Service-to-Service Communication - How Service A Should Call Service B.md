@@ -1759,3 +1759,12 @@ Or more concisely:
 > B owns the contract.  
 > A owns the dependency.  
 > The platform owns the communication standards.
+
+(See [[Service-to-Service Authentication in Distributed Runtimes]] and [[Propagating User Context Between Services]]).
+
+## Related Notes
+
+- [[Service-to-Service Authentication in Distributed Runtimes]] — Managed identities, mTLS, and workload tokens across service boundaries.
+- [[Propagating User Context Between Services]] — Passing user identities, tenancy, and trace context across synchronous calls.
+- [[Standardizing Service Infrastructure with Reusable Blocks]] — Packaging resilient HTTP/gRPC pipelines into reusable service infrastructure.
+- [[Scaling a Modular Monolith with Local-or-Remote Module Execution]] — Decoupling module contracts from physical network boundaries.

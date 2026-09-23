@@ -199,3 +199,12 @@ It is:
 - Distinguish confirmed facts from inferred assumptions.
     
 - Update documentation in the same diff as behavior.
+
+## Related Notes
+
+- [[LLM Agents and Institutional Memory]] - Navigating codebases vs preserving institutional intent and shared mental models.
+- [[The Living Engineering Chronicle and Context Compaction]] - Preserving long-term architectural rationale and session state.
+- [[The Most Valuable Software Training Data May Be Private]] - Strategic advantages of proprietary organizational trajectories.
+- [[Improving AI Models - From Scaling to Agent-Generated Training Data]] - Harnessing verified execution data for continuous model improvement.
+- [[Reviewing AI-Generated Code]] - Review patterns that capture why code was approved or rejected.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic flywheel and compounding institutional knowledge.

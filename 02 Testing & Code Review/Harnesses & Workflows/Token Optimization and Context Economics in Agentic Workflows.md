@@ -273,4 +273,4 @@ Spend context on the decision in front of the agent. Use scripts for predictable
 - [[Local vs Cloud and Hybrid Model Execution]] — local and cloud model costs and hardware.
 - [[Negative Knowledge and Explicit Architectural Dissents]] — recording failed approaches.
 - [[Comments May Become More Valuable in AI-Generated Code]] — comments that preserve intent next to implementation.
-- [[Token Optimization and Context Economics in Agentic Workflows v2]] — progressive disclosure, short plans, cohesive features, and subagent output boundaries.
+- [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]] — progressive disclosure, short plans, cohesive features, and subagent output boundaries.

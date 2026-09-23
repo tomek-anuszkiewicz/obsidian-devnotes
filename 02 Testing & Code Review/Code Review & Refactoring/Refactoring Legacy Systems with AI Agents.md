@@ -168,6 +168,12 @@ A good history allows a reviewer to distinguish:
     
 - Keep rename, move, formatting, refactoring, and behavior changes separate.
     
-- Do not alter expected test values during behavior-preserving refactoring.
-    
+- Do not alter expected test values during behavior-preserving refactoring (see [[Testing in the Model, Agent, LLM Era]]).
 - Make the commit history explain the evolution of the system.
+
+## Related Notes
+
+- [[AI-Generated Architectural Documentation from Code]] — Extracting semantic architecture and invariants from legacy code before refactoring.
+- [[AI Changes the Economics of Technical Debt]] — Assessing the return on investment for automated technical debt reduction.
+- [[Correcting AI Code - Patch, Regenerate, or Respecify]] — Determining whether to patch code or respecify upstream intent during modernization.
+- [[Testing in the Model, Agent, LLM Era]] — Characterization testing and baseline protection during refactoring.

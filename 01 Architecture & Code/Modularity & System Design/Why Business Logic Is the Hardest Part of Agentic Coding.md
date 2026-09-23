@@ -175,6 +175,11 @@ Mechanical comments waste token space and obscure meaningful intent.
 
 A useful principle is:
 
-> Code explains what happens. Comments explain why it must happen that way.
+> Code explains what happens. Comments explain why it must happen that way (see [[Comments May Become More Valuable in AI-Generated Code]] and [[Negative Knowledge and Explicit Architectural Dissents]]).
 
----
+## Related Notes
+
+- [[Comments May Become More Valuable in AI-Generated Code]] — Preserving domain invariants and rationale in co-located code comments.
+- [[Designing Software for AI Agents]] — Structuring domain interfaces to limit agent reasoning errors.
+- [[Negative Knowledge and Explicit Architectural Dissents]] — Documenting known failure modes and prohibited simplifications.
+- [[Formal Verification and Runtime Safety Boundaries]] — Mechanically checking high-consequence business invariants.

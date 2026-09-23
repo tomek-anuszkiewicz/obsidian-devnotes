@@ -283,15 +283,15 @@ For serious agentic work, reliability should come from the complete system:
 
 Enforcing this at the platform layer means treating model output as unverified user input. In practice, production environments isolate autonomous runs in dedicated git worktrees inside ephemeral sandboxes, restrict terminal tooling to bounded scripts rather than unmetered root access, and record structured execution traces of every tool call and file diff. If an agent hits an ambiguous schema or an unexpected authorization boundary, the harness must halt execution and escalate rather than permitting the model to guess.
 
-The model supplies capability. The [[Agentic Harness]] supplies control and evidence.
+The model supplies capability. The [[Agentic Coding Harness and Controlled Development Workflows|Agentic Harness]] supplies control and evidence.
 
 ## Related notes
 
-- [[Subtle Hallucinations in LLM-Assisted Programming]]
-- [[Agentic Harness]]
-- [[Designing APIs for LLM-Generated Code]]
+- [[Reliability of LLM Coding Agents]]
+- [[Agentic Coding Harness and Controlled Development Workflows]]
+- [[Designing APIs for LLM-Generated Integration Code]]
 - [[LLM Agents and Institutional Memory]]
-- [[Evaluating Coding Agents]]
+- [[Building Determinism from Unpredictable Models]]
 
 ## Sources
 

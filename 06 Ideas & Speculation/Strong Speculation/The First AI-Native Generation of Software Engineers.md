@@ -620,3 +620,11 @@ The future engineer may write much less code manually, but still needs opportuni
 Those activities may stop happening automatically during normal work.
 
 They may need to become an intentional part of engineering education and professional development.
+
+## Related Notes
+
+- [[AI Changes the Role and Training of Software Engineers]] - Structural challenges in junior training and the role of experienced developers.
+- [[AI Era Software Engineering Recruitment]] - Interviewing and evaluating engineers when syntax generation is commoditized.
+- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The cognitive burden of continuous supervision and review fatigue.
+- [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]] - Deliberate reading and cognitive grounding in AI-rich environments.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Engineering capabilities and team leverage.

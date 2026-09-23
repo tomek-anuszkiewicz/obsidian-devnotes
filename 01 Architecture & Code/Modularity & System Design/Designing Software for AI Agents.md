@@ -363,7 +363,14 @@ Using explicit types for intermediate steps keeps data provenance clear: an agen
 - Use types to represent meaning.
 - Do not encode business state through `null`, zero, or magic values.
 - Keep side effects and transaction boundaries visible or readily traceable.
-- Treat modular monoliths and microservices as architectural trade-offs, not as agent-specific defaults.
+- Treat modular monoliths and microservices as architectural trade-offs, not as agent-specific defaults (see [[Scaling a Modular Monolith with Local-or-Remote Module Execution]]).
 - Choose module facades, public handlers, or mediator dispatch according to discoverability, coupling, and consistency rather than fashion.
 
-Pair explicit architecture with automated unit and integration tests that run locally in seconds. A discoverable architecture directs an engineer or agent to where a change belongs; a fast, deterministic test suite provides the immediate feedback loop to prove the change is safe.
+Pair explicit architecture with automated unit and integration tests that run locally in seconds. A discoverable architecture directs an engineer or agent to where a change belongs; a fast, deterministic test suite provides the immediate feedback loop to prove the change is safe (see [[Testing in the Model, Agent, LLM Era]]).
+
+## Related Notes
+
+- [[The 5-Layer System Stack for Agentic Software Engineering]] — Foundational 5-layer framework connecting code, tests, runtime, context, and economics.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] — Why indirect abstractions increase reasoning cost and token usage.
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]] — Isolating domain rules where automated inference is most fragile.
+- [[Executable Architecture Tests for Coding Agent Guardrails]] — Automated enforcement of structural boundaries and architectural rules.

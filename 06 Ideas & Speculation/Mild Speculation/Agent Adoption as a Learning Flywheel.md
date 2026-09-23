@@ -686,3 +686,12 @@ Or more compactly:
 
 > Agents will not become capable merely because we wait.  
 > They become capable partly because people try, fail, verify, formalize, and try again.
+
+## Related Notes
+
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding organizational knowledge and flywheel economics.
+- [[Competitive Advantage in the Age of Commodity AI]] - Where defensibility lives when model intelligence is commoditized.
+- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
+- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of proprietary corporate execution history.
+- [[Learning Coding Agents Through Failure-Driven Instructions]] - Turning agent execution breakdowns into durable constraints.
+- [[Improving AI Models - From Scaling to Agent-Generated Training Data]] - Harnessing execution feedback to train frontier models.

@@ -401,6 +401,13 @@ The agent may decide:
 
 This suggests that systems such as Foundry, Bedrock, OpenRouter, Ollama, and dedicated inference clouds are not merely different ways of accessing an LLM.
 
-Together they form an emerging **model execution infrastructure**.
+Together they form an emerging **model execution infrastructure** (see [[Dynamic Model Routing and Inference Gateways]], [[Personal AI Subscriptions and Unified Model Access]], and [[Local vs Cloud and Hybrid Model Execution]]).
 
 In much the same way that cloud platforms and container orchestration abstracted where traditional software executes, this infrastructure may increasingly abstract where and by which model a unit of cognitive work is executed.
+
+## Related Notes
+
+- [[Dynamic Model Routing and Inference Gateways]] — Runtime architectures for model caching, fallback, and routing.
+- [[Local vs Cloud and Hybrid Model Execution]] — Performance and cost trade-offs between local workstations and cloud providers.
+- [[Personal AI Subscriptions and Unified Model Access]] — Individual subscriptions, developer ergonomics, and unified gateways.
+- [[Agent Deployment and Execution Models]] — Sandboxing and hosting patterns for long-running agent processes.

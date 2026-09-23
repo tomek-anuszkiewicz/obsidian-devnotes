@@ -578,4 +578,11 @@ Their durable value will come from things such as:
 - extensive testing.
     
 
-Where the primary value is merely generating repetitive application code, AI-generated explicit implementations may become a surprisingly strong competitor.
+Where the primary value is merely generating repetitive application code, AI-generated explicit implementations may become a surprisingly strong competitor (see [[Internal Shared Packages vs Agent-Generated Code]] and [[AI Changes the Economics of Software Libraries]]).
+
+## Related Notes
+
+- [[Internal Shared Packages vs Agent-Generated Code]] — Deciding between centralized shared packages and agent-generated local code.
+- [[AI Changes the Economics of Software Libraries]] — How cheap code synthesis changes the economic value of utility libraries.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] — The trade-off between implicit metaprogramming and plain, inspectable code.
+- [[Designing Internal Packages as an Explicit, Composable Framework]] — Constructing composable primitives rather than opaque code generators.

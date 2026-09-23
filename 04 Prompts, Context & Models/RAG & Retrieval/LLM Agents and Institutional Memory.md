@@ -196,3 +196,12 @@ Agent-assisted onboarding should therefore also include:
 LLM agents can lower the cost of navigating a complicated codebase. They do not automatically lower the cost or risk of changing it.
 
 The goal should not be to build a system that only an agent can navigate. The goal should be to use agents while preserving a system that people can reason about, explain, review, and collectively own.
+
+## Related Notes
+
+- [[Retrieval-Augmented Generation and Context Architecture]] - Context architecture and retrieval indexing patterns.
+- [[What Should Organizations Preserve from AI-Assisted Development]] - Organizational memory and intellectual property in AI workflows.
+- [[The Living Engineering Chronicle and Context Compaction]] - Preserving operational rationale and architecture decision chronicles.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] - Managing complexity masking and abstraction costs.
+- [[Reviewing AI-Generated Code]] - Code review practices that defend comprehensibility and team mental models.
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]] - Why business semantics cannot be completely delegated to automated agents.

@@ -482,4 +482,11 @@ A related hypothesis is:
 
 And finally:
 
-> The companies that benefit most from AI may not be those with the fastest code generation, but those that can deploy, observe, learn, and reverse faster than their competitors.
+> The companies that benefit most from AI may not be those with the fastest code generation, but those that can deploy, observe, learn, and reverse faster than their competitors (see [[How Should Companies Use the Productivity Gains from AI]] and [[Building Determinism from Unpredictable Models]]).
+
+## Related Notes
+
+- [[How Should Companies Use the Productivity Gains from AI]] — Strategy for redeploying engineering capacity freed by AI tools.
+- [[Building Determinism from Unpredictable Models]] — Verification asymmetry and rollback gates in high-velocity pipelines.
+- [[The Conductor Pattern for High-Bandwidth Engineering]] — Coordinating multiple autonomous implementation streams without human bottlenecking.
+- [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] — Shortening the production observability feedback loop.

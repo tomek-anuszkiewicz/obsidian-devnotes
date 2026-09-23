@@ -224,14 +224,16 @@ Otherwise, it can write tests that confirm its own incorrect interpretation.
     
 - Review acceptance tests before implementation.
     
-- Freeze approved business tests.
-    
-- Implement one vertical slice first.
-    
+- Freeze approved business tests (see [[Building Determinism from Unpredictable Models]] and [[Tests Are for Verification, Not Architectural Navigation]]).
+- Implement one vertical slice first (see [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]).
 - Separate mechanical changes from business changes.
-    
-- Require a skeptical second review.
-    
+- Require a skeptical second review (see [[Reviewing AI-Generated Code]] and [[LLMs as a Code Review Team]]).
 - Require a reproducer test before fixing defects.
-    
 - Update architectural records and API specs as the final step.
+
+## Related Notes
+
+- [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]] — Validating system plumbing on atomic feature slices before scaling.
+- [[Building Determinism from Unpredictable Models]] — Immutability of test baselines and harness execution gates.
+- [[Reviewing AI-Generated Code]] — Review heuristics for catching subtle agent hallucinations.
+- [[LLMs as a Code Review Team]] — Multi-agent ensembles for automated architectural and security review.

@@ -1712,3 +1712,12 @@ Or more concisely:
 > Network location is not identity.  
 > Identity is not authorization.  
 > Authentication should not require long-lived application secrets.
+
+(See [[Service vs User Authorization Models]] and [[Propagating User Context Between Services]]).
+
+## Related Notes
+
+- [[Service vs User Authorization Models]] — Distinguishing between ambient service identity and end-user delegated authorization.
+- [[Propagating User Context Between Services]] — Forwarding caller identities, claims, and tenant context across microservice chains.
+- [[Service-to-Service Communication - How Service A Should Call Service B]] — Synchronous and asynchronous communication mechanics between distributed services.
+- [[Standardizing Service Infrastructure with Reusable Blocks]] — Standardizing token validation, mTLS, and identity bootstrapping.

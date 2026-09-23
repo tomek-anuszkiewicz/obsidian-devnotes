@@ -205,3 +205,12 @@ However, zero-cost code generation brings the temptation to refactor working cod
 - **Approved Step Limits**: Review and commit changes in focused, verifiable stages.
 - **Strict Blast Radiuses**: Cap the number of files and lines touched per change to prevent runaway diffs.
 - **Business Justification**: Require a clear production reason (performance bottleneck, missing test coverage, upcoming feature dependency) before greenlighting a refactor.
+
+## Related Notes
+
+- [[AI Era Software Engineering Recruitment]] - Evaluating architectural reasoning and verification skills over syntax memorization.
+- [[The First AI-Native Generation of Software Engineers]] - How junior engineers develop intuition when starting with coding agents.
+- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The psychological shift from typing code to managing cognitive review fatigue.
+- [[How AI Changes Prototyping and the Path from PoC to Production]] - Fast prototyping, divergent exploration, and path-to-production discipline.
+- [[Reviewing AI-Generated Code]] - Techniques for maintaining system comprehension during agentic code reviews.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Developer capabilities and engineering team leverage.

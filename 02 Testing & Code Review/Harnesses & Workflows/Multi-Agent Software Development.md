@@ -955,4 +955,11 @@ The most interesting change may ultimately not be that agents write code faster.
 
 It may be that software development acquires a completely new unit of computation:
 
-**an autonomous software worker that can be created, specialized, isolated, coordinated, reviewed, and discarded on demand.**
+**an autonomous software worker that can be created, specialized, isolated, coordinated, reviewed, and discarded on demand** (see [[Workflow Orchestration in Agentic Systems]] and [[The Conductor Pattern for High-Bandwidth Engineering]]).
+
+## Related Notes
+
+- [[Workflow Orchestration in Agentic Systems]] — State machines, durable sagas, and execution boundaries in agentic systems.
+- [[The Conductor Pattern for High-Bandwidth Engineering]] — Human coordination of multiple concurrent autonomous agent tracks.
+- [[LLMs as a Code Review Team]] — Multi-agent ensembles for specialized security, architecture, and correctness review.
+- [[From AI-Assisted Teams to Cross-System Feature Ownership]] — How multi-agent setups shift engineer responsibilities from isolated code to feature lifecycles.

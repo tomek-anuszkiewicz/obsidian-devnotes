@@ -534,3 +534,12 @@ toward learning:
 If this feedback loop continues, progress in coding AI may remain significant even if improvements from simple model scaling begin to slow.
 
 The next major gains may come from the interaction between better models, better tools, automatic verification, and the enormous new corpus of human–AI collaboration being created today.
+
+## Related Notes
+
+- [[Agent Adoption as a Learning Flywheel]] - How adoption attempts feed the data flywheel for future models.
+- [[Fresh Contact With Reality May Become the Training Bottleneck]] - Why empirical real-world grounding is the ultimate bottleneck for frontier models.
+- [[The Most Valuable Software Training Data May Be Private]] - Strategic advantages of proprietary organizational trajectories.
+- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
+- [[LLM Capability Reliability and the Shape of Progress]] - Jagged intelligence frontiers and non-linear capabilities.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic flywheels and compounding data loops.

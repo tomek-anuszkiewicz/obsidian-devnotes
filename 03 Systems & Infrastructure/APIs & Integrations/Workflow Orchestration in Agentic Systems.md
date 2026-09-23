@@ -1340,8 +1340,6 @@ A sandbox is not an agent or a workflow orchestrator.
 
 They are separate building blocks that can be composed into a reliable system.
 
-The goal is not to replace normal software with one universal workflow or autonomous agent.
-
 The goal is to use the right abstraction at each level:
 
 ```text
@@ -1351,3 +1349,12 @@ durability where processes must survive time and failure,
 sandboxes where agents require broad but isolated execution capabilities,
 and LLMs where interpretation provides real value.
 ```
+
+(See [[Building Determinism from Unpredictable Models]] and [[User Context in Asynchronous Systems]]).
+
+## Related Notes
+
+- [[Building Determinism from Unpredictable Models]] — Imposing deterministic control loops over stochastic LLM reasoning.
+- [[User Context in Asynchronous Systems]] — Preserving user intent and authorization across long-running background workflows.
+- [[Agent Deployment and Execution Models]] — Sandboxing, containers, and execution runtimes for autonomous tasks.
+- [[Multi-Agent Software Development]] — Coordinating multiple specialized agents within an overarching workflow architecture.

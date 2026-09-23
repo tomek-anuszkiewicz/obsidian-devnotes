@@ -777,3 +777,13 @@ The question may soon stop being:
 It may become:
 
 > How do we remain in control once AI becomes indispensable?
+
+---
+
+## Related Notes
+
+- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack for Agentic Software Engineering]] — Architectural framework detailing the layers required to maintain determinism, policy enforcement, and operational safety.
+- [[AI Productivity Is Limited by the Delivery System|AI Productivity Is Limited by the Delivery System]] — Why downstream delivery pipelines, test harnesses, and review gates bottleneck agent-generated software output.
+- [[Agent Adoption as a Learning Flywheel|Agent Adoption as a Learning Flywheel]] — How compounding organizational familiarity with agent tooling drives competitive lock-in.
+- [[Competitive Advantage in the Age of Commodity AI|Competitive Advantage in the Age of Commodity AI]] — Why proprietary architectures, operational discipline, and organizational invariants matter when models are commoditized.
+- [[Software Engineering May Shift Toward Code Optimized for Agents|Software Engineering May Shift Toward Code Optimized for Agents]] — The architectural shift toward machine-verifiable contracts, explicit schemas, and deterministic test boundaries.

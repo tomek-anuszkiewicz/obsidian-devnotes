@@ -684,6 +684,14 @@ LangGraph and LangSmith fit a workflow that needs state, repeated decisions, che
 2. **A cross-border resale scanner.** Import listings from OLX, Allegro and eBay, use a local model to normalize descriptions across languages, then compare prices with shipping costs and exchange rates to surface possible arbitrage.
 3. **A searchable manga and anime index.** Scrape and OCR pages, describe panels, and embed images and dialogue so someone can search for visual framing or themes beyond text tags.
 
+## Related Notes
+
+- [[Finding Original Knowledge in an Internet Full of Repetition]] - Epistemological filtering and source verification in LLM-saturated environments.
+- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The cognitive burden of constant code review and supervision.
+- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial code audits and specialist reviewers.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Full system architecture from foundational models to economic flywheels.
+- [[The Living Engineering Chronicle and Context Compaction]] - Long-term engineering logs and institutional knowledge preservation.
+
 ## Technical resources
 
 - [Awesome Harness Engineering](https://github.com/ai-boost/awesome-harness-engineering): agent harness designs, evaluation and steering patterns.

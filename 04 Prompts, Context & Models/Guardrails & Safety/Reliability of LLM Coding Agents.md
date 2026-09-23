@@ -251,7 +251,7 @@ A particularly useful question is:
 
 ### 7. Soft prompt rules versus hard mechanical boundaries
 
-Rules placed in `.cursorrules`, `CLAUDE.md`, or repository-level skills files are **soft semantic guardrails**. They adjust token probabilities; they do not enforce system invariants.
+Rules placed in `.cursorrules`, `CLAUDE.md`, or repository-level skills files are **soft semantic guardrails**. They adjust token probabilities; they do not enforce system invariants (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]).
 
 As an agent's context fills with long stack traces, large diffs, and tool outputs, its attention over earlier system prompts degrades. Soft instructions like *"Never delete test files"* or *"Ensure all mutations run in a transaction"* will eventually be ignored during high-entropy recovery loops.
 
@@ -324,3 +324,12 @@ Reliability is therefore not merely a property of the model. It is a property of
 ```text
 model + context + specification + tools + tests + review + harness
 ```
+
+## Related Notes
+
+- [[Building Determinism from Unpredictable Models]] - Harness engineering patterns for repeatable execution.
+- [[Constraint Saturation and Rule Oscillation in Coding Agents]] - The limits of prompt instructions and context saturation.
+- [[Reviewing AI-Generated Code]] - Operational guidelines for reviewing agentic pull requests.
+- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial code audits.
+- [[Formal Verification and Runtime Safety Boundaries]] - Enforcing non-negotiable invariants through compilers and types.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 (Harness & Execution) and Layer 4 (Evaluation & Verification).

@@ -965,3 +965,11 @@ implemented as a collection of software agents that share a continuously evolvin
 The future personal AI may therefore be best understood not as **an assistant that knows some things about me**, but as:
 
 > **a persistent digital representation of me, surrounded by specialized agents that use that representation to protect my attention, remember my history, support my decisions, and act in my interests.**
+
+## Related Notes
+
+- [[The Implications of Having a Digital Model of Yourself]] - Deep dive into psychological, legal, and behavioral implications.
+- [[How LLM Systems Build Context]] - Architectural mechanics of memory, retrieval, and dynamic state assembly.
+- [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]] - Using personal models to filter, adapt, and ingest information.
+- [[How AI Agents May Control Computers, Applications, and the Web]] - Action protocols and tool interfaces for autonomous execution.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 2 (Context Engine) and Layer 5 (Compounding personal flywheels).

@@ -176,9 +176,9 @@ For long conversations, systems may need to:
 
 So a model does not necessarily receive the entire raw history of a long conversation on every turn.
 
-Even with context windows reaching hundreds of thousands of tokens, dumping raw transcripts into the prompt degrades performance. Attention is rarely uniform across the sequence; models routinely suffer from "lost-in-the-middle" effects, recalling information at the extreme boundaries (the system prompt and the latest turn) far more reliably than details buried deep in the middle. Furthermore, prompt processing latency scales with context size.
+Even with context windows reaching hundreds of thousands of tokens, dumping raw transcripts into the prompt degrades performance. Attention is rarely uniform across the sequence; models routinely suffer from "lost-in-the-middle" effects (see [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]), recalling information at the extreme boundaries (the system prompt and the latest turn) far more reliably than details buried deep in the middle. Furthermore, prompt processing latency scales with context size.
 
-To keep latency predictable and maintain attention density, production runtimes prune historical tool outputs. A 2,000-line compiler output or raw JSON payload is necessary when the model evaluates it, but once the agent extracts the diagnostic conclusion, the harness should strip or compress that payload in subsequent turns, retaining only the summary or error trace.
+To keep latency predictable and maintain attention density, production runtimes prune historical tool outputs (see [[Token Optimization and Context Economics in Agentic Workflows]]). A 2,000-line compiler output or raw JSON payload is necessary when the model evaluates it, but once the agent extracts the diagnostic conclusion, the harness should strip or compress that payload in subsequent turns, retaining only the summary or error trace.
 
 ---
 
@@ -487,8 +487,7 @@ This complements rather than replaces other sources:
     
 - **Static code graphs / Graphify-like tools** describe structural relationships present in the code.
     
-- **Runtime graphs** describe relationships actually exercised in production.
-    
+- **Runtime graphs** describe relationships actually exercised in production (such as [[OpenTelemetry]] traces).
 - **MCP/tools** allow the agent to query those sources dynamically.
     
 
@@ -665,3 +664,11 @@ These failure modes create distinct operational issues. When context is incomple
 The goal should not be to provide the maximum possible context.
 
 The goal should be to provide context relevant to the decision.
+
+## Related Notes
+
+- [[Retrieval-Augmented Generation and Context Architecture]] - Detailed architectural patterns for enterprise RAG pipelines.
+- [[How Context Narrows an AI's Solution Space]] - How context constraints filter model reasoning paths.
+- [[Token Optimization and Context Economics in Agentic Workflows]] - Techniques for prompt curation and memory management.
+- [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] - Mitigating attention degradation and anchor bias.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Architectural overview of Layer 2 Context Engines and Layer 3 Harnesses.

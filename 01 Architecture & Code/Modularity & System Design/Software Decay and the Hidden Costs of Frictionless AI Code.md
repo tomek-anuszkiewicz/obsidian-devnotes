@@ -4,7 +4,6 @@ tags:
   - software-architecture
   - ai-agents
   - software-entropy
-  - zero-friction
   - code-maintainability
   - modularity
   - blast-radius

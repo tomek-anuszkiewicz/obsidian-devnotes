@@ -940,3 +940,11 @@ It may look like:
 In such a world, the scarce resource is no longer content.
 
 It is **fresh contact with reality**.
+
+## Related Notes
+
+- [[Improving AI Models - From Scaling to Agent-Generated Training Data]] - Harnessing execution feedback and reality collisions to train frontier models.
+- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of private operational trajectories over public scraping.
+- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, rejection logs, and empirical evidence.
+- [[How AI Breaks the Economic Model of the Open Web]] - Autophagous data loops and the collapse of ad-supported web content.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding data loops and economic flywheels.

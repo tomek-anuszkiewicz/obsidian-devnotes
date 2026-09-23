@@ -224,8 +224,8 @@ class UnderwritingPolicyEngine:
 
 ## Related notes
 
-* **Context Attractors and Recency Bias in Long-Horizon Agent Sessions**: How an agent can focus on recent conversational cues and lose track of earlier operational constraints.
-* **AI, Averaged Decisions, and Premature Convergence on Solutions**: How optimization can favor average solutions that miss conditions at the edges.
-* **Embedding LLMs in Runtime Decision Paths and Operational Telemetry**: Putting probabilistic models into live workflows and limiting decisions based only on proxies.
-* **The 5-Layer System Stack for Agentic Software Engineering**: Where validation of causal conditions (Layer 4) fits alongside runtime policy (Layer 3) and operational economics (Layer 5).
-* **Testing in the Model, Agent, LLM Era**: Deterministic checks for drift and proxy failures in production models.
+* [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] - How an agent can focus on recent conversational cues and lose track of earlier operational constraints.
+* [[AI, Averaged Decisions, and Premature Convergence on Solutions]] - How optimization can favor average solutions that miss conditions at the edges.
+* [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] - Putting probabilistic models into live workflows and limiting decisions based only on proxies.
+* [[The 5-Layer System Stack for Agentic Software Engineering]] - Where validation of causal conditions (Layer 4) fits alongside runtime policy (Layer 3) and operational economics (Layer 5).
+* [[Testing in the Model, Agent, LLM Era]] - Deterministic checks for drift and proxy failures in production models.

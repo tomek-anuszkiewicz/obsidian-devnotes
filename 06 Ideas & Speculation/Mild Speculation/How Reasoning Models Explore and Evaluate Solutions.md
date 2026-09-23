@@ -261,4 +261,10 @@ A bad answer does not necessarily mean that the reasoning model itself was weak.
 
 The system may simply have provided the wrong context.
 
----
+## Related Notes
+
+- [[AI, Averaged Decisions, and Premature Convergence on Solutions]] - How standard generation converges on median solutions and how to prevent it.
+- [[How Context Narrows an AI's Solution Space]] - How context constraints and negative bounding prune model solution spaces.
+- [[Retrieval-Augmented Generation and Context Architecture]] - Context retrieval architecture and search quality.
+- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial evaluation and specialized review roles.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 4: Evaluation, verification, and reward models.

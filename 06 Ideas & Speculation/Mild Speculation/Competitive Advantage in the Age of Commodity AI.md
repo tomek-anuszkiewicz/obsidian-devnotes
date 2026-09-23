@@ -399,3 +399,11 @@ The strongest form of the argument is:
 > In the age of AI, competitive advantage may increasingly come not from owning the best solution, but from owning the better system for creating, deploying, measuring, and continuously improving solutions.
 
 And a company's accumulated history — its code, decisions, incidents, experiments, meetings, customer feedback, and operational experience — may become one of the most important parts of that system.
+
+## Related Notes
+
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding organizational knowledge and flywheel economics.
+- [[Agent Adoption as a Learning Flywheel]] - How early adoption and failure instrumentation create self-reinforcing moats.
+- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of proprietary corporate execution history.
+- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
+- [[AI Changes the Economics of Technical Debt]] - Shifting trade-offs in software maintenance and operational velocity.

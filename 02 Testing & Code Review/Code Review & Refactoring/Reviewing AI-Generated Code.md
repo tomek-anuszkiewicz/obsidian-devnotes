@@ -132,12 +132,15 @@ Because the authoring agent is biased toward justifying its own implementation c
     
 - Start with business meaning.
     
-- Inspect tests as critically as production code.
-    
+- Inspect tests as critically as production code (see [[Tests Are for Verification, Not Architectural Navigation]]).
 - Ask what assumption could make the whole solution wrong.
-    
-- Require the reviewer to explain the flow independently.
-    
+- Require the reviewer to explain the flow independently (see [[LLMs as a Code Review Team]]).
 - Keep diffs small enough to understand honestly.
-    
 - Protect focused review time.
+
+## Related Notes
+
+- [[LLMs as a Code Review Team]] — Designing multi-perspective review teams to spot structural defects.
+- [[Tests Are for Verification, Not Architectural Navigation]] — Preventing tests from becoming fragile rubber stamps.
+- [[Correcting AI Code - Patch, Regenerate, or Respecify]] — Tactical decision-making when review identifies model defects.
+- [[Software Decay and the Hidden Costs of Frictionless AI Code]] — Why uninspected AI additions degrade long-term code quality.

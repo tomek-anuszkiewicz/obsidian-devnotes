@@ -993,4 +993,11 @@ They are not perfect.
 
 But they can be **relentless, specialized, cheap to duplicate, able to investigate suspicious changes, and willing to run the same verification procedure every single time**.
 
-For code review, those properties may matter almost as much as raw intelligence.
+For code review, those properties may matter almost as much as raw intelligence (see [[Multi-Agent Software Development]] and [[Building Determinism from Unpredictable Models]]).
+
+## Related Notes
+
+- [[Reviewing AI-Generated Code]] — Review heuristics and inspection methods for AI-authored changes.
+- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]] — Using review agents to enforce architectural standards at scale.
+- [[Multi-Agent Software Development]] — Coordinating multiple specialized agent personas across development lifecycles.
+- [[Building Determinism from Unpredictable Models]] — Verification gates and deterministic checks to validate reviewer hypotheses.

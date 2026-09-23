@@ -910,3 +910,11 @@ The central opportunity is:
 > Make small amounts of software economical for small amounts of recurring business friction.
 
 This may create a broad market for individuals and small teams who combine domain knowledge, process design, and AI-assisted implementation.
+
+## Related Notes
+
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]] - Why business constraints and domain semantics are the real bottleneck in software.
+- [[Competitive Advantage in the Age of Commodity AI]] - Where defensibility lives when software creation costs approach zero.
+- [[Proactive Software - From Reactive Systems to Autonomous Agents]] - The shift from reactive dashboards to proactive background execution.
+- [[Standardizing Service Infrastructure with Reusable Blocks]] - Building reusable platforms to lower the delivery cost of micro-software.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic flywheels and new software business models.

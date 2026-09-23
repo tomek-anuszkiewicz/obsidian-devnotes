@@ -744,4 +744,11 @@ If the architecture is wrong, fix the architecture.
 
 If the business understanding is wrong, fix the specification.
 
-And during automated execution, keep the definition of success sufficiently immutable so that the agent cannot solve the problem simply by redefining it.
+And during automated execution, keep the definition of success sufficiently immutable so that the agent cannot solve the problem simply by redefining it (see [[Building Determinism from Unpredictable Models]] and [[Reviewing AI-Generated Code]]).
+
+## Related Notes
+
+- [[Reviewing AI-Generated Code]] — Heuristics and inspection patterns for checking agent-authored pull requests.
+- [[Building Determinism from Unpredictable Models]] — Harness boundaries, test verification gates, and rollback mechanisms.
+- [[Developing Features with AI Coding Agents]] — Practical implementation loops and specification refinement.
+- [[Learning Coding Agents Through Failure-Driven Instructions]] — Turning recurring generation mistakes into actionable harness instructions.

@@ -632,4 +632,11 @@ The objective is:
 
 > **Every meaningful agent failure should increase the probability that future agents avoid the entire class of mistake.**
 
-In this model, an organization gradually builds its own **procedural memory for software-engineering agents**.
+In this model, an organization gradually builds its own **procedural memory for software-engineering agents** (see [[Negative Knowledge and Explicit Architectural Dissents]] and [[The Living Engineering Chronicle and Context Compaction]]).
+
+## Related Notes
+
+- [[Negative Knowledge and Explicit Architectural Dissents]] — Documenting rejected architectural directions and past failures.
+- [[The Living Engineering Chronicle and Context Compaction]] — Compacting ongoing implementation lessons into high-density context.
+- [[Constraint Saturation and Rule Oscillation in Coding Agents]] — Avoiding rule bloat and instruction interference as rules accumulate.
+- [[Building Determinism from Unpredictable Models]] — Enforcing hard operational gates rather than relying solely on instructions.

@@ -372,8 +372,8 @@ The central shift can be summarized as:
 
 ## Related notes
 
-- [[Agentic Harness]]
-- [[LLM Coding Agents Reliability]]
-- [[AI Agents and Institutional Memory]]
-- [[Designing APIs for LLM Coding Agents]]
-- [[Software Engineering with LLM Agents]]
+- [[The 5-Layer System Stack for Agentic Software Engineering]]
+- [[Agentic Coding Harness and Controlled Development Workflows]]
+- [[Reliability of LLM Coding Agents]]
+- [[LLM Agents and Institutional Memory]]
+- [[Designing APIs for LLM-Generated Integration Code]]

@@ -1119,4 +1119,11 @@ Each representation can validate and enrich the others.
 
 The result is not simply "automatically generated documentation".
 
-It is a **living semantic model of the software system** that can be consumed by both humans and AI agents.
+It is a **living semantic model of the software system** that can be consumed by both humans and AI agents (see [[The Living Engineering Chronicle and Context Compaction]] and [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
+
+## Related Notes
+
+- [[The Living Engineering Chronicle and Context Compaction]] — Compacting ongoing decisions into living context anchors.
+- [[In-Flight Documentation as the Primary Framework for Coding Agents]] — Real-time documentation as a coordination protocol for coding agents.
+- [[Comments May Become More Valuable in AI-Generated Code]] — Preserving operational rationale and semantic constraints directly in code.
+- [[Refactoring Legacy Systems with AI Agents]] — Using semantic code extraction to safely decompose legacy architectures.

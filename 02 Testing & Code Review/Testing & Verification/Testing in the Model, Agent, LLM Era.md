@@ -945,4 +945,11 @@ Several principles summarize the shift.
 
 And perhaps the most important principle:
 
-> **The better the deterministic verification around an agent, the less intelligence and reliability we need to trust in the agent itself.**
+> **The better the deterministic verification around an agent, the less intelligence and reliability we need to trust in the agent itself** (see [[Building Determinism from Unpredictable Models]] and [[Tests Are for Verification, Not Architectural Navigation]]).
+
+## Related Notes
+
+- [[Tests Are for Verification, Not Architectural Navigation]] — Preventing tests from turning into bloated, brittle navigational crutches.
+- [[Building Determinism from Unpredictable Models]] — Verification asymmetry and inner/outer verification loops.
+- [[Executable Architecture Tests for Coding Agent Guardrails]] — Writing automated architectural invariant tests for coding agents.
+- [[Formal Verification and Runtime Safety Boundaries]] — Combining symbolic invariants with machine learning implementations.

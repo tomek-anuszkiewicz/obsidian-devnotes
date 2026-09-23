@@ -1019,3 +1019,11 @@ Proactive systems can **find work worth doing**.
 That may ultimately be one of the most important consequences of agentic computing:
 
 > **Software changes from a passive tool operated by humans into an active participant that continuously observes its environment, identifies problems and opportunities, and initiates useful work.**
+
+## Related Notes
+
+- [[Workflow Orchestration in Agentic Systems]] - Architecture for multi-step agent execution, fan-out, and checkpoints.
+- [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] - Integrating probabilistic models into live operational paths.
+- [[Building Determinism from Unpredictable Models]] - Harness engineering to constrain agent behavior and enforce invariants.
+- [[OpenTelemetry]] - Standardized distributed tracing and metrics that empower proactive diagnostic agents.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 (Harness & Execution) and Layer 4 (Verification & Guardrails).

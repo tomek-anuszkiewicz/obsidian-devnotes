@@ -1,20 +1,24 @@
-# Original RAG Notes Baseline (Commit f909d7a)
-
-<!-- Source: RAG/Introduction to RAG.md -->
-
 ---
-title: Introduction to RAG
+title: Retrieval-Augmented Generation and Context Architecture
 tags:
   - rag
   - llm
-  - retrieval
+  - context-engineering
   - vector-search
-  - knowledge-management
+  - hybrid-search
+  - graph-rag
   - system-architecture
+  - information-retrieval
 aliases:
+  - Introduction to RAG
   - RAG Overview
   - Fundamentals of Retrieval-Augmented Generation
+  - RAG Ingestion and Chunking Strategies
+  - RAG Retrieval and Search
+  - Advanced RAG Architectures
 ---
+
+# Retrieval-Augmented Generation and Context Architecture
 
 ## What RAG Is
 

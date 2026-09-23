@@ -9,7 +9,6 @@ tags:
   - mutation-testing
   - llm
   - codex
-  - software-development
 aliases:
   - Agentic harness
   - Coding agent workflow

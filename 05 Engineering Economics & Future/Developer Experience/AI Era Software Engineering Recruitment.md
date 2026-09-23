@@ -334,8 +334,8 @@ The strongest candidate is therefore not simply the best programmer or the most 
 
 ## Related notes
 
-- [[LLM Coding Agents Reliability]]
-- [[Agentic Harness for Software Development]]
+- [[Reliability of LLM Coding Agents]]
+- [[Agentic Coding Harness and Controlled Development Workflows]]
 - [[LLM Agents and Institutional Memory]]
-- [[Designing APIs for LLM-Assisted Code Generation]]
+- [[Designing APIs for LLM-Generated Integration Code]]
 - [[Applications of LLM Agents Beyond Programming]]

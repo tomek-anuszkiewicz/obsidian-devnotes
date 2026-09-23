@@ -728,8 +728,15 @@ That may be one of the most important consequences of agentic code review:
 
 The strongest future systems will probably combine two capabilities:
 
-> machines must be extremely reliable at rules that can be formalized, while also extending verification into rules that previously required human interpretation.
+> machines must be extremely reliable at rules that can be formalized (see [[Executable Architecture Tests for Coding Agent Guardrails]]), while also extending verification into rules that previously required human interpretation (see [[LLMs as a Code Review Team]] and [[Reviewing AI-Generated Code]]).
 
 The first preserves the precision of traditional software engineering.
 
 The second expands its reach.
+
+## Related Notes
+
+- [[Executable Architecture Tests for Coding Agent Guardrails]] — Deterministic, code-based architectural rules and boundary tests.
+- [[LLMs as a Code Review Team]] — Structuring multi-perspective agent ensembles for specialized reviews.
+- [[Reviewing AI-Generated Code]] — Heuristics for inspecting model outputs and catching subtle hallucinations.
+- [[Negative Knowledge and Explicit Architectural Dissents]] — Encoding team experience and forbidden patterns into review policies.

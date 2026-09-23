@@ -1447,3 +1447,12 @@ The central tension may therefore be:
 > **A digital model of ourselves could become the most powerful tool ever created for individual autonomy — or the most powerful mechanism ever created for judging individuals from their past.**
 
 The difference may depend less on how intelligent the model becomes and more on **who owns it, who may query it, what it is allowed to reveal, and whether the human remains sovereign over their own digital representation.**
+
+---
+
+## Related Notes
+
+- [[Personal Digital Models as the Foundation of Agent Ecosystems|Personal Digital Models as the Foundation of Agent Ecosystems]] — The architectural blueprint for decentralized, local-first personal models acting across agent networks.
+- [[How LLM Systems Build Context|How LLM Systems Build Context]] — The operational mechanics of prompt assembly, episodic memory retrieval, and grounding in LLM systems.
+- [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs|Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]] — How human internal comprehension and memory retention evolve when persistent models manage factual retrieval.
+- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack for Agentic Software Engineering]] — Foundational architecture governing agent autonomy, constraints, and execution boundaries.

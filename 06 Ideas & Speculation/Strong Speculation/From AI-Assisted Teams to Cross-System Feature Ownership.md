@@ -642,3 +642,11 @@ The likely sequence is:
 > Change the organization only when practical evidence shows what should replace them.
 
 The long-term structure is uncertain, but it will probably emerge from this process rather than appear as a complete design from the beginning.
+
+## Related Notes
+
+- [[AI Productivity Is Limited by the Delivery System]] - Why code generation gains stall in manual deployment and verification pipelines.
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]] - Domain intent and business semantics as the ultimate constraint.
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] - Why layer boundaries and complexity masking complicate agent maintenance.
+- [[LLM Agents and Institutional Memory]] - Navigating multi-repo systems vs maintaining shared architectural models.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Organizational topologies and delivery economics.

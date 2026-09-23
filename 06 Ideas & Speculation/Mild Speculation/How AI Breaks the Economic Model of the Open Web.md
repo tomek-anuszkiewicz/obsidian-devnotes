@@ -835,3 +835,11 @@ And the central commercial battle may shift from:
 to:
 
 > Who does the agent trust, cite, recommend, and ultimately choose?
+
+## Related Notes
+
+- [[Finding Original Knowledge in an Internet Full of Repetition]] - Epistemological filtering and source verification in LLM-saturated environments.
+- [[Fresh Contact With Reality May Become the Training Bottleneck]] - Why empirical real-world grounding is the ultimate bottleneck for frontier models.
+- [[The Most Valuable Software Training Data May Be Private]] - The retreat of high-signal data behind corporate and authenticated firewalls.
+- [[How AI Agents May Control Computers, Applications, and the Web]] - The technical mechanics of autonomous agents interacting with software and web interfaces.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic dynamics of the software ecosystem.

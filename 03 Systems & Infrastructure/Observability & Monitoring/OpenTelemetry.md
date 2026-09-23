@@ -1548,4 +1548,11 @@ The most important architectural distinction is therefore:
 
 And for Kubernetes logging specifically:
 
-> **Applications normally log to stdout/stderr. Kubernetes/container runtime captures those streams into node-local log files, and a node-level collector can forward them. Direct in-process OTLP log export should not be relied upon when logs must survive abrupt application crashes.**
+> **Applications normally log to stdout/stderr. Kubernetes/container runtime captures those streams into node-local log files, and a node-level collector can forward them. Direct in-process OTLP log export should not be relied upon when logs must survive abrupt application crashes.** (See [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] and [[Propagating User Context Between Services]]).
+
+## Related Notes
+
+- [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] — Correlating distributed telemetry traces with real-time AI diagnosis.
+- [[Propagating User Context Between Services]] — Passing traceparent, security principal, and tenancy across microservices.
+- [[Service-to-Service Communication - How Service A Should Call Service B]] — Instrumenting RPC, HTTP, and message flows with standard telemetry.
+- [[Standardizing Service Infrastructure with Reusable Blocks]] — Packaging OpenTelemetry collectors and logging pipelines into shared service blocks.

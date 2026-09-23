@@ -1004,3 +1004,10 @@ The most important warning is:
 And the safest deployment default is:
 
 > Keep instances broadly capable, activate responsibilities explicitly, and restrict connectors only when security, reliability or resource isolation provide a concrete reason.
+
+## Related Notes
+
+- [[Standardizing Service Infrastructure with Reusable Blocks]] — Reusable platform infrastructure for decoupled service runtimes.
+- [[Service-to-Service Communication - How Service A Should Call Service B]] — Remote communication patterns, circuit breakers, and idempotency.
+- [[Designing Software for AI Agents]] — Modularity patterns and mechanical boundary enforcement.
+- [[Propagating User Context Between Services]] — Carrying security and tracing context across process boundaries.

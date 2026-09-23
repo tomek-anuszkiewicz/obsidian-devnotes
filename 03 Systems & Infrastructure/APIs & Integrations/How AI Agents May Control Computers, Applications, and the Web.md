@@ -869,6 +869,13 @@ It is:
 
 > **Software is gradually becoming operable by agents rather than only by humans.**
 
-MCP, application actions, APIs, CLI tools, WebMCP, accessibility interfaces and computer-use models are all pieces of this same transition.
+MCP, application actions, APIs, CLI tools, [[WebMCP - Turning Web Applications into Agent-Native Toolkits|WebMCP]], accessibility interfaces and computer-use models are all pieces of this same transition (see [[Proactive Software - From Reactive Systems to Autonomous Agents]]).
 
 Voice will simply make the transformation impossible to miss.
+
+## Related Notes
+
+- [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] — Exposing semantic web application capabilities directly to browser agents.
+- [[Designing Developer Technologies for Agent-Readiness]] — Designing interfaces that agents can operate programmatically.
+- [[Proactive Software - From Reactive Systems to Autonomous Agents]] — Evolution from reactive button-clicking to autonomous software systems.
+- [[Workflow Orchestration in Agentic Systems]] — Orchestrating multi-step computer automation tasks safely.

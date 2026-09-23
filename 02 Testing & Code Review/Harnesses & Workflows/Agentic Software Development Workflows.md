@@ -942,4 +942,11 @@ A mediocre generation followed by strong tests, feedback, review, and iteration 
 
 The most important architectural challenge in agentic software development may therefore not be code generation itself.
 
-It may be designing the **environment, contracts, feedback loops, and boundaries within which agents work**.
+It may be designing the **environment, contracts, feedback loops, and boundaries within which agents work** (see [[Agentic Coding Harness and Controlled Development Workflows]] and [[Building Determinism from Unpredictable Models]]).
+
+## Related Notes
+
+- [[Agentic Coding Harness and Controlled Development Workflows]] — Orchestrating vertical slices and constraints in the agent harness.
+- [[Building Determinism from Unpredictable Models]] — Enforcing deterministic build, test, and rollback boundaries around models.
+- [[AI Productivity Is Limited by the Delivery System]] — Why harness and CI/CD throughput bound practical AI output.
+- [[Multi-Agent Software Development]] — Multi-role agent coordination, handoffs, and verification architectures.

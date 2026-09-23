@@ -397,5 +397,11 @@ The ability of LLMs to analyze code and explain its mechanics on demand accelera
    - High-level architecture docs remain valuable only as **guardrails and trade-offs** (e.g., ADRs, system constraints, performance budgets) that prevent agents from making architectural refactorings that break unstated non-functional requirements.
 
 3. **Context Engineering via Comments:**
-   - Comments are no longer just an aid for human eyes. They are a fundamental tool of context engineering for autonomous agents.
+   - Comments are no longer just an aid for human eyes. They are a fundamental tool of context engineering for autonomous agents (see [[Designing Software for AI Agents]] and [[The Living Engineering Chronicle and Context Compaction]]).
    - They ensure that an isolated slice of code, separated from the team that built it and the documents that specified it, still carries the operational knowledge required to maintain it safely.
+
+## Related Notes
+
+- [[Designing Software for AI Agents]] — Structuring software and vertical slices so agents can infer boundaries and intent.
+- [[Negative Knowledge and Explicit Architectural Dissents]] — Documenting non-obvious invariants and rejected alternatives.
+- [[The Living Engineering Chronicle and Context Compaction]] — Compacting long-term engineering intent into active agent context.

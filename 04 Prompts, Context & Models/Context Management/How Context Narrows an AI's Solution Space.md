@@ -368,7 +368,7 @@ relevant, structured, and verified context
 â†’ a better constrained solution space
 ```
 
-Context engineering is therefore not only about supplying missing information. It is also about controlling its volume, position, structure, freshness, and relative importance.
+Context engineering is therefore not only about supplying missing information. It is also about controlling its volume, position, structure, freshness, and relative importance (see [[Token Optimization and Context Economics in Agentic Workflows]] and [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]).
 
 Those are very different statements.
 
@@ -402,7 +402,7 @@ Some of these filters are desirable.
 
 For a Polish legal question, removing non-Polish legal solutions is correct.
 
-For an architectural question, however, removing an unusual design simply because it is uncommon may be a mistake.
+For an architectural question, however, removing an unusual design simply because it is uncommon may be a mistake, causing models to fall into [[AI, Averaged Decisions, and Premature Convergence on Solutions]].
 
 The agent therefore needs to know not only:
 
@@ -636,3 +636,11 @@ A better model alone may improve the system, but so can:
     
 
 The future progress of AI agents may therefore come as much from improving this entire loop as from increasing the raw capability of the underlying language model.
+
+## Related Notes
+
+- [[How Targeted Prompts Steer Model Solution Spaces]] - How explicit prompt framing and negative bounding sculpt model behavior.
+- [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] - Positional biases and attention degradation in complex sessions.
+- [[Token Optimization and Context Economics in Agentic Workflows]] - Techniques for curating working context to maximize model reliability.
+- [[Retrieval-Augmented Generation and Context Architecture]] - Architectural patterns for dynamic, iterative retrieval loops.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 2 (Context Engine) and Layer 3 (Harness & Execution) system boundaries.

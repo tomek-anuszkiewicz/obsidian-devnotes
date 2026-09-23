@@ -548,3 +548,11 @@ The agent advantage is relentless execution.
 > An agent can repeat it one hundred times, provided that a human first defines what “the right thing” means.
 
 This is one of the most practical ways agents can outperform humans in software development: not by being wiser, but by being tireless, systematic, and methodical to the point where incomplete work becomes less acceptable.
+
+## Related Notes
+
+- [[AI Changes the Economics of Technical Debt]] - How reduced execution costs make refactoring and cleanup economically viable.
+- [[Refactoring Legacy Systems with AI Agents]] - Methodical patterns for codebase modernization and migration.
+- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]] - Using tirelessness to police code standards and conventions.
+- [[Developing Features with AI Coding Agents]] - Closed-loop development workflows combining speed and verification.
+- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 Harness and Layer 4 Verification engines.

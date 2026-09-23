@@ -39,7 +39,7 @@ The layers affect one another. Engineers set goals and boundaries; an agent load
 
 Start with the code that runs in production. Allocation, I/O, concurrency, and database queries still determine latency, even if an agent wrote the source.
 
-An agent trained on public repositories can readily produce deep inheritance trees, runtime reflection, many heap allocations, or several layers of dependency injection. Those patterns are common in examples, but they can be expensive on a hot path. Give the agent explicit performance constraints when throughput or latency matters, then check the result against the runtime.
+An agent trained on public repositories can readily produce deep inheritance trees, runtime reflection, many heap allocations, or several layers of dependency injection. Those patterns are common in examples, but they can be expensive on a hot path. Give the agent explicit performance constraints when throughput or latency matters, then check the result against the runtime (see [[Designing Software for AI Agents]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ### 1. Keep a business operation together
 
@@ -134,7 +134,7 @@ Property-based tests with FsCheck or QuickCheck can exercise contracts across ma
 
 ### 2. Make architecture rules executable
 
-Put boundaries into build checks using `NetArchTest`, reflection, or a Roslyn analyzer. An agent that crosses a prohibited boundary should see a failing check immediately. The following sketch checks handler length and calls out LINQ on marked hot paths:
+Put boundaries into build checks using `NetArchTest`, reflection, or a Roslyn analyzer (see [[Executable Architecture Tests for Coding Agent Guardrails]] and [[Building Determinism from Unpredictable Models]]). An agent that crosses a prohibited boundary should see a failing check immediately. The following sketch checks handler length and calls out LINQ on marked hot paths:
 
 ```csharp
 [Fact]
@@ -208,7 +208,7 @@ At the card network boundary, configure Polly for the failures the service can o
 
 Commands such as `ProcessPaymentCommand` and `RefundTransactionCommand` validate the business rules, append to a transaction ledger, and emit domain events. Read models are projected asynchronously into indexed PostgreSQL or Redis, letting clients query without locking transactional tables.
 
-For a sequence such as authorizing a card, reserving inventory, and capturing funds, use a durable saga in Durable Functions or a temporal state machine. If capture fails, the workflow runs the defined compensation steps rather than depending on one broad distributed transaction.
+For a sequence such as authorizing a card, reserving inventory, and capturing funds, use a durable saga in Durable Functions or a temporal state machine (see [[Workflow Orchestration in Agentic Systems]]). If capture fails, the workflow runs the defined compensation steps rather than depending on one broad distributed transaction.
 
 ### 3. Choose a Kafka topic layout deliberately
 
@@ -225,9 +225,9 @@ For concurrent changes, the backend can use optimistic locking and version vecto
 
 ### 5. Trace a request across services
 
-Instrument the services with OpenTelemetry and propagate `traceparent` through HTTP, gRPC, and Kafka envelopes. An agent can inspect related spans and logs instead of asking an engineer to read 50 GB of daily logs.
+Instrument the services with [[OpenTelemetry]] and propagate `traceparent` through HTTP, gRPC, and Kafka envelopes (see [[Propagating User Context Between Services]]). An agent can inspect related spans and logs instead of asking an engineer to read 50 GB of daily logs.
 
-Alert on changes in error ratios and p99 latency trends, including sudden changes in their rate, as well as on fixed thresholds such as CPU above 85%. Feed anomalous span graphs and correlated logs to an LLM diagnostics service to investigate which commit or configuration change caused the problem.
+Alert on changes in error ratios and p99 latency trends, including sudden changes in their rate, as well as on fixed thresholds such as CPU above 85%. Feed anomalous span graphs and correlated logs to an LLM diagnostics service to investigate which commit or configuration change caused the problem (see [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]).
 
 ---
 
@@ -237,7 +237,7 @@ The agent can work only with the context it loads. A long prompt containing ever
 
 ### 1. Retrieve code by its relationships
 
-Naive text chunks can cut through a syntax tree or separate a caller from the interface it uses. Build an AST-based code graph with tools such as Graphify and GitNexus. Track symbols, implementations, inheritance, imports, and call paths.
+Naive text chunks can cut through a syntax tree or separate a caller from the interface it uses. Build an AST-based code graph with tools such as Graphify and GitNexus (see [[How LLM Systems Build Context]] and [[Retrieval-Augmented Generation and Context Architecture]]). Track symbols, implementations, inheritance, imports, and call paths.
 
 Export dependency maps to Markdown and Obsidian for human navigation. When the agent changes `IPaymentProcessor`, load the nearby implementations, callers, and tests into its context:
 
@@ -257,7 +257,7 @@ A schema-aware REST or GraphQL layer such as Azure Data API Builder can expose s
 
 ### 3. Keep rules and working context under control
 
-Too many simultaneous instructions can make the agent alternate between conflicting rules: it fixes one requirement and breaks another. Keep the primary system prompt below 1,500 tokens in this setup, and load task-specific guidance as modular skills, for example `awesome-agent-skills`, `azure-skills`, or `Wayfinder`.
+Too many simultaneous instructions can make the agent alternate between conflicting rules: it fixes one requirement and breaks another (see [[Constraint Saturation and Rule Oscillation in Coding Agents]] and [[Token Optimization and Context Economics in Agentic Workflows]]). Keep the primary system prompt below 1,500 tokens in this setup, and load task-specific guidance as modular skills, for example `awesome-agent-skills`, `azure-skills`, or `Wayfinder`.
 
 As the work progresses, remove completed tasks and old agent debates from the active context. Retain the user's original goal, the current state of edited files, compiler failures, and the tests that decide whether the change works.
 
@@ -275,7 +275,7 @@ Package feeds / Renovate → Upgrade, test, fix → PR with breaking changes han
 
 ### 1. Make it easier to express and check a task
 
-Connect local or edge speech-to-text tools such as `SuperWhisper` or `WisprFlow` to IDE commands. An engineer can dictate an implementation goal, and the transcription workflow can turn the spoken explanation into a structured prompt.
+Connect local or edge speech-to-text tools such as `SuperWhisper` or `WisprFlow` to IDE commands. An engineer can dictate an implementation goal, and the transcription workflow can turn the spoken explanation into a structured prompt (see [[The Conductor Pattern for High-Bandwidth Engineering]] and [[Always-On Autonomous Agents - The 24-7 Local Operating System]]).
 
 Use a browser automation agent such as `browser-use` to navigate applications, check a production deployment, test a third-party integration, or collect research references.
 
@@ -291,7 +291,7 @@ A local model can also act as a rehearsal partner before a design review, salary
 
 Models can generate common CRUD services, algorithms, a Redis-backed cache, or an OAuth flow quickly. Public syntax and familiar architecture are therefore easier to reproduce.
 
-The harder-to-copy parts of a company's system are its private domain material, production history, execution data, database states, and the delivery checks that encode business rules. The engineer's job increasingly includes setting system boundaries, specifying its topology, defining invariants, strengthening tests, and checking that agent-written changes remain safe and maintainable.
+The harder-to-copy parts of a company's system are its private domain material, production history, execution data, database states, and the delivery checks that encode business rules (see [[AI Changes the Economics of Software Libraries]] and [[AI-Assisted Software Engineering - Where Are We Now]]). The engineer's job increasingly includes setting system boundaries, specifying its topology, defining invariants, strengthening tests, and checking that agent-written changes remain safe and maintainable.
 
 ---
 
@@ -336,3 +336,13 @@ OpenTelemetry spans, allocation profile, Envoy logs
 2. Give the user this input: *“Build a query tool to inspect failed card transactions over $500 in Poland with bank decline code 05.”*
 3. Have the backend generate a JSON component schema as it works.
 4. Let React read the SSE stream and render the form, table, and charts for that query.
+
+---
+
+## Knowledge Graph: Layer Indices
+
+- **Layer 1 (Architecture & Code):** [[Designing Software for AI Agents]], [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]], [[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]], [[Replacing Source Generators with Explicit Generated Code]], [[Comments May Become More Valuable in AI-Generated Code]].
+- **Layer 2 (Testing & Code Review):** [[Building Determinism from Unpredictable Models]], [[Agentic Coding Harness and Controlled Development Workflows]], [[Executable Architecture Tests for Coding Agent Guardrails]], [[Testing in the Model, Agent, LLM Era]], [[Reviewing AI-Generated Code]].
+- **Layer 3 (Systems & Infrastructure):** [[OpenTelemetry]], [[Workflow Orchestration in Agentic Systems]], [[Designing Developer Technologies for Agent-Readiness]], [[Service-to-Service Communication - How Service A Should Call Service B]], [[Propagating User Context Between Services]].
+- **Layer 4 (Prompts, Context & Models):** [[How LLM Systems Build Context]], [[Retrieval-Augmented Generation and Context Architecture]], [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]], [[Token Optimization and Context Economics in Agentic Workflows]], [[Reliability of LLM Coding Agents]].
+- **Layer 5 (Engineering Economics & Future):** [[AI Changes the Economics of Software Libraries]], [[AI-Assisted Software Engineering - Where Are We Now]], [[The Conductor Pattern for High-Bandwidth Engineering]], [[Always-On Autonomous Agents - The 24-7 Local Operating System]], [[What Should Organizations Preserve from AI-Assisted Development]].

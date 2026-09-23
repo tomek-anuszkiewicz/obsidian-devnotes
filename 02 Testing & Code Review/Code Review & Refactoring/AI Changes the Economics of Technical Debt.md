@@ -117,6 +117,11 @@ Configure agent harnesses to restrict how many files can be touched in a single 
 Instead of deferring mechanical hygiene to quarterly planning sprints, schedule recurring background agent jobs to bump dependencies, prune dead methods, and clear compiler warnings. Each run should generate a self-contained pull request with verified tests, ready for quick human approval.
 
 ### Track Agent Friction as an Architectural Metric
-Monitor which modules produce the highest agent token consumption, repeated compile-fix repair loops, or high review rejection rates. These operational metrics identify exactly where structural debt is hurting delivery velocity, providing an empirical business justification for targeted refactoring.
+Monitor which modules produce the highest agent token consumption, repeated compile-fix repair loops, or high review rejection rates (see [[Token Optimization and Context Economics in Agentic Workflows]]). These operational metrics identify exactly where structural debt is hurting delivery velocity, providing an empirical business justification for targeted refactoring.
 
----
+## Related Notes
+
+- [[Software Decay and the Hidden Costs of Frictionless AI Code]] — How frictionless code generation introduces subtle long-term architectural decay.
+- [[Token Optimization and Context Economics in Agentic Workflows]] — Managing token burn, prompt headroom, and attention budgets.
+- [[Refactoring Legacy Systems with AI Agents]] — Practical strategies for incremental modernization with agents.
+- [[Executable Architecture Tests for Coding Agent Guardrails]] — Enforcing file ceilings and coupling boundaries deterministically.
