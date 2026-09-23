@@ -30,6 +30,8 @@ The best description of the present moment is:
 
 > We are high on the curve of single-answer capability, on a steep part of the agentic-capability curve, but much lower on the curve of real-world reliability.
 
+Reliability in autonomous workflows does not come from waiting for an infallible base model. It comes from enclosing probabilistic model inference inside deterministic verification harnesses, automated test suites, and strict execution sandboxes.
+
 ## Capability is not reliability
 
 Two claims that sound similar are fundamentally different:
@@ -42,6 +44,8 @@ The first is becoming true at an astonishing rate. The second is still far from 
 This distinction explains why modern models can produce expert-level work and still make a small, convincing mistake: an incorrect parameter, a subtly wrong assumption, a nonexistent API option, or a locally plausible implementation of the wrong business rule.
 
 These are often not spectacular hallucinations. They are *soft hallucinations*: errors embedded in an otherwise coherent and persuasive result.
+
+Because the surrounding context reads naturally and passes superficial visual inspection, soft hallucinations are far more dangerous in production environments than overt syntax errors. A broken import or syntax typo fails fast at compile time; an inverted permission check or an unindexed query embedded in an otherwise elegant pull request slips silently past code review and into production.
 
 ## A simplified history of model generations
 
@@ -131,6 +135,8 @@ This calculation is simplified, but it illustrates why being almost always corre
 
 Real systems can perform better because tests, compilers, schemas, and environmental feedback catch errors. They can also perform worse because errors are correlated: one incorrect assumption may poison dozens of later decisions.
 
+In an unattended agent loop, error compounding operates under two opposing forces. Deterministic feedback loops—compilers, linters, unit tests, and schema validators—intercept execution errors before they can cascade, giving the agent a chance to self-correct in place. Conversely, semantic errors cascade catastrophically: when an agent misinterprets an authorization rule or database invariant at step 2, that invalid assumption enters the context window. The subsequent 18 steps may execute with syntactically flawless logic, but they are expanding on a poisoned foundation that no compiler can flag.
+
 ## The task-horizon curve
 
 METR measures the length of a task—expressed as the time a skilled human would need—that an AI agent can complete with 50% success probability.
@@ -207,6 +213,8 @@ The most plausible near-term future is not a model that never makes mistakes. It
 
 Human work is likely to shift from producing every implementation detail toward defining intent, constraints, acceptance criteria, and review boundaries.
 
+In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested.
+
 ## Why software engineering may automate faster
 
 Programming has unusually strong external feedback:
@@ -219,6 +227,8 @@ Programming has unusually strong external feedback:
 - runtime behaviour can be compared with an expected state.
 
 Tasks with a strong verifier can improve much faster than tasks whose quality is subjective or whose requirements are hidden.
+
+This feedback loop is amplified by disposable execution environments. Running agents inside ephemeral sandboxes (like Docker containers or Firecracker microVMs) allows them to safely trigger real builds, execute migrations against disposable database instances, and parse actual runtime logs. When the oracle is unambiguous—a passing test suite, a validated OpenAPI schema, or a clean compiler pass—the model can iterate autonomously until the contract is satisfied.
 
 Likely faster areas:
 
@@ -271,6 +281,8 @@ For serious agentic work, reliability should come from the complete system:
 - stop conditions and escalation rules;
 - human approval for ambiguous or high-impact decisions.
 
+Enforcing this at the platform layer means treating model output as unverified user input. In practice, production environments isolate autonomous runs in dedicated git worktrees inside ephemeral sandboxes, restrict terminal tooling to bounded scripts rather than unmetered root access, and record structured execution traces of every tool call and file diff. If an agent hits an ambiguous schema or an unexpected authorization boundary, the harness must halt execution and escalate rather than permitting the model to guess.
+
 The model supplies capability. The [[Agentic Harness]] supplies control and evidence.
 
 ## Related notes
@@ -290,4 +302,3 @@ The model supplies capability. The [[Agentic Harness]] supplies control and evid
 - [METR — Measuring AI Ability to Complete Long Software Tasks](https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/)
 - [OpenAI — Why Language Models Hallucinate](https://openai.com/index/why-language-models-hallucinate/)
 - [OpenAI — Introducing GPT-5.2](https://openai.com/index/introducing-gpt-5-2/)
-

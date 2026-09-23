@@ -246,6 +246,8 @@ The same mechanism can be used by:
 
 Voice is simply one possible entry point.
 
+Under the hood, MCP standardizes this discovery and invocation over JSON-RPC transports (typically stdio for local processes or SSE/HTTP for remote services). By publishing typed schemas, argument constraints, and tool descriptions upfront, the protocol lets an agent inspect capabilities on the fly rather than requiring hardcoded API adapters or burning prompt tokens on brittle tool glue code.
+
 ---
 
 # CLI May Become More Important, Not Less
@@ -290,6 +292,8 @@ Not because humans suddenly prefer terminals, but because **agents are excellent
 
 An application with a good CLI may already be significantly more agent-friendly than an application exposing only a GUI.
 
+Terminal I/O is dense, structured text, which makes it remarkably cheap on token consumption compared to parsing massive DOM snapshots or decoding high-resolution screen frames. Applications that expose structured output flags like `--json` provide deterministic exit codes, explicit error streams, and parseable output that make automated recovery and command piping trivial for an agent.
+
 ---
 
 # Operating Systems Are Starting to Expose Capabilities to Agents
@@ -323,6 +327,8 @@ The OS can become a capability registry:
 
 This is much more powerful than traditional voice assistants based on a fixed list of predefined commands.
 
+Instead of forcing the model to guess regex patterns against voice phrases, the operating system functions as a typed local broker. Applications register parameter schemas and execution handlers directly with the OS daemon, allowing the model to discover, inspect, and invoke actions within structured OS-level permission and isolation boundaries.
+
 ---
 
 # The Web May Be Even More Agent-Friendly
@@ -352,6 +358,8 @@ find button with role="button" and name="Buy"
 This is considerably better than looking at pixels.
 
 Browser automation tools such as Playwright already demonstrate how powerful this model is.
+
+Targeting the accessibility (ARIA) tree rather than the raw DOM or visual viewport filters out rendering noise, CSS styling hacks, and responsive layout shifts. Automation engines like Playwright can latch onto deterministic semantic roles and names, giving the agent a stable interaction handle without bloating the context window with megabytes of styling tags and script noise.
 
 ---
 
@@ -442,6 +450,8 @@ or:
 
 GUI agents therefore need perception, planning, and error recovery.
 
+Operating purely on pixels comes with steep operational penalties. Processing high-resolution desktop frames through multimodal models burns hundreds of tokens per step and introduces latency overhead of 2 to 5 seconds per interaction loop. Pixel-level automation is also inherently fragile: background popups, OS notifications, DPI scaling shifts, or focus drops can break an agent's execution loop mid-workflow, making visual verification loops and explicit fallback paths mandatory.
+
 ---
 
 # The Likely Control Hierarchy
@@ -492,6 +502,8 @@ which is better than:
 ```text
 look at screenshot and guess where Continue is
 ```
+
+This hierarchy represents a direct trade-off between semantic clarity and execution latency. Calling a typed API or MCP tool executes deterministically in single-digit milliseconds with zero token overhead for visual interpretation. Dropping down to DOM or accessibility trees preserves structural labels but introduces mutation latency. Dropping all the way to vision and synthetic inputs sits at the bottom of the stack—maximizing compatibility at the cost of high token burn, inference latency, and probabilistic failure rates.
 
 ---
 
@@ -630,6 +642,8 @@ The key value is therefore not merely controlling individual applications.
 
 It is **composition across applications**.
 
+The biggest operational win is eliminating the manual data-shuffling, copy-pasting, and context-switching that happens between disconnected systems. By acting as an integration layer across disparate APIs, CLI utilities, and desktop applications, an orchestrator can reconcile state, sync data pipelines, and execute end-to-end workflows without human intervention.
+
 ---
 
 # Security Becomes a First-Class Problem
@@ -693,7 +707,8 @@ Agent platforms will therefore need:
 - user confirmation policies,
     
 - provenance of tools and data.
-    
+
+In operational environments, managing blast radius requires concrete runtime controls: scoped capability tokens rather than ambient authority, unprivileged execution sandboxes (such as containers or ephemeral filesystem worktrees), deterministic audit trails capturing every input and side-effect, and strict transaction rollback boundaries before state is committed.
 
 ---
 
@@ -726,6 +741,8 @@ becomes security-critical.
 This is particularly important for browser agents because the open web is untrusted input.
 
 Future agent platforms will therefore have to treat external content similarly to how operating systems treat untrusted executable code today.
+
+In practice, hardening an agent platform against injection requires architectural isolation: separating raw external payloads from the model's control prompt, gating sensitive tool execution behind human verification whenever untrusted context is in play, and running web evaluation workers inside isolated, network-restricted headless browser environments.
 
 ---
 

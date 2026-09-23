@@ -7,9 +7,13 @@ tags:
   - framework-design
   - modular-design
   - maintainability
+  - ai-agents
+  - package-management
 aliases:
   - Internal NuGet Framework Architecture
   - Explicit Composable NuGet Packages
+  - Designing Internal Shared Libraries
+  - The Frozen Package Problem
 ---
 
 ## Core Idea
@@ -38,6 +42,8 @@ The problem begins when the framework:
 A good internal framework should provide **modular building blocks** that are explicitly selected, configured, and composed by the consuming application.
 
 The application should remain the owner of its runtime configuration.
+
+When maintaining codebases alongside AI coding agents, magic shared packages become severe operational bottlenecks. Coding agents cannot reliably infer ambient reflection scanning, hidden dependency injection registrations, or implicit bootstrap hooks without hallucinating side effects. Explicit composition keeps the execution graph directly in the context window as executable documentation (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ---
 
@@ -103,6 +109,8 @@ Small dependency trees provide:
     
 - better understanding of the runtime composition.
     
+
+Pulling in broad transitive dependencies also triggers diamond dependency hell across an organization. When an internal package drags in a heavy JSON serializer, database driver, or cloud SDK, two unrelated libraries referencing incompatible major versions of that transitive dependency will break downstream builds and freeze upgrades across dozens of consumer repositories.
 
 ---
 
@@ -211,6 +219,8 @@ This creates problems when:
     
 
 A framework should make the pipeline easier to assemble, not make it invisible.
+
+Pipeline order directly dictates resource utilization, security, and runtime correctness. If request body parsing executes before authentication, unauthenticated callers can stream multi-megabyte payloads that exhaust memory and trigger expensive garbage collection pauses before being rejected. Similarly, if exception logging runs before correlation ID extraction, unhandled failures drop the distributed tracing context needed for production triage.
 
 ---
 
@@ -650,6 +660,8 @@ prefer:
 
 The goal should be understanding and verifiable constraints, not ritualistic preservation of a copied structure.
 
+Maintaining a binary package for low-churn utilities—such as computing HMAC signatures, generating deterministic idempotency keys, or normalizing headers—incurs high organizational drag across CI pipelines, versioning gates, and release tracking. Keeping a clean reference implementation that developers or coding agents can copy into local code eliminates package release cycles, avoids dependency conflicts entirely, and keeps the full implementation visible to automated inspection (see [[Internal Shared Packages vs Agent-Generated Code]]).
+
 ---
 
 ## 13. Use Conformance Tests Where Shared Behavior Matters
@@ -709,6 +721,8 @@ await AssertRetriesTransientFailureAsync(
     expectedAttempts: 3);
 ```
 
+Distributing shared binary packages is frequently the wrong mechanism for enforcing standards such as RFC 7807 error envelopes, correlation header propagation, or `/healthz` formats. An automated, containerized conformance test harness validates the contract at the network boundary as a black box. This enforces company-wide invariants without imposing shared runtime dependencies or version lockstep across services (see [[AI Changes the Economics of Software Libraries]]).
+
 ---
 
 ## 14. Mechanism and Policy Should Be Separated
@@ -750,6 +764,8 @@ where the application cannot easily see:
     
 
 The framework may provide safe defaults, but important operational policies should remain visible.
+
+Mechanism is the generic capability—such as an interceptor executing exponential backoff with full jitter, or a filter measuring request durations. Policy is the operational trade-off decided by service owners: financial settlement calls must never retry automatically on timeouts, while idempotent catalog queries can safely retry three times with tight deadlines. Hardcoding operational policies into a shared package removes critical runtime tuning from the engineers who own the production on-call rotation.
 
 ---
 

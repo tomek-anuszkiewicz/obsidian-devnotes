@@ -97,6 +97,8 @@ A developer may prepare their part faster, while the complete feature still wait
 
 Therefore, the current benefit is often local rather than systemic.
 
+Accelerating code generation inside a single silo simply shifts the delivery bottleneck downstream. A developer can use an agent to draft and test an endpoint in thirty minutes, but the complete feature still stalls in cross-team review queues, backlog prioritization, and multi-stage staging deployments. The speedup is trapped inside the local boundary.
+
 ## The Current Learning Phase
 
 The immediate challenge is not yet redesigning the entire organization.
@@ -146,6 +148,8 @@ A team that uses agents well will probably develop:
     
 
 The first stage of adoption will therefore happen mostly inside current organizational structures.
+
+In practice, this means establishing concrete engineering guardrails: repository-level instruction files (`AGENTS.md`) defining architectural invariants and prohibited dependencies, automated validation harnesses running type checks and linters before humans inspect the diff, and telemetry tracking agent failures and review turnaround times.
 
 ## The Likely Near Future
 
@@ -223,6 +227,8 @@ They may improve:
     
 
 AI may initially fit into the existing process, but successful teams will gradually modify the process around AI.
+
+When an agent can draft a complete component change in minutes, slow delivery pipelines become unbearable. If test suites take forty-five minutes to run or staging environments regularly drift and flake, the engineering constraint shifts entirely from code production to verification latency. Teams are forced to invest in deterministic local test suites, ephemeral preview environments, and decoupled feature flags just to keep up with the volume of drafted changes.
 
 ## Why Existing Structures May Become Limiting
 
@@ -385,6 +391,8 @@ toward:
 
 This would make service teams resemble internal platform maintainers or domain guardians.
 
+In practice, this turns component teams into guardians of architectural invariants. Instead of fielding Jira tickets for routine CRUD operations, they maintain deterministic verification oracles—such as automated contract testing suites (Pact, OpenAPI schema diffs, Protobuf breaking-change detection) and strict lint rules. If an external feature owner or an agent submits a pull request that violates backward compatibility or performance budgets, the CI pipeline rejects it automatically before any engineer has to spend review cycles on it.
+
 ## Possible Organizational Forms
 
 The final structure may not be centered on a single senior engineer.
@@ -475,6 +483,8 @@ This may require:
 
 Without these capabilities, an agent can produce cross-system changes, but the changes will still wait at organizational boundaries.
 
+Without robust technical guardrails, opening repository access to external feature owners leads straight to integration chaos. Decoupled deployment requires strict adherence to backward-compatible database migrations (such as the expand/contract pattern), dynamic branch-level ephemeral environments to validate multi-service interactions, and granular OpenTelemetry tracing to pinpoint regressions instantly in production.
+
 ## Risks of the Emerging Model
 
 Cross-system ownership supported by agents creates new risks.
@@ -484,6 +494,8 @@ Cross-system ownership supported by agents creates new risks.
 An agent may make an unfamiliar service appear easier to understand than it really is.
 
 A senior engineer may gain confidence faster than genuine understanding.
+
+An agent produces syntactically idiomatic code with ease, which can easily mask critical runtime hazards. A feature lead might review a clean, passing diff without noticing that it violates subtle concurrency models, bypasses connection pool limits, or breaks distributed caching invariants.
 
 ### Hidden Local Knowledge
 
@@ -500,11 +512,15 @@ Some important constraints may exist only in people's experience:
 - historical reasons for strange code.
     
 
+These unwritten constraints—strange database lock contentions under batch processing spikes, third-party vendor rate-limiting quirks, or bespoke workarounds for specific enterprise clients—do not exist inside the repository context. When an agent cannot see past incident history, it optimizes for nominal syntax while tripping over legacy operational realities.
+
 ### Review Overload
 
 One engineer and several agents may generate changes faster than local experts can review them.
 
 The bottleneck moves rather than disappears.
+
+If cross-system PRs are generated in hours but still reviewed line-by-line by hand, service owners become overwhelmed review gates. Without automated invariant verification, teams either drown in review backlogs or succumb to rubber-stamping PRs they do not have time to dissect.
 
 ### Excessive Authority
 
@@ -525,6 +541,8 @@ A small number of domain experts may become responsible for too many cross-syste
 Agents can make complex structures easier to navigate without removing the underlying complexity.
 
 This can delay necessary architectural simplification.
+
+Using agents to paper over an unmaintainable distributed monolith allows organizations to tolerate accidental complexity far longer than they should. Instead of executing necessary domain refactoring and boundary simplification, teams use agents as cognitive prosthetics to route around bad architecture.
 
 ## What We Can Say with Relative Confidence
 
@@ -591,6 +609,8 @@ Failed models will be abandoned.
 
 The future organization may therefore be discovered experimentally rather than planned theoretically.
 
+Conway's Law established that system designs mirror an organization's communication structures. When coding agents dramatically lower the cognitive cost of navigating across repository boundaries, those communication pathways will inevitably adapt. The organizations that thrive will not be the ones attempting sweeping reorgs on paper, but the ones that systematically eliminate the coordination queues and deployment friction exposed by faster code generation.
+
 ## Working Hypothesis
 
 A reasonable hypothesis is:
@@ -622,5 +642,3 @@ The likely sequence is:
 > Change the organization only when practical evidence shows what should replace them.
 
 The long-term structure is uncertain, but it will probably emerge from this process rather than appear as a complete design from the beginning.
-
-Ta wersja celowo zachowuje ostrożność: opisuje obecny stan, dość prawdopodobną ewolucję oraz dopiero potem hipotezę o globalnym feature ownership.

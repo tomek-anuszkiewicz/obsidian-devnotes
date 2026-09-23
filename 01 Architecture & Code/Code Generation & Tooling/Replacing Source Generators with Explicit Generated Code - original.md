@@ -259,6 +259,8 @@ mapping requirements
 
 The resulting code is committed to the repository and treated like ordinary application code.
 
+Treating this output as standard source code in Git solves an immediate operational friction with generators. Developers and IDEs interact with plain files instead of fighting generator cache synchronization, brittle build-order dependencies, or stepping into synthetic, read-only decompiled symbols during a production debugging session.
+
 ## Explicit Code May Become Cheaper Than Abstraction
 
 Historically, abstractions were partly justified because explicit code was expensive to write and maintain.
@@ -418,6 +420,8 @@ Generating a few lines of serialization code is easy.
 
 Reproducing the reliability of a mature serialization ecosystem is not.
 
+At this layer, the generator is not merely saving keystrokes; it is synthesizing high-performance systems code—such as zero-allocation UTF-8 byte stream parsing, unaligned memory reads, and SIMD-accelerated scanning—while guarding against subtle security vulnerabilities like hash-collision denial-of-service. An LLM can easily generate clean property assignments, but it cannot reliably improvise the decades of hardware-level optimization and RFC compliance embedded in a battle-tested infrastructure generator.
+
 Therefore the likely distinction is:
 
 ```text
@@ -465,6 +469,10 @@ tests verify behavior
 
 rather than calling an LLM during every compilation.
 
+Attempting to run an LLM as a step inside an automated build toolchain is a severe operational failure mode. Doing so introduces network latency, variable API costs, rate-limiting failures, and non-reproducible releases where identical source code produces divergent binaries. The build pipeline must remain offline-capable, bit-for-bit reproducible, and fast.
+
+The trade-off of shifting from compile-time generators to explicit code is handling schema drift. Without a generator running during compilation, contract and round-trip unit tests become the primary safeguard. When an entity changes, a failing test gives an immediate, deterministic signal for an agent to update the explicit implementation in a routine edit.
+
 ## Source Generators and AI Can Also Complement Each Other
 
 This is not necessarily a replacement story.
@@ -487,6 +495,8 @@ Another possibility is:
 source generator handles 95% of cases
 AI generates explicit code for the exceptional 5%
 ```
+
+Another practical hybrid is schema-first workflows. An agent can draft and update a formal schema—such as an OpenAPI specification or Protobuf definition—from conversational product requirements, while a deterministic generator handles the strict wire-level serialization and client stubs where mechanical precision is mandatory.
 
 The boundary can be expressed simply:
 

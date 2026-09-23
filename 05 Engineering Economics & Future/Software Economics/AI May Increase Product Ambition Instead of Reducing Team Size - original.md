@@ -47,6 +47,8 @@ It is also:
 
 > What software becomes worth building once development becomes dramatically cheaper?
 
+When deciding [[How Should Companies Use the Productivity Gains from AI|how to reinvest productivity dividends]], teams quickly realize that developer typing speed was rarely the true bottleneck. Instead, [[AI Productivity Is Limited by the Delivery System|delivery systems bound organizational output]], and as implementation costs drop, the competitive frontier simply shifts toward higher scope and deeper technical ambition.
+
 ---
 
 ## Software Demand Is Not Fixed
@@ -193,6 +195,8 @@ Some may exist only as long as a particular business process exists.
 Historically, such software would often have been too expensive to justify.
 
 With agents, much of it may become ordinary.
+
+This economic shift opens up [[A New Market for Small, Custom Business Software|a massive market for small, custom business software]]. When the labor overhead of writing boilerplate, basic API integrations, and database schemas drops, building an internal tool for a single department or twenty specialized operators becomes viable. Software no longer has to be a venture-scale SaaS product to justify its existence.
 
 ---
 
@@ -374,6 +378,8 @@ A company competing in a fast-moving product market may reinvest productivity ga
 This is why higher productivity does not mechanically translate into proportional reductions in employment.
 
 The target itself moves.
+
+In competitive systems engineering, that moving target means reallocating engineering cycles toward technical depth that was previously deemed too expensive: sub-second local-first synchronization, resilient event-driven architectures, automated distributed invariant testing, self-healing background jobs, and sub-100ms API response budgets. Teams do not write fewer lines of code to relax; they build more resilient systems under tighter operational constraints.
 
 ---
 
@@ -581,6 +587,8 @@ AI can accelerate execution, but it does not eliminate uncertainty about what sh
 
 The strongest companies may use productivity gains to move the frontier rather than reduce staffing.
 
+At the systems level, lasting technical differentiation moves away from routine syntax and toward hard engineering problems: partitioning high-scale proprietary data streams, designing resilient state machines, managing low-latency edge caching, and fine-tuning models on sovereign infrastructure. Generative tooling accelerates baseline scaffolding, but it does not solve distributed consensus, data corruption under split-brain scenarios, or p99 tail-latency spikes under production loads. Solving those failure modes requires rigorous systems architecture and continuous empirical verification.
+
 ---
 
 ## AI Raises Both the Floor and the Ceiling
@@ -657,6 +665,8 @@ A company may build the wrong product faster than before.
 
 And if organizations can afford to attempt ten times more ideas, deciding which ideas deserve attention may become even more important.
 
+When code creation becomes cheap, the risk of accumulating unmaintainable architectural chaos rises. As teams ship faster with generative tools, preventing [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and codebase decay]] becomes a critical engineering discipline. Scaffolding unvetted abstractions or building the wrong architecture ten times faster simply accelerates technical bankruptcy unless grounded system design keeps domain boundaries clean.
+
 ---
 
 ## Research and Development Still Matter
@@ -705,6 +715,8 @@ faster experimentation
 ```
 
 AI may therefore increase the amount of R&D organizations can justify.
+
+In production systems, these unknowns are concrete: discovering whether a storage engine balances write throughput against query latency under real-world workloads, how an agent handles downstream transient rate limits and network partitions, or whether tail-latency SLOs hold under degraded conditions. Cheaper code generation allows teams to build automated test harnesses, run benchmark simulations, and probe these operational failure boundaries much earlier in the product lifecycle.
 
 ---
 
@@ -763,6 +775,8 @@ ability to understand a problem,
 design the right system,
 and judge whether the result is good
 ```
+
+This transition drives a shift toward [[From AI-Assisted Teams to Cross-System Feature Ownership|cross-system feature ownership]]. Instead of developers maintaining narrow vertical silos—writing routine controller endpoints or standard UI layouts—engineers increasingly own end-to-end distributed capabilities. They spend less time manually writing boilerplate and more time defining API contracts, designing multi-agent tool routing with fallback boundaries, profiling query performance, and implementing continuous automated evaluation harnesses to prevent regression.
 
 ---
 
@@ -887,6 +901,8 @@ and:
 ```text
 highly ambitious market leaders
 ```
+
+A mid-tier product that offers a generic data model with routine CRUD interfaces—while carrying the high payroll overhead of a traditional engineering team—gets squeezed from both directions. It is attacked from below by lightweight, bespoke in-house tools, and outclassed from above by deeply integrated platforms where [[Competitive Advantage in the Age of Commodity AI|competitive advantage is secured by tackling fundamentally harder problems]].
 
 ---
 

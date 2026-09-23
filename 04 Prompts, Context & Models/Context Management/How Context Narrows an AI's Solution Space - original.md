@@ -10,6 +10,8 @@ tags:
 aliases:
   - Context Narrowing Effect
   - Solution Space Pruning with Context
+  - Negative Bounding of Latent Space
+  - Pruning by Exclusion vs Affirmative Guidance
 ---
 
 An AI system does not reason over every theoretically possible solution equally. Jurisdiction, language, culture, social norms, professional conventions, organizational constraints, and current law can narrow the effective solution space before detailed reasoning begins.
@@ -483,6 +485,32 @@ treating a cultural habit as a technical limitation
 So before asking whether the model's reasoning was correct, it is sometimes necessary to ask:
 
 > Was it reasoning inside the correct world?
+
+---
+
+## 7. Negative Bounding: Pruning the Solution Space by Exclusion
+
+When shaping an LLM's solution space, engineers often fall into the trap of over-prescribing behavior. There is a fundamental operational difference between **affirmative prescription** and **negative bounding**.
+
+### The Permeability of Affirmative Prescription
+When you tell an agent how it *must* solve a problem (*"Use the repository pattern, write helper classes for data mapping, and implement factory method X"*), you bias its attention heads toward those tokens. However, you do not mathematically eliminate invalid paths:
+
+- In high-dimensional latent space, prescribing a single path leaves the surrounding solution space unconstrained.
+- If the model encounters an unpredicted edge case—such as an undocumented API return value or an unexpected disk permission error—it will often hallucinate workarounds, introduce rogue libraries, or drop silent errors just to fulfill the prescribed checklist.
+
+### The Stability of Negative Bounding
+Instead of micromanaging the intermediate reasoning steps of a capable model, establish strict negative boundaries:
+
+1. **Explicitly prune forbidden states**: Carve out two or three catastrophic anti-patterns or non-goals:
+   - *"Do NOT introduce external dependencies outside the standard library."*
+   - *"Do NOT execute blocking network calls inside this event loop."*
+   - *"Do NOT alter the database schema or write destructive migrations."*
+2. **Preserve autonomy within the safe space**: Allow the model to explore and evaluate candidate solutions freely inside the remaining, verified boundaries.
+
+Bounding by exclusion avoids the brittle failure modes of affirmative micromanagement. It provides clear architectural safety rails while letting frontier models use their parametric reasoning and tool feedback to navigate unexpected obstacles.
+
+---
+
 # The Full Agent Loop
 
 Putting everything together gives a more realistic architecture:
@@ -498,7 +526,7 @@ Putting everything together gives a more realistic architecture:
                     CONTEXT PLANNING
                   What information is needed?
                             â”‚
-       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” 
        â–¼                    â–¼                     â–¼
  conversation             memory                 RAG
  history                    â”‚                     â”‚
@@ -514,9 +542,9 @@ Putting everything together gives a more realistic architecture:
                                  â–¼
                               REASON
                                  â”‚
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” 
                     â”‚ missing information?    â”‚
-                    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
                                  â”‚
                                yes
                                  â†“
@@ -545,6 +573,10 @@ Putting everything together gives a more realistic architecture:
                                  â–¼
                             FINAL ANSWER
 ```
+
+In this architecture, context narrowing is not an isolated initial prompt step. It is an active mechanism that loops through context assembly, hypothesis generation, invariant verification, and safety evaluation.
+
+Retrieval is targeted and iterative. If the model identifies an unresolved jurisdiction, an ambiguous data model, or missing parameters during its initial reasoning pass, it triggers focused retrieval instead of guessing.
 
 ---
 

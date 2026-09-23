@@ -14,6 +14,8 @@ aliases:
 
 Reasoning quality depends not only on whether a model can follow a promising path, but also on whether it explores enough alternatives, evaluates them well, and verifies the final choice.
 
+When evaluating reasoning models or building agent harnesses around them, teams often treat reasoning breakdowns as failures of raw model intelligence. In practice, reasoning failures usually stem from distinct structural failure modes: generating candidate solutions from an incomplete search space, relying solely on final-outcome verification, or starving the model of critical upstream context.
+
 ## 1. Reasoning Itself Is Learned Behavior
 
 Planning, decomposing a problem, checking assumptions, exploring alternatives, and backtracking are not necessarily hard-coded algorithms.
@@ -64,6 +66,8 @@ Training does not literally memorize:
 
 Instead, model parameters are adjusted so that behaviors associated with successful trajectories become more likely on future problems.
 
+Through reinforcement learning with verifiable reward signals, gradient updates reinforce the underlying search heuristics rather than static outputs. Over time, the model internalizes operational behaviors: breaking down complex operations, sanity-checking intermediate calculations against known invariants, and actively backtracking when hitting a logical contradiction.
+
 ---
 
 ## 3. Evaluating Reasoning Is Hard
@@ -96,6 +100,8 @@ planning → run simulation
 
 But a correct result can occasionally come from flawed reasoning.
 
+The failure mode here is false positive validation: broken deduction can accidentally stumble onto the correct output. In multi-step code generation or architectural planning, a model might drop an invariant, make a compensating error, and still produce the expected return value. Rewarding only terminal outcomes reinforces these fragile reasoning chains, which then fail catastrophically on subsequent tasks.
+
 ---
 
 ## 4. Process Supervision Evaluates Intermediate Steps
@@ -124,6 +130,11 @@ from:
 ```text
 bad reasoning → accidentally good result
 ```
+
+In production runtimes, scoring intermediate steps with a Process Reward Model (PRM) provides two practical capabilities:
+
+1. **Credit Assignment**: It cleanly isolates valid deductive steps from flawed intermediate logic that happened to get lucky.
+2. **Early Pruning at Inference**: Instead of letting the model burn output tokens down an invalid trajectory, the runtime harness can evaluate intermediate step scores, prune branches falling below a threshold, and backtrack early.
 
 ---
 
@@ -158,6 +169,8 @@ This makes evaluation scalable.
 But it introduces another problem:
 
 > What if the judge has the same blind spots as the generator?
+
+This introduces the problem of correlated blind spots. When the judge shares the same model family, pre-training corpus, or architectural biases as the generator, it will consistently approve plausible-sounding hallucinations and flawed logic that mirror its own blind spots.
 
 ---
 
@@ -204,6 +217,12 @@ generate → judge → answer
 ```
 
 A model may be very good at evaluating a solution once someone mentions it, while still being bad at discovering that solution independently.
+
+### The Generation-Verification Asymmetry
+
+Language models consistently exhibit an asymmetry between generation and verification: they are often capable of verifying, critiquing, and selecting a non-obvious solution once it is explicitly in context, while failing to generate that same solution independently.
+
+Collapsing this dynamic into a single unguided generation pass causes the model to sample median, high-probability tokens and prematurely converge on obvious paths before verification can even occur.
 
 ---
 

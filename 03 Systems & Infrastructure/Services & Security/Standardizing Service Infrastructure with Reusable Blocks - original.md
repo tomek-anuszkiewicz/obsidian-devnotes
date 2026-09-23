@@ -253,6 +253,8 @@ Typical symptoms include:
 - the framework eventually stops evolving.
     
 
+In ASP.NET Core, middleware execution is strictly order-dependent—routing must precede authentication, authentication must precede authorization, and exception handlers must wrap the entire pipeline. When a monolithic platform method registers these internally, teams cannot inject custom middleware between framework layers or adjust the pipeline without cracking open or bypassing the framework entirely.
+
 The framework may have started as a useful paved road but gradually become a closed architectural model.
 
 The common path remains easy.
@@ -766,6 +768,41 @@ await AssertRetriesTransientFailureAsync(
     expectedAttempts: 3);
 ```
 
+For example, a conformance test for outbound HTTP resilience should spin up the application in a test harness (such as `WebApplicationFactory`), mock the downstream dependency with WireMock to return transient errors, and verify the resulting retry behavior through external network observations rather than inspecting dependency injection registrations:
+
+```csharp
+[Fact]
+public async Task OutboundClient_ShouldRetryThreeTimesOnTransientHttp503()
+{
+    var downstreamMock = WireMockServer.Start();
+    downstreamMock
+        .Given(Request.Create().WithPath("/api/v1/resource"))
+        .InScenario("TransientRetry")
+        .WillReturn(Response.Create().WithStatusCode(503))
+        .SetNextScenarioState("FirstRetry");
+
+    downstreamMock
+        .Given(Request.Create().WithPath("/api/v1/resource"))
+        .InScenario("TransientRetry")
+        .WhenStateIs("FirstRetry")
+        .WillReturn(Response.Create().WithStatusCode(503))
+        .SetNextScenarioState("SecondRetry");
+
+    downstreamMock
+        .Given(Request.Create().WithPath("/api/v1/resource"))
+        .InScenario("TransientRetry")
+        .WhenStateIs("SecondRetry")
+        .WillReturn(Response.Create().WithStatusCode(200).WithBody("OK"));
+
+    var client = factory.CreateClient();
+
+    var response = await client.GetAsync("/proxy-call");
+
+    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    Assert.Equal(3, downstreamMock.LogEntries.Count());
+}
+```
+
 Bad requirement:
 
 ```text
@@ -824,6 +861,8 @@ service=orders
 the central dashboard becomes a collection of exceptions.
 
 Therefore, dashboard compatibility should be tested.
+
+A reliable way to enforce this in CI is to spin up the service in a test harness, drive synthetic load, export telemetry to an ephemeral Prometheus or Loki container, and execute the actual dashboard PromQL queries to assert that every panel returns data. If a metric rename or missing label breaks a query or alert expression, the build fails before reaching staging.
 
 Dashboards and alerts should also be treated as code:
 
@@ -1043,6 +1082,8 @@ A shared module should have:
 - usage feedback from real services.
     
 
+A platform team must also dogfood its own building blocks by maintaining production services on the same paved road. If the team maintaining the packages does not experience the friction of package upgrades, breaking dependency trees, and runtime bugs firsthand, the platform inevitably drifts away from practical engineering realities.
+
 An unmaintained but mandatory framework is one of the worst outcomes.
 
 The organization loses:
@@ -1213,3 +1254,4 @@ Not necessarily:
 The preferred outcome is a paved road rather than a walled garden:
 
 > Make the correct path easy, visible, tested, and well supported—without hiding the application or making alternative implementations impossible.
+```

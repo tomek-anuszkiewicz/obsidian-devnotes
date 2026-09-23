@@ -291,6 +291,8 @@ The exact APIs differ, but the architectural choices are usually the same:
 
 The deployment model should be selected independently from the model provider whenever possible.
 
+Decoupling the orchestration engine from specific model providers avoids architectural lock-in. When frontier models shift in pricing, context windows, or reasoning capabilities, a provider-agnostic harness allows swapping models without redesigning tool contracts, persistent state machines, or CI integrations.
+
 ## Writing the agent loop yourself
 
 Using a ready-made agent harness is not mandatory.
@@ -405,6 +407,8 @@ then review.
 
 Text instructions guide model behavior. A state machine can make invalid transitions impossible.
 
+Hard verification gates protect the codebase from model hallucinations. If a compilation or test step fails, code logic routes the diagnostic output directly into a repair loop or halts for human review. Enforcing validation invariants in software ensures that an optimistic model response cannot prematurely open a pull request or merge unverified code.
+
 ## Frameworks for custom orchestration
 
 A custom agent loop does not require a graph framework, but frameworks can help once the workflow becomes complex.
@@ -477,6 +481,8 @@ The appropriate host depends on whether the agent needs:
 - access to internal repositories;
 - access to internal package feeds;
 - databases or internal APIs.
+
+Execution duration and filesystem dynamics heavily influence hosting choices. Serverless runtimes like AWS Lambda work well for lightweight webhook dispatch, but their strict execution timeouts (such as Lambda's 15-minute ceiling) make them unsuitable for heavy compilation passes or multi-turn test suites. Similarly, agents performing large codebase refactorings benefit from container hosts with fast, warm disk checkouts rather than cold-starting full repository clones inside ephemeral functions.
 
 ## Self-hosted agents
 
@@ -582,6 +588,8 @@ This removes dependence on a model provider's inference API, but the physical in
 
 For many organizations, this is a useful middle ground between SaaS model APIs and owning a GPU datacenter.
 
+In practice, this pattern pairs dedicated cloud compute (such as AWS `g5`/`p4` instances or Azure ND-series) with optimized open-weights inference servers like vLLM or TensorRT-LLM. Connecting the inference cluster to internal networks via private endpoints (AWS PrivateLink or Azure Private Link) eliminates public internet exposure and multi-tenant data sharing without incurring the procurement lead times of physical hardware.
+
 ### Fully on-premises or isolated deployment
 
 The strongest sovereignty model is to run the complete stack on infrastructure physically controlled by the organization.
@@ -643,6 +651,8 @@ Maximum data sovereignty
 
 The cost of strict sovereignty is therefore not only infrastructure cost. It can also reduce access to closed models that are available only as managed services.
 
+There is also an operational capability trade-off. While open-weights models (such as Llama, Qwen, or specialized coding variants) have narrowed the gap for standard implementation tasks, the most capable reasoning models often remain exclusive to managed cloud APIs. Organizations requiring complete on-premises air-gapping must accept this trade-off, prioritizing total data isolation over frontier reasoning capabilities.
+
 ## Hybrid architecture
 
 The model, orchestrator and executor do not need to run together.
@@ -682,6 +692,8 @@ A hybrid setup can combine:
 - private local execution.
 
 This can be useful when the organization wants cloud-scale orchestration but must keep some execution close to internal systems.
+
+This hybrid topology mirrors the architecture of modern CI runner systems like GitHub Actions or GitLab Runners. A centralized, cloud-hosted control plane manages task dispatch, scheduling, and UI state, while a lightweight runner daemon running inside the private network executes local builds and tests. Because the internal runner connects outbound to the control plane over a secure WebSocket or polling connection, no inbound firewall ports or internal network endpoints need to be exposed to the public internet.
 
 ## Local and managed agents can coexist
 
@@ -741,6 +753,15 @@ Release Agent
 
 The ability to share an agent across a team makes centralized identity and permission management more important, not less.
 
+### Execution sandboxing and isolation boundaries
+
+Running agent-generated code and arbitrary shell commands on shared infrastructure requires defense-in-depth isolation:
+
+- **Ephemeral sandboxing**: Execute tool calls and compilation steps inside disposable containers or microVMs (such as gVisor or Firecracker). Tearing down the environment immediately after execution prevents state poisoning, contaminated package caches, or untrusted dependencies from persisting across tasks.
+- **Network egress filtering**: Restrict outbound network access from the execution runtime. Allowlist only required package registries, internal source control, and inference endpoints. Explicitly block access to cloud instance metadata endpoints (`169.254.169.254`) to prevent credentials from being extracted by untrusted dependencies.
+- **Short-lived credentials**: Avoid persisting long-lived API keys or deployment credentials on disk. Use short-lived, workload-identity-federated tokens (such as OIDC) scoped strictly to the task.
+- **Clean workspace trees**: Provision each task in a fresh, isolated Git worktree. Never allow untracked build artifacts or modified scripts to leak across unrelated agent runs.
+
 ## Choosing a deployment model
 
 A simple decision guide:
@@ -779,3 +800,4 @@ A simple decision guide:
 12. Rented private GPU infrastructure can provide a middle ground between external model APIs and fully on-premises deployment.
 13. Keep deterministic workflow rules in code when they must be enforced.
 14. Local, managed and hybrid agents can coexist in the same development organization.
+```

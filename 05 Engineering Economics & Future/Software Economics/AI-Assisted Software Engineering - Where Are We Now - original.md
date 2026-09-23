@@ -11,6 +11,7 @@ aliases:
   - AI Coding Agents — Historical Perspective
   - State of AI-Assisted Programming
   - AI Coding Agents â€” Historical Perspective
+  - "AI-Assisted Software Engineering Where Are We Now"
 created: 2026-08-23
 status: evergreen
 ---
@@ -33,7 +34,7 @@ What is becoming clear is that AI does not eliminate software engineering. It mo
 - reviewing and validating changes;
 - maintaining shared understanding of the system.
 
-The likely future is therefore not simply â€œagents write the code.â€ It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
+The likely future is therefore not simply â€œagents write the code.â€  It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
 
 ## 1. Is there a historical analogy?
 
@@ -45,7 +46,7 @@ The introduction of high-level languages allowed developers to describe more of 
 
 Coding agents continue this movement toward higher-level intent. The crucial difference is that a compiler is a deterministic translator with a formal contract. An agent is a probabilistic implementer that may misunderstand the request, infer a missing business decision, or produce a convincing implementation of the wrong behavior.
 
-Consequently, an LLM agent is not yet a â€œcompiler for natural language.â€ It is closer to a very fast and broadly knowledgeable developer who lacks local business knowledge and sometimes guesses without recognizing that it is guessing.
+Consequently, an LLM agent is not yet a â€œcompiler for natural language.â€  It is closer to a very fast and broadly knowledgeable developer who lacks local business knowledge and sometimes guesses without recognizing that it is guessing.
 
 ### Libraries, frameworks, open source, and Stack Overflow
 
@@ -82,6 +83,16 @@ In terms of maturity, the present moment resembles the web around 1995â€“20
 
 This analogy does **not** imply that progress will follow the same timeline. LLM tooling changes much faster than earlier infrastructure technologies.
 
+### Missing canonical literature and training data bias
+
+Historically, software engineering shifts were anchored by foundational literature that codified durable patterns. We relied on texts like *Design Patterns* (Gamma et al.), *Refactoring* (Fowler), and *Designing Data-Intensive Applications* (Kleppmann) to establish a shared technical vocabulary and evaluate trade-offs.
+
+Today, agentic software engineering operates in an empirical vacuum:
+
+1. **Absence of long-term studies**: There are no longitudinal studies tracking how codebases survive hundreds of automated agent refactorings across a multi-year lifecycle.
+2. **The training data bias**: Current frontier models were trained on historical open-source repositories written under human constraints—saving keystrokes, deep inheritance hierarchies, heavy runtime reflection, and extreme DRY (Don't Repeat Yourself) abstraction layers. These patterns often degrade agent performance. Agents navigate flat, explicit, modular codebases with colocated unit tests far more effectively than deep inheritance trees with dynamic runtime dispatch. Left unguided, models instinctively reproduce the complex human-centric patterns found in their training weights.
+3. **Living field literature**: Teams shipping real software cannot wait for academic consensus or authoritative textbooks. The most valuable knowledge currently exists as living field notes, internal engineering post-mortems, and iterative repository rules built by teams running agents in production.
+
 ## 2. At what stage are we now?
 
 A simplified progression is:
@@ -92,7 +103,7 @@ A simplified progression is:
 4. **Current stage â€” workflow experimentation:** learning how to specify, constrain, supervise, evaluate, and integrate agent work.
 5. **Emerging stage â€” agent-oriented engineering:** designing repositories, interfaces, documentation, validation, and team processes for predictable agent participation.
 
-We are between stages four and five. Agents are capable enough to perform meaningful work, but not reliable enough for â€œgive the agent a large goal and accept the resulting systemâ€ to be a generally safe operating model.
+We are between stages four and five. Agents are capable enough to perform meaningful work, but not reliable enough for â€œgive the agent a large goal and accept the resulting systemâ€  to be a generally safe operating model.
 
 The important transition now is therefore from **better prompting** to **better engineering of the environment in which the agent works**.
 
@@ -197,7 +208,7 @@ The more requirements are executable, the less the workflow relies on the model'
 
 ### Step 5: Make review independent
 
-Asking the generating agent â€œis your solution correct?â€ is weak verification because it may preserve the same mistaken interpretation. Better approaches include:
+Asking the generating agent â€œis your solution correct?â€  is weak verification because it may preserve the same mistaken interpretation. Better approaches include:
 
 - a fresh context or separate reviewing agent;
 - review against the specification rather than the original explanation;
@@ -216,7 +227,7 @@ The agent should stop rather than continue improvising when:
 - a destructive or externally visible action requires authorization;
 - success cannot be objectively verified.
 
-This is an important part of the harness. An unconstrained â€œkeep trying until tests passâ€ loop can make tests pass by weakening them, adding special cases, or solving a different problem.
+This is an important part of the harness. An unconstrained â€œkeep trying until tests passâ€  loop can make tests pass by weakening them, adding special cases, or solving a different problem.
 
 ## 5. How will agent-assisted programming affect code quality and maintenance?
 
@@ -255,7 +266,7 @@ The most important long-term risk is probably not spectacularly broken code. It 
 
 A large 2026 preprint examining more than 300,000 verified AI-authored commits reports evidence of technical-debt issues, but this research is still new and attribution methodology is difficult. It is a useful warning, not a settled verdict. See [A Large-Scale Empirical Study of AI-Generated Code in the Wild](https://arxiv.org/html/2603.28592v1).
 
-### A likely change in the meaning of â€œmaintainabilityâ€
+### A likely change in the meaning of â€œmaintainabilityâ€ 
 
 Historically, maintainable code meant code that another human could understand and change safely. If agents participate heavily, organizations may be tempted to treat code as maintainable whenever an agent can modify it successfully.
 
@@ -328,7 +339,7 @@ Until then, annual research such as DORA, controlled studies such as METR, repos
 
 ## 8. Probable direction of the profession
 
-The role of the software engineer is unlikely to become simply â€œmanager of several coding agents.â€ That description underestimates the continuing need for direct technical understanding.
+The role of the software engineer is unlikely to become simply â€œmanager of several coding agents.â€  That description underestimates the continuing need for direct technical understanding.
 
 The role is more likely to shift toward:
 

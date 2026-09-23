@@ -12,6 +12,7 @@ aliases:
   - Agent-Extensible Applications
   - Malleable Software in the Agent Era
   - From Monolithic Apps to Agent Primitives
+  - The Shift to Malleable Domain Engines
 ---
 
 Historically, software development has operated under a central assumption:
@@ -103,6 +104,8 @@ When a user snaps a photo of a meal:
 
 The application ceases to be an AI host and becomes a consumer of intelligence provided by the user's own device.
 
+From an operational perspective, running quantized multimodal models (in the 3B to 8B parameter range) directly on client silicon handles feature extraction with sub-second latency and zero cloud inference costs. The application stops streaming heavy raw image payloads over cellular connections to proprietary cloud APIs; it simply ingests structured, typed domain entities parsed by the local model.
+
 ### 2. Personal Data Vaults (Bring Your Own Data)
 
 Similarly, user records have historically been fragmented across dozens of cloud databases. A health app stores calories in its database; a fitness watch stores workouts in another; a grocery app stores food purchases in a third.
@@ -122,6 +125,8 @@ app C [UI] ──┘
 ```
 
 The application requests access to write and read from a standardized personal data layer. If the user decides to switch to a different interface tomorrow, their entire nutritional history remains intact in their personal vault.
+
+In practice, this storage tier is implemented via local-first persistence engines, such as embedded SQLite instances or CRDT-backed stores (Conflict-free Replicated Data Types). Applications request scoped read and write permissions to specific operational tables rather than hoarding state inside multi-tenant vendor databases. Decoupling persistence from the presentation layer eliminates storage lock-in: if a user migrates to another client or analytical tool tomorrow, their historical log remains intact in their local vault.
 
 ---
 
@@ -219,6 +224,8 @@ If an agent can inject code into an application, how does the system prevent sec
 - **Declarative Primitives over Arbitrary Code:** Rather than executing raw JavaScript directly within privileged contexts, applications will likely expose declarative schemas (e.g., structured UI widgets, isolated iframes, or WebAssembly sandboxes).
 - **Capability-Based Permissions:** The application can restrict what an injected plugin may do (e.g., *can render a chart based on read-only meal data, but cannot initiate network calls outside authorized endpoints*).
 
+Running unvalidated agent-generated JavaScript directly in the application's main execution context is an immediate operational hazard—inviting cross-site scripting (XSS), session token exfiltration, and unrecoverable UI state corruption. Robust host environments enforce sandboxing through WebAssembly (Wasm) runtimes or headless `<iframe>` contexts governed by strict Content Security Policies (CSP). By mediating access through granular, unforgeable capability tokens, the host runtime ensures an extension can query read-only domain primitives without obtaining network egress or accessing sensitive authentication state.
+
 ### 2. The Shift in Software Monetization
 
 If users bring their own models, store their own data, and generate their own custom features, what does the software developer sell?
@@ -232,6 +239,8 @@ emerging value proposition:
 ```
 
 Developers transition from selling **rigid feature bundles** to selling **high-trust platforms and domain engines**. A medical or financial tracking app wins not because it has a pretty button for one specific calculation, but because its domain primitives are mathematically rigorous, legally compliant, and seamlessly extensible by any agent.
+
+This dynamic mirrors the broader unbundling of enterprise software. When UI presentation and inference compute are commoditized, commercial leverage moves to transaction execution guarantees, state synchronization, and regulatory compliance. A domain engine commands pricing power because its invariants are mathematically verified, its data schemas satisfy rigorous regulatory standards (such as HIPAA, GDPR, or SOC 2), and its exposed APIs reliably execute high-stakes state transitions on behalf of autonomous agents.
 
 ---
 
@@ -252,3 +261,12 @@ agent-extensible malleable software with runtime personalization
 When applications stop trying to be everything to everyone, they can become smaller, faster, and more robust.
 
 They provide the foundational primitives of their domain, while the user's personal agent tailors the interface, logic, and integrations to the exact shape of that individual's life.
+
+---
+
+# Related Systems Notes
+
+- [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] — Exposing machine-discoverable primitives and capability schemas directly to in-browser agents.
+- [[Designing APIs for LLM-Generated Integration Code]] — Structuring typed interfaces and domain invariants for autonomous runtime integration.
+- [[Unbundling of Enterprise Software]] — The architectural shift from closed application silos to composable, agent-addressable domain engines.
+- [[Personal Digital Models as the Foundation of Agent Ecosystems]] — User-owned storage vaults and local context powering runtime personalization.

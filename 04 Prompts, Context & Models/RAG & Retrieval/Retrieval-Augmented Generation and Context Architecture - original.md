@@ -74,6 +74,8 @@ RAG Precision Context:
 → Compact context (<1k tokens), focused attention, fast response, low cost
 ```
 
+In production agent loops, every token in the prompt carries a recurring latency and cost tax. Pushing time-to-first-token (TTFT) from 500 milliseconds out to 15 seconds across a 20-turn agent execution destroys developer ergonomics. Furthermore, keeping retrieved context compact preserves prompt headroom for intermediate reasoning chains, Git diffs, compiler error logs, and multi-step tool call returns, preventing context window saturation and rule oscillation.
+
 ---
 
 ## RAG Is More Than a Vector Database
@@ -254,6 +256,12 @@ RAG architectures have evolved across four distinct generations:
    Knowledge Graph (Nodes & Typed Edges) + Vector Index ──> Subgraph Extraction & Path Reasoning ──> LLM
 ```
 
+### Naive RAG
+The early baseline splits raw text into fixed-size character or token windows, generates embeddings, stores them in a vector database, and queries via cosine similarity. In software engineering codebases, this vector-only approach fails constantly: it cannot reliably match exact symbols or function names like `ProcessTx_v2`, splits syntax mid-statement, drops enclosing class scopes, and pulls in syntactically similar code from entirely unrelated modules.
+
+### Hybrid RAG
+Hybrid retrieval addresses lexical blindness by pairing dense semantic vector search with sparse lexical indices (BM25) fused via Reciprocal Rank Fusion (RRF), then passing the candidates through a cross-encoder reranker. BM25 guarantees deterministic matching for exact identifiers, error codes, and configuration keys, while dense vectors capture conceptual synonyms. A cross-encoder reranking stage evaluates joint attention over the query and candidate chunk together, pruning false positives before prompt assembly.
+
 ### Agentic RAG
 In Agentic RAG, retrieval is not a single shot, but an iterative investigation guided by an autonomous agent loop:
 ```text
@@ -266,6 +274,8 @@ In Agentic RAG, retrieval is not a single shot, but an iterative investigation g
 7. Synthesize complete root-cause answer
 ```
 The agent controls query formulation, evaluates whether retrieved context is sufficient, and backtracks or issues follow-up queries dynamically.
+
+While agentic RAG excels at deep forensic investigations across distributed repositories and ticketing systems, routine refactoring cannot afford multi-hop network roundtrips for every local edit. Day-to-day code maintenance relies heavily on zero-latency, co-located context anchors, as detailed in [[Comments May Become More Valuable in AI-Generated Code]].
 
 ### Graph RAG
 Software engineering knowledge forms an interconnected natural graph rather than isolated text snippets:
@@ -336,6 +346,8 @@ Document / Code Sources
 - **Graph Backends:** Neo4j, GraphRAG, Memgraph
 - **Local Model Serving:** Ollama, vLLM, LocalAI
 
+For strictly air-gapped or confidentiality-sovereign environments, production local deployments typically run local embedding models (`BAAI/bge-large-en` or `nomic-embed-text` via Ollama or ONNX Runtime) paired with local hybrid storage (Qdrant or pgvector for dense vectors, and Meilisearch or SQLite FTS5 for BM25 sparse search). Cross-encoder rerankers such as `BAAI/bge-reranker-large` can run locally on dedicated GPU or high-memory inference hosts without sending proprietary code outside the network perimeter.
+
 ---
 
 ## 4. Security: Permission-Aware Retrieval
@@ -365,8 +377,17 @@ Filtered Safe Context Chunks
 2. **Post-Retrieval Truncation vs. Pre-Filtering:** Filter candidates by tenant and permission group *prior* to vector ranking to prevent leakage through side-channel search results.
 3. **Audit Logging:** Every retrieved chunk passed to an agent must be logged with user and tenant correlation IDs.
 
-Related foundational overview: [[Introduction to RAG]].
+---
 
+## 5. Operational Failure Modes and Defenses
+
+Running RAG pipelines across large software repositories exposes three primary operational failure modes:
+
+1. **Chunk Fragmentation Blindness**: If critical business logic spans 40 lines across multiple conditional branches and the chunker splits at line 20, neither chunk contains the full invariant. Using Small-to-Big retrieval or AST-aware chunking ensures the model receives the full parent function.
+2. **Stale Index Drift (Ghost Architectures)**: When files are refactored or deleted, vector indices often retain obsolete chunks. An agent will retrieve and write code against interfaces that no longer exist. Ingestion pipelines must bind index updates to CI/CD triggers, automatically invalidating stale chunk IDs on every branch merge.
+3. **Semantic Dilution and Hallucinated Near-Misses**: Chunks sharing technical vocabulary (e.g., generic payment utilities) score high in vector similarity but belong to an entirely different subsystem. Hard metadata pre-filtering (by repository, module namespace, or runtime environment) must constrain the search boundary before vector scoring.
+
+Related foundational overview: [[Introduction to RAG]].
 
 ---
 
@@ -458,6 +479,11 @@ Document Object Model
 
 Preserving semantic structure is essential because tables and code lose their meaning when converted to flat, unformatted strings.
 
+### Format-Specific Parsing Rules
+Different technical formats require specialized parsing rules before chunking:
+- **Markdown and Technical Specs**: Preserve header hierarchies (`#`, `##`, `###`) to maintain contextual parentage. Markdown tables and code blocks must stay intact; splitting a table mid-row destroys its structural semantics for the model.
+- **API Specifications (OpenAPI, GraphQL)**: Chunk strictly by complete endpoint or schema type definition. Never decouple an endpoint's request payload from its response schema.
+
 ---
 
 ## 3. Chunking Strategies
@@ -490,6 +516,9 @@ Code Chunking Example:
 │ └──────────────────────────────────────────┘ │
 └──────────────────────────────────────────────┘
 ```
+
+### Parent-Document (Small-to-Big) Chunking
+A frequent challenge in code retrieval is the tension between search precision and contextual sufficiency: a small 100-token chunk matches the query cleanly, but lacks the enclosing class or method signature needed to write correct code. The **Parent-Document (Small-to-Big)** strategy indexes small, granular chunks (e.g., 100–150 tokens) for dense vector search, while storing a reference pointer to the wider parent block (e.g., the complete 1,000-token class or method). When the search finds a leaf chunk, the retriever injects the full parent container into the prompt context.
 
 ---
 
@@ -537,7 +566,6 @@ Embeddings transform textual and code chunks into continuous high-dimensional ve
 - **Local vs. Cloud Models:** For sensitive enterprise code, embeddings can be generated entirely on-premises using local embedding models (e.g. `bge-large`, `nomic-embed-text`) running via Ollama, vLLM, or Hugging Face runtimes.
 
 Next stage in the pipeline: [[RAG Retrieval and Search]].
-
 
 ---
 
@@ -614,6 +642,11 @@ $$RRF\_Score(d) = \sum_{m \in M} \frac{1}{k + r_m(d)}$$
 
 where $r_m(d)$ is the rank of document $d$ in retrieval method $m$, and $k$ is a smoothing constant (typically 60).
 
+### Query Transformation and Expansion
+Raw queries from developers are often terse or ambiguous (e.g., *'Why is checkout failing?'*). Production retrieval pipelines apply pre-retrieval query transformations before hitting the indices:
+- **Hypothetical Document Embeddings (HyDE)**: The model drafts a hypothetical exception log or implementation snippet that would answer the query. Searching for the embedding of this hypothetical passage clusters significantly closer to actual code and logs in vector space than the raw question does.
+- **Sub-Query Decomposition**: Deconstructs complex architectural questions into distinct sub-queries (e.g., splitting an inquiry into checkout failures into one search for database deadlock logs and another for payment gateway timeout configs).
+
 ---
 
 ## 3. Two-Stage Retrieval and Reranking
@@ -638,6 +671,8 @@ Candidate Pool (50 items) ───[ Cross-Encoder Reranker ]───> High-Pre
 ```
 
 Reranking drastically improves context density and reduces hallucination rates.
+
+Bi-encoder embedding models vectorize the query and documents independently into fixed-width vectors. While this enables fast approximate nearest neighbor (ANN) searches, it completely misses token-level cross-attention between the query and candidate passages. A cross-encoder reranker feeds the query and candidate chunk jointly through full attention layers to evaluate exact contextual relevance. Pruning candidate pools from 50–100 chunks down to the top 3–7 with a cross-encoder typically yields a 20–35% improvement in answer accuracy while stripping out semantic near-misses.
 
 ---
 
@@ -687,6 +722,3 @@ Without temporal filtering, an agent asking *"How do we configure database conne
 ---
 
 Next stage: [[Advanced RAG Architectures]] and [[Introduction to RAG]].
-
-
----

@@ -28,6 +28,8 @@ The more important question becomes:
 
 This may significantly reshape the software library ecosystem.
 
+This shift directly alters the balance between third-party packages, [[Internal Shared Packages vs Agent-Generated Code|internal shared packages versus agent-generated code]], and [[Designing Internal Packages as an Explicit, Composable Framework|designing internal libraries as explicit, composable frameworks]]. When writing code is no longer the bottleneck, architecture centers entirely around the long-term cost of code ownership.
+
 ## Libraries That Mainly Save Typing Are Under Pressure
 
 Some libraries exist primarily to reduce boilerplate.
@@ -76,6 +78,8 @@ more explicit local code
 
 The number of lines of code may become much less important than before.
 
+Pulling in an external dependency brings a permanent tax: supply-chain attack surface, transitive dependencies, security alerts, and periodic breaking upgrades across runtime versions. When an agent can generate and verify the code in seconds, importing an external package solely to avoid thirty lines of clear boilerplate introduces [[Software Decay and the Hidden Costs of Frictionless AI Code|software decay]] without delivering tangible architectural value.
+
 ## Validation Is a Good Example
 
 A validation library may allow something concise such as:
@@ -99,6 +103,8 @@ if (!EmailValidator.IsValid(request.Email))
 The second version may be longer, but that may matter much less if nobody had to type it manually.
 
 It may also be easier for future agents to understand and modify because the behavior is explicit and local.
+
+Locality of behavior matters here. Standard imperative control flow runs without hidden reflection engines, expression compilation, or implicit lifecycle hooks. When a coding agent later inspects the handler to fix a bug or add a field, it sees standard branches rather than having to parse a framework's domain-specific abstraction.
 
 The important question therefore becomes:
 
@@ -214,6 +220,8 @@ In these cases, the hard part is not producing code.
 
 The hard part is knowing whether the implementation is correct.
 
+In domains like storage engines and protocol stacks, subtle errors mean catastrophic data corruption or silent vulnerabilities. An agent can emit syntactically clean C code for a B-tree or an encryption loop, but it cannot replicate the write-ahead log (WAL) crash-recovery hardening, constant-time math guarantees that prevent side-channel leaks, or decades of fuzzing that battle-tested libraries like SQLite, OpenSSL, or libsodium provide.
+
 ## Cost of Creation and Cost of Ownership Diverge
 
 AI dramatically reduces the cost of creating software.
@@ -326,6 +334,8 @@ Examples include:
 A locally generated implementation may look reasonable while still being subtly incorrect.
 
 In such areas, "almost correct" can be worse than obviously incomplete.
+
+Subtle discrepancies in edge cases like URL canonicalization, Unicode grapheme clusters, or JWT claim verification do not just cause logic glitches—they lead directly to authentication bypasses, request smuggling, and injection vulnerabilities.
 
 A trusted library serves as a canonical implementation of complex semantics.
 
@@ -457,6 +467,8 @@ This is especially relevant in areas such as:
 - safety-critical systems.
     
 
+In regulated environments, having auditable compliance (such as PCI-DSS, FIPS 140-2/3, or SOC 2) and commercial vendor indemnification matters as much as the code itself. Even if an agent generates mathematically sound cryptographic logic or billing flows, passing an external security audit without certified, vetted implementations is an uphill battle.
+
 "We generated our own implementation" may be technically possible while remaining organizationally unacceptable.
 
 Sometimes a library is purchased partly because someone else is willing to stand behind it.
@@ -538,6 +550,8 @@ Invent an implementation of Y and correctly handle every relevant edge case.
 ```
 
 The most mature libraries may therefore become even more useful because agents can compose them efficiently.
+
+Asking an agent to configure an established health check or resilience package produces deterministic, production-ready glue code. Asking it to invent a custom concurrent health-check sweeper with timeouts and cancellation tokens from scratch introduces subtle race conditions and maintenance overhead.
 
 ## The Library Ecosystem May Polarize
 

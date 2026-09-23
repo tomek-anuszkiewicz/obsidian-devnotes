@@ -76,6 +76,8 @@ GPT / Claude / Gemini / Llama / Qwen / ...
 
 The model becomes one resource among many managed by the platform.
 
+In enterprise production setups, this layer is primarily about operational governance and latency predictability. Features like provisioned throughput (such as AWS Bedrock Provisioned Throughput) allow teams to reserve dedicated compute slices, ensuring predictable inference latency (p99) and bypassing the noisy-neighbor rate limits of public multi-tenant APIs. At the same time, the platform acts as a compliance perimeter, enforcing role-based IAM, zero-data-retention invariants, PII redaction, and central audit logging before requests ever reach model weights.
+
 ## Model gateways and brokers
 
 OpenRouter represents a somewhat different class of solution.
@@ -143,6 +145,8 @@ The gateway becomes an abstraction layer over model execution.
 
 Other systems, such as LiteLLM, can play a similar role, especially when organizations want to operate such a gateway themselves.
 
+At the network layer, a gateway normalizes vendor-specific payload variations into a single protocol (typically OpenAI-compatible). This unlocks practical resilience primitives: when an upstream provider throws an HTTP 429 (rate limit) or 503 (service overload), the gateway automatically catches the failure and replays the request against an alternate provider or a fallback model without breaking the calling application. Model aliasing also lets engineering teams decouple code from specific model versions—the application requests functional targets like `fast-triage` or `deep-reasoning`, and the gateway remaps the underlying endpoints dynamically without requiring application redeployments. Self-hosting a gateway like LiteLLM Proxy in an internal Kubernetes cluster keeps these routing rules, virtual keys, and spend tracking entirely inside private VPC boundaries.
+
 ## Local model runtimes
 
 Ollama belongs primarily to another category.
@@ -195,6 +199,8 @@ Related technologies include:
 
 They differ substantially in production readiness and intended use, but they share the idea that model inference can be operated independently from the original model creator.
 
+In practice, production suitability divides this tier. Tools like Ollama and LM Studio optimize for single-developer ergonomics and quick local experimentation. In contrast, runtimes like vLLM and NVIDIA NIM are built for production inference pipelines, leveraging continuous batching and PagedAttention to saturate GPU memory bandwidth across concurrent requests. Operating on owned hardware changes the economic model: marginal token costs drop to raw electricity and hardware amortization, making high-frequency loops—like AST parsing, continuous linting, or real-time embeddings—cost-effective at scale while guaranteeing that source code and sensitive data never cross external network boundaries.
+
 ## Dedicated inference providers
 
 There is also an important layer between local execution and large enterprise platforms.
@@ -241,6 +247,8 @@ Model gateway
      ↓
    Models
 ```
+
+The core advantage of dedicated inference clouds is latency optimization and execution throughput. Hardware architectures like Groq LPUs or Cerebras wafer-scale engines eliminate memory bandwidth bottlenecks, generating 300 to 800+ tokens per second. That order-of-magnitude reduction in Time to First Token (TTFT) makes multi-turn agentic loops and deep reasoning traces practical where standard multi-tenant cloud APIs would feel unresponsive. Additionally, because multiple providers host identical open weights (like Llama or Qwen), teams can implement multi-provider redundancy: if one provider experiences an outage or performance degradation, traffic shifts to another provider running the exact same model weights without altering prompt formatting or output parsing.
 
 ## A useful mental model
 
@@ -324,6 +332,8 @@ judge / rank
    ↓
 select result
 ```
+
+Multi-model arbitration is especially valuable for high-stakes steps like security audits or critical architectural refactoring. Fan-out requests dispatch the same prompt to distinct model families (such as Claude, GPT, and DeepSeek) simultaneously. Aggregating their solutions and validating them against deterministic tooling—such as compilers, linters, and regression suites—significantly reduces hallucination rates and catches blind spots that any single model checkpoint would overlook.
 
 This creates an important separation:
 

@@ -54,6 +54,19 @@ USER QUESTION ──────┼─ previous conversation retrieval
 
 This means that many apparent "model capabilities" are actually capabilities of the whole system around the model.
 
+### Layer Precedence and Conflict Resolution
+
+When context sources provide conflicting information, the system cannot rely on the model to guess which source is authoritative. High-reliability harnesses enforce an explicit precedence hierarchy:
+
+1. **System & Safety Envelopes**: Non-negotiable boundaries, schema enforcement, and tool access limits.
+2. **Application Rules**: Workspace conventions, coding standards, and project-specific constraints.
+3. **Dynamic Tool Telemetry & Live State**: The current state of the filesystem, compiler diagnostics, or production logs (hard ground truth).
+4. **Retrieved External Context (RAG)**: Indexed documentation, Jira tickets, and architecture decision records (can be outdated).
+5. **Session History & Episodic Memory**: Past turns and user preferences (subservient to current constraints).
+6. **User Input**: The immediate task or question.
+
+If a retrieved architecture document from two years ago contradicts a live compiler error or an active system prompt, the hierarchy ensures the harness or the model drops or flags the stale retrieved context rather than hallucinates a compromise.
+
 ---
 
 ## 2. Some Knowledge Is Inside the Model, Some Is Retrieved
@@ -69,6 +82,8 @@ it may answer directly from what has been encoded in its parameters.
 But the model cannot rely on its internal knowledge for everything.
 
 For recent, private, specialized, or highly detailed information, the system may perform retrieval.
+
+In systems terms, this is the split between parametric memory (weights frozen at training time) and non-parametric retrieval (external state fetched at runtime). Parametric knowledge handles syntax, general reasoning patterns, and standard algorithms well, but it degrades quickly on private APIs, post-cutoff changes, and exact configuration values. Relying on parametric recall for internal system behavior inevitably leads to subtle confabulations; production systems treat parametric weights as an execution engine and delegate facts, contracts, and state to external retrieval.
 
 ---
 
@@ -123,6 +138,8 @@ block AI indexing
 
 The old SEO problem is therefore gradually becoming a broader problem of optimizing information for AI retrieval and answer systems.
 
+Search systems rarely feed raw HTML into the prompt. They parse the DOM, extract main text blocks, slice them into token-bounded chunks, and re-rank those snippets against the query. As a result, optimizing technical documentation for AI discovery shifts away from legacy keyword packing toward structured, retrieval-friendly layouts: explicit markdown headings, concise introductory summaries, and schema definitions that can survive snippet extraction without losing context.
+
 ---
 
 ## 4. Conversation History Is Another Source of Context
@@ -159,6 +176,10 @@ For long conversations, systems may need to:
 
 So a model does not necessarily receive the entire raw history of a long conversation on every turn.
 
+Even with context windows reaching hundreds of thousands of tokens, dumping raw transcripts into the prompt degrades performance. Attention is rarely uniform across the sequence; models routinely suffer from "lost-in-the-middle" effects, recalling information at the extreme boundaries (the system prompt and the latest turn) far more reliably than details buried deep in the middle. Furthermore, prompt processing latency scales with context size.
+
+To keep latency predictable and maintain attention density, production runtimes prune historical tool outputs. A 2,000-line compiler output or raw JSON payload is necessary when the model evaluates it, but once the agent extracts the diagnostic conclusion, the harness should strip or compress that payload in subsequent turns, retaining only the summary or error trace.
+
 ---
 
 ## 5. Memory and Previous Conversations Behave Like Retrieval
@@ -190,6 +211,8 @@ the previous discussion concerned agentic code review
 may be enough context for the current question.
 
 This makes personal memory effectively another knowledge source available to the agent.
+
+During active sessions, an extraction harness can monitor turns for durable user preferences and technical invariants, committing them to a persistent key-value or vector memory store. When a new session opens weeks later, the system queries this episodic store using the user's initial prompt and injects the extracted facts as top-level constraints, avoiding the token overhead of indexing entire raw transcripts.
 
 ---
 
@@ -260,6 +283,8 @@ More advanced retrieval can use:
     
 - previous retrieval results.
     
+
+Vector similarity alone frequently fails on source code because dense embeddings measure semantic intent rather than architectural dependencies or temporal validity. An obsolete commit or a deprecated helper method often has higher cosine similarity to a user query than the active refactored implementation. Robust code retrieval combines dense vectors with sparse lexical search (BM25) for exact symbol resolution, abstract syntax tree (AST) references, and git commit history to prevent resurrecting legacy patterns.
 
 ---
 
@@ -427,6 +452,8 @@ The agent should preferably start from a compressed runtime model rather than re
 
 For example, an Application Map or another precomputed dependency graph can answer which services communicate with each other. The agent can then use KQL or individual traces only for drill-down.
 
+Feeding thousands of raw JSON log lines directly into an LLM wastes context budget and dilutes attention. Instead, the runtime harness should present high-level aggregations—such as p99 latency percentiles, error rates grouped by status code, or queue consumer lag—and only inject raw log lines or stack traces when the agent explicitly queries an exemplar trace ID.
+
 This suggests an important distinction:
 
 **MCP/tool access provides the telemetry.**
@@ -543,6 +570,12 @@ architecture documentation
 
 before reaching a conclusion.
 
+In an operational debugging loop, this translates to concrete diagnostic steps:
+1. **Reason**: The agent notes that latency spiked at 14:00 UTC and queries the git log between the current release tag and the prior tag.
+2. **Retrieve**: It discovers a commit that altered connection pool sizing in the database client.
+3. **Reason**: It hypothesizes thread starvation and retrieves connection wait metrics from telemetry.
+4. **Verify**: Seeing wait times jump from 5ms to over 1000ms while active connections hit the pool ceiling, it confirms pool exhaustion without needing to inspect unrelated services.
+
 ---
 
 ## 10. More context helps, but does not eliminate the problem
@@ -626,6 +659,8 @@ The context may still be:
     
 - missing manual operational processes.
     
+
+These failure modes create distinct operational issues. When context is incomplete—such as providing an endpoint implementation while omitting the upstream authentication middleware—the model will needlessly generate redundant auth checks or bypass existing token validation. When context is contradictory, such as an active ADR conflicting with a legacy wiki page, the lack of an explicit authority hierarchy forces the model into an arbitrary guess. Maximizing context size is rarely the fix; the engineering goal is maximizing signal density while aggressively cutting token noise.
 
 The goal should not be to provide the maximum possible context.
 

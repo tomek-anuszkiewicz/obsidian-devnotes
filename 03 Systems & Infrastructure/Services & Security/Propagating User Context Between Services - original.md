@@ -111,6 +111,8 @@ X-User-Id: user-123
 
 The system boundary (API Gateway) must strip, overwrite, or reject untrusted internal-context headers sent from external clients.
 
+If an incoming external request carries an unverified `X-User-Id` or `X-Tenant-Id` header, the gateway must drop it immediately before authenticating caller credentials and attaching verified downstream headers. Leaving header sanitization to downstream internal services introduces confused-deputy vulnerabilities if any internal service misconfigures transport authentication or exposes an unauthenticated debug route.
+
 ---
 
 ## Trace Context Is Separate from User Context
@@ -129,6 +131,8 @@ userId         = original initiator
 ```
 
 They may travel together in headers, but they belong to different technical contracts.
+
+Conflating W3C trace IDs with user identity also introduces regulatory and compliance hazards. Telemetry collectors and APM systems routinely ingest trace headers without redaction; embedding user identity or tenant keys into trace state risks leaking Personally Identifiable Information (PII) across log aggregators and third-party monitoring vendors.
 
 ---
 
@@ -200,6 +204,8 @@ public Task UpdateDocumentAsync(
     CancellationToken cancellationToken);
 ```
 
+Relying on ambient storage like `AsyncLocal` or `ThreadLocal` also introduces non-deterministic execution bugs under high load. When asynchronous tasks hand execution off across thread pool boundaries or run detached background jobs, ambient context can silently drop or cross-contaminate concurrent requests. Passing context explicitly down the call stack makes dependencies visible to compilers and keeps execution paths deterministic.
+
 ---
 
 ## Who Owns What?
@@ -225,6 +231,8 @@ AUTH_USER_FORBIDDEN           -> User lacks permission for resource D
 ```
 
 Avoid collapsing all security failures into a generic `403 Forbidden` without logging the exact failure reason.
+
+Collapsing all security errors into an opaque `403 Forbidden` makes operational debugging miserable. An on-call engineer cannot tell if a spike in 403s is due to an expired service mesh mTLS certificate, an IAM role misconfiguration, or an actual end user attempting an unauthorized action. Granular error codes inside the response body and structured logs make diagnosing production failures straightforward.
 
 ---
 

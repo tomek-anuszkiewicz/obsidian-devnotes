@@ -10,6 +10,9 @@ tags:
 aliases:
   - Cost of Hidden Abstractions with Agents
   - Explicit vs Magic Abstractions in AI Era
+  - Semantic Locality in Agentic Architecture
+  - Mechanically Expandable Abstractions
+  - Domain Vocabulary Alignment
 ---
 
 Modern software engineering often tries to remove repetitive concerns from local code.
@@ -174,6 +177,8 @@ Humans often tolerate this because experienced developers gradually learn the ar
 
 An agent entering a repository for a single task must rediscover it.
 
+This creates a distinct failure mode: an agent writes code that compiles, passes localized unit tests using standard mocks (where ambient contexts default to empty or null), and then breaks in multi-tenant production because it bypassed an implicit ambient filter or failed to populate an `AsyncLocal` state variable.
+
 ## Dynamic Dependency Injection Makes the Problem Worse
 
 Constructor injection itself is usually relatively easy to understand.
@@ -219,6 +224,8 @@ Similar problems appear with:
 
 The call site no longer tells the agent what code it is calling.
 
+When static analysis cannot determine which concrete class implements an interface for a given execution path, the agent loses the ability to trace dependencies or reliably verify its changes.
+
 ## Interceptors and Pipelines Can Hide Business-Relevant Semantics
 
 Cross-cutting abstractions become especially problematic when they contain behavior that changes the meaning of an operation.
@@ -251,6 +258,8 @@ A generic timing metric being invisible is usually harmless.
 
 A transaction boundary, retry policy, tenant filter, authorization rule, or business validation being invisible can fundamentally change how an agent should modify the operation.
 
+When an agent needs to alter how an order is saved, it cannot see where the transaction begins or commits, whether the cache update is atomic, or whether domain events fire before or after the database write. If those operations are buried inside generic decorators or database interceptors, an agent trying to fix a bug or add a step will frequently introduce race conditions, partial writes, or security bypasses.
+
 ## Agents May Change the Economics of Explicit Code
 
 Traditional software engineering strongly rewards removing repetition.
@@ -273,6 +282,8 @@ DRY
 ```
 
 But agents reduce the cost of producing and maintaining repetitive code.
+
+Agents generate, read, and verify code at negligible marginal cost compared to humans. Conversely, their failure modes skew heavily toward hallucinating unstated assumptions, misinterpreting implicit behavior, and missing cross-file conventions.
 
 This creates the possibility of a different tradeoff:
 
@@ -404,6 +415,8 @@ A possible rule is:
 > Infrastructure may be implicit. Business-relevant semantics should preferably be explicit.
 
 The boundary will not always be perfect, but it provides a useful design direction.
+
+The operational distinction comes down to failure blast radius. When generic timing metrics or trace baggage fail, the endpoint degrades slightly. When tenant filters, transaction boundaries, or cache invalidations are hidden in interceptors, an agent modifying the code risks introducing silent cross-tenant leaks, partial writes, or split-brain cache states that localized unit tests will not catch.
 
 ## Global Configuration Still Has Value
 
@@ -671,7 +684,6 @@ A useful distinction is therefore:
 
 > A good abstraction reduces syntax without hiding important semantics.
 
-
 ## Business Meaning Should Be Encoded in the Same Vocabulary
 
 Semantic locality is not only about where behavior executes.
@@ -888,7 +900,6 @@ For agents, it reduces the number of semantic translations that must be inferred
 In this sense, agent-friendly code should not merely be readable.
 
 It should be **semantically searchable and cross-referenceable**.
-
 
 ## Semantic Locality May Become an Architectural Goal
 

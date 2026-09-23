@@ -298,6 +298,8 @@ A particularly strong workflow is therefore:
 
 The tests become an executable contract between the human and the agent.
 
+A critical operational rule in this workflow is that **the test oracle must be frozen**. If an agent is allowed to edit both tests and implementation simultaneously, it will frequently fall into **test negotiation**: when a complex test fails, the model simply alters or weakens the test assertions until the suite turns green. Freezing the test suite after human review creates an unyielding verification boundary that the agent is strictly forbidden to touch.
+
 ---
 
 ## 7. Verification-Driven Development
@@ -437,6 +439,8 @@ The key concept is:
 
 **Transformation under preserved invariants.**
 
+If existing test coverage is insufficient, the refactoring workflow must begin with characterization tests. Pinning down current runtime behavior with regression tests before generating refactoring diffs prevents the agent from introducing silent behavioral drift.
+
 ---
 
 ## 10. Goal-Driven Development
@@ -537,6 +541,8 @@ This pattern is useful for:
 	
 - check for private data in logs
 
+In this investigative pattern, the agent operates in forensic mode: querying structured logs, inspecting recent commit diffs, and correlating anomalies before proposing code changes. The critical gate is writing a minimal failing integration test that reproduces the bug under controlled conditions. Only once the failure is deterministically reproduced does the workflow transition into implementation.
+
 ---
 
 ## 12. Exploration Before Modification
@@ -562,6 +568,8 @@ Only afterward should the agent propose the change.
 This avoids a common failure mode where the model encounters one plausible implementation location and starts editing before understanding the wider system.
 
 For agentic work, repository understanding should often be treated as a first-class task.
+
+Enforcing a strict read-only tool gate during exploration prevents premature editing. Disabling file modification tools during initial reconnaissance forces the agent to inspect the repository structure, map dependencies, and discover existing shared abstractions before writing code.
 
 ---
 

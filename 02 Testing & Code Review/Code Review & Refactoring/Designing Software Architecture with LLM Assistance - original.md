@@ -10,6 +10,9 @@ tags:
 aliases:
   - LLM-Assisted Software Architecture
   - Architecture Exploration with AI
+  - Validating the Model of Reality
+  - The Plausible Completeness Illusion
+  - Reversible Architectural Experimentation
 ---
 
 ## Core idea
@@ -51,6 +54,8 @@ The main risk is not only hallucination.
 A more subtle risk is that the model fills missing information with a plausible, typical scenario. The result may be coherent and professionally justified, even though it depends on assumptions that were never confirmed.
 
 This creates an illusion of completeness.
+
+The most deceptive failure mode is cognitive silence: the model rarely warns you that a prompt lacks critical operational invariants. Instead of stopping to ask whether the workload demands read-your-writes consistency, what the p99 latency budget looks like, or how connection pools tolerate spikes, it silently defaults to a textbook pattern and designs an entire system around it.
 
 ---
 
@@ -784,6 +789,16 @@ The dangerous transition is when an exploration prototype silently becomes produ
 
 ---
 
+## Designing for downstream agent maintenance
+
+When designing software that will be maintained, extended, or refactored by coding agents, the system architecture itself must be structured to accommodate agent capabilities and context limits:
+
+1. **Focused 1:1 Module Boundaries**: Avoid sprawling files or "god classes" containing thousands of lines of mixed responsibilities. When an agent must ingest massive files to make a minor change, you burn context window budget and increase the risk of hallucinated regressions. Keep domain logic decomposed into cohesive, single-purpose modules.
+2. **Explicit Dependency Injection**: Avoid dynamic reflection, ambient global state, or hidden runtime auto-wiring. If an agent cannot trace where a service or repository is injected by inspecting the static Abstract Syntax Tree (AST), it cannot reliably reason about module behavior or write clean unit tests.
+3. **Automated Verification Harnesses**: Every architectural boundary requires a fast, deterministic test harness. An agent cannot safely refactor an architectural component unless it can execute a local test suite and get unambiguous, sub-second feedback on whether it broke an invariant.
+
+---
+
 ## The best role of the model
 
 The model should not be treated as an authority that produces the architecture.
@@ -1026,6 +1041,41 @@ Then answer:
 3. What could completely reverse the recommendation?
 4. What tests, measurements, documents, code analysis, or stakeholder conversations would verify the assumptions?
 5. Which parts come from the actual context, and which come only from generic best practices?
+```
+
+---
+
+## Reusable prompt: assumption extraction protocol
+
+```text
+Analyze your previous architecture proposal. 
+List every single assumption you made that was NOT explicitly stated in my original requirements.
+
+Group your analysis into:
+1. Concurrency, ordering, and transaction boundaries.
+2. Network reliability, retry behavior, and partial failure recovery.
+3. Operational complexity, infrastructure management, and team capacity.
+4. Data volume, growth rate, query access patterns, and latency profiles.
+
+For each assumption:
+- Explain how the architecture fails if this assumption is completely false.
+- Describe how we can verify this assumption against our production code, database, or telemetry.
+```
+
+---
+
+## Reusable prompt: adversarial failure post-mortem
+
+```text
+Assume we adopted your recommended architecture and deployed it to multi-tenant production. 
+Six months later, during a major traffic surge, the system suffers an unrecoverable 4-hour outage.
+
+Write the post-mortem report:
+1. Document the exact cascading failure sequence (e.g., connection pool exhaustion, unhandled retry storm, distributed deadlocks, backpressure failure).
+2. Which component failed because of an unstated assumption about our workload?
+3. Why did standard health checks and observability dashboards fail to catch the root cause early?
+4. What fundamental architectural trade-off was violated?
+5. How should the architecture be modified to make this failure mode structurally impossible?
 ```
 
 ---

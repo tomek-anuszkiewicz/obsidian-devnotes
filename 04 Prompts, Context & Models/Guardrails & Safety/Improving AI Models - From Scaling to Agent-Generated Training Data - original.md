@@ -61,6 +61,8 @@ toward:
 
 The important lesson was that better training could sometimes outperform simply making the model larger.
 
+Early empirical scaling papers, like Kaplan et al., suggested that loss scaled predictably with model size and FLOPs, leading teams to build massive networks that were severely undertrained. The Chinchilla findings from Hoffmann et al. corrected course by showing that parameters and token counts must scale in roughly equal measure for compute optimality. Pre-training compresses raw syntax and domain representations into model weights, but as publicly accessible, high-quality web tokens run dry, scaling parameters alone yields steep diminishing returns.
+
 ## Instruction Tuning Changed What "Better Model" Meant
 
 The next major improvement came from teaching models how humans actually wanted them to behave.
@@ -90,7 +92,8 @@ From this point onward, practical model quality increasingly depended on:
 - response structure;
     
 - task-specific post-training.
-    
+
+Techniques like Supervised Fine-Tuning (SFT), Reinforcement Learning from Human Feedback (RLHF), and Direct Preference Optimization (DPO) don't inject foundational domain knowledge. Instead, post-training acts as an indexing mechanism: it enforces strict schema adherence (such as returning valid JSON without extraneous conversational text), pins down refusal boundaries, and maintains consistent turn-by-turn context. However, alignment alone still leaves the model operating as a passive, single-turn generator bound to a static forward pass.
 
 ## Reasoning Added Another Scaling Dimension
 
@@ -113,6 +116,8 @@ A model may explore several possibilities, verify intermediate conclusions, or s
 This means that capability no longer depends only on the static model.
 
 It also depends on how much computation the system allows the model to perform during execution.
+
+At runtime, this test-time compute relies on chain-of-thought deliberation tokens, branch pruning, and step-level evaluation using Process Reward Models (PRMs). Rather than committing greedily to the first probable token sequence, the engine can allocate dynamic inference resources—burning a few milliseconds on simple boilerplate, or spinning through thousands of exploration tokens to isolate a subtle race condition before emitting the final answer.
 
 ## Agents Add Yet Another Layer
 
@@ -166,6 +171,8 @@ inspect
 ```
 
 The apparent intelligence of the system can improve significantly even without an equally large improvement in the underlying base model.
+
+The runtime harness provides deterministic sanity checks that intercept stochastic model hallucinations. When an agent modifies an entity schema, trips a database constraint in an isolated sandbox, parses the error log, and adjusts its own migration script, the working patch is the result of the runtime feedback loop rather than a single perfect forward pass.
 
 ## The Most Interesting New Resource May Be AI Work Itself
 
@@ -307,6 +314,8 @@ This makes programming well suited to reinforcement learning and synthetic-data 
 
 Instead of relying entirely on humans to label outputs, machines can automatically verify large numbers of attempts.
 
+This bypasses the classic "oracle problem" that hampers reinforcement learning on natural language. Evaluating the quality of an essay or conversational summary requires noisy, subjective human feedback. In software, verification is mechanical: a strict type checker (`rustc`, `mypy --strict`), unit test assertions, mutation coverage, and memory profilers provide unambiguous ground-truth reward signals without a human in the loop.
+
 ## Synthetic Data Is Not Necessarily Model Copying Itself
 
 There is an important distinction between two forms of synthetic data.
@@ -345,6 +354,8 @@ The crucial component is verification.
 
 Synthetic data becomes valuable when it represents exploration plus selection, rather than uncontrolled self-imitation.
 
+This is the difference between catastrophic model collapse and productive synthetic distillation. When a model loops over unverified generations, errors compound and output distributions collapse into repetitive noise. But when generation is treated as stochastic exploration and coupled with deterministic verifiers, synthetic pipelines act as an automated search across the engineering solution space. The model proposes hypotheses; the toolchain filters out broken paths.
+
 ## Coding Agents Can Generate Their Own Curriculum
 
 This creates an interesting feedback loop:
@@ -382,6 +393,8 @@ human ↔ AI collaboration traces
 ```
 
 These traces did not exist at meaningful scale before AI assistants became widely used.
+
+This dynamic also shifts the competitive data moat. While public code repositories and open documentation have largely been exhausted, the densest software signals remain inside private engineering ecosystems: complex multi-commit refactors, pull request review discussions clarifying business invariants, production post-mortems mapping runtime incidents to code defects, and CI/CD diagnostic traces. Training on these real-world trajectories teaches models how to navigate messy production environments rather than clean-room toy problems.
 
 ## Today's Failures May Become Tomorrow's Training Examples
 

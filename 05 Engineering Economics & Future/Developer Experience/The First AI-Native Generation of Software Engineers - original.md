@@ -70,6 +70,25 @@ It is that they can often recognize when generated code is:
 
 The first AI-native generation may not automatically develop the same judgment in the same way.
 
+## The Junior Trap: The Barrier of Unknown Unknowns
+
+Being able to instruct an agent to produce a full microservice in minutes creates a dangerous illusion: the feeling that foundational systems knowledge is no longer necessary.
+
+When an inexperienced engineer asks an agent to "build a high-throughput webhook receiver," the agent will gladly output a functional framework application. It will configure routes, parse payloads, and insert records into a database. In local development, the code runs, tests pass, and the feature looks complete.
+
+The breakdown occurs at the boundary of unknown unknowns. 
+
+A developer who has never run a service at scale does not know that:
+
+- Incoming HTTP request bursts can exhaust database connection pools unless an intermediate ingestion queue acts as a buffer.
+- Synchronous database writes within the request lifecycle will degrade latency and trigger client timeouts under load.
+- Failure to enforce database-level unique constraints will cause silent duplicate writes during concurrent retries.
+- Naive JSON deserialization without payload size limits leaves the process vulnerable to memory exhaustion attacks.
+
+Because the junior engineer does not know these failure modes exist, they cannot formulate the prompts required to force the agent to defend against them. Nor can they spot their absence during a pull request review. The developer operates at the macro level ("the service accepts webhooks and writes to the database"), completely blind to the micro-level system behaviors that dictate production reliability. 
+
+This asymmetry creates a dynamic where engineers can generate massive amounts of software while lacking the operational vocabulary required to diagnose why that software degrades or falls over in production.
+
 ## Previous Abstractions Also Removed Skills
 
 This is not the first time software development has moved to a higher abstraction level.
@@ -329,6 +348,27 @@ production mode:
 AI used extensively as an executor
 ```
 
+### The Deliberate Training Analogy: Lessons from Aviation
+
+The software industry is navigating a transition that commercial aviation solved decades ago.
+
+Modern commercial aircraft fly primarily on autopilot. Modern avionics can manage navigation, throttle control, altitude maintenance, and even landings with exceptional precision. 
+
+Yet, airlines do not train pilots by handing them an automated flight deck on day one and telling them to supervise the autopilot.
+
+Pilots learn by:
+
+- Spending hundreds of hours flying small, fully manual aircraft.
+- Learning aerodynamics, stall recovery, and manual instrument reading.
+- Spending regular intervals in flight simulators where automated systems are systematically disabled.
+- Practicing emergency procedures under conditions of engine failure, severe crosswinds, and hydraulic loss.
+
+The aviation industry understood early that when automated systems fail, they fail abruptly. When the autopilot disconnects in severe turbulence, the person in the cockpit cannot spend ten minutes reading an operations manual or asking an assistant what to do. They must possess an immediate, physical, intuitive understanding of aerodynamic flight mechanics.
+
+Software engineering requires the same training paradigm. As day-to-day software development moves to automated code generation, manual implementation must shift from being an economic necessity to being a deliberate educational discipline. 
+
+Engineers do not need to write manual boilerplate in production to prove their worth. But they must write systems manually in controlled training environments to ensure that when production systems fail, they understand the underlying mechanics well enough to take control of the aircraft.
+
 ## AI Can Also Become a Better Teacher
 
 The outcome does not have to be negative.
@@ -580,3 +620,4 @@ The future engineer may write much less code manually, but still needs opportuni
 Those activities may stop happening automatically during normal work.
 
 They may need to become an intentional part of engineering education and professional development.
+```

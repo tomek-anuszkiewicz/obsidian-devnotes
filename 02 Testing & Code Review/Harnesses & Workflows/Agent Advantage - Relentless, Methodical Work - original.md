@@ -65,6 +65,8 @@ Historically, many good engineering practices were considered too expensive.
 
 A team might agree that a migration should be divided into five safe deployments, but preparing all five pull requests, tests, documentation, telemetry, and cleanup work would take too much time.
 
+Consider a standard non-breaking database schema evolution: first introduce a nullable field with dual-write logic; second, backfill historical rows via background jobs; third, shift reads to the new column; fourth, remove the legacy write fallback; fifth, drop the old column and delete the compatibility shims. In practice, preparing five distinct pull requests with dedicated test suites and deployment gates takes days of manual effort, so teams routinely take the riskier shortcut of an atomic, lock-heavy maintenance window.
+
 As a result, the team accepts a riskier shortcut.
 
 An agent can reduce the cost of the disciplined path:
@@ -177,6 +179,25 @@ Examples include:
     
 
 A human can perform this work, but attention usually degrades as repetition increases.
+
+#### Eradicating Primitive Obsession
+
+A concrete example of manual typing fatigue is primitive obsession. Domain-Driven Design has long advocated wrapping raw primitive types like strings, UUIDs, and decimals in explicit domain value types:
+
+```text
+Primitive Obsession (low typing effort, error-prone at runtime):
+  decimal price
+  uuid customer_id
+  decimal margin_rate
+
+Strong Domain Modeling (compiler-enforced semantic invariants):
+  Money<Currency::USD> price
+  CustomerId customer_id
+  GrossAmount total_gross
+  TaxRate vat_percentage
+```
+
+Engineers understand why passing a `CustomerId` into an `OrderId` parameter is dangerous, or why adding a raw `TaxRate` to a `GrossAmount` creates subtle accounting bugs. Yet teams routinely abandon strong typing because declaring dozens of wrapper records, custom JSON serializers, ORM value converters, and validation rules requires substantial manual boilerplate. Because an agent experiences zero keystroke fatigue, generating explicit wrapper types, type-safe constructors, and serialization conversions across hundreds of models costs virtually nothing. A design practice once avoided due to typing overhead becomes a repeatable, enforceable standard.
 
 ### Consistent Enforcement
 
@@ -492,6 +513,8 @@ Therefore, the team must define proportionality:
     
 
 The agent should be relentless inside a bounded scope, not unlimited in every direction.
+
+In practice, teams enforce this through concrete operational guardrails. Critical paths like financial ledgers or auth boundaries receive exhaustive mutation testing and matrix validation, while internal scripts receive simple smoke tests. Agents should operate under strict touchpoint caps on modified files per pull request, negative constraints that forbid speculative abstractions, and deterministic halting criteria tied to compiler or test passes rather than open-ended exploration.
 
 ## A Better Mental Model
 

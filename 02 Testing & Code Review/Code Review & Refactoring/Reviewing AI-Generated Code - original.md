@@ -31,6 +31,8 @@ The danger is the illusion of understanding:
 
 The reviewer may scan the diff without reconstructing the actual behavior.
 
+When diffs are merged based on superficial plausibility, software entropy and frictionless code sprawl accelerate. Over time, the repository morphs into a codebase where every file compiles and passes tests, but no engineer on the team understands how the pieces interact, which invariants protect the database, or why specific trade-offs were made. When a severe production defect strikes—such as a distributed race condition, database connection pool exhaustion, or an inconsistent state transition across services—the generating agent hits a reasoning wall debugging distributed state without deterministic feedback loops. If engineers surrender their mental model during review, they are left operating an alien system they do not understand.
+
 Review should therefore be organized around risk rather than file order.
 
 Review first:
@@ -52,11 +54,28 @@ Review first:
 
 Review mechanical mapping and boilerplate later.
 
+Standard code review tools display files alphabetically, burning mental energy on trivial configuration files, generated DTOs, and dependency injection wiring before the reviewer inspects core business logic. Prioritizing review by operational risk ensures critical boundaries receive scrutiny while focus is highest. If fatigue sets in, it happens on low-risk mechanical glue rather than state mutations that can corrupt production data.
+
 A useful standard is:
 
 > Before approving the change, the reviewer should be able to explain the complete new flow in their own words.
 
 If they cannot, they probably have not understood the change sufficiently.
+
+Specifically, an engineer should be able to answer four concrete operational questions before signing off:
+
+1. **Execution and Transformation:** How does data enter, transform, and leave this component? Trace the primary path from entry point to persistence.
+2. **Invariants and Constraints:** What conditions must always hold true? What prevents corrupted or half-formed state from being committed?
+3. **Partial Failure Behavior:** What happens when an external HTTP call, cache write, or secondary database query fails halfway through execution? Does the system leave orphaned records, or does it roll back cleanly?
+4. **Concurrency and Idempotency:** Can two worker processes or HTTP threads execute this operation on the same entity simultaneously without race conditions, duplicate writes, or deadlocks?
+
+### Inspecting Tests as Critically as Production Code
+
+Coding agents are remarkably adept at generating tests that pass without proving requirements. When an agent writes both the implementation and the test suite, it naturally mirrors its own blind spots across both. Inspect the test diff with the same skepticism applied to production code, looking for three recurring patterns:
+
+- **Tautological Assertions:** Tests that assert mock outputs against hardcoded mock expectations. The test passes green, but only proves the mocking framework was configured as written, not that the integrated system behaves correctly.
+- **Missing Negative Cases:** Agents lean heavily into happy paths. A pull request may include ten tests checking successful 200 OK responses, but zero tests for network timeouts, schema validation rejections, duplicate webhook deliveries, or authorization denials.
+- **Vacuous and Overly Permissive Matchers:** Assertions that check only for broad conditions (such as asserting an object is non-null or an HTTP status is 200) without validating that payload contents, database state, and side effects match the business specification.
 
 ---
 
@@ -100,6 +119,8 @@ Look for:
 ```
 
 The second agent is an attention aid, not the final authority.
+
+Because the authoring agent is biased toward justifying its own implementation choices, running an isolated session with an adversarial prompt prevents the model from rubber-stamping its own assumptions. The second agent points human focus directly toward potential landmines, but the final judgment, architectural verification, and approval remain strictly with the human engineer.
 
 ---
 

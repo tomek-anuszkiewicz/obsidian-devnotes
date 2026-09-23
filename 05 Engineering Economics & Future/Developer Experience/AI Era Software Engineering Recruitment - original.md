@@ -29,6 +29,8 @@ It is increasingly:
 
 This does not make technical knowledge obsolete. It changes where that knowledge creates value: less in recalling syntax, and more in understanding systems, directing work, evaluating output, detecting subtle mistakes, and accepting responsibility for the result.
 
+Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection. An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
+
 ## Do not hire for knowledge of a particular AI tool
 
 Requiring experience with Copilot, Cursor, Claude Code, Codex, or another current product is a weak long-term hiring criterion. Tools and interfaces will change quickly, and many companies are still at very different stages of adoption.
@@ -108,6 +110,8 @@ Before generating code, a candidate should discover questions such as:
 
 This tests whether the candidate understands that implementation should not begin until the important ambiguity is made explicit.
 
+Candidates who jump straight into prompting an LLM to generate an endpoint without resolving these invariants demonstrate that they will delegate critical product and domain thinking to an unconstrained model.
+
 ### 2. Inspect a small but realistic repository
 
 Ask the candidate to identify:
@@ -167,6 +171,8 @@ This may be the highest-value part of the interview. The pull request should be 
 
 The important risk of AI-generated code is often not a spectacular hallucination. It is a small deviation that remains coherent, compiles, passes superficial tests, and looks reasonable during a quick review.
 
+In practice, these flaws manifest as concrete operational landmines: a read-modify-write race that checks inventory in application memory instead of issuing a `SELECT ... FOR UPDATE`, an un-scoped background task that drops cancellation context so database queries hang after a client disconnects, or a `catch (Exception e)` block that silently swallows constraint violations while returning an HTTP 200. A candidate relying on surface impressions sees clean formatting and passing mocks. A senior engineer audits state mutations, concurrency boundaries, and failure paths.
+
 ## Code review becomes a central engineering skill
 
 AI can increase the rate of code production faster than a team can increase its capacity to understand that code. Review therefore needs to operate at several levels:
@@ -183,6 +189,8 @@ AI can increase the rate of code production faster than a team can increase its 
 | Maintenance | Will another engineer understand the decision later? |
 
 An AI reviewer can provide an additional signal, but it cannot be the final authority. In the 2025 Stack Overflow Developer Survey, more developers distrusted the accuracy of AI output than trusted it. Experienced developers were among the most cautious. Human verification therefore remains part of professional accountability.
+
+High-performing engineering teams treat generated diffs with the same adversarial scrutiny as an untrusted third-party pull request. When code authoring is cheap, code review serves as the primary barrier against silent architectural drift, security regressions, and unhedged operational risk.
 
 Review quality should also be assessed during hiring. A good reviewer:
 
@@ -218,6 +226,8 @@ An interview can include the requirement:
 
 This tests whether documentation is treated as part of delivery rather than as cleanup performed after the code is finished.
 
+When system rules exist solely as tribal knowledge, coding agents produce implementations that break unspoken boundary contracts, creating severe review drag. Explicit, executable documentation—such as machine-readable interface schemas (Protobuf, OpenAPI), unambiguous invariant lists, and single-command local validation harnesses (`make test`, containerized dependencies)—enables both human developers and automated harnesses to verify compliance before code ever reaches a pull request.
+
 DORA's 2025 research describes AI as an amplifier of the surrounding organizational system. Strong feedback loops, platforms, documentation, and engineering practices can be amplified; fragmented systems and weak controls can be amplified as well. AI adoption is therefore a systems problem, not merely a tool-purchasing decision.
 
 ## Suggested senior-engineer scorecard
@@ -237,6 +247,8 @@ The exact weights should depend on the role, but a reasonable starting point is:
 AI-tool usage receives a small separate weight because it should also be visible throughout every other competency. Prompt fluency without domain understanding, technical judgment, and verification is not sufficient.
 
 For a junior role, the weights should differ. Juniors need more explicit assessment of fundamentals and learning ability because they have fewer internal models with which to challenge plausible AI output. They should not be evaluated only on the amount of functioning code they can generate.
+
+Junior developers have not yet built the operational scar tissue needed to spot architectural pitfalls in generated diffs. Evaluating them solely on how much working code they can generate with an assistant risks hiring engineers who cannot debug their own systems when the tooling fails. Junior assessments must verify that the candidate understands control flow, can explain underlying runtime behavior without tooling assistance, and possesses the foundational mental models needed to grow into an independent reviewer.
 
 ## Additional capabilities worth assessing
 
@@ -264,6 +276,8 @@ Candidates working with agents should understand:
 - dependency and license verification;
 - provenance and review of generated changes;
 - the distinction between read-only investigation and mutation.
+
+These considerations map to tangible failure boundaries: software supply chain attacks through hallucinated package dependencies, prompt injection embedded in untrusted issue trackers or third-party documentation, and accidental exfiltration of secrets or tenant data in agent prompt contexts. Candidate engineers should be able to configure and work within agent harnesses that enforce least privilege, strictly isolating read-only codebase discovery from mutating disk, network, and execution privileges.
 
 ### Measuring outcomes
 
@@ -325,4 +339,3 @@ The strongest candidate is therefore not simply the best programmer or the most 
 - [[LLM Agents and Institutional Memory]]
 - [[Designing APIs for LLM-Assisted Code Generation]]
 - [[Applications of LLM Agents Beyond Programming]]
-

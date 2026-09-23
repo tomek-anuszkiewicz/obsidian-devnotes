@@ -102,6 +102,26 @@ Every one of these may look technical in the generated implementation.
 
 But some of them may actually represent significant business decisions.
 
+```python
+# Example: The model silently resolves core business rules inside a data model
+from pydantic import BaseModel, Field
+from datetime import datetime, timedelta
+
+class WebhookPayload(BaseModel):
+    event_id: str
+    tenant_id: str
+    payload: dict
+    # Hidden business decisions made by the model:
+    # 1. Hardcoded 3-retry maximum before message dropping
+    max_retries: int = 3
+    # 2. Hardcoded 7-day retention window
+    expires_at: datetime = Field(default_factory=lambda: datetime.utcnow() + timedelta(days=7))
+    # 3. Silent assumption that tenants cannot override delivery guarantees
+    is_idempotent: bool = True
+```
+
+Consider how easily this sneaks into production code. A generated data model hardcodes a 7-day retention TTL and a 3-retry ceiling. If downstream consumers expect a 90-day window for regulatory compliance or need failed events held in a dead-letter queue for manual re-drive, the system fails silently at runtime. The developer reviewing the pull request sees clean, idiomatic typing, but the model has quietly resolved core policies around data lifecycle, delivery guarantees, and backpressure without a single engineering discussion.
+
 ---
 
 ## 3. Why the Model's Default May Not Be the Company's Best Decision
@@ -235,6 +255,8 @@ This means that:
 
 It is only a set of solutions that happened to be generated.
 
+Take a concrete systems scenario: designing cache invalidation across distributed edge nodes. When asked for architectures, an LLM typically defaults to well-trodden paths like short TTLs with conditional HTTP `If-None-Match` requests or pub/sub cache purge broadcasting. If an architect explicitly asks, *"Why not stream Change Data Capture (CDC) events directly from the database write-ahead log to lightweight edge workers?"*, the model instantly provides a rigorous technical breakdown: it recognizes that CDC eliminates the dedicated message broker, avoids race conditions between cache purging and DB commits, and guarantees causal ordering. The model already possesses the operational knowledge to validate and score the pattern, but the high token probabilities of conventional pub/sub designs crowded it out during initial generation.
+
 ---
 
 ## 7. Why This Happens
@@ -300,6 +322,8 @@ Conceptually, they may occupy one small part of the solution space.
 What matters is not the number of solutions.
 
 What matters is the **diversity of solution classes**.
+
+True diversity requires exploring orthogonal architectural axes: comparing an asynchronous distributed queue backed by worker pools against an append-only log, an in-memory ring buffer with kernel-bypass networking, or a synchronous backpressure-driven streaming model. Prompting for raw volume only yields cosmetic variations of the same underlying failure domain.
 
 ---
 
@@ -547,6 +571,32 @@ For example:
 
 This can reveal that part of what appeared to be implementation was actually product or business design.
 
+To operationalize this in an engineering pipeline, require the model to emit a structured decision manifest alongside any architecture proposal:
+
+```json
+{
+  "implicit_assumptions_made": [
+    {
+      "area": "Retry and Failure Semantics",
+      "assumed_default": "3 retries with exponential backoff before message discard",
+      "alternative_options": ["Block partition to guarantee strict ordering", "Route directly to DLQ after 1 failure"],
+      "business_impact": "Potential silent data loss if poison pills are discarded without alerting"
+    },
+    {
+      "area": "Data Retention",
+      "assumed_default": "Hardcoded 30-day TTL in database records",
+      "alternative_options": ["Infinite retention with cold-tier S3 offload", "24-hour transient buffer"],
+      "business_impact": "Direct impact on storage cost and legal compliance audits"
+    }
+  ],
+  "delegated_authority_breaches": [
+    "Model resolved consistency tier (eventual consistency) without product sign-off"
+  ]
+}
+```
+
+Extracting this structured artifact before writing code prevents invisible drift and catches policy assumptions before they become entrenched in production schemas.
+
 ---
 
 # 18. Company Context as Protection Against Averaging
@@ -607,6 +657,13 @@ A strong agent therefore needs more than problem-solving capability.
 It also needs the ability to recognize:
 
 **the boundary of its decision-making authority.**
+
+In practice, this means establishing an explicit operational contract for what the model can decide autonomously:
+
+- **Safe for model autonomy:** Writing idiomatic scaffolding, generating deterministic test fixtures, refactoring purely structural interfaces, and analyzing time/space complexity.
+- **Requires human architectural ownership:** Choosing consistency tiers and isolation levels, fixing data retention and compliance windows, establishing blast-radius boundaries, and selecting irreversible build-versus-buy trade-offs.
+
+When an LLM hits an ambiguity that crosses into human architectural ownership—such as whether stale reads are acceptable during a database failover—it must halt and surface the trade-off rather than silently picking an eventual consistency default.
 
 ---
 

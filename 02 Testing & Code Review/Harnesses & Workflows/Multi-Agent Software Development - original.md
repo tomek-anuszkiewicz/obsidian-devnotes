@@ -138,6 +138,8 @@ the problem can be split into smaller, cleaner contexts.
 
 This is not only a performance optimization. It is also a form of context engineering.
 
+When a single agent attempts to reason about database schemas, API contracts, frontend components, test harnesses, and security policies inside one long context window, the model inevitably suffers from instruction drift and attention degradation. Important constraints get pushed out of active attention, and the agent begins making unforced errors across module boundaries. Partitioning the work into subagents keeps contexts small, focused, and disposable.
+
 ## 4. Fleet-Style Execution
 
 Fleet-style systems automate decomposition and parallel execution.
@@ -383,6 +385,8 @@ without seeing the implementer's reasoning.
 
 This reduces anchoring and makes the review more independent.
 
+When an implementer reviews its own code, it suffers from self-confirmation bias—routinely glossing over its own logic flaws and rationalizing edge-case omissions. Passing only the raw diff and the specification to an independent reviewer agent, with zero chain-of-thought inheritance from the implementer, forces the reviewer to evaluate the solution strictly on its own merits.
+
 ## 9. Shared Context vs Independent Context
 
 Multi-agent systems introduce an important tension.
@@ -416,6 +420,8 @@ Some tasks benefit from collaboration.
 Others benefit from deliberate information isolation.
 
 For debugging, architecture review, risk analysis, and security review, independent reasoning can be especially valuable.
+
+If an early agent makes an incorrect assumption in a fully shared context, that hallucination cascades across the entire fleet. On the other hand, complete isolation risks duplicate token spend as multiple agents rediscover the same codebase layout or type contracts. The practical heuristic is simple: collaborative implementation of known interfaces benefits from shared context, whereas adversarial review, root-cause debugging, and security sweeps demand hard context isolation.
 
 ## 10. Workspace Isolation
 
@@ -460,6 +466,8 @@ Git therefore becomes more than version control.
 
 It becomes a transactional isolation layer for autonomous workers.
 
+In practice, Git worktrees provide the cleanest, lowest-overhead primitive for this. The orchestrator provisions a dedicated worktree and isolated branch for each agent. The worker reads, edits, runs tests, and commits inside its private sandbox without interfering with concurrent runs. Only when changes pass verification gates are the branches rebased and integrated back into the mainline.
+
 ## 11. Failure Containment
 
 Isolation also limits the blast radius of agent mistakes.
@@ -503,7 +511,12 @@ Multi-agent development therefore needs many ideas already familiar from distrib
 - validation,
     
 - rollback.
-    
+
+Containing the blast radius of autonomous workers requires concrete operational guardrails:
+
+- **Deterministic verification gates**: Compilers, linters, and unit test suites must act as non-negotiable ground-truth oracles rather than relying on LLM self-assessment.
+- **Fail-stop and rollback semantics**: If an agent gets stuck in a loop or fails tests after a fixed retry budget, the harness terminates the worker and prunes its worktree. Main remains untouched.
+- **Atomic commit checkpoints**: Requiring agents to commit intermediate working states allows the harness to roll back failed experiments without throwing away the entire task.
 
 ## 12. Specialized Agents
 
@@ -609,6 +622,8 @@ It creates a new optimization problem:
 
 The best agent may not be the best worker for every subtask.
 
+Routing tasks to the appropriate model tier keeps costs and latency under control. Burning frontier reasoning tokens on localized boilerplate or import cleanup wastes budget for negligible gain. Conversely, assigning a lightweight coding model to design an architectural migration will lead to broken invariants and subtle bugs. Model tiering matches the reasoning profile to the cognitive difficulty of each step.
+
 ## 15. Compute Scheduling
 
 Multi-agent systems create another important problem: cost.
@@ -691,6 +706,8 @@ This resembles adaptive search.
 
 The system increases compute only when confidence is insufficient.
 
+Static agent topologies are inherently wasteful—allocating five agents to fix a typo burns budget, while tackling a subtle concurrency bug with a single agent almost guarantees failure. An adaptive harness uses deterministic feedback from compilers and tests as the escalation trigger: spend minimal compute on straightforward problems, and scale up competitive debugging agents only when deterministic feedback signals high ambiguity or repeated test failures.
+
 ## 17. Asynchronous Agent Workforce
 
 Agents also do not need to operate interactively.
@@ -747,6 +764,8 @@ approve integration
 This resembles the work of a technical lead more than the traditional work of an individual contributor.
 
 The difference is that the "team" can be created on demand.
+
+The engineer's leverage shifts away from typing boilerplate or memorizing library syntax toward specifying invariant boundaries, designing deterministic test oracles, and evaluating architectural trade-offs across competing agent implementations.
 
 ## 19. A Possible End-to-End Workflow
 

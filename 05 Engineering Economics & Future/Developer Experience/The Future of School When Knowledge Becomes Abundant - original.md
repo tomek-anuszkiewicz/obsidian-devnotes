@@ -866,6 +866,51 @@ This may become one of the most important consequences of AI for education.
 
 ---
 
+# The Educational Lag: Modern Systems and Agent Orchestration
+
+There is a massive and growing delta between what traditional schools spend their time teaching and the operational reality of the technical world.
+
+Curricula move on generational bureaucratic cycles, while the state of the art shifts every few years:
+
+```text
+technological reality:
+updates continuously every 2–4 years
+        vs.
+institutional education:
+updates through committees every 15–20 years
+```
+
+Students still burn hundreds of hours practicing manual calculations, memorizing formulas, and drilling rote syntax that can be handled instantly by basic software. Meanwhile, almost no time is spent covering the systems that run the modern world:
+
+- How distributed networks, cloud platforms, and basic identity/auth work
+- How recommendation algorithms, telemetry, and tracking pipelines steer user behavior
+- How to evaluate threat models, manage cryptographic keys, and maintain operational privacy
+- **How to formulate intent, orchestrate autonomous AI agents, and verify their output**
+
+In an agent-dense environment, the practical bottleneck shifts from basic code generation to **system orchestration and adversarial auditing**:
+
+```text
+INDUSTRIAL-ERA TASK:
+Memorize the procedure → Execute manually → Grade on compliance
+
+AGENT-ERA TASK:
+Formulate system intent
+          ↓
+Orchestrate agents and development tools
+          ↓
+Audit code, check boundary conditions, and verify proofs
+          ↓
+Catch edge-case hallucinations and invalid assumptions
+          ↓
+Take production ownership of the deployed system
+```
+
+Treating AI merely as a "cheating tool" to be banned from assignments exposes an outdated mindset that views education strictly as procedural compliance monitoring. 
+
+Until schools train people to orchestrate, audit, and push machine intelligence to its limits, that literacy will remain confined to self-directed learners—widening the gap between engineers who direct these systems and operators who are directed by them.
+
+---
+
 # The Central Transformation
 
 The old educational problem was approximately:
@@ -922,3 +967,4 @@ The long-term effect of LLMs on education may therefore not be that machines rep
 It may be that AI finally makes it possible for teachers and schools to stop spending so much of their effort on distributing information and instead concentrate on the much harder problem:
 
 > **helping people learn how to learn, discover what interests them, and turn knowledge into real capability.**
+```

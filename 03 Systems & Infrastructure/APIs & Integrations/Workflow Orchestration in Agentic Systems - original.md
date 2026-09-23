@@ -10,6 +10,8 @@ tags:
 aliases:
   - Workflow Orchestration Concepts
   - Durable Execution and Orchestration
+  - Decoupling Process Durability from Stochastic Reasoning
+  - Distributed Process State and Agent Workflows
 ---
 
 ## Core Idea
@@ -438,6 +440,8 @@ even if the process has been waiting for several days or the underlying services
 
 This is fundamentally different from merely putting another job into a queue.
 
+Under the hood, durable execution engines rely on an append-only event history. Whenever a workflow invokes an activity—such as charging a credit card or hitting an external API—the engine intercepts the call, delegates execution to a worker, and records the completion event and payload in the log. If the host process crashes mid-stream or the workflow sleeps for weeks waiting on a webhook, a new worker reconstructs the state machine by replaying the event history. It fast-forwards through completed steps without re-executing external side effects, picking up execution precisely at the point of interruption.
+
 ---
 
 ## 4. LLM and Agent Orchestration
@@ -517,6 +521,8 @@ coordinates the model's reasoning and tool usage
 The two can be combined.
 
 A business workflow may call an agent as one step.
+
+Agent frameworks manage stochastic reasoning loops, context window compaction, and dynamic tool selection. However, they typically lack built-in crash-proof event sourcing, distributed transaction guarantees, or cross-service compensation logic. In a robust architecture, the durable orchestrator owns the end-to-end business invariant, while the agent framework operates as an isolated sub-process tasked with solving an ambiguous reasoning step.
 
 ---
 
@@ -985,6 +991,8 @@ The important point is that the **business capability** is exposed through the s
 
 The fact that a background worker executes it internally does not need to leak outside the service.
 
+Holding an HTTP connection open across multi-minute tasks invites gateway timeouts, connection drops, and thread exhaustion across the ingress proxy fleet. Shifting long-running tasks to an asynchronous job contract allows the caller to release sockets immediately, while the orchestrator suspends its execution fiber in persistence until an external event or webhook signals completion.
+
 ---
 
 # REST, Messaging, and Orchestration Solve Different Problems
@@ -1070,6 +1078,8 @@ Repeated execution using the same key should not charge the customer multiple ti
 
 Reliable orchestration and idempotent business operations strongly complement each other.
 
+At the database level, idempotency is typically enforced via unique transaction constraints or a distributed key-value cache with an explicit TTL storing the original operation's result payload. When a duplicate request arrives with the same key, the service bypasses domain mutations entirely and replays the cached response. Without this guarantee at the persistence layer, automatic orchestrator retries will inevitably produce duplicate payments, phantom records, or corrupted downstream state.
+
 ---
 
 # Human Approval Is a Workflow State
@@ -1106,6 +1116,8 @@ Workflow continues
 Human involvement should not necessarily be treated as an exception.
 
 In many workflows it is simply another legitimate state.
+
+Because durable orchestrators persist workflow execution state to an append-only event log, a workflow sitting in a `waiting_for_approval` state consumes zero active CPU threads, memory allocations, or database connection pool handles. It can remain dormant for weeks until an operator triggers an approval webhook, at which point the engine reloads the workflow state and schedules the next activity.
 
 ---
 

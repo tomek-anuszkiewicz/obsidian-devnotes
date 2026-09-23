@@ -8,10 +8,13 @@ tags:
   - entity-framework
   - testing
   - database
-  - llm-agents
+  - persistence-layers
+  - mechanical-sympathy
 aliases:
   - EF Core with AI Agents
   - SQL Server and Agentic Coding
+  - Data Access Economics with Coding Agents
+  - ORMs vs Explicit SQL in the AI Era
 ---
 
 # Agentic Coding with EF Core and SQL Server
@@ -29,6 +32,8 @@ The main question is no longer whether an agent can write SQL and map a result s
 - Where should business logic live?
 - How do we verify semantics, concurrency, and performance?
 - Can humans still understand and review the resulting system?
+
+Teams historically accepted the ORM tax—leaky abstractions, hidden N+1 query storms, runaway joins, and object-relational impedance mismatches—simply because writing data access layers by hand was an exhausting typing bottleneck. When an agent drives the marginal cost of generating repetitive DTOs and explicit SQL queries close to zero, that typing bottleneck disappears. However, near-zero generation cost does not eliminate the hard problems of persistence; it introduces new failure modes around silent contract drift and split-backend logic sprawl.
 
 ## An Agent Can Easily Generate the Mapping Layer
 
@@ -65,6 +70,13 @@ Potential mismatches include:
 - a structurally valid but semantically incorrect join.
 
 These are often subtle errors: the code looks plausible and may survive superficial review.
+
+In agent-modified queries, these mismatches produce specific runtime failure modes:
+
+- **Nullability inversion**: A database column defined as `NOT NULL` in the table schema becomes silently nullable the moment an agent introduces a `LEFT JOIN`. If the target C# record or domain model expects a non-nullable value, the application throws an unhandled `NullReferenceException` in production the moment an outer relationship yields no matches.
+- **Semantic join alterations**: An agent may change a `LEFT JOIN` to an `INNER JOIN` to satisfy a prompt requirement. The SQL passes syntax validation, but it silently drops rows when optional relationships are empty, returning truncated result sets.
+- **Type truncation and precision loss**: An agent might map a database `bigint` to a standard 32-bit `int`, or map a high-precision `decimal(18, 4)` financial balance to a `double`, introducing silent rounding errors or overflow exceptions into production ledgers.
+- **Alias drift**: Renaming a SQL projection alias (such as `SELECT u.UserId AS Id`) without updating reflection- or dictionary-based row mappers fails silently, hydrating the C# property with a default zero, empty string, or `null`.
 
 ## What Should Be the Source of Truth?
 
@@ -141,6 +153,8 @@ The contract validator should compare:
 
 For SQL Server, result metadata can be inspected using facilities such as `sp_describe_first_result_set`. A provider-independent alternative is executing the command in a schema-only mode and inspecting `DbDataReader.GetColumnSchema()`, although provider behavior and nullability reporting must be verified.
 
+Using dynamic management functions like `sys.dm_exec_describe_first_result_set` or system stored procedures like `sp_describe_undeclared_parameters` returns the exact schema contract of any ad-hoc query string without executing the query logic or mutating data. Running this validation harness in CI against an ephemeral database container (such as Testcontainers) verifies the entire query suite in milliseconds before code ever reaches staging.
+
 The test suite should include at least:
 
 1. rebuilding a database from all migrations;
@@ -176,6 +190,8 @@ EF Core does not necessarily produce bad SQL. For ordinary filtering, projection
 
 The distinction is therefore not simply “good SQL versus bad EF.” EF provides type information, convenient change tracking, refactoring support, and a discoverable model. Explicit SQL provides precise control and access to the database's full language.
 
+Set-based operations illustrate the mechanical advantage clearly. Pulling thousands of entity graphs across the network into memory, mutating properties in a loop, and relying on change tracking emits thousands of individual `UPDATE` statements, saturating connection pools and churning the buffer cache. A handwritten, set-based `UPDATE ... WHERE` executes inside the engine in a single round trip with minimal log and memory overhead. Furthermore, explicit SQL eliminates surprise Cartesian explosions caused by eager-loading multiple navigation collections simultaneously (`.Include()`), allowing queries to be tuned directly with targeted covering or filtered indexes.
+
 ## Moving Code into the Database
 
 Agents also reduce the implementation cost of views, functions, and stored procedures. These mechanisms have different appropriate roles:
@@ -207,6 +223,10 @@ Poor candidates include:
 - logic moved merely because SQL can express it.
 
 Otherwise the system develops two backends: one in C# and another hidden in stored procedures. An agent can cheaply add code to both, but reviewers and maintainers must still understand both.
+
+To avoid this split-backend trap, keep the operational boundaries distinct:
+- **Application runtime**: Domain workflow orchestration, external API calls and webhooks, idempotency boundaries, domain event publishing, and volatile business policies that change frequently.
+- **Database engine**: Relational integrity constraints (foreign keys, check constraints, unique indexes), high-throughput set-based transformations, mass aggregation, and strict ACID transactional boundaries across multi-table writes.
 
 ## What Agents Reduce—and What They Do Not
 
@@ -267,6 +287,8 @@ An agent working in this architecture should be instructed to:
 9. measure rather than merely claim performance improvements;
 10. keep business reasoning in the application unless database placement is explicitly justified.
 
+Enforcing atomic changes across files is critical: whenever an agent modifies a query projection, it must update the corresponding C# result DTO and its contract test in the same pass. Leaving mapping or test updates for a subsequent prompt invites prompt drift and broken builds.
+
 ## Conclusion
 
 Agentic coding makes explicit SQL and database-side programming economically more attractive because it lowers the cost of repetitive implementation and maintenance. It does not remove the need for strong contracts, migrated-database tests, semantic review, or architectural discipline.
@@ -276,6 +298,10 @@ The likely outcome is not a return to putting the entire application in stored p
 ## Related Notes
 
 - [[Designing Software Architecture with LLM Assistance]]
+- [[Designing Software for AI Agents]]
 - [[LLM Coding Agents Reliability]]
 - [[Agentic Harnesses for Software Development]]
 - [[Testing as Executable Documentation]]
+- [[Testing in the Model, Agent, LLM Era]]
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]]

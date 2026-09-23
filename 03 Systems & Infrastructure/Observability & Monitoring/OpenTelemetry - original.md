@@ -79,6 +79,12 @@ Profiles are newer and less mature than the other three.
 
 Frontend/browser/mobile telemetry is not a separate signal. Those are simply additional telemetry sources that can emit traces, metrics, logs, etc.
 
+Under the hood, these signals serve distinct diagnostic purposes:
+- **Traces** record the causal path of a request through a distributed system. Spans form a Directed Acyclic Graph (DAG) capturing operations, parent-child dependencies, and latencies.
+- **Metrics** provide aggregated numerical counters, gauges, and histograms tracking throughput, error rates, and resource saturation over time.
+- **Logs** capture discrete, structured event records. In OpenTelemetry, logs carry ambient `TraceId` and `SpanId` identifiers, linking them directly into distributed traces.
+- **Profiles** capture continuous call-stack samples to attribute CPU allocations and thread contention directly to code paths.
+
 ---
 
 ## 2. OTLP — OpenTelemetry Protocol
@@ -129,6 +135,8 @@ OTLP traces ─────────┘
 
 normalize them, and then forward them using OTLP or another supported protocol.
 
+OTLP is serialized primarily with Protocol Buffers (Protobuf). In production, it runs over gRPC (HTTP/2) using standard port 4317, or over HTTP/1.1 with Protobuf/JSON payloads on port 4318.
+
 ---
 
 ## 3. OpenTelemetry Architecture
@@ -155,6 +163,10 @@ OpenTelemetry
 
 Applications use OpenTelemetry APIs or platform-native APIs integrated with OpenTelemetry to produce telemetry.
 
+OpenTelemetry enforces a strict boundary between the API and the SDK:
+- **API**: Contains only the instrumentation interfaces and data types. It has zero dependencies on network transports or exporters. If an application instruments code against the API and no SDK is registered at runtime, calls fall back to a zero-overhead no-op implementation.
+- **SDK**: The runtime implementation (in .NET, Go, Java, etc.) that registers listeners, manages in-memory buffering, evaluates sampling rules, executes batch processors, and transmits payloads over the wire.
+
 ### Semantic conventions
 
 OpenTelemetry tries to standardize attribute names and meanings.
@@ -171,6 +183,8 @@ method
 telemetry can follow common conventions.
 
 This is important for portability between observability providers.
+
+Conventions cover standard keys across network boundaries: `http.request.method`, `http.response.status_code`, `db.system`, and `db.statement`. Adhering to these conventions guarantees that dashboards, alert queries, and APM views operate predictably regardless of which programming language or framework emitted the span.
 
 ### Context propagation
 
@@ -198,6 +212,11 @@ SpanId
 ParentSpanId
 traceparent
 ```
+
+Context propagation standardizes on the **W3C TraceContext** specification:
+- `traceparent`: A single formatted header containing the protocol version, 16-byte `TraceId`, 8-byte `ParentSpanId`, and trace flags (for example, `01` indicating recorded/sampled).
+- `tracestate`: Transports vendor-specific opaque routing and filtering metadata across hops without breaking trace continuity.
+- **Baggage**: Key-value pairs propagated across the distributed call tree. It carries cross-cutting business context (such as `tenant.id`) across microservices without hitting an intermediate datastore, though it is not automatically converted to span attributes without explicit mapping.
 
 ---
 
@@ -306,6 +325,12 @@ add:
 backend
 ```
 
+In Collector pipelines, **processor order matters strictly**. Telemetry flows sequentially through the declared list:
+- `memory_limiter`: Drops or backs off ingestion when the Collector process approaches its physical RAM ceiling. It must be declared first in the pipeline to prevent unrecoverable out-of-memory crashes.
+- `k8sattributes`: Enriches spans and logs with pod name, namespace, and workload labels resolved dynamically from the client's IP address.
+- `transform`: Uses the OpenTelemetry Transformation Language (OTTL) to mutate, rename, or drop attributes via declarative statements before exporting.
+- `batch`: Groups individual records into larger compressed network frames, slashing outbound HTTP/gRPC connection overhead and downstream network calls.
+
 ## Exporters
 
 Exporters send telemetry to another system.
@@ -387,6 +412,8 @@ Collector
    ├──→ Elastic
    └──→ Grafana ecosystem
 ```
+
+Beyond vendor decoupling, the Collector acts as an operational buffer. Direct application export leaves application runtimes vulnerable: if a cloud backend stalls or drops connections, in-process queues fill up, forcing application threads to absorb memory pressure or stall on outbound sockets. An intermediate Collector decouples application thread health from backend availability, offloading batch compression, retry loops, and auth credential handling to a dedicated process.
 
 ---
 
@@ -522,6 +549,8 @@ exporter
 
 This resembles the old Application Insights extensibility pipeline.
 
+In .NET, custom processors inherit from `BaseProcessor<Activity>` and implement `OnEnd(Activity activity)`. These run synchronously on execution or batch dispatch threads, making them ideal for stripping known sensitive keys or adding thread-level diagnostic tags before data leaves memory.
+
 ---
 
 ## Collector-level transformation
@@ -578,6 +607,8 @@ Trace B   message handler
 
 This provides a better representation of asynchronous workflows.
 
+In asynchronous message processing (such as Kafka, RabbitMQ, or Azure Service Bus), making a consumer span a direct child of the publishing span introduces serious operational confusion. A message might sit in a queue for minutes or hours before processing; representing it as a parent-child span stretches the trace duration artificially and misrepresents system latency. When a worker pulls a batch of 50 messages, span links allow the consumer to reference all 50 distinct upstream traces without creating an unreadable, interleaved trace hierarchy.
+
 ---
 
 # 9. Sampling
@@ -615,6 +646,12 @@ sample ordinary successful requests
 ```
 
 Tail sampling is one of the reasons a central Collector can be valuable.
+
+### The Tail Sampling Routing Invariant
+
+Tail sampling introduces an architectural invariant: **all spans belonging to the same `TraceId` must arrive at the exact same Collector instance**. Because microservices emit spans independently across the network, standard round-robin load balancers will scatter spans across different Collector nodes, causing incomplete trace DAGs and broken sampling decisions.
+
+Solving this requires a two-tier Collector topology. A front-facing routing tier uses the OpenTelemetry `loadbalancingexporter` to compute a consistent hash on the incoming `TraceId`. It deterministically forwards all spans for that trace to a specific second-tier Collector node, where the `tail_sampling` processor evaluates the completed trace against sampling rules.
 
 ---
 
@@ -791,6 +828,8 @@ email address
 
 usually should not become metric dimensions.
 
+In time-series databases (like Prometheus or Grafana Mimir), each unique permutation of metric dimensions allocates a distinct time-series line in memory. Emitting high-cardinality values like user IDs or order numbers explodes the database's inverted index, saturates RAM, and eventually crashes the storage engine. High-cardinality context belongs exclusively in span attributes or structured log payloads, which are indexed differently and designed for arbitrary uniqueness.
+
 ---
 
 # 12. Logs
@@ -921,6 +960,8 @@ A useful consequence is that logs already written to stdout can survive the appl
 
 The pod itself is not responsible for maintaining those files. The container runtime/node logging infrastructure performs that job.
 
+When an application writes to `stdout`, the write traverses an operating system pipe buffer managed directly by the Linux kernel. The container runtime (such as containerd or CRI-O) drains the pipe and appends the log record to the node's local disk. Even if the application process terminates violently due to an out-of-memory kill (`OOMKilled`, exit code 137) or a sudden segmentation fault, the fatal log entry describing the crash is already flushed to the host filesystem.
+
 ---
 
 # 15. OTel Collector for Kubernetes Logs
@@ -993,6 +1034,8 @@ backend
 
 If the Collector restarts, telemetry remaining in persistent storage can be retried.
 
+The `filelog` receiver tracks its read state by persisting file checkpoints (device ID, inode, and byte offset) to disk. If the Collector crashes and restarts, it resumes reading from the exact byte where it left off, avoiding duplicate or dropped records. Outbound exporters can be backed by the Collector's `file_storage` extension, creating an on-disk buffer that protects telemetry during downstream network outages.
+
 ### Node failure
 
 Node-local storage still has limits.
@@ -1036,6 +1079,8 @@ Node
 One Collector can therefore handle logs from many pods.
 
 Sidecars are more appropriate when a particular application requires unusual per-pod processing or integration.
+
+From a resource standpoint, a sidecar collector duplicates memory allocations across every pod in the cluster. Deploying a sidecar across 100 pods means maintaining 100 independent Collector memory buffers and 100 sets of outbound network connections. A node-level DaemonSet consolidates telemetry processing into a single shared process per host, lowering cluster-wide memory usage and connection churn.
 
 ---
 
@@ -1350,6 +1395,8 @@ Backends still differ in:
 
 OTel primarily reduces coupling at the telemetry generation and transport layer.
 
+Query languages and alert rules remain tightly bound to specific storage engines. Standardizing on OpenTelemetry does not mean you can run a PromQL query against Azure Log Analytics, or a KQL statement against Grafana Loki or Tempo. Migrating backends still requires translating dashboards, recalculating alert thresholds, and adapting to different billing models (such as paying per ingested gigabyte versus paying per active metric time series). OpenTelemetry solves application-side lock-in, not backend query compatibility.
+
 ---
 
 # 26. Security and Sensitive Data
@@ -1386,6 +1433,8 @@ backend
 The Collector is particularly useful for enforcing organization-wide filtering or redaction policies.
 
 However, sensitive values ideally should not be emitted unnecessarily in the first place.
+
+The Collector can enforce sanitization rules centrally using the `transform` processor or dedicated redaction components. By configuring regex patterns to mask credit cards, tokens, or email addresses, and stripping sensitive headers like `Authorization` or `Cookie`, teams ensure compliance across all running microservices without having to rely on every developer remembering to sanitize local log outputs.
 
 ---
 
@@ -1497,3 +1546,4 @@ The most important architectural distinction is therefore:
 And for Kubernetes logging specifically:
 
 > **Applications normally log to stdout/stderr. Kubernetes/container runtime captures those streams into node-local log files, and a node-level collector can forward them. Direct in-process OTLP log export should not be relied upon when logs must survive abrupt application crashes.**
+```

@@ -16,6 +16,8 @@ aliases:
 
 Good architecture becomes more important when agents can generate changes at high speed.
 
+When a human developer inherits a tangled codebase with hidden conventions, they lose hours in chat threads, design documents, and debugger sessions piecing together how things actually run. When an AI agent hits that same codebase, it burns context window tokens searching through disconnected files, hallucinates missing links, and generates diffs that subtly violate unstated invariants across the system.
+
 An agent-friendly system should make it easy to answer:
 
 1. Where should this change be made?
@@ -57,6 +59,19 @@ await transaction.Execute(async () =>
 ```
 
 This style is helpful when the ordering and scope of these operations are important to the business behavior. It is not automatically better than middleware, filters, decorators, or pipelines.
+
+Contrast that with an implicit, magic approach:
+
+```csharp
+// How are permissions evaluated? Does the attribute run before model binding?
+// Is there an ambient database transaction wrapping this method?
+// Does saving an entity automatically trigger outbox dispatch via reflection?
+[CustomMagicFilter]
+[TransactionalPipeline]
+public Response Handle(Request req) => _service.DoThing(req);
+```
+
+When execution semantics are hidden behind dynamic runtime scanning, aspect-oriented magic, or undocumented filter ordering, both humans and language models struggle. An agent cannot reliably infer the order of execution from a class attribute if that attribute relies on an internal reflection registry configured three projects away.
 
 Centralized behavior can reduce duplication and make a system more consistent. For example, global exception handling may map known domain failures to HTTP responses while handlers allow unexpected exceptions to propagate. An agent can often continue this convention by inspecting neighboring handlers, tests, application registration, and middleware configuration. Repeating the same exception handling in every endpoint would make the system less consistent, not more explicit.
 
@@ -174,6 +189,74 @@ There is no universally best choice between a module facade, public handlers, an
 - data and behavior ownership are clear,
 - module boundaries are mechanically enforced.
 
+Mechanical enforcement means relying on the compiler, explicit project dependencies, and automated architectural tests (such as ArchUnit or NetArchTest) rather than documentation. If an internal module type or persistence model leaks across a boundary, the build should fail immediately.
+
+---
+
+## File Topology: Co-Locating Vertical Slices for Agent Cognition
+
+Beyond logical module boundaries, physical file layout directly dictates how effectively an engineer or an agent can reason about and modify a codebase.
+
+Traditional enterprise clean architecture splits a single business use case across horizontal technical layers:
+
+```text
+src/
+├── Application/
+│   ├── Commands/      ──► CancelOrderCommand.cs
+│   ├── Handlers/      ──► CancelOrderCommandHandler.cs
+│   ├── Validators/    ──► CancelOrderCommandValidator.cs
+│   └── Results/       ──► CancelOrderResult.cs
+├── Domain/
+│   └── Entities/      ──► Order.cs
+└── Infrastructure/
+    └── Repositories/  ──► OrderRepository.cs
+```
+
+When an agent needs to add a validation rule or modify domain behavior in this layout, it suffers from context blindness. Editing a handler without the validator and input contract in view forces the model to guess missing invariants, hallucinating rules and burning token budget on multi-hop file-browsing tool calls.
+
+Structuring operations as cohesive vertical slices on disk solves this locality problem. Co-locating the command, its validation, the handler, and the output contract in a single physical file keeps the entire operation observable in one pass:
+
+```csharp
+// Features/Orders/CancelOrder.cs
+
+public sealed record CancelOrderCommand(Guid OrderId, Guid UserId, string Reason);
+
+public sealed class CancelOrderValidator
+{
+    public ValidationResult Validate(CancelOrderCommand cmd)
+    {
+        if (cmd.OrderId == Guid.Empty) return ValidationResult.Fail("Invalid OrderId");
+        if (string.IsNullOrWhiteSpace(cmd.Reason)) return ValidationResult.Fail("Reason required");
+        return ValidationResult.Success();
+    }
+}
+
+public sealed class CancelOrderHandler
+{
+    private readonly IDbConnection _db;
+    private readonly IEventPublisher _events;
+
+    public CancelOrderHandler(IDbConnection db, IEventPublisher events)
+    {
+        _db = db;
+        _events = events;
+    }
+
+    public async Task<CancelOrderResult> Handle(CancelOrderCommand cmd, CancellationToken ct)
+    {
+        // Explicit domain execution, state mutation, and outbox event dispatch
+        // Fully observable in a single file read
+    }
+}
+
+public sealed record CancelOrderResult(bool Succeeded, string? ErrorMessage);
+public sealed record OrderCancelledEvent(Guid OrderId, DateTime OccurredUtc);
+```
+
+Co-locating these components delivers dense context without wasting attention budget on navigating directory trees. When an agent updates the feature, it produces a clean, isolated diff against a single file, eliminating orphaned files, broken imports, and mismatched cross-file contracts.
+
+However, vertical co-location is not a license to create monolithic God files. Cramming thirty unrelated operations or a massive entity mapping into a 3,000-line file degrades attention and creates constant merge collisions. Keep each file focused on a single capability or vertical slice, bounded between 200 and 500 lines of code. When a slice exceeds that size, extract shared pure domain calculations or split compound flows into distinct feature files.
+
 ---
 
 ## Model Data to Eliminate Interpretation
@@ -190,6 +273,27 @@ Avoid designs where:
 - the meaning of data depends on execution order.
 
 Do not minimize the number of fields. Minimize the number of possible interpretations.
+
+```text
+AMBIGUOUS / OVERLOADED MODEL:
+class Booking {
+    double amount;        // Wholesale cost? Retail price? Including or excluding tax?
+    int status;           // What does 0 mean? Unprocessed, failed, or cancelled?
+    String metadata;      // Untyped JSON string with varying fields based on status
+    DateTime? processed;  // Does null mean queued, in-flight, or skipped?
+}
+
+EXPLICIT / SELF-DOCUMENTING MODEL:
+class Booking {
+    Money supplier_cost_net;
+    Money customer_price_gross;
+    BookingStatus lifecycle_status; // Explicit enum: PendingPayment, Confirmed, Cancelled
+    AuditTrail audit_record;        // Strongly-typed structured payload
+    ProcessingSchedule schedule;   // Distinct state machine representation
+}
+```
+
+Ambiguous models force agents to make guesses. Never use `null` to simultaneously represent "not yet loaded", "does not exist", and "not applicable". Eliminate magic sentinel values like `0` or `-1` for unbound retries or special system accounts, and never reuse a single `price` field to represent supplier cost in an ingest step and customer price during checkout.
 
 ---
 
@@ -218,14 +322,33 @@ Each meaningful stage should have a clear input and output. Separate types are p
 Example categories:
 
 ```csharp
-HotelSupplierQuote
-NormalizedHotelCost
-HotelPricingResult
-PackagePricingResult
-ProfitValidationResult
+public record HotelSupplierQuote(
+    string SupplierCode, 
+    decimal RawRate, 
+    string Currency);
+
+public record NormalizedHotelCost(
+    Guid HotelId, 
+    Money BaseCostUtc);
+
+public record HotelPricingResult(
+    Guid HotelId, 
+    Money CustomerPrice, 
+    decimal MarginApplied);
+
+public record PackagePricingResult(
+    IReadOnlyList<HotelPricingResult> LineItems, 
+    Money TotalPackagePrice);
+
+public record ProfitValidationResult(
+    bool IsViable, 
+    Money NetMargin, 
+    IReadOnlyList<string> PolicyViolations);
 ```
 
 This makes data provenance and responsibility visible without requiring a distinct type for every incidental implementation step.
+
+Using explicit types for intermediate steps keeps data provenance clear: an agent or developer inspecting `HotelPricingResult` immediately sees what inputs were required to calculate it without reverse-engineering upstream feeds. It also allows isolated unit testing of each transformation stage without setting up mock databases or complex harness fixtures, while preventing raw, unvalidated supplier payloads from leaking into customer-facing pricing logic.
 
 ## Practical Working Rules
 
@@ -242,3 +365,6 @@ This makes data provenance and responsibility visible without requiring a distin
 - Keep side effects and transaction boundaries visible or readily traceable.
 - Treat modular monoliths and microservices as architectural trade-offs, not as agent-specific defaults.
 - Choose module facades, public handlers, or mediator dispatch according to discoverability, coupling, and consistency rather than fashion.
+
+Pair explicit architecture with automated unit and integration tests that run locally in seconds. A discoverable architecture directs an engineer or agent to where a change belongs; a fast, deterministic test suite provides the immediate feedback loop to prove the change is safe.
+```

@@ -658,6 +658,8 @@ namespace
 Kubernetes Service Account
 ```
 
+Under the hood, an admission webhook intercepts pod creation, projecting a short-lived Kubernetes ServiceAccount token into the pod volume and injecting environment variables (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_FEDERATED_TOKEN_FILE`). The Azure SDK exchanges this projected OIDC token with Microsoft Entra ID using the federated credential configured for the Managed Identity, scoped to the audience `api://AzureADTokenExchange`.
+
 ## Kubernetes Configuration
 
 A Service Account can identify which Entra identity the workload should use:
@@ -853,6 +855,12 @@ The network may additionally restrict access using:
     
 - Azure RBAC does not always replace grants inside the database.
     
+
+## Connection Pooling and Token Expiration
+
+When using secretless authentication with database connection poolers (such as ADO.NET, HikariCP, or Npgsql), verify driver support for automated token refreshes. 
+
+If a connection pooler initializes physical TCP connections with an OAuth access token, those pooled connections can fail or throw authentication exceptions when the initial token expires (typically after 60 minutes) unless the driver or pooler actively retrieves fresh tokens when validating or opening connections. Modern drivers (such as `Microsoft.Data.SqlClient` or modern `Npgsql` plugins) manage token lifecycles natively when configured for Active Directory Default authentication.
 
 ---
 
@@ -1086,6 +1094,29 @@ authorization policies
 ```
 
 Use when the cluster hosts many sensitive or independently owned workloads.
+
+For example, an Istio policy can enforce cryptographic identity and method restrictions without application changes:
+
+```yaml
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-orders-to-inventory
+  namespace: inventory
+spec:
+  selector:
+    matchLabels:
+      app: inventory-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/orders/sa/orders-api"]
+      to:
+        - operation:
+            methods: ["POST"]
+            paths: ["/reservations*"]
+```
 
 ## Azure-Consistent Model
 
@@ -1418,6 +1449,8 @@ When a secret is unavoidable:
 - prevent logging.
     
 
+To avoid writing custom secret-retrieval code in every pod, deploy the Azure Key Vault Secrets Store CSI Driver. Workload Identity authenticates the CSI driver against Key Vault, which mounts the secret as a local volume file in the container filesystem or synchronizes it to a Kubernetes `Secret` resource without exposing connection strings in source control.
+
 ---
 
 # User Context Is Separate from S2S Authentication
@@ -1460,6 +1493,12 @@ Service B decides whether it authorizes:
     
 
 The user ID should be treated as context unless protected delegation is explicitly used.
+
+## Forwarding Browser Tokens vs. Protected Delegation
+
+Forwarding an incoming user browser token directly across internal services is a dangerous anti-pattern. User tokens are issued for a specific public audience (such as the API gateway or edge service). Replaying them internally means downstream services must either skip audience validation—allowing any token to be replayed anywhere—or fail the call. Furthermore, if an internal service is compromised, stolen user tokens can be used to impersonate the user against other systems. User tokens also have short lifetimes (often 60 minutes), breaking background workers and asynchronous message consumers.
+
+When downstream operations genuinely require verified user delegation, use the OAuth 2.0 On-Behalf-Of (OBO) flow. The edge service exchanges the user token for a new token scoped strictly to Service B's audience. Otherwise, keep machine authentication distinct: Service A authenticates with its own workload identity (Managed Identity or mTLS) and passes the user ID, tenant ID, and correlation ID strictly as unprivileged metadata headers (`X-User-ID`, `X-Correlation-ID`).
 
 ---
 
@@ -1670,3 +1709,4 @@ Or more concisely:
 > Network location is not identity.  
 > Identity is not authorization.  
 > Authentication should not require long-lived application secrets.
+```

@@ -96,6 +96,12 @@ public sealed record MessageContext(
 
 The consuming service authenticates to the broker using its own machine identity (e.g. Managed Identity or mTLS) and verifies the producer service via message signatures or broker-level topic permissions.
 
+### Context Propagation Mechanics
+
+1. **Distributed Tracing:** Propagate `traceParent` (W3C Trace Context) to maintain end-to-end distributed telemetry in OpenTelemetry across producer and consumer spans. Many brokers allow this in transport headers (e.g., Kafka record headers or Azure Service Bus application properties).
+2. **Correlation and Causation:** Track `correlationId` (the overall root operation) and `causationId` (the direct message or command that triggered this message) to trace cascading asynchronous workflows.
+3. **Tenant Isolation:** Background workers consuming messages must rehydrate the tenant isolation context (`tenantId`) before running queries or persisting state, ensuring database connection routing, multi-tenant row-level security, or schema switches are properly applied.
+
 ---
 
 ## 4. Authorization Timing: Acceptance vs. Execution Time

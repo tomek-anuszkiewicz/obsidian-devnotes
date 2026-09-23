@@ -84,6 +84,8 @@ Review this pull request.
 
 asks one model to simultaneously reason about too many unrelated concerns.
 
+Asking one model instance to simultaneously reason about security boundaries, database query plans, asynchronous cancellation propagation, and domain invariants blows out the context window and dilutes attention. The result is predictable: shallow feedback, pedantic style nits, hallucinated syntax errors, and silence on critical race conditions. Dispatching targeted specialists keeps each agent's attention sharp and prompt context bounded.
+
 A better design is a team of specialized reviewers.
 
 For example:
@@ -213,11 +215,15 @@ A correctness reviewer may concentrate on:
 
 This is much easier to improve than one enormous global prompt.
 
+Dividing the review domain into modular playbooks makes the system maintainable. When an agent produces false positives or misses an edge case, you tune a single specialized playbook rather than destabilizing a massive global prompt.
+
 ---
 
 ## The Reviewer Should Form Hypotheses, Not Just Opinions
 
 LLMs are useful at spotting suspicious patterns, but a review becomes much more valuable when an agent can verify its own suspicions.
+
+The fastest way to destroy developer trust is to deploy an AI reviewer that litters pull requests with speculative, unverified comments like "this code might be slow" or "this could cause a concurrency issue." Speculative comments force engineers to waste time disproving hallucinations. Following a hypothesis-verification protocol ensures that an LLM generates a failure thesis, and deterministic tools verify it before any comment is posted.
 
 Instead of:
 
@@ -343,6 +349,8 @@ It is saying:
 
 > I can demonstrate a case where this is wrong.
 
+In practice, the agent writes a reproduction test asserting expected behavior and runs it against baseline (`main`) where it passes, then executes it against the pull request branch where it fails. The reproducer test confirms the defect with empirical evidence and can be committed directly to the test suite by the author, permanently preventing regression.
+
 ---
 
 ## Reviewer and Fixer Should Be Separate Roles
@@ -391,6 +399,8 @@ Approve or reject.
 This reduces the risk that the same agent unconsciously rationalizes the solution it has just created.
 
 It also makes permissions easier to control.
+
+When an agent both analyzes and modifies, it tends to rationalize its own misunderstandings. If it hallucinates a bug, it will write a patch that adds unnecessary complexity to solve an imaginary problem, or worse, modify assertions in the test suite to make its broken patch pass. Keeping the reviewer strictly read-only and forbidding the fixer from altering test assertions ensures independent verification.
 
 ---
 
@@ -448,6 +458,8 @@ hot-path implementation
 The router itself can use a cheap model.
 
 Expensive reasoning is reserved for changes where it matters.
+
+The router can combine deterministic heuristics—such as file path patterns and abstract syntax tree (AST) diffs—with a small, fast model to classify modified components. Heavy reasoning models and sandboxed execution environments are reserved for changes touching core execution paths, schema boundaries, or security perimeters.
 
 ---
 
@@ -535,6 +547,8 @@ The goal is not maximum number of findings.
 
 The goal is high-value findings.
 
+False positives erode engineering trust faster than missed edge cases. If an agent cannot generate deterministic proof for a hypothesis, that observation must either be suppressed or placed in an informational summary checklist. It should never block the developer or trigger change requests.
+
 ---
 
 ## Reviewers Can Learn From Human Decisions
@@ -615,6 +629,8 @@ and more:
 
 > How effective is this reviewer?
 
+Tracking metrics like hypothesis verification rate—the percentage of generated hypotheses confirmed by deterministic tools—shifts code review evaluation from subjective prompt engineering into measurable systems engineering. If precision drops below operational thresholds, the specialist's playbook and confidence gates must be tightened.
+
 ---
 
 ## GitHub Is a Natural Platform for This Model
@@ -661,6 +677,8 @@ inspect artifacts
 ```
 
 This is particularly attractive when verification requires executing the code.
+
+Running directly inside the project's native build container provides a natural sandbox for verifying hypotheses, compiling benchmarks, and running regression suites without exposing internal build artifacts or network topologies to external third-party services.
 
 ---
 
@@ -713,6 +731,8 @@ It can add:
     
 
 This is the model used by many external analysis and review products.
+
+This architecture suits enterprise environments requiring centralized orchestration, shared prompt caches, and dedicated GPU infrastructure. The service consumes webhook events, coordinates agent reasoning off-cluster, and triggers isolated worker sandboxes only when code execution is needed for verification.
 
 ---
 
@@ -845,6 +865,8 @@ or:
 
 The value of the reviewer grows significantly when it has access to organizational context.
 
+Connecting the review engine to internal Architecture Decision Records (ADRs), post-mortem databases, and live schema statistics bridges the gap between syntactic correctness and operational viability. A pull request might pass every unit test while violating an active migration plan or triggering lock escalation on a massive production table.
+
 ---
 
 ## Permissions Should Be Deliberately Limited
@@ -871,6 +893,8 @@ Secrets
 A system that only investigates and comments requires much less trust than an autonomous coding agent.
 
 Writing code can be delegated to a separate fixer with stronger permissions.
+
+Limiting review agents to read-only repository access and write access only for comments and checks drastically limits the blast radius. If an agent is manipulated via prompt injection hidden inside untrusted pull request diffs or third-party dependencies, it cannot exfiltrate repository secrets, alter pipeline definitions, or push malicious commits to protected branches.
 
 ---
 

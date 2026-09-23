@@ -328,6 +328,10 @@ better future model
 
 The long-term advantage may come less from access to a unique model and more from having prepared the organization to use models effectively.
 
+$$\text{Organizational Capability} = \text{Frontier Model} + \text{Execution Harness} + \text{Verified Domain History} + \text{Automated Oracles}$$
+
+When foundation models are commoditized via API, model weights cease to be an organizational moat. The durable advantage is the internal substrate: an execution harness where agents can run, fail safely in isolated sandboxes, and be verified deterministically against proprietary business invariants.
+
 ---
 
 ## The environment also becomes easier for agents
@@ -516,6 +520,60 @@ production outcome
 
 This is more valuable than storing only the final code because it captures both the solution and the path used to validate it.
 
+In practice, a structured task record captures the full execution trajectory:
+
+```json
+{
+  "task_id": "MIGRATE-AUTH-0042",
+  "base_commit": "a1b2c3d4",
+  "prompt": "Migrate internal token validation to standard OAuth2 JWT verification across user-service",
+  "agent_trajectory": [
+    {
+      "step": 1,
+      "thought": "Inspect existing auth middleware and parse token verification logic.",
+      "tool_call": "read_file",
+      "arguments": { "path": "src/middleware/auth.go" },
+      "result": "package middleware\nimport (...)"
+    },
+    {
+      "step": 2,
+      "thought": "Update JWT parsing to use standard jwt-go library.",
+      "tool_call": "edit_file",
+      "arguments": { "path": "src/middleware/auth.go", "diff": "..." },
+      "result": "File updated successfully."
+    },
+    {
+      "step": 3,
+      "thought": "Run unit test suite to verify token parsing.",
+      "tool_call": "run_command",
+      "arguments": { "command": "go test ./src/middleware/..." },
+      "result": "FAIL: TestTokenValidation - signature invalid: key format mismatch"
+    },
+    {
+      "step": 4,
+      "thought": "The public key parsing logic expects PEM-encoded blocks. Update key loader.",
+      "tool_call": "edit_file",
+      "arguments": { "path": "src/middleware/keys.go", "diff": "..." },
+      "result": "File updated successfully."
+    },
+    {
+      "step": 5,
+      "thought": "Re-run unit tests.",
+      "tool_call": "run_command",
+      "arguments": { "command": "go test ./src/middleware/..." },
+      "result": "PASS: ok  user-service/src/middleware 0.42s"
+    }
+  ],
+  "human_review": {
+    "approved_by": "lead-architect",
+    "notes": "Good recovery on key parsing. Added defensive error handling on missing headers."
+  },
+  "final_commit": "e5f6a7b8"
+}
+```
+
+These structured traces capture the initial context, the compiler or test failure, the diagnostic reasoning, and the verified resolution. Retaining multi-step execution logs turns everyday developer corrections into high-signal datasets for internal fine-tuning, retrieval-augmented prompt harnesses, and regression test suites.
+
 ---
 
 ## A more realistic model of progress
@@ -575,6 +633,12 @@ For a particular interaction to contribute, several things must happen:
     
 
 The broader effect is therefore statistical and ecosystem-wide, rather than a guaranteed direct relationship between one user's correction and a future model.
+
+Even when public foundation models cannot train on proprietary logs due to data retention policies or licensing constraints, the flywheel still operates inside the organization. Engineering teams capture this value locally:
+
+- Hardening internal CI/CD pipelines and isolated sandbox harnesses.
+- Building domain-specific fine-tuning datasets tailored to private APIs and architectural patterns.
+- Curating golden evaluation suites to benchmark new model releases against real internal regressions.
 
 ---
 

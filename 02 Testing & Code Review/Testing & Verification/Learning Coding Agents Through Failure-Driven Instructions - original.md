@@ -10,6 +10,9 @@ tags:
 aliases:
   - Failure-Driven Agent Learning
   - Instruction Tuning from Coding Failures
+  - Procedural Memory for Coding Agents
+  - Eval-Driven Instruction Engineering
+  - Dual Optimization Loops
 ---
 
 ## Core Idea
@@ -68,6 +71,8 @@ This is already realistic today because software provides unusually strong autom
     
 
 The agent can repeatedly modify the implementation until the checks pass.
+
+However, relying entirely on the inner loop leaves the system with complete operational amnesia. The agent will make the exact same architectural blunder on Friday that it made on Monday, burning compute, burning tokens, and requiring another five iterative compile-and-fix cycles to rediscover boundaries that were already known.
 
 ---
 
@@ -163,6 +168,8 @@ Success rate alone is not sufficient.
 
 An agent that succeeds after seven attempts may be much less useful than one that succeeds almost immediately.
 
+Long repair loops introduce subtle technical debt. When an LLM spends five consecutive turns attempting to satisfy a compiler or lint rule, it often starts introducing defensive, bloated code—unnecessary null-coalescing operators, redundant type assertions, and weird wrapper abstractions—just to stop the linter from screaming.
+
 Useful metrics include:
 
 ```text
@@ -207,6 +214,8 @@ add another rule
 ```
 
 Eventually the instructions would become enormous, redundant, contradictory, and difficult for the model to follow.
+
+When prompt instructions become bloated and repetitive, models suffer from rule oscillation and constraint saturation. They hyper-fixate on the rules at the very end of the prompt or those written in all-caps, while quietly ignoring foundational architectural constraints.
 
 Instead, failure processing should look more like:
 
@@ -310,6 +319,8 @@ declare improvement
 
 This may simply encode the solution to one particular case.
 
+Tweaking instructions solely to pass the task that just failed almost always results in over-indexing on an isolated symptom. You end up with hyper-specific rules that teach the model how to solve yesterday's bug while breaking its ability to generalize across tomorrow's features.
+
 Instead, instruction development should resemble machine learning evaluation:
 
 ```text
@@ -330,6 +341,8 @@ measure real improvement
 ```
 
 The instruction system itself can overfit.
+
+If a candidate rule improves the order management endpoints on the train set but degrades performance on identity management tasks in the validation set, it cannot be merged without refinement.
 
 ---
 
@@ -484,6 +497,12 @@ This changes the economics of review.
 A good review comment is no longer only an improvement to one PR.
 
 It becomes a potential improvement to **all future generated code**.
+
+### The "Don't Patch in Silence" Rule
+
+A common anti-pattern in teams adopting coding agents is the silent manual fix. A developer spots an architectural boundary violation or a domain modeling error in an agent-authored branch. To save two minutes, they rewrite the code by hand, push the commit, and merge. The immediate ticket is closed, but the agent harness learned nothing. The next agent will stumble into the exact same trap tomorrow.
+
+Treating recurring mistakes as defects in the system's operational context compounds engineering velocity. Instead of quietly fixing the code in isolation, the developer spends two minutes encoding the constraint—as an explicit instruction, an example pair, or a new architectural boundary test. Every review feedback cycle then permanently prevents that entire class of regression across all future tasks.
 
 ---
 

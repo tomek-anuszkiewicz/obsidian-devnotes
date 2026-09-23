@@ -114,6 +114,30 @@ Putting everything together gives a more realistic architecture:
                             FINAL ANSWER
 ```
 
+### 1. Safety and Policy Pre-Checks
+Before spending tokens on context retrieval or reasoning, requests pass through fast, lightweight guardrails. This layer catches prompt injections, obvious policy violations, or out-of-scope queries using cheap classifiers or deterministic keyword and regex filters, saving latency and compute.
+
+### 2. Context Planning and Assembly
+Rather than treating the model's context window as an unbounded dumping ground, production harnesses treat it like working memory or an L1 cache. The context planning step determines what information is actually necessary to solve the task:
+- **Conversational state**: Truncated or summarized history of the current interaction.
+- **Episodic memory**: Long-term user preferences, past execution failures, or cross-session facts pulled from a key-value or vector store.
+- **Retrieval-Augmented Generation (RAG)**: Relevant documentation, code snippets, or knowledge base chunks.
+- **Live environment telemetry**: Current working directory, schema definitions, tool catalogs, or active system state.
+
+Stuffing raw, unfiltered context degrades retrieval quality and increases attention dispersion across long sequences. Selective assembly ensures the model focuses on the signals that actually matter.
+
+### 3. Reasoning, Gap Detection, and Retrieval Loops
+Once assembled, the model processes the context. If it detects missing parameters, ambiguous requirements, or incomplete data, it does not guess. It triggers an execution branch: issuing targeted tool calls (such as search queries, file reads, or API requests) and looping back to incorporate the new findings into working context before proceeding.
+
+### 4. Candidate Generation, Critique, and Deterministic Verification
+For non-trivial tasks, generating a single response and assuming it is correct leads to high failure rates. High-reliability harnesses separate candidate generation from candidate verification:
+- **Generating alternatives**: The model proposes multiple trajectories or potential solutions.
+- **Critique & verification**: Instead of relying solely on the model to "grade its own homework," the harness evaluates candidates against deterministic oracles wherever possible. In coding workflows, this means running linters, compilers, type-checkers, and unit test suites. In data workflows, it means validating JSON schemas, SQL query execution plans, and row counts.
+- **Selection**: The harness discards paths that fail deterministic checks and picks the candidate that satisfies all constraints.
+
+### 5. Final Policy Evaluation
+Before mutating state (e.g., writing to a database, executing shell commands) or returning the response to the user, a final evaluator verifies that the output conforms to safety boundaries, format contracts, and operational guidelines.
+
 ---
 
 # The Important Shift in Perspective

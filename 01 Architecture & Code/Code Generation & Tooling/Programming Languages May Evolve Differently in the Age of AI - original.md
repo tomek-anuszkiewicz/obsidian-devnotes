@@ -10,6 +10,9 @@ tags:
 aliases:
   - AI-Era Programming Language Evolution
   - Languages Designed for LLM Generation
+  - Verbosity Is Cheap Ambiguity Is Expensive
+  - Context-Native Languages
+  - The Language Feature Inertia Gap
 ---
 
 Programming languages have historically evolved around human limitations.
@@ -194,6 +197,8 @@ Humans often avoid this degree of modeling because it creates additional types a
 
 Agents reduce that cost.
 
+Declaring dedicated record structs, custom serializers, and validation logic for dozens of domain wrappers creates massive manual overhead, which is why codebases default to primitive obsession. When an agent can stamp out strongly typed wrappers at zero marginal cost, wrapping identifiers and currency values becomes an easy default rather than an architectural chore.
+
 The compiler can then detect entire categories of mistakes:
 
 ```text
@@ -226,6 +231,8 @@ These reduce work for humans.
 For agents, explicit code is cheap.
 
 Hidden behavior, on the other hand, can make reasoning harder.
+
+An agent cannot inspect runtime reflection or convention-based routing purely from the source files loaded into its context window. When behavior is wired dynamically at startup rather than explicitly through the call graph, the agent is flying blind. It cannot verify dependencies statically and easily hallucinates invalid assumptions about system wiring.
 
 This may encourage a shift toward:
 
@@ -508,6 +515,8 @@ A future benchmark for language design might be:
 > Can a capable general coding agent become productive after reading thirty pages of specification and a small set of examples?
 
 That is very different from today's ecosystem requirements.
+
+A critical component of this context loop is machine-actionable compiler feedback. Traditional compilers emit prose diagnostics formatted for human eyes. An agent-friendly compiler emits structured error output—including exact AST spans, error taxonomy codes, and deterministic repair hints. This allows the model to correct build failures in a deterministic loop rather than guessing what a human-oriented error message means.
 
 ## New Features May Need Agent Readiness from Day One
 

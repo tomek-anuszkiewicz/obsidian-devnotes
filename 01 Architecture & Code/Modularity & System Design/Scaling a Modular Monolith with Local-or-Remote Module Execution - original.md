@@ -583,6 +583,8 @@ When local, this may only be inefficient.
 
 When remote, it becomes a large sequence of network round trips.
 
+In-process, this fine-grained loop executes in a few milliseconds over shared RAM. When the target module is extracted to a separate worker, 100 items produce 300 sequential network round trips, turning a sub-10ms in-memory query into a multi-second latency bottleneck.
+
 ---
 
 ## A remote call is not a local call
@@ -631,6 +633,8 @@ The caller should understand that a cross-module operation:
     
 
 The abstraction may hide transport details, but it should not hide distributed-system semantics.
+
+Context propagation also shifts across this boundary. In-process dispatch preserves ambient execution context (`AsyncLocal`), user identity, and cancellation tokens automatically. Once dispatch crosses a network transport, trace context (such as OpenTelemetry W3C `traceparent` headers), security tokens, and correlation identifiers must be explicitly serialized into message metadata and rehydrated at the receiving worker.
 
 ---
 
@@ -702,6 +706,41 @@ new ChargePayment(
 
 The handler should ensure that the same `paymentAttemptId` cannot cause a second charge.
 
+In any distributed setup, a timeout is an unknown outcome, never a confirmed failure. The receiving handler must enforce deduplication against its persistence store before triggering side effects:
+
+```csharp
+public async Task<PaymentResult> Handle(ChargePayment command, CancellationToken ct)
+{
+    var existingAttempt = await _dbContext.PaymentAttempts
+        .FirstOrDefaultAsync(p => p.Id == command.PaymentAttemptId, ct);
+
+    if (existingAttempt is not null)
+    {
+        return new PaymentResult(
+            existingAttempt.Success,
+            existingAttempt.TransactionReference,
+            existingAttempt.FailureReason);
+    }
+
+    var response = await _paymentGateway.ChargeAsync(command.Amount, ct);
+
+    _dbContext.PaymentAttempts.Add(new PaymentAttemptRecord
+    {
+        Id = command.PaymentAttemptId,
+        OrderId = command.OrderId,
+        Success = response.IsSuccess,
+        TransactionReference = response.Reference,
+        FailureReason = response.Error
+    });
+
+    await _dbContext.SaveChangesAsync(ct);
+
+    return new PaymentResult(response.IsSuccess, response.Reference, response.Error);
+}
+```
+
+If a dropped response packet forces the caller to retry, the handler detects the existing record, skips the external payment call, and immediately returns the cached transaction reference.
+
 ---
 
 ## When synchronous remote calls are reasonable
@@ -748,6 +787,8 @@ HTTP request
 
 The source code may look like several normal method calls, while runtime behavior becomes a fragile distributed transaction.
 
+Cascading synchronous chains also wreck system availability. If each module in a synchronous chain has a 99% success rate, a call spanning five consecutive hops drops the overall transaction success rate to $0.99^5 \approx 95.1\%$. Worse, the upstream caller remains blocked for the entire duration of the slowest downstream dependency. Under load, this latency tail cascades backward, exhausting web server thread pools and causing catastrophic failure across completely unrelated modules.
+
 ---
 
 ## Asynchronous commands are often safer
@@ -787,6 +828,8 @@ This provides:
 
 However, it introduces eventual consistency and requires explicit status handling.
 
+Asynchronous queueing introduces critical operational shock absorbers. Traffic spikes sit safely in the broker instead of crashing ingress API servers. If a background worker throws an out-of-memory exception on a corrupt payload, the message returns to the broker for retry or dead-lettering without dropping the customer's checkout session. Furthermore, background workloads can be scheduled on dedicated, cheaper compute instances with tailored concurrency limits.
+
 ---
 
 ## Avoid a distributed monolith
@@ -825,6 +868,8 @@ Business transactions span many synchronous remote calls.
 ```
 
 The architecture should preserve explicit module ownership rather than turn the message bus into a distributed replacement for arbitrary method calls.
+
+The most common trap is relying on ambient database transactions. In-process dispatch allows developers to cheat by wrapping multiple module calls inside an ambient `TransactionScope` or shared EF Core `DbContext`. The moment any of those modules is moved to a remote host, that atomic guarantee evaporates. If Module A commits local state and the remote command to Module B fails, Module A cannot roll back without compensating transactions or an explicit transactional outbox.
 
 ---
 
@@ -956,3 +1001,4 @@ The most important warning is:
 And the safest deployment default is:
 
 > Keep instances broadly capable, activate responsibilities explicitly, and restrict connectors only when security, reliability or resource isolation provide a concrete reason.
+```

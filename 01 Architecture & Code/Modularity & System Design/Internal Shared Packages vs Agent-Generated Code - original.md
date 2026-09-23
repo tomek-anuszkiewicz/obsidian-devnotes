@@ -10,6 +10,9 @@ tags:
 aliases:
   - Shared Libraries vs Generated Code
   - NuGet vs AI Generation
+  - Internal Packages vs Agent-Generated Code
+  - Reusable Implementation vs Repeatable Instruction
+  - The Strategic Triad Heuristic
 ---
 
 ## Core Question
@@ -53,6 +56,8 @@ Internal packages have usually been created to provide:
 LLMs significantly reduce the cost of writing repetitive code. This weakens the argument that code should be packaged only because developers do not want to write it repeatedly.
 
 However, agents do not automatically solve versioning, rollout, ownership, or consistency problems.
+
+Every package an organization introduces imposes a long-term maintenance tax: transitive dependency drift, semantic versioning churn, build-pipeline maintenance, and coordinated upgrade campaigns across multiple teams. When the marginal cost of writing and refactoring boilerplate was high, accepting that maintenance tax was a necessary trade-off. When agents reduce the cost of generating explicit, local code to near zero, that economic equation flips: the operational drag of maintaining an internal library often exceeds the cost of managing decoupled, localized implementations.
 
 ---
 
@@ -304,6 +309,10 @@ A pattern does not have to become a reusable package immediately.
 
 The organization can first document and validate the pattern and only package it when a genuinely stable abstraction emerges.
 
+### Isolated blast radius
+
+Keeping generated code local to the repository establishes a strict failure boundary. If an agent introduces a subtle logic defect or an unoptimized query in a local handler, the operational blast radius is confined to that single service. Conversely, distributing a flawed fix or an unexpected behavioral change through a central shared package risks destabilizing dozens of downstream microservices simultaneously upon their next build or deployment.
+
 ---
 
 ## Entity Framework as an Example of the Same Shift
@@ -457,6 +466,8 @@ A package change may require coordination across many teams and repositories.
 
 Applications may be forced to adopt unrelated dependencies or architectural decisions.
 
+Shared utility libraries typically pull in transitives—specific JSON serializers, logging drivers, or web framework bindings—that eventually clash with the host service. When an application team needs to bump a major framework version, they often find themselves blocked waiting for the internal platform library to publish an update.
+
 ### Accidental business logic centralization
 
 Shared packages may gradually absorb business rules that should belong to specific domains.
@@ -567,6 +578,8 @@ Use NuGet packages for:
 - critical algorithms,
     
 - low-level infrastructure integrations.
+
+Shared runtime packages in this tier must contain zero domain business logic and stay out of application startup wiring. As soon as a shared library attempts to configure dependency injection containers or register ambient global middleware behind magic extension methods, it hides the execution flow from coding agents and couples services to a specific hosting framework.
     
 
 ### Layer 2: Executable organizational standards
@@ -584,6 +597,8 @@ Use:
 - security scanning,
     
 - compatibility test suites.
+
+This tier executes entirely out-of-band during the CI validation pipeline. Because conformance test suites and architectural rules validate compiled services against observable network and contract boundaries, they enforce organizational consistency without injecting runtime dependencies into the production deployment artifact.
     
 
 ### Layer 3: Locally generated code
@@ -605,6 +620,8 @@ Generate:
 - configuration,
     
 - boilerplate integrations.
+
+Because this code lives directly inside the service repository, it can be freely refactored by agents to match local domain models and performance requirements. Local code eliminates transitive dependency conflicts and ensures that the complete execution path remains directly visible in the repository context.
     
 
 This model avoids building a large corporate framework while still preserving consistency where consistency matters.
@@ -688,3 +705,4 @@ If it is a repeatable instruction, an agent can generate the code.
 If correctness can be described externally, conformance tests can validate it.
 
 If one exact implementation must be trusted and maintained centrally, a package or service is still the better abstraction.
+```

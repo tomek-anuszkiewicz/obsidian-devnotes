@@ -16,6 +16,8 @@ Large language models learn from available data, but in software engineering the
 
 Public repositories contain enormous amounts of code, but code is mostly the **final artifact**.
 
+In public git trees, squashed commits and scrubbed pull requests systematically strip away the exact signal an agent needs to learn causal reasoning: dead-end approaches, design debates, test failures, and emergency rollbacks. The public artifact reflects survivorship bias, while the actual debugging journey stays private.
+
 Inside companies, there is a much richer record of how software was actually created.
 
 A typical development history may contain:
@@ -84,6 +86,8 @@ It teaches:
     
 
 This type of information is often absent from public code.
+
+When models only train on final, clean commits, they learn what valid syntax looks like, but remain blind to how systems break under production load and how engineers isolate faults.
 
 ## Software Companies Possess Large Amounts of "Dark Knowledge"
 
@@ -266,6 +270,8 @@ It contains:
 Traditional repositories mostly preserve the final solution.
 
 Agent systems can preserve the **entire path toward the solution**.
+
+Unlike static code, an agent trajectory captures concrete runtime feedback—compiler errors, failing test assertions, and stack traces—alongside the corrective diffs applied to recover from intermediate failures. This provides dense, step-by-step supervision on fault isolation that static repositories cannot offer.
 
 At sufficient scale, normal software development with agents could automatically generate enormous datasets describing how models fail and how those failures should be corrected.
 

@@ -64,6 +64,8 @@ Discovering these barriers early creates useful organizational knowledge.
 
 A company may begin improving its systems before AI becomes capable enough to use them fully.
 
+When an early pilot breaks, the postmortem usually points directly to missing typed interfaces, schema mismatches across services, or non-existent evaluation benchmarks rather than fundamental model failure. Preparing repositories with [[Agentic Coding Harness and Controlled Development Workflows]] exposes these exact blockers, turning a failed prototype into an engineering backlog for test harnesses and deterministic execution environments.
+
 ## The Real Advantage Is Not Prompting Skill
 
 Knowing how to use an AI interface or write prompts is a relatively small advantage.
@@ -88,6 +90,8 @@ More important capabilities include:
     
 
 A company that has already run many experiments may understand these issues much better than a company starting only after a major technological breakthrough.
+
+In practice, long-term leverage comes from systems engineering: exposing internal services via typed contracts (such as OpenAPI or JSON Schema) with idempotency guarantees, instrumenting automated test benches to benchmark model regressions, and calculating unit economics across token caching, latency budgets, and human-in-the-loop review overhead.
 
 ## Organizational Absorptive Capacity
 
@@ -139,6 +143,8 @@ These improvements are useful even without AI.
 
 At the same time, they create an option to adopt future agents much faster. The company is not merely buying an AI tool. It is preparing an environment in which future AI can operate effectively.
 
+Because [[AI Productivity Is Limited by the Delivery System]], resolving these delivery constraints yields immediate productivity gains for human engineers. When CI build times drop from forty minutes to two, and modules expose clean integration boundaries, both human developers and autonomous coding agents can run tight verification loops.
+
 ## Preserving Knowledge Before It Is Needed
 
 Early AI readiness is not only about experimenting with models. It is also about preserving organizational knowledge before it disappears.
@@ -170,6 +176,8 @@ The important insight is:
 
 > A model can be purchased later. Lost organizational memory cannot be reconstructed easily.
 
+If a senior engineer explains the edge cases of a distributed locking mechanism during an unrecorded call and leaves the company six months later, that operational context is permanently lost. If that discussion is recorded, transcribed, and indexed, it remains available as ground truth for every future engineer and agent maintaining the system. Understanding [[What Should Organizations Preserve from AI-Assisted Development]] prevents this institutional amnesia.
+
 ## Recordings as Organizational Data
 
 Recordings often contain knowledge that never reaches formal documentation.
@@ -196,6 +204,8 @@ They may explain:
 Formal documentation usually describes the final state. Conversations preserve the reasoning that produced it.
 
 That historical reasoning may be more valuable than the final document, especially when a future employee or agent needs to understand whether an old decision is still valid.
+
+Without that historical context, agents and developers alike will refactor an unconventional code pattern, only to re-introduce the catastrophic production bug that the original hack was explicitly designed to prevent. Capturing the operational reasoning behind architectural trade-offs directly protects [[LLM Agents and Institutional Memory]].
 
 ## Raw Material for RAG
 
@@ -293,6 +303,26 @@ A more complete knowledge system should therefore preserve and connect:
 
 This creates a multimodal knowledge base rather than a simple collection of text chunks.
 
+Capturing this operational context requires binding timestamped audio, visual telemetry, and repository state into a unified trace:
+
+```json
+{
+  "timestamp": "2024-10-14T15:23:10Z",
+  "speaker": "lead-architect-01",
+  "transcript": "Look at this spike here; if this happens before that line executes, the thread pool hangs.",
+  "visual_context": {
+    "frame_type": "screen_share",
+    "ocr_text": "Grafana: pool-exhaustion-rate > 85% | thread_pool.rs:142",
+    "active_window": "Grafana Dashboard / Production Cluster A"
+  },
+  "referenced_entities": [
+    "service:payments-worker",
+    "git_sha:9f8a3c2",
+    "incident_id:INC-8492"
+  ]
+}
+```
+
 ## Recording Everything Is Not Enough
 
 A large archive of recordings can easily become a digital landfill.
@@ -329,6 +359,8 @@ A RAG system may retrieve a perfectly relevant statement that was correct three 
 but also:
 
 > When was it said, what did it refer to, and is it still current?
+
+Temporal drift is the primary failure mode in technical retrieval. For instance, a 2022 design review stating that all new services must use Cassandra for session storage will easily outscore a 2024 migration note in vector similarity, feeding an agent obsolete instructions. Ingestion pipelines must attach temporal anchors (commit SHAs, release tags), explicit deprecation pointers, and access control lists so the retriever invalidates superseded decisions.
 
 ## The Value of Early Data Collection Compounds
 
@@ -415,6 +447,8 @@ Specific failure descriptions allow the company to retest the use case when the 
 
 The organization should preserve not only successful use cases, but also structured explanations of why previous attempts failed.
 
+A disciplined engineering organization separates failures into model limits, dirty context, and architectural debt. For example, instead of declaring that an agent cannot handle backend engineering, the postmortem notes that the target service lacked integration tests, relied on dynamic SQL that bypassed schema parsing, and exceeded the active context window. That yields an actionable engineering backlog rather than a discarded initiative.
+
 ## A Practical Learning Loop
 
 A useful process may look like this:
@@ -437,6 +471,8 @@ A useful process may look like this:
     
 
 This converts temporary experiments into cumulative organizational learning.
+
+Dissecting step 5 requires isolating whether a run broke due to a model deficit (reasoning collapse or hallucination), a context deficit (missing schemas or stale docs), a system deficit (untyped APIs or flaky test runs), or a process deficit (conflicting business rules). Fixing the system and context deficits immediately improves human developer velocity, even while waiting for frontier models to resolve the model deficits.
 
 ## Two Sources of Early-Mover Advantage
 

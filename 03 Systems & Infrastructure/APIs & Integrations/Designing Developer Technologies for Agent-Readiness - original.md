@@ -228,7 +228,28 @@ An agent may:
 - mix syntax from different versions,
     
 - require explicit prompting to use it.
-    
+
+```csharp
+// Modern C# supported by the compiler:
+public readonly record struct UserUpdatedEvent(Guid Id, string Email, ReadOnlyMemory<byte> Payload);
+
+// What an agent conditioned on legacy training weights defaults to generating:
+public class UserUpdatedEvent
+{
+    public Guid Id { get; set; }
+    public string Email { get; set; }
+    public byte[] Payload { get; set; }
+
+    public UserUpdatedEvent(Guid id, string email, byte[] payload)
+    {
+        Id = id;
+        Email = email;
+        Payload = payload;
+    }
+}
+```
+
+The generated legacy code compiles and the tests pass, but it drags along heap allocations, GC pressure, and mutable state where the architecture called for stack-allocated, immutable primitives. Because the agent never triggers a compiler diagnostic with the old syntax, developers quietly ship code written against idioms that are years out of date.
 
 A developer could therefore use a modern compiler while effectively writing an older subset of the language because that is what agents handle most reliably.
 
@@ -354,6 +375,26 @@ For ASP.NET integration, register...
 Never combine X with...
 ```
 
+In practice, an operational `skill.md` provides explicit boundaries and compilation rules:
+
+```markdown
+---
+name: modern-mapping-engine
+version: 2.4.0
+description: High-throughput, zero-allocation compile-time object mapper for .NET.
+tools:
+  - dotnet-build
+  - dotnet-test
+---
+
+# Operational Rules & Constraints
+1. Always use compile-time source generator attributes (`[Mapper]`). Never use runtime reflection or dynamic code generation.
+2. When mapping arrays or collections, utilize `ReadOnlySpan<T>` overloads to prevent intermediate heap allocations.
+3. Dependency Injection: Do not register mappers as transient or scoped services in the DI container. Declare them as static partial classes at the assembly boundary.
+4. Property Mismatches: When source and destination field names differ, annotate explicitly with `[MapProperty(nameof(Source.Prop), nameof(Dest.TargetProp))]`. Do not rely on loose fuzzy matching.
+5. Error Handling: Failures during parsing must throw `MappingException` with explicit field paths. Never swallow exceptions in custom conversion hooks.
+```
+
 This is not merely documentation.
 
 It is a compact learning package for agents that do not yet know the technology.
@@ -379,6 +420,8 @@ unsupported patterns
 ```
 
 A small number of very high-quality canonical examples may be more useful to an agent than thousands of uncontrolled snippets from public repositories.
+
+Documentation written for humans frequently takes shortcuts to optimize readability—skipping `CancellationToken` checks, leaving off error handling, or relying on ambient global state. Human engineers recognize those simplifications as pedagogical omissions. Coding agents do not: they treat reference examples as literal probability distributions to reproduce. If an official quickstart omits timeout handling or swallows exceptions to keep the sample brief, agents will faithfully reproduce those antipatterns straight into production.
 
 This changes the role of examples from:
 
@@ -486,7 +529,6 @@ This could become important for:
 - new language features,
     
 - new programming languages.
-    
 
 ## Agent Readiness Could Become a Release Quality Metric
 
@@ -524,6 +566,8 @@ This could lead to a new release checklist:
 [ ] canonical examples updated
 [ ] agent evals pass
 ```
+
+In practice, verifying agent readiness means CI pipelines run automated headless agent harnesses against release candidates: initializing a model with zero project pre-context, injecting the `/agent` package, presenting it with standard implementation scenarios, and asserting that the resulting code compiles cleanly and passes the test suite without human intervention.
 
 In this sense, "AI support" would not necessarily mean embedding an LLM in the product.
 
@@ -563,7 +607,22 @@ Such a service could return:
 - known limitations,
     
 - agent instruction packages.
-    
+
+Instead of open-ended conversational prompts, an agent can query this ecosystem index through structured tool protocols:
+
+```json
+{
+  "query": "recommended compile-time mapping libraries",
+  "ecosystem": "dotnet",
+  "constraints": {
+    "zero_allocation": true,
+    "source_generator_based": true,
+    "active_maintenance": true
+  }
+}
+```
+
+The registry returns machine-readable package metadata alongside direct links to the library's authoritative `skill.md` bundle. This decouples technology selection from pretraining cutoffs, allowing a library released yesterday to be selected and correctly used today.
 
 This would separate:
 
@@ -615,6 +674,8 @@ This could become a genuine competitive advantage.
 The best AI-era library may not be the one that models already know.
 
 It may be the one that an unfamiliar model can understand correctly after reading a few thousand tokens.
+
+The design choices that optimize developer ergonomics for humans do not always align with agent reliability. Humans often favor loose conventions, ambient context, and polymorphic overloads that save keystrokes. Agents thrive on explicit static typing, pure functions with zero hidden state, deterministic error codes, and strict compiler boundaries. When an API eliminates runtime reflection and relies on explicit contracts, an agent can verify its own code through compiler diagnostics rather than hallucinating runtime behavior.
 
 ## The Bootstrap Problem May Become a Normal Part of Technology Adoption
 
@@ -683,3 +744,4 @@ agent evaluation
 ```
 
 In that environment, the ability to teach an agent quickly may become almost as important as the quality of the API itself.
+```

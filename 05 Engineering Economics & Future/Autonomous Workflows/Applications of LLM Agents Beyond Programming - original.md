@@ -137,6 +137,13 @@ The goal is not just to find matching text, but to answer questions such as:
 - What is the safest mitigation?
     
 
+### Diagnostic sandboxing and safety boundaries
+
+To use agents safely in production diagnostics, you must establish strict architectural boundaries:
+
+- **Read-Only Telemetry Bridges**: The agent should query Prometheus, inspect [[OpenTelemetry]] traces, query Elasticsearch, and read GitHub commit histories, but it must lack permissions to mutate production infrastructure directly.
+- **Bounded Remediation Proposals**: When an agent suggests an action (such as rolling back a deployment, cycling a connection pool, or flipping a flag), that remediation must pass through human-in-the-loop review or an automated, verified deployment pipeline with pre-configured rollback capabilities.
+
 ## Semantic testing
 
 Many useful tests cannot be expressed as strict deterministic rules.
@@ -267,6 +274,12 @@ An agent can detect that:
 
 This is a **semantic system-level error**, not a syntax error.
 
+In production, this divergence triggers a silent failure cascade:
+1. Long-running requests will be terminated by the load balancer at 30 seconds with an HTTP 504.
+2. The application will continue processing the request for another 15 seconds, wasting compute.
+3. The Grafana alert threshold (40s) will never fire for these timeouts because the load balancer cuts the connection before the threshold is reached.
+4. The on-call engineer following the runbook will assume that operations running under 60 seconds are normal, making it much harder to diagnose the issue.
+
 ## A broader idea: System as Code
 
 Infrastructure as Code and related approaches make increasingly large parts of an organization explicitly describable.
@@ -340,6 +353,8 @@ A useful way to think about the capabilities is:
     
 
 Steps 6–8 are especially important because they distinguish an **agent** from a simple one-shot LLM query.
+
+Steps 1 through 5 can be handled by standard single-shot LLM prompts. However, steps 6 through 8 transform the model into an active agent: the system forms an intent, chooses which diagnostic tools to execute across sandboxes, processes the resulting feedback, and verifies its own conclusions against runtime reality.
 
 ## Key idea
 

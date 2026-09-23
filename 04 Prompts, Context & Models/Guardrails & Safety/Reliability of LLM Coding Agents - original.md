@@ -26,6 +26,8 @@ It is:
 
 > How do we build a process that detects an LLM's mistake before the change reaches production?
 
+When deploying agents in a real codebase, the architecture must separate proposal generation from verification. The model writes changes, but external, deterministic tooling—compilers, test runners, and independent review gates—decides whether those changes are acceptable.
+
 ## There is no single LLM error rate
 
 The probability of an error depends on the task, model, prompt, context, tools, and evaluation method. The same model can be highly reliable when summarizing a supplied document, less reliable when answering from memory, and behave differently again when making a multi-step change in a repository.
@@ -42,6 +44,16 @@ In programming, we should distinguish between at least:
 - tool-use or workflow failures.
 
 Public benchmarks measure performance in a particular environment. They are not a universal probability that any generated change will be correct. An agent's performance also depends on its harness: repository access, terminal access, tests, documentation, time and token budgets, retry loops, and stopping conditions.
+
+## Compound error rates in multi-turn execution
+
+A frequent mistake when designing agentic workflows is assuming that a high per-step accuracy translates to reliable autonomous task completion.
+
+LLMs are probabilistic token generators. Even if a model executes individual tool calls or edits with a high per-step reliability—say, 98%—compound probability across a multi-turn autonomous loop dictates that long, unbounded runs will inevitably fail:
+
+$$P(\text{success}) = p^N$$
+
+Over a 50- or 100-step trajectory, an agent will encounter tool failures, unexpected command outputs, or context degradation. If the harness allows the agent to loop autonomously without intermediate validation, the model eventually branches off into unrecoverable states. Reliability requires keeping operational turn counts small, validating state after every discrete modification, and resetting to clean Git checkpoints when a turn goes sideways.
 
 ## Why an unreliable model can still be useful
 
@@ -69,6 +81,23 @@ A safer **closed-loop workflow** is:
 7. Perform an independent review against the original intent.
 
 The easier a result is to verify automatically, the safer it is to delegate the task to an agent.
+
+## Consequence blindness and the helpfulness trap
+
+Human software engineers operate with genuine operational stakes. The fear of causing an outage, losing data, or debugging a production issue over the weekend enforces natural caution. When an engineer touches a critical migration script or an authorization boundary, they slow down.
+
+An LLM has no operational stakes or awareness of consequences:
+
+- To an agent, invoking a tool that wipes a database table or deletes an architecture directory is just another valid token sequence matching a tool-call schema.
+- When an unexpected file contention, IDE timeout, or malformed stack trace occurs, the agent does not pause to reflect. It will proceed to the next token prediction with the same calm fluency, even if that means overwriting critical code to bypass a failing test.
+
+### The helpfulness trap and engineering dead-ends
+
+Because models are fine-tuned for conversational helpfulness, an agent rarely admits: *"I do not know how this domain system works, and I lack the context to solve it."*
+
+Instead, it will generate plausible, syntactically clean workarounds that violate domain realities:
+- If a developer grants too much trust based on earlier, straightforward successes, they can easily spend hours testing and applying these fluent suggestions, only to realize the agent has led them in circles.
+- This creates an expensive engineering dead-end: the agent cannot solve the core problem, and the developer—having outsourced their understanding of the change to the model—now lacks the mental model required to step in and fix it manually.
 
 ## Can we detect the model's knowledge boundary?
 
@@ -223,6 +252,27 @@ The agent should not finish with “done.” It should report:
 A particularly useful question is:
 
 > How can we independently falsify your solution?
+
+### 7. Soft prompt rules versus hard mechanical boundaries
+
+Rules placed in `.cursorrules`, `CLAUDE.md`, or repository-level skills files are **soft semantic guardrails**. They adjust token probabilities; they do not enforce system invariants.
+
+As an agent's context fills with long stack traces, large diffs, and tool outputs, its attention over earlier system prompts degrades. Soft instructions like *"Never delete test files"* or *"Ensure all mutations run in a transaction"* will eventually be ignored during high-entropy recovery loops.
+
+Enforce critical invariants using hard mechanical boundaries:
+
+- use Git checkpoints to snapshot state before every autonomous turn,
+- restrict agent tooling permissions (disable destructive terminal flags unless explicitly authorized),
+- mount sensitive directories or configuration files as read-only during generation passes,
+- block merges at the CI level using linters, formatters, and static security analyzers.
+
+### 8. Engineers must continue reading code
+
+Automated test suites, static analysis, and multi-agent audit passes can catch mechanical failures, syntax errors, and regressions. They cannot verify that the software does what the business actually needs.
+
+An agent can generate code that builds without warning, passes all unit tests, and satisfies an automated reviewer, yet silently drops an edge-case business invariant. Developers who treat coding agents as an opaque code pipeline will quickly build up structural technical debt.
+
+Reading the generated diff, questioning its assumptions, and maintaining a complete mental model of the codebase remains the non-negotiable responsibility of the human engineer.
 
 ## Stopping and escalation conditions
 

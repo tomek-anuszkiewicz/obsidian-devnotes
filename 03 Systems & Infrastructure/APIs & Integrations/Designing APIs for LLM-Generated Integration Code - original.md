@@ -10,6 +10,8 @@ tags:
 aliases:
   - Agent-Friendly API Design
   - APIs for LLM Integrations
+  - Shipping MCP Servers and Agent Skills Alongside APIs
+  - Agent-Native Interface Bundles
 ---
 
 ## Goal
@@ -46,6 +48,8 @@ Generated client
         ↓
 REST API
 ```
+
+Leaving an agent with an empty HTTP client and raw endpoints forces it to guess path parameters, serialization conventions, query formatting, and header requirements. That dramatically widens the surface area for hallucinations. Collapsing that action space into typed methods with clear signatures keeps the model on rails.
 
 ## Internal vs External APIs
 
@@ -84,6 +88,20 @@ External APIs should:
 This distinction becomes even more important for LLM-generated code.
 
 The easier it is to understand the business meaning of an operation, the easier it is for an agent to select it correctly.
+
+---
+
+## The Shift in API Consumption: What Services Need to Ship
+
+Traditionally, API design focused on human developers reading Swagger UI in a browser, then manually writing integration boilerplate. When coding agents and LLM orchestration loops write and maintain integration logic, that workflow breaks down.
+
+To make a service reliably consumable by an autonomous agent, the service interface should publish a cohesive bundle of assets:
+
+1. **A Formal Schema Contract**: OpenAPI 3.1 for REST, AsyncAPI for event-driven messaging, or an introspectable GraphQL schema.
+2. **A Strongly Typed Client SDK**: Pre-generated client libraries (via Kiota, NSwag, or OpenAPI Generator) that expose compiler-validated methods.
+3. **Runtime Tool Surfaces (MCP)**: If an agent needs to invoke APIs dynamically during execution, a native Model Context Protocol (MCP) server lets it discover endpoints as discrete, structured tools with typed parameter schemas.
+4. **Repository and Operational Guidance (`AGENTS.md` / `SKILL.md`)**: Concrete rules describing authentication, token refreshes, pagination patterns, and idempotency keys.
+5. **Deterministic Sandbox Environments**: Mock servers or sandbox endpoints that provide immediate pass/fail feedback when the agent runs its verification test suite.
 
 ---
 
@@ -254,6 +272,8 @@ It no longer needs to reconstruct:
 
 Instead, it chooses a typed method.
 
+When an agent works against a typed client, the compiler and Language Server Protocol (LSP) become an immediate feedback loop. If the model hallucinates a parameter or passes an invalid type, the build fails instantly with deterministic error diagnostics that the agent can read and self-correct, rather than failing silently at runtime with a 400 Bad Request or malformed JSON payload.
+
 ---
 
 ## Preserve Documentation in Generated Clients
@@ -286,6 +306,8 @@ public interface IInvoicesClient
 This is particularly useful for coding agents because the most relevant semantic information is available directly next to the methods they are expected to use.
 
 If the generated client loses all API descriptions, much of the semantic value of OpenAPI is lost.
+
+This matters because of how coding agents navigate repositories. An agent rarely reads a 10,000-line `swagger.json` file in its entirety—doing so burns context window budget and dilutes attention. Instead, the agent inspects local files, runs semantic code searches, and relies on LSP hover definitions. When semantic rules, preconditions, and negative warnings live directly inside interface docstrings, the model sees them at the exact token distance where it inspects the method signature.
 
 ---
 
@@ -369,6 +391,8 @@ The OpenAPI specification tells it **which capabilities exist and what they mean
 
 These are different responsibilities.
 
+For complex flows—such as multi-step OAuth handshakes, cursor-based pagination loops, or handling distributed saga compensations—repository instructions or agent skills bridge the gap by outlining the standard operational sequence so the model does not have to invent one.
+
 ---
 
 ## OpenAPI Does Not Always Need to Be Read Directly
@@ -438,6 +462,8 @@ Prefer errors that expose the state and possible resolution:
 
 This is useful both for generated application code and for an LLM trying to understand the intended workflow.
 
+When an agent runs an integration test in a sandbox harness and encounters this error, the remediation is mechanical. The agent parses `suggestedOperation: "cancelInvoice"`, locates `CancelInvoiceAsync` on the typed client, updates the calling code, and reruns the test suite—resolving the failure autonomously in its verification loop.
+
 ---
 
 ## The Same Principle Applies Beyond REST
@@ -503,6 +529,8 @@ AsyncAPI can describe:
     
 
 A coding agent can then generate or discover the correct publisher abstraction.
+
+From an AsyncAPI specification, generators produce strongly typed message publishers and consumers. The agent then calls `publisher.PublishAsync(new RevokeUserSessions(...))` instead of manually constructing raw message broker envelopes, managing partition keys, or serializing raw byte arrays.
 
 ---
 

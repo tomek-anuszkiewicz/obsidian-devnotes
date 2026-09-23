@@ -10,6 +10,8 @@ tags:
 aliases:
   - Service-to-Service vs User Auth
   - Authorization Patterns in Microservices
+  - Disentangling Service Identity from User Authorization
+  - Delegation vs Impersonation in Distributed Systems
 ---
 
 # Service vs User Authorization Models
@@ -33,6 +35,8 @@ There are two primary actors involved:
 2. **Original Initiator:** User U (human or external user context).
 
 Authorization must determine: does Service B evaluate permissions for **Service A**, for **User U**, or for the combination of both?
+
+Choosing the wrong model creates common failure modes: either downstream internal services become overly coupled to complex user permission logic they should know nothing about, or upstream services pass unverified user headers that allow compromised internal services to spoof any identity across the network.
 
 ---
 
@@ -151,6 +155,23 @@ The delegated token:
 - Is constrained to the minimum scopes needed for the operation.
 - Explicitly contains an `act` (actor) claim representing Service A and a `sub` (subject) claim representing User U.
 
+A token issued under RFC 8693 explicitly embeds the actor hierarchy:
+
+```json
+{
+  "iss": "https://auth.internal.net",
+  "sub": "usr-98124",
+  "aud": "service-b",
+  "act": {
+    "sub": "order-service"
+  },
+  "scope": "read:docs",
+  "exp": 1714838400
+}
+```
+
+Token exchange introduces an extra network round-trip to the Security Token Service (STS) on downstream calls. To avoid exhausting IdP connection pools and spiking p99 latency, services must cache downscoped tokens locally using a compound cache key: `(UserId, TargetService, RequestedScopes)`.
+
 ---
 
 ## 6. Audit Logging Structure
@@ -170,6 +191,8 @@ When user context is propagated, Service B should record structured audit events
   "traceId": "4bf92f3577b34da6a3ce929d0e0e4736"
 }
 ```
+
+Capturing both `technicalActor` and `initiatedByUserId` allows incident response to determine which machine identity executed the network call versus which human user authorized the business action. It also correlates operations across services via `traceId` without forcing downstream capability services to store or query user-level access control tables.
 
 ---
 

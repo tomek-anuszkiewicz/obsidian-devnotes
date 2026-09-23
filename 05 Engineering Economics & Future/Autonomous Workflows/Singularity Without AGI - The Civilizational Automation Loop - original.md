@@ -8,6 +8,7 @@ tags:
   - ai-systems
   - feedback-loops
 aliases:
+  - "Networked Automation Loops and Software Output Without AGI"
   - Civilizational Automation Loop
   - Narrow AI Singularity
 ---
@@ -25,6 +26,8 @@ The important transition would not necessarily be:
 It may instead be:
 
 > Humans stop being on the critical path of technological progress.
+
+Even as this shift occurs, overall throughput does not become infinite overnight. As explored in [[AI Productivity Is Limited by the Delivery System]], system velocity remains fundamentally bounded by physical delivery pipelines: power grids, silicon foundries, fabrication cycles, and real-world telemetry.
 
 ---
 
@@ -48,6 +51,10 @@ model
 No individual component needs to be a magical superintelligence.
 
 The system only needs to improve the machinery that produces further improvements.
+
+Probabilistic generation alone cannot sustain self-improvement; left to itself, recursive generation on unverified outputs degrades model performance. The loop stabilizes and compounds only when paired with deterministic verification: compilers, linters, test suites, and empirical benchmarks that act as ground-truth filters.
+
+As captured in [[Learning Coding Agents Through Failure-Driven Instructions]], agents can systematically update their own prompt strategies and tool usage rules based on recorded execution errors. This operational telemetry then feeds [[Improving AI Models - From Scaling to Agent-Generated Training Data]], transforming synthetic traces and verified code executions into clean, high-signal training datasets. Through this mechanism, [[Agent Adoption as a Learning Flywheel]] operates as a compounding loop rather than an open-ended operational cost.
 
 Software development is an obvious first domain because iteration is cheap.
 
@@ -208,6 +215,8 @@ native implementation
 The same idea applies far beyond operating systems.
 
 Entire technical ecosystems may become much easier to replace once the cost of rewriting, validating and maintaining them collapses.
+
+Enterprise ERPs, relational database engines, networking stacks, and embedded control software become replaceable commodities once the friction of writing, fuzzing, differential testing, and maintaining them collapses.
 
 ---
 
@@ -412,6 +421,12 @@ But biology introduces a radically different risk structure.
 
 A failed program usually stops running.
 
+```text
+experiment
+→ syntax error / segfault
+→ process terminated
+```
+
 A failed biological experiment may reproduce.
 
 ```text
@@ -456,6 +471,8 @@ hypothesis
 → unexpected result
 → updated knowledge
 ```
+
+Over time, closed data loops suffer from variance loss and accumulated synthetic artifacts. As detailed in [[Fresh Contact With Reality May Become the Training Bottleneck]], real progress depends on physical instrumentation: automated wet labs, sensor telemetry, wind tunnels, test tracks, and material science stress rigs that inject uncorrupted ground truth into the loop.
 
 This means autonomous laboratories, robots, sensors, manufacturing systems and exploration platforms become increasingly important.
 

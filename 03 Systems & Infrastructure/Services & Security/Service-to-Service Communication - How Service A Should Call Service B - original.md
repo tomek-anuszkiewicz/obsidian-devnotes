@@ -325,6 +325,8 @@ This creates several problems:
 - strong coupling to the Service B package.
     
 
+On the networking layer, baking custom `HttpClientHandler` setups or lifetime management into an SDK frequently breaks connection pooling, leading to socket exhaustion under burst traffic or bypassing DNS refresh cycles. If the client bundles specific versions of low-level dependencies like Polly or serialization libraries, consumers can run into diamond dependency conflicts during platform-wide runtime upgrades.
+
 ### Guiding principle
 
 > A service-specific client should own the Service B protocol, not the communication policy of the whole organization.
@@ -570,6 +572,8 @@ In reality it may:
 - depend on authentication and service availability.
     
 
+When engineers fall for this illusion, the failure modes are predictable: calling remote endpoints inside loops, holding open local database transactions across network roundtrips, omitting explicit timeout budgets, or retrying non-idempotent operations until thread pools saturate.
+
 The abstraction is useful only when the network semantics remain visible in design and error handling.
 
 ### Recommended rule
@@ -807,6 +811,15 @@ The Service B client may enrich telemetry with information such as:
 
 It should not configure a separate observability stack.
 
+In practice, the platform wires up standard W3C `traceparent` propagation and OpenTelemetry metric listeners on the underlying `HttpMessageHandler`. Service-specific code should only ever touch `Activity.Current` to append contextual domain tags, never spin up separate tracer providers or write raw unredacted payload logs:
+
+```csharp
+var activity = Activity.Current;
+activity?.SetTag("peer.service", "ServiceB");
+activity?.SetTag("service_b.operation", "get_customer");
+activity?.SetTag("service_b.error_code", error?.Code);
+```
+
 A useful principle is:
 
 > Service-specific clients may enrich telemetry, but they should not own the telemetry infrastructure.
@@ -877,6 +890,8 @@ services
 
 The policy remains visible to A.
 
+Without a circuit breaker, retries under sustained upstream outage cause cascading thread pool starvation across dependent services. Retries must also be strictly constrained to transient failures (such as HTTP 503, 504, or socket disconnects) and idempotent operations—blindly retrying non-idempotent mutations risks executing duplicate state changes.
+
 A single default policy hidden inside the B client may be wrong for different consumers or use cases.
 
 ---
@@ -921,6 +936,8 @@ Service A should configure:
     
 
 The Service B client may integrate with the shared authentication handler, but it should not implement a separate authentication framework.
+
+Authentication is best implemented via platform-provided delegating handlers (`DelegatingHandler`) attached to the client registration. The handler transparently resolves workload identity tokens (such as Azure Managed Identity or SPIFFE/SPIRE), caches them in memory until near expiry, and attaches bearer tokens or negotiates mTLS without exposing credential management to application code.
 
 ---
 
@@ -1296,6 +1313,8 @@ The pipeline should detect:
     
 - changed response codes.
     
+
+Automated schema diffing tools (such as `openapi-diff`) running in CI enforce these rules mechanically against the version deployed in production. However, schema validation only catches syntactic breakage—consumer-driven contract tests (e.g., Pact) remain necessary to catch behavioral and semantic drift.
 
 ### Consumer-driven contract tests
 
@@ -1737,3 +1756,4 @@ Or more concisely:
 > B owns the contract.  
 > A owns the dependency.  
 > The platform owns the communication standards.
+```

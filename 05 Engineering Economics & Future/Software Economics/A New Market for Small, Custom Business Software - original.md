@@ -388,6 +388,8 @@ Platforms provide the building blocks.
 
 Local integrators provide the final fit.
 
+In practice, this means composing mature building blocks—such as Stripe for payments, Twilio for messaging, Clerk or native OAuth for identity, and Cloudflare R2 or S3 for object storage—underneath lightweight compute like Fly.io or serverless workers. Rather than building foundational infrastructure from scratch, the custom software layer focuses strictly on the operational glue connecting these platforms to existing spreadsheets, inboxes, and internal workflows.
+
 ## Horizontal Platforms Have a Difficult Product Problem
 
 Some platforms attempt to support a general process across many industries.
@@ -670,6 +672,8 @@ They may need to provide:
 
 The business value may come from an ongoing service relationship rather than a one-time software sale.
 
+Operationally, this requires treating lightweight automations as mission-critical infrastructure. A durable maintenance model includes centralized health-check pings, structured log aggregation, dead-letter queues to catch unparseable payloads before they corrupt downstream state, automated daily database snapshots, and documented runbooks so operators can execute the workflow manually if an external API degrades.
+
 ## The Risk of Unmaintainable Micro-Automation
 
 The same low cost that enables this market can create a new form of technical debt.
@@ -716,7 +720,53 @@ A good solution should include:
 - simple recovery;
     
 - understandable operating costs.
-    
+
+### Technical Invariants for Resilient Micro-Software
+
+To prevent micro-software from degrading into fragile technical debt, production implementations should adhere to three core architectural patterns:
+
+#### Strictly Separate Probabilistic Parsing from Deterministic Execution
+Language models should be used exclusively for unstructured intake—extracting fields from emails, invoices, or customer messages—and never for direct database mutations or financial calculations. Every extracted payload must pass through strict schema validation (such as Zod or Pydantic) before triggering downstream state changes:
+
+```typescript
+// Validating extracted payload before triggering ledger mutations
+const InvoiceSchema = z.object({
+  invoiceNumber: z.string(),
+  vendorTaxId: z.string(),
+  lineItems: z.array(z.object({
+    description: z.string(),
+    amount: z.number().positive(),
+  })),
+  totalAmount: z.number().positive(),
+});
+
+const result = InvoiceSchema.safeParse(extractedPayload);
+
+if (!result.success || isLowConfidence(extractedPayload)) {
+  await reviewQueue.push({
+    rawPayload: extractedPayload,
+    validationErrors: result.error?.format(),
+    requiresImmediateReview: true,
+  });
+} else {
+  await ledger.recordInvoice(result.data);
+}
+```
+
+If the validation fails or confidence falls below threshold, the payload diverts to a human review queue rather than failing silently or writing corrupted data to the primary database.
+
+#### Default to Inspectable, Single-Tenant Storage
+Small businesses do not need multi-tenant database clusters. A single-tenant SQLite database running on a persistent volume is fast, trivial to inspect, and simple to replicate to remote object storage:
+
+```bash
+# Automated streaming backup via Litestream to Cloudflare R2 or S3
+litestream replicate /var/data/operations.db s3://client-backups-bucket/operations.db
+```
+
+This architecture ensures total data sovereignty. An operator can copy the file directly to a laptop and inspect it with standard SQL tools, completely eliminating vendor lock-in.
+
+#### Enforce Idempotency on Ingress and Webhooks
+Operational glue runs in unreliable network environments where webhooks retry and upstream systems double-deliver payloads. Every webhook listener and background ingestion job must verify payload signatures and deduplicate events using idempotency keys before executing side effects.
 
 ## The Market May Favor Reusable Customization
 

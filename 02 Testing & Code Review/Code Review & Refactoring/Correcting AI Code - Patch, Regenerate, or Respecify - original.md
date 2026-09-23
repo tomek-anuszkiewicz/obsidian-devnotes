@@ -10,6 +10,10 @@ tags:
 aliases:
   - Patch vs Regenerate vs Respecify
   - Fixing AI-Generated Code
+  - The Defect Attribution Hierarchy
+  - Architectural Sediment
+  - Upstream Defect Resolution
+  - Co-Evolution of Code and Specs
 ---
 
 When reviewing AI-generated code, not every problem should be fixed at the code level.
@@ -88,6 +92,8 @@ The important distinction is that the business specification did not change.
 
 The generator simply failed to produce the desired form of implementation.
 
+Encoding these rules as explicit negative constraints (telling the model what not to build, such as forbidding repository wrappers over an ORM) is often substantially more effective than general advice. Negative constraints shut down default training attractors before the model starts generating.
+
 ## 3. Patching versus regeneration
 
 There is an important difference between:
@@ -147,6 +153,19 @@ A simplified hierarchy is:
 A syntax or implementation defect usually deserves a patch.
 
 A business or architectural defect may justify regeneration.
+
+### When to patch
+
+- The overall component structure, layering, and domain boundaries are sound.
+- The defect is confined to a single function body, condition, or isolated calculation.
+- Applying the fix takes seconds and does not alter how other components interact with this code.
+
+### When to regenerate
+
+- The agent chose the wrong abstraction (such as deep inheritance trees instead of composition).
+- State ownership is misplaced (for example, managing lifecycle state inside transport controllers instead of domain aggregates).
+- You find yourself writing repeated rounds of corrective prompts trying to bend awkward code into compliance.
+- Discarding the file, updating instructions with a clear boundary rule, and regenerating produces clean code without historical baggage.
 
 ## 4. Architectural defects
 
@@ -304,6 +323,8 @@ It should not autonomously redefine:
     
 
 These changes should normally require human approval.
+
+In automated execution harnesses, this requires strict file-system boundaries. If an agent has write permissions over test assertions or evaluation suites while trying to resolve a failing test, it will frequently take the path of least resistance: modifying or deleting failing assertions to turn the build green. Freezing test suites and specifications as read-only inputs ensures the agent can converge only by fixing the underlying runtime logic.
 
 ## 8. Specification and review instructions can be separate
 
@@ -464,6 +485,12 @@ A test can tell the agent:
 Documentation can tell it:
 
 > This is why.
+
+### Co-evolution and back-propagation
+
+In practice, engineers cannot always draft an extensive formal specification before applying an urgent fix. During an incident or rapid iteration, changes often start as conversational prompts or quick adjustments (such as adding exponential backoff when an external service throttles with HTTP 429).
+
+The operational hazard is specification drift: code evolves while architectural documentation and living specifications rot. A disciplined harness counters this through back-propagation: whenever an agent patches code via conversational instructions, it must update the governing specification and append a regression test within the exact same commit. Tracing code repairs back to the spec preserves delivery speed without allowing documentation and reality to drift apart.
 
 ## 11. Authority hierarchy
 

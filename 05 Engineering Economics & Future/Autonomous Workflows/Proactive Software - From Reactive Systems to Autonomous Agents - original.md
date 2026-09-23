@@ -115,6 +115,8 @@ The agent can inspect several data sources, compare time periods, notice a novel
 
 That expands the range of work that can be automated.
 
+In production, a latency spike during a batch backfill is benign, but that exact same spike is fatal if paired with database connection pool exhaustion and a recent commit that modified connection acquisition logic. An agent can query telemetry, pull recent merge requests, and correlate distributed traces across service boundaries to determine whether the observed pattern warrants intervention.
+
 ---
 
 # Generic classes of proactive agent behavior
@@ -201,6 +203,8 @@ They can ask:
 This introduces a form of exploratory monitoring.
 
 The system is not only detecting known failure modes. It is also searching for **unknown unknowns**.
+
+This moves monitoring from univariate thresholds to multi-dimensional patterns: catching a tenant whose altered call pattern risks cascading cache invalidation, identifying that request volume and database write amplification have decoupled, or detecting slow memory leaks across worker nodes that stay just below pod-restart limits.
 
 ---
 
@@ -319,6 +323,8 @@ Possible targets include:
 
 The agent can identify candidates continuously rather than waiting for humans to notice that optimization is required.
 
+Instead of waiting for a quarterly performance sprint, a background agent can profile slow RPC paths across the service mesh, inspect query execution plans for missing covering indexes, or flag cache invalidation thrashing as soon as workload patterns shift.
+
 ---
 
 ## 6. Maintaining system hygiene
@@ -388,6 +394,8 @@ The general task becomes:
 > Inspect the system and identify important absences.
 
 This is extremely difficult to represent with conventional deterministic automation.
+
+Deterministic assertions easily verify that an existing service is healthy, but they fail to catch critical omissions: a new microservice deployed without alerting rules or a linked runbook, a production table created without point-in-time recovery (PITR) enabled, or an endpoint merged without schema validation.
 
 ---
 
@@ -481,6 +489,8 @@ A software organization could effectively have agents continuously asking:
 > What could be improved here?
 
 The results can enter a prioritization system rather than being executed automatically.
+
+This keeps the blast radius zero while delivering high utility. The agent operates in a read-only diagnostic loop and emits concrete, reviewable artifacts: pull requests with candidate database indexes benchmarked via `EXPLAIN ANALYZE`, pre-filled incident tickets containing correlated distributed traces, or Terraform plans ready for engineering review.
 
 ---
 
@@ -669,6 +679,8 @@ ignore / record / recommend / act
 
 This hierarchy may be more scalable than giving every agent complete autonomy.
 
+Each watcher maintains a tight blast radius, continuously observing its subsystem and emitting structured events with high-fidelity context. Downstream aggregator services deduplicate alerts, correlate findings with deployment metadata, calculate confidence scores, and determine whether a finding warrants autonomous remediation, a staged pull request, or immediate human escalation.
+
 ---
 
 # The new scarcity: attention
@@ -721,6 +733,8 @@ This introduces concepts such as:
     
 
 The ability to **ignore** may become as important as the ability to detect.
+
+Silently discarding low-value findings is what separates a reliable proactive platform from an unmaintainable noise generator. If an agent surfaces 5 findings a day across 100 systems, engineers will simply mute the channels. Evaluating reversibility, operational blast radius, and whether the expected value exceeds the human review cost ensures the system protects engineering attention rather than consuming it.
 
 ---
 
@@ -797,6 +811,8 @@ delegate to specialist
 
 This model allows autonomy to increase gradually as confidence in a workflow grows.
 
+Teams can grant Level 1 (Observe) authority immediately across all systems, promoting agents to Level 4 (Prepare) or Level 5 (Act) only after diagnostic accuracy and deterministic guardrails have proven reliable over time.
+
 ---
 
 # Agents that create work for other agents
@@ -828,6 +844,8 @@ No single agent needs to understand the entire process.
 The system behaves more like an organization of specialized workers.
 
 This may eventually create software systems containing thousands of small, persistent responsibilities rather than a few giant universal agents.
+
+Constraining each agent to a single boundary keeps the system reliable. The diagnostic watcher does not modify code, the remediation agent does not deploy to production, and deterministic CI test suites gate every step. This strict separation of concerns mirrors high-performing engineering teams.
 
 ---
 
@@ -883,8 +901,6 @@ deterministic systems execute allowed actions
 
 # Software that initiates work
 
-This may be the most important conceptual change.
-
 Historically, humans have been the primary source of intent.
 
 Humans decide:
@@ -920,6 +936,8 @@ This does not mean software should autonomously control every decision.
 
 It means software is no longer restricted to waiting for humans to formulate every problem first.
 
+The human role shifts from discovering raw symptoms and manually orchestrating fixes to evaluating hypotheses and acting as a policy governor over automated execution.
+
 ---
 
 # The important boundary: agency versus uncontrolled activity
@@ -935,6 +953,8 @@ A sales agent may contact too many people.
 A maintenance agent may continuously propose unnecessary upgrades.
 
 An optimization agent may make the system harder to understand in exchange for negligible savings.
+
+An unconstrained agent will aggressively optimize for its narrow objective: flooding git logs with trivial refactoring pull requests, flagging theoretical security edge cases that cannot be exploited, or terminating idle compute instances that were intentionally pre-warmed for batch traffic.
 
 Therefore agents need explicit stopping and filtering criteria.
 
@@ -999,3 +1019,4 @@ Proactive systems can **find work worth doing**.
 That may ultimately be one of the most important consequences of agentic computing:
 
 > **Software changes from a passive tool operated by humans into an active participant that continuously observes its environment, identifies problems and opportunities, and initiates useful work.**
+```

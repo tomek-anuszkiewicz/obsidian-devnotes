@@ -14,11 +14,15 @@ aliases:
   - Agentic harness
   - Coding agent workflow
   - Controlled Development Workflows
+  - Meta-Harnessing and Pattern Drift
+  - Steering Agents via Negative Boundaries
+  - Negative Bounding in Agent Workflows
+  - SOTA Patterns for High-Assurance Agents
 ---
 
 # Agentic Coding Harness and Controlled Development Workflows
 
-> See also: [[Agent Deployment and Execution Models]]
+> See also: [[Agent Deployment and Execution Models]], [[Building Determinism from Unpredictable Models]]
 
 ## Core idea
 
@@ -246,6 +250,67 @@ Example inline PR escalation comment:
 
 The developer replies directly in the GitHub PR review thread, triggering a webhook that re-engages the harness with explicit human guidance.
 
+## The limits of soft prompts: hard fences and runtime containment
+
+A common failure mode in harness design is relying on markdown prompts (`AGENTS.md`, system prompts) to prevent catastrophic actions:
+
+```markdown
+<!-- Soft semantic prompt: Can and will fail probabilistically -->
+Never delete database tables or wipe project directories.
+```
+
+An LLM is a probabilistic engine. Under heavy context saturation, long debugging loops, or novel compiler error formats, model attention degrades. Eventually, an agent will misinterpret a test failure as a corrupted directory and issue `rm -rf *`, drop a local table, or overwrite critical files with empty stubs.
+
+### The asymmetry of risk
+
+Human developers slow down when typing `drop table` or touching shared persistence schemas because we understand the pain of data loss and production recovery.
+
+An LLM has no concept of consequence:
+- Dropping an active table or deleting an entire subsystem is just another syntactically valid JSON tool call (`execute_command("rm -rf src/")`).
+- When a catastrophic deletion executes, the model simply parses the empty directory listing and proceeds to its next turn without hesitation.
+- System prompts provide soft semantic steering; they alter token probabilities, but they cannot enforce physical invariants.
+
+### Hard runtime fences
+
+Because models cannot guarantee their own containment, the harness must enforce non-negotiable boundaries in code:
+
+1. **The Clean Commit Prerequisite**: Never let an agent operate on an uncommitted, dirty working tree. Every task must run in an isolated Git branch or a dedicated worktree (`git worktree add`). If an agent corrupts files or thrashes, recovery is instantaneous (`git checkout .` or dropping the worktree).
+2. **Tool-Level Destructive Gating**: The model should physically lack tools capable of unrestricted directory unlinking or database drops. Destructive operations must be gated behind out-of-band confirmation or blocked entirely at the tool dispatch layer.
+3. **Read-Only Path Sandboxing**: Core specifications, architectural rules, and environment configurations must be mounted read-only to the agent process.
+4. **Human Review of Diffs**: Never auto-merge agent-authored branches. A human engineer must inspect diffs to catch subtle logic decay, hallucinated dependencies, or weakened assertions.
+
+### Fix the harness, not just the code
+
+When an agent breaks an invariant, introduces an anti-pattern, or deletes something it shouldn't, avoid manually patching the code in your editor and moving on.
+
+If you fix the code manually, the agent will make the same mistake on the next run. Instead, fix the harness:
+- Add an explicit negative fence in `.agents/rules/`.
+- Write an automated architecture test that fails if that pattern appears.
+- Add a deterministic check to your pre-flight verification script.
+
+Force the agent to re-run against the hardened constraint until it passes. Hardening the harness permanently eliminates that failure mode for both agents and future developers.
+
+## Steering agents via negative boundaries
+
+A frequent mistake in repository instructions is prescriptive over-specification—attempting to dictate every internal method, variable name, and design decision in advance.
+
+### The leaky nature of affirmative instructions
+
+Affirmative instructions are inherently leaky: telling an agent what it *should* do does not stop it from doing everything else.
+
+If you instruct an agent: *"Use the command pattern to handle this request"*, the model may follow that instruction while also introducing reflection, allocating large heap buffers inside a tight audio loop, or wrapping operations in generic `catch (Exception ex)` blocks. Affirmative instructions guide probability, but they leave an unbounded operational surface.
+
+### Bounding by exclusion
+
+A more reliable approach pairs wide implementation freedom with rigid negative boundaries (see [[Negative Knowledge and Explicit Architectural Dissents]]):
+
+1. **Grant Implementation Latitude**: Allow the agent to choose local data structures, helper functions, and algorithm details within the target module scope.
+2. **Erect 2–3 Explicit Negative Fences**: Clearly define forbidden anti-patterns:
+   - Forbidden: Adding external package dependencies without prior approval.
+   - Forbidden: Mutating database schemas or public API contracts in this task slice.
+   - Forbidden: Introducing heap allocations, dynamic dispatch, or blocking I/O inside synchronous hot paths.
+3. **Outcome**: The agent retains the flexibility to solve edge cases without getting stuck in brittle, over-specified prompts, while your architectural invariants remain protected against drift.
+
 ## Files used to guide an agent
 
 A practical repository can separate permanent guidance from task-specific state:
@@ -255,10 +320,18 @@ repo/
 ├── AGENTS.md
 ├── README.md
 ├── ARCHITECTURE.md
+├── ROADMAP.md
+├── DIARY.md
 ├── .codex/
 │   └── config.toml
 ├── .agents/
+│   ├── rules/
+│   │   ├── performance.md
+│   │   └── security.md
 │   └── skills/
+├── tools/
+│   ├── log_diary.py
+│   └── pre_flight.py
 ├── docs/
 │   ├── architecture/
 │   └── workflows/
@@ -269,6 +342,7 @@ repo/
 │       └── DECISIONS.md
 ├── scripts/
 │   ├── setup.ps1
+│   ├── build.ps1
 │   ├── test-module.ps1
 │   ├── verify.ps1
 │   └── mutation-test.ps1
@@ -298,6 +372,36 @@ Provides a short, practical map:
 - where business rules, persistence and transport code belong.
 
 For a modular monolith, it should explain module boundaries explicitly. Whenever possible, these boundaries should also be enforced with architecture tests.
+
+### `ROADMAP.md` and active backlog pruning
+
+Maintains the immediate plan for upcoming work. High-assurance workflows enforce active backlog pruning (see [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]):
+
+- Completed items are deleted immediately from the active backlog file rather than retained with `[x]` checkmarks or strikethrough text.
+- Leaving dozens of completed tasks in view degrades model attention and burns context budget on settled work.
+- The moment a step is verified and committed, it is removed from `ROADMAP.md`. High-level capabilities are summarized in a brief baseline deliverables list at the top, keeping the file small and forward-looking.
+
+### `DIARY.md` and out-of-context tooling
+
+Because the active roadmap prunes completed work, project evolution and technical decisions must be captured in an append-only engineering diary (`DIARY.md`; see [[The Living Engineering Chronicle and Context Compaction]]).
+
+Each entry captures four key areas:
+1. Affected subsystems;
+2. What changed;
+3. Architectural rationale;
+4. Verification results.
+
+To prevent a growing log file from saturating the agent's context window, the agent does not open or edit `DIARY.md` directly. Instead, it uses a lightweight CLI tool:
+
+```bash
+python tools/log_diary.py \
+  --subsystem "Orders" \
+  --changed "Added cancellation event handler" \
+  --rationale "Ensures event consistency before inventory updates" \
+  --verified "./scripts/test-module.ps1 Orders"
+```
+
+The script appends formatted Markdown to disk directly without passing the historical log through the model's context window. Periodically, older entries can be summarized into architectural digests.
 
 ### `AGENTS.md`
 
@@ -454,6 +558,30 @@ An LLM should not replace tools that can check a rule exactly.
 The principle is:
 
 > If a rule can be checked deterministically, let a deterministic tool check it. Use the LLM to interpret, plan and repair.
+
+### Executable architecture tests
+
+Architecture rules should be enforced through executable test suites rather than text guidelines alone. In .NET, for instance, you can write automated tests using `NetArchTest` (or `ArchUnit` in Java) to verify that architectural boundaries remain intact:
+
+```csharp
+[Fact]
+public void DomainLayer_ShouldNotHaveDependencyOn_InfrastructureLayer()
+{
+    var result = Types.InAssembly(DomainAssembly)
+        .ShouldNot()
+        .HaveDependencyOn("Orders.Infrastructure")
+        .GetResult();
+
+    Assert.True(result.IsSuccessful, "Domain must remain isolated from Infrastructure.");
+}
+```
+
+Architecture tests can also enforce structural guardrails on the codebase:
+- asserting that no source file in the domain exceeds a given line threshold;
+- asserting that public API handlers do not swallow exceptions with empty catch blocks;
+- asserting that all repository methods accept a cancellation token.
+
+When an agent breaks an architectural boundary, the test runner fails with a clear, targeted assertion error, guiding the agent to correct itself through the standard test-fix loop.
 
 ## Stable verification commands
 
@@ -709,6 +837,15 @@ A small set of explicit roles is usually more useful than many loosely defined a
 
 Parallel agents should normally work in separate Git worktrees or branches. Two write-capable agents sharing the same working tree can overwrite or confuse each other's changes.
 
+## High-assurance engineering patterns
+
+When configuring harnesses for production repositories, five operational patterns help keep agent execution aligned with system invariants:
+
+- **Repro-First (Regression Guard)**: Require an isolated, failing reproduction test *before* touching any production code. This prevents unanchored edits, speculative fixes, and masking existing bugs.
+- **Pre-Flight Gate**: Run a single local gate script (`./tools/pre_flight.py` or `./scripts/verify.ps1`) that bundles formatting, architecture boundary tests, and type checking before committing.
+- **Platform Quirks Catalog**: Maintain a concise document listing non-obvious runtime behaviors, OS differences, and edge cases. This prevents agents from refactoring intentional, low-level platform workarounds.
+- **Reference Triangulation**: Provide clean-room reference examples, internal ADRs, or official SDK documentation directly in the context. This eliminates hallucinated third-party SDK calls and divergent code patterns.
+- **Git Worktree Sandbox**: Execute experimental spikes and multi-agent tasks in disposable Git worktrees (`git worktree add`). This isolates file churn and prevents dirty working states from polluting the primary repository.
 
 ## Execution location
 
@@ -816,6 +953,29 @@ def self_healing_loop(state: HarnessState):
     return trigger_human_escalation(state)
 ```
 
+## The evolution of meta-harnessing and system drift
+
+As model capabilities advance, how agentic harnesses are built and maintained will shift from manual rule-authoring to automated scaffolding.
+
+### The pretraining bottleneck
+
+Current foundation models are proficient at localized code editing, but struggle to configure multi-agent orchestration loops or design comprehensive rule systems from scratch.
+
+This limitation stems from their training data: repositories created prior to 2024 contained almost no examples of agent harnesses, `.agents/rules/`, MCP server configurations, or programmatic subagent workflows. Because models have few training examples of self-governance, human engineers must define the ground rules—structuring context, configuring tools, and erecting boundary fences.
+
+This changes how platform and library maintainers should approach developer tooling:
+- **Documentation is no longer consumed only by humans in browsers**: Static wikis and Swagger UIs are insufficient for automated agents.
+- **Ship Native MCP Servers**: Expose platform APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with services directly.
+- **Provide Executable Skills (`SKILL.md`)**: Package explicit, multi-step integration workflows, token refresh routines, and pagination logic directly into the repository so agents don't have to guess.
+
+### Autophagous data and verifiable selection loops
+
+As code written by AI agents becomes a significant portion of public repositories, future models will inevitably train on synthetic code. Training recursively on uncurated synthetic text risks model collapse—where edge cases are forgotten and hallucinated patterns compound.
+
+However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically**.
+
+If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection. Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
+
 ## Final principles
 
 1. Use a ready-made harness before building a custom one.
@@ -828,4 +988,3 @@ def self_healing_loop(state: HarnessState):
 8. Use mutation tools to generate mutations and an LLM to interpret survivors.
 9. Restrict credentials, network access and production authority.
 10. Let agents prepare commits and draft PRs, but retain CI, branch protection and merge approval.
-

@@ -41,6 +41,8 @@ The amount of independent information does not necessarily grow at the same rate
 
 This suggests that **fresh contact with reality** may become one of the scarce resources in model training.
 
+A closed synthetic loop that feeds model outputs back into subsequent training runs without external verification inevitably drifts. Without hard friction against external systems, the learning process risks recycling its own assumptions, amplifying subtle hallucinations, and narrowing diversity. Token volume explodes, but independent entropy collapses.
+
 ---
 
 ## Models Ultimately Need Someone to Discover Something
@@ -98,6 +100,8 @@ The same applies to:
 
 Human activity continuously produces such information because humans encounter situations not completely represented in existing datasets.
 
+In production engineering, this is the difference between generating plausible distributed consensus logic and hitting thread contention under a specific Linux kernel version, silent hardware clock drift, or an unhandled network partition. Those operational failures cannot be derived purely by token prediction; they require collision with an unyielding execution environment.
+
 ---
 
 ## We May Deliberately Produce New Training Experiences
@@ -154,6 +158,8 @@ problem
 
 This creates information that could not simply have been copied from an existing solution.
 
+The valuable training artifact is not the final patch or the pristine pull request. The real signal lives in the end-to-end trajectory of human reasoning against system feedback: mental modeling, diagnostic probing with debuggers and kernel logs (`strace`, `pprof`, `gdb`), and course corrections when an assumption breaks against runtime reality. That step-by-step resolution path cannot be synthesized simply by querying existing model weights.
+
 ---
 
 ## The Technological Reserve
@@ -192,6 +198,8 @@ A literal permanent AI-free community is probably unnecessary and difficult to j
 A more realistic version would consist of temporary, controlled AI-free environments.
 
 People could use AI normally in everyday life while periodically performing selected tasks without it.
+
+Senior engineers might use AI acceleration for routine feature plumbing in their day jobs, but participate in targeted, instrumented clean-room sprints where AI tooling is switched off to tackle genuinely novel system architectures, distributed race conditions, or low-level performance bottlenecks.
 
 ---
 
@@ -345,6 +353,32 @@ C succeeds
 
 This is almost a ready-made curriculum for the next model.
 
+Consider how this plays out in concrete systems programming:
+
+```text
+Model:
+"Implement this cache with a simple sync.Map in Go to handle concurrent reads."
+
+Human:
+"That won't work here. The access pattern is heavily write-skewed on cache misses,
+which degrades sync.Map performance due to cache line bouncing. We need a sharded map."
+
+Model:
+"Understood. Here is a sharded map implementation using RWMutex per shard."
+
+Human:
+"The tests pass, but you introduced a deadlock risk: shard A calls shard B during
+eviction callbacks while holding the shard A write lock."
+
+Human:
+[Refactors eviction to an asynchronous ring buffer outside the critical section]
+
+Production:
+Deployment stabilizes; latency drop confirmed.
+```
+
+The resulting trajectory explicitly encodes negative search paths and runtime failure modes that static code cannot convey: Pattern A fails due to hardware cache line bouncing, Pattern B passes local unit tests but deadlocks under concurrency, and Pattern C stabilizes production p99 latency.
+
 ---
 
 ## Two Kinds of Human Training Environments
@@ -475,6 +509,17 @@ The trajectory can additionally tell us:
 > Why was one design chosen over another?
 
 That missing history may be extremely valuable training material.
+
+A typical git commit tells a lossy story:
+
+```diff
+-  cache.Set(key, val)
++  workerPool.Submit(func() { cache.Set(key, val) })
+```
+
+Accompanied by a one-line message: `fix: resolve request latency spike under burst traffic`.
+
+The real diagnostic work underneath was an extensive sequence: initial hypothesis (cache is too small), metric verification (cache hit rate was actually 94%), profiling with `pprof` (identifying lock contention on the mutex during request bursts), a failed try-lock experiment that dropped updates, and a final architectural pivot to offload writes to a bounded worker pool with graceful draining. Capturing that diagnostic history provides the causal context that clean git diffs erase.
 
 ---
 
@@ -728,6 +773,8 @@ This may create a market rather than merely an internal monitoring system:
 
 > Experts explicitly sell carefully scoped pieces of their work experience as training data.
 
+From an operational perspective, this requires rigorous client-side data hygiene: local automated redaction of API keys, credentials, PII, and customer payloads before telemetry ever leaves the machine. Data collection must be strictly bound to consented, designated clean-room sandboxes or specific debugging sessions, preventing background telemetry from devolving into opaque corporate surveillance.
+
 ---
 
 ## Human Experience Factories
@@ -801,6 +848,8 @@ The current model therefore helps determine:
 
 This is substantially different from pure synthetic data generation because the loop still contains an external source of evidence.
 
+For example, a model struggling with consensus edge cases in distributed Raft implementations can generate a targeted reproduction harness with subtle network jitter and partition scenarios. A human specialist or deterministic execution harness attempts the problem, the compiler and kernel provide unforgiving binary pass/fail telemetry, and the resulting debugging trajectory is captured to train the successor model.
+
 ---
 
 ## The Essential Boundary Is Contact With Reality
@@ -847,6 +896,8 @@ The critical component is not necessarily the human.
 It is **external reality**.
 
 Humans currently happen to be one of the most flexible mechanisms for connecting models with it.
+
+That external friction does not always have to be a human mind. A deterministic compiler, a physical robot arm, an eBPF network probe, a silicon testbench, or a production telemetry stream under real user traffic all serve as unforgiving verification oracles. The non-negotiable invariant is that the validation boundary lives outside the model's own statistical priors.
 
 ---
 

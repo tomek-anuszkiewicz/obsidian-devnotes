@@ -10,6 +10,10 @@ tags:
 aliases:
   - Architectural Documentation Generation
   - Extracting Architecture from Code with LLMs
+  - AI-Generated Architectural Documentation
+  - Documentation as Semantic Cache
+  - Architectural Drift Detection
+  - Operation Cards from Code
 ---
 
 ## Idea
@@ -169,6 +173,16 @@ This may improve:
     
 
 For very large repositories, this can be particularly important.
+
+In token economics, this reconnaissance loop is brutal. An agent exploring an unfamiliar repository easily burns 30,000 to 50,000 tokens on multi-file grep and AST inspection before making its first edit. Pre-computed architectural cards drop that exploration tax to a couple thousand tokens of targeted navigation. More importantly, it acts as an architectural guardrail: without explicit documents stating module boundaries, an agent will take the path of least resistance—such as importing a repository across domains or executing direct cross-schema SQL joins.
+
+---
+
+# Why Tests Alone Cannot Replace Architectural Documentation
+
+A common assumption is that an exhaustive test suite makes architectural documentation redundant—if the tests pass, the system is correct.
+
+In production, test suites and architectural models solve fundamentally different problems. A test suite verifies functional input-output contracts (`assert actual == expected`), but it is structurally blind. A coding agent can implement a feature by bypassing an event-driven queue, querying a private database table of another service directly, and returning the correct response. The functional tests pass cleanly, but the architectural boundary is broken. Tests guarantee functional behavior; architectural documentation safeguards system structure, data ownership, and navigation paths.
 
 ---
 
@@ -603,6 +617,8 @@ The generated documentation should ideally also describe:
 
 State machines are valuable because important business rules are often distributed across handlers, validators, and domain methods.
 
+Making state boundaries explicit eliminates one of the most common agent bugs: invalid lifecycle leaps, such as updating an order directly from `Pending` to `Shipped` because the agent only saw the shipping service handler. Once terminal states and validation triggers are documented in the state machine, agents can verify whether a proposed mutation violates domain rules before modifying code.
+
 ---
 
 # Failure-Path Documentation
@@ -688,6 +704,8 @@ POST /orders
 ```
 
 Agents can then load only the level of detail relevant to the current task.
+
+Hierarchical zoom prevents attention degradation and context exhaustion. An agent solving a localized bug does not need to parse the entire codebase into its prompt; it routes down from the system view to locate the owning container, inspects the component boundary, and only pulls the specific implementation files required for the patch.
 
 ---
 
@@ -787,6 +805,8 @@ Order completion is now eventually consistent.
 
 This could be very useful during pull request review.
 
+Reviewing architectural diffs shifts pull request evaluation from line-by-line syntax checking to system-level impact analysis. A tech lead or reviewer can immediately see if a PR introduces an eventual consistency window, adds an unauthorized inter-module coupling, or changes an SLA boundary—issues that are almost invisible when scanning 500 lines of modified implementation code.
+
 ---
 
 # Documentation Generated from Runtime Evidence
@@ -834,6 +854,8 @@ The reconciliation job handles unresolved payments after 15 minutes.
 ```
 
 This transforms architectural documentation into something closer to an **operational model of the system**.
+
+Grounding static analysis in APM metrics and OpenTelemetry traces prevents teams from architecting around theoretical assumptions. For instance, code analysis might show that a controller calls a pricing client and a repository. Telemetry exposes that the pricing client accounts for 75% of total P99 latency and that connection pools saturate under peak traffic. Feeding these runtime realities back into documentation ensures both human architects and AI agents optimize for real operational bottlenecks rather than imaginary ones.
 
 ---
 

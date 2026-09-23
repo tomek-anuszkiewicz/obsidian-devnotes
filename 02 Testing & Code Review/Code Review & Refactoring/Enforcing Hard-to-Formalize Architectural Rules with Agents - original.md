@@ -9,9 +9,12 @@ tags:
   - compliance
   - review
 aliases:
+  - Enforcing Hard-to-Formalize Architectural Rules with Agents
   - Natural-Language Rules as Executable Policies
   - Agentic Review Rules
   - Semantic Code Review
+  - The Semantic Verification Continuum
+  - Human Review Intuition as Executable Policy
 ---
 
 Traditional software quality automation works best when a rule can be expressed precisely.
@@ -201,6 +204,8 @@ It is closer to:
 
 The important change is that a rule no longer needs to be translated completely into code before it can be checked automatically.
 
+High signal-to-noise ratio is critical for this workflow. If an agent posts speculative nitpicks on ambiguous code, developers quickly suffer review fatigue and dismiss all agent comments. Tuning the agent to stay completely silent unless it has high confidence—requiring it to cite the exact line of code and the specific architectural invariant being breached—keeps the feedback actionable and prevents CI noise.
+
 ---
 
 ## This Expands the Automatable Region of Engineering
@@ -369,6 +374,8 @@ A useful principle is:
 
 > Formalize what is cheap to formalize. Use agents where formalization becomes disproportionately expensive.
 
+The economic and operational contrast is stark: local CPU assertions execute in microseconds without token overhead or network latency. Replacing a compiler constraint, a lint rule, or a unit test with an LLM prompt introduces non-deterministic model drift, inflates CI gating duration, and wastes token budget on checks that an AST parser evaluates instantaneously.
+
 ---
 
 # The Agent Can Connect Formal and Informal Rules
@@ -421,6 +428,51 @@ This interaction is potentially much more powerful than either approach alone.
 
 ---
 
+## Real-World Scenarios: Where Deterministic Linters Go Blind
+
+To see why semantic review is necessary alongside static analysis, consider three common failure modes where deterministic checks pass without warning:
+
+### 1. The Database Shadow Leak
+
+A boundary rule states: *The Billing module must never depend on the Inventory module's internal schema.*
+
+A static dependency linter inspects project references and import declarations. The project files show zero forbidden assembly or package references, and TypeScript or C# imports are completely clean. The build passes.
+
+However, inside a billing handler, an engineer writes a direct SQL query against the `inventory_items` table to fetch current stock counts, bypassing `InventoryService` to save time. A syntax linter sees only a database client executing a SQL string. A semantic reviewer reading the module boundary policy recognizes that `inventory_items` is an internal persistence detail of the Inventory context and flags the bypass immediately.
+
+### 2. Accidental Compliance via Silent Clamping
+
+A business invariant requires: *An invoice total must never be negative.*
+
+```csharp
+public decimal CalculateInvoiceTotal(Order order, Discount discount)
+{
+    var rawTotal = order.Subtotal - discount.Amount;
+    
+    // Developer adds this to pass: Assert.True(invoiceTotal >= 0)
+    return Math.Max(0, rawTotal);
+}
+```
+
+The unit test suite runs `Assert.True(CalculateInvoiceTotal(order, discount) >= 0)` and reports green. Syntactically, the invariant is satisfied. But clamping the value masks an upstream failure: if a discount exceeds the subtotal, that indicates an unhandled promo engine race or an invalid state transition. Silently swallowing the negative value prevents a crash today at the expense of corrupting financial ledger reconciliation tomorrow. The semantic agent catches the evasion because it evaluates business intent rather than binary return values.
+
+### 3. Premature Factory Boilerplate
+
+A developer needs to query an external exchange rate API inside a single background reconciliation task:
+
+```text
+src/
+└── Currency/
+    ├── IExchangeRateProviderFactoryStrategy.cs
+    ├── AbstractExchangeRateProviderFactory.cs
+    ├── CurrencyProviderRegistryPool.cs
+    └── DefaultCurrencyExchangeRateProvider.cs
+```
+
+The code compiles cleanly. SOLID heuristics pass, interfaces are injected, and SonarQube shows zero warnings. But the three layers of factory abstraction serve a single call site that will not change. A static analyzer cannot distinguish between justified architectural extensibility and premature over-engineering. An agent cross-referencing the diff against the repository can see that this abstraction has exactly one implementation and flag it against the guideline: *Do not introduce generic frameworks or factory indirection for single-use dependencies.*
+
+---
+
 # Agents Can Escalate Rules Into Deterministic Tests
 
 Agentic review can also help discover which informal rules should eventually become formal.
@@ -455,6 +507,8 @@ architecture test / analyzer added
 This gives a useful migration path.
 
 Agents can act as the exploratory layer from which deterministic rules emerge.
+
+This lifecycle also manages token economics and context window pressure. Running an LLM against recurring, predictable structural patterns acts as an ongoing token tax. Once an architectural violation stabilizes into clear syntactic boundaries, encoding it as an AST check (using tools like ArchUnit, custom ESLint rules, or CodeQL) allows you to remove the rule from the agent's prompt instructions. This frees attention budget for newer, subtler domain rules that still require semantic interpretation.
 
 ---
 
@@ -539,6 +593,8 @@ tests as investigative instruments
 ```
 
 Agents can make heavy use of the second category.
+
+This separation directly prevents test-suite bloat. Checking every exploratory edge case into the repository slowly degrades developer velocity: build times creep up, CI pipelines experience p99 latency spikes, and engineers spend time updating brittle tests that assert low-level implementation details. An agent can spin up a concurrency harness in an isolated sandbox, execute 100 iterations against a PR branch, and discard the harness if no race occurs. The test is only promoted to a permanent regression check when an actual failure reproduces.
 
 ---
 
@@ -677,3 +733,4 @@ The strongest future systems will probably combine two capabilities:
 The first preserves the precision of traditional software engineering.
 
 The second expands its reach.
+```

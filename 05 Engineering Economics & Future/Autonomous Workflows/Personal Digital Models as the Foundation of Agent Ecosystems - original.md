@@ -159,6 +159,8 @@ User likes working from home.
 
 It should understand that preferences evolve.
 
+If an agent converts both statements into static embeddings and relies on naive vector similarity search, it retrieves conflicting assertions and hallucinates an answer. The retrieval runtime cannot treat personal memory as flat, immutable documents; it requires explicit temporal validity intervals (`valid_from`, `valid_to`, confidence decay) to know which preference is currently active.
+
 A more realistic memory hierarchy might look like:
 
 ```text
@@ -176,6 +178,8 @@ current personal model
 ```
 
 The system therefore needs not only retrieval, but also **continuous interpretation of a person's history**.
+
+This means the runtime cannot rely solely on static index retrieval. It requires continuous background synthesis: extracting episodic structures from raw telemetry, tracking preference drift over time, running conflict resolution across outdated facts, and maintaining a consolidated view of who the user is right now.
 
 ---
 
@@ -640,6 +644,59 @@ It does not become tired of bureaucracy.
 
 ---
 
+# Personal Agents as Cognitive and Economic Defense
+
+Most discussions of AI assistants center on consumer convenience: drafting routine emails, summarizing transcripts, or syncing calendars.
+
+A more structural motivation for running a personal agent is defensive:
+
+> **In an economy run by corporate algorithms and institutional bots, an unassisted human faces severe cognitive and economic asymmetry.**
+
+Modern enterprises operate automated extraction architectures designed to exploit human cognitive limits:
+
+- **Dynamic Surge and Margin Pricing**: Adjusting prices in real time based on observed device type, battery level, perceived urgency, and historical price elasticity.
+- **Behavioral Attention Loops**: Optimizing content feeds to capture attention and direct screen time toward high-margin actions.
+- **Contractual Obfuscation and Dark Patterns**: Structuring cancellation flows, subscription renewals, and warranty clauses to make opting out as difficult as possible.
+- **Automated Dispute Deflection**: Routing customer support issues through automated bots designed to exhaust the claimant until they drop the issue.
+
+An unassisted individual cannot manually track moving prices across global markets, read terms of service updates, or spend four hours arguing with an automated telecom bot.
+
+```text
+corporate infrastructure:
+continuous automated optimization
++ dynamic pricing models
++ behavioral user tracking
++ legal automation
+
+vs.
+
+the unassisted individual:
+limited attention
++ fatigue and cognitive load
++ information asymmetry
++ finite time
+```
+
+Under these conditions, a personal agent is not a lifestyle upgrade; it functions as a necessary **fiduciary shield**:
+
+```text
+corporate agent / platform
+           ▲
+           │ [negotiation, verification, defense]
+           ▼
+     personal agent
+           ▲
+           │ [strict user constraints & policies]
+           ▼
+         human
+```
+
+The personal agent manages automated negotiation, verifies contract terms, enforces budget constraints, handles subscription cancellations, and acts as an attention firewall against manipulative feed loops.
+
+Adoption will not be driven merely by the desire to save ten minutes a day. It will be driven by the fact that navigating an algorithmic economy without an automated representative leaves the user open to systematic extraction.
+
+---
+
 # The Agent Becomes a Guardian of the User's Interests
 
 This may be the most important distinction between platform AI and personal AI.
@@ -740,6 +797,8 @@ work agent
 ```
 
 The personal model may need something analogous to an operating system's permission model.
+
+Crucially, external service agents should rarely receive raw context dumps or direct access to vector stores. The personal model needs to process incoming requests internally and emit minimal execution payloads—such as cryptographically signed assertions, scoped parameter bounds, or zero-knowledge proofs—preventing private context leakage during external tool execution.
 
 ---
 

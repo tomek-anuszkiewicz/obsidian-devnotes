@@ -12,6 +12,7 @@ tags:
 aliases:
   - LLM Agents and Team Memory
   - Institutional Knowledge Preservation
+  - Code Archaeology and Corporate Memory
 ---
 
 # LLM Agents and Institutional Memory in Software Teams
@@ -78,6 +79,26 @@ This creates a dangerous state:
 > Nobody fully understands the system, but everybody can continue modifying it with an agent.
 
 Such a system may function for a long time. The weakness becomes visible when the team faces a cross-cutting change, a business contradiction, or an incident that cannot be fixed by adding another local exception.
+
+## Code archaeology: mining intent from corporate archives
+
+Frontier foundation models are trained predominantly on public open-source software, documentation, and textbooks. By default, they expect clean, idiomatic patterns. But when an organization connects an agent to its private corporate archives—proprietary repositories, a decade of Git commits, Jira tickets, PR review discussions, incident post-mortems, and team chat threads—the tool shifts from a generic syntax assistant into a code archaeologist.
+
+### Decoding context and intent
+
+The most expensive question in enterprise engineering is rarely algorithmic. It is figuring out why a bizarre four-line conditional exists in a checkout pipeline, and whether removing it will break billing at month-end. A generic model flags the check as an anti-pattern and proposes a refactoring. An agent with deep repository and issue context traces the block back to an incident ticket from three years ago, surfacing the comment explaining that a specific vendor API sends corrupted payloads on a legacy tier. The tool transitions from naive syntax cleanup to revealing historical and operational intent.
+
+### Internalizing Conway's Law
+
+Production architectures reflect the communication structures and political boundaries of the organization that built them. By indexing internal communications, ticket handoffs, and team review boundaries, an agent can expose the organizational realities behind technical anomalies—such as why two adjacent services communicate via database table polling instead of gRPC, or which team secretly operates an orphaned service regardless of what the internal service catalog claims.
+
+### The risk of training on enterprise debt
+
+Exposing models to raw corporate history carries a major operational risk: the model readily adopts the organization's worst technical habits. If a legacy codebase is dominated by rushed patches, hollow unit tests written just to satisfy coverage gates, and four-thousand-line god objects, fine-tuning an internal model or indiscriminately feeding uncurated dumps into retrieval pipelines causes the agent to generate those exact anti-patterns by default. Context and ingestion pipelines require strict curation—filtering out deprecated services, dead branches, and known architectural anti-patterns—to prevent the tool from accelerating technical debt.
+
+### Informal truth versus formal fiction
+
+Most enterprises maintain two parallel systems: the formal architecture documented on pristine wiki pages, and the operational reality engineers use to keep production alive. An agent indexing both formal design documents and real-time operational channels (like incident post-mortems and engineering chat) functions as an architectural diagnostic mirror, highlighting where official policy has diverged from actual production survival tactics.
 
 ## Code review as knowledge distribution
 
@@ -168,6 +189,7 @@ Agent-assisted onboarding should therefore also include:
 7. Measure onboarding by the quality of independent reasoning, not only delivery speed.
 8. Treat increasing dependence on RAG as a possible signal of architectural complexity.
 9. Ask periodically whether the agent is helping the team understand the system or merely helping it tolerate the system.
+10. Curate enterprise training and context retrieval data aggressively; uncurated dumps teach agents to reproduce past architectural shortcuts and bad habits.
 
 ## Conclusion
 
