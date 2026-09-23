@@ -20,214 +20,100 @@ aliases:
 
 # Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents
 
-When teams roll out coding agents, leadership usually frames the transition around raw velocity: engineers write less boilerplate, ship features faster, and spend their time directing systems rather than typing syntax. 
+When a team introduces coding agents, the pitch usually focuses on speed. Engineers spend less time writing boilerplate, features move faster, and the job becomes directing an agent instead of typing code. That may be true, but it leaves out what the work feels like.
 
-In practice, this shift alters the psychological mechanics of writing software.
+Writing a solution and supervising an agent demand different kinds of attention. If you spend the day steering an agent, reading its diffs, and fixing the places where it misunderstood the system, you lose much of the satisfaction of building the solution yourself. Some engineers enjoy that role. Others find that it turns their day into a long code review, with little room to recover between difficult decisions. For them, the change can bring review fatigue, lower job satisfaction, and doubts about what it means to be an engineer.
 
-Replacing manual implementation with supervisory oversight breaks the natural cognitive pacing of engineering. When you stop writing code and spend your entire day steering, auditing, and debugging non-human output, your work changes from an act of creative construction to an adversarial code review. Some engineers adapt and thrive in this orchestrator role, but many face a steep drop in job satisfaction, severe review fatigue, and an ongoing identity crisis about what their job actually is.
+A typical day illustrates the difference. After a difficult design decision, manually wiring DTOs, mapping entities, or setting up integration tests gives you a stretch of fairly routine work. The next hard decision comes later. An agent can produce that routine code in seconds, then hand you a 400- or 500-line diff to audit. As soon as you finish, another prompt can produce another diff. The typing time has disappeared; the need to check semantics, concurrency, and edge cases has not.
 
-```text
-THE COGNITIVE SHIFT: FROM MEDITATIVE FLOW TO VIGILANCE EXHAUSTION
+## When routine coding gave the brain a break
 
-Traditional Implementation (Sustainable Rhythm):
-  [ Hard Architectural Problem ] ──► [ Low-Stress Typing / Boilerplate ] ──► [ Tests Pass & Brain Recharges ]
-  (100% Cognitive Focus)             (60% Focus: DTOs, plumbing, wiring)      (Natural buffer between decisions)
+A lot of engineers enjoy the physical rhythm of programming: headphones on, editor open, one piece of logic taking shape after another. Typing, compiler feedback, and local test runs create a pace you can sustain. You also know why each branch and variable is there because you made those decisions as you wrote the code. There is a craft element to it, much like working with your hands.
 
-Supervisory Agentic Workflow (Continuous Vigilance):
-  [ Direct / Prompt Agent ]
-             │
-             ▼
-  [ Agent Generates 500-Line Diff in 10s ]
-             │
-             ▼
-  [ High-Intensity Adversarial Audit ] (100% Cognitive Strain, No Breathing Room)
-  - Hunting subtle semantic bugs, race conditions, hallucinated flags
-  - Eliminates the low-stress typing buffer between conceptual decisions
-             │
-             ▼
-  [ Vigilance Exhaustion & Rubber-Stamp Apathy ]
-  - Mental fatigue leads to blindly approving unread diffs
-  - Structural defense: Offload verification to compilers, linters, and deterministic tests
-```
+Routine implementation was part of that rhythm. Writing glue code, mapping a database entity to a domain model, or scaffolding a test could give you time to absorb the architectural decision you had just made. It did not require the same concentration as designing the boundary in the first place. If an agent generates that code in five seconds, you move straight from design into reviewing its output. The natural gap between demanding tasks disappears.
 
----
+That shift is easy to miss when measuring only how quickly a change appears in the repository. The engineer may be doing less typing while spending much more of the day in a critical, high-attention state.
 
-## Practical Realities of Supervisory Engineering
+## Writing code and auditing code feel different
 
-1. **The Vigilance Penalty**: Moving from manual coding to supervising autonomous agents trades low-stress flow for continuous adversarial code review. This removes the natural mental rest stops built into traditional software development.
-2. **Loss of Cognitive Buffers**: Writing routine glue code and DTO mappings was never just busywork. It gave your brain time to decompress between high-intensity architectural decisions. When agents generate that code in seconds, that recovery window disappears.
-3. **The Asymmetric Empathy Trap**: Humans naturally project social dynamics onto conversational interfaces. When a polite, conversational model makes the exact same architectural mistake three times in a row, it causes intense cognitive irritation.
-4. **Vigilance Exhaustion and Rubber-Stamping**: Reviewing massive, rapidly generated diffs without a break causes cognitive overload. Developers eventually burn out and approve changes without fully understanding them, which lets nasty regressions slip into production.
-5. **Moving Defense to the Test Harness**: You cannot manually review every line of probabilistic output and stay sane. Sustainable engineering requires offloading verification to deterministic test suites, strict compiler checks, and automated mutation testing.
+When you write a piece of code, you build its mental model along the way. You know the intended behavior, the system constraints, and the cases you considered. Reviewing code you did not write requires you to reconstruct all of that from the result. You follow branches, infer intent, and look for the cases the author missed.
 
----
+Agent output adds its own review work. A diff can look plausible while containing an invented flag, a quiet state mutation, a concurrency error, or a failure at a boundary condition. You have to stay skeptical even when the code compiles and the tests pass. When the agent goes off track, you also have to work out why, rewrite the instructions, and try again.
 
-## 1. The Loss of the Meditative Flow State
+Code review used to be a focused part of the day. If nearly the whole day becomes reviewing unfamiliar output, the job starts to feel less like building a system and more like policing changes to it. The problem gets worse when the agent generates large diffs faster than you can understand them. Fatigue can lead to approving code you have not really read, and that is how a subtle regression reaches production.
 
-For decades, the core draw of programming has been the tactile craft of building something line by line:
-- You put on headphones, open an editor, and translate system requirements into working logic.
-- You enter a sustainable flow state where your brain runs at a comfortable 60–70% capacity, guided by the rhythm of typing, compiler errors, and local test runs.
-- It feels like digital woodworking—a predictable, creative craft where you have an intimate understanding of every line, branch, and variable in the file.
+## The change does not suit every engineer equally
 
-In an agentic workflow, that rhythm disappears:
+Software engineers do not all get their satisfaction from the same part of the job. Some enjoy clean syntax, local algorithms, and uninterrupted time implementing a solution. Others care most about the shape of the system: data models, state transitions, boundaries, and the behavior that emerges when the pieces run together.
 
-```text
-TRADITIONAL IMPLEMENTATION (SUSTAINABLE RHYTHM):
-[Architecture / Design] ──► [30 Minutes of Rhythmic Implementation & Wiring] ──► [Green Tests]
-                                       │
-                                       └── Natural cognitive buffer for the brain
-
-AGENTIC SUPERVISION (CONTINUOUS HIGH-INTENSITY AUDITING):
-[Instruction / Prompt] ──► [Agent Generates 400-Line Diff in 5s] ──► [Intense Line-by-Line Audit]
-                                                                               │
-                                                                               └── Next Prompt (Zero Rest)
-```
-
-Writing boilerplate, mapping database entities to domain models, and scaffolding integration tests used to serve an unappreciated biological purpose: they acted as cognitive cooling cycles. They gave your brain low-stress processing time to digest hard architectural decisions before tackling the next one.
-
-When an agent generates all the boilerplate in five seconds, that recovery buffer vanishes. Instead of cycling between deep thinking and routine execution, you are pushed into a loop of continuous, high-stakes evaluation.
-
----
-
-## 2. From Author to Auditor: The Vigilance Penalty
-
-Reading code has always been significantly harder on working memory than writing it:
-- When you write code, you maintain the mental model, system invariants, and edge cases organically as you build.
-- When you read someone else's code, you have to reverse-engineer their intent, mentally execute branch conditions, and actively search for edge cases they missed.
-
-In an agent-heavy setup, you spend almost your entire day reading foreign code produced by an author that does not think like a human:
-- You scan diffs for subtle hallucinations, silent concurrency bugs, and boundary condition failures.
-- You maintain continuous skepticism without the creative satisfaction of building the solution yourself.
-- You spend your energy figuring out why an agent went off the rails, rewriting instructions, and tightening prompts.
-
-This shifts your role from an engineer who builds systems to an auditor who polices output. 
-
-Code review used to be an occasional, focused task during the day. Turning an engineer's entire job into non-stop code review and runtime auditing is an effective way to trigger rapid mental fatigue.
-
----
-
-## 3. The Identity Split: Who Thrives and Who Suffers
-
-Software engineering has always attracted two distinct engineering mindsets:
-
-| The Tactile Maker | The Systems Architect |
+| Engineer drawn to hands-on implementation | Engineer drawn to system design |
 | :--- | :--- |
-| Enjoys the physical rhythm of typing and clean syntax. | Views manual typing as a throughput bottleneck. |
-| Finds deep satisfaction in local algorithmic clarity and code craft. | Obsessed with system topologies, state machines, and boundaries. |
-| Finds peace in deep, uninterrupted implementation flow. | Thrives on running rapid experiments and testing edge cases. |
-| Views agentic code review as tedious management overhead. | Feels supercharged by orchestrating multiple background agents. |
+| Enjoys typing and refining code directly. | Sees manual implementation as something that slows down experiments. |
+| Takes pride in a clear algorithm or a carefully written module. | Focuses on system structure, states, and boundaries. |
+| Values long stretches of uninterrupted implementation. | Enjoys trying approaches quickly and checking edge cases. |
+| Can experience agent review as management overhead. | May enjoy directing several background tasks. |
 
-### The Frustration of the Tactile Maker
-For engineers who got into programming because they love the hands-on craft of building software with their own hands, working exclusively with agents can feel like an unwanted promotion to middle management:
-- They stop building directly and spend their time supervising a synthetic junior developer.
-- They have to stay in an analytical, critical mindset all day, resolving weird discrepancies in diffs they did not write.
-- They feel disconnected from their own repository. The code runs and the tests pass, but they lack the proprietary pride that comes from hand-crafting a clean, reliable codebase.
+For an engineer who loves writing software by hand, exclusive use of agents can feel like an unwanted move into management. Instead of building, they supervise something like a synthetic junior developer. They spend the day resolving odd discrepancies in code they never wrote. Even when the tests pass, they can feel detached from their own repository and lose the pride that comes from crafting reliable code directly.
 
-### The Leverage of the Systems Architect
-Engineers who focus naturally on system architecture, data models, and domain boundaries tend to find agents liberating. They can direct an agent to build a low-level execution harness or scaffold an entire service integration in an afternoon without getting bogged down in repetitive syntax. They direct all their energy toward verifying invariants, designing test harnesses, and stress-testing system behavior.
+An engineer who prefers designing systems may have the opposite experience. An agent can build a low-level execution harness or scaffold a service integration in an afternoon. That leaves more time to define invariants, design tests, and probe how the system behaves. Neither reaction is a failure to adapt; the work has changed, and people value different parts of it.
 
----
+## A conversational tool is easy to mistake for a colleague
 
-## 4. The Illusion of Collaboration: Asymmetric Empathy and the Unconscious Model
+An agent writes fluent, polite replies. It apologizes, agrees, and says it understands the problem. That makes it easy to respond as though a junior engineer were sitting across the desk. The illusion becomes frustrating when you explain an architectural mistake, receive a reassuring acknowledgment, and then see the same pattern in the next diff.
 
-A major psychological trap of working closely with LLMs is the anthropomorphic illusion:
-- Because modern models communicate with conversational polish, correct grammar, and polite language, our brains instinctively treat them like human coworkers.
-- We start treating the agent like a junior engineer sitting across the desk.
+The reply sounds empathetic, but the model is producing text. It does not feel your frustration or take professional responsibility for the result. A polite apology followed by the same mistake can be more irritating than a compiler error precisely because it sounds like a human response without the human adjustment you expect to follow.
 
-This mental model breaks down quickly because the model's apparent empathy is purely syntactic and entirely one-sided:
+The mismatch shows up in technical discussions too. A model tends to return to familiar implementations from its training, even when your design calls for an unusual, tightly constrained approach. A gentle correction may not be enough; you may have to state the architectural constraint explicitly and name the pattern it must avoid. Then, if you ask an exploratory question, the agent may explain basic programming concepts in a patronizing tone. For an experienced engineer already trying to solve a difficult problem, that adds another layer of friction.
 
-```text
-THE ILLUSION OF COLLABORATIVE REASONING:
-Human explains a bug with frustration ──► Agent: "I understand completely! Let me fix that for you."
-                                                    │
-                                                    ▼
-                       Model outputs the exact same architectural anti-pattern
-                                                    │
-                                                    ▼
-                     Developer experiences deep frustration against a text prompt
-```
+In a human team, urgency or visible frustration can tell a colleague that they have missed something important. They can reflect and change course. Irritation, sarcasm, exclamation marks, or pleading do not change a model's underlying behavior in the same way. It may agree enthusiastically and still repeat the error. Repeating constraints to an interface that sounds as if it understands them can become exhausting.
 
-### 1. Synthetic Empathy vs. Mechanical Reality
-Model providers increasingly tune their models to sound empathetic and emotionally aware. But that behavior is just token prediction:
-- The model matches tone and outputs polite apologies (*"I see what went wrong, thanks for catching that..."*).
-- It has no actual self-awareness. It cannot understand that its inability to follow an architectural constraint is the direct cause of your frustration.
-- This creates an uncanny valley effect: getting a polite, synthetic apology from an agent that immediately repeats the exact same blunder is far more frustrating than working with a cold, silent compiler error.
+When an agent gets stuck, treat the problem as a tool problem. Stop debating it. Reset the context if needed, tighten the specification, spell out what it must avoid, lower the temperature where that control is available, or make a deterministic check reject the unwanted pattern. Conversational fluency is part of the interface; it does not relieve you of setting and checking the constraints.
 
-### 2. Pre-Training Gravity and the Condescending Explanation
-A frequent source of irritation is an agent that stubbornly refuses to adopt a non-standard architectural design:
-- Because the model's pre-training corpus is dominated by mainstream implementations, it naturally gravitates toward conventional patterns, actively resisting specialized, highly constrained domain architectures.
-- Subtle hints and polite corrections rarely work; you have to issue explicit, rigid constraints to override the model's default training weights.
-- To make matters worse, when you ask an exploratory question, the agent often adopts an instructional, patronizing tone—explaining basic programming concepts as if you had never seen them before. Having an unconscious statistical engine lecture a senior engineer on basic language primitives adds unnecessary cognitive friction to an already difficult problem.
+There is also a practical imbalance in responsibility. If a service fails at 3 a.m., the engineer gets paged, handles the incident, and answers to stakeholders. The agent pays no price for a brittle 2,000-line diff and gets no satisfaction from a service that runs reliably for a year. The human has to bring all the caution to the review. Keeping that level of vigilance around a tool that can introduce subtle bugs in seconds is tiring.
 
-### 3. Why Emotional Feedback Fails
-In human teams, social feedback serves an operational purpose. If you speak with urgency, show frustration, or call out a careless mistake, your colleague registers that something is wrong, reflects on their approach, and adapts their behavior.
+## How the fatigue builds
 
-With an LLM, emotional feedback is wasted effort:
-- Showing irritation, adding exclamation points, or pleading with a model does not change its underlying sampling weights or context window dynamics.
-- The model responds with frictionless, hollow agreement (*"You are completely right!"*), and then lapses right back into the same broken implementation on the very next token run.
-- You end up yelling at a polite, oblivious system that physically cannot feel accountability, professional pride, or the drive to do better.
+Long hours, impossible deadlines, and production incidents have always contributed to burnout. Agent-driven development adds another route: staying on alert for plausible mistakes throughout the day.
 
-### 4. Treating the Agent as a State Machine
-To keep your sanity and stay productive, you have to break the habit of anthropomorphizing the tool:
-- Remember that conversational fluency is just an interface layer, not evidence of a thinking collaborator.
-- Never try to guide an agent using social nudges, sarcasm, or emotional appeals.
-- When an agent gets stuck in a loop or insists on the wrong pattern, stop debating it. Treat it like a misconfigured state machine.
-- The only effective response is mechanical: clear the context window, tighten the specification, lower the temperature, add explicit negative constraints, or run a deterministic linter to fail the build.
+- **A convincing diff can still be wrong.** An off-by-one error, missed concurrency case, or silent state change may pass the current unit tests and fail under production load. You keep looking for the defect that the ordinary checks did not catch.
+- **Parallel sessions split your attention.** One agent writes code, another runs tests, and you draft instructions for a third. Switching between those threads can consume more energy than working through one problem from code to tests to commit.
+- **Authorship becomes uncomfortable.** When a change works, the agent wrote it. When it breaks, you have to understand and repair hundreds of lines of unfamiliar logic. It is natural to ask whether you still built the system, or whether you could build it from scratch without the assistant. If you never connect your contribution to the design and verification, that doubt can wear down your confidence.
+- **The interface keeps sounding more understanding than it is.** Repeatedly restating the same domain constraints to a polite tool creates a steady, low-level irritation.
 
-### 5. Skin in the Game: The Root Cause of Vigilance Fatigue
-The deepest imbalance between a human engineer and a coding agent comes down to who owns the operational risk:
-- **The Human Owns the Production Risk**: If a service crashes at 3:00 AM, the human engineer gets paged, handles the incident call, and answers to stakeholders.
-- **The Agent Has Zero Skin in the Game**: For the model, generating a brittle, buggy 2,000-line diff carries no risk. It is just another set of completions. The model feels no satisfaction when a system runs cleanly for a year, and no panic when a memory leak takes down the platform.
-- **The Mental Tax of Constant Vigilance**: Because the agent has no concept of production failure, you have to supply all the caution yourself. Supervising a tireless, supremely confident system that can introduce subtle production bugs in seconds is far more exhausting than writing the code yourself.
+These pressures also reinforce one another. A tired reviewer is more likely to skim a large diff, while a skimmed diff leaves more room for the sort of production failure the reviewer was worried about in the first place.
 
----
+## Make the work sustainable
 
-## 5. The Anatomy of Modern Developer Burnout
+The answer is partly to change how you use agents during the day, and partly to decide what work you want to keep for yourself.
 
-Burnout used to come primarily from long hours, impossible deadlines, and frequent production fire drills. 
+### Limit the work you have to review at once
 
-Working with agents introduces a new failure mode: **vigilance exhaustion**.
+Being able to run four agents in parallel does not mean you can properly review four streams of output. Run one task, understand the diff, run the tests, and settle the change before starting the next. Protect the attention you need to review the code you will own.
 
-1. **The Fear of the Plausible Diff**: The quiet, constant stress that an agent-generated diff contains a subtle, critical bug—like an unhandled concurrency edge case, an off-by-one error, or a silent state mutation—that passes all existing unit tests but will fail under production load.
-2. **Terminal Juggling and Context Fragmentation**: In traditional development, you focus on one problem, write code, run tests, and commit. In an agentic setup, work easily devolves into managing multiple terminal sessions at once: one agent is writing code, another is running a test suite, while you try to draft a specification for a third. Splitting your attention across multiple parallel tasks drains your energy much faster than linear focus.
-3. **Authorship Debt and Impostor Dissonance**: You begin to feel like an operator rather than an engineer. When things go well, the agent wrote the code; when things break, you have to dig through hundreds of lines of alien logic to fix it. Over time, this triggers real self-doubt: *"Did I actually build this system, or did the model? Can I still write this from scratch without an assistant?"* Unless you anchor your value in system design and constraint validation, this dynamic will eat away at your engineering confidence.
-4. **The Friction of Oblivious Tools**: The low-grade, persistent frustration of dealing with an interface that sounds human, pretends to understand your domain, but has no actual memory or comprehension, forcing you to restate the same constraints over and over.
+### Let the agent work while you step away
 
----
+An agent can produce code without you sitting at the keyboard for eight continuous hours. Start a task, get a coffee or take a walk, then return to its diff and test results. Give it the next instruction after you have reviewed the first result. Treating it as background work can break the cycle of watching several terminals and responding to every update immediately.
 
-## 6. Sustainable Operating Patterns for Engineering Teams
+### Keep writing some code yourself
 
-To avoid burnout and keep software engineering satisfying while using agents, teams need to change their day-to-day operating habits:
+A core domain engine, a difficult state machine, or an interesting optimization can be worth implementing by hand. It helps you keep your skills sharp, build a detailed model of the code, and retain the creative satisfaction that drew you to programming. You and your team do not have to delegate every implementation task.
 
-### 1. Enforce Bounded Agent Concurrency
-Just because you can run four agents in parallel does not mean your brain can safely review their work. Keep your work serial: run one agent task at a time. Review the output thoroughly, run the tests, and understand the changes before starting the next task. Protect your review bandwidth.
+### Put repeatable checks between the agent and production
 
-### 2. Leverage Asynchronous Mobility
-Managing multiple terminal sessions at your desk is exhausting. But agentic tools also make it possible to step away from your desk without stopping work:
-- Since the agent handles syntax generation, you do not need to sit in your chair typing for eight hours straight.
-- Kick off an agent trajectory, step away to get a coffee or take a walk, review the generated diff and test results when you get back, guide the next step, and step away again.
-- Treating the agent as an asynchronous background worker rather than an immediate, real-time chat partner keeps you from getting sucked into frantic, multi-terminal monitoring.
+Manually inspecting every line an agent can produce is not sustainable. Let compiler checks, linters, deterministic tests, and mutation testing catch the problems they are suited to catch. That gives your review time to the decisions and failure cases that require engineering judgment. It also makes it harder for fatigue to turn into approving a diff simply because it looks reasonable.
 
-### 3. Preserve Manual Craftsmanship
-Give yourself and your team explicit permission to write critical code by hand. If you are building a core domain engine, a complex state machine, or an interesting algorithmic optimization, write it yourself. Not every problem needs to be delegated to an LLM. Writing code by hand keeps your fundamentals sharp, builds deep mental models, and provides the creative satisfaction that brought you into this field in the first place.
+### Take ownership of the design and its verification
 
-### 4. Shift Professional Pride to Verification and System Defense
-You have to update what you take pride in as an engineer:
-- **Old Standard**: *"I take pride in having manually typed every line and function in this service."*
-- **New Standard**: *"I take pride in defining airtight constraints, catching subtle systemic edge cases, maintaining strict test oracles, and defending this architecture under real-world traffic."*
+Pride in engineering does not have to depend on having typed every line. Defining constraints, spotting a convincing but wrong implementation, choosing sound boundaries, maintaining trustworthy test oracles, and checking behavior under real traffic are also engineering work. They require experience; a junior engineer or a nontechnical manager cannot reliably substitute for it.
 
-To shake off the feeling of "authorship debt," remember that filtering, shaping, and verifying code are core acts of engineering:
-- **Verification Taste**: Knowing which architectural approaches are resilient, spotting plausible-sounding hallucinations, and rejecting brittle abstractions requires real domain experience. A junior engineer or a non-technical manager cannot do this effectively.
-- **The Whiteboard Defense Test**: If you can stand at a whiteboard without an LLM and explain every state transition, data flow, failure mode, and trade-off in your system from first principles, you own that architecture. The agent was just a fast typing assistant.
-
----
+A useful test is whether you can go to a whiteboard, without the model, and explain the system's state transitions, data flow, failure modes, and trade-offs. If you can defend those decisions and understand the code that implements them, you own the architecture, even if an agent did much of the typing.
 
 ## Related Notes & Deep Dives
 
-- **[[AI Changes the Role and Training of Software Engineers]]**: The broader shift from syntax implementation to architectural questioning, system verification, and the whiteboard defense test.
-- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: How enterprise bureaucracy and centralized tooling stifle individual engineering agency, compounding developer fatigue.
-- **[[Reviewing AI-Generated Code]]**: Practical strategies for auditing large diffs, catching synthetic hallucinations, and avoiding review fatigue.
-- **[[The First AI-Native Generation of Software Engineers]]**: How new developers build their technical foundation and mental models when code generation is entirely automated.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How automated linters, compilers, and test suites protect human attention from agent-generated code bloat.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why pushing teams to generate and review code faster without fixing the underlying deployment and testing pipeline leads to systemic quality drops.
-- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Using clear, domain-specific constraints to guide model output, reduce review overhead, and eliminate authorship dissonance.
+- **[[AI Changes the Role and Training of Software Engineers]]**: The shift from writing syntax to asking architectural questions, verifying systems, and defending design decisions at a whiteboard.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: How bureaucracy and centralized tools limit individual engineering agency and add to fatigue.
+- **[[Reviewing AI-Generated Code]]**: Reviewing large diffs, finding invented details, and managing review fatigue.
+- **[[The First AI-Native Generation of Software Engineers]]**: How new developers build technical foundations when generation handles much of the implementation.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How linters, compilers, and tests help protect human attention from unnecessary generated code.
+- **[[AI Productivity Is Limited by the Delivery System]]**: Why producing and reviewing code faster can hurt quality when testing and deployment cannot keep up.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How clear domain constraints guide output and reduce review effort and the feeling of detachment from generated code.

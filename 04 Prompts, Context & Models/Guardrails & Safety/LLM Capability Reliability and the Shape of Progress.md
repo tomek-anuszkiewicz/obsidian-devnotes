@@ -14,422 +14,284 @@ aliases:
 created: 2026-08-23
 ---
 
-# LLM Capability Reliability and the Shape of Progress
+# LLM Capability, Reliability, and the Shape of Progress
 
 ## Summary
 
-Large language models are improving rapidly, but their progress is not a monolithic march toward zero errors. In practice, different capabilities advance along decoupled trajectories:
+LLMs are still improving rapidly, but they are not moving along a single curve toward infallibility. Several different capabilities are advancing at different rates:
 
-- **Single-task performance** on bounded, well-specified problems is already high.
-- **Reasoning, code generation, tool invocation, and multimodality** are advancing quickly through inference-time compute and execution feedback.
-- **Agent task horizons**—the length and complexity of multi-step tasks a model can attempt—are expanding at an exponential rate.
-- **Error calibration, robustness, and uncertainty detection** improve much more slowly.
-- **General-purpose infallibility** remains an unrealistic target because real-world software engineering operates under incomplete information, shifting requirements, and ambiguous specifications.
+- performance on well-defined tasks is already high;
+- reasoning, coding, tool use, and multimodality are improving quickly;
+- the duration of tasks agents can complete is increasing especially fast;
+- calibration, robustness, and recognition of uncertainty improve more slowly;
+- general-purpose infallibility remains far away and may not be a meaningful attainable state.
 
-The practical state of frontier models today can be summarized simply:
+The best description of the present moment is:
 
-> We are high on the curve of single-turn capability, in the steep acceleration phase of agentic task horizons, but still low on the curve of unassisted real-world reliability.
-
-```text
-       Capability vs. Operational Reliability Over Step Depth
- 100% +-------------------------------------------------------------------+
-      |               Raw Benchmark & Single-Task Horizon Capability      |
-      |             ..................................................... |
-      |          .·´                                                      |
-  75% |        .·´                                                        |
-      |      .·´                                                          |
-      |     .·                                  Operational Reliability   |
-  50% |    .·                                   (Unmitigated P = p^N)     |
-      |   .·                                    ---------------------\    |
-      |  .·                                                           \   |
-  25% | .·                                                             \  |
-      | ·                                                               \ |
-   0% +-------------------------------------------------------------------+
-      Step 1      Step 5              Step 10                     Step 20
-
-      [ Probabilistic LLM ] ---> [ Deterministic Harness & Oracles ] ---> [ Verified Output ]
-      (Generates Solutions)      (Compilers, Linters, Test Runners)       (Guaranteed State)
-```
+> We are high on the curve of single-answer capability, on a steep part of the agentic-capability curve, but much lower on the curve of real-world reliability.
 
 Reliability in autonomous workflows does not come from waiting for an infallible base model. It comes from enclosing probabilistic model inference inside deterministic verification harnesses, automated test suites, and strict execution sandboxes.
 
----
+## Capability is not reliability
 
-## Capability is Not Reliability
-
-Two statements that sound similar describe fundamentally different operational realities:
+Two claims that sound similar are fundamentally different:
 
 1. A model **can** solve a difficult task.
 2. A model will **reliably** solve every similar task.
 
-The first statement is becoming true across software engineering at an astonishing rate. The second remains far from solved.
+The first is becoming true at an astonishing rate. The second is still far from true.
 
-This divergence explains why modern models can generate complex, architecturally sound distributed systems code, yet simultaneously introduce a trivial, catastrophic bug: an inverted boolean, an undocumented API parameter, a subtly false concurrency assumption, or a clean, idiomatic implementation of the wrong business rule.
+This distinction explains why modern models can produce expert-level work and still make a small, convincing mistake: an incorrect parameter, a subtly wrong assumption, a nonexistent API option, or a locally plausible implementation of the wrong business rule.
 
-These failures are rarely spectacular, obvious hallucinations. They are **soft hallucinations**: subtle errors embedded within an otherwise coherent, persuasive, and syntactically flawless implementation. Because the surrounding context reads naturally and passes superficial visual inspection, soft hallucinations are far more dangerous in production environments than overt syntax failures.
+These are often not spectacular hallucinations. They are *soft hallucinations*: errors embedded in an otherwise coherent and persuasive result.
 
----
+Because the surrounding context reads naturally and passes superficial visual inspection, soft hallucinations are far more dangerous in production environments than overt syntax errors. A broken import or syntax typo fails fast at compile time; an inverted permission check or an unindexed query embedded in an otherwise elegant pull request slips silently past code review and into production.
 
-## A Simplified History of Model Generations
+## A simplified history of model generations
 
-```
-GPT-3 (2020–2022)        GPT-3.5 (2022–2023)        GPT-4 / Claude 3 (2023–2024)   Reasoning Models & Agents (2024–2026)
------------------        -------------------        ----------------------------   -------------------------------------
-Fluent text generation   Instruction following      Deep multi-file analysis       Inference-time search & reasoning
-Small code snippets      Interactive chat utility   Tool and API integration       Self-correction via test execution
-High instruction drift   Believable broken code     Pair programming partner       Persistent scratchpads & git tools
-Invented APIs            Little error awareness     Requires constant review       Bounded by runtime harnesses
-```
+### GPT-3 era: persuasive text generation
 
-### GPT-3 Era: Persuasive Text Generation (2020–2022)
-Models in this era were primarily statistical predictors of tokens trained on raw internet text:
-- Generated fluent prose and answered broad domain questions.
-- Recalled broad factual knowledge and wrote small, isolated code snippets.
-- Performed basic text transformations and pattern completion.
+Models from roughly 2020–2022 could:
 
-However, they suffered from rapid instruction drift, routinely invented non-existent library methods, and could not maintain a coherent multi-step plan. They were creative text generators, not dependable software collaborators.
+- generate fluent text;
+- recall substantial general knowledge;
+- write small code fragments;
+- perform simple transformations.
 
-### GPT-3.5 and Early Chat Models: Useful Assistants (2022–2023)
-Reinforcement Learning from Human Feedback (RLHF) turned completion engines into conversational assistants:
-- Instruction-following improved significantly, allowing structured zero-shot prompting.
-- Models became genuinely useful for drafting boilerplate, explaining concepts, and writing simple functions.
-- They frequently produced code that looked completely correct to human eyes but failed at runtime.
-- They possessed virtually no internal calibration regarding their own knowledge boundaries.
+However, they easily lost instructions, invented facts and APIs, and were unable to maintain a coherent plan across longer tasks. They were impressive language generators rather than dependable collaborators.
 
-### GPT-4 and Claude 3 Era: Capable Collaborators Under Supervision (2023–2024)
-Substantial leaps in parameter scale, context window capacity, and instruction fine-tuning delivered genuine engineering utility:
-- Reliable analysis of complex, multi-file codebases across 100k+ token contexts.
-- Planning and executing refactors across multiple interdependent modules.
-- Identifying trade-offs between architectural patterns and explaining legacy code.
-- Correcting syntax errors when fed compiler error outputs directly.
+### GPT-3.5 and early chat models: useful assistants
 
-These models became indispensable daily drivers for experienced developers, but they still operated without an internal execution loop. Every output required rigorous line-by-line review.
+Instruction following improved dramatically. Models became genuinely useful for conversation and programming assistance, but they frequently produced code that looked correct without working. They also had little ability to recognize when they were outside their knowledge.
 
-### Reasoning Models and Agents (2024–2026)
-The breakthrough in this phase did not come from pre-training on more raw text. It came from allocating compute at inference time—allowing models to generate hidden reasoning tokens, explore alternative search paths, and interact directly with execution environments:
-- Inference-time reasoning chains to evaluate edge cases before emitting answers.
-- Direct access to local shells, file systems, browsers, and terminal test runners.
-- The execution of iterative **change → observe → correct** loops.
-- Structured context curation, persistent scratchpads, and git-aware diffing.
-- [[Agentic Coding Harness and Controlled Development Workflows|Agentic harnesses]] that sandbox, validate, and constrain model operations.
+### GPT-4 and Claude 3 era: capable collaborators under supervision
 
-This represents a structural shift. A single raw inference pass from a model may still contain errors, but an agent running inside a harness can confront its output with compilers, linters, and unit tests, systematically repairing its own mistakes before presenting the final diff.
+During 2023–2024, models became much better at:
 
----
+- analysing code;
+- working with larger contexts;
+- planning multi-file changes;
+- explaining trade-offs;
+- correcting some mistakes when given test results.
 
-## Why Benchmarks Appear to Improve So Dramatically
+They became productive tools for experienced developers, but still required verification and review.
 
-Stanford’s AI Index recorded that performance on SWE-bench rose from roughly 4.4% in 2023 to over 70% by late 2024. By 2026, benchmarks like SWE-bench Verified were approaching saturation.
+### Reasoning models and agents: 2024–2026
 
-```text
- Benchmark Performance (%)
-  100% +-------------------------------------------------------+
-       |                                      SWE-bench Verified
-       |                                  ......................
-   75% |                                .·´
-       |                              .·´     SWE-bench Pro
-       |                            .·´       (Contamination-resistant)
-   50% |                          .·´         ------------------
-       |                        .·´
-   25% |                      .·´
-       |         SWE-bench  .·´
-    0% +-----------·´------------------------------------------+
-       2023                 2024                 2025       2026
-```
+The next major improvement did not come only from adding more knowledge. Models gained:
 
-This rapid benchmark climb does **not** mean that autonomous agents can solve 80% of real-world software engineering issues. It means that models have saturated a specific, bounded class of historical GitHub issues.
+- more inference-time reasoning;
+- access to terminals, repositories, browsers, and search;
+- the ability to run tests and inspect results;
+- iterative `change → observe → correct` loops;
+- better context management and persistent notes;
+- agent harnesses that constrain and verify their work.
 
-When a benchmark saturates, harder, contamination-resistant evaluations reveal the true operational limits. For example, OpenAI reported that GPT-5.2 Thinking reached approximately 80% on SWE-bench Verified, but dropped to 55.6% on SWE-bench Pro—a suite designed to resist training-set leakage and evaluate broader repository-level reasoning.
+This changed the nature of the system. A single model response may still be wrong, but an agent can now confront its answer with reality and repair some of its own mistakes.
 
-Every benchmark follows a predictable lifecycle:
-1. **Introduction**: A difficult, realistic benchmark is released; baseline frontier models score in the single digits.
-2. **Rapid Ascent**: Fine-tuning, prompt engineering, agentic search, and reasoning tokens rapidly improve scores.
-3. **Saturation**: Top models bunch together near 80–90%, and the benchmark loses its ability to separate frontier systems.
-4. **Recalibration**: A more rigorous benchmark is introduced, exposing blind spots, edge-case failures, and brittle assumptions.
+## Why benchmarks appear to improve so dramatically
 
-This dynamic explains why two seemingly contradictory realities coexist:
-- Benchmark progress is advancing faster than any previous technology cycle.
-- The same models that achieve record benchmark scores still fail in production due to undocumented internal dependencies, subtle race conditions, or unstated business assumptions.
+Stanford's AI Index reported that performance on SWE-bench rose from approximately 4.4% in 2023 to 71.7% in 2024. By 2026, SWE-bench Verified was close to saturation.
 
----
+This does **not** mean that agents can solve nearly every software-engineering problem. It means they became very effective on a particular, bounded class of issues. Once a benchmark approaches saturation, harder and more diverse benchmarks reveal the remaining limitations.
 
-## Error Compounding in Multi-Step Workflows
+For example, OpenAI reported 80% for GPT-5.2 Thinking on SWE-bench Verified but 55.6% on the more diverse and contamination-resistant SWE-bench Pro. The goalpost moves because the earlier test no longer separates frontier systems well.
 
-Autonomous agent workflows consist of discrete, sequential decisions: parsing requirements, finding relevant files, editing code, running builds, parsing error logs, and refining edits.
+Each benchmark therefore tends to follow its own S-curve:
 
-In an unmitigated sequential workflow without external validation, overall success is governed by geometric compounding:
+1. A difficult benchmark is introduced.
+2. Results are initially low.
+3. Performance rises quickly.
+4. The benchmark approaches saturation.
+5. A harder benchmark exposes new weaknesses.
+
+Consequently, all of the following can be true simultaneously:
+
+- progress is extremely fast;
+- established benchmarks are saturating;
+- models still make elementary mistakes in real work.
+
+## Error compounding in long tasks
+
+Suppose an agent performs 20 important steps, with each step being correct 95% of the time. If no mechanism detects errors, the probability that every step is correct is:
 
 $$
-P_{\text{success}} = \prod_{i=1}^{N} p_i
+0.95^{20} \approx 36\%
 $$
 
-Assuming an optimistic, uniform per-step correctness probability $p$:
+Even at 99% correctness per step:
 
 $$
-P_{\text{success}} = p^N
+0.99^{20} \approx 82\%
 $$
 
-If an agent executes a 20-step workflow where each step has a 95% probability of being correct:
-
-$$
-0.95^{20} \approx 35.8\%
-$$
-
-Even if per-step accuracy rises to 99%:
-
-$$
-0.99^{20} \approx 81.8\%
-$$
-
-Across an extended 100-step operational trajectory:
+For 100 steps:
 
 $$
 0.99^{100} \approx 36.6\%
 $$
 
-```text
- Multi-Step Success Probability (P = p^N)
-  100% +-------------------------------------------------------+
-       | *---\_
-       |       \__  p = 0.99 per step
-   75% |          \----\_
-       |                 \----\__
-   50% |   o                     \----\_
-       |    \--\_                       \----\_
-   25% |         \---_  p = 0.95 per step      \---\_
-       |              \------\____                   \--------
-    0% +--------------------------\----------------------------+
-       N = 1       N = 10         N = 25                      N = 100
-```
+This calculation is simplified, but it illustrates why being almost always correct on small tasks does not automatically produce a dependable long-running agent.
 
-This math explains why an LLM that feels brilliant in an interactive chat session can fail completely when left to run autonomously overnight.
+Real systems can perform better because tests, compilers, schemas, and environmental feedback catch errors. They can also perform worse because errors are correlated: one incorrect assumption may poison dozens of later decisions.
 
-In practice, execution environments alter this dynamic in two opposite ways:
+In an unattended agent loop, error compounding operates under two opposing forces. Deterministic feedback loops—compilers, linters, unit tests, and schema validators—intercept execution errors before they can cascade, giving the agent a chance to self-correct in place. Conversely, semantic errors cascade catastrophically: when an agent misinterprets an authorization rule or database invariant at step 2, that invalid assumption enters the context window. The subsequent 18 steps may execute with syntactically flawless logic, but they are expanding on a poisoned foundation that no compiler can flag.
 
-1. **Compensating Feedback**: Deterministic feedback loops (compilers, linters, unit tests, schema validators) intercept errors before they compound. If step 4 breaks the build, the harness feeds the compiler error back to the model, giving it a bounded opportunity to self-correct before proceeding to step 5.
-2. **Correlated Failure Cascades**: Errors in real systems are rarely independent. If an agent misinterprets an authorization rule in step 2, that poisoned assumption enters its context window. Steps 3 through 20 may execute with flawless internal logic, but they are building on a fundamentally broken foundation.
+## The task-horizon curve
 
----
+METR measures the length of a task—expressed as the time a skilled human would need—that an AI agent can complete with 50% success probability.
 
-## The Task-Horizon Curve
+Its original research found that the frontier task horizon had approximately doubled every seven months since 2019. Later results suggest much longer horizons on some verifiable task suites, although METR warns that measurements above roughly 16 hours are currently difficult to estimate reliably.
 
-METR (Model Evaluation and Threat Research) evaluates autonomous capability using the **task horizon**: the duration of a task—measured in the time a skilled human engineer would require—that an AI agent can complete with a **50% success probability**.
+The critical qualifier is **50% success probability**. This is evidence that the system can sometimes complete a long task, not that it can be trusted to do so consistently.
 
-```text
- Human Task Duration Completed with 50% Success
- 16 hrs +----------------------------------------------------+
-        |                                                 .·´
-        |                                             .·´
-  8 hrs |                                         .·´
-        |                                     .·´
-  4 hrs |                                 .·´
-        |                             .·´
-  2 hrs |                         .·´
-        |                     .·´
-  1 hr  |                 .·´
-        |             .·´
-  0 hrs +-------------·´-------------------------------------+
-        2020         2022         2024         2026
-```
+Different reliability thresholds correspond to very different uses:
 
-METR’s data shows that this frontier task horizon has roughly doubled every seven months. Frontier models have progressed from solving 5-minute single-file bugs to handling complex multi-hour development tasks involving multi-file edits, package updates, and regression testing.
+| Success rate | Practical interpretation |
+|---:|---|
+| 50% | Capability demonstration or multiple attempts required |
+| 80% | Useful agent with active supervision |
+| 95% | Limited automation with safeguards and recovery paths |
+| 99.9%+ | Reliability expected from some critical production systems |
 
-However, the critical constraint is the **50% success threshold**. A 50% completion rate demonstrates high technical capability, but it is insufficient for production systems that demand high reliability.
+Measuring the 99% or 99.9% horizon requires far larger and more diverse evaluations than measuring the 50% horizon. Rare failures dominate the result.
 
-| Success Rate | Operational Paradigm | Production Role |
-|:---|:---|:---|
-| **50%** | Non-deterministic trial; multiple rollouts required | Speculative prototyping, Best-of-$N$ offline exploration |
-| **80%** | Interactive pairing; continuous human oversight | Developer copilot; agent drafts, engineer reviews |
-| **95%** | Guarded automation; automated sandboxing and tests | Automated dependency updates, low-risk bug fixes with CI gates |
-| **99.9%+** | True production automation; zero human-in-the-loop | Mission-critical pipelines, live infrastructure modifications |
+## We are moving along several curves
 
-Closing the gap between a 50% task horizon and a 99.9% production threshold cannot be achieved simply by waiting for base models to scale up. As success approaches 100%, long-tail edge cases dominate: undocumented environment quirks, subtle race conditions, inconsistent third-party APIs, and ambiguous requirements.
+### 1. A sequence of benchmark S-curves
 
----
+There is no single benchmark curve. Models rapidly climb one S-curve, saturate the test, and encounter a new curve created by a harder evaluation.
 
-## The Three Decoupled Curves of Progress
+### 2. An approximately exponential task-horizon curve
 
-Model evolution is best understood as three distinct, overlapping curves moving at different speeds:
+The length of coherent work agents can sometimes perform has grown much faster than the apparent quality of an ordinary chat response. This may be the most economically important trend.
 
-```text
- Capability Level
-  High ^                                          Sequence of S-Curves
-       |                                          (Saturating Benchmarks)
-       |                                    _.-''''-._      _.-''''-._
-       |                                _.-'          '-._.-'
-       |                     _.-''''-._.-'
-       |                 _.-'
-       |              .-'                     Exponential Task Horizons
-       |           .·´                        (Gross Autonomous Duration)
-       |        .·´                     .·´
-       |     .·´                    .·´
-       |   .·                   .·´
-       |  .                 .·´               Slow Reliability Tail
-       | ·              .·´                   (Ambiguity, Edge Cases, Dark Knowledge)
-       |·          .·´                        ---------------------------------------
-   Low +-------------------------------------------------------------------------> Time
-```
+### 3. A slow reliability-tail curve
 
-### 1. The Sequence of Benchmark S-Curves
-Benchmarks do not follow a single linear trajectory. They follow a jagged sequence of individual S-curves. A model family rapidly climbs an evaluation (e.g., HumanEval, SWE-bench Verified), saturates it, and appears to plateau—until a harder, cleaner benchmark exposes the next tier of limitations.
+Reducing errors from 20% to 10% is different from reducing them from 2% to 0.1%. Each improvement exposes rarer and more difficult cases:
 
-### 2. The Exponential Task-Horizon Curve
-The volume and duration of coherent, multi-step work an agent can perform before derailing is growing exponentially. This expansion is driven by extended context windows, faster inference, scratchpad reasoning, and tool use. This is the most commercially disruptive trend: tasks that once required constant developer intervention can increasingly be handed off as asynchronous jobs.
+- ambiguous requirements;
+- undocumented business rules;
+- obsolete documentation;
+- conflicting sources;
+- unusual infrastructure configurations;
+- failures that appear only after a long chain of actions;
+- technically correct solutions to the wrong problem.
 
-### 3. The Slow Reliability-Tail Curve
-Progress along the long-tail reliability curve is fundamentally slower. Reducing an error rate from 20% down to 10% requires straightforward model scaling and instruction tuning. Driving an error rate from 2% down to 0.1% requires solving hard, open-world problems:
-- Incomplete or contradicting technical documentation.
-- Institutional business rules that exist only in senior engineers' heads.
-- Legacy system side effects that do not appear in local test suites.
-- Latent bugs exposed only under production concurrency.
-- Code changes that are technically flawless implementations of the wrong architectural abstraction.
+The final part of the reliability curve may be harder than all earlier capability gains combined.
 
----
+## Why general infallibility is unlikely
 
-## Why General Infallibility is a Flawed Metric
+General-purpose infallibility is not merely technologically difficult; it is poorly defined:
 
-Infallibility in real-world software systems is not merely difficult to engineer; it is conceptually ill-defined:
+- some questions have no single correct answer;
+- sources may conflict;
+- requirements may be incomplete;
+- facts may change after training;
+- the user's premise may be false;
+- the evaluator may also be wrong.
 
-- **Requirements are inherently incomplete**: Software requirements rarely specify every edge condition. When a human engineer encounters an ambiguity, they consult stakeholders or make an informed architectural bet. A model must either guess or ask.
-- **Ground truth drifts**: Code libraries deprecate methods, upstream APIs alter rate limits, and security vulnerabilities emerge after training cutoffs.
-- **The usefulness vs. caution trade-off**: A model can achieve near-zero hallucination rates by refusing to act whenever it encounters uncertainty. However, an agent that aborts execution every time an environment variable is ambiguous is useless in practice:
+Training and benchmarks can additionally reward guessing over admitting uncertainty. A system can reduce hallucinations by refusing more often, but that produces a trade-off:
 
 $$
-\text{Usefulness} \longleftrightarrow \text{Caution}
+\text{usefulness} \longleftrightarrow \text{caution}
 $$
 
-A model tuned for high caution will refuse valid, creative solutions; a model tuned for high usefulness will make plausible, unverified guesses. Production engineering requires balancing this trade-off using external rules rather than relying on model intuition alone.
+A model that never answers will rarely hallucinate, but it will also be useless.
 
----
+## What is likely to improve next
 
-## What Improves Next: The Shift Toward Verification
+The most plausible near-term future is not a model that never makes mistakes. It is a system that increasingly:
 
-The near-term future of software automation will not be defined by a model that never hallucinates. It will be defined by systems that systematically identify and repair their own mistakes before touching production:
+1. verifies claims and actions with tools;
+2. detects contradictions in its own reasoning;
+3. maintains goals over longer tasks;
+4. distinguishes facts, assumptions, and missing information;
+5. runs independent attempts or reviews when risk is high;
+6. relies on tests, types, schemas, permissions, and observability;
+7. asks humans to decide ambiguous product and business questions.
 
-```
-[ Natural Language Intent ]
-           │
-           ▼
-┌───────────────────────────────────────────────────────────┐
-│              Agentic Harness Architecture                 │
-│                                                           │
-│   ┌───────────────────┐        ┌──────────────────────┐   │
-│   │   Reasoning LLM   │◄──────►│ Deterministic Tools  │   │
-│   │ (Proposes Diffs)  │        │ (Bash, LSP, Linters) │   │
-│   └─────────┬─────────┘        └──────────┬───────────┘   │
-│             │                             │               │
-│             ▼                             ▼               │
-│   ┌───────────────────────────────────────────────────┐   │
-│   │              Verification Gatekeepers             │   │
-│   │   - Headless Compilers & Static Type Checkers     │   │
-│   │   - Local Sandbox Unit & Integration Tests        │   │
-│   │   - Invariant Checks & Mutation Testing           │   │
-│   └─────────────────────────┬─────────────────────────┘   │
-└─────────────────────────────┼─────────────────────────────┘
-                              │
-               Passes All Gates?
-               ├── Yes ──► [ Git Commit & PR Created ]
-               └── No  ──► [ Rollback / Human Escalation ]
-```
+Human work is likely to shift from producing every implementation detail toward defining intent, constraints, acceptance criteria, and review boundaries.
 
-1. **Deterministic Verification Loops**: Running builds, executing unit suites, verifying API contracts with OpenAPI schemas, and using the Language Server Protocol (LSP) to flag type mismatches before committing code.
-2. **Contradiction Detection**: Cross-checking reasoning chains against tool outputs to spot internal inconsistencies before taking action.
-3. **Explicit Goal Tracking**: Maintaining structured scratchpads that track completed sub-tasks, pending verifications, and architectural constraints across long operational horizons.
-4. **Epistemic Classification**: Distinguishing between verified repo facts (read from disk), assumptions (inferred from context), and missing knowledge (requiring human confirmation).
-5. **Speculative Execution (Best-of-$N$)**: Spawning multiple isolated attempts in parallel git worktrees, running test suites against each branch, and selecting the cleanest passing solution.
-6. **Human-in-the-Loop Escalation**: Recognizing when an edit touches sensitive security boundaries, billing pipelines, or architectural foundations, and explicitly halting to request human confirmation.
+In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested.
 
-The human engineer's primary responsibility shifts from manually typing code to defining verifiable specifications: writing rock-solid integration tests, configuring lint rules, bounding sandbox permissions, and reviewing pull requests.
+## Why software engineering may automate faster
 
----
+Programming has unusually strong external feedback:
 
-## Why Software Engineering Automates Faster Than Other Knowledge Work
+- code compiles or fails;
+- a test passes or fails;
+- a type checker identifies inconsistencies;
+- an API contract can be validated;
+- a UI can be rendered and inspected;
+- runtime behaviour can be compared with an expected state.
 
-Software engineering is uniquely suited to agentic automation because code operates within an environment of rich, immediate, and unambiguous feedback mechanisms:
+Tasks with a strong verifier can improve much faster than tasks whose quality is subjective or whose requirements are hidden.
 
-- **Compilers and Type Checkers**: Provide binary pass/fail verification on syntax, interface contracts, and nullability.
-- **Automated Test Suites**: Mechanically validate functional correctness and protect against regressions.
-- **Language Server Protocol (LSP)**: Surfaces missing imports, dead references, and type mismatches instantly.
-- **Ephemeral Sandboxes**: Containerized environments (Docker, Firecracker microVMs) allow agents to safely execute code, inspect runtime behavior, and evaluate real logs.
+This feedback loop is amplified by disposable execution environments. Running agents inside ephemeral sandboxes (like Docker containers or Firecracker microVMs) allows them to safely trigger real builds, execute migrations against disposable database instances, and parse actual runtime logs. When the oracle is unambiguous—a passing test suite, a validated OpenAPI schema, or a clean compiler pass—the model can iterate autonomously until the contract is satisfied.
 
-Tasks possessing clear deterministic verifiers advance far faster than tasks that rely on subjective human evaluation.
+Likely faster areas:
 
-```text
-                  Automation Velocity by Task Type
-   Faster Automation Velocity           Slower Automation Velocity
-   (Strong External Verifiers)          (Subjective / Hidden Context)
-  ◄──────────────────────────────────────────────────────────────────►
-   • Bounded bug fixes                  • Product feature discovery
-   • Version migrations                 • Undocumented business logic
-   • Well-tested refactoring            • Cross-team consensus building
-   • Boilerplate API endpoints          • Multi-year architecture planning
-   • Infrastructure as Code (IaC)       • Maintainability & readability trade-offs
-```
+- bounded bug fixes;
+- migrations with explicit rules;
+- refactoring protected by tests;
+- implementing well-specified API operations;
+- generating and validating infrastructure definitions.
 
-### Fast-Moving Areas
-- **Bounded Bug Fixes**: A failing test provides an unambiguous target. The agent edits code until the test passes without breaking existing suites.
-- **Framework and Dependency Migrations**: Clear syntax transformation rules verified immediately by the compiler and test runners.
-- **Refactoring under Deep Test Coverage**: Code can be restructured aggressively because the regression safety net is automated and unambiguous.
-- **Spec-First API Development**: Implementing endpoints from explicit OpenAPI/gRPC schemas, where inputs, outputs, and validation rules are strictly typed.
+Likely slower areas:
 
-### Slower-Moving Areas
-- **System Architecture**: Making structural trade-offs for requirements that will not exist for another two years.
-- **Discovering Product Intent**: Identifying that the feature requested by a client will not actually solve their operational bottleneck.
-- **Reconstructing Dark Knowledge**: Excavating unwritten organizational assumptions and institutional history that never made it into comments or docs.
-- **Balancing Clean Abstractions**: Knowing when code duplication is preferable to the wrong shared abstraction.
+- discovering what product should be built;
+- reconstructing undocumented business knowledge;
+- resolving conflicting stakeholder intentions;
+- choosing architecture for uncertain future requirements;
+- judging maintainability over several years.
 
----
+## Where we are now
 
-## Where We Stand Today
+The overall technology does not appear to be on a final plateau. Instead, several waves overlap:
 
-The industry is not approaching a performance ceiling; it is navigating overlapping architectural waves:
+- conventional pre-training scaling may deliver diminishing returns;
+- inference-time reasoning still provides substantial gains;
+- tool use and agent loops produce large practical improvements;
+- context management, evaluation, memory, and harness design are becoming as important as the underlying model.
 
-- **Traditional Pre-training**: Scaling model parameter counts and raw web text is encountering physical and economic limits (data exhaustion, power availability, diminishing returns per watt).
-- **Inference-Time Compute**: Allocating test-time compute to search, backtrack, and evaluate multiple candidate solutions yields massive capability leaps on complex reasoning tasks.
-- **Agentic Runtime Harnesses**: Surrounding probabilistic models with terminal access, git worktrees, testing suites, and LSP tools provides massive practical reliability gains without changing model weights.
+We are probably past the first great transition—*a model can speak and write*—and in the middle of the second—*a model can perform and verify work*.
 
-We have moved past the initial phase where the miracle was that an LLM could converse and generate syntax. We are now in the operational phase: engineering dependable systems that direct, constrain, and verify multi-step autonomous work.
+The remaining danger is subtle. As models become more capable, their errors become less obvious and their outputs more persuasive. Trust may increase faster than reliability. Therefore, the central engineering question is no longer only:
 
-Because models produce increasingly persuasive and well-structured output, their failures are becoming harder to catch visually. Trust can easily outpace actual reliability. As a result, the critical engineering question has fundamentally changed:
+> How capable is the model?
 
-```text
-  Yesterday's Question:  "Can the model write this code?"
-  Today's Question:      "What deterministic verification proves this code is correct?"
-```
+It is increasingly:
 
----
+> What evidence would reveal that this particular result is wrong?
 
-## Practical Architectural Takeaway
+## Practical conclusion
 
-LLMs are probabilistic reasoning engines. They should never be treated as deterministic components in an enterprise architecture.
+LLMs should not be treated as deterministic components. They are probabilistic workers operating inside a deterministic control system.
 
-For serious agentic automation, operational reliability must be enforced by the surrounding platform:
+For serious agentic work, reliability should come from the complete system:
 
-1. **Hermetic Sandboxing**: Execute agent actions inside disposable microVMs or containers with strict network controls and filesystem boundaries.
-2. **Explicit Verification Oracles**: Never accept a code diff based on the model's claim that it works. Require clean build outputs, passing linters, and green unit/integration tests.
-3. **Branch-Level Isolation**: Direct agents to work in isolated git worktrees, preventing them from corrupting local working state during failed multi-step attempts.
-4. **Least-Privilege Tooling**: Restrict terminal commands to bounded scripts (e.g., specific test runners, formatters, and git commands) rather than granting raw root shell access.
-5. **Observable State and Execution Traces**: Log every intermediate thought, tool call, stdout/stderr stream, and file diff to allow rapid post-mortem debugging of failed agent runs.
-6. **Hard Escalation Boundaries**: Automatically halt execution and page human operators whenever an agent encounters ambiguous requirements, security-sensitive code paths, or irreversible production actions.
+- explicit specification;
+- bounded permissions;
+- source retrieval;
+- executable tests;
+- static analysis;
+- independent review;
+- observable intermediate state;
+- stop conditions and escalation rules;
+- human approval for ambiguous or high-impact decisions.
 
-The model provides probabilistic reasoning and code generation. The **[[Agentic Coding Harness and Controlled Development Workflows|Agentic Harness]]** provides deterministic verification, enforcement, and reliability.
+Enforcing this at the platform layer means treating model output as unverified user input. In practice, production environments isolate autonomous runs in dedicated git worktrees inside ephemeral sandboxes, restrict terminal tooling to bounded scripts rather than unmetered root access, and record structured execution traces of every tool call and file diff. If an agent hits an ambiguous schema or an unexpected authorization boundary, the harness must halt execution and escalate rather than permitting the model to guess.
 
----
+The model supplies capability. The [[Agentic Harness]] supplies control and evidence.
 
-## Related Notes
+## Related notes
 
-- **[[Reliability of LLM Coding Agents]]**: Practical failure modes, soft hallucinations, and architectural recovery paths for autonomous coding agents.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing deterministic control environments, test harnesses, and execution sandboxes for agents.
-- **[[Testing in the Model, Agent, LLM Era]]**: Adapting testing strategies, mutation testing, and deterministic verification for non-deterministic model outputs.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Identifying semantic deceits, incorrect library parameters, and plausible bugs in generated code.
-- **[[How Reasoning Models Explore and Evaluate Solutions]]**: Test-time compute, Monte Carlo tree search, and verification heuristics in frontier reasoning architectures.
-- **[[Designing APIs for LLM-Generated Integration Code]]**: Structuring internal libraries and interfaces to reduce agent error rates through strict type safety and clear contracts.
-- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]**: How synthetic execution data, RL environments, and self-correction loops train frontier models.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why raw model capability cannot translate to organizational throughput without mature CI/CD and verification pipelines.
-- **[[LLM Agents and Institutional Memory]]**: Preserving architectural intent, operational context, and technical decisions across extended agent sessions.
-- **[[Exploring Agent Harnesses]]**: Designing contamination-resistant benchmarks, regression suites, and realistic testbeds for coding agents.
-
----
+- [[Subtle Hallucinations in LLM-Assisted Programming]]
+- [[Agentic Harness]]
+- [[Designing APIs for LLM-Generated Code]]
+- [[LLM Agents and Institutional Memory]]
+- [[Evaluating Coding Agents]]
 
 ## Sources
 

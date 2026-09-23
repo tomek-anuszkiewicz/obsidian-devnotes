@@ -18,154 +18,96 @@ aliases:
 ---
 # The Living Engineering Chronicle and Context Compaction
 
-When you run long-horizon software projects with coding agents, standard documentation patterns fall apart quickly. If you rely entirely on Git commit history or static Architecture Decision Records (ADRs), your project will eventually suffer from catastrophic amnesia. 
+Coding agents can make ten substantial changes to a system in an afternoon. A few weeks later, the repository shows what survived, but it may tell you very little about why those changes took this shape. A squashed or rebased branch can hide the intermediate attempts: a compiler quirk found halfway through, a concurrency bug worked around in the third iteration, or an approach that failed before the final diff. An architecture decision record (ADR) often has the opposite timing problem. It records the intended design before implementation reveals the limits of a library, API, or machine, and nobody updates it after the design changes.
 
-The mechanism is straightforward: when feature branches are squashed, batched, or rebased into `main`, the nuanced, step-by-step technical rationale behind intermediate decisions gets discarded. The repo retains the final diff, but the context—the compiler quirks discovered midway through, the subtle concurrency bug bypassed during step three, or the failed architectural attempt—disappears. Static ADRs have the inverse problem: they capture high-level intentions before implementation starts, but rarely get updated when real-world constraints force a pivot during development.
+Keep that reasoning in a chronological `DIARY.md`. The file records architectural changes, bug fixes, and structural changes as they happen. Each entry says which parts of the system changed, what changed, why, and how the result was checked. That gives a later reader more than a final diff or an initial design statement.
 
-To solve this, a production-grade agent harness needs a **Living Engineering Chronicle** (`DIARY.md`). This is an append-only, chronological narrative recording every single architectural change, bug fix, and structural modification. 
-
-However, maintaining a continuous log presents a major operational trap: as the file grows to hundreds of kilobytes over weeks of development, having an agent read the entire file just to append an entry will blow out its context window, waste thousands of tokens, and degrade model performance. We resolve this by enforcing **Out-of-Context Append Tooling**—a dedicated, deterministic CLI script that handles appends in milliseconds directly on disk without ever loading the chronicle into the model's active prompt.
+There is a practical catch. After weeks of work, the diary may be hundreds of kilobytes long. If the agent reads the entire file to append a short entry, old history fills its context window, costs tokens, and leaves less room for the task at hand. A small CLI script can write the entry straight to disk and return a short confirmation. At completed milestones, a separate session condenses older entries while leaving recent ones in full.
 
 ```mermaid
 flowchart TD
-    subgraph AgentAction["Agent Implementation Cycle"]
-        A1["Task Implementation Completed"] --> A2["Verify All Deterministic Tests"]
-        A2 --> A3["Call Out-of-Context Append Tool\n(python tools/log_diary.py)"]
-    end
-
-    subgraph OutOfContext["Out-of-Context Tooling (0 Prompt Tokens)"]
-        A3 --> B1["CLI Tool Computes Timestamp & Headers"]
-        B1 --> B2["Appends 4 Standard Facets directly to DIARY.md"]
-        B2 --> B3["Returns in 0.05s with Zero Prompt Ingestion"]
-    end
-
-    subgraph Lifecycle["Chronicle Lifecycle & Compaction"]
-        B3 --> C1["Living Chronicle Grows (100 KB - 500 KB)"]
-        C1 -->|Major Milestone Completed| C2["Milestone Compaction Skill (compact-diary)"]
-        C2 --> C3["Synthesize Older Entries into High-Level Architectural Digests"]
-        C3 --> C4["Preserve Rationale; Keep Recent Entries Granular"]
-    end
+    A["Finish change and run checks"] --> B["Call tools/log_diary.py"]
+    B --> C["Append dated entry to DIARY.md"]
+    C --> D["Diary grows over milestones"]
+    D --> E["Condense older milestones"]
+    E --> F["Keep recent entries detailed"]
 ```
 
----
+## How to use the diary
 
-## Architectural Principles and Operating Rules
+### Record reasoning while it is fresh
 
-### 1. The Rationale Evaporation Problem
-Git commit messages in high-bandwidth agent workflows are routinely squashed into single PR summaries, while static ADRs capture only idealized initial designs. The concrete daily reality—obscure runtime errors, vendor library bugs bypassed with targeted workarounds, and exact test suite outputs—evaporates unless captured immediately at the moment of execution.
+Git messages are often reduced to one PR summary when work is squashed. They also seldom carry benchmark deltas, runtime measurements, or exact test results. ADRs describe an intended direction, but runtime errors, library bugs, hardware limits, and API constraints can force changes during implementation. Write down those discoveries when they happen, alongside the change they explain.
 
-### 2. The Four-Facet Narrative Contract
-Every log entry must follow a rigid four-part schema:
-* **Affected Subsystems**: Specific crates, modules, configuration files, or database schemas modified.
-* **What Was Changed (The Concrete Reality)**: The explicit algorithmic changes, data structure modifications, and plumbing updates applied.
-* **Why It Was Done & Architectural Rationale**: The problem statement, user directive, root cause analysis, and rejected alternatives.
-* **Verification & Test Results**: Concrete test suites executed, benchmark measurements, clock-cycle counts, and pass/fail outputs.
+### Give every entry four parts
 
-### 3. Out-of-Context Append Tooling
-As a multi-month chronicle expands past 100 KB and approaches 500 KB, **an agent must never read the chronicle into its context window merely to write a new entry**. Doing so wastes context capacity on historical data irrelevant to the active task. Dedicated CLI tools must append entries directly to disk via standard file I/O in milliseconds, consuming zero prompt tokens.
+An entry identifies the affected crates, modules, configuration files, or schemas; describes the actual algorithm, data structure, or wiring changes; explains the problem, instruction, root cause, trade-off, and rejected options; and lists the tests, benchmarks, cycle counts, or pass/fail results used to check the work. A line such as “fixed bug in engine” does not give the next engineer enough to work with.
 
-### 4. Milestone Compaction Protocol
-While out-of-context append tools protect prompt budgets during active runs, an unbounded 500 KB Markdown file eventually becomes difficult for human engineers to review. When an engineering milestone is reached, a dedicated compaction routine runs in an isolated session. Older chronological entries are synthesized into dense architectural summaries that preserve the core decision-making logic, while recent entries remain granular.
+### Append without reading the history
 
-### 5. Decoupling History from the Active Backlog
-Pairing the Living Engineering Chronicle with [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]] keeps the codebase clean. The active task backlog remains small, lightweight, and focused purely on upcoming work, while the chronicle acts as the system's durable long-term memory.
+For routine writes, the agent passes those four parts to a CLI tool. The tool checks the inputs, adds a timestamp, formats the entry, and appends it to `DIARY.md`. The existing entries do not enter the model's prompt. This matters as a multi-month diary grows from roughly 100 KB toward 500 KB.
 
----
+### Condense completed milestones
 
-## 1. Why Git Commits and Static ADRs Fall Short
+Direct appends solve the prompt problem during daily work, but they do not stop the file from growing. After a milestone, run a separate compaction task. It condenses older entries into architectural summaries that retain decisions, rejected approaches, measurements, and difficult edge cases. Keep the current and immediately preceding milestones in full so a recent regression can still be traced step by step.
 
-When pairing with coding agents, the iteration cycle moves fast. An agent can run through ten substantial architectural refactorings in an afternoon. Under this kind of throughput, standard documentation workflows fail:
+### Keep the backlog focused on future work
 
-```text
-CONVENTIONAL DOCUMENTATION FAILURE MODES:
-1. Git Commit Messages:
-   - Squash-merging pull requests destroys intermediate reasoning.
-   - Commit bodies are rarely structured enough to log benchmark deltas or runtime telemetry.
-   - Querying Git logs across divergent branches requires complex commands that agents parse poorly.
+The diary holds completed work and its reasoning. The active task list stays small and contains upcoming work. [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]] describes how to maintain that division.
 
-2. Static Architecture Decision Records (ADRs):
-   - Written upfront when technical knowledge of the problem is at its lowest point.
-   - Rarely updated when low-level runtime quirks, hardware limits, or API limits force changes.
-   - Completely disconnected from actual diffs and verified benchmark suites.
-```
+## 1. Where Git and ADRs lose the details
 
-The Living Engineering Chronicle bridges the gap between raw Git diffs and abstract design docs. It functions as an unedited engineering log:
+In a fast agent workflow, several substantial refactors can happen before the end of a day. A squash merge removes the intermediate commits from the main history. Commit bodies rarely capture benchmark changes or runtime telemetry in a consistent form, and finding the relevant reasoning across diverging branches takes Git queries that an agent may handle poorly.
 
-* When an engineer reviews the codebase weeks later and wonders, *"Why did we choose a flat lookup table over a binary search in this dispatch kernel?"*, the answer isn't lost in a deleted branch. It is logged under that day's timestamp alongside the exact L1/L2 cache hit rates that justified the trade-off.
-* When an agent starts work on an unfamiliar subsystem, reading a compacted digest of recent chronicle entries provides immediate context on recent architectural decisions without requiring the model to deduce intent by reading thousands of lines of code.
+An ADR has a different weakness: it is usually written when the team knows the least about implementation details. If a hardware limit, API restriction, or runtime behavior forces a different design, the ADR may remain as it was. It is also separate from the actual diff and the test suite that verified the eventual choice.
 
----
+The diary fills the space between those sources. Suppose an engineer asks weeks later why a dispatch kernel uses a flat lookup table instead of binary search. The dated entry can show the choice and the L1/L2 cache hit rates behind it, even if the intermediate branch is gone. When an agent begins work in an unfamiliar subsystem, a compact summary of recent entries gives it the relevant decisions without making it infer intent from thousands of lines of code.
 
-## 2. The Four-Facet Narrative Contract
+## 2. What an entry must contain
 
-To prevent entries from devolving into lazy, low-signal summaries like "fixed bug in engine," the harness enforces a strict four-facet schema for every entry:
+Use the same four fields each time. Here is an example:
 
 ```markdown
 ### [YYYY-MM-DD HH:MM TZ] — Title of Modification
-- **Affected Subsystems**:
+- **Affected subsystems**:
   - `kernel/dispatch/`, `bus/arbitration/`, `rules/memory-model.md`
-- **What Was Changed (The Concrete Reality)**:
-  - Replaced dynamic heap buffer in event queue with a fixed 256-element circular ring buffer.
-  - Implemented monotonic cycle counter progression across micro-step sub-phases.
-  - Updated interrupt priority encoder to evaluate lines on phase 2 rather than instantaneously.
-- **Why It Was Done & Architectural Rationale**:
-  - *Root Cause:* Under high-throughput workloads, dynamic allocations triggered memory allocator lock contention, causing 15% frame drops.
-  - *Trade-off:* Fixed-size ring buffer caps maximum in-flight interrupts to 256, but guarantees $O(1)$ zero-allocation deterministic latency.
-- **Verification & Test Results**:
-  - `cargo test -p kernel --test test_event_queue`: Passed (42/42 tests).
-  - `cargo test -p system --test test_bus_contention`: All 18 cycles matched silicon baseline.
-  - Architecture gate: Zero dynamic allocations confirmed in hot path.
+- **What changed**:
+  - Replaced the event queue's heap buffer with a fixed 256-element ring buffer.
+  - Made the cycle counter advance monotonically across micro-step phases.
+  - Changed the interrupt priority encoder to check lines in phase 2 rather than immediately.
+- **Why and what it costs**:
+  - Root cause: Allocations under high throughput caused allocator lock contention and 15% frame drops.
+  - Trade-off: The ring buffer limits in-flight interrupts to 256 but gives O(1) latency without allocations.
+- **Verification and results**:
+  - `cargo test -p kernel --test test_event_queue`: 42/42 passed.
+  - `cargo test -p system --test test_bus_contention`: All 18 cycles matched the silicon baseline.
+  - Architecture gate: No dynamic allocations in the hot path.
 ```
 
-This structure guarantees that every entry answers four critical questions:
-1. **Where**: Exactly what boundary or module was touched?
-2. **What**: What are the raw mechanical changes, down to the data structures?
-3. **Why**: What problem forced this change, and what trade-offs were accepted?
-4. **Proof of Truth**: What deterministic command proved that the change works as intended?
+The fields answer four questions a later reader will actually ask: where was the change made; what happened down to the data structures; why was it necessary and what trade-off was accepted; and which command or measurement checked the result? Keep the actual outputs rather than replacing them with “tests passed.”
 
----
+## 3. Append the entry without loading the diary
 
-## 3. The Out-of-Context Tooling Pattern
+Imagine telling an agent only to “add an entry to `DIARY.md`.” A typical file-editing workflow reads the file before writing it back. At 400 KB, the diary might represent roughly 100,000 tokens. Reading that history to add 20 lines uses up context, raises API costs, can impair reasoning on the current task, and may lead to truncation.
 
-The failure mode with an append-only chronicle is prompt context bloat. 
+Instead, finish the change, run its checks, and call a deterministic script with the entry fields:
 
-If an agent's instructions simply say *"add an entry to DIARY.md"*, standard agent toolchains will run a `read_file` call first, loading the entire file into memory before writing back the update. If `DIARY.md` has grown to 400 KB (roughly 100,000 tokens), appending a 20-line log entry consumes the agent's context budget, drives up API costs, degrades reasoning performance, and risks context truncation.
-
-To avoid this entirely, use an **Out-of-Context Append Tool**:
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   OUT-OF-CONTEXT APPEND ARCHITECTURE                   │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. Agent Finishes Task & Verifies Tests                                │
-│                         │                                              │
-│                         ▼                                              │
-│ 2. Agent Executes Deterministic CLI Command:                           │
-│    python tools/log_diary.py \                                         │
-│      --title "Fix Bus Arbitration Race Condition" \                    │
-│      --subsystems "kernel/bus/, scheduler/" \                          │
-│      --changes "Added phase-latching; aligned wait-states" \           │
-│      --rationale "Prevented CPU prefetch starvation during DMA burst" \│
-│      --results "All 18 architecture tests passed cleanly"              │
-│                         │                                              │
-│                         ▼                                              │
-│ 3. Script Formats Entry, Computes Timestamp, Appends to DIARY.md       │
-│    - Execution Time: ~0.05 seconds                                     │
-│    - Prompt Tokens Consumed: 0                                         │
-└────────────────────────────────────────────────────────────────────────┘
+```bash
+python tools/log_diary.py \
+  --title "Fix Bus Arbitration Race Condition" \
+  --subsystems "kernel/bus/, scheduler/" \
+  --changes "Added phase-latching; aligned wait-states" \
+  --rationale "Prevented CPU prefetch starvation during DMA burst" \
+  --results "All 18 architecture tests passed cleanly"
 ```
 
-The script validates that all required parameters are present, formats the markdown block, generates the ISO-8601 timestamp, and writes directly to disk via standard append mode (`open(path, 'a')`). The agent sees only a one-line terminal output confirming success. The historical contents of the chronicle never touch the agent's context window.
+The script checks that each argument is present, produces the timestamp and Markdown, and appends with `open(path, 'a')`. It can finish in around 0.05 seconds. The agent receives one short confirmation; none of the old diary contents are loaded into its prompt. That is the sense in which the append consumes zero prompt tokens for the existing file.
 
-Below is a production-ready implementation of `tools/log_diary.py`:
+Here is the `tools/log_diary.py` implementation:
 
 ```python
 #!/usr/bin/env python3
-"""
-tools/log_diary.py
-Appends a verified engineering diary entry directly to DIARY.md.
-Executes completely out-of-context (zero prompt token consumption).
-"""
+"""Append a verified engineering entry to DIARY.md without reading it."""
 
 import argparse
 import datetime
@@ -176,18 +118,19 @@ DIARY_PATH = Path("DIARY.md")
 
 ENTRY_TEMPLATE = """
 ### [{timestamp}] — {title}
-- **Affected Subsystems**:
+- **Affected subsystems**:
 {subsystems}
-- **What Was Changed (The Concrete Reality)**:
+- **What changed**:
 {changes}
-- **Why It Was Done & Architectural Rationale**:
+- **Why and what it costs**:
 {rationale}
-- **Verification & Test Results**:
+- **Verification and results**:
 {results}
 """
 
+
 def format_bullet_points(raw_text: str) -> str:
-    """Ensures input items are consistently formatted as clean markdown bullets."""
+    """Format each nonempty input line as a Markdown bullet."""
     lines = [line.strip() for line in raw_text.splitlines() if line.strip()]
     if not lines:
         return "  - None documented."
@@ -199,17 +142,16 @@ def format_bullet_points(raw_text: str) -> str:
             formatted.append(f"  - {line}")
     return "\n".join(formatted)
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Append an out-of-context entry to DIARY.md.")
-    parser.add_argument("--title", required=True, help="Concise summary title of the change.")
-    parser.add_argument("--subsystems", required=True, help="Modified modules, paths, or schemas.")
-    parser.add_argument("--changes", required=True, help="Specific algorithmic or structural modifications.")
-    parser.add_argument("--rationale", required=True, help="Root cause, architectural problem, and trade-offs.")
-    parser.add_argument("--results", required=True, help="Explicit test suites executed and verified output.")
+    parser = argparse.ArgumentParser(description="Append an entry to DIARY.md.")
+    parser.add_argument("--title", required=True, help="Title of the change.")
+    parser.add_argument("--subsystems", required=True, help="Modules, paths, or schemas changed.")
+    parser.add_argument("--changes", required=True, help="Algorithm or structure changes.")
+    parser.add_argument("--rationale", required=True, help="Cause and trade-offs.")
+    parser.add_argument("--results", required=True, help="Checks run and their results.")
 
     args = parser.parse_args()
-
-    # Generate timestamp with current local timezone offset
     now = datetime.datetime.now(datetime.timezone.utc).astimezone()
     timestamp_str = now.strftime("%Y-%m-%d %H:%M %Z")
 
@@ -223,7 +165,7 @@ def main():
     )
 
     try:
-        # Append directly to file without reading existing contents into memory
+        # Append without reading existing diary entries.
         with open(DIARY_PATH, "a", encoding="utf-8") as f:
             f.write(entry.rstrip() + "\n\n")
         print(f"Successfully appended entry to {DIARY_PATH} at {timestamp_str}")
@@ -232,51 +174,49 @@ def main():
         print(f"Error appending to {DIARY_PATH}: {err}", file=sys.stderr)
         sys.exit(1)
 
+
 if __name__ == "__main__":
     main()
 ```
 
----
+## 4. Condense older milestones
 
-## 4. The Milestone Compaction Protocol
+Appending directly keeps routine work from loading the history into the model, but `DIARY.md` still grows. Eventually the full file becomes awkward for an engineer to review and too large for an agent to read even when historical research calls for it.
 
-Out-of-context tooling keeps prompt costs at zero during routine task runs, but the file on disk will still expand steadily. Eventually, an unbounded file becomes unwieldy for humans to audit and too large for an agent to ingest even when intentional historical research is needed.
-
-To manage this, we run **Milestone Compaction**:
+The example below shows the intended shape of compaction. Older milestones become shorter summaries; the active work remains detailed.
 
 ```text
-CHRONICLE BEFORE COMPACTION (400 KB):
-├── Milestone 1: 85 Granular Daily Entries (150 KB)  <-- Older phase
-├── Milestone 2: 92 Granular Daily Entries (170 KB)  <-- Older phase
-└── Milestone 3: 45 Granular Daily Entries (80 KB)   <-- Active Milestone
+BEFORE (400 KB)
+Milestone 1: 85 daily entries (150 KB) — older work
+Milestone 2: 92 daily entries (170 KB) — older work
+Milestone 3: 45 daily entries (80 KB)  — active work
 
-                     │
-                     ▼ (Invoke compact-diary skill upon Milestone 3 Completion)
-                     │
-CHRONICLE AFTER COMPACTION (180 KB):
-├── Milestone 1: High-Level Architectural Digest (15 KB summary of key decisions)
-├── Milestone 2: High-Level Architectural Digest (20 KB summary of key decisions)
-├── Milestone 3: High-Level Architectural Digest (25 KB summary of key decisions)
-└── Milestone 4: Granular Daily Entries (Active pending milestone)
+AFTER compact-diary runs as Milestone 4 begins
+Milestone 1: architectural summary (15 KB)
+Milestone 2: architectural summary (20 KB)
+Milestone 3: 45 detailed daily entries (80 KB) — previous milestone
+Milestone 4: detailed daily entries — new active work
+
+After another milestone, Milestone 3 can also become a shorter summary
+(25 KB in this example). Milestone 4 then remains detailed.
 ```
 
-### Compaction Rules
-1. **Preserve Rationale, Drop Routine Churn**: Compaction is not simple log pruning; it is architectural synthesis. Routine entries (typo fixes, straightforward test additions) are compressed, while critical decisions, rejected alternatives, performance baselines, and tricky hardware/runtime edge cases are preserved in concise digests.
-2. **Protect Recent Granularity**: The active milestone and the milestone immediately preceding it must always remain fully uncompacted. Engineers and agents frequently need to review recent step-by-step diffs and test logs to diagnose regressions. Only older, settled milestones are eligible for compaction.
-3. **Execution via Isolated Tooling**: Compaction should never run as an afterthought during feature work. It runs as an explicit maintenance task (for example, via an isolated `compact-diary` skill) in a fresh agent session. This keeps the agent's context focused entirely on synthesis, avoiding hallucinated summaries or dropped details.
+Three rules govern this maintenance task:
 
----
+1. **Keep the reasons, compress routine work.** Shorten typo fixes and straightforward test additions. Retain major decisions, rejected alternatives, performance baselines, and awkward hardware or runtime cases. The aim is to preserve how the design evolved, not merely remove old lines.
+2. **Keep recent work detailed.** Leave the active milestone and the one immediately before it untouched. Engineers and agents may need the individual changes and test logs to diagnose a regression. Only older, settled milestones are candidates for compaction.
+3. **Run compaction in its own session.** Make it an explicit maintenance task, such as a `compact-diary` skill, after finishing a milestone. A fresh session can focus on synthesizing the history instead of squeezing that work into a feature task and risking missing or invented details.
 
-## 5. Harness Integration and the Knowledge Graph
+## 5. Use the diary with the rest of the workflow
 
-The Living Engineering Chronicle gives an agentic workflow the durable institutional memory that LLMs lack natively. When combined with automated append tooling and milestone compaction, the engineering team gets a complete, searchable record of technical decisions without running into context bloat or high token bills.
+The diary gives successive agent sessions and the engineering team a searchable record of decisions. The append script keeps daily entries out of the active prompt; milestone compaction keeps older history usable. The task backlog remains for upcoming work, while the diary records what was done and why.
 
-### Related Patterns and Systems
+### Related notes
 
-* **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: The operational counterpart to this document. Explains how to prune active tasks while archiving completed work in the chronicle.
-* **[[Token Optimization and Context Economics in Agentic Workflows]]**: Framework for token conservation, out-of-context tooling economics, and asymmetric reasoning tiering across the agent loop.
-* **[[Agentic Coding Harness and Controlled Development Workflows]]**: The broader harness infrastructure, including automated checks, environment isolation, and skill execution.
-* **[[The Conductor Pattern for High-Bandwidth Engineering]]**: How a human lead uses the chronicle to maintain architectural continuity across multiple autonomous agent sessions.
-* **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: The practice of documenting architectural changes during implementation rather than writing docs after the fact.
-* **[[Learning Coding Agents Through Failure-Driven Instructions]]**: How debugging insights captured in diary entries are graduated into permanent system rules.
-* **[[LLM Agents and Institutional Memory]]**: The broader systems design problem of retaining knowledge across ephemeral agent contexts.
+- **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** explains how to keep active tasks short while archiving completed work.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]** covers token costs, tools that run outside model context, and different reasoning tiers in the agent loop.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** covers the surrounding checks, isolated environments, and skill execution.
+- **[[The Conductor Pattern for High-Bandwidth Engineering]]** shows how a human lead maintains architectural continuity across agent sessions.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** covers recording architectural changes during implementation.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]** covers turning debugging lessons from diary entries into lasting rules.
+- **[[LLM Agents and Institutional Memory]]** discusses retaining knowledge across short-lived agent contexts.

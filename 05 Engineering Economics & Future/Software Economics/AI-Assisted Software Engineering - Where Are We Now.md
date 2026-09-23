@@ -1,5 +1,5 @@
 ---
-title: "AI-Assisted Software Engineering - Where Are We Now"
+title: "AI-Assisted Software Engineering — Where Are We Now?"
 tags:
   - ai
   - llm
@@ -16,95 +16,74 @@ created: 2026-08-23
 status: evergreen
 ---
 
-# AI-Assisted Software Engineering - Where Are We Now
+# AI-Assisted Software Engineering â€” Where Are We Now?
 
-## Executive Summary
+## Executive summary
 
-AI-assisted programming has moved past the novelty phase of tab-autocomplete, but it has not yet settled into a stable engineering discipline. Coding agents can read entire codebases, edit multiple files, execute shell commands, interpret test failures, and iterate on fixes. Yet engineering organizations are still figuring out when these workflows genuinely improve end-to-end software delivery rather than simply accelerating the production of unvetted code.
+AI-assisted programming has moved beyond autocomplete and experimentation, but it has not yet reached a stable engineering paradigm. Coding agents can perform real multi-step work in repositories, yet the industry is still discovering when they improve the complete delivery process rather than merely increase code production.
 
-The most accurate historical framing is that we are in **an early infrastructure transition**, comparable to the introduction of high-level languages, the early days of the web, or the first decade of cloud and DevOps. The underlying technology is effective, rapidly improving, and here to stay. However, durable repository patterns, organizational boundaries, and long-term maintenance models remain unresolved.
+The best historical description is **an early infrastructure transition**: comparable to the early web, the adoption of high-level languages, and the first decade of cloud and DevOps. The technology is already useful and unlikely to disappear, but its durable practices, organizational consequences, and long-term maintenance costs are not yet settled.
 
-AI does not eliminate software engineering. Instead, it displaces the primary engineering bottleneck away from the mechanics of typing syntax and toward:
+What is becoming clear is that AI does not eliminate software engineering. It moves the bottleneck away from typing code and toward:
 
-- Defining clear system requirements and domain constraints;
-- Expressing unambiguous acceptance criteria;
-- Structuring repository context so agents can navigate it without hallucinations;
-- Architecting clean modular boundaries and explicit interfaces;
-- Building fast, deterministic verification loops (compilers, test suites, linters);
-- Reviewing and validating proposed diffs with high scrutiny;
-- Maintaining human understanding of the system's runtime behavior.
+- defining the right problem;
+- expressing constraints and acceptance criteria;
+- providing usable repository context;
+- designing architecture and boundaries;
+- creating reliable feedback loops;
+- reviewing and validating changes;
+- maintaining shared understanding of the system.
 
-The trajectory of the field is not simply "agents write the software." It is an environment where **code generation becomes cheap and abundant, while architectural judgment, verification harnesses, and system comprehension become the primary constraints on delivery**.
+The likely future is therefore not simply â€œagents write the code.â€  It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
 
-```text
-           THE EVOLUTION OF ABSTRACTION IN SOFTWARE DELIVERY
+## 1. Is there a historical analogy?
 
-1960s: Assembly          [ Machine Opcodes, Registers, Direct Memory Addressing ]
-1980s: High-Level Langs  [ Structured Functions, Compilers, Static Type Systems ]
-2010s: Cloud / DevOps    [ Virtualization, Containers, CI/CD Pipelines, IaC ]
-2020s: AGENTIC ERA       +-------------------------------------------------------+
-                         | Natural Language Specs, Invariants & Context Maps     |
-                         |                          |                            |
-                         |                          v                            |
-                         | [ Probabilistic Coding Agents (Multi-File Edits) ]    |
-                         |                          |                            |
-                         |                          v                            |
-                         | [ Deterministic Verification Harness ]                |
-                         | (Compilers, AST Linters, Test Suites, Sandboxes)      |
-                         +-------------------------------------------------------+
-                         Primary Bottlenecks: Verification, Context & Delivery
-```
+There is no exact precedent because coding agents combine several earlier transitions.
 
----
+### High-level languages replacing assembly
 
-## 1. Is There a Historical Analogy?
+The introduction of high-level languages allowed developers to describe more of **what** a program should do and less of **how** the machine should do it. It increased productivity and enabled larger systems, while raising fears that programmers would no longer understand what the computer was executing.
 
-There is no single precedent for coding agents because they combine characteristics from several earlier industry shifts.
+Coding agents continue this movement toward higher-level intent. The crucial difference is that a compiler is a deterministic translator with a formal contract. An agent is a probabilistic implementer that may misunderstand the request, infer a missing business decision, or produce a convincing implementation of the wrong behavior.
 
-### High-Level Languages Replacing Assembly
+Consequently, an LLM agent is not yet a â€œcompiler for natural language.â€  It is closer to a very fast and broadly knowledgeable developer who lacks local business knowledge and sometimes guesses without recognizing that it is guessing.
 
-Moving from assembly to compiled languages like Fortran and C allowed engineers to describe *what* a program should calculate rather than micromanaging registers and memory addresses. It dramatically improved delivery speed and made large-scale systems viable, while sparking early concerns that developers would lose touch with the underlying hardware.
+### Libraries, frameworks, open source, and Stack Overflow
 
-Coding agents represent another layer of abstraction above the source code. But there is a fundamental difference: **a compiler is a deterministic translator with a formal mathematical contract**. Given identical source code and compiler flags, it produces predictable machine instructions. An LLM-based agent is a probabilistic system. It can misinterpret instructions, invent missing business logic, or generate an elegant, highly performant implementation of entirely the wrong behavior.
+Libraries and internet knowledge made it possible to build applications without understanding or implementing every component. This produced enormous gains, but also dependency sprawl, cargo-cult programming, copied vulnerabilities, and systems assembled from abstractions that their maintainers did not fully understand.
 
-An agent is not a "compiler for natural language." It behaves much more like a junior developer: encyclopedic knowledge of public APIs and syntax, incredible speed, but zero institutional memory, no innate understanding of your production operational realities, and an inclination to guess rather than ask when requirements are vague.
-
-### Libraries, Open Source, and Stack Overflow
-
-The explosion of package registries (npm, PyPI, Maven) and community knowledge bases allowed engineers to assemble complex applications without reinventing basic components. This shift unlocked immense velocity, but it also introduced dependency bloat, security vulnerabilities deep in supply chains, and cargo-cult programming where teams shipped code they could not debug.
-
-An agent takes this dynamic to another level. Instead of searching Stack Overflow and manually adapting a snippet to your codebase, the agent synthesizes an implementation directly tailored to your local files. Because the generated code looks native, uses your project's naming conventions, and is delivered with stylistic confidence, unsupported assumptions and subtle edge-case bugs are much harder to catch during code review.
+An LLM generalizes this mechanism. Instead of copying a visible Stack Overflow answer, the developer receives a custom-looking synthesis. Because the result is adapted to the codebase and written in a confident style, unsupported assumptions can be harder to notice.
 
 ### Cloud and DevOps
 
-This is the closest organizational parallel. Adopting AWS or GCP did not automatically fix dysfunctional teams. Well-run engineering organizations used on-demand infrastructure to ship reliable software faster; disorganized teams used it to deploy brittle, distributed architectures at unprecedented scale and cost. The true productivity gains only arrived once the industry developed disciplined operational patterns: Infrastructure as Code (IaC), automated CI/CD pipelines, distributed tracing, and platform engineering.
+This is probably the strongest organizational analogy. Cloud infrastructure did not automatically repair weak engineering practices. It allowed strong organizations to deliver faster, but also allowed weak organizations to create distributed operational complexity faster. Mature value appeared only after practices such as infrastructure as code, CI/CD, observability, platform engineering, and delivery metrics became established.
 
-Coding agents require the same systemic approach. Handing developers an agent token does not improve engineering throughput. High-leverage adoption requires an **agentic harness** built around the model:
+Agents appear to behave similarly. A model alone is not the engineering system. Useful adoption requires an **agentic harness** around it:
 
-- Structured repository instructions (`AGENTS.md`, scoped blueprints);
-- Explicit tool permissions and sandbox boundaries;
-- Fast automated builds, type-checkers, linters, and architectural rules;
-- Strict mandates for small, single-purpose diffs;
-- Explicit human checkpoints for business-critical logic;
-- Comprehensive audit trails of agent tool calls;
-- Deterministic stopping rules when tests fail repeatedly.
+- repository instructions and discoverable documentation;
+- explicit permissions and tool boundaries;
+- automated builds, tests, linters, and architecture checks;
+- small reviewable changes;
+- checkpoints for human decisions;
+- logs and observable outcomes;
+- clear stopping and escalation conditions.
 
-The 2025 DORA research confirms that AI acts primarily as an **amplifier** of an organization's existing engineering maturity. Installing AI tools into a team with weak testing, poor documentation, and slow deployment pipelines simply accelerates the rate at which they generate operational debt. See the [DORA: State of AI-assisted Software Development 2025](https://dora.dev/dora-report-2025/).
+The 2025 DORA research describes AI primarily as an **amplifier** of an organization's existing strengths and weaknesses. The greatest returns come from improving the underlying sociotechnical system rather than merely installing an AI tool. See [DORA: State of AI-assisted Software Development 2025](https://dora.dev/dora-report-2025/).
 
-### Early Web Adoption (1995–2000)
+### Early web adoption
 
-In terms of technical maturity, the agent landscape currently mirrors the web in the late 1990s:
+In terms of maturity, the present moment resembles the web around 1995â€“2000:
 
-- Adoption is exploding, and the core capability is undeniably real;
-- Engineering leadership feels immense pressure to integrate the technology immediately;
-- Flashy demonstrations are easy to build, but robust production deployments are rare;
-- Tooling, frameworks, and developer workflows change week to week;
-- Teams see isolated, anecdotal wins, but industry-wide best practices are still forming;
-- Early architectures will look primitive within three to five years.
+- adoption is rapid and the capability is clearly real;
+- many organizations feel forced to participate;
+- demonstrations are easier than dependable production systems;
+- terminology and tools change quickly;
+- local success stories exist, but general rules remain uncertain;
+- early practices will later look primitive.
 
-One key difference: the tooling cycle for LLM engineering is compressing much faster than earlier transitions.
+This analogy does **not** imply that progress will follow the same timeline. LLM tooling changes much faster than earlier infrastructure technologies.
 
-### Missing Canonical Literature and Training Data Bias
+### Missing canonical literature and training data bias
 
 Historically, software engineering shifts were anchored by foundational literature that codified durable patterns. We relied on texts like *Design Patterns* (Gamma et al.), *Refactoring* (Fowler), and *Designing Data-Intensive Applications* (Kleppmann) to establish a shared technical vocabulary and evaluate trade-offs.
 
@@ -114,328 +93,287 @@ Today, agentic software engineering operates in an empirical vacuum:
 2. **The training data bias**: Current frontier models were trained on historical open-source repositories written under human constraints—saving keystrokes, deep inheritance hierarchies, heavy runtime reflection, and extreme DRY (Don't Repeat Yourself) abstraction layers. These patterns often degrade agent performance. Agents navigate flat, explicit, modular codebases with colocated unit tests far more effectively than deep inheritance trees with dynamic runtime dispatch. Left unguided, models instinctively reproduce the complex human-centric patterns found in their training weights.
 3. **Living field literature**: Teams shipping real software cannot wait for academic consensus or authoritative textbooks. The most valuable knowledge currently exists as living field notes, internal engineering post-mortems, and iterative repository rules built by teams running agents in production.
 
----
+## 2. At what stage are we now?
 
-## 2. At What Stage Are We Now?
+A simplified progression is:
 
-The evolution of AI-assisted programming breaks down into five distinct phases:
+1. **2021â€“2023 â€” completion and conversation:** generating functions, tests, documentation, and explanations.
+2. **2023â€“2024 â€” repository-aware copiloting:** proposing multi-file changes and assisting with debugging.
+3. **2024â€“2026 â€” practical coding agents:** reading repositories, editing files, running commands and tests, interpreting failures, and iterating.
+4. **Current stage â€” workflow experimentation:** learning how to specify, constrain, supervise, evaluate, and integrate agent work.
+5. **Emerging stage â€” agent-oriented engineering:** designing repositories, interfaces, documentation, validation, and team processes for predictable agent participation.
 
-1. **2021–2023 — Completion and Conversation**: Generating localized functions, drafting boilerplate unit tests, explaining code snippets, and inline chat assistants.
-2. **2023–2024 — Repository-Aware Copiloting**: Context retrieval over local files, proposing multi-file diffs, and conversational debugging directly inside the IDE.
-3. **2024–2026 — Practical Coding Agents**: Autonomous terminal tools that inspect repository trees, edit files across packages, run build commands and test suites, parse error traces, and iterate on fixes.
-4. **Current Stage — Workflow Experimentation**: Teams are learning how to specify boundaries, constrain tool access, supervise multi-file edits, evaluate generated logic, and safely merge agent contributions into main branches.
-5. **Emerging Stage — Agent-Oriented Engineering**: Architecting systems, APIs, internal documentation, and CI/CD pipelines specifically so that autonomous agents can reliably read, modify, and test the software without breaking system invariants.
+We are between stages four and five. Agents are capable enough to perform meaningful work, but not reliable enough for â€œgive the agent a large goal and accept the resulting systemâ€  to be a generally safe operating model.
 
-The industry is sitting between **Stage 4 and Stage 5**. Modern agents can carry out non-trivial, multi-file refactors, but they are not reliable enough to be given an open-ended feature request and left unsupervised.
+The important transition now is therefore from **better prompting** to **better engineering of the environment in which the agent works**.
 
-The focus has shifted decisively from **prompt engineering** (crafting clever natural language instructions) to **environment engineering** (giving the agent explicit constraints, clean context, small scopes, and deterministic test harnesses).
+## 3. Do we already know which applications produce real results?
 
----
+Yes, but the answer is contextual rather than universal.
 
-## 3. Do We Know Which Applications Produce Real Results?
+### What the evidence says
 
-Yes, but the return on investment depends on task topology, repository hygiene, and verification costs.
+A GitHub randomized study asked 202 experienced developers to implement a bounded API task. Developers with Copilot access were more likely to pass all tests, and their submissions received slightly higher ratings for readability, reliability, maintainability, and conciseness. This supports the claim that AI can help with constrained, familiar implementation tasks. The study should still be interpreted with awareness that it was conducted by the product's vendor. See [GitHub's Copilot code-quality study](https://github.blog/news-insights/research/does-github-copilot-improve-code-quality-heres-what-the-data-says/).
 
-### What the Empirical Evidence Shows
+METR studied 16 experienced open-source developers completing 246 real tasks in mature repositories they had known for years. With early-2025 AI tools, they took an average of 19% longer, despite believing that AI had made them faster. Review, correction, prompting, and waiting costs outweighed generation speed in this setting. See [METR's 2025 randomized study](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/).
 
-A controlled randomized study by GitHub evaluated 202 experienced developers completing a bounded API task. Developers using GitHub Copilot completed the task faster, had higher test pass rates, and wrote code rated slightly higher in readability, maintainability, and conciseness. For well-defined, standard implementation tasks, assisted generation provides a distinct speed advantage. See [GitHub's Copilot Code-Quality Study](https://github.blog/news-insights/research/does-github-copilot-improve-code-quality-heres-what-the-data-says/).
+A 2026 METR update provides some evidence of improvement with newer tools, but the uncertainty intervals remain wide. It does not establish a universal productivity gain. See [METR's 2026 update](https://metr.org/blog/2026-02-24-uplift-update/).
 
-Conversely, a rigorous 2025 study by METR tracked 16 senior open-source maintainers completing 246 real-world maintenance and feature tasks in complex repositories they had maintained for years. Using early-2025 AI agent tooling, the developers **took an average of 19% longer** to complete tasks compared to working without AI, despite self-reporting that they felt faster. The time spent prompting, waiting for generations, reviewing large diffs, and fixing subtle bugs exceeded the time saved on typing. See [METR's 2025 Randomized Study](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/).
+These results are not necessarily contradictory. They examine different developers, tasks, repositories, and definitions of success.
 
-A follow-up METR study in 2026 indicates that newer reasoning models reduce this penalty on certain classes of tasks, but the variance across repositories and developer familiarity remains high. See [METR's 2026 Uplift Update](https://metr.org/blog/2026-02-24-uplift-update/).
-
-These findings do not contradict each other. They highlight that AI efficiency depends heavily on the task profile:
-
-| Engineering Scenario | Practical Reality & Current Expectation |
+| Situation | Current expectation |
 |---|---|
-| **Boilerplate, data mappings, schema migrations** | High leverage. Translating schemas, generating DTOs, and writing repetitive glue code is fast and easily checked by compilers. |
-| **Unit tests for known, deterministic behavior** | Highly effective, provided human review verifies test assertions rather than accepting tautological mocks. |
-| **Codebase onboarding and documentation** | Useful for initial architectural orientation, but developers must verify factual details against running code. |
-| **Small, isolated, well-specified bug fixes** | Strong candidate for agent delegation if backed by a failing regression test. |
-| **Learning an unfamiliar library or framework** | Excellent for rapid prototyping, generating scaffolding, and understanding common API usage patterns. |
-| **Subtle logic changes in complex, mature domains** | High friction. Reviewing plausible-looking diffs and debugging edge cases often takes longer than direct implementation. |
-| **Ambiguous business requirements** | High failure risk. The agent will confidently select an arbitrary business path without flagging the underlying ambiguity. |
-| **Cross-cutting architectural refactoring** | High risk. Without high-coverage integration suites and rigid boundary checks, agents introduce architectural drift. |
-| **Concurrency, distributed state, cryptography** | High risk. Requires rigorous, specialized human design and deep formal verification; agents frequently miss race conditions. |
-| **Open-ended autonomous feature development** | Poor return. Generates sprawling, unmaintainable PRs that overwhelm human reviewers and fail subtle operational checks. |
-
-The core takeaway for engineering leads is:
-
-> AI tools have no universal productivity multiplier. Their value is a function of task complexity, codebase quality, the speed of local feedback loops, and how cheaply a human or a test suite can verify the output.
-
-### Where Coding Agents Excel
-
-Coding agents consistently deliver real value when the task exhibits five properties:
-
-1. **Locally Bounded**: Touches a small number of related files rather than sprawling across the entire dependency graph;
-2. **Mechanically Laborious**: Involves tedious, repetitive updates that consume human engineering hours;
-3. **Deterministically Verifiable**: Success can be confirmed immediately by a compiler, static analysis tool, or unit test suite;
-4. **Pattern-Followed**: Mirrors an established, well-tested pattern already present in the repository;
-5. **Low Business Ambiguity**: Contains no hidden domain trade-offs or implicit product requirements.
-
-Concrete examples: upgrading a major framework version where API renames follow a formal migration guide, converting REST endpoints to a new routing convention, writing boilerplate client adapters from an OpenAPI specification, fixing lint and type errors across a legacy package, or generating mock datasets.
-
-The advantage evaporates when success hinges on tacit institutional knowledge, navigating internal political alignment, balancing unstated operational trade-offs, or recognizing that a requested feature should not be built at all.
-
----
-
-## 4. How to Work with an Agent: The Controlled Engineering Loop
+| Boilerplate, adapters, mappings, migrations | Often a clear benefit |
+| Tests for behavior that is already understood | Often useful, with review |
+| Documentation and codebase explanation | Useful, but facts must be checked |
+| Small, well-specified local change | Strong candidate for delegation |
+| Working in an unfamiliar framework | Useful for exploration and scaffolding |
+| Subtle change in a mature system known deeply by an expert | The review overhead may remove the gain |
+| Ambiguous business requirement | High risk of implementing a plausible but wrong choice |
+| Cross-cutting architectural refactoring without strong tests | High risk |
+| Security, concurrency, distributed consistency | Requires specialized and independent validation |
+| Large autonomous feature with unclear boundaries | Unpredictable and difficult to review |
 
-The only sustainable way to run coding agents in production repositories is through a disciplined, feedback-driven engineering loop rather than open-ended autonomy.
+The strongest conclusion available today is:
 
-```text
-               THE CONTROLLED AGENTIC ENGINEERING LOOP
-  +-----------------------------------------------------------------+
-  | 1. SPECIFY: Isolate problem, acceptance criteria & non-goals    |
-  +-----------------------------------------------------------------+
-                                  |
-                                  v
-  +-----------------------------------------------------------------+
-  | 2. PLAN: Agent maps affected files & proposes diff strategy     |
-  +-----------------------------------------------------------------+
-                                  |
-                        [ Human Approval Gate ]
-                                  |
-                                  v
-  +-----------------------------------------------------------------+
-  | 3. EXECUTE: Apply small, atomic changes (single-file or module) |
-  +-----------------------------------------------------------------+
-                                  |
-                                  v
-  +-----------------------------------------------------------------+
-  | 4. VERIFY: Run compiler, unit tests, AST linters & formatters   |
-  +-----------------------------------------------------------------+
-           |                                              |
-     [ Tests Pass ]                                 [ Tests Fail ]
-           |                                              |
-           v                                              v
-  +-----------------------+                    +--------------------+
-  | 5. INDEPENDENT REVIEW |                    | 6. ESCALATE / STOP |
-  | (Fresh context/agent) |                    | (Max 3 iterations) |
-  +-----------------------+                    +--------------------+
-           |
-           v
-  +-----------------------+
-  | 7. COMMIT & ADVANCE   |
-  +-----------------------+
-```
+> AI has no single productivity multiplier. Its value depends on task shape, repository quality, available feedback, developer expertise, and the cost of verification.
 
-### Step 1: Separate the Problem from the Implementation
+### Where agents already provide realistic value
 
-Never prompt an agent with a vague goal like "add multi-tenant support to our billing service." Before asking for code, document:
+Agents are particularly effective when the task is:
 
-- The exact business outcome and operational constraints;
-- Strict acceptance criteria;
-- System invariants that cannot be violated (e.g., database isolation, backward compatibility);
-- Explicit non-goals to prevent feature creep;
-- Decisions the agent is strictly forbidden from making unilaterally.
+- locally bounded;
+- mechanically laborious;
+- easy to verify automatically;
+- based on an existing pattern in the repository;
+- reversible if the result is poor;
+- low in hidden business decisions.
 
-The most catastrophic failure mode is not a syntax error or a broken test—it is an agent generating a clean, working implementation of Option B when your business model required Option A.
+Examples include dependency upgrades, repetitive migrations, straightforward API clients generated from formal specifications, test scaffolding, static-analysis fixes, documentation synchronization, and diagnosis that can be confirmed by logs or tests.
 
-### Step 2: Require an Explicit Plan and Analysis First
+Their advantage falls when success requires tacit organizational knowledge, negotiation of ambiguous requirements, global architectural judgment, or recognizing that the requested change should not be implemented at all.
 
-Instruct the agent to inspect the codebase, identify affected files, list edge cases, and propose an implementation plan *before modifying any files*.
+## 4. How should we work with an agent to obtain good results?
 
-Review this plan as an independent engineering artifact. Catching a flawed assumption during planning takes seconds. Catching it after the agent has modified twenty files requires unwinding messy git state and battling the psychological sunk cost of trying to patch an unviable diff.
+The most credible emerging model is a controlled engineering loop rather than open-ended autonomy.
 
-### Step 3: Execute in Small, Atomic Increments
+### Step 1: Separate the problem from the implementation
 
-Do not let an agent execute an entire seven-step migration in a single prompt. Enforce a tight loop:
+Before asking for code, state:
 
-1. Pick a single, scoped step from the approved plan;
-2. Apply the edit to a localized set of files;
-3. Run targeted unit tests and compile checks;
-4. Review the raw diff (`git diff`);
-5. Commit the working change or immediately revert;
-6. Proceed to the next step only if the codebase remains green.
+- the business outcome;
+- acceptance criteria;
+- constraints and invariants;
+- relevant integration points;
+- explicit non-goals;
+- decisions the agent must not make silently.
 
-Small commits are your primary recovery mechanism. If an agent goes down an architectural dead end, rolling back a clean, single-step commit is painless.
+The most dangerous agent failure is often not invalid code. It is a technically coherent implementation of option **B** when the business required option **A**.
 
-### Step 4: Convert Requirements into Executable Feedback
+### Step 2: Ask for repository analysis and a plan first
 
-LLMs hallucinate completion. If you ask an agent if its code works, it will almost always say yes. You must replace the agent's subjective judgment with objective, mechanical feedback:
+The agent should identify affected components, uncertainties, alternatives, expected tests, and risks before editing. The plan should be reviewed as a separate artifact.
 
-- Compiler errors and strict type-checker output (`tsc --noEmit`, `mypy --strict`, `cargo check`);
-- Targeted unit and integration tests;
-- Linter rules and structural architecture checks;
-- Static security scanners (detecting hardcoded secrets, injection risks);
-- API schema validators;
-- Headless browser runs and visual regression tests for UI changes;
-- Memory limits, performance budgets, and query count assertions.
+This catches incorrect assumptions while they are still cheap to correct. Once a large diff exists, there is psychological and economic pressure to repair it rather than reconsider the underlying approach.
 
-The more requirements you can express as executable scripts that return exit code `0` or `1`, the less you depend on the model's self-evaluation.
+### Step 3: Execute in small increments
 
-### Step 5: Enforce Independent Review
+A robust loop is:
 
-Asking the authoring agent to review its own pull request is largely ineffective. The model retains the conversational context and cognitive biases that produced the bug in the first place.
+1. select one plan step;
+2. implement a small coherent change;
+3. compile and run targeted tests;
+4. inspect the diff;
+5. perform review;
+6. commit or revert;
+7. continue only if the acceptance criteria remain valid.
 
-Instead, enforce independent review paths:
+Small commits are not merely convenient. They are the unit of control, explanation, review, and recovery.
 
-- **Isolated reviewer contexts**: Spin up a separate, clean agent session with instructions focused purely on finding edge cases, security flaws, and specification drift;
-- **Spec-to-diff review**: Review the diff directly against your original specification, ignoring the conversational explanations provided by the agent;
-- **Adversarial verification**: Explicitly task an agent with writing failing unit tests that attempt to break the proposed implementation;
-- **Mandatory human review**: High-impact business logic, database migrations, authentication, and architectural boundaries must always require human sign-off.
+### Step 4: Convert requirements into executable feedback
 
-### Step 6: Define Hard Stopping and Escalation Conditions
+Agents improve dramatically when they can observe objective results:
 
-An unconstrained agent trapped in a failing test loop will often "fix" the problem by weakening the test assertions, deleting edge-case checks, mocking out the database, or writing absurd defensive hacks.
+- compiler errors;
+- unit and integration tests;
+- architecture tests;
+- linters and type checkers;
+- security scanners;
+- contract tests;
+- browser automation and screenshots for UI;
+- performance budgets;
+- production-like logs and traces.
 
-Configure your harness with clear stopping rules:
+The more requirements are executable, the less the workflow relies on the model's subjective claim that the task is complete.
 
-- If tests fail three times consecutively without progress, abort the execution and escalate to a human;
-- If the agent discovers an ambiguous business rule, it must stop and prompt the user;
-- If the proposed diff expands beyond the pre-approved set of files, pause for authorization;
-- If a tool execution requires destructive actions (dropping tables, clearing caches, modifying external infrastructure), require explicit approval.
+### Step 5: Make review independent
 
----
+Asking the generating agent â€œis your solution correct?â€  is weak verification because it may preserve the same mistaken interpretation. Better approaches include:
 
-## 5. Code Quality, System Health, and Maintenance
+- a fresh context or separate reviewing agent;
+- review against the specification rather than the original explanation;
+- explicit requests for counterexamples and failure modes;
+- negative and adversarial tests;
+- human review for high-impact business, security, and architectural decisions.
 
-AI tooling will not homogenize code quality across the industry. Instead, it will **dramatically widen the gap between disciplined and undisciplined engineering teams**.
+### Step 6: Define stopping and escalation conditions
 
-### How Code Quality Can Improve
+The agent should stop rather than continue improvising when:
 
-In an engineering organization with strong standards, agents act as an automated force multiplier for discipline:
+- a business choice is missing;
+- tests contradict the specification;
+- the required change expands materially beyond the approved plan;
+- repeated attempts fail without producing new evidence;
+- a destructive or externally visible action requires authorization;
+- success cannot be objectively verified.
 
-- Backfilling comprehensive unit tests for legacy code paths;
-- Consistently enforcing naming conventions, directory structures, and documentation rules;
-- Executing routine dependency upgrades and deprecated API migrations that developers put off;
-- Keeping OpenAPI, Protobuf, and client SDK definitions synchronized with backend code;
-- Eliminating boilerplate across repositories without human fatigue;
-- Making small refactorings and code hygiene economically viable.
+This is an important part of the harness. An unconstrained â€œkeep trying until tests passâ€  loop can make tests pass by weakening them, adding special cases, or solving a different problem.
 
-### How Code Quality Can Deteriorate
+## 5. How will agent-assisted programming affect code quality and maintenance?
 
-The marginal cost of emitting code is dropping to zero, but the cognitive cost of reading, understanding, and debugging code remains unchanged. When generating syntax is frictionless, developers are incentivized to add more code rather than finding elegant, minimal abstractions.
+The likely outcome is not uniformly better or worse code. It is a **greater spread between disciplined and undisciplined organizations**.
 
-The failure modes are already visible in production:
+### How code can improve
 
-- **Code bloat**: Repositories expand rapidly with thousands of lines of verbose, semi-redundant code;
-- **Architectural erosion**: Locally functional features violate global system boundaries, creating hidden coupling across modules;
-- **Duplicated implementations**: Agents independently re-implement similar utility functions across multiple directories instead of discovering existing shared modules;
-- **Shallow testing**: High code-coverage numbers driven by tests that simply mirror the implementation's internal logic rather than validating actual business invariants;
-- **Hallucinated documentation**: Well-formatted docstrings and comments that sound authoritative but describe system behavior that does not match reality;
-- **Orphaned code**: Systems that work in production today, but which no human engineer on the team truly understands;
-- **PR review bottlenecks**: Teams trade a typing bottleneck for an unmanageable code review backlog.
+In a well-designed environment, agents can consistently:
 
-The primary long-term threat is not that agents will write catastrophic, easily detected bugs. The real threat is **creeping architectural entropy**: every individual PR looks reasonable and passes basic CI checks, but the system steadily accumulates exceptions, inconsistent abstractions, and unvetted logic until the entire application becomes impossible to reason about.
+- add missing tests and documentation;
+- apply established repository conventions;
+- perform migrations that would otherwise be postponed;
+- improve naming and remove routine duplication;
+- keep API specifications and clients synchronized;
+- detect simple inconsistencies across many files;
+- make small maintenance work economically worthwhile.
 
-A 2026 empirical study analyzing over 300,000 verified AI-authored git commits identified measurable increases in code churn, duplication, and technical debt markers. While research in this area is ongoing, the early data confirms that unharnessed code generation introduces structural drag. See [A Large-Scale Empirical Study of AI-Generated Code in the Wild](https://arxiv.org/html/2603.28592v1).
+An agent can become an automated executor of engineering discipline when the discipline is explicitly encoded.
 
-### Redefining Maintainability
+### How code can deteriorate
 
-Historically, "maintainable code" meant code that another human engineer could quickly read, understand, and safely modify.
+The marginal cost of generating code is approaching zero, but the cost of understanding code is not. This creates incentives to add code instead of simplifying or deleting it.
 
-As coding agents become standard collaborators, some teams fall into the trap of assuming code is maintainable simply because *an agent can easily modify it*.
+Likely failure modes include:
 
-This is a dangerous trap. When production incidents occur, during compliance audits, when critical security flaws are discovered, or when models experience service interruptions, human engineers remain legally, financially, and operationally accountable.
+- larger codebases without proportional business value;
+- locally correct changes that erode global architecture;
+- repeated implementations instead of discovering the right abstraction;
+- unnecessary wrappers, fallback paths, configuration, and defensive branches;
+- tests that reproduce the implementation's assumptions rather than verify independent requirements;
+- plausible comments and documentation that conceal incorrect reasoning;
+- code that no current team member can confidently explain;
+- review queues becoming the new delivery bottleneck.
 
-A sustainable definition of maintainability in the agentic era is:
+The most important long-term risk is probably not spectacularly broken code. It is **subtle architectural entropy**: every individual change looks acceptable, while the system gradually accumulates exceptions, duplication, inconsistent concepts, and unexplained decisions.
 
-> A system is maintainable when human engineers can easily understand its core architectural decisions, agents can safely modify isolated modules through explicit interfaces, and both can verify changes using deterministic test harnesses.
+A large 2026 preprint examining more than 300,000 verified AI-authored commits reports evidence of technical-debt issues, but this research is still new and attribution methodology is difficult. It is a useful warning, not a settled verdict. See [A Large-Scale Empirical Study of AI-Generated Code in the Wild](https://arxiv.org/html/2603.28592v1).
 
----
+### A likely change in the meaning of â€œmaintainabilityâ€ 
 
-## 6. When Will We Understand the Long-Term Impacts?
+Historically, maintainable code meant code that another human could understand and change safely. If agents participate heavily, organizations may be tempted to treat code as maintainable whenever an agent can modify it successfully.
 
-We do not have definitive answers yet.
+That would be dangerous. A system still requires human accountability during incidents, regulatory review, security analysis, unexpected migrations, model outages, and changes that cross business boundaries.
 
-Copilot-style inline autocomplete gained traction around 2022–2023. Practical agents capable of navigating entire repositories and running command-line workflows only became viable around 2024–2025. Not enough time has passed to observe:
+A stronger future definition may therefore be:
 
-- The cost of maintaining an AI-generated codebase after the original developers have left the company;
-- Multi-year platform migrations across codebases written predominantly by models;
-- Production incident dynamics in systems that have accumulated years of subtle agentic drift;
-- How junior developers develop deep technical intuition when they rely on agents from day one;
-- The institutional memory loss that occurs when engineers delegate system implementation details entirely to models.
+> A system is maintainable when humans can understand its important decisions, agents can change it through explicit interfaces, and both can verify changes using reliable feedback.
 
-A realistic timeline for empirical answers:
+## 6. When will we know the long-term effects?
 
-- **2026–2028**: Rigorous, short-term empirical studies on task-level productivity, defect escape rates, security vulnerabilities, and code review throughput.
-- **2027–2029**: The first longitudinal, multi-year comparisons of repositories built with agents versus traditional human-authored systems.
-- **2029–2032**: Mature research establishing whether AI-assisted development improves or degrades total software lifecycle costs, team retention, and system reliability.
+We do not yet know them.
 
-A unique measurement challenge exists: by the time a multi-year academic study is published, the models and tooling evaluated will be obsolete. Research evaluating 2023-era autocomplete tools cannot accurately predict the impact of 2029 multi-agent systems. Even so, the fundamental organizational dynamics—such as review fatigue, context fragmentation, and the cost of code bloat—remain constant.
+Copilot-style assistance became widespread around 2022â€“2023. Agents capable of independently editing repositories and running feedback loops became practically significant around 2024â€“2025. That is not enough time to observe:
 
-### Metrics Engineering Teams Should Track Today
+- maintenance after the original team leaves;
+- major platform migrations several years later;
+- accumulated architectural debt;
+- rare production failures caused by interactions between many plausible changes;
+- onboarding of developers into heavily AI-generated systems;
+- whether teams retain institutional and business knowledge;
+- the cost of changing large volumes of cheaply produced code.
 
-Counting "lines of code generated" or "Copilot suggestion acceptance rate" is useless vanity. These are activity metrics, not delivery indicators.
+Reasonable expectations are:
 
-Engineering leadership should measure:
+- **2026â€“2028:** stronger short-term studies of task selection, review cost, defect rates, security, and team-level delivery;
+- **2027â€“2029:** the first useful two- to four-year longitudinal comparisons of repositories and teams;
+- **2029â€“2032:** more credible conclusions about lifecycle maintenance, architectural evolution, team knowledge, and organizational design.
 
-- **Standard DORA Delivery Metrics**: Change Lead Time, Deployment Frequency, Change Failure Rate, and Mean Time to Recovery (MTTR);
-- **Review Overhead**: Average time pull requests spend waiting for review, and the ratio of review time to authoring time;
-- **PR Rework Rate**: The percentage of agent-generated pull requests that require significant manual rewriting before merge;
-- **Escaped Defect Rate**: Production regressions and bug reports originating from AI-generated modules;
-- **Code Churn**: How frequently newly committed code is rewritten or deleted within 30 to 90 days;
-- **Blast Radius**: The average number of distinct modules or packages touched by a single feature request;
-- **Deletion Rates**: The volume of dead code, obsolete abstractions, and technical debt removed, rather than just gross lines added.
+There is an unavoidable measurement problem: by the time a multi-year study finishes, the models and tools under study may be obsolete. Research on 2023 Copilot use cannot directly predict 2029 agents. It can still reveal durable mechanisms, such as whether lower implementation cost causes code overproduction or weakens shared ownership.
 
----
+### What organizations should measure now
 
-## 7. Current Literature and the Road Ahead
+Counting AI-generated lines or accepted suggestions is not enough. These are activity measures, not outcomes.
 
-While foundational, time-tested treatises on agentic software engineering do not yet exist, several practical books provide useful operational guidance for current tooling:
+More meaningful measures include:
 
-- **[AI-Assisted Programming (O'Reilly)](https://www.oreilly.com/library/view/ai-assisted-programming/9781098164553/)**: Practical workflows integrating AI across requirements analysis, architectural design, testing, and debugging.
-- **[Beyond Vibe Coding (O'Reilly)](https://www.oreilly.com/library/view/beyond-vibe-coding/9798341634749/)**: Focuses on validation strategies, systematic debugging, failure modes, and controlled agent execution loops.
-- **[Coding with AI (Manning)](https://www.manning.com/books/coding-with-ai)**: A structured guide for developers integrating coding assistants into day-to-day engineering workflows.
-- **[Agentic Engineering at Scale (O'Reilly)](https://www.oreilly.com/library/view/agentic-engineering-at/0642572344306/)**: Harness design, automated guardrails, specification-driven development, and orchestrating agents across enterprise codebases.
-- **[Agentic Coding with Claude Code (O'Reilly)](https://www.oreilly.com/library/view/agentic-coding-with/9781806022595/)**: Concrete context management, tool integration, and practical workflows built around specific agentic terminal environments.
+- change lead time;
+- deployment frequency;
+- change failure rate;
+- deployment rework and recovery time;
+- review time and review load;
+- escaped defects and regressions;
+- security findings;
+- time required to modify an existing feature;
+- time required for a new developer to work independently;
+- number of components touched by one business change;
+- percentage of agent changes substantially rewritten during review;
+- deletion and simplification rates, not only code production.
 
-Tool-specific manuals will become obsolete as interfaces evolve. The durable engineering literature will focus on context boundary management, verification architectures, type system design for non-human coders, automated safety guardrails, and organizational workflow design.
+The [DORA delivery metrics](https://dora.dev/guides/dora-metrics/) are a better starting point than measuring generated code volume.
 
-The first definitive texts synthesizing multi-year production lessons will likely appear around **2027–2029**. A data-driven equivalent of *Accelerate*—capable of distinguishing practices that merely feel fast from those that measurably improve software delivery and operational stability—is unlikely before **2029–2032**.
+## 7. Are there already books that summarize the field?
 
----
+Practical books already exist, but there is not yet an equivalent of *Design Patterns*, *Refactoring*, *Continuous Delivery*, or *Accelerate* for agent-assisted software engineering.
 
-## 8. The Evolving Role of the Software Engineer
+Current books mostly explain how to use today's tools and workflows:
 
-The software engineer is not turning into a detached "manager of agents." That framing drastically underestimates the technical depth required to evaluate, debug, and govern complex systems.
+- [AI-Assisted Programming (O'Reilly)](https://www.oreilly.com/library/view/ai-assisted-programming/9781098164553/) â€” AI across requirements, design, coding, debugging, testing, and documentation.
+- [Beyond Vibe Coding (O'Reilly)](https://www.oreilly.com/library/view/beyond-vibe-coding/9798341634749/) â€” validation, debugging, failure modes, and agentic workflows.
+- [Coding with AI (Manning)](https://www.manning.com/books/coding-with-ai) â€” a systematic practical workflow for AI-assisted development.
+- [Agentic Engineering at Scale (O'Reilly)](https://www.oreilly.com/library/view/agentic-engineering-at/0642572344306/) â€” harness engineering, guardrails, spec-driven development, and scaling agentic work.
+- [Agentic Coding with Claude Code (O'Reilly)](https://www.oreilly.com/library/view/agentic-coding-with/9781806022595/) â€” concrete context and workflow techniques tied to a particular tool.
 
-The engineer's responsibilities are shifting up the stack toward:
+These can be useful, but tool-specific advice will age quickly. The durable material is likely to concern specification, context management, feedback loops, verification, permissions, architecture, and organizational design.
 
-- **Translating ambiguous business goals** into mathematically sound system behaviors and formal specifications;
-- **Designing clean domain boundaries**, invariant rules, and explicit API contracts;
-- **Engineering automated verification harnesses** that can evaluate proposed code changes without human intervention;
-- **Triage and risk assessment**: knowing precisely when a task can be safely delegated to an agent versus when it requires hands-on human implementation;
-- **Detecting subtle architectural drift**, edge-case vulnerabilities, and unstated assumptions in plausible-looking pull requests;
-- **Aggressively controlling system entropy**, pruning dead code, and preventing unnecessary code bloat;
-- **Preserving deep architectural understanding** across the engineering organization so the team can operate during catastrophic incidents or platform migrations.
+The first strong synthesis based on several years of production experience may appear around **2027â€“2029**. A data-driven equivalent of *Accelerate*, capable of distinguishing practices that merely feel productive from those that improve delivery and maintenance, is more likely around **2029â€“2032**.
 
-Direct, hands-on implementation will remain essential when learning new domains, when architecting novel abstractions, when working in safety-critical systems, or when profiling low-level performance bottlenecks. But routine, mechanical translation from a validated design into standard glue code will increasingly belong to coding agents.
+Until then, annual research such as DORA, controlled studies such as METR, repository analyses, and carefully measured internal experiments are likely to be more current than books.
 
----
+## 8. Probable direction of the profession
+
+The role of the software engineer is unlikely to become simply â€œmanager of several coding agents.â€  That description underestimates the continuing need for direct technical understanding.
+
+The role is more likely to shift toward:
+
+- converting business intent into explicit system behavior;
+- defining boundaries, invariants, and contracts;
+- designing environments in which proposed changes can be verified;
+- choosing which work can be delegated safely;
+- detecting subtle errors in plausible output;
+- controlling complexity and deleting unnecessary code;
+- preserving institutional knowledge across humans and agents.
+
+Manual implementation will remain important where it is the fastest way to understand a problem, where behavior is safety-critical, or where the abstraction itself is being invented. However, routine translation from a clear design into code will increasingly be delegated.
 
 ## Conclusion
 
-We are far enough along to recognize that coding agents are not a temporary passing fad, but early enough that blanket claims about "the end of programming" are entirely detached from the reality of shipping production software.
+We are early enough that confident universal claims are unjustified, but late enough that dismissing coding agents as a temporary novelty is also implausible.
 
-The practical realities are clear:
+The evidence already supports several conclusions:
 
-1. **Coding agents deliver real efficiency gains** on bounded, pattern-based, mechanically repetitive tasks backed by automated tests.
-2. **There is no universal productivity multiplier**. In complex, mature domains with high verification friction, agents can slow experienced developers down.
-3. **The surrounding engineering harness matters far more than the raw model**. A standard model inside a codebase with strong types, clean boundaries, and fast tests will consistently outperform a superior model dropped into an unmaintained, unverified monolith.
-4. **Cheap code generation makes verification the scarce resource**. As syntax emission accelerates, your specifications, test suites, architectural constraints, and review processes become the true constraints on delivery.
-5. **The long-term maintenance costs remain unknown**. The industry will need several more years to evaluate how agent-authored codebases fare over full software lifecycles.
-6. **AI widens the gap between strong and weak teams**. Disciplined organizations will use agents to eliminate routine toil and reinforce technical rigor; undisciplined organizations will simply produce larger volumes of unmaintainable code faster.
+1. Agents deliver real value for bounded, verifiable, pattern-based work.
+2. They do not provide a universal productivity gain; in some expert contexts they can make work slower.
+3. The quality of the surrounding engineering system matters more than access to a particular model.
+4. Faster code generation increases the importance of specifications, tests, review, architecture, and stopping rules.
+5. Long-term maintainability remains unknown and will require several more years of evidence.
+6. AI will probably widen the gap between organizations that control complexity and those that merely produce more code.
 
-The core paradigm shift comes down to this:
+The central shift can be summarized as:
 
-> Code is becoming a cheap, abundant intermediate artifact. The scarce and valuable assets in software engineering are domain understanding, architectural judgment, reliable verification harnesses, and shared human comprehension of the system.
+> Code is becoming a cheaper intermediate artifact. Correct intent, sound architecture, reliable verification, and shared understanding are becoming the scarce resources.
 
----
+## Related notes
 
-## Related Notes
-
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical frameworks for moving beyond autocomplete into bounded, reviewable agent executions with explicit stop conditions.
-- **[[Reliability of LLM Coding Agents]]**: Empirical analysis of model reliability, common failure modes, and operational constraints in production repositories.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why organizational deployment frequency and review capacity dictate real-world delivery speed more than raw code generation.
-- **[[Designing APIs for LLM-Generated Integration Code]]**: Architectural principles for designing strongly typed, machine-discoverable client interfaces that minimize agent hallucinations.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How file structures, modularity, and abstraction patterns evolve when coding agents are the primary maintainers.
-- **[[Testing in the Model, Agent, LLM Era]]**: Shifting engineering focus from writing syntax to building deterministic verification oracles and mutation suites.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Managing code bloat, technical debt, and architectural drift when generation friction approaches zero.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Structuring living markdown blueprints and architectural decision records to anchor agent reasoning.
-- **[[Early AI Adoption as Organizational Readiness]]**: How early experimentation builds structural capabilities and repository hygiene before next-generation models arrive.
-- **[[LLM Agents and Institutional Memory]]**: Preserving architectural intent, historical trade-offs, and domain knowledge across human-agent teams.
-- **[[AI Changes the Role and Training of Software Engineers]]**: The psychological, cognitive, and organizational evolution of engineering career paths in an agentic world.
-- **[[Competitive Advantage in the Age of Commodity AI]]**: Why long-term competitive advantage shifts from implementation speed to problem formulation and deterministic verification loops.
+- [[Agentic Harness]]
+- [[LLM Coding Agents Reliability]]
+- [[AI Agents and Institutional Memory]]
+- [[Designing APIs for LLM Coding Agents]]
+- [[Software Engineering with LLM Agents]]

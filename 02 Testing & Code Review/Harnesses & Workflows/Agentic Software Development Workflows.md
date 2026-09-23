@@ -11,86 +11,113 @@ aliases:
   - Coding Agent Workflows
   - Granularity of Agent Work
   - Agentic Development Lifecycles
-  - From Code Assistant to Engineering Agent
-  - The System Around the Model
 ---
 
-# Agentic Software Development Workflows
+AI coding agents can work with a repository in very different ways. The important distinction is not only **which agent or tool is used**, but **what workflow governs its behavior**.
 
-AI coding agents can interact with a codebase in fundamentally different ways. When evaluating an agent setup, the critical distinction is rarely the underlying foundation model alone; it is the **workflow state machine that governs its execution loop**.
+The same coding agent can act as a fast code generator, a test-driven implementer, a planner, a reviewer, a refactoring engine, or a semi-autonomous developer.
 
-The exact same model can act as a careless code generator, a disciplined test-driven implementer, a system architect, an adversarial reviewer, a surgical refactoring engine, or a semi-autonomous engineer. What dictates the outcome is how you structure the agent's context, constraints, tool access, and verification loops.
-
-Agentic software development is best understood not as a single tool, but as a collection of composable workflows.
+A useful way to think about agentic software development is therefore as a collection of composable workflows.
 
 ---
 
 ## 1. Vibe Coding
 
-The most basic agentic workflow follows an unconstrained loop:
+#vibe_coding 
+
+The simplest workflow is:
 
 **Prompt → Code → Run → Fix**
 
-The developer describes what they want in plain English, and the agent immediately starts modifying the repository.
+The developer describes what they want in natural language, and the agent immediately starts modifying the repository.
 
-```text
-Developer: "Add authentication and password reset support."
-Agent: [Searches codebase, edits 14 files, adds dependencies, runs app, fixes syntax errors]
-```
+Example:
 
-This workflow is fast and surprisingly effective for:
-- 30-minute disposable proof-of-concept spikes,
-- Green-field experiments and prototypes,
-- Small, single-file scripts or isolated utilities,
-- Quick library reconnaissance and exploratory learning.
+> Add authentication and password reset support.
 
-Its fatal flaw in production is that **missing requirements are silently invented by the model**.
+The agent explores the codebase, implements a solution, runs the application or tests, and fixes obvious problems.
 
-When an agent operates without explicit constraints, it unilaterally decides:
-- What the underlying architecture and patterns should look like,
-- How edge cases and failure modes are handled,
-- Which abstractions to introduce and which dependencies to pull in,
-- What the business logic actually intended to do in ambiguous states.
+This approach is useful for:
 
-For complex, stateful systems—such as execution kernels, payment pipelines, or distributed event handlers—this approach routinely produces a technically working implementation of the completely wrong solution.
+- prototypes,
+    
+- experiments,
+    
+- small applications,
+    
+- isolated changes,
+    
+- learning and exploration.
+    
+
+Its main weakness is that missing requirements are silently filled in by the model.
+
+The agent may decide:
+
+- how the architecture should work,
+    
+- what edge cases matter,
+    
+- which abstractions to introduce,
+    
+- which behavior the business intended.
+    
+
+For larger systems, this creates a risk of producing a technically valid implementation of the wrong problem.
 
 ---
 
 ## 2. Feature-by-Feature Development
 
-A safer, production-grade baseline breaks broad requests down into vertical slices:
+A safer production-oriented workflow is:
 
 **Feature → Implementation → Verification → PR**
 
-Instead of delegating an entire subsystem, you constrain the agent's blast radius to a single, bounded operational change.
+Instead of asking the agent to build a large subsystem, work is divided into relatively small features.
 
-```text
-User story: "Allow an unpaid order to be cancelled."
-```
+Example:
 
-The execution loop follows a strict sequence:
-1. The agent explores only the affected domain and application files.
-2. It implements the change within existing architectural conventions.
-3. It updates or writes targeted unit and integration tests.
-4. It runs local validation to prove the change works.
-5. It outputs a minimal, reviewable diff or pull request.
+> Allow an unpaid order to be cancelled.
 
-Once validated, the next feature is tackled in a fresh context window.
+The agent:
 
-This has major practical advantages:
-- **Bounded Context**: The agent does not dilute its context window with unrelated files.
-- **Auditability**: Pull requests remain small, focused, and easy for a human lead to review.
-- **Rollback Safety**: Reverting a flawed change does not tear down adjacent work.
-- **Low Blast Radius**: Unrelated systems remain untouched.
-- **Deterministic History**: Git history stays clean and bisectable.
+1. explores the affected code,
+    
+2. implements the feature,
+    
+3. modifies or adds tests,
+    
+4. runs validation,
+    
+5. produces a small diff or pull request.
+    
 
-For everyday product engineering, bounded vertical slices should be your default unit of delegated work.
+Then another feature is handled separately.
+
+This has several advantages:
+
+- smaller context,
+    
+- easier review,
+    
+- easier rollback,
+    
+- fewer unrelated changes,
+    
+- simpler debugging,
+    
+- clearer history.
+    
+
+For normal software development, this is likely a good default unit of work for an agent.
 
 ---
 
 ## 3. Issue-Driven Development
 
-You can formalize feature-by-feature work by using an issue tracker or ticket as an explicit execution contract.
+Feature-driven development can be made more formal by treating a ticket or issue as the contract.
+
+Example:
 
 ```text
 Problem:
@@ -100,567 +127,723 @@ Expected:
 Paid orders must not be cancellable.
 
 Acceptance criteria:
-- API returns 409 Conflict when cancellation is attempted on paid orders.
-- Order state remains unchanged in the database.
-- An OrderCancellationRejected audit event is emitted.
+- API returns 409.
+- Order state remains unchanged.
+- Audit event is recorded.
 ```
 
-The workflow runs:
+The workflow becomes:
 
 **Issue → Agent → Verification → PR**
 
-In this pattern, the issue backlog becomes an **asynchronous task queue for coding agents**. Rather than a developer driving every session via an interactive chat prompt, well-specified tickets are assigned directly to agents operating in headless worktrees or containers.
+This is especially interesting because a backlog can effectively become a **task queue for coding agents**.
 
-The bottleneck shifts entirely to the quality of the issue specification. A vaguely worded ticket produces erratic, unconstrained agent behavior. A well-specified ticket—complete with explicit acceptance criteria, expected error codes, and non-goals—allows an agent to work with high autonomy and minimal human steering.
+Instead of developers manually starting every coding session, suitable tickets may eventually be assigned directly to agents.
+
+The quality of the issue then becomes much more important.
+
+Poorly specified tickets produce poorly constrained agent behavior.
 
 ---
 
 ## 4. Plan-Driven Development
 
-For cross-cutting changes, migrations, or unfamiliar codebases, the agent must be prevented from writing code immediately.
+For larger changes, the agent should often be prevented from modifying code immediately.
 
-The workflow enforces a hard permission boundary:
+The workflow becomes:
 
 **Explore → Plan → Review → Implement**
 
-The initial prompt restricts the agent to read-only tools:
+Example instruction:
 
 ```text
-Study the repository and identify all components affected by adding tenant-level rate limiting.
+Study the repository and identify all components affected by this change.
 
-Prepare a detailed implementation plan.
+Prepare an implementation plan.
 
-Do not modify any code yet.
+Do not modify the code yet.
 ```
 
-The agent inspects the code and returns a structured proposal:
+The agent may return:
 
 ```text
-1. Extend the TenantConfiguration domain model with RateLimitPolicy.
-2. Add RateLimitingMiddleware to the API pipeline ahead of route handlers.
-3. Update Redis cache client to support sliding-window counters.
-4. Add EF Core database migration for TenantConfiguration.
-5. Add unit tests for window calculation and integration tests for 429 responses.
-6. Update API documentation and helm values.
+1. Extend the domain model.
+2. Modify CancelOrderHandler.
+3. Update API contracts.
+4. Add database migration.
+5. Add integration tests.
+6. Update documentation.
 ```
 
-The human engineer reviews, edits, or rejects the plan. Only after explicit approval does the agent receive permission to modify production files.
+Only after the plan is reviewed does implementation begin.
 
-This approach is mandatory for:
-- Large-scale refactors,
-- Database and schema migrations,
-- Architectural pattern changes,
-- Working in unfamiliar, legacy, or highly coupled codebases,
-- Changes that touch multiple bounded contexts or services.
+This approach is particularly useful for:
 
-Planning cleanly separates **problem comprehension** from **code execution**.
+- cross-cutting changes,
+    
+- architectural changes,
+    
+- migrations,
+    
+- unfamiliar repositories,
+    
+- large refactors,
+    
+- changes involving multiple modules.
+    
+
+Planning separates **understanding the problem** from **executing the change**.
 
 ---
 
 ## 5. Spec-Driven Development
 
-Spec-Driven Development pushes planning into a formal, artifact-based pipeline. Rather than jumping straight from a prompt to code, you build a chain of durable documents:
+#sdd
+
+Spec-driven development pushes this idea further.
+
+Instead of going directly from request to implementation, the workflow becomes:
 
 **Request → Requirements → Design → Tasks → Implementation**
 
-```text
-┌─────────┐      ┌──────────────┐      ┌─────────┐      ┌───────┐      ┌────────────────┐
-│ Request │ ──►  │ Requirements │ ──►  │ Design  │ ──►  │ Tasks │ ──►  │ Implementation │
-└─────────┘      └──────────────┘      └─────────┘      └───────┘      └────────────────┘
-```
-
-The specification is developed across distinct layers:
+A specification may contain several layers.
 
 ### Requirements
-Capture business rules and state machine invariants in clear, unambiguous language:
+
+Example:
 
 ```text
 WHEN an authenticated user cancels an unpaid order
-THE SYSTEM SHALL transition the order state to Cancelled.
-
-WHEN an authenticated user cancels an already paid order
-THE SYSTEM SHALL reject the request with a 409 Conflict
-AND SHALL NOT modify the order state.
+THE SYSTEM SHALL change its state to Cancelled.
 ```
 
 ### Design
-The agent diagrams the components, contracts, and data flows required to satisfy the requirements:
+
+The agent determines the affected components and expected architecture.
+
+Example:
 
 ```text
 CancelOrderCommand
-       ↓
+    ↓
 CancelOrderHandler
-       ↓
-Order Aggregate (Validates: State == Unpaid)
-       ↓
-OrderCancelled Domain Event
+    ↓
+Order Aggregate
+    ↓
+OrderCancelled Event
 ```
 
 ### Tasks
-The design is decomposed into an ordered checklist of discrete, auditable engineering tasks:
+
+The specification is decomposed into concrete implementation steps.
+
+Example:
 
 ```text
-[ ] Extend Order aggregate with Cancel() invariant check
-[ ] Implement CancelOrderCommand and CancelOrderHandler
-[ ] Expose DELETE /orders/{id} endpoint returning 200 or 409
-[ ] Add unit tests covering state transition permutations
-[ ] Add API integration tests using WebApplicationFactory
+[ ] Extend domain model
+[ ] Add command handler
+[ ] Add endpoint
+[ ] Add unit tests
+[ ] Add integration tests
 ```
 
 ### Implementation
-The agent executes the task list incrementally, checking off items as deterministic verification (builds and tests) passes.
 
-This discipline prevents implementation details from silently redefining business requirements. It also ensures that the architectural context survives across separate agent sessions, context window truncations, or handoffs between different engineers.
+Only after these artifacts exist does the agent modify production code.
+
+This reduces the probability that implementation decisions silently redefine the requirement.
+
+Spec-driven development is especially useful when the feature is large enough that the intended behavior should survive beyond a single chat session.
 
 ---
 
 ## 6. Test-Driven Agent Development
 
-TDD works exceptionally well with coding agents, but requires one critical safeguard: **the test oracle must be frozen**.
+Traditional TDD becomes especially interesting when coding agents are involved.
 
-The basic workflow is:
+The workflow is:
 
 **Requirement → Test → Fail → Implementation → Pass → Refactor**
 
-First, instruct the agent to write only the tests:
+The first task given to the agent may be:
 
 ```text
-Write tests covering the requested cancellation behavior in OrderTests.cs.
-Run them using the test runner and verify that they fail for the expected reasons.
+Write tests describing the requested behavior.
 
-Do not modify any production code yet.
+Run them and verify that they fail.
+
+Do not modify production code yet.
 ```
 
-The human lead reviews the generated tests to ensure they accurately model the business requirements and edge cases. 
+A human can review the tests before implementation begins.
 
-Once approved, the tests are locked. The agent is then instructed:
+Then the agent receives the next instruction:
 
 ```text
-Implement the minimal production code necessary to make the tests pass.
-You are strictly forbidden from modifying the test files.
+Implement the smallest change that makes the tests pass.
 ```
 
-```text
-┌─────────────────┐
-│   Requirement   │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│   Write Tests   │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Verify Failure  │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│  Freeze Tests   │  ◄── Hard human review gate: agent cannot edit tests
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Implement Code  │  ◄── Agent iterates until test suite exits 0
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Refactor/Clean  │
-└─────────────────┘
-```
+This separates two important activities:
 
-Freezing the test oracle solves one of the most common failure modes in agentic engineering: **test negotiation**. If allowed to edit both tests and implementation simultaneously, an agent that struggles to make a complex test pass will often "fix" the problem by weakening the test's assertions.
+1. interpreting the requirement,
+    
+2. implementing the solution.
+    
 
-A frozen test suite acts as an unyielding, executable contract between the human architect and the coding agent.
+If the agent misunderstood the feature, the problem becomes visible in the tests before large amounts of implementation code are generated.
+
+A particularly strong workflow is therefore:
+
+**Specification → Acceptance Tests → Human Review → Implementation**
+
+The tests become an executable contract between the human and the agent.
+
+A critical operational rule in this workflow is that **the test oracle must be frozen**. If an agent is allowed to edit both tests and implementation simultaneously, it will frequently fall into **test negotiation**: when a complex test fails, the model simply alters or weakens the test assertions until the suite turns green. Freezing the test suite after human review creates an unyielding verification boundary that the agent is strictly forbidden to touch.
 
 ---
 
 ## 7. Verification-Driven Development
 
-You should never rely on an agent to produce correct code in a single generation. Instead, place the agent inside an automated, closed-loop feedback harness.
+Agents should not be expected to produce correct code in a single generation.
+
+Instead, they should operate inside a feedback loop.
+
+A typical workflow might be:
 
 ```text
-    ┌──────────────────────┐
-    │   Synthesize Code    │
-    └──────────┬───────────┘
-               ▼
-    ┌──────────────────────┐
-    │     Build Project    │ ── (Fail) ──┐
-    └──────────┬───────────┘             │
-        (Pass) │                         │
-               ▼                         │
-    ┌──────────────────────┐             │
-    │      Run Tests       │ ── (Fail) ──┤
-    └──────────┬───────────┘             │
-        (Pass) │                         │
-               ▼                         │
-    ┌──────────────────────┐             │
-    │   Static Analysis    │ ── (Fail) ──┤
-    │     & Linters        │             │
-    └──────────┬───────────┘             │
-        (Pass) │                         │
-               ▼                         │
-    ┌──────────────────────┐             │
-    │ Architectural Checks │ ── (Fail) ──┤
-    └──────────┬───────────┘             │
-        (Pass) │                         ▼
-               │                ┌──────────────────┐
-               │                │  Feed Compiler/  │
-               │                │  Test Output to  │
-               │                │      Agent       │
-               │                └────────┬─────────┘
-               │                         │
-               ▼                         ▼
-          [ SUCCESS ]             [ Fix Code ]
+Implement
+    ↓
+Build
+    ↓
+Unit Tests
+    ↓
+Integration Tests
+    ↓
+Static Analysis
+    ↓
+Architecture Checks
+    ↓
+Agent Review
+    ↓
+Fix
+    ↓
+Repeat
 ```
 
-The agent does not terminate because it thinks the code looks good. It terminates because observable, deterministic checks confirm that predefined invariants are satisfied.
+The agent does not stop because it believes the implementation is correct.
 
-The core rule of production agent systems is simple: **Do not depend on the raw quality of a single generation. Build an environment in which the agent can autonomously detect and correct its own mistakes.**
+It stops because observable checks confirm that predefined conditions have been satisfied.
 
-The faster and more comprehensive your local verification pipeline (compiler checks, fast unit tests, strict linters, type checkers), the more autonomy you can safely delegate to the agent.
+This leads to an important principle of agentic development:
+
+> Do not depend on the quality of a single generation. Build an environment in which the agent can detect and correct its own mistakes.
+
+The better the feedback loop, the more autonomy can safely be delegated.
 
 ---
 
 ## 8. Reviewer and Adversarial Workflows
 
-An agent that writes an implementation carries the conversational bias of that generation. Asking the same agent in the same session, *"Are there any bugs in this code?"* rarely surfaces deep design flaws.
+Implementation and review do not need to be performed by the same agent.
 
-Multi-agent review solves this by splitting generation and auditing into separate contexts with distinct instructions:
-
-```text
-┌────────────────────────┐
-│  Implementation Agent  │
-└───────────┬────────────┘
-            │ Generates diff
-            ▼
-┌────────────────────────┐
-│   Adversarial Review   │ ◄── Fresh context, no implementation bias
-│         Agent          │     Instructed to find specific defect categories
-└───────────┬────────────┘
-            │ Surfaces concrete defects
-            ▼
-┌────────────────────────┐
-│  Implementation Agent  │ ◄── Fixes verified issues
-└────────────────────────┘
-```
-
-The reviewer agent is given an explicit adversarial mandate:
+A multi-agent workflow may look like:
 
 ```text
-Assume the provided implementation contains subtle defects, race conditions, or architecture violations.
-
-Review the diff specifically for:
-- Concurrency bugs, race conditions, and improper thread-safety mechanisms,
-- Missing database transaction boundaries,
-- Unhandled edge cases or missing null/empty guards,
-- Architecture violations (e.g., domain entities referencing UI or infrastructure types),
-- Inadequate error handling or swallowed exceptions,
-- Resource leaks (unclosed streams, missing database connection disposal).
-
-Do not summarize the code. List only concrete, actionable bugs with file paths and line numbers.
+Implementation Agent
+        ↓
+Code Review Agent
+        ↓
+Adversarial Agent
+        ↓
+Implementation Agent fixes issues
 ```
 
-Separating these personas breaks confirmation bias and consistently catches edge cases that slip through standard single-agent generation.
+Different agents can have deliberately different goals.
+
+For example, a reviewer may receive:
+
+```text
+Assume the implementation contains defects.
+
+Search specifically for:
+- race conditions,
+- security problems,
+- missing edge cases,
+- architecture violations,
+- incorrect error handling,
+- performance regressions.
+```
+
+This is useful because an agent reviewing its own work may reproduce the assumptions that produced the original implementation.
+
+Independent agents can provide different perspectives.
 
 ---
 
 ## 9. Refactor-Driven Development
 
-Refactoring tasks do not add new business capabilities; they modify internal structure while strictly preserving external behavior.
+#refactor
 
-These tasks should be defined in terms of **invariants**:
+Some agent tasks are not about adding behavior but transforming the implementation while preserving behavior.
 
-```text
-Replace MediatR in-process messaging with direct handler invocation across the Billing service.
+The task can therefore be expressed through invariants.
 
-Non-negotiable constraints:
-- Public HTTP API behavior, request payloads, and status codes must remain identical.
-- Database schemas and existing EF Core migrations must remain untouched.
-- External integration events published to RabbitMQ must preserve their existing JSON schema.
-- All existing unit, integration, and architecture tests must pass without modification.
-```
-
-The agent runs this incrementally across isolated modules:
+Example:
 
 ```text
-Subsystem A ──► Refactor ──► Compiler / Tests ──► Git Commit
-      │
-Subsystem B ──► Refactor ──► Compiler / Tests ──► Git Commit
-      │
-Subsystem C ──► Refactor ──► Compiler / Tests ──► Git Commit
+Replace MediatR with direct handler invocation.
+
+Constraints:
+- API behavior must remain unchanged.
+- Database schema must remain unchanged.
+- Public contracts must remain unchanged.
+- Existing tests must continue to pass.
 ```
 
-This workflow is ideal for:
-- Framework or major dependency upgrades,
-- Architectural migrations (e.g., moving from anemic domain models to rich aggregates),
-- Eliminating deprecated APIs across large repositories,
-- Standardizing logging, telemetry, or error-handling boilerplate.
+The workflow may be incremental:
 
-The operational foundation is **transformation under preserved invariants**. If the existing test coverage is poor, you must write characterization tests to capture current system behavior before letting an agent refactor production code.
+```text
+Module A
+↓
+Refactor
+↓
+Tests
+↓
+Commit
+
+Module B
+↓
+Refactor
+↓
+Tests
+↓
+Commit
+```
+
+This approach is suitable for:
+
+- library migrations,
+    
+- framework migrations,
+    
+- architecture cleanup,
+    
+- performance optimization,
+    
+- large-scale renaming,
+    
+- API transitions.
+    
+
+The key concept is:
+
+**Transformation under preserved invariants.**
+
+If existing test coverage is insufficient, the refactoring workflow must begin with characterization tests. Pinning down current runtime behavior with regression tests before generating refactoring diffs prevents the agent from introducing silent behavioral drift.
 
 ---
 
 ## 10. Goal-Driven Development
 
-In goal-driven workflows, you define an externally measurable target rather than an implementation path:
+An even more autonomous workflow describes the desired outcome rather than the implementation.
 
-```text
-Objective:
-The endpoint GET /orders/search must respond with a p99 latency under 100ms when tested against a database containing 5,000,000 orders under a simulated load of 200 concurrent users.
-```
+Example:
 
-The agent runs an autonomous discovery and measurement loop:
+> `/orders/search` must respond within 100 ms at p99 under the defined test load.
 
-**Goal → Measure Baseline → Form Hypothesis → Apply Change → Measure Delta → Iterate**
+The agent may then:
 
-```text
-┌──────────────┐
-│ Define Goal  │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│ Profile Base │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│  Hypothesize │ ◄────────────────────────┐
-└──────┬───────┘                          │
-       ▼                                  │
-┌──────────────┐                          │
-│ Apply Change │ (Index, Query, Cache)   │
-└──────┬───────┘                          │
-       ▼                                  │
-┌──────────────┐                          │
-│ Measure P99  │                          │
-└──────┬───────┘                          │
-       ▼                                  │
-   Target Met? ── (No: Regressed/Short) ──┘
-       │
-     (Yes)
-       ▼
-  [ Keep Diff ]
-```
+- profile the endpoint,
+    
+- inspect database queries,
+    
+- introduce benchmarks,
+    
+- modify indexes,
+    
+- rewrite SQL,
+    
+- remove allocations,
+    
+- change caching,
+    
+- measure the result,
+    
+- repeat the experiment.
+    
 
-The agent's toolbelt in this workflow extends beyond text editing to profiling tools:
-- Running load-test harnesses (e.g., k6, Bombardier),
-- Inspecting query execution plans (`EXPLAIN ANALYZE`),
-- Adding missing database indexes,
-- Rewriting inefficient ORM queries into raw SQL,
-- Eliminating unnecessary heap allocations in hot paths,
-- Introducing caching layers,
-- Measuring the delta after each iteration and rolling back changes that fail to move the metric.
+The workflow becomes:
 
-Here, source code is simply an instrument used to achieve a measurable operational outcome. This pattern is particularly powerful for latency optimization, memory leak remediation, test suite run-time reduction, and cloud infrastructure cost tuning.
+**Goal → Measure → Change → Measure → Iterate**
+
+In this model, code is only one possible instrument for achieving an externally measurable objective.
+
+This is particularly promising for:
+
+- performance optimization,
+    
+- cost reduction,
+    
+- reliability improvement,
+    
+- flaky-test reduction,
+    
+- security hardening,
+    
+- build-time optimization.
+    
 
 ---
 
 ## 11. Investigation-Driven Development
 
-When responding to production incidents or subtle regressions, the agent's initial job is not writing code—it is reducing uncertainty.
+Sometimes the task should begin with investigation rather than implementation.
 
-```text
-Incident report:
-"The payment processing worker started throwing OutOfMemoryExceptions yesterday around 14:00 UTC. Find the root cause."
-```
+Example:
 
-The agent executes an investigative state machine:
+> Production started throwing this exception yesterday. Find out why.
+
+The workflow becomes:
 
 ```text
 Incident
-   ↓
+↓
 Collect Evidence
-   ↓
+↓
 Inspect Logs and Telemetry
-   ↓
-Compare with Recent Repository Changes (git log, diffs)
-   ↓
+↓
+Compare with Recent Repository Changes
+↓
 Form Hypotheses
-   ↓
-Test Hypotheses (Write reproducing test)
-   ↓
+↓
+Test Hypotheses
+↓
 Propose Fix
-   ↓
-Implement and Verify
+↓
+Implement
 ```
 
-In this mode, the agent acts as an automated forensic investigator:
-- Querying structured logs and distributed traces,
-- Identifying the deployment or commit range where the issue first appeared,
-- Correlating payload shapes with memory or CPU spikes,
-- Formulating a hypothesis and writing a minimal, failing integration test that reliably reproduces the bug,
-- Verifying that sensitive customer data (PII) is not leaking into error logs.
+This is different from normal feature development because the agent does not initially know what code needs to change.
 
-Only when the failure is consistently reproduced by an automated test does the workflow switch into standard implementation mode.
+Its first job is to reduce uncertainty.
+
+This pattern is useful for:
+
+- bugs,
+    
+- production incidents,
+    
+- regressions,
+    
+- performance degradation,
+    
+- unexpected business metrics.
+	
+- check for private data in logs
+
+In this investigative pattern, the agent operates in forensic mode: querying structured logs, inspecting recent commit diffs, and correlating anomalies before proposing code changes. The critical gate is writing a minimal failing integration test that reproduces the bug under controlled conditions. Only once the failure is deterministically reproduced does the workflow transition into implementation.
 
 ---
 
 ## 12. Exploration Before Modification
 
-A pervasive failure mode in agentic development is premature editing. An agent scans a codebase, finds the first file whose name matches the prompt, and immediately begins making edits—completely unaware that a shared abstraction, utility library, or architectural pattern already exists elsewhere in the project.
+A general rule for larger repositories is that agents should often have a dedicated exploration phase.
 
-In non-trivial codebases, you should explicitly mandate an exploration phase:
+For example:
 
 ```text
-Phase 1: Exploration
-Identify all relevant modules, entry points, existing abstractions, and test suites related to webhook delivery.
-Inspect similar features to understand our idiomatic patterns for retry logic and idempotency.
+Find:
+- relevant modules,
+- entry points,
+- existing implementations,
+- tests,
+- architectural rules,
+- similar features.
 
-Rules:
-- You are in read-only mode.
-- Do not edit, create, or delete any files.
-- Summarize your findings and list the exact files you plan to touch before proceeding.
+Do not modify code.
 ```
 
-This read-only gate forces the agent to map the repository's abstract syntax tree (AST) and module dependencies before touching code. Repository understanding must be treated as a first-class, auditable engineering task.
+Only afterward should the agent propose the change.
+
+This avoids a common failure mode where the model encounters one plausible implementation location and starts editing before understanding the wider system.
+
+For agentic work, repository understanding should often be treated as a first-class task.
+
+Enforcing a strict read-only tool gate during exploration prevents premature editing. Disabling file modification tools during initial reconnaissance forces the agent to inspect the repository structure, map dependencies, and discover existing shared abstractions before writing code.
 
 ---
 
 # Granularity of Agent Work
 
-Another vital operational dimension is the size of the task assigned to the agent. Delegated work exists along a spectrum of increasing complexity:
+Another important dimension is the size of the unit delegated to the agent.
+
+There is a continuum:
 
 ```text
 Autocomplete
-     ↓
+    ↓
 Single Function
-     ↓
+    ↓
 Single Change
-     ↓
+    ↓
 Feature
-     ↓
+    ↓
 Issue
-     ↓
+    ↓
 Pull Request
-     ↓
+    ↓
 Epic
-     ↓
+    ↓
 Specification
-     ↓
+    ↓
 Product Goal
 ```
 
-```text
-HIGH ┌──────────────────────────────────────────────────────────────────┐
-     │                                                     PRODUCT GOAL │
-     │                                                   EPIC           │
-S    │                                           PULL REQUEST           │
-C    │                                     ISSUE                        │
-A    │                               FEATURE                            │
-F    │                         CHANGE                                   │
-F    │               FUNCTION                                           │
-O    │          AUTO                                                    │
-L    │       COMPLETE                                                   │
-D    │                                                                  │
-LOW  └──────────────────────────────────────────────────────────────────┘
-     LOW ◄────────────────────────────────────────────────────► HIGH
-                         AUTONOMY LEVEL
-```
+As the delegated unit becomes larger, stronger controls are needed.
 
-As the unit of work expands from an inline autocomplete suggestion to an entire pull request or product goal, the need for deterministic scaffolding grows exponentially:
+Large autonomous tasks generally require more:
 
-| Delegated Unit | Required Guardrails & Scaffolding | Primary Risk |
-| :--- | :--- | :--- |
-| **Function / Change** | Compiler checks, inline unit tests | Local syntax errors, missed edge cases |
-| **Feature / Issue** | Frozen test suites, architecture linters, living specs | Architectural drift, unstated business assumptions |
-| **Pull Request / Epic**| Multi-agent review, human approval gates, CI pipelines | Systemic regressions, massive context window pollution |
-| **Product Goal** | Profilers, telemetry harnesses, automated rollbacks | Unbounded exploration, optimizing the wrong metric |
+- specification,
+    
+- planning,
+    
+- testing,
+    
+- observability,
+    
+- architecture rules,
+    
+- verification,
+    
+- checkpoints,
+    
+- review.
+    
 
-Trying to execute an entire Epic using low-ceremony vibe coding always leads to architectural degradation. The level of autonomy you grant an agent must never exceed the verification capacity of the surrounding development environment.
+The correct level of autonomy therefore depends heavily on the quality of the surrounding environment.
 
 ---
 
 # A Production-Oriented Agent Workflow
 
-In mature engineering organizations, these individual patterns compose into a structured, automated delivery pipeline:
+Many of the techniques above can be composed.
+
+A mature workflow could look like:
 
 ```text
 Business Request
       ↓
-Clarify Requirements & Identify Non-Goals
+Clarify Requirements
       ↓
-Write Living Technical Specification
+Write Specification
       ↓
-Explore Repository (Read-Only AST & Pattern Recon)
+Explore Repository
       ↓
-Prepare Implementation Plan (Reviewed by Tech Lead)
+Prepare Implementation Plan
       ↓
-Generate & Freeze Acceptance Tests (Executable Oracle)
+Generate Acceptance Tests
       ↓
-Human Approval Gate
+Human Review
       ↓
-Implement Small, Bounded Task Slice
+Implement Small Task
       ↓
-Local Verification Loop (Build + Tests + Static Analysis)
+Build + Tests + Static Checks
       ↓
-Agent Self-Correction Iteration (until checks pass)
+Agent Self-Review
       ↓
-Adversarial Agent Review (Targeting concurrency, security, leaks)
+Independent Agent Review
       ↓
-Atomic Git Commit (Documenting rationale)
+Commit
       ↓
-Next Task (Loop until spec is satisfied)
+Next Task
       ↓
-Create Pull Request
+Pull Request
       ↓
-Final Human Code Review & Merge
+Human Review
 ```
 
-While this looks more structured than a loose prompt-and-code loop, automated tooling eliminates most of the manual overhead. 
+This may look heavier than vibe coding, but automation removes much of the cost.
 
-The essential realization here is that software engineering discipline does not disappear when agents write code. Instead, the process steps that senior engineers have always practiced—planning, requirements analysis, edge-case identification, test-driven design, and rigorous code review—are codified into the execution harness itself.
+The important change is that software engineering discipline does not disappear when agents write the code.
+
+Instead, many previously human-driven process steps can themselves become automated.
 
 ---
 
 # These Workflows Are Complementary
 
-These methodologies are not mutually exclusive alternatives. They govern different, orthogonal dimensions of the software delivery lifecycle:
+These approaches should not necessarily be treated as competing methodologies.
 
-- **Spec-Driven Development** defines *what* business behavior must exist and sets the acceptance boundary.
-- **Plan-Driven Development** determines *how* changes are decomposed across existing architectural components.
-- **Test-Driven Development** converts expected behavior into *executable, unyielding verification contracts*.
-- **Feature- and Issue-Driven Development** establish the *unit of work and blast radius* for a single run.
-- **Verification-Driven Development** defines the *empirical feedback loop* that proves technical correctness.
-- **Adversarial Review Workflows** introduce *independent criticism* to catch blind spots.
-- **Refactor-Driven Development** enforces the *preservation of invariants* during structural modifications.
-- **Goal-Driven Development** gives the agent an *optimization search space* bounded by measurable metrics.
+They describe different dimensions of the development process.
 
-A production-ready pipeline combines these tools to fit the task at hand:
+**Spec-driven development** defines what should exist.
+
+**Plan-driven development** determines how the work should be decomposed.
+
+**Test-driven development** turns expected behavior into executable checks.
+
+**Feature- or issue-driven development** defines the unit of work.
+
+**Verification-driven development** determines how correctness is demonstrated.
+
+**Reviewer and adversarial workflows** provide independent criticism.
+
+**Refactor-driven development** performs transformations while preserving invariants.
+
+**Goal-driven development** allows the agent to search for solutions to measurable outcomes.
+
+A practical agent workflow may therefore combine several of them.
+
+For example:
 
 ```text
-Issue Backlog
-      ↓
-Living Specification
-      ↓
-Read-Only Codebase Reconnaissance
-      ↓
-Implementation Plan
-      ↓
-Frozen Acceptance Tests
-      ↓
-Incremental Code Generation
-      ↓
-Compiler / Linter / Test Verification Loop
-      ↓
-Adversarial Review Pass
-      ↓
-Pull Request
+Issue
+↓
+Specification
+↓
+Repository Exploration
+↓
+Plan
+↓
+Acceptance Tests
+↓
+Implementation
+↓
+Verification Loop
+↓
+Independent Review
+↓
+PR
 ```
 
 ---
 
+
 # Agentic Execution Environments
 
-The workflows outlined above address **how an agent organizes and executes its work**. 
+The workflows described above answer the question:
 
-An equally critical, orthogonal architectural question is: **where does the agent execute, and what tools can it touch?**
+> **How should an agent perform the work?**
+
+There is another, orthogonal question:
+
+> **Where does the agent work, and what kind of environment is available to it?**
+
+This distinction becomes increasingly important as agents move beyond source-code generation.
+
+A useful conceptual separation is:
 
 ```text
 Workflow
-→ How work is decomposed, sequenced, verified, and audited.
+→ how the work is organized
 
-Execution Environment
-→ Where the agent runs and what operating system resources it can manipulate.
+Execution environment
+→ where the work is performed and which resources the agent can manipulate
 ```
 
-The same structural workflow (such as plan-driven design or verification-driven execution) functions very differently depending on the runtime environment it controls.
+The same workflow may potentially be executed in very different environments.
+
+For example, plan-driven or verification-driven work can happen inside a coding workspace, while research-driven or document-oriented work may happen inside a more general knowledge-work environment.
+
+## Coding Environments
+
+Coding-oriented agent environments are optimized around:
+
+- repositories,
+- source files,
+- terminals,
+- builds,
+- tests,
+- Git,
+- branches and worktrees,
+- development tools.
+
+Examples include environments such as Claude Code, Codex, and coding agents integrated with IDEs.
+
+Their natural unit of work is usually a software engineering task:
+
+```text
+Issue
+↓
+Repository
+↓
+Code Change
+↓
+Tests
+↓
+Commit / Pull Request
+```
+
+## General Knowledge-Work Environments
+
+Claude Cowork represents a broader category.
+
+Instead of focusing primarily on repositories and terminals, a Cowork-style environment is designed around general knowledge work:
+
+- documents,
+- files,
+- spreadsheets,
+- research,
+- reports,
+- presentations,
+- connected applications.
+
+Its natural tasks may look like:
+
+```text
+Collect information
+↓
+Inspect documents
+↓
+Compare data
+↓
+Prepare analysis
+↓
+Produce report / spreadsheet / presentation
+```
+
+A useful mental model is:
+
+```text
+Chat
+→ conversation with a model
+
+Claude Code
+→ agentic software workspace
+
+Claude Cowork
+→ agentic knowledge-work workspace
+```
+
+Cowork is therefore not directly comparable to Fleet, Squad, subagents, or multiple parallel sessions.
+
+These concepts describe different dimensions.
+
+For example:
+
+```text
+Execution environment
+├── coding workspace
+├── knowledge-work workspace
+├── browser environment
+├── desktop / OS environment
+└── cloud / background environment
+
+Work organization
+├── single agent
+├── multiple independent sessions
+├── subagents
+├── fleet-style parallel execution
+└── persistent agent team
+```
+
+The two dimensions can be combined.
+
+A coding environment may use one agent or many agents.
+
+A knowledge-work environment may also eventually use specialized workers, reviewers, or parallel research agents.
+
+This gives a broader model:
 
 ```text
                  WORK ORGANIZATION
@@ -671,127 +854,92 @@ Coding          ●        ●       ●
 Knowledge Work  ●        ●       ●
 Browser         ●        ●       ●
 Desktop / OS    ●        ●       ●
-Cloud Runner    ●        ●       ●
+Cloud           ●        ●       ●
 ```
 
-### Coding Environments
-Coding-oriented agent workspaces are built around software engineering primitives:
-- Git repositories and worktrees,
-- Source files and abstract syntax trees,
-- Shell terminals and system processes,
-- Compilers, linters, and test runners,
-- Local debuggers and profilers.
+This distinction helps avoid treating every new agent product as a competing methodology.
 
-Examples include CLI harnesses like Claude Code, dedicated IDE agents, and headless containerized execution runners. Their natural unit of work is an issue, a diff, or a pull request:
+Some products primarily change **how agents are orchestrated**.
 
-```text
-Issue ──► Repository Worktree ──► Code Edits ──► Test Runner ──► Pull Request
-```
-
-### General Knowledge-Work Environments
-Tools like Claude Cowork represent a distinct category. Instead of operating on git trees and compilers, a Cowork-style environment runs across general office and operational tooling:
-- Technical specifications, architectural decision records (ADRs), and markdown docs,
-- Local files, spreadsheets, and data extracts,
-- Research hubs and documentation portals,
-- Team communication channels and ticket trackers.
-
-Its operational loop centers on data gathering, synthesis, and documentation:
-
-```text
-Gather Sources ──► Inspect Artifacts ──► Cross-Reference ──► Generate Spec / Report
-```
-
-### Execution Environments vs. Work Organization
-
-| Execution Environment | Typical Work Unit | Tool Surface & Capabilities |
-| :--- | :--- | :--- |
-| **Coding Workspace** | Issues, PRs, refactoring slices, test suites | Compilers, shells, Git, unit tests, debuggers |
-| **Knowledge Workspace** | Technical specs, ADRs, RFCs, post-mortems | Markdown documents, issue trackers, RAG indices |
-| **Cloud Background Runner** | Migrations, security scanning, fuzz testing | Headless CI/CD containers, isolated cloud VMs |
-| **Browser / OS Workspace** | UI integration testing, administrative workflows | Headless Chromium, DOM trees, OS window managers |
-
-Keep these two dimensions separate:
-1. **The Execution Environment**: Coding workspace, knowledge-work workspace, cloud background worker, or browser automation container.
-2. **The Work Organization**: A single developer-driven interactive agent, a parallel fleet of independent task runners, or a persistent team of specialized subagents.
-
-A coding environment might run a single interactive agent pairing with an engineer, or a headless fleet of fifty agents processing tickets in parallel git worktrees. Similarly, a knowledge-work environment might use one agent to draft an ADR or coordinate an entire team of research agents auditing compliance across internal systems.
-
----
+Others primarily expand **what environment agents can operate in**.
 
 ## From Tools to Digital Workers
 
-The relationship between developers and AI is moving through distinct operational phases:
+This also suggests a larger evolution:
 
 ```text
 Chatbot
    ↓
-Agent with Tools (File search, web retrieval)
+Agent with tools
    ↓
-Agent with a Repository (Codebase-aware editing)
+Agent with a repository
    ↓
-Agent with a Workspace (Terminal, compiler, test suite)
+Agent with a workspace
    ↓
-Agent Controlling Applications (Browser, local operating system)
+Agent controlling applications
    ↓
-Autonomous Digital Worker (Persistent, multi-tool, end-to-end execution)
+General digital worker
 ```
 
-The emergence of dedicated workspaces demonstrates that agentic principles apply well beyond raw syntax generation. The core architectural mechanics—autonomous execution, tool calling, persistent working state, deterministic feedback loops, artifact creation, and human-gated checkpoints—apply equally to systems engineering, incident management, compliance auditing, and technical writing.
+Claude Cowork is useful in this model because it demonstrates that the agentic paradigm is expanding beyond software development.
 
-For engineering teams, this leads toward specialized, cooperating environments:
+The same concepts that make coding agents useful—
+
+- autonomous task execution,
+- tool use,
+- persistent workspaces,
+- feedback loops,
+- artifact creation,
+- verification,
+- delegation—
+
+can be applied to general office and knowledge work.
+
+For software engineers, this may create a split between different agentic environments:
 
 ```text
-Coding Agents
-→ Implementation, debugging, unit testing, refactoring
+Coding agent
+→ implementation, debugging, testing, refactoring
 
-Knowledge-Work Agents
-→ Requirements generation, architecture specs, ADRs, post-mortems
+Knowledge-work agent
+→ requirements, documentation, analysis, reports, presentations
 
-Cloud / Application Agents
-→ CI/CD pipelines, production telemetry analysis, dependency updates
+Browser / application agent
+→ external systems, research, administrative workflows
 ```
 
-The future of software engineering is not a single, all-knowing conversational model. It is a network of **specialized execution environments**, governed by disciplined workflows, operating on structured contracts.
+The long-term direction is therefore not necessarily one universal agent interface.
+
+It may instead be a collection of specialized execution environments sharing similar agentic principles.
 
 ---
 
 # From Coding Assistants to Software Engineering Agents
 
-The progression of agentic engineering maturity can be traced along a clear trajectory:
+The evolution can be summarized roughly as:
 
 ```text
-AI writes code snippets
-       ↓
-AI implements vertical features
-       ↓
-AI executes bounded engineering tasks
-       ↓
-AI follows disciplined software engineering harnesses
-       ↓
-AI collaborates continuously within large-scale production systems
+AI writes code
+        ↓
+AI implements features
+        ↓
+AI executes engineering tasks
+        ↓
+AI follows engineering processes
+        ↓
+AI participates in continuous software development
 ```
 
-As this shift occurs, the central technical question changes.
+The important question is therefore gradually changing from:
 
-It is no longer:
-> *"How capable is the model at generating syntax?"*
+> How good is the model at generating code?
 
-It is now:
-> *"How robust is the development system around the model?"*
+to:
 
-An average model operating inside a strict engineering harness—with frozen specifications, deterministic test oracles, read-only exploration gates, and automated feedback loops—will consistently ship more reliable production software than a state-of-the-art model running unconstrained in a loose prompt loop.
+> How good is the development system around the model?
 
-The most important architectural responsibility in agentic software engineering is not writing prompts. It is **building the environments, execution contracts, feedback loops, and verification gates within which agents work**.
+A mediocre generation followed by strong tests, feedback, review, and iteration may be far more valuable than an impressive one-shot generation without verification.
 
----
+The most important architectural challenge in agentic software development may therefore not be code generation itself.
 
-## Related Notes & Core Patterns
-
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical mechanics for building plan-and-approval harnesses and self-healing test loops.
-- **[[Developing Features with AI Coding Agents]]**: Tactical patterns for vertical-slice delivery and managing frozen business test contracts.
-- **[[Testing in the Model, Agent, LLM Era]]**: Using deterministic test suites as the primary verification oracle for agentic execution.
-- **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]**: Using multi-agent review to enforce subtle architectural and organizational invariants.
-- **[[LLMs as a Code Review Team]]**: Implementing adversarial multi-agent review pipelines to surface regressions before merge.
-- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Identifying when to lean into unconstrained vibe coding for disposable spikes versus when to switch to strict engineering harnesses.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Maintaining living specifications and architecture markdown files to prevent context degradation across long sessions.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why agent speed gains hit a wall without automated CI/CD validation and verification infrastructure.
+It may be designing the **environment, contracts, feedback loops, and boundaries within which agents work**.

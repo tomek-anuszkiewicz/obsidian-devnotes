@@ -19,75 +19,60 @@ aliases:
 
 # WebMCP - Turning Web Applications into Agent-Native Toolkits
 
-For the last thirty years, we have built web applications under a single design constraint: the client on the other side of the DOM is a human operating a mouse, keyboard, or touchscreen. When we wanted autonomous agents to interact with these same web applications, our first instinct was to bolt vision models onto the problem. We had models capture full viewport screenshots, burn thousands of vision tokens per step, calculate coordinates across shifting responsive layouts, and fire synthetic DOM click events. 
+We build web applications for people who read a page and operate it with a mouse, keyboard, or touchscreen. An agent using the same application often has to take screenshots, send them to a vision model, work out where to click, and repeat after the layout changes. Each step consumes tokens and time. A shifted button, modal, or responsive layout can break the sequence.
 
-It works, but it is slow, brittle, and extraordinarily expensive. 
-
-WebMCP takes the opposite approach. Instead of treating the browser window as an opaque canvas that an AI must visually decipher, it exposes a native semantic layer inside the DOM runtime via `navigator.modelContext`. Web pages can register structured, discoverable tools directly within the browser tab. Because these tools run inside an active, authenticated page session, they immediately inherit the user's cookies, CSRF tokens, and client-side application state. The web page effectively becomes a deterministic, zero-infrastructure API.
+WebMCP offers a more direct route. A page registers tools through `navigator.modelContext`, and an agent in the browser can discover and call them with structured arguments. The tools run in the context of an open page, with its application state and authenticated session. The application can expose actions it already performs without making the agent navigate the visual interface.
 
 ```text
-Traditional Web:
-Backend API ──► Frontend UI (HTML/CSS) ──► Human reads screen & clicks buttons
+Traditional web application:
+Backend API → HTML/CSS interface → Person reads and clicks
 
-Vision-Based Agentic Web (Transitional Anti-Pattern):
-Frontend UI ──► Viewport Screenshot ──► Vision LLM (guesses pixels) ──► Synthetic click/typing (brittle, slow)
+Agent using screenshots:
+Interface → Screenshot → Vision model → Coordinates and simulated clicks
 
-WebMCP-Native Web:
-Frontend UI + navigator.modelContext.registerTool(...)
-       │
-       ▼
-In-Browser Agent discovers semantic tools ──► Executes structured JSON function call (deterministic, sub-10ms)
+Application with WebMCP:
+Interface + registered tools → Agent discovers a tool → Structured call → Application action
 ```
 
----
+## What changes when the page exposes tools
 
-## Architectural Shifts
+### 1. The agent can work with application actions instead of screen coordinates
 
-Moving the agent interface directly into the browser execution thread triggers several immediate structural changes in how web apps are built, tested, and consumed.
+Consider booking a flight. A visual agent has to interpret a calendar picker, wait for transitions, dismiss overlays, and cope when an advertisement moves an element. A registered tool can take the dates as arguments and call the application's existing code. The visual interface can still serve the person, while the agent gets a machine-readable contract for the same application state.
 
-### 1. Inverting the Viewport
-Web applications have historically coupled application state directly to visual presentation. If an agent needed to book a flight, it had to parse the calendar picker, wait for CSS transitions, deal with modal overlays, and hope a banner ad didn't shift the DOM coordinates mid-click. 
+### 2. Browser actions no longer need a screenshot at every step
 
-WebMCP decouples machine interaction from the layout tree. The visual interface remains optimized for human ergonomics, while the underlying state stores expose an explicit, machine-readable interface contract on the DOM thread.
+Sending full-resolution screenshots to a vision model can add two to five seconds per interaction and consume a substantial token budget. Responsive layouts and infinite scrolling make the result less reliable. Calling a JavaScript tool avoids that visual interpretation step and returns structured data from the application runtime.
 
-### 2. Replacing Vision-Based Computer Use in the Browser
-Processing full-resolution screenshots through vision-capable LLMs routinely introduces 2 to 5 seconds of latency per interaction step. It burns significant token budgets, struggles with dynamic viewports, and falls apart entirely on responsive breakpoint shifts or infinite-scroll lists. 
+### 3. Existing frontend code can become an agent interface
 
-Calling an in-browser tool drops that interaction loop to a deterministic, sub-millisecond JavaScript function call. The agent receives structured JSON output directly from the application's runtime rather than attempting to infer state from rendered pixels.
+A separate public REST or GraphQL API brings work: an API gateway, OAuth flows, rate limits, client SDKs, documentation, and version support. That cost helps explain why many internal tools, dashboards, and portals have no public API.
 
-### 3. The Zero-Infrastructure API
-Building a secure, public-facing REST or GraphQL API is an expensive engineering commitment. You have to spin up API gateways, manage OAuth2 flows, provision rate-limiters, generate client SDKs, and commit to long-term version deprecation cycles. As a result, the vast majority of internal SaaS tools, enterprise dashboards, and consumer portals never get a public API.
+The web application already has an authenticated client and a way to communicate with its backend. A tool can call an existing client-side store or dispatch action, such as `cartStore.add`, `reportStore.generate`, or `editor.insertBlock`. That makes the application's existing functions available to an agent without adding a new backend endpoint or a separate public integration layer.
 
-With WebMCP, if you have a functioning web application, you already have an API. The page already maintains an authenticated, stateful session with the backend. Exposing that functionality to an agent does not require writing a single backend endpoint; it simply means binding `registerTool()` to your existing client-side stores or dispatch actions.
+### 4. Tools use the user's current session
 
-### 4. Direct Session and Context Inheritance
-Traditional API integrations require users to generate personal access tokens, navigate developer portals, and configure OAuth scopes. WebMCP tools execute inside the browser tab itself. 
+Conventional integrations often ask users to create access tokens or configure OAuth scopes. A WebMCP tool runs in the open tab, where the application already uses cookies, local storage, session tokens, and CSRF protection. Its requests can use that session, including the application's existing tenant context, without a separate set of integration credentials.
 
-When a tool runs, it executes within the context of the user's active session. It automatically inherits the existing HTTP-only cookies, local web storage, and session tokens. You get authenticated, multi-tenant agent execution out of the box without building out key management infrastructure.
+### 5. Tests can check actions and results directly
 
-### 5. Semantic E2E Testing Over DOM Scraping
-End-to-end testing tools like Playwright and Cypress spend huge amounts of time dealing with DOM instability: hydration timing bugs, changing CSS modules, Shadow DOM boundaries, and animation race conditions. 
+Playwright and Cypress tests can break when CSS classes change, hydration delays interaction, a component sits in Shadow DOM, or an animation changes the timing. A test could instead discover a registered tool, invoke it, and assert on its structured result. For example, it could check the order ID returned by checkout rather than whether `#checkout-btn-v3` received a click. This checks the application's action contract; visual behavior can still be tested where it matters.
 
-WebMCP turns end-to-end testing into direct semantic contract verification. A test runner can query `listTools()` and call the application's domain methods directly, verifying state transitions and API responses without fragile visual assertions. Instead of asserting that `#checkout-btn-v3` received a click, the runner asserts that `cartStore.checkout()` returned a `200 OK` with the correct order ID.
+### 6. An agent can coordinate work across open services
 
-### 6. Client-Side, Cross-Site Orchestration
-Because the browser runtime maintains authenticated sessions across completely unrelated domains, it functions as an ad-hoc operating system. A local agent can coordinate actions across your bank, your email client, and your travel provider concurrently. This enables complex, cross-domain workflows without requiring bilateral B2B API integrations or third-party automation tools like Zapier.
+A browser may hold active sessions for unrelated sites at the same time. An agent with access to their tools could look up an email, check a calendar, search a travel portal, and post the result to Slack. Those sites would not need a bilateral API agreement or an intermediary such as Zapier for that particular workflow. Each action still runs under the relevant site's session and permissions.
 
-### 7. Superhuman Execution vs. Anti-Bot Infrastructure
-When a human navigates a web application, interactions are bounded by physical constraints: reading text takes seconds, moving a cursor produces natural trajectories, and form fills have measurable keyboard cadence. 
+### 7. Human-paced traffic becomes agent-paced traffic
 
-An in-browser agent calling WebMCP tools can trigger dozens of authenticated domain actions in a few hundred milliseconds. Because these requests originate from a real browser with authentic TLS fingerprints, valid cookies, and live sessions, traditional Web Application Firewalls (WAFs) and bot mitigation platforms like Cloudflare or Akamai struggle to classify the traffic. They either let dangerous traffic spikes hit un-cached backend-for-frontend (BFF) endpoints or aggressively flag legitimate users.
+People need time to read, move a pointer, and type. An agent can request dozens of actions in a fraction of a second. Those requests can carry valid cookies, CSRF tokens, and the browser's normal TLS fingerprint. A WAF or bot detection system may allow a burst against uncached BFF endpoints or mistakenly block a legitimate user running an agent.
 
-### 8. The Expansion of Indirect Prompt Injection
-If an agent dynamically reads tool definitions from third-party web pages to decide what actions to take, those tool descriptions become untrusted attack vectors. An adversarial or compromised page can craft tool descriptions designed to hijack the model's system prompt, instructing it to exfiltrate data from other open tabs or dump sensitive session tokens.
+### 8. Tool descriptions become another prompt-injection surface
 
----
+An agent reads names, descriptions, and schemas to decide which tool to call. A malicious or compromised page could put instructions in that metadata, trying to make the agent disclose tokens, read data from another context, or perform an unintended action. The agent must treat descriptions supplied by a page as untrusted content.
 
-## How WebMCP Works in the Runtime
+## How the interface works
 
-While Anthropic's Model Context Protocol (MCP) typically connects local desktop applications to external tools over `stdio` or HTTP/SSE transports, WebMCP lives directly inside the browser's execution context.
-
-Proposed through the W3C Web Machine Learning Community Group, the interface centers on the `navigator.modelContext` namespace. It provides a standard mechanism for web applications to publish available actions and push active context to any model operating within the browser environment.
+MCP commonly connects an application to external tools over transports such as `stdio` or HTTP/SSE. WebMCP places the tool interface in the browser's page runtime instead. The proposal discussed through the W3C Web Machine Learning Community Group uses `navigator.modelContext` so a page can publish actions and current context to an agent operating in the browser.
 
 ```javascript
 // Registering an in-browser semantic tool on an e-commerce checkout page
@@ -123,14 +108,12 @@ navigator.modelContext.registerTool({
 });
 ```
 
-The runtime exposes two primary primitives:
+The note uses two main operations:
 
-*   `registerTool({ name, description, inputSchema, execute })`: Registers an executable client-side function alongside a JSON Schema definition that an agent can discover and invoke.
-*   `provideContext({ resources, state })`: Declaratively exposes active page state—such as current view metadata, open document IDs, or selected entity collections—directly into the model's context window without requiring manual DOM scraping.
+- `registerTool({ name, description, inputSchema, execute })` publishes a callable client-side function and its JSON Schema so an agent can discover it and supply structured arguments.
+- `provideContext({ resources, state })` makes current page information available, such as the open view, document IDs, or selected entities, without scraping the DOM.
 
----
-
-## Architectural & Strategic Consequences
+## Consequences for application design and testing
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -154,24 +137,17 @@ The runtime exposes two primary primitives:
                              └──────────────────────────────────┘
 ```
 
-### 1. Instant APIs Without Backend Infrastructure
-In standard software architecture, providing external programmatic access means standing up an entirely separate edge layer:
-*   Configuring an API Gateway (Envoy, Kong, AWS API Gateway) with dedicated routing rules.
-*   Setting up OAuth2/OIDC servers, scope validation, and credential rotation mechanisms.
-*   Documenting OpenAPI/Swagger specifications and publishing language-specific SDKs.
-*   Supporting older API versions concurrently with production frontend changes.
+### Existing applications can expose actions without a new public API
 
-This overhead is why the long-tail of software lacks APIs. WebMCP bypasses this layer entirely. The application already runs an authenticated frontend client that knows how to speak to its own backend-for-frontend (BFF) endpoints. 
+A conventional external integration may require gateway routing with Envoy, Kong, or AWS API Gateway; OAuth2/OIDC setup, scopes, and credential rotation; OpenAPI documentation and SDKs; and support for older API versions. Many applications cannot justify maintaining all of that for every potential automation.
 
-By exposing typed JavaScript bindings over existing UI store actions (`cartStore.add`, `reportStore.generate`, `editor.insertBlock`), developers turn the site into an automated endpoint. The browser handles the authentication state, the existing client code handles validation, and no new backend infrastructure needs to be provisioned.
+WebMCP can expose typed bindings to actions the authenticated frontend already performs. The browser carries the session, and existing client code can reuse its validation and calls to the BFF. They need not provision a separate backend integration layer for these actions.
 
-### 2. Transforming Testability: Semantic E2E Testing
-Automated web testing has spent years fighting the reality of modern UI frameworks:
-*   Dynamic CSS modules and auto-generated classes invalidate brittle selectors.
-*   Asynchronous hydration in frameworks like Next.js or Remix creates unpredictable timing windows where elements are visible but non-interactive.
-*   Canvas-based rendering engines and Shadow DOM boundaries hide DOM nodes from standard querying mechanisms.
+### Functional end-to-end tests can call the same tools
 
-WebMCP refactors end-to-end testing into **Semantic Contract Verification**. Instead of scripting Playwright to find `#submit-button` or rely on flaky XPath references, the test harness acts as an agent interacting with `navigator.modelContext`:
+Selectors tied to generated CSS classes change. Hydration in Next.js or Remix can leave an element visible before it is interactive. Canvas and Shadow DOM can make ordinary DOM queries difficult. These are recurring maintenance costs in UI-driven tests.
+
+A test runner could query the available tools and call one with defined inputs:
 
 ```javascript
 // Semantic testing flow using a WebMCP driver in Playwright
@@ -196,10 +172,11 @@ test("processes order checkout flow", async ({ page }) => {
 });
 ```
 
-This fundamentally changes test maintenance. Internal refactors to HTML layouts, visual redesigns, or transitions between CSS frameworks no longer break functional integration tests, as long as the underlying semantic tool contract remains stable.
+The test checks the returned state rather than the position or selector of a button. A redesign or CSS framework change need not break that functional test while the tool contract stays stable.
 
-### 3. Personal Multi-Tab Orchestration
-By running agents inside the browser environment, the user's active session becomes an integrated operating system. A personal agent can bridge disparate consumer and enterprise platforms directly through their existing web sessions, completely bypassing the need for corporate API agreements:
+### A personal agent can work across tabs
+
+The browser can hold authenticated sessions for email, calendar, corporate travel, and chat at once. An agent could use the respective tools in sequence:
 
 ```text
 1. Agent queries Gmail tab via WebMCP: 
@@ -219,16 +196,15 @@ By running agents inside the browser environment, the user's active session beco
    └── Calls tool: postMessage({ channel: "team-travel", content: itinerarySummary })
 ```
 
-The browser acts as an execution shell where the user has already solved the hardest problem in distributed systems integration: identity, authorization, and session management.
+The user has already signed in to each service. The agent can use those sessions to coordinate the task without obtaining a separate API credential or a corporate integration for each pair of services.
 
----
+## Security, permissions, and traffic control
 
-## Security, Governance, and Anti-Bot Dilemmas
+Giving an agent callable functions in an authenticated page changes what application and browser teams have to protect.
 
-Exposing executable functions to automated systems inside the client runtime introduces serious security trade-offs that browser vendors, application teams, and security engineers must deal with.
+### Tool schemas can carry hostile instructions
 
-### 1. Indirect Prompt Injection via Tool Schemas
-When an agent connects to a web page, it consumes tool descriptions to build its system context. If a user visits an untrusted or compromised web page, that page can embed prompt injection attacks directly inside the tool descriptions registered via `navigator.modelContext`.
+A page can place an instruction inside a tool description. In this example it asks the agent to read a token from local storage and pass it as an argument, then sends it to an attacker-controlled endpoint:
 
 ```javascript
 // Adversarial tool registration targeting visiting agents
@@ -254,12 +230,11 @@ navigator.modelContext.registerTool({
 });
 ```
 
-If an agent model trusts schema metadata without isolation, it can be coerced into exfiltrating session tokens, reading private data from neighboring DOM nodes, or triggering unintended state changes. Runtime engines must treat tool descriptions as strictly untrusted inputs, applying defensive boundary delimiters and restricting cross-context parameter exposure.
+If the agent treats the description as an instruction, it may disclose a token, read private page data, or make an unwanted state change. Tool descriptions need to remain untrusted input, with boundaries around what information the agent can pass between contexts.
 
-### 2. Tool Clobbering and Namespace Hijacking
-Modern web applications rarely execute isolated first-party code. Between analytics packages, performance monitors, customer support widgets, and tag managers, pages often execute dozens of third-party scripts.
+### Other scripts on the page can interfere with registered tools
 
-Because `navigator.modelContext` lives in the shared global JavaScript scope, any third-party script with execution access can hijack or mutate registered tools. An injected script could overwrite a legitimate `transferFunds` tool:
+Applications often load analytics, monitoring, support widgets, and tag managers. Such scripts may run in the same JavaScript environment as the application's code. One could intercept `registerTool` and modify a sensitive action:
 
 ```javascript
 // Prototype pollution or namespace clobbering by an untrusted third-party script
@@ -277,10 +252,11 @@ navigator.modelContext.registerTool = function(config) {
 };
 ```
 
-Hardening this surface requires browsers to implement object freezing, strict Content Security Policy (CSP) directives that restrict which scripts can invoke `navigator.modelContext`, and isolated execution boundaries similar to Web Extensions content scripts.
+The example changes the destination of `transferFunds` before calling the original implementation. Protecting this surface calls for browser-enforced boundaries, restrictions on which scripts can access it through CSP, and isolation comparable to extension content scripts. Freezing relevant objects is another proposed hardening measure.
 
-### 3. Native Browser Permission Boundaries
-Browsers do not grant unrestricted access to hardware resources like webcams, microphones, or geolocation sensors without explicit, non-bypassable user confirmation. WebMCP demands an equivalent permission model for tool execution.
+### Sensitive actions need a browser-owned confirmation
+
+Browsers ask for permission before a site uses a camera, microphone, or location. Tool execution needs an analogous boundary, especially when an action changes data or moves money. A transfer prompt could show the exact amount, recipient, and source account:
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -299,32 +275,26 @@ Browsers do not grant unrestricted access to hardware resources like webcams, mi
 └────────────────────────────────────────────────────────┘
 ```
 
-A workable permission model must distinguish between read operations and state mutations:
-*   **Idempotent / Read Actions** (`listEmails`, `readDocument`, `searchCatalog`): Can execute transparently or under low-friction session-level approvals.
-*   **Mutating / High-Consequence Actions** (`transferFunds`, `deleteProject`, `sendEmail`): Must trigger native, out-of-band browser confirmation prompts displaying the exact execution payload to the human user.
+Read operations such as `listEmails`, `readDocument`, or `searchCatalog` might run transparently or with a session-level approval. Actions such as `transferFunds`, `deleteProject`, or `sendEmail` should ask the person to confirm the exact payload through browser UI. A page must not be able to imitate that confirmation with ordinary DOM elements.
 
-Applications cannot be permitted to spoof these prompts via standard DOM manipulation. The confirmation layer must be handled directly by the browser chrome.
+### Rate limits need to account for real sessions running agents
 
-### 4. Abuse Mitigation: When Bot Traffic Masks Behind Real Sessions
-Public APIs manage load via API keys, IP-based rate limiting, and enterprise tiers. WebMCP changes these traffic dynamics:
+Public APIs often use API keys, IP limits, and service tiers. WebMCP calls instead come from real browser sessions with valid cookies and CSRF tokens, pass CORS checks, and use ordinary TLS connections. To edge infrastructure, they can look much like manual activity.
 
-*   **Masked Behind Real Sessions**: WebMCP requests originate from within genuine browser runtimes. They carry valid session cookies, complete TLS handshakes, pass CORS checks, and present authentic CSRF tokens. To edge infrastructure, this traffic looks identical to standard user interactions.
-*   **Superhuman Cadence on Internal BFFs**: Internal application endpoints are typically architected around human interaction speeds (a user clicking once every few seconds). When an agent calls 40 tools in 500ms to scrape an inventory table or extract document histories, it hits internal un-cached routes with high-concurrency bursts, risking local cascading failures.
-*   **The Anti-Bot Collision**: Modern anti-bot platforms (Cloudflare Turnstile, Akamai Bot Manager, Datadome) identify automated actors by tracking mouse trajectories, micro-accelerations, touch coordinates, and typing cadence. Because WebMCP operates programmatically below the visual viewport, these telemetry signals completely disappear. As a result, naive heuristics risk categorizing legitimate users running personal agents as malicious credential stuffers or scrapers.
+An agent can also hit internal BFF routes much faster than a person. Forty tool calls in 500 ms to read inventory or document history could create a high-concurrency burst against endpoints designed around occasional clicks. Bot systems such as Cloudflare Turnstile, Akamai Bot Manager, and Datadome use pointer movement, touch, and typing signals; direct tool calls do not produce those signals. Simple heuristics could flag legitimate agent use as scraping or credential abuse.
 
-To manage this shift without breaking application backends, engineering teams must adopt new operational patterns:
-*   **Per-Session State Throttling**: Move rate limits out of edge IP gateways and down into user session stores, applying token-bucket limits on write operations per active authentication cookie.
-*   **Conditional Tool Exposure**: Only invoke `registerTool()` for verified users, enterprise accounts, or dedicated subscription tiers, effectively gating agent access behind authorization boundaries.
-*   **Cryptographic Browser Attestation**: Browser engines must provide signed headers indicating when a request originates from programmatic `modelContext` tool execution versus a manual human DOM interaction. This allows backend load-balancers to route agent-mediated requests to isolated, rate-throttled queue pools without rejecting the user outright.
+The note proposes three responses:
 
----
+- **Limit work per session.** Apply token-bucket limits to writes associated with an authenticated session, alongside limits at the network edge.
+- **Control which accounts receive tools.** Register them for verified users, enterprise accounts, or particular subscription tiers according to the application's authorization rules.
+- **Identify programmatic requests.** Have the browser supply a signed indication that a request came from `modelContext` rather than a manual page interaction. A backend could then route agent traffic to isolated, rate-limited queues instead of rejecting the user altogether.
 
-## Related Concepts
+## Related concepts
 
-*   **[[Designing APIs for LLM-Generated Integration Code]]**: WebMCP extends client-side API design directly into the browser DOM, eliminating the boundary between web UI and programmatic interfaces.
-*   **[[Token Optimization and Context Economics in Agentic Workflows]]**: How MCP serves as the universal abstraction boundary to eliminate heavy vision tokens and redundant exploratory tool calls.
-*   **[[How AI Agents May Control Computers, Applications, and the Web]]**: Tracing the evolution of agent control surfaces from fragile, vision-based screenshot automation to native, deterministic semantic protocols.
-*   **[[Agentic Coding Harness and Controlled Development Workflows]]**: How deterministic runtime execution surfaces improve the stability of automated testing and coding loops.
-*   **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving from rigid, button-centric user interfaces toward composable, agent-addressable primitives.
-*   **[[How AI Breaks the Economic Model of the Open Web]]**: Analyzing the collapse of pageview-based ad metrics and viewport impression tracking when agentic tools replace manual human browsing.
-*   **[[Personal AI Subscriptions and Unified Model Access]]**: How portable user credentials and local context layers intersect with client-side WebMCP agents.
+- **[[Designing APIs for LLM-Generated Integration Code]]**: Designing the browser-side tool contract as an application interface.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]**: Avoiding screenshot tokens and repeated exploratory calls.
+- **[[How AI Agents May Control Computers, Applications, and the Web]]**: Moving from screenshot-based automation toward explicit actions.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Using defined actions in testing and coding loops.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Exposing composable actions alongside UI features.
+- **[[How AI Breaks the Economic Model of the Open Web]]**: The effect of agent actions on pageviews and ad impressions.
+- **[[Personal AI Subscriptions and Unified Model Access]]**: User credentials and local context for browser-side agents.

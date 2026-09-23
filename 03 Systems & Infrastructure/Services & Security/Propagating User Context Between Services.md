@@ -10,60 +10,57 @@ tags:
 aliases:
   - User Context Propagation
   - Service Identity and End-User Identity
-  - Orthogonal Identity and Context Separation
-  - Secure Microservice Context Propagation
 ---
-
-# Propagating User Context Between Services
-
-> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
-> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
 
 ## Context
 
-In distributed systems, Service A frequently receives a request initiated by an end user and must subsequently call Service B to complete the operation:
+In distributed systems, Service A may receive a request initiated by a user and then call Service B.
+
+The full flow may look like:
 
 ```text
-User U ──► API Gateway (Sanitizes headers, authenticates user)
-                 │
-                 ▼
-            Service A (Authenticates as Service A via mTLS / Workload Identity)
-                 │
-                 ▼ [Propagates allowlisted headers: User-Id, Tenant-Id, traceparent]
-            Service B (Verifies Service A identity ──► Validates User Context ──► Authorizes Resource Access)
+User U
+→ Gateway
+→ Service A
+→ Service B
 ```
 
-When the request lands on Service B, that service needs to know:
-- Which service made the network call,
-- Which user originally initiated the operation,
-- Which tenant the operation belongs to,
-- Which trace and correlation identifiers track the execution chain,
-- Whether the operation is authorized.
+Service B may need to know:
+- which service made the call,
+- which user originally initiated the operation,
+- which tenant the operation belongs to,
+- which trace and correlation identifiers belong to the flow,
+- whether the operation is authorized.
 
-These concerns are interrelated, but conflating them into a single generic request context creates subtle security holes, confused-deputy vulnerabilities, and architectural rot.
+These concerns are related, but they are not the same. Treating all of them as one generic request context leads to security bugs and architecture decay.
 
-A clean design strictly separates six distinct concerns:
-- **Service identity:** Who is physically making the call over the wire.
-- **User identity:** Who initiated the business operation.
-- **Authorization:** Whether the requested operation is permitted on the target resource.
-- **Audit context:** Who did what, when, and under what delegation chain.
-- **Trace context:** The technical distributed execution chain across hops.
-- **Tenant context:** The organizational boundary owning the target data.
+A clean model strictly separates:
+- **Service identity** (who is calling),
+- **User identity** (who initiated the operation),
+- **Authorization** (is this allowed),
+- **Audit context** (who did what and when),
+- **Trace context** (technical execution chain),
+- **Tenant context** (boundary of the data).
 
 ---
 
 ## Core Principle
 
-A reliable responsibility model follows three rules:
+A robust responsibility model is:
 
 > **The calling service authenticates itself.**  
 > **The user identifier is propagated as contextual metadata.**  
 > **The service owning the resource decides how authorization should work.**
 
 In practical terms:
-- `userId` tells Service B whose operation this is.
-- `service identity` tells Service B who is making the call.
-- `authorization` determines whether the operation is allowed.
+
+```text
+userId tells Service B whose operation this is;
+
+service identity tells Service B who is making the call;
+
+authorization determines whether the operation is allowed.
+```
 
 These three concepts must never be treated as interchangeable.
 
@@ -71,7 +68,7 @@ These three concepts must never be treated as interchangeable.
 
 ## Architectural Deep Dives
 
-This guideline works alongside two dedicated architectural references:
+This guideline is modularized into specialized architecture references:
 
 1. **[[Service vs User Authorization Models]]**
    - Choosing between **Model 1** (Service B authorizes Service A) and **Model 2** (Service B authorizes the User).
@@ -91,43 +88,40 @@ This guideline works alongside two dedicated architectural references:
 
 ## Authenticate the Calling Service Independently
 
-Service B must verify the technical caller before it inspects or trusts any propagated user metadata:
+Service B must verify the technical caller independently:
 
 ```text
 Authenticated caller: Service A
-Original initiator:   User U
+Original initiator: User U
 ```
 
-Standard service authentication mechanisms include:
-- Workload identity (Kubernetes ServiceAccount tokens, AWS IAM Roles for Service Accounts, Azure Managed Identities),
-- Mutual TLS (mTLS) with SPIFFE/SAN validation,
-- Client credentials grant via OAuth 2.0 (service-to-service JWTs),
-- Service mesh sidecar identity (Istio, Linkerd).
+Possible service authentication mechanisms include:
+- workload identity (Kubernetes / Cloud provider IAM),
+- mutual TLS (mTLS),
+- client credentials (OAuth2),
+- signed service tokens,
+- trusted service mesh identity (e.g. Istio / Linkerd).
 
-If Service B accepts requests from an unauthenticated caller, an attacker can forge any arbitrary user identifier:
+Service B should verify that the request genuinely came from Service A. Only then may it trust the user context metadata supplied by Service A.
 
 ```http
-# Critical vulnerability: An unauthenticated caller supplying an arbitrary User-Id
-POST /orders HTTP/1.1
-Host: service-b.internal
-X-User-Id: admin-user-42
+# Dangerous: An unauthenticated caller supplying an arbitrary User-Id
+X-User-Id: user-123
 ```
 
-Service B must verify that the request genuinely originated from an authorized service (such as Service A). Only after that caller identity is proven should Service B trust the downstream context headers.
+The system boundary (API Gateway) must strip, overwrite, or reject untrusted internal-context headers sent from external clients.
 
-### Edge Gateway Sanitization
-The system boundary (API Gateway) must unconditionally strip, overwrite, or drop untrusted internal-context headers (`X-User-Id`, `X-Tenant-Id`, `X-Initiated-By-User-Id`) received from external clients. If an external client sends an `X-User-Id` header, the gateway must remove it, authenticate the incoming user credentials (session cookie, bearer token), and set its own trusted headers before forwarding internally.
+If an incoming external request carries an unverified `X-User-Id` or `X-Tenant-Id` header, the gateway must drop it immediately before authenticating caller credentials and attaching verified downstream headers. Leaving header sanitization to downstream internal services introduces confused-deputy vulnerabilities if any internal service misconfigures transport authentication or exposes an unauthenticated debug route.
 
 ---
 
 ## Trace Context Is Separate from User Context
 
-Distributed tracing tracks physical execution hops. It uses standard W3C trace propagation (`traceparent`, `tracestate`). Keep this technical telemetry decoupled from business and security identity:
+Distributed tracing should use standard W3C trace propagation (`traceparent`, `tracestate`).
 
 - **Trace context** answers: *Which technical execution chain does this call belong to?*
-- **Correlation context** answers: *Which logical business workflow or batch job does this call belong to?*
-- **Tenant context** answers: *Which organizational security boundary owns this data?*
-- **User context** answers: *Which human or automated agent initiated the business intent?*
+- **User context** answers: *Who initiated the business operation?*
+- **Correlation context** answers: *Which logical business workflow or batch does this belong to?*
 
 ```text
 traceId        = technical execution chain (W3C traceparent)
@@ -136,18 +130,20 @@ tenantId       = organizational / security boundary
 userId         = original initiator
 ```
 
-These values often travel alongside one another in HTTP headers, but they belong to different operational contracts. Conflating W3C trace IDs with user identity risks leaking Personally Identifiable Information (PII) into telemetry collectors, APM tools, and log aggregators.
+They may travel together in headers, but they belong to different technical contracts.
+
+Conflating W3C trace IDs with user identity also introduces regulatory and compliance hazards. Telemetry collectors and APM systems routinely ingest trace headers without redaction; embedding user identity or tenant keys into trace state risks leaking Personally Identifiable Information (PII) across log aggregators and third-party monitoring vendors.
 
 ---
 
 ## Tenant Context
 
-In multi-tenant architectures, `tenantId` is commonly propagated alongside `userId`.
+In multi-tenant systems, `tenantId` is often propagated alongside `userId`.
 
-Service B must never accept an arbitrary `X-Tenant-Id` header without verification. Doing so opens the door to cross-tenant data access if a compromised or buggy upstream service passes the wrong ID. The tenant must always be validated against an authenticated identity:
+Service B must not trust an arbitrary `X-Tenant-Id` header without verification. The tenant must be verified against a trusted identity:
 - Verified claims in a cryptographically signed token,
-- An authenticated caller that is explicitly authorized to act on behalf of that tenant,
-- An explicit database lookup confirming that the authenticated `userId` is an active member of `tenantId`.
+- Authenticated caller that is authorized to act on behalf of the tenant,
+- Explicit database lookup confirming that `userId` is an active member of `tenantId`.
 
 > [!IMPORTANT]
 > **Tenant Isolation Rule:** Tenant context must always be derived from or validated against an authenticated identity. Never permit cross-tenant data access based on an unverified header.
@@ -167,113 +163,74 @@ traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
 ```
 
 ### Avoid Blind Header Propagation
-A dangerous anti-pattern is copying all inbound HTTP headers directly to outbound downstream calls:
+A dangerous anti-pattern is copying all inbound HTTP headers directly to downstream calls. This risks leaking:
+- browser cookies,
+- credentials with excessive scopes,
+- sensitive client claims,
+- internal routing or debug headers.
 
-```text
-Incoming Request ──► [Blind Header Copying] ──► Downstream Call
-```
-
-Blind copying frequently leaks:
-- End-user session cookies and basic auth headers,
-- Broadly scoped user tokens to services that do not need them,
-- Sensitive client IP addresses, browser user-agents, and geographic markers,
-- Internal routing, proxy, and debugging headers.
-
-Always use an **explicit allowlist** in your outbound HTTP client pipeline, picking only the specific context fields intended for downstream consumption.
+Always use an **explicit allowlist** of validated context fields for outbound requests.
 
 ---
 
-## Strongly-Typed Context Contracts vs. Ambient State
+## A Shared Context Contract in Code
 
-Model your context contract explicitly using strongly-typed data structures rather than untyped string maps or dictionaries.
-
-### C# Contract Definition
+Model the context contract explicitly using strongly-typed records rather than an untyped dictionary:
 
 ```csharp
 public sealed record ExecutionContext(
     string CallerService,
     string? InitiatedByUserId,
     string? TenantId,
-    string CorrelationId,
-    string TraceParent);
+    string CorrelationId);
 
 public sealed record ActorContext(
     string TechnicalActor,
     string? OriginalUser,
     string? TenantId,
-    IReadOnlyList<string>? DelegationChain);
+    string? DelegationChain);
 ```
 
-### TypeScript Contract Definition
-
-```typescript
-export interface ExecutionContext {
-  readonly callerService: string;
-  readonly initiatedByUserId?: string;
-  readonly tenantId?: string;
-  readonly correlationId: string;
-  readonly traceParent: string;
-}
-
-export interface ActorContext {
-  readonly technicalActor: string;
-  readonly originalUser?: string;
-  readonly tenantId?: string;
-  readonly delegationChain?: readonly string[];
-}
-```
-
-### Avoid Ambient Global State
-Relying heavily on ambient global state—such as static `CurrentUser.Id` holders, raw `ThreadLocal`, unchecked `AsyncLocal` globals, or injecting raw `HttpContext` deep into business logic—causes persistent production issues:
-- It hides method dependencies, making unit testing painful.
-- It frequently leaks user context across thread pools or into asynchronous fire-and-forget background tasks.
-- It makes asynchronous task scheduling non-deterministic when context fails to flow across thread pool handoffs.
-
-Pass context explicitly to domain operations via method arguments or scoped domain execution boundaries:
+### Avoid One Global Ambient Context
+Avoid relying heavily on ambient global state (e.g. static `CurrentUser.Id`, unchecked `AsyncLocal` globals, or direct access to `HttpContext` deep inside business domains):
+- Makes unit testing difficult and hides method prerequisites.
+- Risks leaking user context into fire-and-forget background tasks or thread pool threads.
+- Domain logic should receive required identity values explicitly via method arguments or scoped domain interfaces:
 
 ```csharp
-// Explicit context passing in C#
 public Task UpdateDocumentAsync(
     DocumentId documentId,
     UserId initiatedBy,
-    ExecutionContext context,
     CancellationToken cancellationToken);
 ```
 
-```typescript
-// Explicit context passing in TypeScript
-async function updateDocument(
-  documentId: DocumentId,
-  initiatedBy: UserId,
-  context: ExecutionContext
-): Promise<OperationResult> {
-  // Domain logic uses context explicitly
-}
-```
+Relying on ambient storage like `AsyncLocal` or `ThreadLocal` also introduces non-deterministic execution bugs under high load. When asynchronous tasks hand execution off across thread pool boundaries or run detached background jobs, ambient context can silently drop or cross-contaminate concurrent requests. Passing context explicitly down the call stack makes dependencies visible to compilers and keeps execution paths deterministic.
 
 ---
 
-## Responsibility Matrix: Who Owns What?
+## Who Owns What?
 
 | Boundary | Responsibilities |
 | :--- | :--- |
-| **Service A (Caller)** | • Authenticates user at system edge.<br>• Validates user intent and use-case authorization.<br>• Propagates user/tenant context via an explicit allowlist.<br>• Authenticates itself technically to Service B. |
-| **Service B (Callee)** | • Authenticates Service A.<br>• Validates received context format.<br>• Authorizes the operation against resources B owns.<br>• Logs both technical actor and user initiator in immutable audit trails. |
+| **Service A (Caller)** | • Authenticates user at system edge.<br>• Validates user intent and use-case authorization.<br>• Propagates user/tenant context via an allowlist.<br>• Authenticates itself technically to Service B. |
+| **Service B (Callee)** | • Authenticates Service A.<br>• Validates received context format.<br>• Authorizes the operation against resources B owns.<br>• Logs both technical actor and user initiator. |
 | **Platform / Mesh** | • Service-to-service mTLS or workload identity.<br>• W3C trace propagation and correlation IDs.<br>• Edge gateway stripping of internal context headers.<br>• Middleware for typed context serialization and extraction. |
 
 ---
 
-## Discrete Failure Taxonomy
+## Failure Handling
 
-Service B should distinguish failure modes using stable, machine-readable error codes rather than collapsing all rejections into a generic `403 Forbidden`:
+Service B should distinguish failure reasons using stable, machine-readable error codes:
 
 ```text
-AUTH_SERVICE_UNAUTHENTICATED  ──► Caller service failed transport or token authentication
-AUTH_SERVICE_UNAUTHORIZED     ──► Service A is authenticated, but not permitted to invoke this capability
-AUTH_USER_CONTEXT_MISSING     ──► Required user identity metadata is absent from the request
-AUTH_TENANT_MISMATCH          ──► User does not belong to the target tenant boundary
-AUTH_USER_FORBIDDEN           ──► User is identified, but lacks permission for the requested resource
+AUTH_SERVICE_UNAUTHENTICATED  -> Caller service failed authentication
+AUTH_SERVICE_UNAUTHORIZED     -> Service A not permitted to invoke this capability
+AUTH_USER_CONTEXT_MISSING     -> Required user identity metadata absent
+AUTH_TENANT_MISMATCH          -> User does not belong to specified tenant
+AUTH_USER_FORBIDDEN           -> User lacks permission for resource D
 ```
+
+Avoid collapsing all security failures into a generic `403 Forbidden` without logging the exact failure reason.
 
 Collapsing all security errors into an opaque `403 Forbidden` makes operational debugging miserable. An on-call engineer cannot tell if a spike in 403s is due to an expired service mesh mTLS certificate, an IAM role misconfiguration, or an actual end user attempting an unauthorized action. Granular error codes inside the response body and structured logs make diagnosing production failures straightforward.
 
@@ -294,17 +251,6 @@ Service B decides whether it authorizes:
 Service B logs both identities in its audit trail.
 ```
 
-1. **Propagate identity for context and audit.**
-2. **Authenticate the service independently.**
-3. **Authorize at the service that owns the relevant rule or resource.**
-
----
-
-## Related Documentation
-
-- **[[Service vs User Authorization Models]]**: Choosing between service-level authorization, end-user token pass-through, and RFC 8693 token exchange.
-- **[[User Context in Asynchronous Systems]]**: Managing identity, security claims, and execution boundaries across message brokers, event streams, and workers.
-- **[[Service-to-Service Authentication in Distributed Runtimes]]**: Practical implementation of mTLS, workload identity, and managed service identities.
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Transport patterns, resiliency strategies, and header propagation across HTTP and gRPC boundaries.
-- **[[OpenTelemetry]]**: Best practices for tracing context propagation across microservice architectures.
-- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Embedding standardized context propagation middleware into shared service templates.
+> **Propagate identity for context and audit.**  
+> **Authenticate the service independently.**  
+> **Authorize at the service that owns the relevant rule or resource.**

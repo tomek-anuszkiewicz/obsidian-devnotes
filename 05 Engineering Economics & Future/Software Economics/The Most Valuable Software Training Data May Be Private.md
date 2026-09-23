@@ -12,13 +12,15 @@ aliases:
   - Git History Value for LLM Training
 ---
 
-# The Most Valuable Software Training Data May Be Private
+Large language models learn from available data, but in software engineering there is an important limitation: much of the most valuable knowledge is not public.
 
-Large language models train on available public data, but software engineering exposes a critical blind spot in that strategy: most high-value engineering knowledge is completely private.
+Public repositories contain enormous amounts of code, but code is mostly the **final artifact**.
 
-Public repositories contain massive volumes of source code, but code is almost always just the **final artifact**. It represents the cleaned-up, survivorship-biased end state of an engineering cycle. In public git trees, squashed commits and scrubbed pull requests systematically strip away the exact signal an agent needs to learn causal reasoning: dead-end approaches, design debates, test failures, and emergency rollbacks.
+In public git trees, squashed commits and scrubbed pull requests systematically strip away the exact signal an agent needs to learn causal reasoning: dead-end approaches, design debates, test failures, and emergency rollbacks. The public artifact reflects survivorship bias, while the actual debugging journey stays private.
 
-Inside an engineering organization, the record looks entirely different. A typical software lifecycle looks like this:
+Inside companies, there is a much richer record of how software was actually created.
+
+A typical development history may contain:
 
 ```text
 business requirement
@@ -34,17 +36,17 @@ business requirement
 → final implementation
 ```
 
-This is not merely syntax. It is an end-to-end trace of **how an engineering team reasoned through constraints toward a stable solution**. In an environment where foundation models are commoditizing code generation, [[Competitive Advantage in the Age of Commodity AI|competitive advantage depends on private telemetry and reasoning traces]]. Inside corporate firewalls lies the [[LLM Agents and Institutional Memory|institutional memory]] that public repositories discard. Because [[What Should Organizations Preserve from AI-Assisted Development|organizations must deliberately preserve decision rationales]], these private histories provide the direct, [[Fresh Contact With Reality May Become the Training Bottleneck|fresh contact with reality]] that synthetic training data lacks.
+This is not merely code.
 
----
+It is a record of **how an organization reasoned its way toward a working solution**.
 
 ## The History of Code May Be More Valuable Than the Code
 
-Consider two alternative datasets for training an engineering agent.
+Consider two possible training datasets.
 
-The first dataset contains ten million syntactically correct, isolated methods scraped from public repositories.
+The first contains millions of correct C# methods.
 
-The second dataset contains realistic engineering iterations:
+The second contains examples such as:
 
 ```text
 Problem:
@@ -66,45 +68,77 @@ Final solution:
 The transaction boundary and idempotency model are redesigned.
 ```
 
-The second dataset teaches systems engineering, not just language syntax. It teaches:
+The second dataset teaches much more than syntax.
 
-- Which architectural approaches look viable on paper but fail under load.
-- Which boundary conditions and race conditions engineers routinely miss.
-- Why a staff engineer rejected an initial pull request.
-- Which design assumptions collapsed once exposed to real production traffic.
-- How the codebase evolved to handle changing requirements.
-- What trade-offs between consistency, latency, and complexity were accepted.
+It teaches:
 
-This diagnostic journey is almost entirely absent from public code. When models only train on the final commit, they learn what valid syntax looks like, but remain blind to how systems break and how engineers isolate faults.
+- which approaches looked reasonable but failed;
+    
+- which edge cases were initially missed;
+    
+- why reviewers rejected a design;
+    
+- which assumptions proved wrong in production;
+    
+- how the solution evolved;
+    
+- what trade-offs mattered.
+    
 
----
+This type of information is often absent from public code.
+
+When models only train on final, clean commits, they learn what valid syntax looks like, but remain blind to how systems break under production load and how engineers isolate faults.
 
 ## Software Companies Possess Large Amounts of "Dark Knowledge"
 
-A software organization operating over several years accumulates deep operational telemetry distributed across disconnected systems:
+A typical company may have years of information distributed across:
 
-- Source repositories and granular commit histories
-- Pull request review threads and rejected diffs
-- Issue trackers (Jira, Linear, GitHub Issues)
-- Architectural Decision Records (ADRs) and design proposals
-- Incident management systems, alerts, and post-mortems
-- Engineering chat logs (Slack, Teams)
-- Production APM traces, runtime logs, and monitoring dashboards
-- Customer support escalation tickets
+- source repositories;
+    
+- Git history;
+    
+- pull requests;
+    
+- code-review comments;
+    
+- Jira or other issue trackers;
+    
+- architectural decision records;
+    
+- documentation;
+    
+- Slack or Teams discussions;
+    
+- meeting recordings and transcripts;
+    
+- support tickets;
+    
+- production logs;
+    
+- incident reports;
+    
+- post-mortems;
+    
+- monitoring data.
+    
 
-Individually, these artifacts look like routine operational exhaust. Taken together, they constitute a comprehensive operational history:
+Individually, these artifacts may appear mundane.
 
-> How real software engineering problems were discovered, misunderstood, argued over, implemented, broken in production, and eventually remediated.
+Together, they form a detailed history of:
 
-Foundation model providers cannot crawl this private surface area. As the public web fills with redundant or synthetic content, [[Finding Original Knowledge in an Internet Full of Repetition|finding original engineering truth requires looking behind enterprise firewalls]]. There is an immense dark dataset of operational experience that public foundation models simply cannot see.
+> how real software engineering problems were discovered, misunderstood, discussed, solved, broken, and eventually improved.
 
----
+Most of this information is private.
+
+Foundation-model providers therefore cannot simply crawl it in the way they can crawl public repositories.
+
+There may consequently be an enormous **dark dataset of software engineering experience** that general-purpose models do not have access to.
 
 ## Enterprise Agents May Know More Than Foundation Models
 
-This data asymmetry creates a clear operational divide.
+This creates an interesting separation.
 
-An organization can anchor an agent directly into its internal toolchain:
+A company may connect an AI agent to:
 
 ```text
 foundation model
@@ -122,243 +156,328 @@ production history
 internal tools
 ```
 
-An internal agent wired this way will understand the company's runtime reality far better than the base foundation model ever could:
+The resulting agent may understand the company extremely well.
+
+But that knowledge does not automatically become knowledge of the underlying foundation model.
+
+We may therefore reach a situation where:
 
 ```text
-general foundation model
+general model
     <
 company-specific agent
 ```
 
-The general model knows language syntax, common framework patterns, and public algorithms. The internal agent knows:
+for many practical engineering problems inside that organization.
 
-- Why a specific service cannot use standard connection pooling.
-- The unwritten business rules governing legacy billing integrations.
-- Past operational failures that led to non-obvious guardrails.
-- Regulatory and compliance boundaries unique to that customer base.
-- Latency and memory characteristics of proprietary internal services under peak load.
+The general model understands software engineering broadly.
 
-This local context forms an operational moat that raw scale in base pre-training cannot easily overcome.
+The company agent additionally understands:
 
----
+- historical decisions;
+    
+- business rules;
+    
+- previous failures;
+    
+- organizational constraints;
+    
+- customer-specific requirements;
+    
+- unusual production edge cases.
+    
 
-## Extracting Lessons Without Exposing Proprietary Data
+This private context can become a major source of capability.
 
-Enterprises routinely refuse to let model vendors train on their raw internal data:
+## Raw Corporate Data Does Not Necessarily Need to Be Shared
+
+A company may never agree to provide an AI vendor with:
 
 ```text
-private repositories
-+ customer PII
-+ internal issue trackers
-+ meeting audio/transcripts
-+ production logs
+its repositories
++ customer data
++ internal tickets
++ meetings
++ incident history
 ```
 
-However, high-value engineering signals can be extracted and sanitized without exposing proprietary code or customer information:
+But useful training information might still be extracted without exposing the original material.
+
+For example:
 
 ```text
 private production incident
 ↓
-extract the causal engineering lesson
+extract the engineering lesson
 ↓
-strip proprietary identifiers and business logic
+remove proprietary identifiers
 ↓
-construct an abstracted, synthetic equivalent
+construct a synthetic equivalent
 ↓
-use the generalized trajectory for training
+use the generalized example for training
 ```
 
-Instead of exposing an internal log entry like:
+Instead of exposing:
 
-> `CustomerSettlementService` caused duplicate payments for Client X because the retry loop lacked a distributed lock on the order ID.
+> `CustomerSettlementService` caused duplicate payments for Client X because of retry behavior.
 
-The extracted training instance becomes:
+the resulting training example could become:
 
-> A financial processing workflow uses at-least-once message delivery over a message broker. Downstream retries execute concurrently without an idempotency key or distributed lock. Identify the concurrency hazard, describe the duplicate execution mode, and refactor the transaction boundary.
+> A financial workflow uses at-least-once message delivery. The operation is not idempotent. Identify the failure mode and design a safer architecture.
 
-The proprietary code and customer identifiers are completely removed, but the **underlying engineering failure mode and its resolution remain fully intact**. This abstraction process offers a viable path for unlocking private enterprise experience for model training.
+The private implementation is gone.
 
----
+The **lesson learned from it remains**.
 
-## Agent Trajectories as High-Signal Training Data
+This may become an important mechanism for extracting training value from private enterprise experience.
 
-Autonomous coding agents running in active developer environments generate an operational dataset that is significantly more valuable than static code repositories.
+## Agent Trajectories May Become Especially Valuable
 
-A typical agent loop produces an end-to-end reasoning trace:
+AI coding agents create another type of dataset that could be even more useful than traditional repositories.
+
+A typical agent interaction may produce:
 
 ```text
-task description
+task
 → agent attempt 1
-→ unit test failure / compiler error
-→ agent analysis & correction
+→ test failure
+→ agent correction
 → attempt 2
-→ human review rejection with architectural feedback
+→ human review rejection
+→ explanation
 → attempt 3
-→ integration tests pass
-→ pull request approved and merged
+→ tests pass
+→ human approval
 ```
 
-This trajectory provides dense supervision:
+This is an unusually rich training signal.
 
-- The initial task and ambiguous requirements.
-- The dead ends the model explored first.
-- Objective runtime feedback (compiler errors, failing test assertions, stack traces).
-- Subjective human feedback (idiomatic style, interface ergonomics, security boundaries).
-- The exact diffs applied to recover from intermediate failures.
+It contains:
 
-Static repositories only show the final solution. Agent trajectories capture the **entire corrective loop**. At scale, engineering teams using coding agents every day are running [[Agent Adoption as a Learning Flywheel|a continuous operational flywheel]] that records exactly how models fail and how those failures are corrected.
+- the original task;
+    
+- unsuccessful reasoning paths;
+    
+- objective test results;
+    
+- human feedback;
+    
+- corrections;
+    
+- final success.
+    
 
----
+Traditional repositories mostly preserve the final solution.
 
-## The Engineering Data Flywheel
+Agent systems can preserve the **entire path toward the solution**.
 
-This interaction pattern establishes a self-reinforcing training loop:
+Unlike static code, an agent trajectory captures concrete runtime feedback—compiler errors, failing test assertions, and stack traces—alongside the corrective diffs applied to recover from intermediate failures. This provides dense, step-by-step supervision on fault isolation that static repositories cannot offer.
+
+At sufficient scale, normal software development with agents could automatically generate enormous datasets describing how models fail and how those failures should be corrected.
+
+## AI Usage Could Create a New Data Flywheel
+
+This produces a possible feedback loop:
 
 ```text
-more capable model
+better model
 ↓
-engineers assign more complex, ambiguous tasks
+companies give agents harder tasks
 ↓
-agents hit novel edge cases and failure modes
+agents encounter new failures
 ↓
-automated test suites and human reviewers supply corrections
+tests and humans identify mistakes
 ↓
-detailed recovery trajectories are logged
+agents are corrected
 ↓
-next-generation models train on verified recovery paths
+valuable trajectories are produced
 ↓
-more capable model
+next models learn from those trajectories
+↓
+better model
 ```
 
-This flywheel produces a much richer learning signal than scraping more public code. The core training objective shifts away from simply predicting the next token in clean code:
+This may eventually become more valuable than simply collecting more public code.
 
-> **Old Paradigm:** Here is an isolated block of working code.  
-> **New Paradigm:** Here was the problem, here is the broken attempt, here is the runtime error, here is how the engineer diagnosed it, and here is the patch that held in production.
+The important training material is no longer just:
 
----
+> Here is good code.
 
-## The IP and Ownership Bottleneck
+It becomes:
 
-The primary bottleneck in operationalizing this flywheel is data ownership.
+> Here was the task.  
+> Here is what the model tried.  
+> Here is why it failed.  
+> Here is the correction.  
+> Here is what finally worked.
 
-Enterprises view their internal engineering trajectories as critical intellectual property:
+## But There Is a Fundamental Ownership Problem
 
-- Core business logic and domain rules.
-- Security configurations, boundary surfaces, and vulnerability histories.
-- Proprietary algorithmic implementations.
-- Compliance and confidential customer workflows.
+The organizations generating these trajectories may not want to give them away.
 
-This dynamic creates friction between model providers and enterprise customers. AI vendors need messy, real-world troubleshooting trajectories to push their models past current reasoning plateaus. Enterprises want more capable agents, but will not leak their operational trade secrets or risk training models that competitors can query.
+They may consider them:
 
-The core legal and commercial debate is moving beyond simple code ownership:
+- intellectual property;
+    
+- security-sensitive information;
+    
+- competitive knowledge;
+    
+- customer-confidential information;
+    
+- proprietary business-process knowledge.
+    
 
-> Who owns the multi-step reasoning trajectory generated while an AI agent works on an enterprise's private codebase?
+This creates a tension.
 
----
+AI vendors want high-quality experience data.
 
-## Emerging Data-Sharing Frameworks
+Enterprises want increasingly capable models.
 
-Today's enterprise AI agreements typically promise zero data retention for customer inputs:
+But the data that could improve those models may itself be strategically valuable.
+
+The question becomes not merely:
+
+> Who owns the source code?
+
+but increasingly:
+
+> Who owns the learning trajectory generated while an AI agent worked on the company's problems?
+
+## New Data-Sharing Models May Appear
+
+Today, enterprise AI products often emphasize that company data is not used for general model training by default.
+
+That is attractive because companies want strong isolation.
+
+In the future, however, additional arrangements could emerge.
+
+For example:
 
 ```text
-standard enterprise agreement
-→ zero data retention
-→ private inference endpoints
-→ no general model training
+standard enterprise contract
+→ no training
+
+optional data partnership
+→ selected trajectories
+→ anonymization
+→ abstraction
+→ controlled contribution
+→ financial or product benefit
 ```
 
-While zero-retention contracts address baseline enterprise security concerns, more flexible arrangements are likely to emerge as the need for experience data grows:
+Companies might receive:
+
+- lower inference costs;
+    
+- access to better models;
+    
+- custom fine-tuning;
+    
+- priority capabilities;
+    
+- credits;
+    
+- research partnerships.
+    
+
+In exchange, they might contribute carefully sanitized training examples rather than raw corporate data.
+
+## Organizational Knowledge May Become a Strategic Dataset
+
+This changes the value of documentation.
+
+Historically, documentation was created mainly so that another employee could understand a system later.
+
+In an AI-heavy organization, documentation may also become:
+
+> training and context data for future agents.
+
+The same applies to:
+
+- meeting transcripts;
+    
+- decision logs;
+    
+- incident reports;
+    
+- PR discussions;
+    
+- rejected approaches;
+    
+- business explanations;
+    
+- architectural rationale.
+    
+
+Organizations that systematically preserve this history may accumulate something similar to **AI knowledge capital**.
+
+A company that has ten years of:
 
 ```text
-enterprise isolation (default)
-→ absolute data separation
-
-structured data partnership (opt-in)
-→ selective trajectory extraction
-→ automated PII and proprietary logic sanitization
-→ abstract schema synthesis
-→ verified contribution to model provider
-→ enterprise receives credits, lower inference costs, or custom weights
+requirements
++ decisions
++ implementations
++ incidents
++ corrections
++ agent interactions
++ human evaluations
 ```
 
-Under this structure, companies could trade sanitized failure-and-recovery traces for tangible benefits:
+may possess an extraordinarily valuable dataset for future internal AI systems.
 
-- Lower per-token inference rates.
-- Fine-tuned domain weights optimized for their software stack.
-- Early access to frontier reasoning models.
-- Targeted feature development for internal tooling.
+The companies that recorded their reasoning may therefore have an advantage over companies that preserved only final artifacts.
 
----
+## The Scarcity May Shift From Data to Experience Data
 
-## Organizational Knowledge as Engineering Capital
-
-This dynamic fundamentally alters the purpose of internal engineering documentation.
-
-Historically, teams wrote documentation, post-mortems, and pull request descriptions solely so another engineer could onboard or troubleshoot an outage months later. In practice, these wikis frequently rotted because maintenance costs outweighed immediate returns.
-
-In an agent-driven development environment, internal technical artifacts serve as **direct training and retrieval context for internal models**. This applies directly to:
-
-- Architectural Decision Records (ADRs) explaining discarded designs.
-- Pull request review discussions detailing why an implementation was rejected.
-- Incident post-mortems detailing edge-case production failures.
-- Runbooks, playbooks, and root-cause analyses.
-- Slack/Teams discussions analyzing production anomalies.
-
-An enterprise with a clean, searchable, ten-year archive of design rationale, incident resolutions, and agent-human interaction loops possesses proprietary engineering capital that cannot be matched by an external competitor using generic models. Teams that document their reasoning accumulate a lasting architectural advantage over teams that only preserve their final commits.
-
----
-
-## The Shift From Raw Data to Experience Data
-
-The initial phase of large language model development scaled via brute force:
+The early model-training paradigm was largely:
 
 ```text
-crawl public web and open repositories
-→ ingest raw tokens
-→ train larger dense transformer
+crawl the internet
+→ obtain more text and code
+→ train a larger model
 ```
 
-The public internet is saturated with final outputs, boilerplate, and duplicate code samples. Scraping another ten million public repositories yields diminishing returns because those repositories do not show the diagnostic reasoning required to solve hard engineering problems.
+But the internet contains disproportionately large amounts of final output.
 
-The next scaling vector is access to **operational experience data**:
+The next major bottleneck may be access to something different:
 
-> Detailed, step-by-step records of how complex, real-world systems were designed, tested, broken under real traffic, diagnosed, and repaired.
+> high-quality records of how difficult real-world tasks were solved.
 
-In software engineering, this experience is generated every day inside private enterprise environments. It lives in CI/CD pipelines, terminal sessions, code reviews, and production incident channels. Almost all of it remains behind corporate firewalls.
+This includes mistakes, feedback, hidden constraints, failed attempts, and long-term consequences.
 
----
+In software engineering, corporations generate this type of information continuously.
+
+Most of it remains private.
 
 ## Mental Model
 
-The evolution of training signals in software engineering breaks down across four tiers:
+The evolution may look roughly like this:
 
 ```text
 Public Internet
     ↓
-models learn natural language syntax and surface-level code structure
+models learn what software looks like
 
-Public Repositories
+Public repositories
     ↓
-models learn how standard algorithms and libraries are assembled
+models learn how software is implemented
 
-Enterprise Context
+Enterprise context
     ↓
-agents learn how a specific organization, architecture, and toolchain operate
+agents learn how a particular organization works
 
-Agent Trajectories & Telemetry
+Agent trajectories
     ↓
-models learn how real engineering failures are diagnosed, reasoned through, and resolved
+models could learn how difficult engineering problems are actually solved
 ```
 
-The final tier carries the highest engineering value, and it is the hardest to access. The primary ceiling on software engineering models is not a lack of public tokens—it is **a lack of access to the private operational experience that records how production systems actually get built, broken, and fixed**.
+The final step may be the most valuable one.
 
----
+And it is also the step where access to data becomes the hardest.
 
-## Related Concepts
+The future limitation of LLM development may therefore not be a simple lack of data.
 
-- **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: Why private empirical engineering logs outvalue degraded, synthetic public web content.
-- **[[Competitive Advantage in the Age of Commodity AI]]**: How proprietary corporate code repositories and execution traces form defensible competitive moats.
-- **[[LLM Agents and Institutional Memory]]**: Capturing internal PR debates, incident post-mortems, and architectural decision records into actionable agent memory.
-- **[[Agent Adoption as a Learning Flywheel]]**: Transforming daily operational engineering traces into proprietary fine-tuning pipelines.
-- **[[Finding Original Knowledge in an Internet Full of Repetition]]**: The retreat of unique, high-signal engineering truth behind enterprise firewalls.
-- **[[What Should Organizations Preserve from AI-Assisted Development]]**: Why design rationale and rejected iterations must be preserved alongside final code.
+It may be:
+
+> **a lack of access to the private experience data that records how organizations actually solve complex problems.**

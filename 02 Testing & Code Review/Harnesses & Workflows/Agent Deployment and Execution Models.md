@@ -13,89 +13,45 @@ aliases:
   - Agent deployment models
   - Local and managed agents
   - Agent hosting
-  - The 3-Plane Agent Architecture
-  - Model vs Harness vs Executor
 ---
 
 # Agent Deployment and Execution Models
 
-> See also: [[Agentic Coding Harness and Controlled Development Workflows]], [[Model Access and Execution Infrastructure]]
+> See also: [[Agentic Coding Harness and Controlled Development Workflows]]
 
-When designing or deploying coding agents, the agent workflow logic and the environment where that logic physically runs are distinct architectural concerns. Conflating them leads to muddled security boundaries, fragile workflows, and operational headaches. 
+## Core idea
 
-A clean architecture separates the system into three distinct planes:
+The **agent workflow** and the **place where the agent runs** are separate architectural concerns.
 
-```text
-1. Model Plane (Inference)
-   Where do the weights live and where does token generation occur?
-   (Provider API, dedicated private cloud GPU, or local/on-prem inference server)
-
-2. Orchestration Plane (Harness & State)
-   Where does the agent loop, state machine, and context management live?
-   (Developer CLI, background daemon, team workflow service, or managed platform)
-
-3. Execution Plane (Runtime Environment)
-   Where do the filesystem, Git operations, shell commands, builds, and tests run?
-   (Developer workstation, ephemeral container sandbox, isolated CI runner, or cloud VM)
-```
-
-These three planes do not need to run on the same machine or inside the same network boundary. 
-
-For instance, an agent might run inference against an external provider API, execute its orchestration loop on a developer's laptop, but dispatch all builds, tests, and bash commands to an isolated cloud sandbox. Alternatively, an event-driven cloud orchestrator might control an executor daemon running inside a secured on-premises network.
-
-Understanding how to decouple and combine these planes determines how well your agents scale, how securely they access internal systems, and how strictly they honor data sovereignty policies.
-
----
-
-## Architectural Planes and Topologies
-
-Decoupling reasoning from physical execution yields several standard operational configurations:
+A useful decomposition is:
 
 ```text
-Configuration A: Local Interactive (Inner Loop)
-[ Laptop: Harness + Git + Tools + Compiler ] ──► HTTPS ──► [ Model Provider API ]
+1. Model
+   Where does LLM inference happen?
 
-Configuration B: Team Managed Service (Unattended / CI)
-[ Event / Webhook ] ──► [ Cloud Orchestrator ] ──► [ Ephemeral Container Sandbox ]
-                               │                               │
-                               ▼                               ▼
-                     [ Provider Model API ]         [ Private Git Repository ]
+2. Orchestrator / harness
+   Where does the agent loop, workflow and state machine run?
 
-Configuration C: Air-Gapped / High-Sovereignty
-[ Private VPC: Team Orchestrator ] ──► [ Internal Execution Worker ] ──► [ On-Prem Inference Server ]
-
-Configuration D: Hybrid Runner
-[ Cloud Orchestrator ] ──► Secure Tunnel ──► [ On-Prem Runner Daemon ] ──► [ Internal Builds / Repos ]
-          │
-          ▼
-[ Provider Model API ]
+3. Executor
+   Where do files, Git, shell commands, builds and tests actually run?
 ```
 
-The four primary deployment models across these topologies are:
+These three components do not have to run in the same place.
 
-1. **Local agents**
-2. **Managed remote agents**
-3. **Self-hosted enterprise agents**
-4. **Hybrid agents**
+For example, a model may run in a provider cloud while the harness and tool execution run on a developer workstation. A cloud orchestrator may also control a self-hosted executor inside a private network.
 
----
+The main deployment models are:
 
-## Comparative Matrix: Deployment Models
+1. local agents;
+2. managed remote agents;
+3. self-hosted agents;
+4. hybrid agents.
 
-| Dimension | Local Agent | Managed Remote Agent | Self-Hosted Agent | Hybrid Agent |
-| :--- | :--- | :--- | :--- | :--- |
-| **Primary Use Case** | Interactive coding, inner-loop debugging | Unattended tasks, overnight PRs, scheduled runs | Internal VPC codebases, strict compliance | Cloud orchestration controlling private runners |
-| **Workstation Dependency** | High (machine must stay online and awake) | None (runs asynchronously in cloud) | None (runs in private cluster/compute) | None (executes on internal worker pool) |
-| **Setup Overhead** | Low (CLI or IDE extension install) | Minimal (SaaS platform onboarding) | High (Kubernetes, runners, monitoring, IAM) | Moderate (lightweight runner daemon deployment) |
-| **Network Locality** | Developer workstation LAN | Cloud vendor network | Corporate intranet / private VPC mesh | Split perimeter (inbound control plane, local egress) |
-| **Trust Boundary** | Local machine | Vendor managed infrastructure | Enterprise perimeter | Shared / brokered trust boundary |
-| **Resource Limits** | Workstation CPU/RAM/Battery | Elastic cloud instances | Cluster capacity limits | Internal worker pool capacity |
+## Local agents
 
----
+A local coding agent runs its harness or execution loop on the developer's machine.
 
-## Local Agents
-
-A local coding agent runs its orchestration loop and tool execution directly on the developer's workstation. CLI utilities and IDE extensions that manipulate local checkouts operate on this model.
+Typical examples are CLI or IDE coding agents that operate directly on a local checkout.
 
 ```text
 Developer workstation
@@ -112,32 +68,36 @@ Developer workstation
           remote LLM API
 ```
 
-Model inference typically happens remotely over an HTTPS API, but all file reads, file edits, shell commands, builds, and test runs execute against the developer's local filesystem.
+The LLM inference may still happen remotely, but file access, shell commands, builds and tests are performed locally.
 
 ### Advantages
 
-- **Zero context friction**: The agent immediately sees uncommitted changes, local branches, and developer-specific environment overrides.
-- **Interactive debugging**: The developer can observe the agent's work in real time, interrupt bad execution paths, and inspect diffs inside familiar IDE tooling.
-- **Low infrastructure overhead**: No cloud runners, Kubernetes clusters, or isolated sandboxes to provision or manage.
-- **Familiar environment**: The agent runs using the exact compilers, runtimes, and local credentials already configured on the machine.
+- direct access to the developer's checkout;
+- simple interactive debugging;
+- low setup cost;
+- easy experimentation;
+- the agent sees the same environment as the developer;
+- useful for pair-programming-style work.
 
 ### Limitations
 
-The agent's lifecycle is bound to the physical machine. If the laptop goes to sleep, loses Wi-Fi, or runs out of memory during a heavy compilation step, the execution loop halts.
+The agent is normally tied to that workstation.
 
-Local agents are ideal for:
-- Interactive pair programming and inner-loop feature work
-- Exploratory refactoring and ad-hoc debugging
-- Small, well-scoped tasks with immediate human oversight
-- Developer-specific tooling and experiment workflows
+If the machine is turned off or disconnected, the local execution loop stops unless some separate remote service keeps it alive.
 
----
+This makes local agents particularly suitable for:
 
-## Managed Remote Agents
+- interactive coding;
+- exploratory work;
+- debugging;
+- small tasks;
+- developer-specific workflows.
 
-A managed remote agent runs both its orchestration loop and its execution environment on managed cloud infrastructure provided by a platform vendor.
+## Managed remote agents
 
-Instead of binding to a developer's laptop, the agent receives explicit, scoped credentials to pull repositories, consult documentation, run tools, and interact with APIs.
+A managed agent runs its agent loop and usually its execution environment in cloud infrastructure provided by a vendor.
+
+Instead of depending on a developer workstation, the agent receives controlled access to repositories, documentation, tools, APIs and credentials.
 
 ```text
 Git repositories ─────┐
@@ -153,27 +113,34 @@ Internal APIs / MCP ──┤
               build / test / Git
 ```
 
-Because the execution does not depend on a developer workstation remaining online, managed sessions handle long-running, asynchronous, and scheduled workflows that would otherwise tie up a local machine:
+The developer who starts the task does not have to keep a workstation running.
 
-- Overnight refactoring and broad codebase upgrades (such as migrating dependency versions)
-- Asynchronous task dispatch (assigning a task and checking back hours later)
-- Scheduled repository maintenance and security patch application
-- CI-triggered failure triage and automated test repair
-- Deep, repository-wide code reviews and architectural audits
+Managed sessions can therefore support:
 
----
+- long-running tasks;
+- asynchronous work;
+- overnight execution;
+- scheduled maintenance;
+- CI-triggered work;
+- webhook-triggered work;
+- repository-wide analysis;
+- pull-request review.
 
-## Why Managed Agents Scale Across Teams
+## Why managed agents are attractive for teams
 
-For an individual engineer, a local agent CLI is usually the path of least resistance. But across an engineering organization, running uncoordinated local agents creates fragmentation:
+For an individual developer, a local agent is often the simplest choice.
+
+For a team, a remote or managed agent can become **shared development infrastructure**.
+
+Instead of:
 
 ```text
-Developer A → local agent A (custom prompt, local tools, unverified model)
-Developer B → local agent B (different tool versions, unvetted scripts)
-Developer C → local agent C (personal API key, missing corporate linting rules)
+Developer A → local agent A
+Developer B → local agent B
+Developer C → local agent C
 ```
 
-Shifting to a managed agent turns individual tooling into **shared development infrastructure**:
+the organization can provide:
 
 ```text
                Shared Agent Platform
@@ -182,22 +149,28 @@ Shifting to a managed agent turns individual tooling into **shared development i
           Developer A Developer B Developer C
 ```
 
-A shared platform enforces consistency across the engineering org:
+The shared platform can enforce the same:
 
-- **Repository instructions**: Consistent system prompts, architecture guidelines, and coding standards.
-- **Verified toolsets**: Standardized linters, compilers, testing suites, and MCP servers.
-- **Centralized model routing**: Directing requests to approved models and enterprise-contracted endpoints.
-- **Guardrails and policy**: Enforcing read-only access on critical branches, blocking forbidden terminal commands, and controlling egress traffic.
-- **Unified telemetry**: Tracking token usage, cost attribution, tool failure rates, and execution traces.
-- **Credential management**: Using scoped, short-lived tokens instead of storing production or repository secrets on personal laptops.
+- repository instructions;
+- tools;
+- model selection;
+- permissions;
+- architecture rules;
+- workflows;
+- verification commands;
+- tracing;
+- cost policies;
+- credentials.
 
-Managed agents operate more like continuous integration (CI) infrastructure than desktop productivity apps.
+This reduces the risk that every developer maintains a slightly different local setup.
 
----
+A managed agent can therefore behave more like CI infrastructure than like an IDE extension.
 
-## Event-Driven and Unattended Workflows
+## Event-driven and unattended work
 
-Because remote agents run on servers rather than laptops, they can respond directly to infrastructure events without human initiation:
+A remote agent can be started manually, but it can also be invoked by infrastructure events.
+
+For example:
 
 ```text
 Jira issue becomes "Ready"
@@ -217,88 +190,121 @@ Jira issue becomes "Ready"
     implement on branch
           |
           v
-      run verification (build / test / lint)
+      run verification
           |
           v
        create PR
 ```
 
-Common trigger mechanisms include:
+Possible triggers include:
 
-- **Git webhooks**: Opening an issue, pushing to a branch, or requesting a review.
-- **CI failures**: Automatically spinning up an agent to analyze a failed test run, fix the regression on a branch, and push a patch.
-- **Issue tracker events**: Moving a ticket to "Ready for Dev" in Jira or Linear.
-- **Scheduled cron jobs**: Nightly dependency updates, dead code elimination, or documentation synchronization.
-- **Message queues**: Processing task queues from Slack bots or developer portals.
+```text
+GitHub / GitLab webhook
+CI event
+scheduled job
+issue tracker event
+manual API request
+message queue event
+```
 
-Critical checkpoints—such as merging to the main branch or releasing to production—remain guarded by standard branch protection rules, mandatory CI passes, and human code reviews.
+The merge or production deployment can still remain protected by normal CI, branch protection and human approval.
 
----
+## Managed agent platforms
 
-## Managed Agent Platforms
-
-Vendors offer different balances between turnkey operational convenience and architectural control.
+Several vendors provide managed infrastructure for running agents remotely.
 
 ### Anthropic Claude Managed Agents
 
-Claude Managed Agents bundle an optimized, Anthropic-managed harness together with managed execution infrastructure.
+Claude Managed Agents provide a pre-built Claude agent harness together with managed execution infrastructure.
 
-Configuration centers on declarative primitives:
-- Model selection (e.g., Sonnet, Haiku)
-- System instructions and skill libraries
-- Tool definitions and Model Context Protocol (MCP) servers
-- Multi-agent coordination structures
+An agent configuration can include concepts such as:
 
-The engineering team configures the agent rather than building the control loop from scratch. Sessions run within isolated environments managed by the provider, or against dedicated customer-managed execution workers. 
+- model;
+- system prompt;
+- tools;
+- MCP servers;
+- skills;
+- multi-agent configuration.
 
-This model fits teams that want an out-of-the-box runtime with minimal plumbing, enterprise-grade context management, and zero orchestration code to maintain.
+The important characteristic is that the organization configures the Anthropic-managed harness rather than implementing the complete agent loop itself.
+
+A managed session can operate in a vendor-managed execution environment or, depending on the setup, use execution infrastructure controlled by the organization.
+
+This model is attractive when a team wants:
+
+- the Claude agent runtime;
+- long-running sessions;
+- remote execution;
+- shared configuration;
+- managed lifecycle;
+- minimal custom orchestration code.
 
 ### Microsoft Foundry Hosted Agents
 
-Microsoft Foundry Hosted Agents focus on hosting custom agent applications on managed infrastructure.
+Microsoft Foundry Hosted Agents support hosting an agent application in Microsoft-managed infrastructure.
 
-Instead of locking you into a proprietary harness format, this approach lets you write the agent logic directly in code (using .NET, Python, or TypeScript) while the cloud platform handles operational concerns:
-- Compute orchestration and horizontal autoscaling
-- Managed identity (Azure Entra ID) and secret injection
-- Persistent session storage and execution checkpoints
-- OpenTelemetry instrumentation and audit logging
-- Container deployment pipelines
+This model is particularly interesting when the development team wants to own more of the agent implementation.
 
-For a .NET engineering team, the workflow mirrors standard microservice delivery:
+A team can write the agent or workflow in code and let the platform provide infrastructure concerns such as:
+
+- compute;
+- scaling;
+- identity;
+- session state;
+- telemetry;
+- deployment lifecycle.
+
+For a .NET team, the development path can be close to:
 
 ```text
-dotnet run (local testing)
+dotnet run
     |
     v
-local agent workflow validation
+local agent/workflow
     |
     v
-container image build
+container or source deployment
     |
     v
-deploy to Foundry Hosted Agent runtime
+Foundry Hosted Agent
 ```
 
-The distinction comes down to control:
+The important distinction is:
 
-- **Managed harness**: Configure a vendor-provided agent loop and execution environment.
-- **Hosted custom agent**: Write your own orchestration code and let a platform manage the servers, scaling, and state persistence.
+```text
+Managed harness
+    = configure a vendor-provided agent loop
 
-### Choosing Across Provider Ecosystems
+Hosted custom agent
+    = write your own agent logic and let a platform host it
+```
 
-Similar hosting patterns exist across AWS (Bedrock Agents), Google Cloud (Vertex AI Agent Builder), and specialized platforms like Modal or Replit. The fundamental decision is always the same:
+### Other provider ecosystems
 
-1. Use a vendor-managed agent runtime for fast time-to-market.
-2. Deploy a custom agent container onto managed application compute (e.g., Azure Container Apps, AWS ECS, Google Cloud Run).
-3. Self-host the entire orchestration and execution stack on private infrastructure.
+Similar patterns also exist across other cloud and agent ecosystems.
 
-Keep your agent deployment model decoupled from your model provider choice whenever possible. Tying your orchestration engine strictly to a single model vendor creates painful migration friction as model price-performance characteristics shift.
+The exact APIs differ, but the architectural choices are usually the same:
 
----
+- use a provider-managed agent runtime;
+- run a custom agent on managed compute;
+- self-host the entire agent stack.
 
-## Writing the Agent Loop Yourself
+The deployment model should be selected independently from the model provider whenever possible.
 
-You do not need a heavy vendor harness or framework to build a production agent. At its foundation, an agent loop is an ordinary while-loop paired with tool dispatch:
+Decoupling the orchestration engine from specific model providers avoids architectural lock-in. When frontier models shift in pricing, context windows, or reasoning capabilities, a provider-agnostic harness allows swapping models without redesigning tool contracts, persistent state machines, or CI integrations.
+
+## Writing the agent loop yourself
+
+Using a ready-made agent harness is not mandatory.
+
+The agent loop can be implemented directly in an ordinary programming language such as:
+
+- Python;
+- C#;
+- TypeScript;
+- Go.
+
+At its simplest:
 
 ```python
 while not state.finished:
@@ -309,371 +315,489 @@ while not state.finished:
 
     if response.requests_tool:
         result = execute_tool(response.tool_call)
-        state.messages.append({
-            "role": "tool",
-            "tool_call_id": response.tool_call.id,
-            "content": result
-        })
+        state.messages.append(result)
     else:
         state.finished = True
 ```
 
-In a production harness, that basic loop expands with essential operational controls:
-
-- **State machine transitions**: Restricting which tools can be called based on the current phase of execution.
-- **Directed Acyclic Graph (DAG) execution**: Orchestrating parallel planning, execution, and review steps.
-- **Budgets and circuit breakers**: Setting hard caps on total tokens, wall-clock runtime, and API expenditure per task.
-- **Human approval gates**: Pausing execution for explicit user confirmation before destructive commands (e.g., git force pushes, database migrations).
-- **Tool permission boundaries**: Enforcing read-only vs. read-write access dynamically.
-- **Context window management**: Compacting history, truncating massive tool outputs, and summarizing older messages to prevent out-of-context errors.
-- **Checkpoints and durable state**: Persisting state after every step so an execution can pause, crash, resume, or rewind safely.
-- **Dynamic model routing**: Using cheap, fast models for planning or syntax checks, and reasoning-heavy models for code generation and review.
-
-Building your own harness gives your team total ownership over the workflow, treating underlying LLMs as interchangeable inference engines:
+A production harness can then add:
 
 ```text
-Custom Python/.NET Harness
-          |
-          +--> Claude (Sonnet / Opus)
-          |
-          +--> OpenAI (GPT-4o / o-series)
-          |
-          +--> Google Gemini
-          |
-          +--> Self-hosted open weights (vLLM / Ollama)
+state machine
+DAG execution
+parallel branches
+retries
+timeouts
+budgets
+human approval gates
+tool permissions
+context management
+checkpoints
+persistent state
+tracing
+model routing
+subagents
 ```
 
----
-
-## Deterministic Orchestration with Probabilistic Workers
-
-A critical architectural rule for reliable agent systems:
-
-> **Keep the workflow deterministic in code, and use LLM inference only inside the specific steps that require judgment.**
-
-Do not rely entirely on natural-language system prompts to guide a complex lifecycle (e.g., "First create a plan, then write the code, then run tests, and only open a PR if the tests pass"). A model can hallucinate past an instruction, misunderstand state, or prematurely mark a task complete.
-
-Instead, enforce lifecycle rules in code via a deterministic state machine:
+This gives the organization control over the workflow while treating models as replaceable execution components.
 
 ```text
-Task Triggered
-      |
-      v
-[ Plan Agent ] ── (Generates technical spec)
-      |
-      v
-[ Human Approval Gate ] ── (Rejection routes back to Plan Agent)
-      |
-      v
-[ Implementation Agent ] ── (Writes code to branch)
-      |
-      v
-[ Deterministic Step: dotnet build ]
-      |
-      +── Fail ──► [ Repair Agent ] ──► (Retries build, capped at 3 loops)
-      |                    ▲
-      v Pass               │
-[ Deterministic Step: dotnet test ]
-      |                    │
-      +── Fail ────────────┘
-      |
-      v Pass
-[ Review Agent ] ── (Validates architecture and code style)
-      |
-      v
-[ Draft PR Created ]
+Custom Python/.NET harness
+          |
+          +--> Claude
+          |
+          +--> OpenAI model
+          |
+          +--> Gemini
+          |
+          +--> local model
 ```
 
-The transitions, retry budgets, compilation steps, and approval requirements are strictly enforced by the software runtime. The LLMs act as probabilistic workers inside bounded, verifiable boxes. 
+## Deterministic orchestration with probabilistic workers
 
-A state machine makes illegal transitions structurally impossible. If `dotnet test` fails, the system cannot open a pull request, no matter what the model claims in its text generation.
+A useful design principle is:
 
----
+> **Keep the workflow deterministic where possible and use LLM inference inside the steps that require judgment.**
 
-## Orchestration Frameworks
+For example:
 
-A custom agent loop does not require a third-party framework, but as workflows gain branching logic and persistence needs, choosing the right tool matters:
+```text
+Task
+ |
+ v
+Plan Agent
+ |
+ v
+Human Approval
+ |
+ v
+Implementation Agent
+ |
+ v
+dotnet build
+ |
+ v
+dotnet test
+ |
+ +-------------------+
+ |                   |
+pass                fail
+ |                   |
+ v                   v
+Review Agent      Repair Agent
+ |                   |
+ +---------<---------+
+ |
+ v
+Draft PR
+```
 
-- **Plain application code**: Ideal for simple, linear tool-calling workflows. Easy to write, profile, and debug with standard tools.
-- **LangGraph**: Useful for complex graph topologies, cyclic loops, and stateful multi-agent workflows in Python or TypeScript.
-- **Temporal / Azure Durable Functions**: Best-in-class choices when workflows require durability, multi-day pauses for human approval, reliable timers, and resilient retry logic across server restarts.
-- **Message queues (RabbitMQ, SQS, Kafka)**: Ideal for decoupling agent dispatch from worker execution pools.
+The transitions, retry limits and approval requirements can be enforced by code.
 
-The architectural decision is not which library to import, but where you draw the line between:
-1. Deterministic control logic (state transitions, test validation, branch operations)
-2. Probabilistic model decisions (analyzing errors, writing implementations)
-3. Sandboxed tool execution (running bash, compiling code)
-4. Durable persistence (saving execution state across failures)
+The individual agents remain probabilistic.
 
-For modest systems, fifty lines of clear state-machine logic in Python, Go, or C# are far easier to maintain and debug than a sprawling framework abstraction.
+This is stronger than encoding the entire process only as natural-language instructions such as:
 
----
+```text
+plan first;
+then implement;
+then test;
+then review.
+```
 
-## Hosting Options for Custom Agents
+Text instructions guide model behavior. A state machine can make invalid transitions impossible.
 
-A custom agent harness is simply a service, container, or background worker. It can be hosted on standard enterprise infrastructure:
+Hard verification gates protect the codebase from model hallucinations. If a compilation or test step fails, code logic routes the diagnostic output directly into a repair loop or halts for human review. Enforcing validation invariants in software ensures that an optimistic model response cannot prematurely open a pull request or merge unverified code.
+
+## Frameworks for custom orchestration
+
+A custom agent loop does not require a graph framework, but frameworks can help once the workflow becomes complex.
+
+Possible approaches include:
+
+- a simple custom state machine;
+- LangGraph;
+- Microsoft Agent Framework workflows;
+- Temporal;
+- Durable Functions;
+- queue-based worker orchestration;
+- a custom DAG engine.
+
+The important decision is not which framework is used, but which parts are:
+
+- deterministic workflow logic;
+- probabilistic model decisions;
+- external tool execution;
+- persistent state;
+- human approval.
+
+For a small system, plain application code may be easier to understand than a large orchestration framework.
+
+## Hosting a custom agent
+
+A custom agent application is ultimately a service, worker or container and can be hosted using ordinary cloud infrastructure.
+
+Possible environments include:
 
 ### Azure
-- **Azure Container Apps (ACA)**: Excellent for microservices, background event-driven workers, and scaling to zero when idle.
-- **Azure Kubernetes Service (AKS)**: Best for complex, high-density runner setups with customized network policies and hardware requirements.
-- **Azure Functions / Durable Functions**: Serverless event routing and durable, long-running workflow orchestration.
-- **Microsoft Foundry Hosted Agents**: Managed lifecycle for custom agent code within the Azure ecosystem.
+
+- Azure Container Apps;
+- Azure Kubernetes Service;
+- Azure Functions;
+- Durable Functions;
+- virtual machines;
+- Microsoft Foundry Hosted Agents.
 
 ### AWS
-- **AWS ECS (Fargate / EC2)**: Straightforward, highly reliable container hosting for harness services and isolated execution sandboxes.
-- **AWS EKS**: Enterprise-scale container deployment with deep network and security controls.
-- **AWS Lambda**: Cost-effective for lightweight, stateless webhook receivers and short-lived agent tasks (subject to the 15-minute execution limit).
+
+- ECS;
+- EKS;
+- Lambda;
+- EC2.
 
 ### Google Cloud
-- **Cloud Run**: Fast-scaling container platform suitable for both synchronous webhooks and asynchronous background jobs.
-- **GKE**: Flexible Kubernetes environment for complex runner orchestration and custom node pools.
 
-### Infrastructure Selection Criteria
+- Cloud Run;
+- GKE;
+- Compute Engine.
 
-Select your hosting target based on runtime needs:
-- **Execution duration**: Does the agent finish in 30 seconds, or does it run full test suites for 45 minutes?
-- **Filesystem persistence**: Does the harness need ephemeral throwaway disks, or fast, warm checkouts on persistent SSDs?
-- **Network topology**: Does the agent need direct access to private corporate VPCs, internal package registries, or internal databases?
-- **Sandbox requirements**: Can tools run directly in the worker container, or must they execute in an isolated microVM to prevent unsafe code execution?
+### General-purpose infrastructure
 
----
+- Kubernetes;
+- Docker hosts;
+- virtual machines;
+- serverless container platforms;
+- internal company infrastructure.
 
-## Self-Hosted Agents and Corporate Trust Boundaries
+The appropriate host depends on whether the agent needs:
 
-A self-hosted agent runs its orchestration harness and execution workers entirely inside infrastructure owned and operated by your organization:
+- long-running processes;
+- persistent filesystem state;
+- queues;
+- scheduling;
+- webhook endpoints;
+- isolated sandboxes;
+- private network access;
+- access to internal repositories;
+- access to internal package feeds;
+- databases or internal APIs.
+
+Execution duration and filesystem dynamics heavily influence hosting choices. Serverless runtimes like AWS Lambda work well for lightweight webhook dispatch, but their strict execution timeouts (such as Lambda's 15-minute ceiling) make them unsuitable for heavy compilation passes or multi-turn test suites. Similarly, agents performing large codebase refactorings benefit from container hosts with fast, warm disk checkouts rather than cold-starting full repository clones inside ephemeral functions.
+
+## Self-hosted agents
+
+A self-hosted agent runs the agent loop in infrastructure controlled by the organization.
 
 ```text
-Corporate VPC / On-Premises
+Company infrastructure
         |
-        ├── orchestrator service
-        ├── worker runner pool
-        ├── internal repository access
-        ├── private artifact feeds
-        └── build & test sandboxes
+        ├── orchestrator
+        ├── agent workers
+        ├── repository access
+        ├── internal services
+        └── build environment
                  |
                  v
              LLM API
 ```
 
-This model gives you total governance over the execution environment:
-- **Private networking**: Direct access to internal source control, documentation wikis, and staging databases without exposing them to the internet.
-- **Secret protection**: Secrets and credentials stay within internal vault solutions (e.g., HashiCorp Vault, AWS Secrets Manager).
-- **Environment parity**: Workers use the exact container images, toolchains, and operating systems used by internal development and CI teams.
-- **Auditability**: Complete logging, telemetry, and network capture of all commands the agent attempts to run.
+This provides strong control over the agent execution environment, including:
 
-### The Inference Boundary Trap
+- networking;
+- secrets;
+- filesystem access;
+- runtime versions;
+- build infrastructure;
+- observability;
+- data retention for the agent runtime.
 
-Self-hosting the agent harness and execution workers **does not** mean the overall system is private. 
+It also means the organization must operate more infrastructure.
 
-If your self-hosted agent calls an external LLM API (such as OpenAI, Anthropic, or Google), **your source code, test failures, schema definitions, and internal context still cross your network boundary**. 
+This model can be attractive when the agent needs access to private systems that should not be exposed to an external execution environment.
 
-The location of the agent harness determines where tools run. The location of the model inference determines where your data goes.
+However, **self-hosting the agent does not imply self-hosting the model**.
 
----
+If the agent still calls an external LLM API, then prompts, selected repository content, diffs, compiler output, test failures and other context sent to the model cross the organization's trust boundary.
 
-## Data Sovereignty and Inference Boundaries
+## Data sovereignty and fully private agents
 
-For organizations handling proprietary source code, regulated customer data (HIPAA, PCI-DSS, GDPR), or classified systems, the model plane must be evaluated carefully.
+For organizations with strict confidentiality requirements, the privacy boundary must be analyzed separately from the agent deployment boundary.
 
-> **The physical location of the model inference dictates your data trust boundary.**
+A useful rule is:
 
-There are three distinct operating levels for data sovereignty:
+> **The location of the agent does not determine the privacy boundary. The location of model inference does.**
 
-```text
-Level 1: Self-Hosted Agent + External Model API
-[ Enterprise Network: Harness + Repo + Sandboxes ] ──► (Public Internet) ──► [ Model Provider API ]
-* Code stays local until read. Prompts, diffs, and context files exit your perimeter.
+There are several important deployment levels.
 
-Level 2: Self-Hosted Stack on Dedicated Private Cloud Compute
-[ Enterprise Network: Harness + Repo ] ──► Private Link / VNet ──► [ Dedicated GPU Instances (vLLM) ]
-* Zero multi-tenant sharing. Traffic traverses private cloud backbones. Hardware is rented from cloud providers.
-
-Level 3: Fully Air-Gapped / On-Premises Stack
-[ Enterprise Datacenter: Harness + Repo + Execution Sandboxes + Bare-Metal GPU Nodes ]
-* Fully isolated. No outbound internet connectivity. Complete hardware and weight ownership.
-```
-
-### Level 1: Self-Hosted Agent with External Inference APIs
-The agent runs in your VPC, but sends context out to commercial inference APIs over TLS. 
-
-This model is acceptable for many enterprises if they have enterprise zero-data-retention (ZDR) agreements and HIPAA/SOC2 compliance guarantees from the model vendor. However, it violates policies that strictly forbid source code from leaving internal corporate boundaries.
-
-### Level 2: Self-Hosted Stack on Rented Private Cloud GPUs
-You do not need to buy physical hardware to achieve inference privacy. You can rent dedicated GPU compute (e.g., Azure ND-series, AWS `p4`/`g5` instances, or specialized providers like CoreWeave and Lambda Labs) and deploy an open-weights inference engine (such as vLLM or TensorRT-LLM).
-
-Key technical controls:
-- Inference instances run in your own isolated VPC/VNet.
-- Private endpoints (AWS PrivateLink, Azure Private Link) eliminate public internet transit.
-- Egress gateways drop all outbound traffic to the public internet.
-- Disk encryption uses customer-managed keys (CMK).
-- Model weights (e.g., Llama 3, Qwen 2.5, DeepSeek-Coder) are downloaded once, cryptographically verified, and hosted in private object storage.
-
-This architecture delivers strong data isolation without the massive capital expense and multi-month lead times of physical hardware procurement.
-
-### Level 3: Fully Air-Gapped / On-Premises Deployment
-The entire stack—repositories, orchestration, sandboxed execution, and bare-metal GPU clusters—runs inside physical enterprise datacenters with no external internet connection.
-
-This pattern is required for defense, intelligence, critical national infrastructure, and high-security financial systems.
-
-The trade-offs are significant:
-- **Capital expense and lead time**: Procuring high-memory GPU servers (NVIDIA H100/H200, B200, or high-capacity unified memory workstations) is expensive and slow.
-- **Operational maintenance**: Your infrastructure team owns GPU driver stability, CUDA patching, vLLM optimizations, model serving high availability, and capacity scaling.
-- **Capability lag**: Top-tier proprietary models (such as Claude 3.7 Sonnet or OpenAI o3) are not available for on-prem weight deployment. While open models have closed the gap significantly for code generation, the most capable reasoning models often remain behind vendor APIs.
+### Self-hosted agent with an external model API
 
 ```text
-Maximum Model Capability / Zero Ops
-        │
-        ▼
-External Vendor APIs (Claude, OpenAI)
-        │
-        │ Increasing operational complexity
-        │ Increasing data sovereignty
-        ▼
-Dedicated Private Cloud GPUs (vLLM in customer VPC)
-        │
-        ▼
-Fully Air-Gapped Physical Hardware
-
-Maximum Data Sovereignty / High Ops
+Company infrastructure
+        |
+        ├── harness
+        ├── executor
+        ├── repository
+        └── internal tools
+                 |
+                 v
+          External LLM API
 ```
 
----
+The repository and execution environment may remain inside the company network, but any context sent to the model leaves that environment.
 
-## Hybrid Architectures
+This can still be acceptable when the organization trusts contractual, technical and retention guarantees offered by the model provider.
 
-In a hybrid architecture, the orchestration plane lives in the cloud, while the execution workers run inside an internal network.
+It is **not** sufficient for a policy that requires source code and prompts to never reach an external model provider.
+
+### Self-hosted stack on rented private GPU infrastructure
+
+An organization does not necessarily have to buy and operate its own physical GPU servers.
+
+It can deploy its own inference stack on rented GPU compute while still avoiding a vendor-hosted LLM API.
 
 ```text
-Cloud Management Plane
-  - Task scheduling
-  - State persistence
-  - Team dashboard
-  - Model API coordination
-         │
-         │ Outbound-only secure tunnel / WebSocket
-         ▼
-Internal Network / VPC
-  - Runner daemon (e.g., GitHub Actions Runner, GitLab Runner pattern)
-  - Pristine Git clone
-  - Internal compilers & build tools
-  - Private database & internal API access
+Company systems
+        |
+        ├── repositories
+        ├── documentation / RAG
+        ├── harness
+        ├── executor
+        └── internal services
+                 |
+                 v
+        Private GPU environment
+                 |
+                 ├── inference server
+                 └── self-hosted model
 ```
 
-This model is familiar to platform engineers: it mirrors how GitHub Actions or GitLab CI operates. A cloud-hosted control plane coordinates tasks, but the actual compilation, testing, and secret evaluation happen on a self-hosted runner daemon behind the company firewall.
+The GPU environment can be implemented using virtual machines, Kubernetes, dedicated hosts or other rented compute.
 
-Benefits of hybrid designs:
-- You avoid maintaining a custom web UI, database, and orchestration server on-premises.
-- The internal runner initiates outbound connections to the control plane, requiring zero open inbound firewall ports.
-- Sensitive source code and build artifacts remain inside the internal network, exposed only to internal toolchains.
+Typical controls can include:
 
----
+- private VPC / VNet networking;
+- no public ingress;
+- restricted or disabled egress;
+- private endpoints;
+- organization-controlled identity and access policies;
+- organization-controlled encryption keys;
+- private model and artifact storage;
+- internal logging and telemetry.
 
-## Coexistence of Local and Managed Agents
+This removes dependence on a model provider's inference API, but the physical infrastructure is still operated by the cloud or hosting provider.
 
-Treating local agents and managed cloud agents as an either/or choice is a false dichotomy. Healthy engineering organizations run both in parallel:
+For many organizations, this is a useful middle ground between SaaS model APIs and owning a GPU datacenter.
+
+In practice, this pattern pairs dedicated cloud compute (such as AWS `g5`/`p4` instances or Azure ND-series) with optimized open-weights inference servers like vLLM or TensorRT-LLM. Connecting the inference cluster to internal networks via private endpoints (AWS PrivateLink or Azure Private Link) eliminates public internet exposure and multi-tenant data sharing without incurring the procurement lead times of physical hardware.
+
+### Fully on-premises or isolated deployment
+
+The strongest sovereignty model is to run the complete stack on infrastructure physically controlled by the organization.
 
 ```text
-Local Agent (The Inner Loop)
-  - Interactive coding and feature prototyping
-  - Fast, conversational debugging
-  - Developer-driven refactoring on a dirty working tree
-  - Instant tactile feedback
-
-Managed Remote Agent (The Outer Loop)
-  - Asynchronous, multi-hour background tasks
-  - Automated PR reviews and linting triage
-  - Large-scale dependency and framework upgrades across 50+ repos
-  - Webhook-triggered CI failure auto-repair
-  - Nightly security and technical debt remediation
+Company datacenter
+        |
+        ├── repositories
+        ├── documentation / RAG
+        ├── harness
+        ├── executor
+        ├── inference server
+        ├── GPU cluster
+        └── model weights
 ```
 
-An engineer can spend their afternoon writing a new microservice alongside an interactive local CLI agent, and before signing off for the day, trigger a managed cloud agent to upgrade API models and fix broken unit tests across three legacy repositories.
+This can be deployed with no dependency on an external inference service and, if required, without Internet access.
 
----
+Such a design is appropriate when the requirement is literally:
 
-## Security, Sandboxing, and Permission Scoping
+> Source code, prompts, retrieved context and model inputs must not leave organization-controlled infrastructure.
 
-Running arbitrary agent-generated code on shared infrastructure requires defense-in-depth isolation:
+The trade-off is significantly higher operational responsibility, including:
+
+- GPU procurement and capacity planning;
+- model serving;
+- model upgrades;
+- scaling;
+- observability;
+- security patching;
+- inference optimization;
+- reliability and redundancy.
+
+### The model becomes part of the infrastructure decision
+
+Strict data-sovereignty requirements can also constrain model selection.
+
+If a model is available only through a vendor API, then an organization that forbids external inference cannot use it for protected workloads.
+
+The organization may instead need a model whose weights can be deployed in its own environment.
+
+This creates an important trade-off:
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        AGENT SECURITY ENCLOSURE                        │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. EPHEMERAL SANDBOXING: MicroVMs or isolated containers instantiated  │
-│    per task and destroyed immediately upon completion.                 │
-│ 2. NETWORK EGRESS FILTERING: Block outbound internet access except to  │
-│    allowlisted package registries, source control, and model APIs.     │
-│ 3. CREDENTIAL ISOLATION: Inject short-lived, scoped tokens (OIDC);     │
-│    never store long-lived production secrets in agent environments.    │
-│ 4. DISK PERSISTENCE ISOLATION: Prevent state contamination across      │
-│    unrelated tasks by mounting pristine git checkouts.                 │
-└────────────────────────────────────────────────────────────────────────┘
+Maximum model choice
+        |
+        v
+External model APIs
+        |
+        | increasing infrastructure control
+        v
+Self-hosted inference on rented GPU compute
+        |
+        v
+Fully on-premises inference
+
+Maximum data sovereignty
 ```
 
-### 1. Ephemeral Sandboxing
-Never execute untrusted agent commands directly on a shared, persistent host. Agents can make mistakes, download broken dependencies, or fall victim to prompt injection attacks embedded in third-party issues or documentation.
-- Use isolated microVMs (e.g., AWS Firecracker, Fly.io machines) or hardened container runtimes (e.g., gVisor, Kata Containers).
-- Treat execution environments as strictly disposable. Destroy the container or microVM immediately after the build, test, or patch completes.
+The cost of strict sovereignty is therefore not only infrastructure cost. It can also reduce access to closed models that are available only as managed services.
 
-### 2. Network Egress Filtering
-Block outbound internet access from the execution environment by default:
-- Allowlist specific source control domains (e.g., `github.com`), internal artifact repositories (e.g., Artifactory, internal NuGet/npm feeds), and inference endpoints.
-- Drop all traffic directed toward cloud metadata services (`169.254.169.254`) to prevent malicious or accidental extraction of instance profile credentials.
+There is also an operational capability trade-off. While open-weights models (such as Llama, Qwen, or specialized coding variants) have narrowed the gap for standard implementation tasks, the most capable reasoning models often remain exclusive to managed cloud APIs. Organizations requiring complete on-premises air-gapping must accept this trade-off, prioritizing total data isolation over frontier reasoning capabilities.
 
-### 3. Credential Scoping and RBAC
-Shared agents must not operate under global administrative privileges. Slice capabilities based on the agent's role in the workflow:
+## Hybrid architecture
 
-- **Planner**: Read-only access to repository code, specs, and issue trackers. No write permissions to files or branches.
-- **Implementer**: Read-write access strictly scoped to an ephemeral feature branch (`agent/issue-1234`). Ability to run builds and test suites. No rights to merge or publish artifacts.
-- **Reviewer**: Read-only access to the diff, repository, and test logs. Permission to post comments and reviews on pull requests.
-- **Release Agent**: Restricted permissions to trigger deployment pipelines, requiring explicit human multi-factor authentication (MFA).
+The model, orchestrator and executor do not need to run together.
 
-Rely on short-lived OpenID Connect (OIDC) federated credentials rather than long-lived API tokens or SSH keys stored on disk.
+For example:
 
-### 4. Disk and State Isolation
-Prevent contamination across tasks:
-- Start every task from a clean, freshly cloned Git worktree.
-- Never let an agent carry modified dependencies, temporary files, or environment overrides across to an unrelated task.
+```text
+Cloud orchestrator
+       |
+       v
+remote agent loop
+       |
+       v
+self-hosted executor
+       |
+       +-- private repository
+       +-- internal build infrastructure
+       +-- private databases
+```
 
----
+Another example:
 
-## Decision Guide: Selecting the Right Architecture
+```text
+Vendor LLM
+    |
+    v
+Company-hosted harness
+    |
+    v
+Company-hosted executor
+```
 
-| Operational Requirement | Recommended Architecture |
-| :--- | :--- |
-| Interactive developer inner loop & pair programming | Local agent integrated with IDE or terminal CLI |
-| Long-running, asynchronous, or overnight refactoring | Managed remote agent or self-hosted cloud worker |
-| Automated PR review and CI failure triage | Managed or self-hosted agent triggered by webhooks |
-| Source code must never leave corporate network | Self-hosted model inference on internal private infrastructure |
-| Control inference without buying and managing physical GPUs | Self-hosted inference (vLLM) on rented private cloud GPU instances |
-| Strict air-gapped compliance (defense, banking, critical infra) | Fully on-premises stack with bare-metal GPU clusters |
-| Minimal operational overhead and fast time-to-market | Managed agent platform with enterprise vendor APIs |
-| Complex, proprietary multi-stage engineering workflows | Custom state machine or Temporal workflow with modular model routing |
-| Vendor portability across evolving model families | Custom harness decoupling the orchestration loop from model providers |
+A hybrid setup can combine:
 
----
+- cloud model inference;
+- centrally managed orchestration;
+- private local execution.
 
-## Architectural Principles
+This can be useful when the organization wants cloud-scale orchestration but must keep some execution close to internal systems.
 
-1. **Decouple the three planes**: Treat inference, orchestration, and execution as separate infrastructure choices.
-2. **Local for the inner loop**: Use local agents when real-time developer interaction, instant feedback, and low overhead matter most.
-3. **Managed for team scale**: Use remote, managed infrastructure to turn agent workflows into consistent, audited team infrastructure.
-4. **Decouple the agent from the workstation**: Move long-running, asynchronous, and scheduled tasks off personal laptops and onto cloud runners.
-5. **Enforce workflow determinism in code**: Use state machines, typed schemas, and real tool outputs to govern lifecycle transitions. Keep LLMs focused on the probabilistic tasks that require judgment.
-6. **Self-hosting the harness is not self-hosting the model**: If you call an external model API from inside your VPC, your prompts and source code still leave your network perimeter.
-7. **Inference location governs data sovereignty**: If corporate policy forbids code from leaving your boundary, you must control the inference server, not just the agent harness.
-8. **Leverage private cloud GPUs**: Renting dedicated GPU compute within your private cloud VPC provides data isolation without the overhead of physical datacenter procurement.
-9. **Coexistence over monoculture**: Pair interactive local agents for daytime feature work with managed remote agents for overnight and event-driven automation.
-10. **Sandbox execution rigorously**: Run agent-generated bash and code inside ephemeral, network-filtered, and disposable execution environments.
+This hybrid topology mirrors the architecture of modern CI runner systems like GitHub Actions or GitLab Runners. A centralized, cloud-hosted control plane manages task dispatch, scheduling, and UI state, while a lightweight runner daemon running inside the private network executes local builds and tests. Because the internal runner connects outbound to the control plane over a secure WebSocket or polling connection, no inbound firewall ports or internal network endpoints need to be exposed to the public internet.
 
----
+## Local and managed agents can coexist
 
-## Related Notes
+Local versus managed should not be treated as an exclusive choice.
 
-- [[Agentic Coding Harness and Controlled Development Workflows]] — Architectural patterns for state-machine-driven execution loops and validation gates.
-- [[Model Access and Execution Infrastructure]] — Gateway design, connection pooling, and latency optimization for inference traffic.
-- [[Dynamic Model Routing and Inference Gateways]] — Decoupling application logic from concrete model providers via smart proxies.
-- [[Local vs Cloud and Hybrid Model Execution]] — Evaluating TCO, thermal characteristics, and throughput across local hardware and cloud clusters.
-- [[Always-On Autonomous Agents - The 24-7 Local Operating System]] — Architecture, security boundaries, and persistence models for local daemons.
-- [[Multi-Agent Software Development]] — Designing specialized agent teams that collaborate across architectural boundaries.
-- [[AI Productivity Is Limited by the Delivery System]] — Why raw model output speed is bottlenecked by CI, review pipelines, and verification steps.
+A development organization can use both:
+
+```text
+Local agent
+    |
+    +-- interactive development
+    +-- debugging
+    +-- exploratory work
+    +-- developer-specific tasks
+
+Managed agent
+    |
+    +-- shared team workflows
+    +-- unattended tasks
+    +-- scheduled maintenance
+    +-- repository-wide analysis
+    +-- PR review
+    +-- CI-triggered work
+```
+
+A developer may use a local agent while actively modifying code and send larger or unattended tasks to a remote agent.
+
+## Security and permissions
+
+Deployment location does not remove the need for least privilege.
+
+A shared cloud agent should not automatically receive access to every repository, environment or production credential.
+
+Permissions should be scoped by role.
+
+For example:
+
+```text
+Planner
+  read repository
+  read documentation
+  read issue tracker
+
+Implementer
+  read/write feature branch
+  build
+  test
+
+Reviewer
+  read repository
+  read diff
+  no write access
+
+Release Agent
+  deployment permissions
+```
+
+The ability to share an agent across a team makes centralized identity and permission management more important, not less.
+
+### Execution sandboxing and isolation boundaries
+
+Running agent-generated code and arbitrary shell commands on shared infrastructure requires defense-in-depth isolation:
+
+- **Ephemeral sandboxing**: Execute tool calls and compilation steps inside disposable containers or microVMs (such as gVisor or Firecracker). Tearing down the environment immediately after execution prevents state poisoning, contaminated package caches, or untrusted dependencies from persisting across tasks.
+- **Network egress filtering**: Restrict outbound network access from the execution runtime. Allowlist only required package registries, internal source control, and inference endpoints. Explicitly block access to cloud instance metadata endpoints (`169.254.169.254`) to prevent credentials from being extracted by untrusted dependencies.
+- **Short-lived credentials**: Avoid persisting long-lived API keys or deployment credentials on disk. Use short-lived, workload-identity-federated tokens (such as OIDC) scoped strictly to the task.
+- **Clean workspace trees**: Provision each task in a fresh, isolated Git worktree. Never allow untracked build artifacts or modified scripts to leak across unrelated agent runs.
+
+## Choosing a deployment model
+
+A simple decision guide:
+
+| Need | Good starting point |
+| --- | --- |
+| Interactive personal coding | Local agent |
+| IDE/CLI pair programming | Local agent |
+| Long-running unattended work | Managed or self-hosted agent |
+| Shared agent for a team | Managed or self-hosted agent |
+| Webhook / CI-triggered execution | Managed or self-hosted agent |
+| Maximum control over agent execution | Self-hosted agent |
+| Private internal execution | Self-hosted or hybrid agent |
+| Code must not reach an external model provider | Self-hosted model inference |
+| Avoid buying GPUs while controlling model inference | Private rented GPU infrastructure |
+| No protected data may leave organization-controlled infrastructure | Fully self-hosted stack |
+| Maximum data sovereignty | On-premises or isolated inference |
+| Minimal operational overhead | Managed agent |
+| Fully custom workflow | Custom-hosted agent |
+| Deterministic workflow guarantees | Custom orchestrator |
+| Provider portability | Custom harness |
+
+## Final principles
+
+1. The model, harness and executor are separate architectural components.
+2. Local agents are the simplest option for interactive development.
+3. Managed agents are especially valuable as shared team infrastructure.
+4. Remote execution enables unattended, scheduled and event-driven work.
+5. A custom agent loop can be written in ordinary application code.
+6. A custom harness can be hosted on general-purpose cloud infrastructure or a specialized agent platform.
+7. Use managed infrastructure when operational simplicity matters more than full control.
+8. Use self-hosting when networking, security or execution requirements demand it.
+9. Self-hosting the agent does not imply self-hosting the model.
+10. The model inference location determines whether prompts and selected code cross the organizational trust boundary.
+11. Strict data-sovereignty requirements may require both self-hosted agent infrastructure and self-hosted model inference.
+12. Rented private GPU infrastructure can provide a middle ground between external model APIs and fully on-premises deployment.
+13. Keep deterministic workflow rules in code when they must be enforced.
+14. Local, managed and hybrid agents can coexist in the same development organization.
+```

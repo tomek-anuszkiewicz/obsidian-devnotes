@@ -10,95 +10,40 @@ tags:
 aliases:
   - Legacy Migration with Agents
   - AI-Driven Code Modernization
-  - The Legacy Dilemma: Maintaining vs Rewriting with AI
-  - Automated Straightening of Legacy Code
-  - The Frankenstein Intermediate Phase
-  - Shadow Twin and Differential Execution
 ---
 
-# Refactoring Legacy Systems with AI Agents
+## Refactoring Legacy Code with Agents
 
-Rewriting a legacy system from scratch has historically been one of the fastest ways to burn engineering capital. Big-bang human rewrites regularly ran over schedule, blew past budgets, and introduced regressions by dropping subtle, undocumented edge cases that had been ironed out across years of production. Teams learned to live with fragile monoliths, cautiously applying local patches and hoping nothing critical broke in the background.
+Agents are useful for legacy modernization, but broad instructions are dangerous.
 
-Coding agents change the economics of this problem. Using an agent to navigate and endlessly patch tangled legacy code merely defers maintenance and drives up cognitive overhead. However, using agents to methodically extract business rules, backfill characterization tests, and rewrite vertical slices into clean modules is significantly faster and cheaper than living with a legacy codebase. 
+Avoid:
 
-The key is treating the agent as a precision extraction tool rather than an autonomous re-architect.
+> Rewrite this module using clean architecture.
 
-```text
-The Maintenance Trap:
-Leave legacy spaghetti intact ──► Patch with LLMs ──► Context bloat explodes + regressions multiply
+Prefer small, behavior-preserving steps:
 
-Automated Straightening (Strangler Fig):
-Lock behavior with tests ──► Re-synthesize clean modular slices ──► Maintenance costs collapse
-```
+1. map the current behavior,
+    
+2. add characterization tests,
+    
+3. rename ambiguous concepts,
+    
+4. move code without editing it,
+    
+5. extract pure functions,
+    
+6. introduce explicit types,
+    
+7. isolate side effects,
+    
+8. compare old and new outputs,
+    
+9. only then introduce new business behavior.
+    
 
----
+Characterization tests do not claim that the current behavior is correct. They record what the system currently does so that refactoring does not change it accidentally.
 
-## 1. The Legacy Dilemma: Endless Patching vs. Automated Straightening
-
-When facing a complex legacy codebase burdened with technical debt, engineering leads face a practical choice: use agents to patch the existing spaghetti, or use them to systematically rewrite vertical slices into clean, isolated components.
-
-### Why Patching Legacy Code Fails Long-Term
-
-Patching is tempting because an agent can parse messy code and generate a localized fix in minutes. But relying on this workflow creates serious systemic problems:
-
-1. **Context and Token Overhead**: Spaghetti code rarely respects functional boundaries. Navigating it requires dumping dozens of loosely coupled files into context. As the codebase grows, feeding these large context windows slows down development, drives up costs, and increases the likelihood of model hallucinations.
-2. **Hidden Side Effects**: Monolithic legacy code is riddled with ambient global state, implicit execution ordering, and unindexed database queries. A change that looks clean within a narrow prompt context can easily trigger a production outage downstream.
-3. **Complexity Masking**: Because an agent can generate a working patch quickly, teams lose the incentive to fix underlying design flaws. The architecture continues to rot beneath automated bandages, deepening technical debt.
-
-### Why Automated Straightening Works
-
-Modern coding agents make structural refactoring economically viable if guided with discipline:
-
-- **Mechanical extraction is cheap**: The tedious work that used to take human teams months—extracting types, isolating database queries, writing DTOs, and splitting monolithic files—can be drafted by an agent in hours.
-- **Automated extraction of domain logic**: The agent does not need to guess business requirements. It can inspect production execution traces, database procedures, and unit histories to synthesize comprehensive characterization tests before anyone touches production logic.
-- **Incremental replacement (Strangler Fig Pattern)**: You do not perform a high-risk cutover. You slice out a single bounded capability, verify its behavior down to the bit level, route traffic through it, and tear down the legacy path.
-
----
-
-## 2. Reconnaissance and Critical Path Slicing
-
-The hardest part of modernizing a 100,000-line legacy system is figuring out what the code actually does. Human developers get bogged down trying to understand every nuance before making a move, paralyzed by fear of breaking unseen dependencies.
-
-Agents work exceptionally well as **path-slicing engines**:
-
-1. **Critical Path Tracing**: Given an entry point and an outcome (for example, *"How does an incoming billing payload reach database persistence?"*), an agent can traverse the call graph across files, isolating the active execution path while filtering out irrelevant scaffolding.
-2. **Proving Irrelevance**: Often the most valuable step is proving what the system *doesn't* do. An agent can verify that adjacent background workers do not mutate target records, or confirm that an old feature flag is hardcoded to false and its entire code branch can be deleted.
-3. **Isolating Scope**: Instead of spending weeks reading through entire modules, the engineer can isolate the core transaction flow in an afternoon, focusing review efforts exclusively on the critical path.
-
----
-
-## 3. Disciplined Behavioral Extraction
-
-Never give an agent open-ended, sweeping instructions like:
-
-> *"Rewrite this module using clean architecture."*
-
-Vague prompts cause agents to invent abstractions, drop subtle business rules, and hallucinate missing edge cases. Refactoring must proceed through small, verified, behavior-preserving steps:
-
-```text
-1. Map Call Graph ──► 2. Add Characterization Tests ──► 3. Rename & Move Code
-                                                                 │
-7. Parity Verification ◄── 6. Isolate Side Effects ◄── 5. Extract Pure Functions
-         │
-         ▼
-8. Implement New Business Behavior or Delete Dead Code
-```
-
-### The Step-by-Step Sequence
-
-1. **Map the current behavior**: Document exact inputs, runtime state, database mutations, and return values.
-2. **Add characterization tests**: Characterization tests do not claim that the current behavior is correct. They simply record what the system *currently does*—quirks, bugs, and edge cases included—so that refactoring does not alter behavior accidentally.
-3. **Rename and move files only**: Clean up confusing variable names and reorganize file structures without changing a single line of execution logic.
-4. **Extract pure functions**: Separate business calculations from database queries, network calls, and message buses.
-5. **Introduce explicit types**: Replace untyped dictionaries, dynamic maps, and raw strings with strongly typed domain models.
-6. **Isolate external side effects**: Wrap database operations, filesystem access, and API calls behind explicit interfaces or repository boundaries.
-7. **Compare old and new outputs**: Run both implementations against historical production data.
-8. **Only then introduce new business behavior**: Once the new structure matches the old behavior with zero divergence, you can safely modify business rules or delete obsolete code.
-
-### Verifying Output Parity
-
-For sensitive domains like pricing or financial ledgers, run both implementations side by side against historical data:
+For pricing systems, run both implementations against historical data:
 
 ```text
 old pricing result
@@ -106,70 +51,54 @@ vs.
 new pricing result
 ```
 
-During pure refactoring, results must remain identical, down to precision limits and rounding quirks. If the legacy code rounds intermediate calculations to four decimal places, the refactored code must match that behavior exactly until a deliberate business decision is made to change it.
+During pure refactoring, results should remain identical, including rounding behavior.
 
 ---
 
-## 4. Differential Shadow Traffic Mirroring (Dark Launching)
+## Reconnaissance and Critical Path Slicing
 
-Synthetic unit and integration tests are necessary, but they rarely capture the full complexity of production environments. Unforeseen null bytes, unexpected header combinations, and race conditions slip past local test suites.
+Before touching a single line of legacy code, use the agent to map execution boundaries. The biggest risk in large monoliths is context sprawl—trying to load an entire module into the prompt window leads to token exhaustion and hallucinations.
 
-The safest way to replace a mission-critical legacy service is **asynchronous differential shadow mirroring**:
+Instead, use the agent as a path-slicing engine:
 
-```text
-                             Production API Gateway
-                                       │
-                     ┌─────────────────┴─────────────────┐
-                     ▼ (Live Request)                    ▼ (Mirrored Copy)
-         ┌───────────────────────┐           ┌───────────────────────┐
-         │     LEGACY SERVICE    │           │    SHADOW SERVICE     │
-         │ (Decaying, monolithic)│           │ (Clean, modern code)  │
-         └───────────┬───────────┘           └───────────┬───────────┘
-                     │                                   │
-                     ▼ Live Response                     ▼ Discard Response
-            [Production Client]             ┌─────────────────────────────┐
-                                            │    DIFFERENTIAL ORACLE      │
-                                            │  Compares: Legacy vs Shadow │
-                                            └──────────────┬──────────────┘
-                                                           │ Disparity Detected (Δ != 0)
-                                                           ▼
-                                            ┌─────────────────────────────┐
-                                            │   AUTOMATED REPAIR AGENT    │
-                                            │ Creates regression test &   │
-                                            │ fixes shadow implementation │
-                                            └─────────────────────────────┘
-```
-
-1. **The Frozen Facade**: The external API contract, message schemas, and error structures must remain strictly identical. Upstream callers should not know or care that the underlying implementation has changed.
-2. **Live Traffic Duplication**: The edge proxy or gateway duplicates incoming live requests asynchronously. The shadow service processes the request against read-only replicas or sandboxed resources, and its output is discarded so real users are unaffected.
-3. **Differential Comparison**: An automated oracle compares the legacy response with the shadow response. Any discrepancy in payload fields, status codes, rounding, or error handling is logged alongside the original request payload.
-4. **Automated Regression Synthesis**: Each detected discrepancy is automatically turned into an end-to-end test case. The agent analyzes the failure, updates the shadow service to match the legacy behavior, and verifies that existing tests still pass.
-5. **Promotion to Production**: Once the shadow service handles millions of mirrored production requests over several days with zero discrepancies, switching primary traffic over is low-risk and straightforward.
+- **Trace the active call graph**: Point the agent at a specific entry point (such as an HTTP controller or message queue consumer) and have it trace execution through to database persistence, filtering out dead code and unrelated background workers.
+- **Prove irrelevance**: Use the agent to prove what the system does *not* do. Confirm that adjacent services do not mutate the same database records, or identify hardcoded feature flags whose dead execution paths can be safely stripped.
+- **Isolate side effects**: Identify every point where the critical path touches external state—raw SQL queries, ambient singletons, filesystem writes, or third-party APIs. These boundaries become the seam for mock injection during characterization testing.
 
 ---
 
-## 5. Escaping the "Frankenstein Intermediate Phase"
+## Differential Shadow Traffic Mirroring
 
-During major refactorings, teams often get stuck in a hybrid state where the legacy engine and the new service are coupled via complex translation layers, bi-directional database syncs, and adapter wrappers.
+Historical unit tests and synthetic replays are necessary, but they rarely capture the full chaos of production. Subtle edge cases—such as unexpected header formats, null bytes in payloads, or implicit database collation quirks—often escape local testing suites.
 
-This intermediate glue code is often more fragile and harder to debug than the original legacy system. When an agent is introduced into this environment, its natural context-following behavior can make things worse:
+For mission-critical paths, deploy the refactored code alongside the legacy implementation using asynchronous differential shadow mirroring (dark launching):
 
-- The context window is flooded with adapter shims, defensive null-checks, and translation logic.
-- The agent treats this glue code as standard domain architecture and continues to build on top of it, adding more retries, fallbacks, and patch layers.
-- The agent will not spontaneously recommend tearing down the adapters.
-
-Breaking out of this trap requires deliberate engineering direction:
-- Recognize when the intermediate adapter layer has become an architectural dead end.
-- Demand a clean break: freeze modifications to the legacy system, define clear service boundaries, and cut over cleanly once parity is proven.
-- Use the agent’s speed to build out the target architecture cleanly, rather than spending weeks perfecting temporary bridge code.
+1. **Duplicate live traffic**: The API gateway or edge proxy duplicates incoming requests. The live request routes to the legacy service to produce the actual user response, while an asynchronous copy hits the modernized service.
+2. **Isolate shadow side effects**: The shadow service must point to read-only database replicas or mock sinks. Its responses are never returned to end users.
+3. **Run a differential oracle**: An automated comparison worker diffs the legacy response against the shadow response. Any divergence in payload structure, HTTP status codes, error formats, or decimal precision is flagged immediately.
+4. **Synthesize regression tests**: Feed detected disparities back to the agent as reproducible failing test cases. The agent patches the modernized implementation until the differential oracle reports zero divergence across millions of production requests.
 
 ---
 
-## 6. Commit Hygiene and Multi-Commit Sequences
+## Avoiding the Frankenstein Intermediate Phase
 
-Left to themselves, agents tend to bundle formatting, file moves, variable renames, and actual logic changes into a single massive pull request. This makes effective code review impossible.
+A major failure mode during incremental modernization is getting stranded in a hybrid architecture. Teams frequently build bi-directional database syncs, dynamic translation adapters, and fallback shims to let legacy and modern services coexist.
 
-Instruct the agent to build a clean, reviewable commit sequence:
+This transitional glue code is often more fragile and harder to debug than the original legacy system. Coding agents can inadvertently worsen this trap:
+
+- The context window fills up with adapter shims, defensive null-checks, and translation boilerplate.
+- The model treats temporary compatibility hacks as permanent architectural patterns, generating even more defensive shims on top of them.
+- The agent will never suggest tearing down the adapter layer on its own.
+
+Prevent this by establishing strict lifecycles for transitional adapters. Freeze changes to the legacy path, define explicit boundary contracts, and treat compatibility shims as throwaway scaffolding to be deleted the moment differential shadow mirroring confirms parity.
+
+---
+
+## Use Multiple Reviewable Commits
+
+Agents can be instructed to create a meaningful commit history.
+
+A useful sequence is:
 
 ```text
 1. Add characterization tests
@@ -192,7 +121,20 @@ Commit 5: feat: add tiered discount rule for enterprise customers
 Commit 6: chore: delete obsolete legacy pricing procedures
 ```
 
-Do not accept commit histories like this:
+Each commit should:
+
+- have one purpose,
+    
+- compile independently,
+    
+- pass relevant tests,
+    
+- clearly state whether it changes behavior,
+    
+- avoid mixing mechanical and semantic changes.
+    
+
+Do not allow histories such as:
 
 ```text
 add implementation
@@ -201,29 +143,31 @@ fix tests
 cleanup
 ```
 
-Those commits document the agent's internal trial-and-error cycle, not the architectural evolution of the system. Squash or structure them before merging. A reviewer must be able to verify existing behavior, structural adjustments, and deliberate domain changes in isolation.
+Those commits describe the agent's mistakes, not the evolution of the system.
+
+A good history allows a reviewer to distinguish:
+
+- existing behavior,
+    
+- structural preparation,
+    
+- the exact business change,
+    
+- later cleanup.
+    
 
 ---
 
 ## Practical Working Rules
 
-### For Commits
-- **One purpose per commit**: Keep renames, file moves, formatting, structural refactorings, and business logic modifications completely separate.
-- **Every commit must be green**: Every intermediate commit must compile cleanly and pass the test suite.
-- **Immutable test assertions**: Never modify expected test assertions during behavior-preserving refactoring steps to force a broken build to pass.
-- **Explain system evolution**: Ensure the commit log reflects intentional structural changes rather than the agent's troubleshooting steps.
+### For commits
 
----
-
-## Related Notes
-
-- **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification workflow explaining the Frozen Oracle Rule and why characterization tests are critical during refactoring.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How unconstrained code generation without disciplined boundaries accelerates technical debt.
-- **[[AI Changes the Economics of Technical Debt]]**: How reducing the generative cost of rewrites shifts the trade-offs of modernizing legacy systems.
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: How capturing explicit architectural rejections prevents agents from reintroducing discarded legacy patterns.
-- **[[Correcting AI Code - Patch, Regenerate, or Respecify]]**: Deciding when to patch legacy components versus when to tear them down and regenerate.
-- **[[Designing Software for AI Agents]]**: Target architectural patterns (focused files, explicit boundaries) that make modernized systems easy for agents to maintain.
-- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: How automated refactoring shifts engineering effort from manual maintenance to active system design.
-- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Understanding why agents anchor to existing code patterns and defend messy intermediate architectures.
-- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: Implementing runtime observers and telemetry to monitor shadow services during live migrations.
-- **[[Formal Verification and Runtime Safety Boundaries]]**: Why formal tests cannot prove the absence of unstated side effects, making differential shadow mirroring necessary.
+- One purpose per commit.
+    
+- Every commit should compile and pass tests.
+    
+- Keep rename, move, formatting, refactoring, and behavior changes separate.
+    
+- Do not alter expected test values during behavior-preserving refactoring.
+    
+- Make the commit history explain the evolution of the system.

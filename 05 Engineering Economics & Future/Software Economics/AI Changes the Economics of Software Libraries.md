@@ -12,38 +12,54 @@ aliases:
   - Build vs Buy vs Generate
 ---
 
-# AI Changes the Economics of Software Libraries
+AI code generation does not necessarily make software libraries obsolete.
 
-AI code generation does not make software libraries obsolete. It changes the economic and architectural reasons for using them.
+It changes the reason for using them.
 
-Historically, one of the strongest arguments for pulling in an external library was straightforward:
+Historically, one of the strongest arguments for a library was simple:
 
-> I do not want to spend the time writing this code myself.
+> I do not want to write this code myself.
 
-When an AI agent can synthesize hundreds or even thousands of lines of idiomatic, localized code in seconds, that argument collapses. If the marginal cost of writing code drops to near zero, the question flips from creation to stewardship:
+If an agent can generate hundreds or even thousands of lines of local code cheaply, that argument becomes much weaker.
 
-> Do we want to own and maintain this implementation ourselves for the next five to ten years?
+The more important question becomes:
 
-This shift directly alters the balance between relying on third-party dependencies, maintaining [[Internal Shared Packages vs Agent-Generated Code|internal shared packages versus agent-generated code]], and [[Designing Internal Packages as an Explicit, Composable Framework|designing internal libraries as explicit, composable frameworks]]. The software dependency ecosystem is being restructured around the true long-term costs of code ownership.
+> Do we want to own and maintain this implementation ourselves?
 
----
+This may significantly reshape the software library ecosystem.
+
+This shift directly alters the balance between third-party packages, [[Internal Shared Packages vs Agent-Generated Code|internal shared packages versus agent-generated code]], and [[Designing Internal Packages as an Explicit, Composable Framework|designing internal libraries as explicit, composable frameworks]]. When writing code is no longer the bottleneck, architecture centers entirely around the long-term cost of code ownership.
 
 ## Libraries That Mainly Save Typing Are Under Pressure
 
-Many popular libraries exist primarily to save keystrokes and reduce syntactic boilerplate. Typical examples include:
+Some libraries exist primarily to reduce boilerplate.
 
-- Simple validation frameworks
-- Object-to-object mapping helpers
-- Trivial retry policies and loop wrappers
-- Fluent API wrappers around standard system calls
-- Minimalist result types or functional monads (`Result<T, E>`)
-- String formatting, date formatting, and light parsing utilities
+Examples may include:
 
-When manual typing and initial test authoring were expensive, pulling in a library was an obvious win. You accepted a dependency to save two days of implementation time. 
+- simple validation frameworks,
+    
+- mapping helpers,
+    
+- small wrappers,
+    
+- fluent APIs,
+    
+- trivial retry helpers,
+    
+- convenience abstractions,
+    
+- simple result types,
+    
+- lightweight formatting or parsing utilities.
+    
 
-With agents, that initial creation cost vanishes. Instead of taking on an external dependency, an agent can generate a narrow, bespoke implementation tailored exactly to the problem at hand, directly within the calling codebase.
+Historically, writing the equivalent code manually had a meaningful cost.
 
-This upends a long-standing engineering assumption:
+With agents, that cost may become negligible.
+
+Instead of introducing a dependency, an agent may generate a narrow implementation tailored exactly to the application.
+
+This changes an old productivity assumption:
 
 ```text
 more abstraction
@@ -51,7 +67,7 @@ more abstraction
 → higher productivity
 ```
 
-In an agent-assisted codebase, that assumption shifts toward:
+into something closer to:
 
 ```text
 more explicit local code
@@ -60,13 +76,13 @@ more explicit local code
 → easier customization
 ```
 
-The raw line count of a repository becomes far less important than its cognitive clarity, dependency surface, and ease of modification. Pulling in an external dependency brings a permanent tax: supply-chain attack surface, transitive dependencies, security alerts, and periodic breaking upgrades across runtime versions. When code is cheap to generate and verify, importing an external package solely to avoid thirty lines of clear boilerplate compounds [[Software Decay and the Hidden Costs of Frictionless AI Code|software decay]] without delivering tangible architectural value.
+The number of lines of code may become much less important than before.
 
----
+Pulling in an external dependency brings a permanent tax: supply-chain attack surface, transitive dependencies, security alerts, and periodic breaking upgrades across runtime versions. When an agent can generate and verify the code in seconds, importing an external package solely to avoid thirty lines of clear boilerplate introduces [[Software Decay and the Hidden Costs of Frictionless AI Code|software decay]] without delivering tangible architectural value.
 
-## Validation as a Concrete Example
+## Validation Is a Good Example
 
-Consider request validation. A dedicated validation library typically encourages concise, declarative syntax:
+A validation library may allow something concise such as:
 
 ```csharp
 RuleFor(x => x.Email)
@@ -74,7 +90,7 @@ RuleFor(x => x.Email)
     .EmailAddress();
 ```
 
-An agent, by contrast, can easily generate explicit, localized control flow:
+An agent can instead generate explicit application code:
 
 ```csharp
 if (string.IsNullOrWhiteSpace(request.Email))
@@ -84,26 +100,30 @@ if (!EmailValidator.IsValid(request.Email))
     return Error.InvalidEmail;
 ```
 
-The second version takes more lines of code, but line count is cheap when nobody has to type it manually. More importantly, explicit code provides distinct advantages:
+The second version may be longer, but that may matter much less if nobody had to type it manually.
 
-1. **Locality of behavior**: Everything happening to that request is readable right in the handler. There is no hidden reflection engine, dynamic rule compilation, or implicit lifecycle hook executing behind the scenes.
-2. **Context-window efficiency**: When a coding agent later inspects the handler to fix a bug or add a field, it sees standard imperative control flow. It does not need to parse or reason about a third-party framework's domain-specific abstractions.
-3. **Zero dependency tax**: The application sheds an external package, its transitive dependencies, and the risk of breaking changes during runtime upgrades.
+It may also be easier for future agents to understand and modify because the behavior is explicit and local.
 
-The evaluation criteria changes: *What does the library provide beyond saving keystrokes?* If the answer is merely a cleaner fluent syntax, the dependency is hard to justify.
+Locality of behavior matters here. Standard imperative control flow runs without hidden reflection engines, expression compilation, or implicit lifecycle hooks. When a coding agent later inspects the handler to fix a bug or add a field, it sees standard branches rather than having to parse a framework's domain-specific abstraction.
 
----
+The important question therefore becomes:
 
-## The Shift in Test Doubles and Mocking Frameworks
+> What does the library provide beyond reducing the amount of code?
 
-Mocking frameworks face the same pressure. Frameworks like Moq or Mockito gained dominance because writing manual test doubles was tedious:
+If the answer is "not much", the dependency becomes easier to question.
+
+## Test Libraries May Face a Similar Change
+
+Mocking frameworks are another interesting example.
+
+A framework can make a test double concise:
 
 ```csharp
 var repo = new Mock<IRepository>();
 repo.Setup(x => x.Get(123)).Returns(customer);
 ```
 
-An agent can instantly generate an explicit, self-contained fake:
+But an agent can cheaply generate an explicit fake:
 
 ```csharp
 public sealed class CustomerRepositoryFake : IRepository
@@ -114,65 +134,101 @@ public sealed class CustomerRepositoryFake : IRepository
 }
 ```
 
-Explicit fakes offer concrete architectural advantages:
+Explicit fakes may have several advantages:
 
-- They are ordinary code with zero dynamic proxy generation or runtime reflection.
-- Debugging is trivial: you can set breakpoints directly inside the fake's methods without stepping through proxy dispatch pipelines.
-- Adding domain-specific assertions or state tracking is straightforward.
-- Coding agents can read, understand, and modify explicit fakes without tripping over framework-specific configuration rules.
-- Test suites remain completely decoupled from third-party test libraries, ensuring seamless runtime upgrades.
+- they are ordinary code;
+    
+- debugging is straightforward;
+    
+- there is less reflection or proxy magic;
+    
+- agents can reason about them easily;
+    
+- domain-specific behavior is simple to add;
+    
+- there is no coupling to a mocking framework.
+    
 
-Mocking frameworks will not disappear overnight, but their primary selling point—sparing developers the chore of hand-writing fakes—carries much less weight. The same dynamic applies to fixture builders, synthetic test-data generators, and specialized assertion DSLs.
+Mock libraries will not necessarily disappear.
 
----
+However, one of their historical advantages — avoiding tedious hand-written test doubles — becomes much weaker.
 
-## The Enduring Moat of Hard Domain Engines
+The same may apply to:
 
-At the other end of the spectrum is a class of libraries whose value does not lie in saving keystrokes, but in encapsulating decades of accumulated engineering and operational experience.
+- fixture builders,
+    
+- test-data helpers,
+    
+- small assertion libraries,
+    
+- test setup DSLs.
+    
 
-SQLite is a primary example. An agent could theoretically generate an embedded relational storage engine, but doing so in a production system would be irresponsible. The value of SQLite is not its lines of C code; it is:
+## Some Libraries Remain Extremely Valuable
 
-- Millions of hours of battle-tested crash recovery and write-ahead log (WAL) integrity
-- Strict ACID transaction guarantees under catastrophic hardware failure
-- Battle-hardened page-locking behavior and concurrent reader semantics
-- A query planner optimized across decades of varied workloads
-- Guaranteed cross-platform on-disk format stability
-- Low-level SIMD, memory-mapped I/O, and platform-specific performance tuning
-- Exhaustive test suites, fuzzing harnesses, and operational edge-case coverage
+A completely different class of libraries derives its value from accumulated engineering knowledge.
 
-```text
-+-----------------------------------------------------------------------+
-| CONVENIENCE & BOILERPLATE UTILITIES                                   |
-| Mapping helpers, string formatters, fluent builders, retry loops      |
-| -> Preference: Generate explicit local code (zero-dependency, inline) |
-+-----------------------------------------------------------------------+
-                                  vs
-+-----------------------------------------------------------------------+
-| HARD DOMAIN ENGINES & PROTOCOL STATE MACHINES                         |
-| SQLite, libsodium, OpenSSL, media codecs, network protocol stacks     |
-| -> Preference: Retain battle-tested libraries (decades of hardening)  |
-+-----------------------------------------------------------------------+
-```
+SQLite is a good example.
 
-This engineering reality applies across multiple domains:
+An agent could theoretically be asked to write an embedded relational database, but that misses the point.
 
-- Cryptography and constant-time math implementations (libsodium, OpenSSL)
-- TLS protocol state machines
-- Production database storage engines and low-level wire drivers
-- Production HTTP/2 and HTTP/3 network stacks
-- Specialized compression algorithms (zstd, snappy)
-- Audio/video codecs and raw container demuxers
-- Standards-compliant parsers (Unicode segmentation, complex RFCs)
-- Distributed consensus engines (Raft, Paxos implementations)
-- Optimized binary serialization engines (Protobuf, FlatBuffers)
+The value of SQLite includes:
 
-In these domains, generating code is trivial; proving that the code is correct, secure, and resilient under harsh real-world conditions is exceptionally difficult.
+- decades of testing,
+    
+- crash recovery,
+    
+- ACID guarantees,
+    
+- locking behavior,
+    
+- query optimization,
+    
+- storage format stability,
+    
+- performance tuning,
+    
+- interoperability,
+    
+- enormous numbers of edge cases.
+    
 
----
+The same logic applies to areas such as:
 
-## Cost of Creation vs. Cost of Ownership
+- cryptography,
+    
+- TLS,
+    
+- database engines,
+    
+- database drivers,
+    
+- HTTP stacks,
+    
+- compression,
+    
+- media codecs,
+    
+- complex standards parsers,
+    
+- distributed consensus,
+    
+- serialization formats.
+    
 
-AI drastically drives down the initial cost of creating software, but it does not eliminate the ongoing cost of owning it. When you replace an external dependency with an agent-generated local module, you alter your balance sheet:
+In these cases, the hard part is not producing code.
+
+The hard part is knowing whether the implementation is correct.
+
+In domains like storage engines and protocol stacks, subtle errors mean catastrophic data corruption or silent vulnerabilities. An agent can emit syntactically clean C code for a B-tree or an encryption loop, but it cannot replicate the write-ahead log (WAL) crash-recovery hardening, constant-time math guarantees that prevent side-channel leaks, or decades of fuzzing that battle-tested libraries like SQLite, OpenSSL, or libsodium provide.
+
+## Cost of Creation and Cost of Ownership Diverge
+
+AI dramatically reduces the cost of creating software.
+
+It does not eliminate the cost of owning it.
+
+A locally generated replacement becomes:
 
 ```text
 our code
@@ -183,266 +239,447 @@ our migration problem
 our support burden
 ```
 
-Every dependency evaluation comes down to a core operational question:
+This suggests that one of the most important questions in future dependency decisions will be:
 
-> Do we want to own this domain problem for the next ten years?
+> Do we want to own this problem for the next ten years?
 
-```text
-AI drastically reduces:
-  * Cost of initial creation (typing, boilerplate, scaffolding)
-
-AI does NOT eliminate:
-  * Cost of verification and formal correctness
-  * Cost of ongoing security maintenance and patch tracking
-  * Cost of API compatibility over runtime upgrades
-  * Operational liability when an edge case breaks production
-```
-
-Lines saved was always a poor proxy for value; ownership cost has always been the true architectural metric. AI simply strips away the illusion that writing code was the expensive part of software engineering.
-
----
-
-## Distributed Testing in the Wild
-
-Popular open-source libraries benefit from a mechanism that local code generation cannot replicate: distributed real-world verification.
+AI reduces:
 
 ```text
-Millions of deployments across diverse environments
-  → Obscure OS, architecture, and virtualization bugs discovered
-    → Edge-case patches and fuzzing tests contributed upstream
-      → Downstream users inherit hardened stability for free
+cost of creation
 ```
 
-A locally generated implementation is only ever tested against the specific inputs and environments your organization anticipates. An AI agent can quickly patch a bug once you identify it in your logs, but it cannot automatically inject the hard-won operational hardening that comes from running code across millions of disparate production servers worldwide.
-
----
-
-## The Broader Tooling and Support Ecosystem
-
-A mature library is rarely just source code. It is an entire operational surface:
-
-- IDE integrations, analyzers, and language-server plugins
-- Profiling hooks, metrics adapters, and OpenTelemetry instrumentation
-- Battle-tested diagnostic tools and heap dump visualizers
-- Comprehensive documentation and community troubleshooting threads
-- Continuous verification against new compiler releases and processor architectures
-- Certified connectors for third-party monitoring platforms
-
-An agent can synthesize a token-bucket rate limiter in a matter of seconds. It cannot instantly materialize the telemetry hooks, dynamic configuration surfaces, or battle-tested dashboard integrations that come baked into an industry-standard resilience framework.
-
----
-
-## The Critical Need for Canonical Implementations
-
-There are foundational computing domains where novelty and creativity are architectural flaws:
-
-- URL parsing and URI encoding compliance
-- Unicode normalization (NFC, NFD) and grapheme cluster handling
-- Time-zone arithmetic, leap seconds, and epoch transitions
-- JSON Web Token (JWT) cryptographic validation and claim verification
-- SQL dialect-specific escaping and AST generation
-- HTTP header parsing and framing semantics
-- Cryptographic primitives and secure memory zeroing
-
-In these areas, an implementation that is "almost correct" is far more dangerous than one that fails visibly. Subtle bugs in URL canonicalization or JWT parsing lead directly to authentication bypasses, request smuggling, and injection vulnerabilities. For critical semantics, teams should lean heavily on vetted, canonical implementations.
-
----
-
-## Performance: Specialization vs. Generality
-
-A common assumption is that mature libraries will always outperform locally generated code because of years of optimization. For deep infrastructure—like a database engine or a vectorized JSON parser—that holds true.
-
-In everyday application code, however, the opposite often happens.
-
-Generic libraries must support a wide range of use cases. To achieve that flexibility, they frequently rely on:
-
-- Deep abstraction pipelines
-- Dynamic dispatch and virtual method lookups
-- Reflection, dynamic proxies, or runtime code emission
-- Broad configuration lookups and internal state machines
-- Defensive memory copies and intermediate allocations
-- Extensibility hooks and adapter layers
+much more than it reduces:
 
 ```text
-Generic Library Flow:
-  Application 
-    → Abstraction Layer 
-      → Configuration Check 
-        → Dynamic Dispatch / Reflection 
-          → Adaptor Pipeline 
-            → Core Operation
-
-Agent-Generated Specialized Code:
-  Application 
-    → Core Operation
+cost of verification
+cost of maintenance
+cost of compatibility
+cost of responsibility
 ```
 
-Because an agent generates code for a single, known use case, it can strip away these abstraction layers. It knows the exact input types, nullability rules, and output formats in advance:
+This distinction may become more important than the number of lines saved by a dependency.
 
-- Heap allocations can often be reduced or moved to the stack.
-- Dynamic dispatch gives way to direct, devirtualized function calls.
-- Intermediate mapping objects and boxing can be eliminated.
-- Compilers and JIT runtimes can inline the operations cleanly.
+## Popular Libraries Benefit From Distributed Testing
 
-Historically, teams accepted the runtime overhead of generic abstractions because writing specialized code by hand was too expensive. Now that generating specialized code has minimal cost, the trade-off is no longer simply "slow custom code versus optimized library." It is **generic reusable indirection versus lean, specialized implementation**.
-
----
-
-## Compliance, Certification, and Liability
-
-In enterprise environments, technical correctness is only part of the equation. Systems must often satisfy legal, regulatory, and audit requirements:
-
-- Industry certifications (FIPS 140-2/3, PCI-DSS, Common Criteria)
-- Independent third-party security audits and penetration test reports
-- Regulatory compliance standards (HIPAA, SOC 2 Type II, ISO 27001)
-- Commercial vendor SLAs, professional support, and indemnity clauses
-- Clear, auditable legal liability
-
-Generating a bespoke, mathematically sound cryptographic module or payment validation pipeline may be entirely feasible with an agent, but it can be completely unacceptable to an auditor or risk board. When an organization buys or adopts an enterprise-grade library, it is often paying for someone else to stand behind the implementation with verified audits, legal accountability, and contractual liability.
-
----
-
-## The Evolution of Forking and Customization
-
-Historically, when a third-party library satisfied 90% of a system's requirements, teams faced a difficult choice:
+Widely used libraries gain another advantage:
 
 ```text
-1. Layer brittle wrappers and monkey-patches around the API.
-2. Submit an upstream PR and wait months for a release.
-3. Fork the repository and inherit the burden of tracking upstream commits.
+millions of deployments
+→ unusual edge cases discovered
+→ fixes contributed
+→ everyone benefits
 ```
 
-With coding agents, a fourth approach becomes practical:
+A private implementation is tested mainly against the cases encountered by one organization.
+
+AI can fix a bug quickly once it is discovered.
+
+It cannot automatically provide the accumulated operational experience of millions of other deployments.
+
+This is one of the strongest forms of value created by mature ecosystems.
+
+## Tooling and Ecosystem Matter
+
+A mature library is often more than its source code.
+
+It may come with:
+
+- documentation,
+    
+- IDE support,
+    
+- analyzers,
+    
+- debugging tools,
+    
+- profiling support,
+    
+- telemetry integrations,
+    
+- community knowledge,
+    
+- examples,
+    
+- compatibility layers,
+    
+- third-party integrations.
+    
+
+An agent can generate a retry mechanism quickly.
+
+It cannot instantly recreate the surrounding ecosystem that a mature resilience library may already have.
+
+## Sometimes We Want a Canonical Implementation
+
+There are also areas where creativity is undesirable.
+
+Examples include:
+
+- URL encoding,
+    
+- Unicode normalization,
+    
+- date and time handling,
+    
+- JWT parsing,
+    
+- SQL escaping,
+    
+- HTTP semantics,
+    
+- cryptographic primitives.
+    
+
+A locally generated implementation may look reasonable while still being subtly incorrect.
+
+In such areas, "almost correct" can be worse than obviously incomplete.
+
+Subtle discrepancies in edge cases like URL canonicalization, Unicode grapheme clusters, or JWT claim verification do not just cause logic glitches—they lead directly to authentication bypasses, request smuggling, and injection vulnerabilities.
+
+A trusted library serves as a canonical implementation of complex semantics.
+
+## Generated Code May Sometimes Be Faster
+
+It is easy to assume that mature libraries will always outperform agent-generated code because they contain years of optimization.
+
+That can be true, especially for complex infrastructure.
+
+But the opposite can also happen.
+
+Generic libraries often need to support:
+
+- many configuration options,
+    
+- multiple execution paths,
+    
+- abstractions,
+    
+- reflection,
+    
+- dynamic dispatch,
+    
+- expression trees,
+    
+- adapters,
+    
+- extensibility hooks,
+    
+- compatibility layers.
+    
+
+A generated implementation can know the exact use case in advance.
+
+It may therefore remove entire layers of indirection.
+
+Instead of a generic pipeline such as:
 
 ```text
-Analyze upstream behavior 
-  → Extract the required 10% sub-logic 
-    → Generate a clean, self-contained local implementation
+application
+→ abstraction
+→ configuration
+→ reflection
+→ generic dispatcher
+→ actual operation
 ```
 
-This dynamic puts pressure on monolithic libraries that grew complex primarily to serve hundreds of edge-case configurations. When an application only needs a tiny slice of that functionality, extracting and maintaining a narrow, tailored implementation locally is often much cleaner than dragging in the entire framework and its dependency graph.
-
----
-
-## Open Source as an Executable Knowledge Base
-
-The role of open-source software shifts in this environment. Open-source libraries are no longer just pre-compiled binaries to drop into a package manager; they are rigorous, publicly accessible repositories of hard-won engineering knowledge.
-
-Agents use open-source codebases to:
-
-- Inspect how veteran engineers handle complex edge cases.
-- Understand the undocumented behaviors of complex underlying protocols.
-- Generate precise, zero-dependency translation adapters.
-- Port battle-tested design patterns from one language ecosystem to another.
-- Trace, isolate, and generate verified patches for platform-specific quirks.
-
-The primary value of an open-source project increasingly expands from **distributing a reusable binary** to **providing a canonical, verified specification of how to solve a hard problem**.
-
----
-
-## Why Agents Make Well-Designed Libraries More Valuable
-
-Agents and high-quality libraries are natural complements. A well-designed, strictly typed, and thoroughly documented library serves as an ideal boundary for an AI model.
-
-For an agent, this prompt:
+an agent may generate something much closer to:
 
 ```text
-Use Microsoft.Extensions.Diagnostics.HealthChecks to expose a liveness probe on /healthz
+application
+→ actual operation
 ```
 
-is orders of magnitude more reliable and deterministic than:
+The resulting code may be almost inline.
+
+This can provide advantages such as:
+
+- fewer allocations,
+    
+- fewer virtual calls,
+    
+- less reflection,
+    
+- fewer branches,
+    
+- simpler data flow,
+    
+- better opportunities for compiler inlining,
+    
+- easier optimization by the JIT or native compiler.
+    
+
+This is especially interesting because abstraction historically had a human productivity benefit.
+
+If agents remove much of the cost of writing repetitive explicit code, some abstraction may no longer be worth its runtime or cognitive cost.
+
+The future tradeoff may therefore be:
 
 ```text
-Invent a custom health-check coordination engine from scratch, handling concurrent sweeps, timeouts, and cancellation tokens.
+generic reusable implementation
+vs
+generated specialized implementation
 ```
 
-High-quality libraries provide reliable guardrails for generative tools. Because agents can parse well-documented APIs and generate the necessary integration glue effortlessly, the most disciplined, predictable, and composable libraries become even more valuable.
-
----
-
-## The Polarization of the Software Ecosystem
-
-As code generation matures, the library ecosystem is bifurcating toward two extremes, putting pressure on generic utilities in the middle:
+rather than simply:
 
 ```text
-  [ TINY CONVENIENCE UTILITY ]
-  String formatters, simple mappers, basic wrappers
-    ↓ 
-  Generate locally (Zero-dependency inline code)
-
-  [ GENERIC APPLICATION ABSTRACTION ]
-  Fluent DSL wrappers, custom event-bus helpers, multi-layer result types
-    ↓ 
-  Evaluate heavily (Often adds indirection without value)
-
-  [ COMPOUND APPLICATION ENGINE ]
-  Job schedulers, robust workflow engines, specialized serialization
-    ↓ 
-  Case-by-case evaluation (Depends on team ownership capacity)
-
-  [ HARD INFRASTRUCTURE ENGINE ]
-  SQLite, libsodium, HTTP/3 stacks, database drivers, compression
-    ↓ 
-  Always use trusted, battle-tested implementations
+slow custom code
+vs
+optimized library
 ```
 
-The middle of the packaging ecosystem—libraries that provide modest abstractions over standard APIs—is being squeezed out. Trivial helpers are replaced by local code, while deep infrastructure engines remain firmly entrenched.
+Mature libraries will still dominate when their performance comes from deep algorithmic knowledge, careful low-level optimization, or years of profiling.
 
----
+But generated code may perform surprisingly well when the main overhead of a library comes from generality.
 
-## New Pressures on Commercial and Paid Libraries
+## Compliance, Certification, and Liability Matter
 
-Commercial libraries that charge seat or core licenses face a fundamentally shifted market. If a vendor charges an enterprise license for an extensive document-processing or UI toolkit, but the customer only uses a fraction of its capabilities:
+In some domains, correctness alone is not enough.
+
+Organizations may also care about:
+
+- certification,
+    
+- security review,
+    
+- compliance,
+    
+- vendor support,
+    
+- contractual guarantees,
+    
+- liability.
+    
+
+This is especially relevant in areas such as:
+
+- payments,
+    
+- identity,
+    
+- healthcare,
+    
+- cryptography,
+    
+- accounting,
+    
+- safety-critical systems.
+    
+
+In regulated environments, having auditable compliance (such as PCI-DSS, FIPS 140-2/3, or SOC 2) and commercial vendor indemnification matters as much as the code itself. Even if an agent generates mathematically sound cryptographic logic or billing flows, passing an external security audit without certified, vetted implementations is an uphill battle.
+
+"We generated our own implementation" may be technically possible while remaining organizationally unacceptable.
+
+Sometimes a library is purchased partly because someone else is willing to stand behind it.
+
+## AI May Change Forking and Customization
+
+Today, when a library almost fits a use case, teams often:
 
 ```text
-Licensed Capabilities:    [ A ] [ B ] [ C ] [ D ] [ E ] [ F ]
-Actual Application Use:   [ A ] [ B ]
+configure it
+→ wrap it
+→ extend it
+→ fork it
 ```
 
-Previously, rebuilding modules `A` and `B` from scratch in-house was economically impractical. With AI agents, writing a dedicated, narrow implementation of those specific features becomes an afternoon's work. 
-
-A software vendor's moat can no longer rely merely on "we wrote thousands of lines of code that would take you months to reproduce." Code volume alone is no longer defensible. Sustainable commercial moats must instead be built on:
-
-- Continuous maintenance, security monitoring, and regulatory patching
-- Dedicated enterprise support, SLAs, and direct engineering access
-- Industry compliance, security certifications, and legal indemnification
-- Proprietary data assets, hosted backend services, and live network integrations
-- Deep, specialized domain expertise that cannot be easily derived from public datasets
-
-At the same time, organizations must navigate intellectual property carefully. Clean-room implementation of public specifications and business logic is economically viable with agents; copying copyrighted source code, reverse-engineering proprietary binaries, or violating software licenses remains a serious legal risk. Lower generation costs do not alter intellectual property law.
-
----
-
-## A Pragmatic Mental Model for Dependencies
-
-The central architectural decision is no longer a simple binary of **"write custom code vs. install a library."**
-
-The meaningful distinction is **commodity code vs. accumulated engineering knowledge**:
+With agents, another option becomes practical:
 
 ```text
-COMMODITY CODE
-  * High supply, low complexity
-  * Trivially generated and verified by agents
-  * Low value in an external package
-  * Safe to implement locally to eliminate dependency bloat
-
-ACCUMULATED KNOWLEDGE
-  * Decades of operational edge cases, bug fixes, and fuzzing
-  * Catastrophic failure modes if implemented incorrectly
-  * Exceptionally high value in an external package
-  * Critical to import and keep updated via trusted libraries
+study the required behavior
+→ generate a narrow implementation
 ```
 
-AI eliminates the justification for importing dependencies merely to avoid typing boilerplate. But for hard problems where reliability, formal correctness, and battle-tested edge cases matter, the strongest reason to rely on an external library remains unchanged:
+This may especially affect libraries whose APIs have become complicated mainly because they must support every imaginable use case.
 
-> We want the accumulated wisdom of the industry, and we do not want to own this complex problem alone.
+A small application may prefer a generated implementation of the 10% of functionality it actually needs.
 
----
+## Open Source May Become More Valuable as Knowledge
 
-## Related Notes and Context
+Open-source libraries may gain another role.
 
-- [[Designing Internal Packages as an Explicit, Composable Framework]]: Balancing code duplication against shared package infrastructure in internal platform engineering.
-- [[Internal Shared Packages vs Agent-Generated Code]]: The explicit trade-offs between shared internal dependencies and localized, agent-maintained code.
-- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]: Why black-box libraries, dynamic dispatch, and excessive indirection degrade AI reasoning.
-- [[Software Decay and the Hidden Costs of Frictionless AI Code]]: Managing the blast radius, dependency rot, and operational drift that accompany rapid code synthesis.
-- [[A New Market for Small, Custom Business Software]]: How dropping implementation costs enables targeted, zero-dependency software architecture.
+They are not only reusable packages.
+
+They are also repositories of tested engineering knowledge.
+
+Agents can use open-source code to:
+
+- understand edge cases,
+    
+- explain behavior,
+    
+- generate adapters,
+    
+- prepare patches,
+    
+- study implementation strategies,
+    
+- port ideas to another platform.
+    
+
+The value of open source may therefore shift partly from:
+
+```text
+reusable binary
+```
+
+toward:
+
+```text
+reusable knowledge
++ tested implementation
+```
+
+## Agents May Actually Increase the Value of Good Libraries
+
+Libraries and generated code are not necessarily competitors.
+
+A well-documented, predictable library can be an excellent primitive for an agent.
+
+For an agent:
+
+```text
+Use library X to perform Y
+```
+
+is often a more reliable task than:
+
+```text
+Invent an implementation of Y and correctly handle every relevant edge case.
+```
+
+The most mature libraries may therefore become even more useful because agents can compose them efficiently.
+
+Asking an agent to configure an established health check or resilience package produces deterministic, production-ready glue code. Asking it to invent a custom concurrent health-check sweeper with timeouts and cancellation tokens from scratch introduces subtle race conditions and maintenance overhead.
+
+## The Library Ecosystem May Polarize
+
+The ecosystem may gradually separate into different classes:
+
+```text
+tiny convenience dependency
+        ↓
+generate locally
+
+small generic abstraction
+        ↓
+often questionable
+
+medium complex library
+        ↓
+case by case
+
+mature infrastructure component
+        ↓
+use established implementation
+
+critical infrastructure
+        ↓
+strong preference for trusted ownership
+```
+
+The middle of the ecosystem may come under the most pressure.
+
+Very small abstractions become cheap to generate.
+
+Very complex components remain expensive to verify and maintain.
+
+## Paid Libraries Face a New Competitive Pressure
+
+AI also lowers the cost of reimplementing functionality from commercial libraries.
+
+Suppose a company pays for a library providing:
+
+```text
+A
+B
+C
+D
+```
+
+but only uses:
+
+```text
+A
+B
+```
+
+Previously, rebuilding those capabilities may have been economically irrational.
+
+With agents, the company may decide that a narrow internal implementation is cheaper than continuing to pay the license fee.
+
+This weakens a traditional moat:
+
+> We wrote a large amount of code, therefore reproducing the product is too expensive.
+
+The strongest commercial defenses increasingly become things such as:
+
+- continuous maintenance,
+    
+- support,
+    
+- certification,
+    
+- proprietary data,
+    
+- ecosystem effects,
+    
+- integrations,
+    
+- cloud services,
+    
+- legal guarantees,
+    
+- security expertise,
+    
+- trust,
+    
+- deep domain knowledge.
+    
+
+The raw amount of code becomes a weaker barrier.
+
+There is, however, an important legal distinction between implementing similar functionality and copying a protected implementation.
+
+Licenses, copyright, patents, trade secrets, and the way the original implementation was accessed still matter.
+
+AI lowers the economic cost of reimplementation.
+
+It does not remove intellectual-property law.
+
+## A Better Mental Model
+
+The future distinction may not primarily be:
+
+```text
+library
+vs
+custom code
+```
+
+It may instead be:
+
+```text
+commodity code
+vs
+accumulated knowledge
+```
+
+AI dramatically reduces the value of commodity code.
+
+It reduces the value of accumulated knowledge much less.
+
+This leads to a broader conclusion:
+
+> AI does not make libraries obsolete. It changes the reason for using them.
+
+Historically, a common reason was:
+
+> I do not want to write this code.
+
+Increasingly, the stronger reason may be:
+
+> I do not want to own this problem.
+
+That shift may become one of the most important changes in how software dependencies are evaluated in the age of AI agents.

@@ -12,56 +12,15 @@ aliases:
   - Instruction Hierarchy and Policy Enforcement
 ---
 
-# How LLM Systems Enforce Safety and Higher-Level Instructions
+Safety and higher-level constraints are not implemented in one place. They can come from trained behavior, instruction hierarchy, runtime policy, classifiers, evaluators, and tool restrictions.
 
-Safety and higher-level constraints in an LLM system cannot be managed from a single place. Relying exclusively on a system prompt breaks down against adversarial jailbreaks; relying exclusively on post-training alignment fails when enterprise policies and legal statutes change faster than training runs; and relying purely on output filters fails because unsafe tool actions may have already executed.
-
-Production-grade governance requires a defense-in-depth architecture that combines parameter alignment, strict context hierarchies, pre-inference classifiers, deterministic execution sandboxes, and post-inference evaluators.
-
-```text
-  User Request / External Payload
-                 │
-                 ▼
-  +───────────────────────────────+
-  |  Layer 1: Input Classifier    | ──► [Malicious / Injection Detected] ──► Fast Reject / Block
-  |  (Fast Guardrail Model)       |
-  +───────────────────────────────+
-                 │ Clean Request
-                 ▼
-  +───────────────────────────────+
-  |  Layer 2: Context Assembly    | ──► Platform Rules > App Directives > User Prompt > Untrusted RAG
-  |  (Instruction Hierarchy)      |
-  +───────────────────────────────+
-                 │ Structured Prompt
-                 ▼
-  +───────────────────────────────+
-  |  Layer 3: Model Inference     | ──► RLHF / DPO / Constitutional alignment in model weights
-  |  (Parametric Alignment)       |
-  +───────────────────────────────+
-                 │ Candidate Tool Call or Response
-                 ▼
-  +───────────────────────────────+
-  |  Layer 4: Tool Sandbox Gate   | ──► Pre-execution parameter validation, cgroups, network isolation,
-  |  (Deterministic Boundary)     |     least-privilege API tokens
-  +───────────────────────────────+
-                 │ Tool Execution Result / Generated Text
-                 ▼
-  +───────────────────────────────+
-  |  Layer 5: Output Evaluator    | ──► Policy Judge validates PII, safety, and invariants before emit
-  |  (Safety Judge / Filters)     |
-  +───────────────────────────────+
-                 │
-                 ▼
-     Safe Output Emitted to User
-```
-
----
+Relying exclusively on a system prompt breaks down against adversarial jailbreaks; relying exclusively on post-training alignment fails when enterprise policies and legal statutes change faster than training runs; and relying purely on output filters fails because unsafe tool actions may have already executed. Production governance splits safety across parametric alignment, context hierarchies, pre-inference classifiers, deterministic execution sandboxes, and post-inference evaluators.
 
 ## 1. Some Instructions Sit Above the User
 
-Context assembly is not a flat string concatenation where every token carries equal authority. In [[How LLM Systems Build Context]], runtime input must be organized into an explicit instruction hierarchy.
+Another source of context consists of instructions that the user is not supposed to override.
 
-These rules govern operational boundaries:
+Examples include rules concerning:
 
 ```text
 safety
@@ -73,7 +32,7 @@ tool permissions
 instruction hierarchy
 ```
 
-Conceptually, context precedence flows downward:
+Conceptually:
 
 ```text
 platform / system rules
@@ -85,23 +44,25 @@ user instructions
 retrieved content
 ```
 
-A user can ask the model to behave differently, but lower-level instructions must never override higher-level rules. Similarly, retrieved external documents (such as web search results or RAG context) must be treated as untrusted data, never as executable control instructions.
+A user can ask the model to behave differently, but lower-level instructions should not override higher-level rules.
 
-When context windows are loaded with competing or contradictory constraints from different levels, models can exhibit [[Constraint Saturation and Rule Oscillation in Coding Agents]], thrashing between conflicting instructions. To keep behavior predictable, the system must establish the platform layer as authoritative and immutable from the user's perspective, providing a baseline within [[How Modern LLM Systems Build Context, Reason, and Stay Constrained]].
+These instructions are "immutable" from the user's perspective, although they are not necessarily literally embedded as immutable code inside the neural network.
+
+Context assembly is not a flat string where every token carries equal authority. In [[How LLM Systems Build Context]], runtime input must be organized into an explicit hierarchy. Retrieved external documents (such as web search results or RAG context) must be treated as untrusted data, never as executable control instructions.
+
+When context windows are loaded with competing or contradictory constraints across different levels, models can exhibit [[Constraint Saturation and Rule Oscillation in Coding Agents]], thrashing between conflicting instructions. Keeping behavior predictable requires establishing the platform layer as authoritative and immutable from the user's perspective.
 
 ---
 
 ## 2. Safety Is Not Implemented in One Place
 
-A common design flaw is treating safety as a prompt engineering task handled by a single hidden system directive:
+A common misconception is that safety behavior comes from a single hidden prompt such as:
 
 ```text
 Never answer dangerous questions.
 ```
 
-Because LLMs are probabilistic sequence predictors, instruction following is inherently probabilistic. A clever roleplay framing, base64-encoded payload, or nested hypothetical prompt can often circumvent a single text instruction.
-
-Robust production systems distribute safety checks across the lifecycle of a request:
+In practice, a robust system can use several layers.
 
 ```text
                     user request
@@ -119,15 +80,17 @@ Robust production systems distribute safety checks across the lifecycle of a req
                      user
 ```
 
-This defense-in-depth model splits governance between probabilistic layers (prompt guidance, parametric alignment, LLM judges) and deterministic layers (sandboxes, network firewalls, strict API token scoping).
+This is defense in depth.
+
+Because LLMs are probabilistic sequence predictors, relying on a single prompt directive easily breaks down against roleplay framing, encoded payloads, or nested hypothetical questions. A robust defense-in-depth architecture splits governance between probabilistic controls (system prompts, parametric alignment, LLM judges) and deterministic controls (sandboxes, network egress rules, and strict API token scoping).
 
 ---
 
 ## 3. Some Safety Behavior Is Trained Into the Model
 
-Post-training (RLHF, DPO, and Constitutional AI) embeds intrinsic behavioral reflexes directly into model weights.
+Post-training can make safe behavior intrinsically more likely.
 
-Rather than checking an exhaustive runtime rulebook for every token, the model internalizes refusal patterns:
+The model can learn patterns such as:
 
 ```text
 dangerous operational request
@@ -135,17 +98,19 @@ dangerous operational request
 → provide safe adjacent information
 ```
 
-This parametric alignment makes safety far more robust than relying on prompt instructions alone. When confronted with an explicit request to generate exploits or hazardous formulas, the model's base probability distribution favors a direct refusal or pivot, regardless of how the system prompt is configured.
+rather than needing a runtime rule for every possible situation.
 
-The engineering challenge at this layer is avoiding over-refusal. A naive alignment setup refuses benign, security-relevant requests (such as analyzing a synthetic vulnerability or killing a stalled OS process). A well-aligned model differentiates malicious utility from educational or operational analysis, refusing the actionable exploit while providing the safe, adjacent conceptual context.
+This makes safety more robust than relying exclusively on prompt instructions.
+
+Post-training techniques like RLHF, DPO, and Constitutional AI embed refusal reflexes directly into the model weights. Confronted with direct exploit requests, the model's base probability distribution favors refusal regardless of prompt manipulation. The main engineering challenge here is avoiding over-refusal: coarse alignment blocks benign operational tasks like killing a hung process or analyzing a synthetic vulnerability. A properly aligned model refuses the actionable exploit while providing the safe, adjacent technical mechanics.
 
 ---
 
 ## 4. Runtime Instructions Still Matter
 
-While foundational refusals belong in weights, static training cannot handle rules that shift frequently.
+Some constraints are easier to change as instructions than by retraining the entire model.
 
-Updating weights via fine-tuning is slow, expensive, and difficult to audit precisely. Conversely, runtime instructions can be updated in milliseconds to enforce:
+For example:
 
 ```text
 current policy
@@ -155,15 +120,19 @@ organization rules
 temporary restrictions
 ```
 
-If an enterprise client disables a specific database tool, or if a legal team updates the disclosure terms for a specific jurisdiction, those changes are injected at runtime via application instructions and prompt wrappers. This decoupling allows teams to deploy immediate policy changes without triggering a retraining or redeployment cycle for the foundation model.
+These can be supplied to the model at runtime.
+
+This is especially important for rules that may change frequently.
+
+Updating weights via fine-tuning is slow, expensive, and difficult to audit. Conversely, runtime instructions can be updated in milliseconds. If an enterprise disables a specific database tool or legal updates disclosure terms for a specific jurisdiction, those changes are injected at runtime via prompt wrappers, avoiding costly retraining cycles.
 
 ---
 
 ## 5. Classifiers Can Inspect the Input
 
-Evaluating a request before it reaches the primary generation model saves compute and stops attacks early.
+A separate model or classifier can evaluate the request before the main model sees it.
 
-A dedicated input guardrail model (typically a smaller, fine-tuned transformer like a modern cross-encoder, a small language model, or a fast classification head) scans inbound prompts for jailbreak patterns, prompt injections, and prohibited intents:
+For example:
 
 ```text
 request
@@ -181,19 +150,46 @@ prohibited category
 → restricted response
 ```
 
-This architecture provides several advantages:
+This classifier does not need to be the same model that generates the answer.
 
-1. **Cost and Latency**: Dropping malicious requests at the ingress point avoids the latency and token cost of running inference on a large reasoning or generation model.
-2. **Context Scanning for RAG**: The classifier can scan untrusted third-party documents fetched during retrieval before they are injected into the primary model's context window, catching indirect prompt injection attacks before they hit the agent.
-3. **Dynamic Routing**: An input flagged with elevated risk can be routed to an inference pipeline with stricter temperature settings, reduced tool access, or a more rigorous system prompt.
+A dedicated input guardrail model—typically a fast cross-encoder, a small language model, or a lightweight classification head—scans inbound prompts for jailbreak patterns and prompt injections. Dropping malicious requests at ingress avoids burning latency and token budget on large reasoning models. Classifiers also inspect untrusted third-party documents fetched during RAG before injecting them into the context window, neutralizing indirect prompt injection attacks before they reach the primary model.
 
 ---
 
-## 6. Deterministic Sandboxes and Tool Boundaries
+## 6. The Output Can Also Be Evaluated
 
-When an agent has access to external tools (database queries, code execution, shell commands, file systems), conversational safety checks are not enough. If an agent executes a malicious tool call, evaluating the final conversational output is useless—the damage to the infrastructure has already occurred.
+Checking only the user's intent is not enough.
 
-Safety checks for autonomous systems must intercept actions *before* execution:
+A seemingly harmless request can generate an unsafe answer, while a sensitive topic can sometimes be discussed safely.
+
+So the system can instead evaluate:
+
+```text
+USER REQUEST
++
+GENERATED RESPONSE
++
+POLICY
+```
+
+and ask:
+
+```text
+Is this response allowed?
+Does it contain harmful operational detail?
+Did it unnecessarily refuse?
+Can it be made safer while remaining useful?
+```
+
+This allows more nuanced behavior than simply classifying entire topics as allowed or forbidden.
+
+Evaluating the full triplet handles nuances that simple keyword blocklists miss. A request asking how attackers exploit unquoted service paths might trigger basic keyword filters, but if the response explains the theoretical mechanics and remediation steps without providing a copy-paste exploit script, an output evaluator can safely approve it.
+
+### Deterministic Sandboxes and Tool Boundaries
+
+When an agent has access to external tools—such as shell execution, database clients, or file APIs—evaluating text output after the fact is completely inadequate. If an agent executes a destructive tool call, checking the final conversational output cannot reverse the mutation.
+
+Safety checks for autonomous systems must intercept tool actions before execution:
 
 ```text
 model generates tool call
@@ -205,45 +201,16 @@ execution inside hard sandbox (cgroups / read-only FS / restricted network)
 tool result returned to context
 ```
 
-Mechanical controls form the hard boundary:
-
-- **Isolated Execution Environments**: Shell commands and code execution must run inside ephemeral containers with strict memory and CPU limits, non-root user privileges, and read-only root filesystems.
-- **Least-Privilege Scoping**: Database and API access must use scoped credentials tied to the authenticated user rather than broad service keys, as detailed in [[Service vs User Authorization Models]].
-- **Tool Parameter Schema Validation**: Arguments generated by the model must match strict schemas (e.g., Pydantic or JSON Schema). Disallowed paths, out-of-range parameters, or unauthorized target addresses are blocked deterministically by the harness before the network or OS handles the call.
-- **Preventing Tool Clobbering**: In complex environments, tool-calling interfaces must actively prevent agents from overwriting internal tool definitions or taking unauthorized actions driven by untrusted web input, aligning with the principles in [[WebMCP - Turning Web Applications into Agent-Native Toolkits]].
+Mechanical controls enforce the boundary:
+- **Isolated Execution Environments**: Shell and code execution run inside ephemeral containers with strict CPU/memory quotas, unprivileged non-root users, and read-only filesystems.
+- **Least-Privilege Scoping**: Database and API access use scoped credentials tied to the authenticated user rather than broad service keys ([[Service vs User Authorization Models]]).
+- **Tool Parameter Schema Validation**: Disallowed paths, out-of-range parameters, or unauthorized target addresses are blocked deterministically via strict schemas (such as Pydantic or JSON Schema) before the network or operating system handles the call.
 
 ---
 
-## 7. The Output Can Also Be Evaluated
+## 7. A Safety Judge Can Be Another LLM
 
-Checking user intent alone is insufficient. A benign prompt can easily trigger an unsafe, hallucinated, or policy-violating completion, while a sensitive prompt can be handled safely and constructively depending on context.
-
-The system evaluates the complete triplet:
-
-```text
-USER REQUEST
-+
-GENERATED RESPONSE
-+
-POLICY
-```
-
-This evaluation answers specific operational questions:
-
-```text
-Is this response allowed?
-Does it contain harmful operational detail?
-Did it unnecessarily refuse?
-Can it be made safer while remaining useful?
-```
-
-This triplet-based evaluation handles nuances that a simple topic blocklist cannot. A request like "How do attackers exploit unquoted service paths in Windows?" might look risky to a basic keyword filter. But if the generated response explains the theoretical mechanics and remediation steps without providing a functional, copy-paste exploit script, an output evaluation can safely approve it.
-
----
-
-## 8. A Safety Judge Can Be Another LLM
-
-Output evaluation can be executed by specialized, downstream evaluators:
+The architecture can therefore look like:
 
 ```text
 main model
@@ -255,70 +222,83 @@ safety judge
 allow / modify / refuse
 ```
 
-The safety judge is often a specialized model fine-tuned specifically to audit text against a codified policy rubric. In larger architectures, this stage can be split into dedicated micro-evaluators running in parallel:
+The judge may itself be trained specifically to interpret policy.
+
+In more complex systems, several specialized evaluators may exist:
 
 ```text
 security evaluator
-privacy / PII evaluator
+privacy evaluator
 safety evaluator
 quality evaluator
 tool-permission evaluator
 ```
 
-If the candidate response violates an invariant, the pipeline can either:
+The main model is therefore only one component in a larger decision system.
 
-1. **Hard Refuse**: Return a standardized, deterministic error or fallback response to the user.
-2. **Redact**: Strip specific offending elements (e.g., masking leaked PII, API tokens, or phone numbers) while keeping the rest of the answer intact.
+When an evaluator flags a violation, the system typically takes one of three paths:
+1. **Hard Refusal**: Return a deterministic fallback message to the user.
+2. **Redaction**: Mask or strip leaked PII, API tokens, or operational secrets while keeping the rest of the response intact.
 3. **Self-Correction Loop**: Route the rejection reason back into the main model as a steering directive to regenerate a compliant answer.
 
 ---
 
-## 9. Why Multiple Layers Are Necessary
+## 8. Why Multiple Layers Are Necessary
 
-Every defensive mechanism in isolation has structural failure modes:
+Every approach has failure modes.
 
-### Only Training
-- Fails against novel out-of-distribution jailbreaks and semantic phrasing tricks.
-- Cannot keep pace with shifting corporate policies or legal statutes.
-- May over-refuse benign requests due to coarse post-training data.
+### Only training
 
-### Only Instructions (System Prompts)
-- Competes for attention in the context window.
-- Vulnerable to prompt injection, context saturation, and roleplay hijacking.
-- Offers no hard guarantees against deterministic execution hazards.
-
-### Only Classifiers
-- Suffer from non-zero false positive and false negative rates.
-- Struggle with long, multi-turn contexts where adversarial intent is distributed across multiple messages.
-
-### Only Output Checking
-- Cannot prevent unsafe intermediate actions (such as mutating database calls or unauthorized API requests) that an agent ran earlier in the chain.
-- Adds downstream latency to streaming responses.
-
-### Only Deterministic Sandboxing
-- Protects underlying compute and networks, but fails to prevent the delivery of toxic text, PII leakage, or logical manipulation to the end user.
-
-A resilient system combines them:
+The model may encounter:
 
 ```text
-training (weights)
+new jailbreaks
+new situations
+distribution shift
+ambiguous requests
+```
+
+### Only instructions
+
+The model may misinterpret or fail to follow them.
+
+### Only classifiers
+
+They produce false positives and false negatives.
+
+### Only output checking
+
+Unsafe intermediate tool actions could already have happened.
+
+### Only deterministic sandboxing
+
+Sandboxes protect compute and network perimeters, but cannot prevent toxic outputs, data exfiltration through user-facing text, or hallucinated logic.
+
+Therefore a stronger design is:
+
+```text
+training
 +
-instruction hierarchy (context layout)
+instruction hierarchy
 +
-input checks (guardrail models)
+input checks
 +
-tool restrictions (deterministic sandboxes)
+tool restrictions
 +
-output evaluation (judges and PII filters)
+output evaluation
 +
-monitoring (audit telemetry)
+monitoring
 ```
 
 ---
 
-## 10. Rules Cannot Live Permanently Inside Model Weights
+## 9. Some Rules Cannot Live Permanently Inside Model Weights
 
-Rules like "Do not provide illegal instructions" appear straightforward, but their real-world application depends on dynamic, volatile factors:
+Rules such as:
+
+> Do not provide illegal instructions.
+
+sound simple but depend on:
 
 ```text
 country
@@ -330,26 +310,18 @@ context
 purpose
 ```
 
-Legal statutes and regulatory environments change far faster than foundation models can be trained and deployed. Attempting to bake jurisdiction-specific compliance laws directly into neural weights guarantees that the model will be out of date within months.
+Law changes faster than model weights.
 
-The system architecture must decouple:
+Therefore the system may require:
 
 ```text
-stable learned behavior (weights)
+stable learned behavior
 +
-current instructions (context injection)
+current instructions
 +
-current external information (retrieval / policy engines)
+current external information
 ```
 
-The foundation model provides generalized language comprehension, reasoning ability, and baseline safety reflexes. Dynamic context and external deterministic policy engines supply the active jurisdictional rules, licensing limits, and organizational boundaries. This separation ensures the system remains compliant, auditable, and maintainable over time.
+The same is true for many organizational policies and compliance requirements.
 
----
-
-## Relationship to the Knowledge Graph
-
-- **[[How Modern LLM Systems Build Context, Reason, and Stay Constrained]]**: Broader architectural overview combining context construction, reasoning loops, and policy constraints.
-- **[[How Context Narrows an AI's Solution Space]]**: Explores how legal, jurisdictional, and policy constraints systematically narrow an agent's viable search and generation space.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Contrasts probabilistic prompt-level steering with mechanical, state-machine guardrails during automated code execution.
-- **[[Service vs User Authorization Models]]**: Technical analysis of identity delegation, least-privilege scoping, and permission boundaries when agents act on behalf of users.
-- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: In-browser permission dialogs, tool clobbering prevention, and indirect prompt injection defenses for web-integrated tools.
+Attempting to bake jurisdiction-specific compliance laws directly into neural weights guarantees obsolescence within months. The system architecture must decouple stable foundation reasoning and safety reflexes (in weights) from dynamic jurisdictional rules, licensing limits, and organizational policies (in context and deterministic policy engines). This separation keeps the system compliant, auditable, and maintainable over time.

@@ -12,93 +12,131 @@ aliases:
   - Reusable Service Platform Blocks
 ---
 
-# Standardizing Service Infrastructure with Reusable Blocks
+## Context
 
-> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
-> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+As an organization, we repeatedly solve the same technical problems across many services.
 
-Organizations repeatedly face the challenge of standardizing service infrastructure across distributed architectures. Whether running independent microservices or deploying modules inside a [[Scaling a Modular Monolith with Local-or-Remote Module Execution|modular monolith]], teams solve the same fundamental problems across dozens of systems:
+Examples include:
 
-- Application startup and dependency injection
-- Structured logging
-- Distributed tracing
-- Metrics and telemetry collection
-- Health checks and readiness probes
-- Authentication and token validation
-- Secrets management
-- Database connectivity and connection pooling
-- Messaging and queue consumers
-- Outbound HTTP communication and [[Service-to-Service Communication - How Service A Should Call Service B|service-to-service communication]]
-- Retries, timeouts, and circuit breakers
-- Grafana dashboards and monitoring
-- Deployment configurations and container manifests
+- application startup and dependency injection,
+    
+- structured logging,
+    
+- distributed tracing,
+    
+- metrics,
+    
+- health checks,
+    
+- authentication,
+    
+- secrets management,
+    
+- database connectivity,
+    
+- messaging and queues,
+    
+- outbound HTTP communication,
+    
+- retries and timeouts,
+    
+- Grafana dashboards,
+    
+- deployment configuration.
+    
 
-At the same time, some of these capabilities cannot merely look similar; they must operate consistently across the entire organization. Every service must:
+At the same time, some of these capabilities should not merely look similar.
 
-- Emit logs in a searchable, predictable schema.
-- Expose standardized liveness and readiness probes.
-- Propagate W3C trace context and correlation identifiers across service boundaries.
-- Publish standard operational Golden Signals (latency, traffic, errors, saturation).
-- Integrate seamlessly with centralized monitoring dashboards.
-- Support organizational alerting thresholds.
-- Be diagnosable using standard operational tools.
+They should work consistently across the entire organization.
 
-This creates a legitimate need for standardization. The core architectural question is:
+For example, every service should:
 
-> Should the organization build a single framework in which all services are developed, or should it provide smaller, composable building blocks that each service assembles explicitly?
+- emit logs in a searchable and predictable format,
+    
+- expose meaningful health checks,
+    
+- propagate trace and correlation identifiers,
+    
+- publish standard operational metrics,
+    
+- integrate with common dashboards,
+    
+- support consistent alerting,
+    
+- be diagnosable using the same operational tools.
+    
 
-```text
-+----------------------------------------------------------------------------------------------------+
-|               STANDARDIZED SERVICE PLATFORM: PAVED ROAD VS CORPORATE FRAMEWORK                    |
-+----------------------------------------------------------------------------------------------------+
-|                                                                                                    |
-|   MONOLITHIC FRAMEWORK (Anti-Pattern)              COMPOSABLE PAVED ROAD (Target Architecture)     |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|  | Single Opaque Wrapper               |          | Application Host (Explicit Composition)    |   |
-|  |   builder.Services                  |          |   builder.Services                         |   |
-|  |     .AddCompanyPlatform();          |          |     .AddCompanyLogging()                   |   |
-|  | (Couples all services to one mega-  |          |     .AddCompanyTracing()                   |   |
-|  | dependency graph, leaks base        |          |     .AddCompanyHealthChecks()              |   |
-|  | classes, forces lock-step upgrades) |          |     .AddCompanyPostgres();                 |   |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|                     |                                                   |                          |
-|                     v                                                   v                          |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|  | Rigid Runtime Lock-In               |          | Independent Granular Packages              |   |
-|  | Upgrading a telemetry package       |          | Telemetry | Security | Resilience | DB     |   |
-|  | breaks database drivers and HTTP    |          | (Decoupled versioning & release cadences)  |   |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|                     |                                                   |                          |
-|                     v                                                   v                          |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|  | Enforced by Compiler Types          |          | Enforced by Conformance Test Suites        |   |
-|  | "Must inherit from BaseHandler"     |          | Black-box verification of W3C, OTLP, & HTTP|   |
-|  +-------------------------------------+          +--------------------------------------------+   |
-|                                                                                                    |
-+----------------------------------------------------------------------------------------------------+
-```
+This creates a legitimate need for standardization.
+
+The key architectural question is:
+
+> Should the organization build one framework in which all services are developed, or should it provide smaller building blocks that each service composes explicitly?
 
 ---
 
 ## The Real Problem We Are Trying to Solve
 
-Standardization initiatives often stall because two distinct engineering problems get conflated into one:
+There are two different problems that are often mixed together.
 
-### 1. Repeated Implementation (Code Reuse)
-Teams write similar boilerplate across repositories: setting up logging sinks, configuring [[OpenTelemetry]] pipelines, establishing HTTP client factories, wiring health checks, configuring database connection strings, binding queue consumers, and standardizing exception-handling middleware. This duplication leads to divergent implementations and wasted effort.
+### Repeated implementation
 
-### 2. Required Operational Consistency (Platform Conformance)
-The organization requires guarantees that every deployed service functions correctly as a node in the platform. Infrastructure operators need logs with uniform fields, traces that traverse network hops without losing parent context, metric names and labels that match centralized dashboards, predictable health-check status codes, and uniform telemetry metadata indicating environment, region, and commit SHA.
+Teams repeatedly write similar code for:
 
-The first problem is about **reuse**. The second problem is about **conformance**. 
+- logging setup,
+    
+- telemetry registration,
+    
+- HTTP clients,
+    
+- health checks,
+    
+- database configuration,
+    
+- queue consumers,
+    
+- middleware,
+    
+- error handling.
+    
 
-A shared, monolithic runtime framework is only one possible solution to both problems, and it usually creates more operational debt than it solves.
+This creates duplication and inconsistent implementations.
+
+### Required operational consistency
+
+The organization also needs guarantees that every deployed service behaves correctly as part of the platform.
+
+For example:
+
+- logs contain the required fields,
+    
+- traces cross service boundaries,
+    
+- metrics use common names and labels,
+    
+- health endpoints have consistent semantics,
+    
+- standard Grafana dashboards work,
+    
+- alerts can be defined centrally,
+    
+- retry and timeout behavior is observable,
+    
+- deployment metadata is attached to telemetry.
+    
+
+The first problem is about reuse.
+
+The second problem is about conformance.
+
+A shared runtime framework is only one possible solution to both problems.
 
 ---
 
 ## The Appeal of a Corporate Framework
 
-A corporate framework makes initial greenfield development effortless. A service bootstrap can be as brief as:
+A corporate framework can make the common path very easy.
+
+A service may only need:
 
 ```csharp
 builder.Services.AddCompanyPlatform(configuration);
@@ -110,18 +148,30 @@ app.UseCompanyPlatform();
 app.Run();
 ```
 
-Behind that single extension method, the framework auto-configures:
-- Structured logging sinks
-- OpenTelemetry instrumentation and Grafana exporters
-- Health check endpoints
-- JWT validation and service-to-service authentication
-- Global exception handling middleware
-- Outbound HTTP resilience policies (Polly)
-- Database connections and ORM conventions
-- Message broker connections and topologies
-- Cloud provider integrations
+The framework may configure:
 
-To maximize consistency, the framework often imposes an application taxonomy:
+- logging,
+    
+- OpenTelemetry,
+    
+- Grafana exporters,
+    
+- health checks,
+    
+- authentication,
+    
+- exception handling,
+    
+- HTTP resilience,
+    
+- databases,
+    
+- queues,
+    
+- cloud integrations.
+    
+
+It may also impose an application structure:
 
 ```text
 Commands/
@@ -132,78 +182,125 @@ ExternalServices/
 Infrastructure/
 ```
 
-It frequently ships opinionated base types:
-- Command and query handler interfaces
-- Wrappers around document and relational databases
-- Specialized handlers for outbound REST communication
-- Corporate `Result<T>` and error types
-- Request validation pipelines
-- Mandatory base classes for entities and domain models
-- Scanning conventions for dependency injection
+It may define:
 
-This approach offers undeniable early benefits:
-- New services spin up in an afternoon.
-- The folder layout and code style look identical across teams.
-- Onboarding developers is straightforward because patterns are pre-baked.
-- Teams spend less time arguing over boilerplate architecture.
-- Boilerplate is eliminated.
-- The happy path is well-defined and frictionless.
+- command and query handlers,
+    
+- wrappers for document databases,
+    
+- special handlers for REST calls,
+    
+- result types,
+    
+- validation pipelines,
+    
+- base classes,
+    
+- conventions for dependency injection.
+    
 
-It is easy to see why engineering leads reach for this model. It lets product engineers focus almost entirely on domain logic.
+This approach offers real benefits:
+
+- fast creation of new services,
+    
+- consistent code structure,
+    
+- easier onboarding,
+    
+- fewer architectural discussions,
+    
+- predictable locations for code,
+    
+- reduced boilerplate,
+    
+- a clear happy path.
+    
+
+Many developers may reasonably prefer this model because it lets them concentrate on business functionality.
 
 ---
 
 ## The Deferred Cost of a Framework
 
-The convenience of a single corporate framework comes with a substantial, deferred cost. Over time, the framework quietly usurps ownership of the application.
+The cost of such convenience is often delayed.
 
-Common failure modes include:
+A framework can gradually become the hidden owner of the application.
 
-- **Startup opacity**: Looking at `Program.cs` no longer reveals how the application actually behaves. Everything is hidden behind magic extension methods.
-- **Hidden middleware ordering**: ASP.NET Core middleware pipelines depend heavily on execution order (e.g., routing before authentication, authentication before authorization, exception handling wrapping everything). A framework that bundles middleware into a single call hides this order, making it difficult to inject custom pipeline logic.
-- **Buried runtime policies**: Default timeouts, retry counts, connection pool sizes, and circuit breaker thresholds live inside binary dependencies rather than source code.
-- **Framework type pollution**: Custom result objects, base classes, and specialized interfaces spread throughout the business layer, making it impossible to migrate or decouple down the road.
-- **Leaky wrapper abstractions**: Every external library (EF Core, MassTransit, NServiceBus, Redis) gets wrapped in a corporate-specific interface that exposes only 80% of the underlying library's features, frustrating developers who need advanced capabilities.
-- **Feature bloat via configuration flags**: As edge cases emerge, the framework accumulates a sprawling configuration schema to satisfy services that need slightly different behavior.
-- **Bloated dependency graphs**: A service that only needs to read from a queue pulls in transitively packaged database drivers, cloud SDKs, and REST libraries.
-- **Upgrade paralysis**: Upgrading a minor version of a logging library forces a new release of the framework, which in turn forces a synchronized upgrade across all corporate services.
-- **Unclear ownership and abandonment**: Teams become afraid to change the framework because its blast radius covers the entire enterprise. It slowly stagnates, and teams begin hacking around it.
+Typical symptoms include:
 
-What started as a helpful paved road becomes a rigid walled garden. The standard path is easy; any deviation from it becomes an uphill battle against the framework's internal assumptions.
+- application startup no longer explains how the service works,
+    
+- middleware registration and ordering are hidden,
+    
+- runtime policy is buried inside extension methods,
+    
+- framework types spread through business code,
+    
+- every integration receives a dedicated abstraction,
+    
+- uncommon scenarios require special flags or workarounds,
+    
+- consumers depend on features they do not use,
+    
+- the package introduces a large dependency graph,
+    
+- the framework becomes difficult to update,
+    
+- ownership becomes unclear,
+    
+- teams are afraid to change it,
+    
+- the framework eventually stops evolving.
+    
+
+In ASP.NET Core, middleware execution is strictly order-dependent—routing must precede authentication, authentication must precede authorization, and exception handlers must wrap the entire pipeline. When a monolithic platform method registers these internally, teams cannot inject custom middleware between framework layers or adjust the pipeline without cracking open or bypassing the framework entirely.
+
+The framework may have started as a useful paved road but gradually become a closed architectural model.
+
+The common path remains easy.
+
+Anything outside the common path becomes disproportionately difficult.
 
 ---
 
 ## A Framework Is Not Inherently Bad
 
-The issue is not the existence of shared internal packages. Internal libraries [[Designing Internal Packages as an Explicit, Composable Framework|designed as an explicit, composable framework]] provide real value when they deliver:
+The problem is not that internal NuGet packages collectively form a framework.
 
-- Stable, vetted capabilities
-- Sensible, production-tested defaults
-- Reliable infrastructure integrations
-- A consistent developer experience
-- Safe security and resilience patterns
+A framework can be useful when it provides:
 
-The foundational design question is:
+- stable capabilities,
+    
+- sensible defaults,
+    
+- tested integrations,
+    
+- a consistent developer experience,
+    
+- safe infrastructure mechanisms.
+    
 
-> **Who owns the final composition of the application?**
+The important question is:
 
-In a healthy architecture, the **application owns the composition**, importing and assembling libraries as needed. In an unhealthy architecture, the **framework owns the composition**, dictating application lifecycle, structure, and dependencies on its own terms.
+> Who owns the final composition of the application?
+
+A healthy framework is composed by the application.
+
+An unhealthy framework configures the application on its behalf.
 
 ---
 
 ## Prefer Explicit Composition
 
-Instead of a monolithic catch-all registration:
+Instead of one large registration:
 
 ```csharp
-// Anti-pattern: Monolithic, opaque platform registration
 builder.Services.AddCompanyPlatform(configuration);
 ```
 
-Prefer granular, explicit capability modules:
+prefer explicit modules:
 
 ```csharp
-// Target: Explicit, modular service composition
 builder.Services.AddCompanyLogging();
 builder.Services.AddCompanyTracing();
 builder.Services.AddCompanyMetrics();
@@ -213,10 +310,9 @@ builder.Services.AddCompanyServiceBus();
 builder.Services.AddCompanyPostgres();
 ```
 
-Keep the middleware pipeline fully visible in application code:
+Middleware should also remain visible:
 
 ```csharp
-// Target: Transparent middleware pipeline
 app.UseCompanyCorrelation();
 app.UseCompanyExceptionHandling();
 app.UseAuthentication();
@@ -224,22 +320,34 @@ app.UseAuthorization();
 app.UseCompanyRequestLogging();
 ```
 
-This approach requires more lines of code in `Program.cs`, but that code is not meaningless boilerplate. It is an **executable architecture document**.
+This configuration may contain more lines of code, but those lines are not meaningless boilerplate.
 
-By inspecting `Program.cs`, an engineer or an automated agent immediately knows:
-- Which infrastructure components are active.
-- Which third-party or cloud providers are configured.
-- What runtime policies are applied.
-- The exact order of middleware execution.
-- Which components can be removed, updated, or swapped out without unintended side effects.
+They form an executable description of the service architecture.
 
-The service must remain the master of its own bootstrap process.
+A developer or agent can see:
+
+- which capabilities are active,
+    
+- which providers are used,
+    
+- which policies are configured,
+    
+- in what order middleware executes,
+    
+- which component can be removed,
+    
+- which component can be replaced.
+    
+
+The application should remain the owner of its bootstrap process.
 
 ---
 
 ## Provide Building Blocks, Not One Mandatory Application Model
 
-Platform engineering should focus on maintaining a curated catalog of independent, composable building blocks rather than a monolithic runtime chassis:
+A better organizational approach is usually to provide a catalog of supported components.
+
+For example:
 
 ```text
 Company.Observability.Core
@@ -261,10 +369,11 @@ Company.Http.Resilience
 Company.HealthChecks
 ```
 
-Each service imports and configures only the modules it requires:
+A service chooses and composes only the modules it needs.
+
+For example:
 
 ```csharp
-// Service A: Relational persistence with Service Bus messaging
 services.AddCompanyObservability();
 services.AddGrafanaExporter();
 
@@ -274,153 +383,156 @@ services.AddAzureServiceBus();
 services.AddPostgresPersistence();
 ```
 
-A different service with different performance or transport needs might configure Kafka and a document store:
+Another service may choose Kafka, Azure Monitor, or a document database.
 
-```csharp
-// Service B: Event-streaming service with Document DB
-services.AddCompanyObservability();
-services.AddAzureMonitorExporter();
+Both can remain compliant with the same organizational requirements.
 
-services.AddCompanyMessaging();
-services.AddKafka();
-
-services.AddDocumentDbPersistence();
-```
-
-Both services satisfy organizational requirements for telemetry, logging, and security, but neither carries dependencies or abstractions it does not need. Standardization emerges through **composition**, not forced inheritance.
+The framework then becomes the result of composition rather than a mandatory starting point imposed on all services.
 
 ---
 
 ## Modularity Means Replaceability
 
-Splitting a monolith into twenty NuGet packages achieves nothing if they are tightly coupled behind the scenes. True modularity requires that packages be independently replaceable.
+Splitting one framework into many NuGet packages is not enough.
 
-A well-designed platform module exhibits:
-- A single, well-defined responsibility.
-- A minimal, stable public API surface.
-- A lean dependency graph (avoiding transitive dependencies on heavy external SDKs unless strictly necessary).
-- Explicit dependency injection registration.
-- Strongly typed, validated configuration options.
-- Independent test suites that run without platform-wide dependencies.
-- A clearly defined operational contract.
-- The ability to be swapped out for a standard open-source library without requiring structural rewrites.
+The modules must be genuinely independent.
 
-For example, a service using the platform's telemetry module:
+A useful module should have:
+
+- one clear responsibility,
+    
+- a small public API,
+    
+- a limited dependency tree,
+    
+- explicit registration,
+    
+- explicit configuration,
+    
+- independent tests,
+    
+- a clear operational contract,
+    
+- the ability to be removed or replaced.
+    
+
+For example:
 
 ```csharp
 services.AddCompanyTelemetry();
 ```
 
-should be cleanly replaceable with the raw OpenTelemetry SDK if the team requires specialized instrumentation:
+should be replaceable with:
 
 ```csharp
 services
     .AddOpenTelemetry()
-    .WithTracing(tracing => tracing
-        .AddSource("CustomSource")
-        .AddAspNetCoreInstrumentation()
-        .AddOtlpExporter())
-    .WithMetrics(metrics => metrics
-        .AddMeter("CustomMeter")
-        .AddAspNetCoreInstrumentation()
-        .AddOtlpExporter());
+    .WithTracing(...)
+    .WithMetrics(...);
 ```
 
-This replacement must not require rewriting:
-- Business domain logic
-- CQRS handlers or controllers
-- Route endpoints
-- Domain entities
-- Unrelated persistence or messaging infrastructure
+without rewriting:
 
-Replaceability is almost always better than endlessly expanding a central configuration object with boolean flags:
+- business logic,
+    
+- handlers,
+    
+- endpoints,
+    
+- domain models,
+    
+- unrelated infrastructure.
+    
+
+Replaceability is often more valuable than exposing dozens of configuration flags.
+
+Instead of creating one module that supports every possible provider through options:
 
 ```csharp
-// Anti-pattern: The "God Options" configuration object
 services.AddCompanyLogging(options =>
 {
     options.UseSerilog = true;
     options.UseGrafana = true;
     options.UseAzureMonitor = false;
     options.UseCustomFormatter = true;
-    options.EnableLegacyXmlSchema = false;
 });
 ```
 
-Prefer composition of smaller packages:
+prefer composition:
 
 ```csharp
-// Target: Composing single-purpose libraries
 services.AddCompanyLoggingCore();
 services.AddSerilogLogging();
 services.AddGrafanaExporter();
 services.AddCompanyLogEnrichment();
 ```
 
-Flexibility should come from adding, removing, and swapping modules, not from managing an sprawling matrix of configuration flags.
+Flexibility should come from replacing and composing modules, not from continuously expanding one configuration object.
 
 ---
 
 ## Avoid Framework Types in Business Code
 
-Infrastructure packages should operate at the application boundaries: HTTP adapters, message bus listeners, database contexts, and telemetry sinks. They should not dictate the internal language of the domain model.
+Infrastructure modules should integrate at application boundaries.
 
-Watch out for these red flags:
-- Application handlers inheriting from corporate base classes.
-- Public service methods forced to return corporate `ServiceResult<T>` wrappers.
-- Domain models implementing framework interfaces.
-- Outbound REST communication requiring inheritance from proprietary HTTP handlers.
-- Database access funneled through an inflexible generic repository base class.
-- Directory and class naming structures strictly enforced by reflection-based runtime runners.
-- The inability to decouple business logic from the corporate package without a full rewrite.
+They should not define the internal language of the whole application.
 
-Consider this inheritance-heavy anti-pattern:
+Warning signs include:
+
+- every handler inherits from a framework base class,
+    
+- every operation returns a corporate result wrapper,
+    
+- domain models implement package interfaces,
+    
+- REST calls require special framework handlers,
+    
+- database access must use a generic framework repository,
+    
+- application structure is enforced through runtime types,
+    
+- removing the framework requires rewriting business logic.
+    
+
+For example, this may be unnecessary:
 
 ```csharp
-// Anti-pattern: Business handler coupled directly to framework base classes
-public sealed class CustomerQueryHandler 
+public sealed class CustomerQueryHandler
     : ExternalRestQueryHandlerBase<CustomerQuery, CustomerResponse>
 {
-    // Hidden execution life-cycle hooks buried in the base class
 }
 ```
 
-A cleaner, explicit design keeps the boundary clear:
+A simpler and more explicit design may be:
 
 ```csharp
-// Target: Clean boundary isolation using standard typed clients
 public sealed class CustomerClient
 {
-    private readonly HttpClient _httpClient;
-
-    public CustomerClient(HttpClient httpClient) => _httpClient = httpClient;
-
-    public async Task<Customer> GetCustomerAsync(
-        CustomerId id, 
-        CancellationToken cancellationToken)
-    {
-        // Standard, testable HTTP invocation using application-level models
-        return await _httpClient.GetFromJsonAsync<Customer>(
-            $"/customers/{id}", 
-            cancellationToken);
-    }
+    public Task<Customer> GetCustomerAsync(
+        CustomerId id,
+        CancellationToken cancellationToken);
 }
 ```
 
-The architectural requirement is that external communication is visible, isolated, resilient, and observable. That does not require creating a proprietary corporate abstraction over `HttpClient`.
+The important architectural requirement is that external communication is isolated and visible.
 
-Similarly, wrapping Entity Framework Core or Dapper inside an organizational "Generic Repository" often strips away the underlying library's best features (change tracking control, optimized projections, raw SQL escape hatches) while presenting a leaky abstraction that requires constant maintenance. Standardize the operational behavior, not the language primitives.
+It does not necessarily require a new category of framework handler.
+
+Similarly, a generic document repository may hide important database capabilities and eventually become a limited reimplementation of the native client.
+
+The organization should standardize the required behavior and operational properties without unnecessarily replacing every underlying technology with a corporate abstraction.
 
 ---
 
 ## Distinguish Mechanism from Policy
 
-Platform packages should provide the **mechanism**. The application should specify the **policy**.
+Shared packages may provide mechanisms.
 
-A resilience package should provide the plumbing for retries, timeouts, and circuit breakers, but the service must declare the actual thresholds:
+Applications should explicitly select important policies.
+
+For example, a package may provide retry support:
 
 ```csharp
-// Target: Mechanism provided by platform, policy declared by application
 services.AddCompanyHttpResilience(options =>
 {
     options.MaxAttempts = 3;
@@ -429,133 +541,239 @@ services.AddCompanyHttpResilience(options =>
 });
 ```
 
-Avoid sweeping these critical operational decisions behind magic catch-all defaults:
+Avoid hiding these decisions behind:
 
 ```csharp
-// Anti-pattern: Hiding critical operational policy
 services.AddCompanyDefaults();
 ```
 
-An engineer reading the application code must be able to see:
-- Timeout durations
-- Retry counts and backoff algorithms
-- Whether non-idempotent HTTP methods (POST, PATCH) are retried
-- Whether sensitive request/response bodies are logged
-- Which exporters are active
-- How health check dependencies are weighted (critical dependency vs. degraded performance)
-- Which downstream failures affect readiness probes
+Operational decisions such as the following should remain visible:
 
-A framework does not eliminate these operational decisions; it merely buries them. When a downstream dependency degrades in production, engineers need these policies clearly visible in source code, not hidden in an external package's default settings.
+- timeout duration,
+    
+- retry count,
+    
+- which operations may be retried,
+    
+- whether request bodies are logged,
+    
+- which exporters are enabled,
+    
+- how health checks are classified,
+    
+- which failures affect readiness.
+    
+
+A framework does not remove such decisions.
+
+It only moves them somewhere else.
+
+If they are important for the behavior of the service, they should remain inspectable.
 
 ---
 
 ## Standardize Outcomes, Not Necessarily Implementations
 
-The organizational mandate should never be:
+The central organizational contract should not always be:
 
-> *"Every service must import Company.Framework v4.2.1."*
+> Every service must use the same NuGet package.
 
-The durable, resilient platform contract is:
+A more durable contract is:
 
-> *"Every service must adhere to the platform's operational contract at runtime."*
+> Every service must demonstrate the required runtime behavior.
 
-Under this model, the organization mandates that every deployed service must:
-- Emit structured logs as JSON matching the corporate schema.
-- Provide a consistent, stable `service.name` attribute.
-- Extract and propagate W3C `traceparent` and `tracestate` headers across boundaries.
-- Export standard RED/Golden Signal request metrics.
-- Expose `/healthz/live` and `/healthz/ready` endpoints with standard semantic payload structures.
-- Trace inbound HTTP calls and downstream persistence/messaging dependencies.
-- Emit queue consumer and database client telemetry.
-- Supply telemetry attributes compatible with centralized Grafana dashboards.
-- Output metrics required to trigger centralized alerts.
+For example, the organization may require that every service:
 
-One service may satisfy these requirements using the internal `Company.Observability` building blocks. Another service—perhaps written in Go, Rust, or Python, or built by a team with unique performance requirements—can satisfy the exact same contract using native OpenTelemetry and open-source middleware.
+- emits structured logs,
+    
+- provides a stable `service.name`,
+    
+- propagates correlation and trace identifiers,
+    
+- exports standard request metrics,
+    
+- exposes liveness and readiness endpoints,
+    
+- produces traces for inbound and outbound calls,
+    
+- exposes queue and database telemetry,
+    
+- works with standard Grafana dashboards,
+    
+- produces the data required by standard alerts.
+    
 
-Both services are fully compliant platform citizens. This mindset protects the architecture from obsolescence while guaranteeing operational consistency.
+One service may satisfy this contract using internal packages.
+
+Another may use OpenTelemetry directly.
+
+Both should be acceptable when they produce the same compliant operational result.
+
+This preserves replaceability while maintaining platform consistency.
 
 ---
 
 ## Operational Conformance Tests
 
-To verify that services meet the platform contract without dictating their internal implementation, treat operational readiness as a first-class testing discipline. This requires separating business validation from operational validation:
+Every service should be tested as a running system for compliance with the operational platform.
+
+This is separate from business end-to-end testing.
+
+### Business E2E tests
+
+These validate a business workflow:
 
 ```text
-BUSINESS END-TO-END TEST:
-Create Order -> Reserve Inventory -> Publish Event -> Return HTTP 201 Created
-
-OPERATIONAL CONFORMANCE TEST:
-Trigger Request -> Verify Structured Log Format -> Verify Distributed Trace Propagation
-                -> Verify Metric Export -> Verify Dashboard Schema Compatibility
+Create order
+→ reserve inventory
+→ publish event
+→ return confirmation
 ```
 
-A service can process business logic flawlessly while being completely invisible to monitoring systems. Conversely, a service can emit beautiful telemetry while calculating invoices incorrectly. Both aspects require independent automated validation.
+### Operational E2E tests
+
+These validate integration with the platform:
+
+```text
+Request
+→ structured log
+→ metric
+→ trace
+→ dashboard-compatible labels
+```
+
+A service can behave correctly from a business perspective while being operationally invisible.
+
+It can also emit telemetry correctly while implementing business behavior incorrectly.
+
+Both kinds of testing are necessary.
 
 ---
 
-## What Operational Conformance Tests Must Validate
+## What Operational E2E Tests Should Validate
 
-An automated operational test suite should spin up the service in a test harness (e.g., using `WebApplicationFactory` or Testcontainers) and assert against its external telemetry and runtime behavior:
+An operational certification suite may verify that:
 
-### 1. Logging
-- Logs are emitted to standard output in structured JSON.
-- Mandatory fields are present (`timestamp`, `log.level`, `message`, `service.name`, `deployment.environment`).
-- Active W3C `trace_id` and `span_id` are automatically correlated into the log context.
-- Inbound correlation IDs (e.g., `X-Correlation-ID`) are captured and attached.
-- Handled and unhandled exceptions output complete stack traces without leaking connection strings, PII, or authorization credentials.
+### Logging
 
-### 2. Distributed Tracing
-- Inbound HTTP requests automatically create an active server span.
-- Outbound HTTP requests, database queries, and message publications create child spans linked to the root trace.
-- W3C `traceparent` context is injected into outbound transport headers.
-- Spans contain mandatory OpenTelemetry semantic convention tags (`http.response.status_code`, `http.request.method`, `server.address`, `db.system`).
+- logs are actually emitted,
+    
+- logs are structured,
+    
+- required fields are present,
+    
+- `service.name` is correct,
+    
+- environment and deployment metadata are present,
+    
+- correlation ID is propagated,
+    
+- trace ID is included,
+    
+- errors produce appropriate log entries,
+    
+- secrets and sensitive values are not logged.
+    
 
-### 3. Metrics and Telemetry
-- The runtime exposes a scraping endpoint (e.g., `/metrics`) or pushes via OTLP.
-- Standard counters and histograms are emitted (`http.server.request.duration`, `http.client.request.duration`).
-- Dependency latencies are tagged with the downstream target name.
-- Metric labels use expected platform keys without unbound cardinality (avoiding raw user IDs or paths with dynamic IDs in label values).
+### Tracing
 
-### 4. Health and Readiness Contracts
-- Liveness (`/healthz/live`) and readiness (`/healthz/ready`) endpoints are distinct.
-- Readiness checks accurately report the state of critical backing stores (PostgreSQL, Kafka, Redis).
-- Transient network drops to downstream dependencies flip readiness checks to unhealthy (503) while keeping liveness healthy (200).
-- Health responses output a consistent JSON payload format.
+- inbound HTTP requests create spans,
+    
+- outbound REST calls create child spans,
+    
+- database calls are traced,
+    
+- queue publication and consumption are traced,
+    
+- trace context propagates across service boundaries,
+    
+- spans contain standard attributes.
+    
 
-### 5. Centralized Monitoring Compatibility
-- Metrics and labels match the queries written in corporate Grafana dashboards.
-- A metric rename or label modification fails the test suite before it can break production alerting.
-- Alerting rules (e.g., error rate > 1% over 5 minutes) can evaluate the service's test metrics cleanly.
+### Metrics
 
-### 6. Runtime Resilience
-- Transient 503 errors on outbound calls trigger the configured number of retries before bubbling up.
-- Upstream client timeouts cleanly cancel internal downstream database queries via `CancellationToken`.
-- Dead-letter queues accurately capture failed messages along with failure reason headers.
+- request count is exported,
+    
+- error count is exported,
+    
+- request duration is available,
+    
+- dependency latency is available,
+    
+- queue metrics are available,
+    
+- retries and timeouts are visible,
+    
+- metric names and labels match platform conventions.
+    
+
+### Health checks
+
+- liveness and readiness are separate,
+    
+- readiness reflects required dependencies,
+    
+- temporary dependency failures have the expected effect,
+    
+- health endpoints use a stable response contract,
+    
+- health checks do not expose sensitive details.
+    
+
+### Grafana integration
+
+- the service appears in standard dashboards,
+    
+- dashboard queries return data,
+    
+- labels use expected names,
+    
+- required panels are populated,
+    
+- common alerts can evaluate the service,
+    
+- a metric rename does not silently break dashboards.
+    
+
+### Runtime behavior
+
+- retry policies behave as declared,
+    
+- timeouts are enforced,
+    
+- queue failures are observable,
+    
+- dead-letter behavior is measurable,
+    
+- deployment information is attached to telemetry.
+    
 
 ---
 
 ## Test the Result, Not the Library Choice
 
-Avoid writing tests that verify an internal dependency graph or class structure. Verify the external, black-box runtime behavior instead.
+A conformance test should not require a particular implementation type.
+
+Bad:
 
 ```csharp
-// Anti-pattern: Brittle unit test verifying internal framework types
-[Fact]
-public void ShouldUseCompanyRetryHandler()
-{
-    var handler = serviceProvider.GetService<HttpMessageHandler>();
-    Assert.IsType<CompanyPlatformRetryHandler>(handler); // Coupled to internal types
-}
+service.Should().BeOfType<CompanyRetryHandler>();
 ```
 
-Write behavioral assertions instead:
+Better:
 
 ```csharp
-// Target: Conformance test verifying observable operational behavior
+await AssertRetriesTransientFailureAsync(
+    client,
+    expectedAttempts: 3);
+```
+
+For example, a conformance test for outbound HTTP resilience should spin up the application in a test harness (such as `WebApplicationFactory`), mock the downstream dependency with WireMock to return transient errors, and verify the resulting retry behavior through external network observations rather than inspecting dependency injection registrations:
+
+```csharp
 [Fact]
 public async Task OutboundClient_ShouldRetryThreeTimesOnTransientHttp503()
 {
-    // Arrange: Mock downstream server to fail twice with 503, then return 200 OK
     var downstreamMock = WireMockServer.Start();
     downstreamMock
         .Given(Request.Create().WithPath("/api/v1/resource"))
@@ -578,200 +796,462 @@ public async Task OutboundClient_ShouldRetryThreeTimesOnTransientHttp503()
 
     var client = factory.CreateClient();
 
-    // Act
     var response = await client.GetAsync("/proxy-call");
 
-    // Assert: Black-box verification of resilience mechanism
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     Assert.Equal(3, downstreamMock.LogEntries.Count());
 }
 ```
 
-Apply the same philosophy to engineering policies:
+Bad requirement:
 
-- **Do not mandate**: *"Every service must use Serilog via Company.Logging."*
-- **Mandate**: *"Every service must emit structured JSON logs to stdout conforming to Platform Schema v2."*
+```text
+The service must use Serilog.
+```
 
-- **Do not mandate**: *"Every service must use Company.Telemetry."*
-- **Mandate**: *"Every service must export traces and metrics using standard OTLP endpoints with valid W3C propagation."*
+Better requirement:
 
-This shift decouples platform guarantees from package implementation details.
+```text
+The service must emit structured logs compatible with the platform schema.
+```
+
+Bad requirement:
+
+```text
+The service must use Company.Telemetry.
+```
+
+Better requirement:
+
+```text
+The service must export traces and metrics using the required names, labels, and propagation rules.
+```
+
+This lets teams replace implementation details without losing operational guarantees.
 
 ---
 
 ## Default Dashboards Are Part of the Contract
 
-Centralized Grafana dashboards are not just visualizations; they are active consumers of your services' telemetry contracts.
+Standard Grafana dashboards are not only documentation or convenience.
 
-A standard RED dashboard relies on exact label keys:
+They are consumers of the telemetry contract.
+
+A shared dashboard may expect labels such as:
 
 ```text
-service.name="orders-api"
-deployment.environment="production"
-http.request.method="GET"
-http.response.status_code="200"
+service.name=orders
+deployment.environment=production
+http.request.method=GET
+http.response.status_code=200
 ```
 
-If one service emits `application="orders-api"` while another emits `service="orders"`, or if a team changes `status_code` to `status`, the shared dashboard breaks silently. The central dashboard becomes an unmaintainable collection of regex exceptions.
+If individual services publish inconsistent labels such as:
 
-To prevent this:
-- **Treat dashboards and alerts as code**: Version-control dashboard JSON definitions and Prometheus alerting rules alongside platform libraries.
-- **Run automated dashboard queries against test data**: Conformance pipelines should spin up services, drive synthetic load, export telemetry to a temporary Prometheus or Loki instance, and run the actual dashboard PromQL queries to assert they return data.
-- **Validate telemetry during CI**: Catch breaking label renames during the pull request build, not when an on-call engineer opens a blank dashboard during an outage.
+```text
+application=orders-api
+```
 
-A service is not operationally ready simply because it exports metrics; it is ready when its metrics populate platform dashboards and trigger platform alerts as expected.
+or:
+
+```text
+service=orders
+```
+
+the central dashboard becomes a collection of exceptions.
+
+Therefore, dashboard compatibility should be tested.
+
+A reliable way to enforce this in CI is to spin up the service in a test harness, drive synthetic load, export telemetry to an ephemeral Prometheus or Loki container, and execute the actual dashboard PromQL queries to assert that every panel returns data. If a metric rename or missing label breaks a query or alert expression, the build fails before reaching staging.
+
+Dashboards and alerts should also be treated as code:
+
+- versioned,
+    
+- reviewed,
+    
+- tested,
+    
+- deployed through automation,
+    
+- validated against test services.
+    
+
+A service is not fully compliant merely because it emits some metrics.
+
+It should emit metrics that are usable by the supported platform tooling.
 
 ---
 
 ## Multiple Enforcement Mechanisms
 
-A mature internal platform does not rely solely on a single runtime package to maintain standards. It distributes enforcement across the software development lifecycle:
+A complete internal platform should not rely on one giant runtime package.
 
-| Mechanism | Purpose | Scope / Application |
-| :--- | :--- | :--- |
-| **Runtime Modules** | Shared execution logic inside the process. | Distributed tracing setup, token validation, messaging adapters, health check publishers. |
-| **Project Templates** (`dotnet new`) | Initial scaffolding for rapid service bootstrapping. | Base project structure, sample unit/conformance tests, baseline Dockerfiles, CI pipeline manifests. |
-| **Roslyn Analyzers / Linters** | Compile-time architectural and safety rules. | Flagging unhandled cancellation tokens, preventing direct `DateTime.Now` calls, banning unauthorized dependencies. |
-| **Operational Conformance Tests** | Behavioral verification against running services. | Asserting W3C trace propagation, log schemas, metrics format, HTTP error contract structures. |
-| **Centralized Build Policy** (`Directory.Build.props`) | Standardized compiler and toolchain settings. | Enforcing C# language versions, treating warnings as errors, standardizing package vulnerability auditing. |
-| **Infrastructure Modules** (Terraform / Helm) | Cloud and platform environment consistency. | Consistent collector daemonsets, pod disruption budgets, ingress rules, standard dashboard provisioning. |
-| **Documentation & Agent Rules** (`AGENTS.md`) | Clear guidance for engineers and LLM agents. | Architecture Decision Records (ADRs), composition recipes, approved library alternatives, agent constraints. |
+Different requirements are better handled by different mechanisms.
 
-Distributing standards across these layers reduces the pressure on runtime packages to act as corporate gatekeepers.
+### Runtime NuGet packages
+
+Use for shared code that must execute inside the service:
+
+- telemetry integrations,
+    
+- authentication components,
+    
+- protocol clients,
+    
+- messaging adapters,
+    
+- health-check implementations.
+    
+
+### Project templates
+
+Use `dotnet new` or starter repositories to provide:
+
+- recommended project structure,
+    
+- initial configuration,
+    
+- Dockerfiles,
+    
+- deployment manifests,
+    
+- example tests,
+    
+- recommended package selection.
+    
+
+Templates provide a starting point, not permanent governance.
+
+### Roslyn analyzers
+
+Use for source-level rules:
+
+- forbidden dependencies,
+    
+- architectural boundaries,
+    
+- unsafe APIs,
+    
+- missing cancellation tokens,
+    
+- incorrect logging patterns.
+    
+
+### Conformance tests
+
+Use for observable behavior:
+
+- logs,
+    
+- metrics,
+    
+- traces,
+    
+- health checks,
+    
+- error contracts,
+    
+- dashboard compatibility.
+    
+
+### Build tooling
+
+Use `Directory.Build.props`, custom project SDKs, or MSBuild targets for:
+
+- compiler settings,
+    
+- analyzers,
+    
+- warnings,
+    
+- package policies,
+    
+- build validation.
+    
+
+### Infrastructure modules
+
+Use Terraform, Helm, deployment templates, or pipeline components for:
+
+- cloud resources,
+    
+- collectors,
+    
+- Grafana dashboards,
+    
+- queues,
+    
+- databases,
+    
+- secrets,
+    
+- deployment conventions.
+    
+
+### Documentation and agent instructions
+
+Use README files, implementation recipes, examples, and `AGENTS.md` for:
+
+- architectural intent,
+    
+- supported patterns,
+    
+- composition guidance,
+    
+- migration instructions,
+    
+- code-generation constraints.
+    
+
+The platform is therefore a combination of code, tests, tooling, infrastructure, and documentation.
+
+It should not be reduced to one `Company.Framework` package.
 
 ---
 
 ## When Copy-Paste Is Better
 
-Not every repeated pattern needs to be packaged into a shared NuGet library. Packaging small, frequently customized logic into binary dependencies creates unnecessary coupling.
+Not every repeated solution should become a runtime dependency.
 
-For lightweight, context-dependent patterns, prefer well-documented code recipes:
+For small and understandable patterns, the organization may provide:
 
 ```text
-/docs/patterns/outbound-http-client.md
-/examples/outbound-http-client/
+/docs/patterns/external-http-client.md
+/examples/external-http-client/
 ```
 
-Document the recipe clearly:
-- How to configure the named `HttpClient`.
-- Required timeout and retry configurations.
-- Telemetry header propagation rules.
-- Structural test examples.
-- Extension points where teams can safely customize logic.
+The pattern can explain:
 
-Teams can copy the reference implementation directly into their codebase, or an AI agent can generate it from the recipe file ([[Internal Shared Packages vs Agent-Generated Code]]).
+- the required behavior,
+    
+- timeout and retry rules,
+    
+- telemetry requirements,
+    
+- important structural invariants,
+    
+- expected tests,
+    
+- which parts may be adapted.
+    
 
-This approach works best when:
-- The code is small (under 100-200 lines).
-- Teams frequently need local variations or customizations.
-- High transparency into the underlying framework is helpful.
-- A centralized package would obscure more than it simplifies.
-- The pattern changes infrequently, making package release overhead unnecessary.
+The code can be copied into the service and become locally owned.
 
-Conformance tests will still validate that the copied code conforms to platform requirements, without tying the service to an internal package lifecycle.
+This may be better when:
+
+- the code is small,
+    
+- local customization is expected,
+    
+- implementation visibility is valuable,
+    
+- one exact central implementation is not required,
+    
+- a package would hide more than it simplifies.
+    
+
+An agent can generate the local implementation from the documented pattern and verify it against conformance tests.
 
 ---
 
 ## Ownership Is Mandatory
 
-A corporate platform without dedicated ownership will decay into technical debt. If an organization mandates the use of internal packages, it must treat those packages as tier-one products.
+A mandatory organizational framework cannot be safely left unmaintained.
 
-Every shared module must have:
-- **An explicit owning team**: A funded platform or enablement team responsible for triage, feature requests, and maintenance.
-- **Strict Semantic Versioning**: No breaking changes within minor or patch releases.
-- **Transparent changelogs and migration guides**: Clear documentation on how to upgrade between major versions.
-- **Consumer-facing test harnesses**: Pre-built test kits that consuming teams can use to validate their services.
-- **Reference sample applications**: Minimal, clean repositories showing recommended composition patterns.
-- **A defined deprecation lifecycle**: A clear schedule (e.g., N-2 support) with ample notice before older versions are sunset.
-- **Active production dogfooding**: The maintaining team must run services that use the packages in production to experience the upgrade path firsthand.
+A shared module should have:
 
-If the organization cannot resource a dedicated team to maintain internal libraries, **do not build a mandatory framework**. Instead, lean on documentation, project templates, Roslyn analyzers, open-source building blocks, and black-box operational conformance tests.
+- a clear owner,
+    
+- supported use cases,
+    
+- a versioning policy,
+    
+- a changelog,
+    
+- consumer-facing tests,
+    
+- a sample application,
+    
+- a migration strategy,
+    
+- a deprecation process,
+    
+- compatibility guarantees,
+    
+- usage feedback from real services.
+    
 
----
+A platform team must also dogfood its own building blocks by maintaining production services on the same paved road. If the team maintaining the packages does not experience the friction of package upgrades, breaking dependency trees, and runtime bugs firsthand, the platform inevitably drifts away from practical engineering realities.
 
-## The Recommended Model: A Paved Road
+An unmaintained but mandatory framework is one of the worst outcomes.
 
-The most effective architectural approach is to deliver a **Service Platform** rather than an all-or-nothing corporate framework.
+The organization loses:
 
-```text
-+----------------------------------------------------------------------------------------------------+
-|                                    THE SERVICE PLATFORM MODEL                                      |
-+----------------------------------------------------------------------------------------------------+
-|                                                                                                    |
-|  1. SUPPORTED BUILDING BLOCKS (Modular NuGet Packages)                                             |
-|     [ Logging ]   [ Tracing ]   [ Metrics ]   [ Auth ]   [ Messaging ]   [ Persistence ]           |
-|                                                                                                    |
-|  2. THE RECOMMENDED PAVED ROAD (Golden Paths)                                                      |
-|     - dotnet new templates with recommended building blocks pre-wired                              |
-|     - Pre-configured Grafana dashboards & Prometheus alerts                                        |
-|     - Production-ready CI/CD pipelines & container images                                          |
-|                                                                                                    |
-|  3. EXPLICIT COMPOSITION (Program.cs)                                                              |
-|     - Services explicitly register only the components they need                                   |
-|     - Transparent middleware pipeline order                                                        |
-|     - Policies (timeouts, retry counts) declared at the service host                               |
-|                                                                                                    |
-|  4. OPERATIONAL CONFORMANCE SUITE (Black-Box Verification)                                         |
-|     - Automated tests verify logging, tracing, metrics, and health probes                          |
-|     - Validates platform contract compliance regardless of internal libraries                      |
-|                                                                                                    |
-|  5. CONTROLLED ESCAPE HATCHES                                                                      |
-|     - Services can replace any platform block with native open-source code                         |
-|     - Conformance tests ensure the escape hatch still fulfills platform requirements               |
-|                                                                                                    |
-+----------------------------------------------------------------------------------------------------+
-```
+- the flexibility of local code,
+    
+- the safety of an actively maintained platform,
+    
+- the ability to adopt new infrastructure,
+    
+- confidence in upgrades.
+    
 
-1. **Provide Composable Building Blocks**: Granular, single-purpose libraries covering logging, metrics, tracing, auth, and persistence.
-2. **Build a Paved Road**: Project templates (`dotnet new`) and reference architectures that assemble these blocks into a working application out of the box.
-3. **Require Explicit Application Composition**: Keep application bootstrapping transparent. Services explicitly register dependencies and assemble their middleware pipeline in `Program.cs`.
-4. **Enforce Standards via Operational Conformance**: Validate services using black-box integration tests that verify logging schemas, metric endpoints, W3C trace propagation, and health check behaviors.
-5. **Support Clean Escape Hatches**: Give teams the freedom to swap out a platform building block for a native open-source library or custom implementation, as long as the service passes the operational conformance suite.
+If the organization cannot commit to long-term ownership, it should prefer smaller packages, templates, documentation, and externally verifiable contracts.
 
 ---
 
-## Architecture Decision Checklist
+## Recommended Model
 
-Run this checklist before adding a new feature or abstraction to a shared corporate package:
+The organization should provide a **service platform**, not only a mandatory runtime framework.
 
-1. **Cross-Cutting Value**: Is this capability genuinely required across multiple distinct services, or is it specific to one domain?
-2. **Outcome vs. Implementation**: Do consuming services need an identical code implementation, or do they simply need to emit an identical operational result?
-3. **Module Isolation**: Can this feature be shipped as an independent, loosely coupled package, or does it drag in the rest of the corporate ecosystem?
-4. **Transitive Dependencies**: Does adding this package introduce heavy, transitive third-party dependencies that consumers might not need?
-5. **Explicit Bootstrap**: Will consumers configure this module visibly in their startup pipeline, or does it rely on opaque reflection magic?
-6. **Replaceability**: Can a consumer easily rip out this package and replace it with raw open-source libraries without rewriting their core business logic?
-7. **Domain Boundary Leakage**: Does this package introduce base classes, interfaces, or result types that will leak into consuming domain models?
-8. **Code Recipe Alternative**: Could this requirement be solved more cleanly with a documented pattern or an AI-assisted code recipe?
-9. **Automated Conformance**: Can this standard be verified from the outside using automated conformance tests?
-10. **Dashboard & Alerting Impacts**: Do platform dashboards and alerts depend on telemetry generated by this component?
-11. **Clear Maintenance Ownership**: Who fixes bugs, updates dependencies, and cuts releases for this package over the next three years?
-12. **Migration & Deprecation Path**: What is the upgrade strategy when the underlying third-party library introduces breaking API changes?
-13. **Frictionless Escape Hatches**: If a team encounters a critical production blocker with this package, how easily can they bypass it?
-14. **Complexity Check**: Does this abstraction actually solve underlying complexity, or does it merely sweep it under the rug until an incident occurs?
+The platform should include:
+
+### Supported building blocks
+
+- logging,
+    
+- tracing,
+    
+- metrics,
+    
+- health checks,
+    
+- authentication,
+    
+- messaging,
+    
+- persistence,
+    
+- HTTP resilience,
+    
+- cloud integrations.
+    
+
+### A recommended paved road
+
+- project templates,
+    
+- reference services,
+    
+- default configurations,
+    
+- standard dashboards,
+    
+- deployment modules.
+    
+
+### Explicit application composition
+
+Each service selects and configures its modules visibly.
+
+### Operational conformance
+
+Every service proves through tests that it integrates correctly with:
+
+- logging infrastructure,
+    
+- tracing infrastructure,
+    
+- metrics infrastructure,
+    
+- health monitoring,
+    
+- dashboards,
+    
+- alerts.
+    
+
+### Controlled escape paths
+
+A team may replace a standard component when necessary, provided that the service continues to satisfy the platform contract.
+
+---
+
+## Decision Questions
+
+Before adding a capability to a corporate framework, ask:
+
+1. Is this behavior genuinely required by many services?
+    
+2. Do services need the same implementation or only the same result?
+    
+3. Can this be provided as a small independent module?
+    
+4. Does the package introduce unrelated dependencies?
+    
+5. Will the application configure it explicitly?
+    
+6. Can the module be replaced independently?
+    
+7. Does it leak framework types into business code?
+    
+8. Could documentation and local generated code be simpler?
+    
+9. Can the requirement be enforced through conformance tests?
+    
+10. Does the standard Grafana dashboard depend on this behavior?
+    
+11. Who will maintain the capability?
+    
+12. How will services migrate to future versions?
+    
+13. Can a service leave the paved road without fighting the framework?
+    
+14. Does the abstraction simplify the system or merely hide it?
+    
 
 ---
 
 ## Mental Model
 
-Organizations need both **code reuse** and **operational consistency**. However, operational consistency does not require forcing every service into an identical, monolithic framework.
+Organizations need both reuse and consistency.
 
-A healthy platform architecture separates responsibilities cleanly:
+However, consistency does not require every service to inherit the same complete application framework.
 
-- **The Service** owns its composition, its startup code, its middleware pipeline order, its business logic, and its explicit runtime policies.
-- **The Platform** provides modular building blocks, safe defaults, reference project templates, dashboard standards, and automated conformance tests.
+A healthier model is:
 
-The platform's foundational contract is simple:
+> The organization provides supported building blocks, a recommended composition, and executable operational standards.
 
-> **Every service must be operationally compatible with the platform, but applications retain full ownership of their composition.**
+The service remains responsible for:
 
-Build a paved road rather than a walled garden. Make the safe, standard path transparent, testable, and effortless to adopt—without making custom requirements impossible to build.
+- selecting the modules,
+    
+- configuring them,
+    
+- ordering middleware,
+    
+- owning its application structure,
+    
+- making important policies visible.
+    
 
----
+The platform remains responsible for:
 
-## Related Concepts
+- shared mechanisms,
+    
+- safe defaults,
+    
+- supported integrations,
+    
+- standard telemetry contracts,
+    
+- default dashboards,
+    
+- conformance tests,
+    
+- long-term maintenance.
+    
 
-- **[[Designing Internal Packages as an Explicit, Composable Framework]]**: Practical patterns for packaging modular internal libraries that avoid framework lock-in.
-- **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing shared package dependencies against localized, agent-generated code.
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Standardizing communication clients while letting applications own their dependencies.
-- **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Applying standardized composition patterns across modular monolith architectures.
-- **[[OpenTelemetry]]**: The vendor-neutral observability standard for traces, metrics, and logs across distributed systems.
+The central contract should be:
+
+> Every service must be operationally compatible with the platform.
+
+Not necessarily:
+
+> Every service must use exactly the same implementation.
+
+The preferred outcome is a paved road rather than a walled garden:
+
+> Make the correct path easy, visible, tested, and well supported—without hiding the application or making alternative implementations impossible.
+```

@@ -14,11 +14,9 @@ aliases:
 
 # How Modern LLM Systems Build Context, Reason, and Stay Constrained
 
-In production, treating an LLM as a stateless text generator—where a single prompt goes in and a finished response comes out—breaks down almost immediately. 
+A modern LLM system is not just a model that receives a question and immediately generates an answer.
 
-If you look at how reliable AI agents actually operate, the language model is just one component inside an orchestration harness. The system behaves much more like a state machine: it dynamically gathers relevant state, plans which tools to invoke, explores potential solution paths, and runs candidate answers through deterministic verification before returning an output or committing a state change.
-
-A useful initial mental model looks like this:
+A more useful mental model is:
 
 ```text
 user request
@@ -34,13 +32,13 @@ verification / policy checks
 final answer
 ```
 
-The overall quality and reliability of the final output depend heavily on the engineering around the model: how effectively the harness curates working context, explores alternative solutions, checks its own work against deterministic tools, and enforces system policies.
+The quality of the final response therefore depends not only on the raw intelligence of the model, but also on how the surrounding system prepares information, explores possible solutions, verifies results, and enforces higher-level rules.
 
 ---
 
 ## Detailed Components
 
-This architecture breaks down into four core domains:
+This architecture is modularized into four core areas:
 
 1. **Context Engineering & Retrieval**:
    - [[How LLM Systems Build Context]] — How effective context is assembled from system prompts, history, memory, tools, and RAG.
@@ -55,7 +53,7 @@ This architecture breaks down into four core domains:
 
 # The Full Agent Loop
 
-When you move from a conceptual diagram to an operational system, the harness needs to handle missing information, iterative tool calls, and validation failures. The full loop looks more like this:
+Putting everything together gives a more realistic architecture:
 
 ```text
                        USER PROBLEM
@@ -150,7 +148,7 @@ It is increasingly misleading to think of an AI system as:
 prompt → LLM → answer
 ```
 
-A better engineering model is:
+A better model is:
 
 ```text
 prompt
@@ -174,25 +172,18 @@ policy enforcement
 answer
 ```
 
-The system's effective intelligence does not live exclusively within the weights of the neural network; it is distributed across the entire loop. 
+The "intelligence" of the system is therefore distributed across several components.
 
-Upgrading to a larger frontier model can certainly improve output quality, but in a production environment, you often get larger, more cost-effective gains by optimizing the surrounding machinery:
+A better model alone may improve the system, but so can:
 
-- **Better context retrieval**: Improving chunking strategies, hybrid search (BM25 + dense embeddings), and reranking.
-- **Better memory systems**: Implementing structured state tracking and key-fact extraction rather than naive history appending.
-- **Better search & tool design**: Exposing clean, ergonomic API contracts and tool signatures with explicit schemas and tight error messages.
-- **Better reasoning strategies**: Using explicit scratchpads, structured chain-of-thought, and test-time search paths.
-- **Better exploration of alternatives**: Sampling multiple candidate trajectories and scoring them against domain heuristics.
-- **Better evaluators & deterministic verification**: Enforcing unit tests, AST parsers, schema validators, and linters to catch hallucinations before they reach production.
-- **Better safety and policy enforcement**: Implementing layered checks at input, tool-execution, and output boundaries.
+- better context retrieval,
+- better memory,
+- better search,
+- better reasoning strategies,
+- better exploration of alternatives,
+- better evaluators,
+- better tools,
+- better verification,
+- better safety and policy enforcement.
 
-The major reliability breakthroughs in autonomous systems are coming just as much from refining this outer state machine and its verification gates as they are from scaling raw foundation model parameters.
-
----
-
-## Relationship to the Knowledge Graph
-
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical implementations of this orchestration loop as an executable state machine with deterministic gates and feedback loops.
-- **[[Reliability of LLM Coding Agents]]**: An analysis of where agent loops fail in production—specifically around context drift, tool misuse, and compounding errors across multi-step execution.
-- **[[Introduction to RAG]]**: Core retrieval architectures and indexing patterns that power the context planning and retrieval stages.
-- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: How to expose clean, structured tool interfaces directly from web environments to ground agent actions reliably.
+The future progress of AI agents may therefore come as much from improving this entire loop as from increasing the raw capability of the underlying language model.

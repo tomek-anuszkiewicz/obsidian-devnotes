@@ -15,191 +15,91 @@ aliases:
   - Hyper-Fixation in Long Contexts
 ---
 
-# Context Attractors and Recency Bias in Long-Horizon Agent Sessions
+# When an Agent Keeps Returning to the Same Idea
 
-> **Key System Dynamic: Attention Gravity and Context Attractors**  
-> In long, multi-turn agent sessions, standard self-attention ($\text{softmax}(QK^T / \sqrt{d_k})V$) creates a distinct failure mode: **Attention Gravity**. When a specific technical motif is debated and cited repeatedly across dozens of turns, its token representations saturate the Key-Value (KV) cache. Subsequent query vectors ($Q$) are pulled toward these dense key clusters ($K$). Over time, the model turns that motif into a **Context Attractor**, treating it as the universal root cause for completely unrelated problems later in the run.  
-> 
-> **Automated conversation compaction actively makes this worse.** Recursive summarizers register the dominant motif as the primary conversational signal, promoting it into an explicit system-prompt rule while discarding the nuanced debate that produced it. Keeping an agent objective over long workflows requires disciplined context hygiene: **atomic, turn-bounded sessions (the 15-Turn Rule)**, **hard session resets anchored by committed markdown artifacts**, and **raw FIFO sliding-window pruning** instead of recursive synthetic summarization.
+Long conversations can give an agent useful context. They can also make one repeatedly discussed idea far too influential. You spend several turns on instruction cache behavior, then ask about hiring, an API, or service monitoring. The agent still finds a way to bring the cache into its answer. I call that recurring idea a **context attractor**.
 
-```text
-+----------------------------------------------------------------------------------------------------+
-|                         ATTENTION GRAVITY & CONTEXT ATTRACTOR DYNAMICS                             |
-+----------------------------------------------------------------------------------------------------+
-|                                                                                                    |
-|  EARLY MULTI-TURN SESSION (Balanced Attention Across Working Context)                              |
-|  [Hardware Execution] ───────► [Test Oracles] ───────► [Service Mesh] ───────► [Human Factors]     |
-|                                                                                                    |
-|  ~~~~~~~~~~~~~~~~~~~~~~~~ ATTENTION WEIGHT ACCUMULATION (50+ TURNS) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  |
-|                                                                                                    |
-|  LATE UNBOUNDED SESSION (The Context Attractor State)                                              |
-|  Incoming Queries                         +───────────────────────────────+                         |
-|  - System Architecture                    |       CONTEXT ATTRACTOR       |                         |
-|  - Recruitment & Team Dynamics  ───────►  |  (e.g., "L1i Cache Thrashing" │ ──────► Monothematic    |
-|  - Operational Telemetry                  |   or "Zero-Semantic Drift")   |         Diagnosis       |
-|  - Strategic Moats                        +───────────────────────────────+                         |
-|                                                                                                    |
-+----------------------------------------------------------------------------------------------------+
-```
+The output may sound thoughtful. That is part of the problem: a capable model can build a persuasive explanation around a connection that the current question does not warrant. Conversation compaction can carry the same fixation forward if its summary preserves the dominant topic and drops the objections and limits discussed along the way.
 
----
+My practical response is to work in short, focused sessions, record decisions in Markdown, and start a fresh session from that record. If I control the agent harness and need to shorten the conversation, I would also consider dropping old turns while retaining the active instructions and files, instead of repeatedly summarizing the whole exchange.
 
-## Core System Dynamics and Architectural Realities
+## Why a longer conversation can start giving worse answers
 
-### 1. Attention Gravity in the KV Cache
-In extended multi-turn sessions, repeatedly discussing a concept floods the KV cache with tokens tied to that specific idea. Under self-attention:
+A long architecture discussion seems to build shared understanding. You establish vocabulary, revisit deployment constraints, and refine decisions together. The agent appears to remember the trade-offs from earlier turns. That context is valuable when a problem spans several components.
+
+But repeated discussion can give one topic a disproportionate place in the conversation. After dozens of turns, the agent may treat that topic as the likely explanation for the next issue, even when the issue has changed. Its own previous answers repeat and reinforce the theme. What looks like accumulated insight can become a habit of reaching for the same explanation.
+
+Consider a session that has spent many turns on L1 instruction cache thrashing, the Ship of Theseus problem, or formal verification oracles. Those subjects are legitimate in their own discussions. The warning sign comes when a later question about a message broker, hiring, or a different part of the system receives an answer organized around one of them.
+
+### What the model is doing with the conversation
+
+A transformer works over the tokens available in its active context. Self-attention relates the current tokens to earlier tokens; its standard form is:
 
 $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-Subsequent queries ($Q$) compute high dot-product similarity against these high-density key clusters ($K$). As a result, the model routes attention toward the dominant motif even when the user asks about an entirely unrelated subsystem.
+During inference, the KV cache holds representations of earlier tokens so the model can reuse them. A repeated discussion leaves many references to the same idea in the active history. This makes it easier for the model to draw on that idea again when forming an answer. The formula alone does not prove that the most repeated concept will win every time; the engineering observation is that repetition can skew the answer toward a familiar theme.
 
-### 2. The Compaction Paradox
-Automated session summarization often accelerates context collapse instead of fixing it. When an LLM summarizes a 100-turn history, it identifies the high-frequency attractor as the primary signal. It then elevates that concept into a definitive ground-truth invariant within the newly generated system prompt, permanently baking the bias into every future turn.
+Imagine a conversation with 4,200 tokens discussing L1 instruction cache behavior and 180 discussing network topology. Those numbers are illustrative. If the next question is about network topology, I want the answer to follow that question. If it returns to L1i thrashing, the earlier discussion is crowding out the current task.
 
-### 3. Plausible Rationalization and Monothematic Drift
-When an agent falls into an attractor state, it does not output obvious errors or corrupted text. Instead, it generates coherent, highly articulate rationalizations that force the current task into the attractor's conceptual framework. To an engineer, this initially reads like creative lateral thinking, but it is actually a total loss of critical evaluation.
+### The failure looks plausible
 
-### 4. The 15-Turn Bounded Session
-High-stakes architectural pair-programming cannot run in open-ended, multi-day chat threads. Work should be broken into short, task-scoped sprints of 5 to 15 turns. Any valuable design decisions or architectural discoveries must be written to Git-tracked markdown files, followed immediately by a hard session reset that flushes the conversational KV cache.
+This drift rarely produces broken prose. It produces answers with a clean argument for the wrong priority:
 
-### 5. Raw FIFO Truncation Beats Recursive Summaries
-When an agentic coding harness hits context limits, a simple FIFO sliding window—dropping the oldest turns raw while keeping the active system instructions and loaded files—preserves reasoning performance far better than an LLM-generated summary.
+| Current task | Answer pulled toward the old topic |
+| --- | --- |
+| Design an engineering interview process | Screen candidates for CPU cache line invalidation profiling. |
+| Review maintainability problems in a web API | Diagnose microarchitectural stalls while overlooking poor boundaries. |
+| Build an observability dashboard | Prioritize hardware counters over business metrics and service objectives. |
 
----
+A reviewer may initially read these answers as creative connections. The useful check is simpler: does this topic actually explain the problem in front of us, or did the agent bring it along from the previous discussion?
 
-## The Illusion of Cumulative Wisdom
+## How compaction can preserve the fixation
 
-Engineers working on complex architectures often assume that longer chat sessions yield better results:
-- You build up shared domain vocabulary over dozens of turns.
-- You work through complex operational constraints together.
-- The agent seems to track early decisions and design trade-offs accurately.
+When a conversation grows too large, an agent harness may summarize earlier turns and continue from that summary. This frees context space, but it also changes what the next model call receives.
 
-However, as a session stretches past dozens of turns and tens of thousands of tokens, the mechanics of self-attention begin to work against you.
+A summary of a 150-turn discussion may give the most frequently repeated idea a prominent place. If the summarizer states it as a settled principle, the next session of reasoning inherits a stronger claim than the conversation actually established. Qualifications, counterexamples, and disagreements can disappear in the compression.
 
-Instead of maintaining a balanced evaluation of your system, the model locks onto specific salient motifs that dominated recent turns. It begins treating those motifs as universal explanations for every subsequent challenge. This is the **Context Attractor** at work: the model is not synthesizing deep wisdom across the conversation; it is stuck in a statistical rut carved by its own recent outputs.
+The sequence is easy to recognize:
 
----
+1. A subject appears often, so the summary treats it as central.
+2. The harness puts that summary back into the agent's working context, possibly among high-priority instructions.
+3. The original debate is no longer visible. The agent sees the conclusion without the reasons to question it.
 
-## 1. The Mechanics of Attention Gravity
+Repeated compaction can repeat this process. A tentative idea from the first conversation may return as an unquestioned assumption. That is the trap: the summary helps the agent remember something, but may change *how certain* it seems and *where it applies*.
 
-Context Attractors are not software bugs in the traditional sense. They are an expected consequence of how transformer models attend across deep conversational histories:
+## The trade-off: enough context, without letting one topic take over
 
-```text
-Prompt Tokens (New Query) ──────┐
-                                ▼
-                       [ Dot-Product Matching ]
-                                ▲
-KV Cache History ───────────────┴──► Dense Cluster: "L1i Thrashing" (Tokens: 4,200)
-                                 ──► Sparse Cluster: "Network Topology" (Tokens: 180)
-                                 ──► Result: Output biased toward L1i Thrashing
-```
+Very short, disconnected prompts are awkward for architecture work. The agent needs system boundaries, deployment constraints, and data flows to discuss cross-system consequences. Otherwise, you keep repeating the same information and it can miss a constraint established earlier.
 
-### A. Token Density and Repetitive Reinforcement
-When you spend five or ten turns debating a specific technical issue—such as *L1 instruction cache thrashing*, *the Ship of Theseus problem*, or *formal verification oracles*—the tokens representing that concept take up an outsized portion of the active KV cache.
+An indefinitely growing thread has the opposite problem. Recent or heavily repeated ideas can dominate later answers, while compaction may strip away the nuance that kept those ideas in check. The goal is to carry forward decisions and relevant constraints without carrying forward every turn of the debate.
 
-Because self-attention computes dot-product similarity across all tokens in the active window:
+## A way to work with long-running engineering tasks
 
-$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+### Keep each conversation focused
 
-The keys ($K$) linked to that concept accumulate disproportionately high attention weights. When you pivot to an unrelated topic—like engineering hiring or configuring a message broker—the query vectors ($Q$) generated by the model are pulled right back to those dense key clusters.
+For an architecture decision, interface, or bug, try a session of roughly **5 to 15 turns**. Treat 15 as a working limit, not a property of the model. Use those turns to explore the options and challenge the agent's reasoning.
 
-### B. The "Man with a Hammer" Failure Mode
-Once an attractor dominates the context window, the model loses its ability to evaluate problems objectively:
-- **Hiring Strategy**: Asked to design an engineering interview pipeline, it suggests screening candidates specifically on their ability to profile CPU cache line invalidation.
-- **Code Maintainability**: Asked about technical debt in a web API layer, it diagnoses micro-architectural stalls instead of poor boundary abstractions.
-- **System Telemetry**: Asked to design an observability dashboard, it insists on prioritizing hardware performance counters over business metrics or service-level objectives.
+At the end, have the agent write the concrete decisions and useful findings into a standalone Markdown document. Commit the document to Git, close the chat, and start a fresh conversation with that file as context. This keeps the decisions available while clearing the live conversation history. The next session can inspect the written reasoning instead of inheriting every repeated phrase from the discussion.
 
-Because modern frontier models excel at coherent language generation, the agent constructs clever, persuasive explanations for why these recommendations make sense. In a code review or architecture session, this looks deceptively profound on the first read. In reality, the agent has lost perspective, forcing every problem into the exact same mold.
+### If you control the harness, consider dropping old turns
 
----
+When the context limit forces the harness to shorten a session, one option is a FIFO sliding window: remove the oldest raw turns and keep the base instructions, active files, and instructions relevant to the current task. The original proposal was to drop roughly **50% to 60%** of the oldest conversation turns.
 
-## 2. The Compaction Trap: Why Automated Summaries Break Context
+This removes old repetitions directly. A recursive summary may preserve them and give them more authority. FIFO pruning also loses older details, so the decisions you need later belong in the committed Markdown document. I would treat the percentage and the choice between pruning and summarizing as a harness setting to evaluate, not as a proven universal optimum.
 
-When context windows fill up or client memory thresholds are hit, modern agent harnesses (such as coding assistants in IDEs) run automated conversation compaction to free up tokens:
+### Redirect the agent when it fixates
 
-```text
-Full Conversation History (150 Turns)
-                 │
-                 ▼
-[ Background Summarizer LLM ]
-                 │
-                 ▼
-Synthetic Summary State (Injected into System Prompt)
-```
+You can also intervene during the current session. State the task and exclude the irrelevant theme explicitly. For example:
 
-In practice, automated compaction often hardens context attractors rather than clearing them:
+> We are designing the operational health check for the ingress proxy. Do not use L1 cache invalidation, mechanical sympathy, or zero-cost abstractions to explain it. Evaluate Linux network socket states and TCP connection backlogs.
 
-1. **Frequency-Biased Extraction**: The summarizer model scans the conversation history and looks for the strongest signals. Naturally, it extracts the concept that appeared most frequently across the last 50 turns.
-2. **Promotion to Ground Truth**: The compactor takes that dominant concept and writes it directly into the `Summary State`. This summary is then prepended to the system prompt as an authoritative, ground-truth operational invariant.
-3. **Loss of Nuance and Dissent**: The qualifying arguments, edge-case analysis, and counter-examples that surrounded the topic during the live conversation are stripped away. What remains is a blunt, dogmatic assertion that continues to bias the model's behavior for the rest of the session.
+This makes the relevant scope clear. It is a useful immediate correction when the agent keeps returning to the old subject, although a fresh session and a written decision record are a cleaner way to move on after a long discussion.
 
----
+## Related notes
 
-## 3. The Engineering Trade-off: Deep Context vs. Attractor Drift
-
-This introduces a difficult trade-off when using LLMs for deep architectural design:
-
-```text
-Context Depth Needed for Complex Architecture
-◄─────────────────────────────────────────────────────────────────────────────►
-Short Context Window                            Deep Context Window
-- Misses subtle cross-system constraints        - Maintains cross-system constraints
-- Requires repetitive prompting                 - High risk of Attention Gravity
-- Low risk of context attractors                - Summarization corrupts intent
-```
-
-You cannot explore subtle, distributed-system edge cases in disconnected single-turn prompts. You need the model to hold system boundaries, deployment constraints, and data flows in working memory. But if you let a session run indefinitely without maintenance, the model will inevitably latch onto an attractor and stop analyzing your designs critically.
-
----
-
-## 4. Practical Mitigations: Breaking Attention Gravity
-
-Managing Attention Gravity requires active context hygiene and strict control over the runtime harness.
-
-### 1. The 15-Turn Strike Team Rule
-Instead of keeping a single chat session alive for days, structure complex engineering efforts into short, disciplined sprints:
-
-```text
-[ Phase A: Explore ] (5–15 Turns)
-Targeted debate and design validation with the agent
-        │
-        ▼
-[ Phase B: Crystallize ] (1 Turn)
-Agent extracts decisions into a clean Markdown design document
-        │
-        ▼
-[ Phase C: Hard Reset ] (Session Exit)
-Commit Markdown doc to Git ──► Terminate Session ──► Start Fresh Context Window
-```
-
-- **Phase A (Exploration)**: Spend 5 to 15 turns evaluating a specific design choice, interface, or bug.
-- **Phase B (Crystallization)**: Have the agent summarize the concrete decisions into a standalone markdown document (following an in-flight documentation pattern).
-- **Phase C (Hard Reset)**: Commit that markdown document to Git, shut down the chat session, and open a brand-new conversation. Point the new session at the committed file. This flushes the live KV cache while preserving the architectural decisions.
-
-### 2. Front-Cutting (Raw FIFO Truncation) Over Summarization
-If your agent harness needs to prune context dynamically, use simple FIFO window truncation instead of recursive LLM summarization. 
-
-Dropping the oldest 50% to 60% of the raw conversational turns—while keeping the base system prompt, active files, and immediately relevant instructions intact—consistently outperforms synthetic summaries. Raw truncation physically purges the early key-value tokens from the cache, breaking the attractor's hold and forcing the model to focus on the active code and current instructions.
-
-### 3. Explicit Negative Constraints (Attractor Dampening)
-If you notice an agent fixating on a specific concept midway through a session, step in as a circuit breaker and explicitly constrain the solution space:
-
-```text
-"We are designing the operational health check for the ingress proxy. 
-Do NOT reference L1 cache invalidation, mechanical symphonies, or zero-cost abstractions. 
-Evaluate this strictly through the lens of standard Linux kernel network socket states 
-and TCP connection backlogs."
-```
-
-Injecting hard negative constraints directly into the prompt breaks the dot-product attraction, forcing the model away from saturated key representations and into the relevant parts of its latent space.
-
----
-
-## Related Systems & Architecture Notes
-
-- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Analyzes how models default to consensus patterns; Context Attractors represent the conversational-history version of premature convergence.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Examines what happens when too many rules compete in the prompt; explains how an attractor motif ends up starving other operational constraints of attention.
-- **[[How Context Narrows an AI's Solution Space]]**: Context is vital for pruning bad implementations, but unmanaged Attention Gravity narrows the solution space to a single, broken perspective.
-- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Using targeted prompts and negative constraints to pull models out of passive attractor states and into under-sampled areas of their latent space.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The harness-level implementation details needed to enforce short, task-scoped sessions and prevent context-compaction crashes.
-- **[[Proxy Metrics and Operational Invariants in AI Systems]]**: Demonstrates how historical attractors and proxy variables trigger self-fulfilling feedback loops across autonomous agent pipelines.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Models can settle too quickly on familiar answers; here, the familiar answer comes from the conversation itself.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Competing prompt rules can crowd one another out, much as a repeated topic can crowd out other constraints.
+- **[[How Context Narrows an AI's Solution Space]]**: Context helps rule out unsuitable solutions, but too much emphasis on one idea can narrow the options too far.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Targeted instructions and exclusions can bring an answer back to the current task.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The harness can enforce focused sessions and control how context is shortened.
+- **[[Proxy Metrics and Operational Invariants in AI Systems]]**: Historical assumptions and proxy measures can reinforce themselves in an agent workflow.

@@ -1,5 +1,5 @@
 ---
-title: Service-to-Service Communication - How Service A Should Call Service B
+title: Service-to-Service Communication — How Service A Should Call Service B
 tags:
   - microservices
   - distributed-systems
@@ -9,128 +9,133 @@ tags:
   - messaging
   - resilience
 aliases:
-  - Service-to-Service Communication -  How Service A Should Call Service B
   - Service-to-Service Communication
   - Inter-Service Calling Patterns
 ---
 
-# Service-to-Service Communication - How Service A Should Call Service B
-
-> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
-> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
-
 ## Context
 
-Assume that Service A needs data or behavior owned by Service B. When architecting distributed microservices, or even when determining module boundaries in a system designed for [[Scaling a Modular Monolith with Local-or-Remote Module Execution|local-or-remote module execution]], this is the most common integration scenario you will encounter:
+Assume that Service A needs data or behavior owned by Service B.
+
+The technical problem may look simple:
 
 ```text
-Service A ─── HTTP / gRPC ───► Service B
+Service A → HTTP → Service B
 ```
 
-On paper, this looks like a simple network call. In a production environment, however, crossing this boundary introduces distributed systems concerns that do not exist within a single process. You immediately face several architectural questions:
+However, several responsibilities must be assigned correctly:
 
 - Who owns the API contract?
-- Who generates or maintains the client library?
-- Who defines the request and response models?
-- Who configures `HttpClient`, connection pooling, and socket lifecycles?
-- Who decides retry, timeout, and circuit breaker policies?
-- Who interprets errors and maps status codes to domain outcomes?
-- Who owns logging, distributed tracing, and metrics?
-- Who maintains backward compatibility across rolling deployments?
-- How much of Service B's internal model should become visible inside Service A?
+    
+- Who generates or maintains the client?
+    
+- Who defines request and response models?
+    
+- Who configures `HttpClient`?
+    
+- Who decides retry and timeout policies?
+    
+- Who interprets errors?
+    
+- Who owns logging, tracing, and metrics?
+    
+- Who maintains backward compatibility?
+    
+- How much of Service B should become visible inside Service A?
+    
 
-A convenient client library can reduce boilerplate, but it can also become an architectural trap. It often hides network realities beneath the illusion of a local method call, leaks upstream schemas into downstream business logic, and tightly couples the release cycles of two independent teams.
+A convenient client library can reduce boilerplate, but it can also introduce strong coupling and hide important runtime behavior.
 
-The guiding objective is straightforward:
+The goal should be:
 
-> Make the integration easy to use and maintain without disguising the remote call as a local, infallible in-memory method.
+> Make the integration easy to use without making the remote call look like a local, infallible method.
 
 ---
 
 ## Core Responsibility Model
 
-To keep services decoupled and prevent shared libraries from turning into unmaintainable pseudo-frameworks, enforce a three-way division of responsibility:
+A useful high-level division is:
 
-> **Service B** owns the public API contract.  
-> **Service A** owns how that contract is interpreted and used within its own domain.  
-> The **Platform** owns cross-cutting communication infrastructure and transport standards.
+> Service B owns the public API contract.  
+> Service A owns how that contract is used inside Service A.  
+> The platform owns cross-cutting communication standards.
 
-```text
-+-----------------------------------------------------------------------------+
-|                      SERVICE-TO-SERVICE RESPONSIBILITY                      |
-+-----------------------------------------------------------------------------+
-|                                                                             |
-|  SERVICE A (Consumer Domain)         PLATFORM              SERVICE B        |
-|  +------------------------+      +---------------+      +-----------------+ |
-|  | Application Logic      |      | Observability |      | Business Logic  | |
-|  | (Use Cases / Invariants|      | (W3C Traces,  |      | & Domain Model  | |
-|  +------------------------+      |  OpenTelemetry|      +-----------------+ |
-|             │                    +---------------+               ▲          |
-|             ▼                            │                       │          |
-|  +------------------------+              │              +-----------------+ |
-|  | Consumer-Owned Port    |      +---------------+      | Public Handler  | |
-|  | (Domain Interface)     |      | Auth & mTLS   |      | (Endpoint / API)| |
-|  +------------------------+      | (Workload ID) |      +-----------------+ |
-|             │                    +---------------+               ▲          |
-|             ▼                            │                       │          |
-|  +------------------------+              │              +-----------------+ |
-|  | Adapter & Local Schema |              │              | Wire Contract   | |
-|  | (Anti-Corruption Layer)|              │              | (OpenAPI / IDL) | |
-|  +------------------------+              │              +-----------------+ |
-|             │                            │                       ▲          |
-|             ▼                            ▼                       │          |
-|  +------------------------+     HTTP/2 / JSON wire call          │          |
-|  | Thin Transport Client  |──────────────────────────────────────┘          |
-|  +------------------------+                                                 |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-```
+More specifically:
 
-### Service B Should Own
+### Service B should own
 
-- Endpoint definitions and route structures.
-- Request and response serialization schemas.
-- Business error codes exposed across the wire.
-- API versioning and deprecation timelines.
-- API documentation and machine-readable contract specifications (OpenAPI/Swagger, Protobuf), which are critical when [[Designing APIs for LLM-Generated Integration Code|designing APIs for programmatic integration]].
-- Backward compatibility guarantees of the public wire contract.
-- Optional, strictly thin generated transport clients.
+- endpoint definitions,
+    
+- request and response schemas,
+    
+- business error codes exposed by the API,
+    
+- API versioning,
+    
+- API documentation,
+    
+- OpenAPI specification,
+    
+- backward compatibility of the public API,
+    
+- optional generated transport clients.
+    
 
-### Service A Should Own
+### Service A should own
 
-- The business meaning of the dependency within its own domain.
-- The interface (port) consumed by its application code.
-- Mapping from Service B's wire DTOs into Service A's local domain models (Anti-Corruption Layer).
-- Contextual interpretation of Service B's responses and business error codes.
-- Use-case-specific timeout budgets and deadlines.
-- Retry suitability (knowing whether an operation is safe to re-execute in the current context).
-- Fallback strategies, caching, and circuit-breaking thresholds.
-- How failures propagate to upstream callers or background workers.
+- the business meaning of the dependency,
+    
+- the interface used by its application code,
+    
+- mapping from B’s transport models into A’s local models,
+    
+- interpretation of B’s responses and errors,
+    
+- use-case-specific timeout budget,
+    
+- retry suitability,
+    
+- fallback behavior,
+    
+- caching,
+    
+- failure propagation.
+    
 
-### The Shared Platform Should Own
+### The shared platform should own
 
-- Standard HTTP client factory instrumentation and connection lifecycle management.
-- Distributed trace-context propagation (such as W3C `traceparent` headers via [[OpenTelemetry]]).
-- Correlation identifiers and shared telemetry enrichment.
-- Standard authentication and authorization handlers (workload identity, mTLS, token acquisition, and token caching as detailed in [[Service-to-Service Authentication in Distributed Runtimes]]).
-- Guidelines for [[Propagating User Context Between Services|propagating user context]] (tenant IDs, actor claims, audit context).
-- PII-safe logging rules and error envelope formatting (e.g., RFC 7807 Problem Details).
-- Base resilience mechanics (standardized Polly policies, retry backoffs, connection timeouts).
-- Service discovery and dynamic endpoint resolution.
+- standard HTTP client instrumentation,
+    
+- trace-context propagation,
+    
+- correlation identifiers,
+    
+- common telemetry conventions,
+    
+- authentication mechanisms,
+    
+- safe logging rules,
+    
+- shared error envelope conventions,
+    
+- basic resilience mechanisms,
+    
+- service discovery or endpoint resolution.
+    
 
-This division ensures that a client package from Service B does not dictate how Service A constructs its domain, handles errors, or configures its runtime.
+This division prevents the Service B client from becoming a hidden application framework inside Service A.
 
 ---
 
 ## Option 1: Service B Publishes a Contracts NuGet
 
-In this model, the team owning Service B publishes a lightweight, passive package containing only transport models:
+Service B publishes a package such as:
 
 ```text
 ServiceB.Contracts
 ```
 
-The package contains pure data transfer objects (DTOs):
+It contains request and response DTOs:
 
 ```csharp
 public sealed record GetCustomerResponse(
@@ -139,74 +144,95 @@ public sealed record GetCustomerResponse(
     string Status);
 ```
 
-Service A references the package and serializes or deserializes directly to these types.
+Service A references the package and uses the shared types.
 
 ### Advantages
 
-- **Single Wire Definition**: Eliminates manual schema duplication across teams working in the same ecosystem.
-- **Compile-Time Safety**: Breaking changes to properties in the package trigger compile errors in Service A.
-- **Low Ceremony**: Extremely easy to set up and distribute in a homogeneous environment.
-- **Explicit Version Tracking**: NuGet dependency versioning makes upstream changes visible in dependency graphs.
+- one shared definition of transport models,
+    
+- compile-time type safety,
+    
+- easy distribution in a .NET-only environment,
+    
+- reduced manual duplication,
+    
+- simple version tracking through package references.
+    
 
 ### Risks
 
-- **Release Cadence Coupling**: Service A's build can become tightly coupled to Service B's library release cadence.
-- **Version Skew**: Referencing the newest package does not guarantee the deployed instance of Service B is running that version.
-- **Domain Pollution**: Developers are easily tempted to pass Service B's DTOs straight into Service A's domain handlers, entities, and database queries.
-- **Behavior Creep**: Over time, teams often sneak validation rules, helper methods, extension libraries, or JSON converter dependencies into this "contracts" assembly.
-- **Implementation Leakage**: Consumers often begin relying on the internal C# type system rather than treating the interaction as an external HTTP contract.
+- A becomes coupled to the release process of B,
+    
+- package versions may not match deployed API versions,
+    
+- transport types may leak into A’s domain and application layers,
+    
+- the package may gradually include helpers, validation, behavior, or framework dependencies,
+    
+- consumers may become dependent on implementation details rather than the public wire contract.
+    
 
-### Rules for Contracts Packages
+### Important rule
 
-If you distribute contracts via a shared package, treat them as immutable wire descriptions, not shared domain libraries.
+Transport DTOs should remain passive data structures.
 
-Never include:
-- Domain business logic or state transitions.
-- Validation routines and business rules.
-- Heavy external dependencies (e.g., FluentValidation, Entity Framework attributes).
-- Dependency injection extension methods.
-- Database mapping attributes.
-- Complex class inheritance hierarchies.
+Avoid models containing:
+
+- domain behavior,
+    
+- validation methods,
+    
+- infrastructure dependencies,
+    
+- service registration,
+    
+- database attributes,
+    
+- business calculations,
+    
+- inheritance hierarchies.
+    
+
+Bad:
 
 ```csharp
-// BAD: Domain behavior, validation, and mutable logic leaked into a contracts package
 public sealed class Customer
 {
     public string Status { get; set; }
 
     public bool CanPlaceOrder()
     {
-        // Business logic owned by Service B leaking into consumers
-        return Status == "Active";
+        // Business behavior from Service B
     }
 
     public void Validate()
     {
-        // Validation logic owned by Service B leaking into consumers
-        if (string.IsNullOrWhiteSpace(Status))
-            throw new ValidationException("Status cannot be empty");
+        // Validation owned by Service B
     }
 }
+```
 
-// GOOD: Passive, immutable transport DTO
+Better:
+
+```csharp
 public sealed record CustomerResponse(
     string Id,
     string Status);
 ```
 
-A contracts package must describe network messages, nothing more. It should never export the internal domain model or business rules of Service B.
+A contracts package should describe messages, not export the internal domain model of Service B.
 
 ---
 
 ## Option 2: Service B Publishes a Full Client NuGet
 
-Here, the Service B team publishes a full-featured client library:
+Service B publishes:
 
 ```text
 ServiceB.Client
 ```
 
-Service A installs the package and registers it during application startup:
+Service A registers it:
 
 ```csharp
 services.AddServiceBClient(options =>
@@ -215,95 +241,152 @@ services.AddServiceBClient(options =>
 });
 ```
 
-Application handlers inject the client interface:
+Application code receives an interface:
 
 ```csharp
-public sealed class OrderHandler(IServiceBClient serviceBClient)
+public sealed class Handler(IServiceBClient serviceBClient)
 {
-    public async Task HandleAsync(PlaceOrder command, CancellationToken ct)
-    {
-        var customer = await serviceBClient.GetCustomerAsync(command.CustomerId, ct);
-        // ...
-    }
 }
 ```
 
-The package typically wraps:
-- Endpoint URLs and HTTP verbs.
-- Request and response serialization.
-- Dependency injection setup extensions.
-- Client credential and token acquisition logic.
-- HTTP status code checks and error deserialization.
-- Embedded telemetry and resilience pipelines.
+The package may provide:
+
+- typed endpoints,
+    
+- request and response DTOs,
+    
+- serialization,
+    
+- dependency injection registration,
+    
+- authentication support,
+    
+- error deserialization,
+    
+- optional telemetry,
+    
+- optional resilience configuration.
+    
 
 ### Advantages
 
-- **Zero-Boilerplate Integration**: Downstream teams can onboard and make calls in minutes.
-- **Encapsulated Protocol Details**: Complex multipart queries, specific header requirements, or strange legacy quirks are handled internally by the team that built them.
-- **Bug Fix Distribution**: Protocol-level serialization bugs or incorrect route bindings can be fixed centrally in the client library.
-- **Uniform Protocol Usage**: Ensures every consumer hits the endpoints with the correct headers, parameters, and compression settings.
+- very low integration cost,
+    
+- consistent protocol implementation,
+    
+- fewer duplicated clients,
+    
+- easier onboarding,
+    
+- Service B can publish a supported official SDK,
+    
+- repeated transport bugs can be fixed centrally.
+    
 
 ### Risks
 
-A full client SDK often takes on too much responsibility. It frequently configures:
-- Hardcoded retries and Polly policies.
-- Fixed timeout thresholds that do not match the consumer's SLA.
-- Bespoke logging pipelines that bypass the consumer's Serilog or OpenTelemetry configurations.
-- Custom exception hierarchies that swallow HTTP context and surface generic runtime exceptions.
-- Global `HttpClientHandler` settings that cause socket issues or conflict with service mesh sidecars.
+A full client can easily take responsibility for too much.
 
-This leads to several concrete production issues:
-- **Hidden Runtime Policies**: Service A cannot predict how many times a call will retry or when it will time out.
-- **Telemetry Disconnects**: Duplicate spans, missing traceparents, or inconsistent field names in logs.
-- **Dependency Hell**: Version conflicts between client libraries needing different versions of `System.Text.Json`, `Polly`, or `Azure.Core`.
-- **Domain Inversion**: Business logic gets embedded in the client, making it impossible for Service A to treat edge cases differently.
+It may silently configure:
 
-### The Guiding Principle
+- logging,
+    
+- tracing,
+    
+- retry,
+    
+- timeouts,
+    
+- exception mapping,
+    
+- authentication,
+    
+- circuit breakers,
+    
+- metrics,
+    
+- global `HttpClient` behavior.
+    
 
-> A service-specific SDK must only own the transport mechanics of the provider's protocol. It must never dictate the operational, resilience, or telemetry policy of the consuming application.
+This creates several problems:
 
-If an SDK is provided, keep it strictly thin.
+- hidden runtime policy,
+    
+- inconsistent behavior between different service clients,
+    
+- duplicate logging and tracing,
+    
+- dependency conflicts,
+    
+- difficult platform-wide upgrades,
+    
+- business interpretation of errors embedded in the client,
+    
+- strong coupling to the Service B package.
+    
+
+On the networking layer, baking custom `HttpClientHandler` setups or lifetime management into an SDK frequently breaks connection pooling, leading to socket exhaustion under burst traffic or bypassing DNS refresh cycles. If the client bundles specific versions of low-level dependencies like Polly or serialization libraries, consumers can run into diamond dependency conflicts during platform-wide runtime upgrades.
+
+### Guiding principle
+
+> A service-specific client should own the Service B protocol, not the communication policy of the whole organization.
+
+A full client may provide a thin transport abstraction, but it should not become the owner of all cross-cutting communication behavior.
 
 ---
 
 ## Option 3: Service A Generates a Client from OpenAPI
 
-In this approach, Service B publishes a formal, machine-readable contract:
+Service B publishes an OpenAPI document:
 
 ```text
 openapi.json
 ```
 
-Service A pulls this contract during its build or code-generation step, using tools such as Microsoft Kiota, NSwag, or openapi-generator to generate a client.
+Service A uses tools such as NSwag, Kiota, Refit-based generation, or another generator to create a client.
 
 ### Advantages
 
-- **Platform Neutrality**: Works seamlessly across heterogeneous environments where Service B is written in Go and Service A is written in .NET.
-- **Contract as the Source of Truth**: The OpenAPI specification is the authoritative document. Code generation guarantees alignment with the documented API.
-- **Consumer Independence**: Service A decides when to update, what code to generate, and how to configure the generated output.
-- **No Shared Binary Dependencies**: Completely decouples package release pipelines and eliminates library version conflicts.
+- OpenAPI becomes the language-neutral contract,
+    
+- consumers can exist in different programming languages,
+    
+- the generated client matches the published API schema,
+    
+- Service A controls when and how the client is regenerated,
+    
+- no need for Service B to maintain handwritten SDKs for every language.
+    
 
 ### Risks
 
-- **Generated Code Bloat**: Generators often produce thousands of lines of verbose, hard-to-read code and hundreds of models for endpoints Service A never calls.
-- **Schema Drift vs. Semantic Drift**: The schema may generate cleanly, but runtime behavior or field semantics may have changed in ways the OpenAPI file cannot express.
-- **Type Pollution**: Generated types can easily leak into business logic if developers inject the generated client directly into domain handlers.
-- **Tooling Churn**: Generator updates can cause massive, noisy Git diffs across generated files.
+- generated clients may be very large,
+    
+- all endpoints and schemas may be generated even when A needs only one operation,
+    
+- generated types may leak throughout A,
+    
+- code can be difficult to read or debug,
+    
+- generator upgrades may produce large unrelated diffs,
+    
+- schema compatibility does not automatically guarantee semantic compatibility.
+    
 
-### Recommended Pattern: Treat Generated Code as an Infrastructure Detail
+### Recommended use
 
-Never let generated clients escape your infrastructure layer. Wrap the generated client inside an application port:
+Treat the generated client as an infrastructure detail.
 
 ```text
-Application Core
-  └── ICustomerRiskProvider (Domain Port owned by Service A)
+Application
+  ICustomerRiskProvider
 
-Infrastructure Layer
-  ├── GeneratedServiceBClient (Generated via OpenAPI)
-  └── ServiceBCustomerRiskProvider (Adapter implementing the Port)
+Infrastructure
+  GeneratedServiceBClient
+  ServiceBCustomerRiskProvider
 ```
 
-The application logic depends exclusively on a domain-owned interface:
+Business code should not depend directly on generated DTOs.
 
 ```csharp
 public interface ICustomerRiskProvider
@@ -314,7 +397,7 @@ public interface ICustomerRiskProvider
 }
 ```
 
-The infrastructure adapter calls the generated client and maps the output into Service A's domain types:
+The adapter uses the generated client:
 
 ```csharp
 internal sealed class ServiceBCustomerRiskProvider(
@@ -329,30 +412,18 @@ internal sealed class ServiceBCustomerRiskProvider(
             customerId.Value,
             cancellationToken);
 
-        return MapToRiskLevel(response);
-    }
-
-    private static RiskLevel MapToRiskLevel(CustomerGeneratedDto dto)
-    {
-        return dto.Status switch
-        {
-            "Restricted" => RiskLevel.High,
-            "Active" => RiskLevel.Low,
-            _ => RiskLevel.Unknown
-        };
+        return Map(response);
     }
 }
 ```
 
-This isolates generated code completely. If you switch from a generated client to a handwritten one, not a single line of business logic changes.
+The generated code remains replaceable and isolated.
 
 ---
 
 ## Option 4: Service A Implements a Small Local Client
 
-If Service A only calls one or two endpoints and needs three fields out of a fifty-field response, building a hand-crafted HTTP adapter inside Service A is often the cleanest choice.
-
-First, define the port Service A actually needs:
+If Service A needs only one endpoint and a few fields, a small local adapter may be simpler than a full SDK.
 
 ```csharp
 public interface ICustomerStatusProvider
@@ -363,7 +434,7 @@ public interface ICustomerStatusProvider
 }
 ```
 
-Then implement it with a standard, typed `HttpClient`:
+Implementation:
 
 ```csharp
 internal sealed class ServiceBCustomerStatusProvider(
@@ -394,7 +465,6 @@ internal sealed class ServiceBCustomerStatusProvider(
             dto.IsActive);
     }
 
-    // Local, private DTO representing only what Service A cares about
     private sealed record ServiceBResponse(
         string Code,
         bool IsActive);
@@ -403,29 +473,52 @@ internal sealed class ServiceBCustomerStatusProvider(
 
 ### Advantages
 
-- **Zero External Dependencies**: No packages to restore, no code generators in your build pipeline, and no shared assemblies.
-- **Minimal Surface Area**: Consumes only the fields needed for the use case; upstream changes to unused fields will not break Service A.
-- **Full Transparency**: Timeouts, headers, serialization, and error handling are explicit and easy to step through in a debugger.
-- **Strict Domain Isolation**: Service B's wire models remain private implementation details inside the adapter.
+- very small dependency surface,
+    
+- complete visibility,
+    
+- easy local customization,
+    
+- no large generated client,
+    
+- no dependency on unrelated B endpoints,
+    
+- explicit mapping into A’s local model.
+    
 
 ### Risks
 
-- **Manual Maintenance**: If Service B changes route definitions or renames required fields, the adapter must be updated manually.
-- **Duplicated Transport Logic**: Different consumer services may end up writing similar boilerplate for the same upstream API.
-- **Inconsistent Error Handling**: Without disciplined testing, local implementations may misinterpret status codes or fail to handle transient network errors properly.
+- duplicated transport code,
+    
+- repeated implementation mistakes,
+    
+- manual maintenance when B changes,
+    
+- possible inconsistent authentication and telemetry,
+    
+- risk of incomplete error handling.
+    
 
-### When to Use It
+### Best fit
 
-- Service A needs a tiny slice of an otherwise large, complex API.
-- The upstream API is stable and rarely changes.
-- The platform already provides standard HTTP handlers for telemetry, authentication, and resilience.
-- Bringing in a heavy SDK or running a code generator would introduce unnecessary complexity.
+This approach works well when:
+
+- only a small part of B is needed,
+    
+- the API is simple,
+    
+- A values minimal coupling,
+    
+- standard platform helpers already handle HTTP concerns,
+    
+- full SDK generation would be disproportionate.
+    
 
 ---
 
 ## Option 5: Service B Publishes an RPC-Like Interface
 
-Some teams use declarative HTTP libraries (such as Refit or RestEase in .NET) to turn an annotated C# interface into a dynamic HTTP client:
+Libraries can create an HTTP client from an interface:
 
 ```csharp
 public interface IServiceBApi
@@ -437,172 +530,225 @@ public interface IServiceBApi
 }
 ```
 
-Service A registers this interface in its DI container and injects it directly into application components.
+Service A requests the interface from dependency injection and calls it like a local method.
 
 ### Advantages
 
-- **Minimal Boilerplate**: Eliminates handwritten serialization and URL concatenation.
-- **Clear Method Signatures**: Makes API routes and parameters explicit in standard C# syntax.
-- **Fast Prototyping**: Ideal for internal services during early development phases.
+- very little boilerplate,
+    
+- readable method declarations,
+    
+- typed requests and responses,
+    
+- easy registration,
+    
+- convenient for simple APIs.
+    
 
-### The Pitfall: The Local-Call Illusion
+### Main risk: local-call illusion
 
-Consider this invocation:
+This code:
 
 ```csharp
-var customer = await serviceBApi.GetCustomerAsync(id, cancellationToken);
+await serviceBApi.GetCustomerAsync(id, cancellationToken);
 ```
 
-Syntactically, this looks identical to an in-memory method invocation on a local service. In reality, it:
-- Crosses a network boundary, traversing switches, routers, and firewalls.
-- Can fail with a DNS lookup failure, TCP reset, or TLS handshake timeout.
-- Can take anywhere from 5 milliseconds to 30 seconds depending on upstream load.
-- May execute multiple times behind the scenes if a retry handler is configured.
-- Can return partial responses or leave resources in indeterminate states.
-- Can fail due to expired OAuth tokens or revoked service permissions.
+looks like an ordinary method call.
 
-When developers mistake remote calls for local operations, they omit timeouts, call remote services inside loops, run calls inside distributed database transactions, and fail to build fallback strategies.
+In reality it may:
 
-### The Rule for RPC-Style Interfaces
+- cross a network boundary,
+    
+- take seconds,
+    
+- time out,
+    
+- fail partially,
+    
+- be retried,
+    
+- execute more than once,
+    
+- depend on authentication and service availability.
+    
 
-Keep declarative RPC interfaces confined to your **infrastructure layer**. Never inject them directly into domain handlers or application use cases. 
+When engineers fall for this illusion, the failure modes are predictable: calling remote endpoints inside loops, holding open local database transactions across network roundtrips, omitting explicit timeout budgets, or retrying non-idempotent operations until thread pools saturate.
 
-Wrap the RPC interface inside an application-owned port:
+The abstraction is useful only when the network semantics remain visible in design and error handling.
 
-```text
-Application Layer:
-  ICustomerRiskProvider (Owned by Service A)
-       ▲
-       │ implements
-Infrastructure Layer:
-  ServiceBCustomerRiskAdapter
-       │ calls
-  IServiceBApi (Refit / RestEase declarative interface)
+### Recommended rule
+
+The RPC-like interface should normally remain inside the infrastructure layer.
+
+Application code should depend on an interface owned by Service A:
+
+```csharp
+public interface ICustomerRiskProvider
+{
+    Task<RiskLevel> GetRiskAsync(
+        CustomerId customerId,
+        CancellationToken cancellationToken);
+}
 ```
 
-The adapter catches network-level exceptions, translates HTTP-specific status codes into domain-level outcomes, and ensures the rest of your application never handles raw transport concerns.
+The infrastructure adapter can internally use the RPC-style client.
 
 ---
 
 ## The Interface Should Usually Be Owned by Service A
 
-A core principle of hexagonal architecture and Domain-Driven Design is:
+Service B exposes technical capabilities.
 
-> The provider owns the wire contract.  
-> The consumer owns the interface that describes why it needs that contract.
+Service A depends on a business need.
 
-Service B exposes general capabilities:
+These are not necessarily the same abstraction.
 
-```csharp
-// Service B's capability view
-public interface IServiceBApi
-{
-    Task<CustomerDto> GetCustomerAsync(string id, CancellationToken ct);
-}
-```
-
-Service A needs to satisfy a specific business use case:
+Service B may expose:
 
 ```csharp
-// Service A's domain requirement
-public interface ICustomerEligibilitySource
-{
-    Task<CustomerEligibility> GetEligibilityAsync(
-        CustomerId customerId, 
-        CancellationToken cancellationToken);
-}
+IServiceBApi.GetCustomerAsync(...)
 ```
 
-These two abstractions address fundamentally different concerns:
+Service A may need:
 
-1. **Decoupled Evolution**: Service B might replace its REST API with a gRPC endpoint, an event-driven cache, or an internal database lookup. If Service A owns its interface, its business logic remains completely untouched—only the infrastructure adapter changes.
-2. **True Domain Isolation**: Service B’s transport models never enter Service A's business logic.
-3. **Simple, Predictable Unit Testing**: Mocking `ICustomerEligibilitySource` in Service A's domain tests is straightforward. Mocking an external HTTP client or an upstream SDK with nested models and HTTP responses is tedious and brittle.
-4. **Composition**: A single method on `ICustomerEligibilitySource` might call Service B, query a local Redis cache, and fall back to a default value if Service B is degraded.
+```csharp
+ICustomerEligibilitySource.GetEligibilityAsync(...)
+```
+
+The second interface is better for A because it describes why A needs the dependency.
+
+Benefits include:
+
+- Service B transport types do not enter business code,
+    
+- REST can later be replaced by messaging, caching, or another provider,
+    
+- Service A can use simple test doubles,
+    
+- changes to B are contained in one adapter,
+    
+- A can combine multiple B calls behind one locally meaningful operation.
+    
+
+A useful principle is:
+
+> The provider owns the public protocol.  
+> The consumer owns the interface expressing its dependency.
 
 ---
 
 ## Error Handling Responsibilities
 
-Shared client libraries often handle errors poorly by catching everything and throwing a single, generic exception:
+Error handling is one of the most difficult parts of a shared client.
 
-```csharp
-// The anti-pattern: flattening all failure modes into one exception
-throw new ServiceBClientException("Call failed", ex);
-```
+Three different categories must be distinguished.
 
-This makes it impossible for downstream code to determine what actually went wrong. Robust inter-service communication requires distinguishing between three distinct failure domains:
+### Transport failures
 
-```text
-+-----------------------------------------------------------------------------+
-|                            FAILURE CATEGORIES                               |
-+-----------------------------------------------------------------------------+
-| 1. TRANSPORT FAILURES                                                       |
-|    - DNS resolution failed, connection refused, connection reset            |
-|    - TLS handshake failure, raw TCP timeout                                 |
-|    - Meaning: The byte stream never made it to Service B (or return dropped)|
-|    - Action: Evaluate retry suitability, check network/mesh health         |
-+-----------------------------------------------------------------------------+
-| 2. PROTOCOL FAILURES                                                        |
-|    - HTTP 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout     |
-|    - Invalid HTTP headers, broken chunked transfer, unparseable JSON        |
-|    - Meaning: An intermediary failed, or Service B returned garbage         |
-|    - Action: Trigger circuit breaker, short-circuit, fallback               |
-+-----------------------------------------------------------------------------+
-| 3. BUSINESS RESPONSES                                                       |
-|    - 404 Not Found (Domain entity does not exist)                           |
-|    - 409 Conflict (Concurrency conflict, duplicate idempotency key)        |
-|    - 422 Unprocessable Entity (Business validation failure)                 |
-|    - Meaning: The message was received, parsed, and rejected by B's domain  |
-|    - Action: Map to consumer domain state; do NOT blindly retry             |
-+-----------------------------------------------------------------------------+
-```
+Examples:
 
-A client should never conflate a network timeout with a business validation failure.
+- DNS failure,
+    
+- connection refused,
+    
+- connection reset,
+    
+- timeout,
+    
+- TLS failure.
+    
+
+These indicate that communication did not complete normally.
+
+### Protocol failures
+
+Examples:
+
+- malformed response,
+    
+- unsupported content type,
+    
+- unexpected status code,
+    
+- invalid JSON,
+    
+- incompatible schema.
+    
+
+These indicate a problem in communication or contract handling.
+
+### Business responses
+
+Examples:
+
+- customer not found,
+    
+- operation not permitted,
+    
+- insufficient balance,
+    
+- conflicting state,
+    
+- validation failure.
+    
+
+These are meaningful outcomes defined by Service B.
+
+The client should not flatten all of these into one exception or one generic result.
 
 ---
 
 ## Who Interprets Errors?
 
-Service B is responsible for returning clear, machine-readable error details rather than arbitrary human-readable text. Using the RFC 7807 Problem Details standard is the industry baseline:
+Service B should define stable machine-readable error codes.
+
+For example:
 
 ```json
 {
-  "type": "https://errors.company.com/customer-not-found",
+  "type": "https://errors.company/customer-not-found",
   "title": "Customer not found",
   "status": 404,
   "code": "customer_not_found",
-  "detail": "Customer 849201 does not exist in the active tenant.",
-  "traceId": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  "traceId": "abc123"
 }
 ```
 
-The platform establishes the standard JSON envelope structure. Service B defines the stable, domain-specific `code` strings (`customer_not_found`, `account_suspended`, `insufficient_funds`).
+The shared platform may define the common envelope.
 
-Service A determines what that error code means **in the context of its own operation**:
+Service B defines the domain-specific error codes.
 
-- In an *Order Checkout* use case: `customer_not_found` indicates corrupted state or fraud. The checkout should fail immediately and log an alert.
-- In a *User Registration* use case: `customer_not_found` is an expected outcome indicating the username or customer ID is available.
-- In a *Batch Sync* use case: `customer_not_found` means Service A should create a new stub record and continue.
+Service A decides what they mean in its use case.
 
-Upstream clients should never throw downstream domain exceptions:
+For one use case:
 
-```csharp
-// ANTI-PATTERN: Service B's client deciding what an error means to Service A
-if (response.StatusCode == HttpStatusCode.NotFound)
-{
-    throw new CustomerMissingFromOrderException(); // B cannot possibly know this context!
-}
+```text
+customer_not_found → normal absence
 ```
 
-Instead, the transport client returns a structured result:
+For another:
+
+```text
+customer_not_found → inconsistent system state
+```
+
+For another:
+
+```text
+customer_not_found → create a new customer
+```
+
+Therefore, a Service B client should not automatically map all errors into application-specific exceptions such as:
 
 ```csharp
-public sealed record ServiceBResponse<T>(
-    bool IsSuccess,
-    T? Value,
-    ServiceBError? Error);
+throw new CustomerMissingFromOrderException();
+```
 
+That exception belongs to A.
+
+A transport client may expose:
+
+```csharp
 public sealed record ServiceBError(
     string Code,
     HttpStatusCode StatusCode,
@@ -610,707 +756,1004 @@ public sealed record ServiceBError(
     string? TraceId);
 ```
 
-Service A's adapter examines `ServiceBError.Code` and maps it to the appropriate outcome for its specific use case.
+The adapter in A performs the final mapping.
 
 ---
 
 ## Logging and Tracing
 
-When every team builds its own logging and tracing setup into their client packages, observability quickly falls apart. You end up with:
-- Redundant log messages for a single HTTP call (one from the client, one from the caller, one from `HttpClient`).
-- Sensitive data (passwords, tokens, PII) accidentally logged in request and response bodies.
-- Broken distributed traces due to inconsistent header propagation.
-- Mismatched metric names (`http_client_requests_duration` vs `service_b_call_latency_ms`).
+Service-specific clients should not independently invent logging and tracing standards.
 
-### The Golden Rule of Inter-Service Observability
+Otherwise each client may:
 
-> Client libraries may enrich distributed traces and telemetry, but they must never construct or configure the telemetry infrastructure itself.
+- use different field names,
+    
+- create duplicate log entries,
+    
+- log request or response bodies unsafely,
+    
+- propagate trace context differently,
+    
+- create redundant spans,
+    
+- use incompatible metric names,
+    
+- hide its retry behavior.
+    
 
-```text
-Platform Layer (Shared)
-  └── Registers OpenTelemetry, W3C TraceContext Handlers, Redaction Rules, Base Metrics
-        ▼
-Service A Configuration
-  └── Binds platform handlers to Service B's HttpClient
-        ▼
-Service B Client (Enrichment Only)
-  └── Adds span tags: { "peer.service": "ServiceB", "rpc.method": "GetCustomer" }
-```
+The shared platform should provide:
 
-The platform configures the core pipeline:
-- Standard W3C `traceparent` and `tracestate` header injection.
-- Consistent OpenTelemetry semantic conventions for HTTP metrics.
-- PII-safe log sanitization pipelines.
+- standard `HttpClient` instrumentation,
+    
+- trace-context propagation,
+    
+- correlation identifiers,
+    
+- common semantic attributes,
+    
+- safe redaction rules,
+    
+- dependency metrics,
+    
+- consistent span and log conventions.
+    
 
-The Service B client or local adapter simply enriches the current active activity:
+The Service B client may enrich telemetry with information such as:
+
+- logical operation name,
+    
+- target service name,
+    
+- API version,
+    
+- stable error code.
+    
+
+It should not configure a separate observability stack.
+
+In practice, the platform wires up standard W3C `traceparent` propagation and OpenTelemetry metric listeners on the underlying `HttpMessageHandler`. Service-specific code should only ever touch `Activity.Current` to append contextual domain tags, never spin up separate tracer providers or write raw unredacted payload logs:
 
 ```csharp
 var activity = Activity.Current;
+activity?.SetTag("peer.service", "ServiceB");
 activity?.SetTag("service_b.operation", "get_customer");
 activity?.SetTag("service_b.error_code", error?.Code);
 ```
+
+A useful principle is:
+
+> Service-specific clients may enrich telemetry, but they should not own the telemetry infrastructure.
 
 ---
 
 ## Retry and Timeout Ownership
 
-Resilience policies are often misplaced in distributed systems. A client library should not ship with hardcoded retries and timeouts baked into its internals.
+Retry and timeout decisions are often incorrectly hidden inside a client package.
 
-Consider the asymmetry of knowledge between the two services:
+Service B knows:
 
-```text
-Service B Knows:
-  - Which endpoints are safe to retry (idempotent operations like GET, PUT, or POST with Idempotency-Key).
-  - Its normal internal latency profile (p50 of 20ms, p99 of 400ms).
-  - Which error states are transient vs permanent.
+- whether an endpoint is idempotent,
+    
+- whether duplicate execution is safe,
+    
+- typical processing time,
+    
+- which failures may be transient.
+    
 
-Service A Knows:
-  - Its total end-to-end deadline (e.g., an interactive UI user is waiting on a 2-second timeout).
-  - How many other downstream services it needs to call to complete the overall request.
-  - Whether a fallback is acceptable if Service B is down (e.g., returning cached or degraded data).
-  - The business cost of failing fast versus waiting for a retry.
-```
+Service A knows:
 
-Service B should document its idempotency guarantees and latency expectations. Service A must configure the final execution budget.
+- its end-to-end latency budget,
+    
+- whether retrying still has business value,
+    
+- whether the user is waiting,
+    
+- whether a fallback exists,
+    
+- how many dependencies are involved in the complete operation.
+    
 
-In modern .NET, configure resilience explicitly in Service A using `Microsoft.Extensions.Resilience`:
+Therefore:
+
+- B should document endpoint semantics,
+    
+- the platform should provide resilience mechanisms,
+    
+- A should usually select the final policy.
+    
+
+For example:
 
 ```csharp
 services
-    .AddHttpClient<IServiceBTransportClient, ServiceBTransportClient>(client =>
-    {
-        client.BaseAddress = configuration.GetServiceUri("ServiceB");
-    })
-    .AddStandardHttpTelemetry() // Platform-owned logging & tracing
-    .AddResilienceHandler("service-b-pipeline", pipeline =>
-    {
-        // Service A sets the total timeout budget for this specific use case
-        pipeline.AddTimeout(TimeSpan.FromSeconds(2.5));
-
-        // Service A configures retry behavior based on its tolerance for latency
-        pipeline.AddRetry(new HttpRetryStrategyOptions
+    .AddHttpClient<IServiceBTransportClient, ServiceBTransportClient>(
+        client =>
         {
-            MaxRetryAttempts = 2,
-            BackoffType = DelayBackoffType.Exponential,
-            Delay = TimeSpan.FromMilliseconds(50),
-            // Only retry safe, transient status codes
-            ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
-                .Handle<HttpRequestException>()
-                .HandleResult(r => r.StatusCode is HttpStatusCode.RequestTimeout 
-                                                or HttpStatusCode.BadGateway 
-                                                or HttpStatusCode.ServiceUnavailable 
-                                                or HttpStatusCode.GatewayTimeout)
-        });
-
-        // Add a circuit breaker to prevent cascading failures
-        pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            client.BaseAddress = configuration.GetServiceUri("ServiceB");
+        })
+    .AddStandardHttpTelemetry()
+    .AddResilienceHandler(
+        "service-b-order-validation",
+        pipeline =>
         {
-            FailureRatio = 0.5,
-            SamplingDuration = TimeSpan.FromSeconds(10),
-            MinimumThroughput = 8,
-            BreakDuration = TimeSpan.FromSeconds(30)
+            pipeline.AddTimeout(
+                TimeSpan.FromSeconds(2));
+
+            pipeline.AddRetry(
+                new HttpRetryStrategyOptions
+                {
+                    MaxRetryAttempts = 1
+                });
         });
-    });
 ```
 
-The policy is declared and tuned right where the operational context is understood: inside Service A.
+The policy remains visible to A.
+
+Without a circuit breaker, retries under sustained upstream outage cause cascading thread pool starvation across dependent services. Retries must also be strictly constrained to transient failures (such as HTTP 503, 504, or socket disconnects) and idempotent operations—blindly retrying non-idempotent mutations risks executing duplicate state changes.
+
+A single default policy hidden inside the B client may be wrong for different consumers or use cases.
 
 ---
 
 ## Authentication Responsibility
 
-Authentication mechanics must be decoupled from application-specific business endpoints.
+Authentication mechanisms should usually be standardized by the platform.
 
-```text
-+-----------------------------------------------------------------------------+
-|                   AUTHENTICATION RESPONSIBILITY MODEL                       |
-+-----------------------------------------------------------------------------+
-|                                                                             |
-| 1. Platform Infrastructure:                                                 |
-|    - Manages workload identity (e.g., Azure Managed Identity, SPIFFE/SPIRE).|
-|    - Handles token acquisition, in-memory caching, and proactive renewal.   |
-|    - Handles mutual TLS (mTLS) certificate rotation and handshakes.         |
-|                                                                             |
-| 2. Service B (Provider):                                                    |
-|    - Defines the required OAuth2 scopes, claims, and audience targets.       |
-|    - Example: Audience: "api://service-b", Scope: "customers.read"         |
-|                                                                             |
-| 3. Service A (Consumer):                                                    |
-|    - Configures which client credentials or managed identity to use.        |
-|    - Assigns the required scope to its configured HTTP client pipeline.     |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-```
+The platform may provide:
 
-Service B's client package must never implement its own token caching loops, file-based credential loaders, or custom crypto routines. It should rely on platform-provided delegating handlers:
+- service identity,
+    
+- token acquisition,
+    
+- certificate handling,
+    
+- token caching,
+    
+- propagation rules,
+    
+- standard authorization headers.
+    
 
-```csharp
-// Standard platform delegating handler injected into Service A's client registration
-services.AddHttpClient<IServiceBTransportClient, ServiceBTransportClient>()
-    .AddPlatformTokenAcquisitionHandler(options =>
-    {
-        options.Audience = "api://service-b";
-        options.Scopes = ["customers.read"];
-    });
-```
+Service B should define:
 
-For deeper design decisions regarding caller vs. user identities, review [[Service vs User Authorization Models]].
+- required scopes,
+    
+- permissions,
+    
+- audience,
+    
+- access rules.
+    
+
+Service A should configure:
+
+- which identity it uses,
+    
+- which credentials or workload identity apply,
+    
+- which scope is requested.
+    
+
+The Service B client may integrate with the shared authentication handler, but it should not implement a separate authentication framework.
+
+Authentication is best implemented via platform-provided delegating handlers (`DelegatingHandler`) attached to the client registration. The handler transparently resolves workload identity tokens (such as Azure Managed Identity or SPIFFE/SPIRE), caches them in memory until near expiry, and attaches bearer tokens or negotiates mTLS without exposing credential management to application code.
 
 ---
 
 ## API Compatibility
 
-Regardless of whether you use generated clients, manual adapters, or contract packages, **Service B must always assume version skew exists in production.**
+Backward compatibility is required regardless of whether the client is:
 
-During a rolling deployment, blue-green deployment, or canary release:
-- New instances of Service B will process requests from old instances of Service A.
-- Old instances of Service B will process requests from new instances of Service A.
-- Downstream consumers in other teams will update their dependencies on their own schedules—often weeks or months later.
+- handwritten,
+    
+- generated,
+    
+- distributed as a NuGet,
+    
+- created locally,
+    
+- expressed through an RPC interface.
+    
 
-Every public contract must be designed for forward and backward compatibility.
+Service B must assume that consumers update at different times.
+
+A deployed B may be called by:
+
+- an old client,
+    
+- the current client,
+    
+- a future client during a rolling deployment.
+    
+
+The contract must tolerate version skew.
 
 ---
 
 ## Usually Safe Changes
 
-These changes generally do not break consumers, provided consumers follow standard serialization hygiene:
+Changes that are often backward compatible include:
 
-- Adding a new endpoint.
-- Adding an optional request parameter or body property.
-- Adding a new property to a response payload (provided consumers ignore unknown fields).
-- Adding a new machine-readable error code (provided consumers have a fallback for unmodeled errors).
-- Adding an optional query string parameter with a safe default on the server.
+- adding a new endpoint,
+    
+- adding an optional request field,
+    
+- adding an optional response field,
+    
+- adding a new error code when consumers handle unknown codes safely,
+    
+- adding a query parameter with a default behavior,
+    
+- adding metadata that old consumers ignore.
+    
 
-Always verify these changes against your code generators and serializers. Some strict serializers fail on unexpected JSON fields by default.
+Even these changes should be tested because generated clients and strict serializers may behave differently.
 
 ---
 
 ## Common Breaking Changes
 
-These changes break consumers at runtime, even if the schema appears structurally valid:
+Typical breaking changes include:
 
-- Removing an endpoint or changing its HTTP verb.
-- Renaming a property or field name in a request or response.
-- Changing the data type of an existing property (e.g., converting an integer to a string).
-- Changing an optional request property into a required one.
-- Altering the semantics of an existing value. For instance:
+- removing an endpoint,
+    
+- renaming a field,
+    
+- removing a field,
+    
+- changing a field type,
+    
+- making an optional field required,
+    
+- changing the meaning of `null`,
+    
+- changing status codes,
+    
+- changing error codes,
+    
+- changing enum behavior,
+    
+- changing authentication requirements,
+    
+- changing idempotency semantics,
+    
+- changing default sorting or filtering,
+    
+- changing retry-related behavior,
+    
+- changing the business meaning of an existing value.
+    
+
+A contract may remain structurally valid while becoming semantically incompatible.
+
+For example:
 
 ```text
-Previously:  "status": "active"  ──► "Customer is verified and eligible for purchases"
-Updated to:  "status": "active"  ──► "Customer record exists and is not soft-deleted"
+status = active
 ```
 
-The JSON payload deserializes without a single schema error, but Service A makes incorrect business decisions because the underlying meaning changed. **Semantic compatibility is just as critical as schema compatibility.**
+may previously mean:
+
+```text
+The customer may place an order.
+```
+
+Later it may mean:
+
+```text
+The customer record is not archived.
+```
+
+The JSON still deserializes, but the consumer behavior may become incorrect.
+
+Backward compatibility must therefore cover both schema and meaning.
 
 ---
 
 ## Enum Compatibility
 
-Enums are one of the most common causes of hidden breaking changes in distributed systems.
+Enums are a frequent source of hidden breaking changes.
 
-Assume Service B returns an enum representing customer state:
+Suppose B initially returns:
 
-```json
-{
-  "status": "active"
-}
+```text
+active
+inactive
 ```
 
-Six months later, Service B introduces a new state: `"suspended"`.
+Later it adds:
 
-If Service A uses a strictly typed enum and an exhaustive switch statement, one of two failures occurs:
-1. **Deserialization Crash**: The JSON parser throws an exception because `"suspended"` is not a valid enum member.
-2. **Unhandled Branch Panic**: The message deserializes, but the application throws an unexpected runtime exception.
+```text
+suspended
+```
+
+A generated .NET enum may fail deserialization or map the value incorrectly.
+
+Safer approaches include:
+
+- string-based values,
+    
+- an `Unknown` fallback,
+    
+- tolerant deserialization,
+    
+- explicit handling of unknown values.
+    
+
+Consumer code should avoid assuming that all possible values are permanently known.
+
+Bad:
 
 ```csharp
-// DANGEROUS: Strict enum assumptions break on additive upstream changes
-public enum CustomerStatus
-{
-    Active,
-    Inactive
-}
-
-// In application code:
 return response.Status switch
 {
-    CustomerStatus.Active => Eligibility.Allowed,
-    CustomerStatus.Inactive => Eligibility.Denied,
-    _ => throw new ArgumentOutOfRangeException() // CRASHES when Service B adds "Suspended"
+    CustomerStatus.Active => true,
+    CustomerStatus.Inactive => false
 };
 ```
 
-### The Resilient Approach: Tolerant Matching with Unknown Fallbacks
-
-Consume enums as strings or use serializers configured for tolerant parsing. Always provide an explicit fallback for unmodeled values:
+Better:
 
 ```csharp
-// RESILIENT: String-based matching with safe business fallback
-public Eligibility EvaluateEligibility(string rawStatus)
+return response.Status switch
 {
-    return rawStatus switch
-    {
-        "active" => Eligibility.Allowed,
-        "inactive" => Eligibility.Denied,
-        _ => Eligibility.Unknown // Safe fallback: treat unrecognized states defensively
-    };
-}
+    "active" => Eligibility.Allowed,
+    "inactive" => Eligibility.Denied,
+    _ => Eligibility.Unknown
+};
 ```
 
-Design every consumer to gracefully handle unexpected enum values from upstream providers.
+The correct fallback depends on the business risk.
 
 ---
 
 ## Request Compatibility
 
-When evolving request payloads, follow Postel’s Law (*be conservative in what you send, and liberal in what you accept*):
+Adding a required request field is normally breaking.
 
-- Never make an optional property required in a subsequent release.
-- If an operation requires a new parameter, provide a sensible default on the server so existing callers can omit it without failing.
-- If a parameter change fundamentally alters the business operation, create a new endpoint route or an explicitly versioned API.
+Instead, B should:
+
+- add an optional field,
+    
+- define a default behavior,
+    
+- introduce a new endpoint or API version when semantics differ substantially.
+    
+
+Old consumers must still be able to send the previous request format.
+
+B should avoid interpreting omitted fields differently without an explicit version change.
 
 ---
 
 ## Response Compatibility
 
-When returning response payloads:
-- Ensure your JSON serializer omits null fields if they add no value, or keep nullability consistent.
-- Never switch an empty array to `null`:
+Adding a response field is generally safe when consumers ignore unknown fields.
+
+Removing or changing an existing field is breaking.
+
+B should also avoid turning:
 
 ```json
-// Predictable contract:
-{ "tags": [] }
-
-// DANGEROUS change:
-{ "tags": null }
+"items": []
 ```
 
-Turning empty collections into `null` frequently triggers `NullReferenceException` crashes in generated clients, even if handwritten code handles it.
+into:
+
+```json
+"items": null
+```
+
+unless the distinction was part of the original contract.
+
+Changes in nullability frequently break generated clients even when handwritten clients continue to work.
 
 ---
 
 ## Error Compatibility
 
-Error contracts are part of your public API. Treat them with the same backward compatibility discipline as your success payloads.
+Error contracts are part of the public API.
 
-Never change:
-- Machine-readable error codes (e.g., changing `"customer_not_found"` to `"err_client_missing"`).
-- HTTP status codes for established outcomes (e.g., changing a `404 Not Found` to a `400 Bad Request`).
-- The semantic meaning of an existing error code.
+Service B should maintain stable:
 
-Do not rely on human-readable error messages for programmatic logic:
+- status codes,
+    
+- machine-readable error codes,
+    
+- error categories,
+    
+- retryability semantics,
+    
+- correlation identifiers.
+    
+
+Changing:
+
+```text
+404 customer_not_found
+```
+
+to:
+
+```text
+400 invalid_customer
+```
+
+can break Service A even if the successful response contract is unchanged.
+
+Human-readable messages should not be used as stable programmatic identifiers.
+
+Bad:
 
 ```csharp
-// FRAGILE: Relies on string matching against human-readable text
-if (error.Message.Contains("Customer was not found")) 
-{
-    // ...
-}
+if (error.Message == "Customer was not found")
+```
 
-// RESILIENT: Relies on an immutable, machine-readable error code
+Better:
+
+```csharp
 if (error.Code == "customer_not_found")
-{
-    // ...
-}
 ```
 
 ---
 
 ## Versioning Strategies
 
-### 1. Additive Evolution (Preferred)
+### Compatible evolution
 
-Evolve APIs additively. Add new optional properties, new endpoints, and new response fields while keeping existing fields intact. Additive evolution avoids the operational overhead of running parallel versions in production.
+Prefer evolving the existing API through additive, backward-compatible changes.
 
-### 2. Explicit Major API Versioning
+This should be the default.
 
-When an endpoint requires fundamental structural or semantic changes that cannot be introduced additively, introduce an explicit new version:
+### Explicit API versioning
+
+Use a new version when:
+
+- semantics change significantly,
+    
+- old behavior cannot be preserved,
+    
+- the contract requires structural redesign,
+    
+- migration requires a transition period.
+    
+
+Examples:
 
 ```text
-POST /api/v1/orders
-POST /api/v2/orders
+/api/v1/customers
+/api/v2/customers
 ```
 
-Alternatively, use media-type or header-based versioning:
+or negotiated media types.
 
-```http
-Accept: application/vnd.company.order.v2+json
-```
+### Parallel support
 
-### 3. Parallel Version Deprecation
+During migration, B may support both versions.
 
-When deploying a new API version:
-1. Run Version 1 and Version 2 in production concurrently.
-2. Direct all new feature work in consumers to Version 2.
-3. Monitor production metrics to identify which consumers are still calling Version 1.
-4. Establish an explicit deprecation timeline, communicate with consuming teams, and remove Version 1 only after its traffic drops to zero.
+A consumers migrate independently.
 
-Never bump an API version for minor, non-breaking modifications. Maintaining multiple parallel versions creates long-term operational baggage.
+B removes the old version only after:
+
+- usage is known,
+    
+- consumers have migrated,
+    
+- a deprecation period has passed,
+    
+- production traffic confirms no remaining users.
+    
+
+Versioning does not replace backward compatibility discipline. Creating a new API version for every small change creates long-term maintenance overhead.
 
 ---
 
 ## Source of Truth
 
-To keep documentation, types, and wire behaviors aligned, establish a single source of truth for the API contract:
+There should be one primary source of truth for the public contract.
+
+Possible choices include:
+
+- OpenAPI specification generated from B,
+    
+- contract-first OpenAPI maintained separately,
+    
+- protocol schema such as Protobuf,
+    
+- another machine-readable IDL.
+    
+
+Avoid maintaining several independent manual definitions:
 
 ```text
-                  Single Source of Truth
-                  (OpenAPI Spec / Proto)
-                             │
-         ┌───────────────────┼───────────────────┐
-         ▼                   ▼                   ▼
-   Generated SDK       Generated Docs     Breaking-Change
-  (or Local Adapters)  (Developer Portal)  CI Verification
+ServiceB.Contracts.dll
+openapi.json
+ServiceB.Client.dll
+documentation
 ```
 
-Avoid scenarios where an assembly, an OpenAPI file, and a documentation page are maintained by hand separately:
+They can drift apart.
+
+A better pipeline is:
 
 ```text
-ServiceB.Contracts.dll  ◄─── DRIFT ───►  openapi.json  ◄─── DRIFT ───►  Developer Wiki
+Source of truth: OpenAPI
+
+Generated artifacts:
+- .NET client
+- TypeScript client
+- API documentation
+- compatibility report
 ```
 
-When manual definitions drift apart, teams spend hours debugging discrepancies between the documentation and reality.
-
-A reliable pipeline generates the OpenAPI document directly from Service B's code during compilation, or uses a contract-first approach where code and documentation are generated from a canonical specification repository.
+The generated artifacts should not become competing contract definitions.
 
 ---
 
 ## Compatibility Testing
 
-Verify contract compatibility automatically in your continuous integration (CI) pipeline:
+Compatibility should be automated.
 
-### 1. Automated Schema Diffs
+### Schema compatibility tests
 
-In Service B's build pipeline, compare the newly compiled OpenAPI schema against the version currently running in production using tools like `openapi-diff`:
+Service B compares the new API specification with the previous released version.
+
+The pipeline should detect:
+
+- removed endpoints,
+    
+- removed properties,
+    
+- changed types,
+    
+- changed required fields,
+    
+- incompatible enum changes,
+    
+- changed response codes.
+    
+
+Automated schema diffing tools (such as `openapi-diff`) running in CI enforce these rules mechanically against the version deployed in production. However, schema validation only catches syntactic breakage—consumer-driven contract tests (e.g., Pact) remain necessary to catch behavioral and semantic drift.
+
+### Consumer-driven contract tests
+
+Service A defines the subset of B behavior it depends on.
+
+For example:
 
 ```text
-CI Check:
-  - Error if an existing endpoint was removed.
-  - Error if an existing response field was renamed or removed.
-  - Error if a required request field was added without a default.
-  - Warn if new enum values were introduced.
+A requires:
+- GET /customers/{id}
+- response fields: id, status
+- 404 with code customer_not_found
+- unknown status values must be possible
 ```
 
-### 2. Consumer-Driven Contract Testing (e.g., Pact)
+Service B validates those expectations before release.
 
-Consumer-Driven Contract Testing flips the verification dynamic:
-- Service A defines the minimal slice of Service B it relies on (e.g., `GET /customers/123`, requiring only `id` and `status`).
-- This expectation is published as a contract artifact.
-- Service B runs these contract tests in its build pipeline before merging code. If an upstream change breaks Service A's contract, Service B's build fails.
+This is especially useful when A uses only a small portion of a large API.
 
-This provides confidence when changing APIs that have dozens of downstream consumers.
+### Integration tests
 
-### 3. End-to-End Smoke Tests
+Service A runs its adapter against:
 
-After deploying Service B to staging or production canary environments, execute smoke tests that validate:
-- Authentication handshake and token acceptance.
-- Correct headers and traceparent propagation.
-- Real response payload serialization.
+- a real test instance of B,
+    
+- a compatible stub,
+    
+- or a contract test environment.
+    
+
+The test should validate:
+
+- authentication,
+    
+- serialization,
+    
+- status codes,
+    
+- timeout behavior,
+    
+- trace propagation,
+    
+- error interpretation.
+    
+
+### Production or staging smoke tests
+
+After deployment, verify:
+
+- A can reach B,
+    
+- authentication works,
+    
+- telemetry is emitted,
+    
+- required endpoints behave correctly,
+    
+- the deployed API matches the expected contract.
+    
 
 ---
 
 ## Partial Contract Consumption
 
-Service A should only deserialize and interact with the data it needs to fulfill its business capability.
+Service A often needs only one endpoint and a subset of fields.
 
-Suppose Service B's customer endpoint returns a comprehensive payload:
+It should not be forced to adopt the complete Service B model.
+
+Suppose B returns:
 
 ```json
 {
-  "id": "cust_9921",
-  "name": "Jane Doe",
+  "id": "123",
+  "name": "Example",
   "status": "active",
-  "email": "jane@example.com",
-  "address": { "street": "123 Main St", "zip": "90210" },
-  "creditScore": 750,
-  "preferences": { "marketing": false, "darkMode": true },
-  "audit": { "createdAt": "2023-01-01T00:00:00Z" }
+  "address": {},
+  "permissions": [],
+  "preferences": {},
+  "audit": {}
 }
 ```
 
-If Service A's only job is to verify whether an account is active before processing an order, its transport model should reflect only that:
+A may only need:
 
 ```csharp
-// Service A's internal, focused deserialization model
-internal sealed record ServiceBCustomerStatusDto(
+private sealed record ServiceBResponse(
     string Id,
     string Status);
 ```
 
-Ensure your JSON deserializer is configured to ignore unknown fields (the default in `System.Text.Json`). 
+Most JSON serializers can ignore additional fields.
 
-This makes Service A immune to changes, additions, or deprecations affecting any of the other fields in Service B's payload.
+This reduces coupling to irrelevant parts of B.
+
+However, A must still understand the semantic contract of the fields it uses.
+
+A useful rule is:
+
+> Depend on the smallest stable subset of the provider contract that satisfies the consumer’s need.
 
 ---
 
 ## Avoid Shared Domain Models
 
-Do not share domain entities across service boundaries via shared libraries.
+Service A and Service B should not normally share one domain model package.
+
+Even when both discuss a concept called `Customer`, the concept may have different responsibilities.
+
+For B:
 
 ```text
-+-----------------------------------------------------------------------------+
-|                      THE SHARED DOMAIN MODEL TRAP                           |
-+-----------------------------------------------------------------------------+
-|                                                                             |
-|                     Shared Domain Package: Customer.dll                     |
-|                   ┌─────────────────────────────────────┐                   |
-|                   │ - CustomerId                        │                   |
-|                   │ - Address, BillingInfo, Preferences │                   |
-|                   │ - CreditRules, DiscountCalculators  │                   |
-|                   └─────────────────────────────────────┘                   |
-|                                      ▲                                      |
-|                 ┌────────────────────┴────────────────────┐                 |
-|                 │                                         │                 |
-|      SERVICE A (Billing)                       SERVICE B (Shipping)         |
-|      Requires: Balance & Invoices              Requires: Address & Carrier  |
-|                                                                             |
-+-----------------------------------------------------------------------------+
+Customer = complete customer record
 ```
 
-While both services deal with a concept called "Customer", their bounded contexts require completely different views of that entity:
-- To **Service B (Identity/Profile)**: A Customer is a complete record containing personal identity, addresses, login audit trails, and privacy preferences.
-- To **Service A (Billing)**: A Customer is simply an ID, a tax exemption status, and an outstanding account balance.
+For A:
 
-Sharing a single `Customer` class creates tight coupling:
-- A change requested by Billing forces a redeployment and testing cycle for Shipping.
-- Unnecessary validation dependencies and logic leak across boundaries.
-- Database annotations or ORM configurations from one service pollute the other.
+```text
+Customer = eligibility information required to place an order
+```
 
-Keep domain models private to each service. Share only passive, wire-level transport DTOs.
+Sharing a domain model creates pressure to combine unrelated needs.
+
+Instead:
+
+- B exposes transport DTOs,
+    
+- A maps them into its own local concepts,
+    
+- each service owns its own domain model.
+    
+
+Shared contracts are acceptable.
+
+Shared domain ownership is much more dangerous.
 
 ---
 
-## Thin Client vs. Smart Client
+## Thin Client vs Smart Client
 
-When designing an official client library, resist the pressure to turn it into a "smart" client:
+### Thin client
 
-```text
-+------------------------------------+------------------------------------+
-|            THIN CLIENT             |            SMART CLIENT            |
-|       (Recommended Pattern)        |       (Architectural Trap)         |
-+------------------------------------+------------------------------------+
-| - Contains endpoints and verbs     | - Bakes in opinionated retries     |
-| - Pure serialization / DTO parsing | - Embeds custom caching logic      |
-| - Unpacks error envelopes          | - Maps domain exceptions internally|
-| - Leaves resilience to consumer    | - Injects custom logging pipelines |
-| - Zero opinion on domain usage     | - Hides raw network realities      |
-+------------------------------------+------------------------------------+
-```
+A thin client provides:
 
-Smart clients seem helpful at first because they reduce initial consumer boilerplate. Over time, however, they become unmaintainable bottlenecks:
-- One consumer wants to cache responses for 10 minutes; another requires real-time data.
-- One consumer wants to retry 5 times; another is on an interactive UI thread and needs to fail fast after 500ms.
-- Upgrading a dependency inside a smart client forces an upgrade across all consuming applications simultaneously.
+- endpoint methods,
+    
+- serialization,
+    
+- protocol-specific DTOs,
+    
+- error-envelope parsing,
+    
+- basic DI registration.
+    
 
-**Default to thin clients.** Let the consuming application manage its own caching, retries, and domain translations.
+It leaves application policy to A.
+
+### Smart client
+
+A smart client may also provide:
+
+- retries,
+    
+- caching,
+    
+- fallback,
+    
+- business validation,
+    
+- domain mapping,
+    
+- global error translation,
+    
+- logging policy,
+    
+- tracing policy.
+    
+
+Smart clients are attractive because they reduce work for consumers.
+
+However, they often embed assumptions that are correct for one use case and wrong for another.
+
+Prefer thin clients unless the additional behavior is:
+
+- truly universal,
+    
+- owned by Service B,
+    
+- stable,
+    
+- carefully documented,
+    
+- independently configurable,
+    
+- tested across consumers.
+    
 
 ---
 
 ## Recommended Layering in Service A
 
-To maintain clean boundaries, organize Service A’s code to keep external integration concerns cleanly separated from your core domain:
+A practical structure is:
 
 ```text
-ServiceA.src
-│
-├── Domain / Application (Core Business Logic)
-│   ├── UseCases/
-│   │   └── PlaceOrderHandler.cs
-│   └── Ports/
-│       └── ICustomerEligibilitySource.cs     ◄── Consumer-owned interface
-│
-└── Infrastructure (External Communications)
-    └── ExternalServices/
-        └── ServiceB/
-            ├── ServiceBTransportClient.cs    ◄── Thin HTTP client / generated SDK
-            ├── ServiceBCustomerAdapter.cs    ◄── Implements ICustomerEligibilitySource
-            ├── Models/
-            │   └── ServiceBCustomerResponse.cs
-            └── ServiceBOptions.cs
+Service A
+
+Application
+  ICustomerEligibilitySource
+  OrderUseCase
+
+Infrastructure
+  ServiceBGeneratedClient
+  ServiceBCustomerEligibilitySource
+  ServiceBConfiguration
 ```
 
-### The Domain Port
+Application interface:
 
 ```csharp
-namespace ServiceA.Domain.Ports;
-
 public interface ICustomerEligibilitySource
 {
-    Task<CustomerEligibility> GetEligibilityAsync(
+    Task<CustomerEligibility> GetAsync(
         CustomerId customerId,
         CancellationToken cancellationToken);
 }
 ```
 
-### The Infrastructure Adapter (Anti-Corruption Layer)
+Adapter:
 
 ```csharp
-namespace ServiceA.Infrastructure.ExternalServices.ServiceB;
-
-internal sealed class ServiceBCustomerAdapter(
-    IServiceBTransportClient transportClient,
-    ILogger<ServiceBCustomerAdapter> logger)
+internal sealed class ServiceBCustomerEligibilitySource(
+    IServiceBTransportClient client)
     : ICustomerEligibilitySource
 {
-    public async Task<CustomerEligibility> GetEligibilityAsync(
+    public async Task<CustomerEligibility> GetAsync(
         CustomerId customerId,
         CancellationToken cancellationToken)
     {
-        var result = await transportClient.GetCustomerAsync(
-            customerId.Value, 
+        var response = await client.GetCustomerAsync(
+            customerId.Value,
             cancellationToken);
 
-        // Handle business outcomes and error translations locally
-        if (!result.IsSuccess)
+        return response switch
         {
-            if (result.Error?.Code == "customer_not_found")
-            {
-                logger.LogInformation(
-                    "Customer {CustomerId} not found in Service B; treating as ineligible.", 
-                    customerId);
-                    
-                return CustomerEligibility.Ineligible;
-            }
+            { IsSuccess: true } =>
+                Map(response.Value),
 
-            logger.LogError(
-                "Unexpected failure calling Service B: {ErrorCode}", 
-                result.Error?.Code);
-                
-            throw new UpstreamServiceException(
-                $"Failed to evaluate customer eligibility. Upstream error: {result.Error?.Code}");
-        }
+            { Error.Code: "customer_not_found" } =>
+                CustomerEligibility.NotAvailable,
 
-        // Map upstream wire DTO into Service A's domain model
-        return result.Value.Status switch
-        {
-            "Active" => CustomerEligibility.Eligible,
-            "Suspended" => CustomerEligibility.Ineligible,
-            _ => CustomerEligibility.RequiresManualReview
+            _ =>
+                throw MapUnexpectedFailure(response.Error)
         };
     }
 }
 ```
 
-This layout gives you clean separation of concerns:
-- Business use cases depend exclusively on `ICustomerEligibilitySource`.
-- Service B's wire models, HTTP status codes, and network exceptions are caught and resolved entirely inside `ServiceBCustomerAdapter`.
-- If Service B changes its API or is replaced by another system, only the files inside the `Infrastructure/ExternalServices/ServiceB/` directory change.
+This isolates:
+
+- generated code,
+    
+- Service B DTOs,
+    
+- HTTP-specific concerns,
+    
+- error translation,
+    
+- compatibility adaptations.
+    
 
 ---
 
 ## Recommended Decision Model
 
-Use this decision matrix when choosing an integration approach:
+### Use a Service B contracts package when
 
-```text
-                           How many consumer teams?
-                                      │
-                 ┌────────────────────┴────────────────────┐
-                 ▼                                         ▼
-            Single Team                               Many Teams
-                 │                                         │
-        API complexity & scope?                    Heterogeneous tech stack?
-        ┌────────┴────────┐                       ┌────────┴────────┐
-        ▼                 ▼                       ▼                 ▼
-   Small / 1-2 eps   Large / Many eps            Yes                No
-        │                 │                       │                 │
-        ▼                 ▼                       ▼                 ▼
- [Option 4: Local]  [Option 3: OpenAPI]     [Option 3: OpenAPI]  Do you have resources
-    Small Adapter     Code Generation         Code Generation    to maintain an SDK?
-                                                                    ┌───┴───┐
-                                                                    ▼       ▼
-                                                                   Yes      No
-                                                                    │       │
-                                                                    ▼       ▼
-                                                             [Option 2: SDK] [Option 1: Contracts]
-                                                               Thin Client    Passive Package
-```
+- consumers are primarily .NET,
+    
+- DTOs are small and passive,
+    
+- package and API versions are carefully managed,
+    
+- shared compile-time types provide real value.
+    
 
-### Summary of Best Fits
+### Use an official Service B client when
 
-- **Use a Contracts Package (Option 1)** when all services are built on the same runtime, teams coordinate closely, and you need simple compile-time type safety for passive DTOs.
-- **Provide an Official Thin Client (Option 2)** when Service B is a core capability called by dozens of teams, and centralizing serialization and route definitions prevents widespread duplication. Keep it thin.
-- **Generate from OpenAPI (Option 3)** when consumers are written in different programming languages, or when you want to automate client creation from a canonical specification.
-- **Write a Small Local Adapter (Option 4)** when you only consume a handful of fields from one or two endpoints, the upstream API is stable, and you want zero external package dependencies.
-- **Use an RPC-Style Client (Option 5)** only for rapid prototyping or simple internal utilities, and keep it confined to your infrastructure layer.
+- B has many consumers,
+    
+- the protocol is non-trivial,
+    
+- B can actively maintain the SDK,
+    
+- the client remains thin,
+    
+- common transport implementation reduces real risk.
+    
+
+### Generate from OpenAPI when
+
+- the API contract is machine-readable,
+    
+- consumers use multiple languages,
+    
+- generation can be automated,
+    
+- generated code is kept inside infrastructure.
+    
+
+### Write a small local adapter when
+
+- A needs only a small API subset,
+    
+- the interaction is simple,
+    
+- full SDK adoption would create unnecessary coupling,
+    
+- platform HTTP helpers already exist.
+    
+
+### Use an RPC-style client when
+
+- convenience is valuable,
+    
+- the interface remains an infrastructure detail,
+    
+- network failure semantics are not hidden,
+    
+- the client is wrapped behind an A-owned interface.
+    
 
 ---
 
-## Warning Signs in Code Reviews
+## Warning Signs
 
-Watch for these warning signs during pull request reviews:
+The integration is becoming unhealthy when:
 
-- **Upstream DTOs in Domain Signatures**: A handler method or domain entity signature references a type from `ServiceB.Contracts` or a generated client namespace.
-- **Deep SDK Dependency Trees**: Installing a client library pulls in logging frameworks, Polly, or third-party JSON libraries that conflict with the consuming host.
-- **Catch-All Exception Flattening**: The client catches all exceptions and rethrows a generic `ApiException`, destroying the original HTTP status code and error details.
-- **Hidden, Hardcoded Retry Loops**: The client automatically retries non-idempotent `POST` requests without the caller's knowledge.
-- **Direct Controller Injection**: Application handlers inject raw `HttpClient` or generated clients directly instead of programming against a local domain port.
-- **Shared Database or Domain Libraries**: Service A references an assembly from Service B that contains Entity Framework configurations or database entities.
-- **String Matching on Error Messages**: Downstream logic checks `if (ex.Message.Contains("404"))` instead of inspecting structured error codes.
+- Service B DTOs appear throughout Service A,
+    
+- business code directly depends on a generated client,
+    
+- the client package configures global logging,
+    
+- the client package creates its own tracing conventions,
+    
+- timeout and retry policies are hidden,
+    
+- every B error is converted into one generic exception,
+    
+- B’s domain behavior is distributed in a contracts package,
+    
+- A must update a large SDK to use one field,
+    
+- the client introduces a large dependency tree,
+    
+- client versions and deployed B versions are unclear,
+    
+- the official client is no longer maintained,
+    
+- nobody knows whether a field or endpoint can be safely changed.
+    
 
 ---
 
 ## Practical Rules
 
-1. **Provider owns the wire contract**: Service B owns endpoints, schemas, and error codes.
-2. **Consumer owns the dependency**: Service A defines its own domain interfaces (ports) describing what it needs.
-3. **Platform owns the pipes**: Logging frameworks, W3C trace propagation, token lifecycle, and mTLS belong to the shared platform.
-4. **Isolate external models**: Keep transport DTOs in your infrastructure layer; map them to domain models at the boundary.
-5. **Treat remote calls as fallible**: Never let an RPC library fool you into treating a network call like an in-memory function.
-6. **Keep clients thin**: Never allow an SDK to configure global timeouts, application-wide retries, or custom logging engines.
-7. **Control resilience at the consumer**: Timeouts and retries belong in Service A, where the operational SLA and use-case context are known.
-8. **Use machine-readable error codes**: Base business decisions on stable, structured error codes, not HTTP text messages.
-9. **Single source of truth**: Drive documentation, schemas, and clients from a single OpenAPI or Protobuf specification.
-10. **Design for version skew**: Always assume callers will run older or newer versions of the contract during deployments.
-11. **Use tolerant enum parsing**: Never use strict, exhaustive switches on upstream enums without an explicit fallback for unmodeled states.
-12. **Consume only what you need**: Model only the properties your use case requires to avoid breaking on unrelated upstream changes.
-13. **Do not share domain packages**: Share passive transport contracts, never internal domain models or validation rules.
+1. Service B owns the public API contract.
+    
+2. Service A owns the business meaning of the integration.
+    
+3. The platform owns common HTTP, logging, tracing, and authentication mechanisms.
+    
+4. A should normally hide B behind an interface owned by A.
+    
+5. Generated and official clients should remain infrastructure details.
+    
+6. Transport DTOs should not become shared domain models.
+    
+7. Clients should be thin by default.
+    
+8. Retry and timeout policy should remain visible to A.
+    
+9. Service B should expose stable machine-readable errors.
+    
+10. A should interpret those errors according to its use case.
+    
+11. Use one machine-readable source of truth for the contract.
+    
+12. Prefer additive, backward-compatible API evolution.
+    
+13. Treat error behavior and semantics as part of compatibility.
+    
+14. Test compatibility automatically.
+    
+15. Depend only on the subset of B that A actually needs.
+    
+16. Do not hide remote-call failure semantics behind a local-looking interface.
+    
+17. A service-specific client should not own organization-wide observability policy.
+    
 
 ---
 
-## The Mental Model
+## Mental Model
 
-A remote client library is not simply a convenience wrapper. It is an architectural boundary between two independently deployed, independently scaling systems.
+A remote client is not only a convenience wrapper.
 
-The most resilient architecture always follows this path:
+It defines a boundary between independently deployed systems.
 
-```text
-Service B (Provider)
-  └── Exposes canonical, versioned wire contract (OpenAPI / Proto)
-            │
-            ▼
-Thin Transport Layer (SDK, Generated Client, or Raw HttpClient)
-            │
-            ▼
-Service A Infrastructure (Adapter / Anti-Corruption Layer)
-  └── Translates wire models and status codes to domain outcomes
-            │
-            ▼
-Service A Domain (Application Core)
-  └── Consumes application-owned port (ICustomerEligibilitySource)
-```
-
-Cross-cutting operational concerns are supplied orthogonal to application logic:
+The healthiest model is:
 
 ```text
-Platform Infrastructure
-  ├── Workload Identity & Token Management
-  ├── OpenTelemetry W3C Distributed Trace Context
-  └── Standard Resilience Mechanics
+Service B
+  owns the public protocol
+        ↓
+Thin transport client or generated client
+        ↓
+Adapter owned by Service A
+        ↓
+Interface and domain concepts owned by Service A
 ```
 
-To summarize the relationship in three sentences:
+Cross-cutting behavior is provided separately:
 
-> **Service B owns the contract.**  
-> **Service A owns the dependency.**  
-> **The platform owns the communication standards.**
+```text
+Platform
+  authentication
+  tracing
+  logging
+  metrics
+  resilience mechanisms
+```
 
----
+The final principle is:
 
-## Related Notes
+> Service B should make its API easy to consume, but it should not decide how Service A structures its application or interprets every outcome.
 
-- **[[Service-to-Service Authentication in Distributed Runtimes]]**: Workload identity, token exchange, and mutual TLS for inter-service communication.
-- **[[Service vs User Authorization Models]]**: Distinguishing caller identity from acting-on-behalf-of user delegation.
-- **[[Propagating User Context Between Services]]**: Propagating trace context, tenant IDs, and user identity across synchronous calls.
-- **[[Scaling a Modular Monolith with Local-or-Remote Module Execution]]**: Designing remote-capable contracts that can execute locally or over HTTP/gRPC.
-- **[[Designing APIs for LLM-Generated Integration Code]]**: Designing strongly typed API contracts that automated tools and agents can reliably consume.
-- **[[OpenTelemetry]]**: Instrumenting inter-service requests with standardized W3C trace context headers.
+Or more concisely:
+
+> B owns the contract.  
+> A owns the dependency.  
+> The platform owns the communication standards.
+```

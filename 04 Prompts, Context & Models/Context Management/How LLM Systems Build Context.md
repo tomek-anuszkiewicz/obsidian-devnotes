@@ -13,61 +13,25 @@ aliases:
   - Context Assembly Pipeline
 ---
 
-# How LLM Systems Build Context
-
-A modern LLM system does not reason from the visible user prompt alone. In production, the practical capability, safety, and reliability of an LLM application are governed by its **context assembly pipeline** rather than the raw parameter count of the underlying model. As explored in [[How Modern LLM Systems Build Context, Reason, and Stay Constrained]], the runtime harness dynamically compiles a multi-layered working context from instructions, conversation history, episodic memory, retrieved internal documents, web search, live tools, APIs, and runtime telemetry.
-
-```text
-USER QUESTION / GOAL
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ CONTEXT ASSEMBLY PIPELINE                                   │
-│                                                             │
-│ ├─ System Instructions      (Safety, operational envelopes) │
-│ ├─ Application Instructions (Workspace rules, schemas)      │
-│ ├─ Session State            (Rolling window, summaries)     │
-│ ├─ Episodic Memory          (Extracted user/domain facts)   │
-│ ├─ Document RAG             (Hybrid BM25 + vector chunks)   │
-│ ├─ External Doc Providers   (Framework docs via MCP)        │
-│ ├─ Live Tool Telemetry      (Traces, compiler outputs, DBs) │
-│ └─ Environment Metadata     (Timestamp, git branch, paths)  │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ COMPILED CONTEXT WINDOW                                     │
-│ (Budgeted, ranked, and deduplicated tokens)                 │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ MODEL ENGINE                                                │
-│ (Next-token inference across compiled attention space)       │
-└─────────────────────────────────────────────────────────────┘
-```
-
-Treating context assembly as an explicit engineering discipline changes how you build agents. Many apparent "model capabilities"—and conversely, many model failures—are actually capabilities or failures of the surrounding context assembly pipeline.
-
----
+A modern LLM system does not reason from the visible user prompt alone. Its effective context can be assembled from instructions, conversation history, memory, retrieved documents, web search, tools, APIs, and metadata.
 
 ## 1. The Model Does Not Start With an Empty Context
 
-When a user submits a prompt, the model receives an assembled payload that is typically orders of magnitude larger than the input text. This payload narrows the model's exploratory solution space, as detailed in [[How Context Narrows an AI's Solution Space]].
+When a user asks a question, the model may receive substantially more information than the visible prompt.
 
-The assembled context typically includes:
+The effective context may include:
 
 ```text
-- platform and system instructions (governed by [[How LLM Systems Enforce Safety and Higher-Level Instructions]])
+- platform and system instructions
 - developer or application instructions
 - the current user request
 - previous messages in the conversation
-- selected memories about the user and project conventions
+- selected memories about the user
 - relevant information from previous conversations
-- retrieved documents (powered by [[Introduction to RAG]])
+- retrieved documents
 - web search results
 - tool outputs and API responses
-- current metadata such as time, git branch, or runtime environment
+- current metadata such as time or environment
 ```
 
 Conceptually:
@@ -88,6 +52,8 @@ USER QUESTION ──────┼─ previous conversation retrieval
                            model
 ```
 
+This means that many apparent "model capabilities" are actually capabilities of the whole system around the model.
+
 ### Layer Precedence and Conflict Resolution
 
 When context sources provide conflicting information, the system cannot rely on the model to guess which source is authoritative. High-reliability harnesses enforce an explicit precedence hierarchy:
@@ -105,150 +71,189 @@ If a retrieved architecture document from two years ago contradicts a live compi
 
 ## 2. Some Knowledge Is Inside the Model, Some Is Retrieved
 
-A foundational distinction in LLM architecture is the difference between **parametric memory** and **non-parametric retrieval**:
+The model itself contains knowledge acquired during training.
 
-- **Parametric knowledge** lives inside the model weights, baked in during pre-training and fine-tuning. For stable, widely published topics—such as explaining how the TCP three-way handshake works or writing a standard quicksort algorithm—the model answers directly from its internal weights.
-- **Non-parametric knowledge** lives outside the model, retrieved on demand from databases, search indexes, filesystems, or APIs, and placed into the prompt.
+For stable questions, such as:
 
-Parametric knowledge is static, expensive to update, and lacks verifiable provenance. It struggles with:
-- Private codebases and internal APIs.
-- Information that changed after the model's training cutoff.
-- Highly specific configuration details and exact numerical thresholds.
+> What is TCP?
 
-For private, specialized, or operational domains, relying on parametric recall leads to subtle confabulations. Reliable systems use parametric weights for syntax, reasoning, and language comprehension, but delegate facts, contracts, and state to external retrieval.
+it may answer directly from what has been encoded in its parameters.
+
+But the model cannot rely on its internal knowledge for everything.
+
+For recent, private, specialized, or highly detailed information, the system may perform retrieval.
+
+In systems terms, this is the split between parametric memory (weights frozen at training time) and non-parametric retrieval (external state fetched at runtime). Parametric knowledge handles syntax, general reasoning patterns, and standard algorithms well, but it degrades quickly on private APIs, post-cutoff changes, and exact configuration values. Relying on parametric recall for internal system behavior inevitably leads to subtle confabulations; production systems treat parametric weights as an execution engine and delegate facts, contracts, and state to external retrieval.
 
 ---
 
 ## 3. Web Search Is a Form of External Retrieval
 
-When a model performs web search, it does not browse the internet like a human using a web browser. It executes a retrieval pipeline:
+When the model searches the web, the process can roughly be thought of as:
 
 ```text
 question
    ↓
-search query generation
+search query
    ↓
-search index / external web providers
+search index / web sources
    ↓
-selected documents, web pages, or snippets
+selected documents or snippets
    ↓
-model context window
+model context
    ↓
-reasoning & synthesis
+reasoning
 ```
 
-Search systems rarely feed entire HTML pages to the model. They parse the DOM, extract readable content, slice it into chunks, re-rank those chunks against the query, and inject only high-relevance snippets into the context window.
+The model does not necessarily download every page directly.
 
-This introduces architectural and operational tensions:
+The search system may use:
+
+- search indexes,
+    
+- cached copies,
+    
+- crawled documents,
+    
+- snippets,
+    
+- external search providers,
+    
+- direct page retrieval.
+    
+
+A publisher may also prevent particular AI crawlers from indexing its content.
+
+This creates an important tension:
 
 ```text
 allow AI indexing
-→ greater visibility in AI-driven answer engines
-→ potentially fewer direct visits to the origin site
+→ greater visibility in AI answers
+→ potentially fewer direct visits
 
-block AI indexing (robots.txt / bot blockers)
-→ retain control of content and compute costs
-→ disappear from AI-assisted discovery pipelines
+block AI indexing
+→ retain more control
+→ potentially disappear from AI-driven discovery
 ```
 
-As search shifts toward synthesis engines, optimizing internal documentation and public technical content shifts from legacy SEO toward **retrieval-friendly structuring**: concise summaries, explicit metadata, clean markdown schemas, and clear semantic headings.
+The old SEO problem is therefore gradually becoming a broader problem of optimizing information for AI retrieval and answer systems.
+
+Search systems rarely feed raw HTML into the prompt. They parse the DOM, extract main text blocks, slice them into token-bounded chunks, and re-rank those snippets against the query. As a result, optimizing technical documentation for AI discovery shifts away from legacy keyword packing toward structured, retrieval-friendly layouts: explicit markdown headings, concise introductory summaries, and schema definitions that can survive snippet extraction without losing context.
 
 ---
 
-## 4. Conversation History and Attention Budgeting
+## 4. Conversation History Is Another Source of Context
 
-In conversational systems, the dialogue history is one of the strongest contextual signals available. Rather than handling an isolated prompt:
+The current conversation is usually one of the strongest contextual signals.
+
+Instead of answering:
 
 ```text
 isolated prompt → response
 ```
 
-the runtime passes the accumulated context:
+the system can answer:
 
 ```text
-conversation history so far
+conversation so far
 +
-new user message
+new message
 → response
 ```
 
-However, context windows are not free, and they are not infinite. Even with windows supporting 128k, 1M, or 2M tokens, stuffing entire chat transcripts into the prompt creates two engineering problems:
+However, context windows are finite.
 
-1. **Latency and Compute Cost**: Time-to-first-token (TTFT) and inference cost scale with prompt size.
-2. **Attention Dilution and "Lost-in-the-Middle"**: Transformer attention mechanisms do not attend equally to all tokens. Models tend to recall tokens at the absolute beginning (system prompt) and the absolute end (latest turn) far better than tokens buried in the middle of a massive context payload.
+For long conversations, systems may need to:
 
-```text
-Attention Weight
-  ▲
-  │   ████                                           ████
-  │   ████                                           ████
-  │   ████                                           ████
-  │   ████ ─── "Lost in the Middle" ───►             ████
-  │   ████       Low Attention Floor                 ████
-  │   ████                                           ████
-  └───┴──────────────────────────────────────────────┴────►
-      Beginning of Context                      End of Context
-      (System Prompt)                          (Latest Turn)
-```
+- retain recent messages directly,
+    
+- summarize older parts,
+    
+- retrieve only relevant fragments,
+    
+- discard information that appears irrelevant.
+    
 
-To manage this, production systems implement sliding context strategies:
+So a model does not necessarily receive the entire raw history of a long conversation on every turn.
 
-- **FIFO Truncation**: Keep the system prompt, discard the oldest turns, and keep the latest $N$ turns.
-- **Rolling Summarization**: Periodically summarize older messages into an evolving state object, discarding the raw turns while preserving key decisions.
-- **Turn-by-Turn Pruning**: Strip verbose tool outputs (e.g., a 2,000-line build log or raw JSON dump) from historical turns once the model has derived its conclusion, retaining only the summary line or error trace.
+Even with context windows reaching hundreds of thousands of tokens, dumping raw transcripts into the prompt degrades performance. Attention is rarely uniform across the sequence; models routinely suffer from "lost-in-the-middle" effects, recalling information at the extreme boundaries (the system prompt and the latest turn) far more reliably than details buried deep in the middle. Furthermore, prompt processing latency scales with context size.
+
+To keep latency predictable and maintain attention density, production runtimes prune historical tool outputs. A 2,000-line compiler output or raw JSON payload is necessary when the model evaluates it, but once the agent extracts the diagnostic conclusion, the harness should strip or compress that payload in subsequent turns, retaining only the summary or error trace.
 
 ---
 
 ## 5. Memory and Previous Conversations Behave Like Retrieval
 
-Human users expect long-lived systems to remember preferences, constraints, and historical decisions across multiple disjoint sessions. Dumping years of conversation history into every request is unworkable.
+Information from older conversations can be handled similarly to RAG.
 
-Instead, long-term memory functions like an internal RAG system:
+Rather than loading every historical conversation, a system can retrieve relevant facts.
+
+Conceptually:
 
 ```text
 years of conversations
         ↓
-fact extraction / indexing
+retrieval
         ↓
-vector / key-value memory store
+relevant facts
         ↓
-selective retrieval on intent
-        ↓
-current context window
+current context
 ```
 
-During a conversation, the harness monitors the dialogue for durable facts:
+For example:
 
 ```text
-user works mainly with .NET and C#
-user prefers modular monoliths over microservices
-user requires strict null-handling and nullable reference types
+user works mainly with .NET
+user prefers modular monoliths
+the previous discussion concerned agentic code review
 ```
 
-When the user starts a new session weeks later asking: "How should I structure this new transaction handler?", the system queries its episodic memory store, pulls out these three relevant facts, and prepends them as operational constraints. The model gets personalized grounding without carrying the weight of hundreds of historical transcripts.
+may be enough context for the current question.
+
+This makes personal memory effectively another knowledge source available to the agent.
+
+During active sessions, an extraction harness can monitor turns for durable user preferences and technical invariants, committing them to a persistent key-value or vector memory store. When a new session opens weeks later, the system queries this episodic store using the user's initial prompt and injects the extracted facts as top-level constraints, avoiding the token overhead of indexing entire raw transcripts.
 
 ---
 
 ## 6. RAG Extends the Model With External Knowledge
 
-In enterprise systems, the same retrieval principle applies across organizational boundaries:
+In a company environment, the same principle can be applied to:
 
 ```text
 Git repositories
-Jira / issue trackers
-Confluence / wikis
-Architecture Decision Records (ADRs)
-Meeting transcripts
-Post-mortem incident reports
-Product specifications
-Relational & document databases
+Jira
+Confluence
+architecture documents
+meeting transcripts
+incident reports
+product specifications
+databases
 ```
 
-When an engineer asks:
+Suppose someone asks:
 
 > Why does the payment retry mechanism behave like this?
 
-A naive approach fails:
+A useful agent might perform:
+
+```text
+question
+   ↓
+find payment module
+   ↓
+find architecture decision
+   ↓
+find related Jira tickets
+   ↓
+find recent implementation changes
+   ↓
+retrieve relevant code
+   ↓
+reason
+```
+
+The naive form of RAG:
 
 ```text
 question embedding
@@ -256,266 +261,407 @@ question embedding
 → LLM
 ```
 
-Vector similarity alone struggles with technical questions because semantic vector distance cannot determine code dependencies or temporal updates. A chunk from an obsolete commit might match the vector embedding better than the active implementation.
+is therefore only the simplest version.
 
-A robust enterprise retrieval pipeline operates across structured signals:
+More advanced retrieval can use:
+
+- semantic similarity,
+    
+- keyword search,
+    
+- metadata,
+    
+- dependency graphs,
+    
+- document hierarchy,
+    
+- timestamps,
+    
+- authorship,
+    
+- source code structure,
+    
+- previous retrieval results.
+    
+
+Vector similarity alone frequently fails on source code because dense embeddings measure semantic intent rather than architectural dependencies or temporal validity. An obsolete commit or a deprecated helper method often has higher cosine similarity to a user query than the active refactored implementation. Robust code retrieval combines dense vectors with sparse lexical search (BM25) for exact symbol resolution, abstract syntax tree (AST) references, and git commit history to prevent resurrecting legacy patterns.
+
+---
+
+## 7. External documentation providers as context
+
+Not every external knowledge source needs to be copied into the company's own RAG index.
+
+Some services are designed specifically to expose technical documentation to agents on demand. Examples include:
+
+- Context7,
+- Microsoft Learn MCP,
+- similar documentation or API knowledge providers exposed through MCP or another queryable interface.
+
+These systems form another useful category of context source:
+
+> **external documentation providers**
+
+They are especially useful for questions about frameworks, SDKs, cloud services, APIs, language features and other knowledge that changes independently of the company's own codebase.
+
+Conceptually:
 
 ```text
 question
    ↓
-identify payment module (code search / repo structure)
+agent chooses documentation provider
    ↓
-find active architecture decisions (ADRs)
+provider searches its authoritative corpus
    ↓
-query related Jira issue keys and pull requests
+relevant documentation / examples
    ↓
-extract recent git commits / diffs
+model context
    ↓
-assemble code snippets + rationale
-   ↓
-model context window
-   ↓
-reasoning & synthesis
+reason
 ```
 
-Advanced retrieval systems combine:
-- **Hybrid Search**: Dense vectors (embeddings) combined with sparse lexical search (BM25) for exact keyword and symbol matching.
-- **Structural Signals**: Abstract Syntax Tree (AST) graphs, file hierarchies, and symbol reference graphs.
-- **Temporal Filtering**: Timestamps, git commit metadata, and document status flags (Draft, Approved, Deprecated).
-- **Relational Metadata**: Authorship, issue linkage, and repository dependencies.
-
-See [[RAG Ingestion and Chunking Strategies]] for deep dives into document decomposition and indexing topologies.
-
----
-
-## 7. External Documentation Providers as Context
-
-Not every external knowledge corpus belongs inside your local vector database. Frameworks, cloud SDKs, third-party APIs, and programming languages update continuously on their own release cycles. Ingesting every revision of the AWS SDK or .NET documentation into an internal corporate index creates a massive maintenance burden.
-
-Modern architectures offload this to **external documentation providers** designed specifically to serve real-time technical documentation to agents on demand. Examples include Context7 or documentation providers exposed via the Model Context Protocol (MCP).
+This differs from the simplest company RAG architecture:
 
 ```text
 question
    ↓
-agent selects documentation provider
+search internally indexed corpus
    ↓
-provider searches its authoritative, managed corpus
+retrieve chunks
    ↓
-relevant, version-pinned documentation / examples
-   ↓
-model context window
-   ↓
-reasoning
+model
 ```
 
-### Knowledge Sources vs. Access Mechanisms
+The difference is not that one mechanism is "RAG" and the other is fundamentally unrelated. Both are forms of retrieval. The important architectural distinction is that the knowledge may be maintained and searched by an external provider rather than ingested into the company's own vector store or search index.
 
-It is critical to distinguish between where context lives and how it is fetched:
+### Source of knowledge vs access mechanism
 
-> **Knowledge Source** = Where the information lives and who maintains it.
->
-> **Delivery Mechanism** = The protocol, tool, or pipeline used to pull it into the prompt.
+It is useful to separate two concepts:
 
-| Knowledge Source | Typical Delivery Mechanism | Maintenance Model |
-| :--- | :--- | :--- |
-| **Framework Docs (e.g., Microsoft Learn)** | MCP, external documentation APIs | Managed by vendor / third-party |
-| **Internal Wikis (Confluence)** | Hybrid RAG, REST API tool | Managed by company platform team |
-| **Code Repositories (Git)** | Code search index, AST graphs, MCP | Managed by repository maintainers |
-| **Production Telemetry** | KQL, Prometheus API, Observability MCP | Managed by SRE / infra pipeline |
+> **Source of context** = where the knowledge comes from.
 
-MCP is not a knowledge category; it is a standardized transport protocol. It allows an agent to query different sources through a unified interface.
+> **Context delivery mechanism** = how the agent obtains it.
 
-### The Context Router Pattern
-
-Instead of dumping every tool and document into the prompt, high-performance systems use a **context router** (or source selector):
+For example:
 
 ```text
-                     ┌─ Internal RAG (wikis, design docs)
-                     ├─ Code Search (ASTs, symbol lookup)
-                     ├─ Issue Trackers (Jira, Linear)
-Agent → Source Router ├─ Architecture & Dependency Graphs
-                     ├─ Runtime Telemetry (traces, metrics)
-                     ├─ External Documentation Providers
-                     ├─ Web Search
-                     └─ Direct DB / Tool Execution
+Microsoft Learn        → knowledge source
+MCP                    → access protocol
+
+Confluence             → knowledge source
+RAG / search / MCP     → possible access mechanisms
+
+Git repository         → knowledge source
+code search / graph / MCP → possible access mechanisms
 ```
 
-The router determines the source of truth based on the nature of the prompt:
+MCP therefore should not itself be treated as a knowledge category. It is better understood as a standard interface through which many different context sources and tools can be exposed.
 
-- *"How does this external library API contract work?"* $\rightarrow$ External framework documentation.
-- *"Why did we configure PaymentService this way?"* $\rightarrow$ Git history + ADRs + Jira issue.
-- *"Does production actually exercise this code path?"* $\rightarrow$ Runtime telemetry and distributed traces.
+This leads to a broader view of retrieval:
 
-This prevents prompt clutter, saves token budget, and ensures the model consults the authoritative system for each type of question.
+```text
+                     ┌─ internal RAG
+                     ├─ code / repository search
+                     ├─ Jira / Confluence
+Agent → source router ├─ architecture / code graph
+                     ├─ runtime telemetry
+                     ├─ external documentation providers
+                     ├─ APIs and tools
+                     └─ web search
+```
+
+The agent does not need to load all of these sources at once. It can choose the source that best matches the current question.
+
+For example:
+
+```text
+"How does this .NET API work?"
+→ external framework documentation
+
+"Why do we use it this way in PaymentService?"
+→ repository + ADR + Jira + commit history
+
+"Does production actually exercise this path?"
+→ runtime telemetry / traces
+```
+
+This suggests a useful architectural component: a **context router** or **source selector**.
+
+Its job is not merely to retrieve documents, but to decide which knowledge system should be queried first and when another source is needed for verification. This is often more effective than attempting to place every possible source into one large vector database.
 
 ---
 
-## 8. Runtime Telemetry and Observability as Context
+## 8. Runtime telemetry and observability as context
 
-Source code and documentation only reveal part of an application's behavior:
+An agent does not have to infer the system only from source code and documentation. Runtime observability can provide another important source of context.
 
-- **Architecture Documentation** describes what the system *should* do.
-- **Source Code & Static Graphs** describe what the system *can* do.
-- **Runtime Telemetry** describes what the system *actually does* in production under real traffic, at what latency, and with what failure modes.
+Examples include:
 
-Telemetry context includes:
-- Distributed traces (OpenTelemetry, Application Insights).
-- Dynamic dependency graphs and Application Maps.
-- Latency percentiles ($p50$, $p95$, $p99$), failure rates, and retry counts.
-- Queue backpressure, consumer lag, and thread pool exhaustion metrics.
-- Dominant execution paths vs. dead code.
+- distributed traces,
+    
+- Application Insights / Azure Monitor,
+    
+- Application Map,
+    
+- service and dependency graphs,
+    
+- request and dependency telemetry,
+    
+- queue and consumer activity,
+    
+- latency, failure and retry statistics,
+    
+- hot paths and frequently used execution paths.
+    
 
-Static analysis might identify twenty theoretical execution paths through a switch statement or interface implementation. Telemetry proves that two paths handle 99.8% of production requests, while a third path only fires during transient network drops.
+This context answers a different question than static code analysis.
 
-### Telemetry Context Hierarchy
+Static sources describe:
 
-Raw logs are high-volume, low-density context. Feeding thousands of raw JSON log lines into an LLM wastes tokens and triggers attention dilution. Instead, telemetry context should be structured hierarchically:
+> What can the system do?
+
+Architecture documentation describes:
+
+> What should the system do?
+
+Runtime telemetry describes:
+
+> What does the system actually do in production, how often, and at what cost?
+
+For example, static analysis may discover many possible execution paths, while telemetry may show that three paths account for 99% of production traffic.
+
+This makes runtime data useful not only for incident investigation, but also as architectural context for agents.
+
+A useful hierarchy is:
 
 ```text
-1. Architecture & System Contracts   (Intended Design)
+Architecture / business documentation
         ↓
-2. Static AST & Dependency Graphs     (Structural Potential)
+Source code and static relationship graph
         ↓
-3. Application Topology / Maps       (Observed System Boundaries)
+Runtime topology / dependency graph
         ↓
-4. Aggregated Metrics & Hot Paths     (Dominant Production Behaviors)
+Aggregated traces and hot paths
         ↓
-5. Filtered Exemplar Traces           (Specific Causality & Latency Spikes)
+Individual traces
         ↓
-6. Raw Error Logs / Exceptions       (Atomic Evidence)
+Raw logs
 ```
 
-The agent starts at the top of the pyramid. It checks the service map to see which nodes talk to each other, looks at aggregated metrics to identify regressions, and only drops down to query specific KQL logs or individual trace IDs when it needs to isolate a specific stack trace.
+The agent should preferably start from a compressed runtime model rather than repeatedly reconstructing the entire topology from raw logs.
 
-### Telemetry Tools vs. Diagnostic Skills
+For example, an Application Map or another precomputed dependency graph can answer which services communicate with each other. The agent can then use KQL or individual traces only for drill-down.
 
-There is a clean line between the access protocol and the operational procedure:
+Feeding thousands of raw JSON log lines directly into an LLM wastes context budget and dilutes attention. Instead, the runtime harness should present high-level aggregations—such as p99 latency percentiles, error rates grouped by status code, or queue consumer lag—and only inject raw log lines or stack traces when the agent explicitly queries an exemplar trace ID.
 
-- **The Tool / MCP Server** provides access to the raw data (e.g., executing a KQL query or pulling trace spans).
-- **The Diagnostic Skill** teaches the agent *how to investigate*.
+This suggests an important distinction:
 
-A diagnostic skill guides the model through an SRE runbook:
-1. Locate the endpoint or service reporting errors.
-2. Query downstream dependency metrics to see if the degradation is local or upstream.
-3. Compare the current failure rate against pre-deployment baselines.
-4. Extract the top three exception stack traces from correlated traces.
-5. Cross-reference the failing code path with the latest deployment commit diff.
+**MCP/tool access provides the telemetry.**
 
-Observability ceases to be an external dashboard a human looks at; it becomes a structured, queryable runtime model that grounds agentic reasoning.
+**A skill tells the agent how and when to use it.**
+
+A skill could instruct the agent to:
+
+1. identify the operation being modified,
+    
+2. inspect its runtime dependencies,
+    
+3. determine dominant execution paths,
+    
+4. identify hot paths and rare fallback paths,
+    
+5. compare observed behavior with architecture documentation,
+    
+6. use raw telemetry only when additional detail is required.
+    
+
+Therefore observability can become a queryable runtime model of the application rather than merely a debugging facility.
+
+### Relationship to other context mechanisms
+
+This complements rather than replaces other sources:
+
+- **RAG** retrieves relevant knowledge and documentation.
+    
+- **Code comments** expose local business meaning close to implementation.
+    
+- **Static code graphs / Graphify-like tools** describe structural relationships present in the code.
+    
+- **Runtime graphs** describe relationships actually exercised in production.
+    
+- **MCP/tools** allow the agent to query those sources dynamically.
+    
+
+Together they provide complementary views of the same system:
 
 ```text
-Documentation ──► Intended system
-Codebase      ──► Implemented system
-Runtime Graph ──► Observed system
-Telemetry     ──► Verifiable evidence
+Documentation → intended system
+Code graph     → implemented system
+Runtime graph  → observed system
+Telemetry      → evidence
 ```
 
 ---
 
-## 9. Reasoning Can Control Retrieval (Closed-Loop Feedback)
+## 9. Reasoning Can Control Retrieval
 
-Context assembly is not necessarily a single-shot operation executed before inference begins. Complex problem-solving requires an iterative loop between reasoning and retrieval.
+The system does not have to collect all information before reasoning begins.
+
+Instead, reasoning and retrieval can form a loop:
 
 ```text
-       ┌────────────────────────┐
-       │     Initial Context    │
-       └───────────┬────────────┘
-                   │
-                   ▼
-       ┌────────────────────────┐
-       │         REASON         │
-       │  "What am I missing?"  │
-       └───────────┬────────────┘
-                   │
-                   ▼
-       ┌────────────────────────┐
-       │        RETRIEVE        │
-       │  (Fetch missing piece) │
-       └───────────┬────────────┘
-                   │
-                   ▼
-       ┌────────────────────────┐
-       │         REASON         │
-       │  "Does this make sense │
-       │    with the code?"     │
-       └───────────┬────────────┘
-                   │
-                   ▼
-       ┌────────────────────────┐
-       │         VERIFY         │
-       │  (Run test / compile)  │
-       └───────────┬────────────┘
-                   │
-                   ▼
-              [ Conclusion ]
+initial context
+      ↓
+reason
+      ↓
+"I am missing X"
+      ↓
+retrieve X
+      ↓
+reason again
+      ↓
+"I should verify Y"
+      ↓
+retrieve Y
+      ↓
+continue
 ```
 
-Consider diagnosing an operational failure:
+This produces a more agent-like process:
 
-> Why did checkout latency spike after the 14:00 UTC deployment?
+```text
+REASON
+  ↓
+RETRIEVE
+  ↓
+REASON
+  ↓
+RETRIEVE
+  ↓
+VERIFY
+```
 
-An agent operating in an open loop tries to guess from its initial prompt. A closed-loop agent breaks the problem down into sub-queries:
+The model can therefore actively decide what information it needs.
 
-1. **Reason**: "I need to know what changed in that deployment."
-   - **Retrieve**: Fetch the git commit log between the current release tag and the prior tag.
-2. **Reason**: "Commit `a7f3b1` modified database connection pool sizing. I need to check connection wait metrics."
-   - **Retrieve**: Query telemetry for `ConnectionWaitTime` percentiles around 14:00 UTC.
-3. **Reason**: "Wait times spiked from 5ms to 1200ms. Did active connections hit the pool ceiling?"
-   - **Retrieve**: Fetch active vs. idle pool metrics from the database monitoring API.
-4. **Verify**: Correlate connection pool exhaustion events with upstream API timeouts.
+For example:
 
-The model controls the context assembly pipeline dynamically, pulling in precisely the tokens it needs to validate or reject hypotheses.
+> Why did latency increase after the latest deployment?
+
+An agent might create subquestions:
+
+```text
+What changed in the deployment?
+Which endpoints became slower?
+Did database latency change?
+Did resource limits change?
+Was an external dependency affected?
+```
+
+and then query:
+
+```text
+Git
+logs
+metrics
+deployment configuration
+tickets
+architecture documentation
+```
+
+before reaching a conclusion.
+
+In an operational debugging loop, this translates to concrete diagnostic steps:
+1. **Reason**: The agent notes that latency spiked at 14:00 UTC and queries the git log between the current release tag and the prior tag.
+2. **Retrieve**: It discovers a commit that altered connection pool sizing in the database client.
+3. **Reason**: It hypothesizes thread starvation and retrieves connection wait metrics from telemetry.
+4. **Verify**: Seeing wait times jump from 5ms to over 1000ms while active connections hit the pool ceiling, it confirms pool exhaustion without needing to inspect unrelated services.
 
 ---
 
-## 10. More Context Helps, But Does Not Eliminate the Problem
+## 10. More context helps, but does not eliminate the problem
 
-Injecting high-density, relevant context dramatically improves model output. When an LLM has access to exact schemas, current code, and concrete constraints, it ceases to rely on generic boilerplate and performs sharp deductive reasoning.
+Providing the model with more relevant context reduces the need to rely on generic patterns.
+
+Useful context includes:
+
+- business rules and invariants,
+    
+- edge cases,
+    
+- current code,
+    
+- tests,
+    
+- API contracts,
+    
+- database schemas,
+    
+- deployment configuration,
+    
+- architecture decision records,
+    
+- incident history,
+    
+- telemetry,
+    
+- operational procedures,
+    
+- migration constraints,
+    
+- descriptions of real end-to-end workflows.
+    
+
+With enough context, the model can infer valid consequences.
+
+Example:
 
 ```text
-Provided Fact:
-"Old and new service versions run concurrently during rolling deployments."
+Fact:
+Old and new application versions run simultaneously.
 
-Valid Deduction:
-The database schema change must maintain backward compatibility with the previous version.
+Inference:
+The data model must remain compatible with both versions.
 
-Concrete Implementation:
-Introduce the column as nullable in phase one; update application code in phase two; apply NOT NULL constraints in phase three.
+Consequence:
+The schema change should be introduced in stages.
 ```
+
+Or:
 
 ```text
-Provided Fact:
-"Ticket inventory reservations cannot exceed the current quota limit under concurrent access."
+Fact:
+A reservation cannot exceed the available limit.
 
-Valid Deduction:
-A simple read-modify-write pattern introduces race conditions.
+Inference:
+Read, validation, and write must be protected against concurrency.
 
-Concrete Implementation:
-Use optimistic concurrency with row versioning, or execute an atomic SQL update: `UPDATE Inventory SET Reserved = Reserved + @Qty WHERE Id = @Id AND Reserved + @Qty <= Total`.
+Consequence:
+A simple unprotected read-modify-write flow is insufficient.
 ```
 
-This is valid domain inference, grounded by context.
+This is useful inference, not hallucination.
 
-### Context Pathologies
+However, more context does not guarantee correctness.
 
-However, simply increasing context volume does not guarantee correctness. More context can actively degrade output if the pipeline suffers from common pathologies:
+The context may still be:
 
-- **Incomplete Context**: The prompt includes the service implementation but omits the middleware handling authentication, leading the model to generate redundant or conflicting auth checks.
-- **Outdated Context**: The RAG index returns an obsolete ADR that contradicts the current production architecture.
-- **Contradictory Context**: Two retrieved documents prescribe opposing patterns, and the system lacks a precedence hierarchy to resolve them.
-- **Noise and Context Bloat**: Dumping thousands of lines of unrelated code or verbose logs drowns the critical signal, pushing the model toward attention dilution and missed instructions.
-- **Hidden Organizational State**: The true constraint exists only as unwritten team tribal knowledge or a manual operational procedure not indexed anywhere.
+- incomplete,
+    
+- outdated,
+    
+- contradictory,
+    
+- too large and noisy,
+    
+- missing organizational knowledge,
+    
+- missing undocumented consumers,
+    
+- missing manual operational processes.
+    
 
-The objective of context assembly is not to maximize the token count up to the window boundary. The objective is to maximize **information density** while strictly minimizing noise.
+These failure modes create distinct operational issues. When context is incomplete—such as providing an endpoint implementation while omitting the upstream authentication middleware—the model will needlessly generate redundant auth checks or bypass existing token validation. When context is contradictory, such as an active ADR conflicting with a legacy wiki page, the lack of an explicit authority hierarchy forces the model into an arbitrary guess. Maximizing context size is rarely the fix; the engineering goal is maximizing signal density while aggressively cutting token noise.
 
----
+The goal should not be to provide the maximum possible context.
 
-## Relationship to the Knowledge Graph
-
-- **[[How Modern LLM Systems Build Context, Reason, and Stay Constrained]]**: Architectural synthesis connecting context assembly with downstream reasoning loops and constraint boundaries.
-- **[[How Context Narrows an AI's Solution Space]]**: Mathematical and operational models explaining how token injection prunes non-deterministic solution spaces.
-- **[[How LLM Systems Enforce Safety and Higher-Level Instructions]]**: Deep dive into system prompt hierarchy, prompt shields, and boundary enforcement.
-- **[[Introduction to RAG]]**: The foundations of external retrieval, indexing mechanics, and similarity search.
-- **[[RAG Ingestion and Chunking Strategies]]**: Practical strategies for tokenizing, chunking, and indexing code, documents, and schemas without losing semantic context.
-- **[[LLM Agents and Institutional Memory]]**: How enterprise systems turn tribal knowledge, ADRs, and post-mortems into queryable context.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: How execution harnesses combine context management, compiler loops, and test oracles to drive autonomous coding workflows.
+The goal should be to provide context relevant to the decision.

@@ -1,5 +1,5 @@
 ---
-title: Proactive Software - From Reactive Systems to Autonomous Agents
+title: Proactive Software — From Reactive Systems to Autonomous Agents
 tags:
   - proactive-agents
   - autonomous-systems
@@ -8,16 +8,13 @@ tags:
   - system-design
   - user-experience
 aliases:
-  - Proactive Software -  From Reactive Systems to Autonomous Agents
   - Reactive to Proactive Software
   - Autonomous Proactive Agents
 ---
 
-# Proactive Software - From Reactive Systems to Autonomous Agents
-
 Traditional software is mostly reactive.
 
-A user clicks a button, submits a form, calls an API endpoint, creates a ticket, or triggers a predefined event. The system executes a known procedure and returns a result.
+A user clicks a button, submits a form, calls an API, creates a ticket, or triggers some predefined event. The system then executes a known procedure and returns a result.
 
 The dominant interaction model has historically looked like this:
 
@@ -33,564 +30,993 @@ predefined logic
 result
 ```
 
-Even standard automation follows this exact philosophy. A cron job wakes up every hour to run a database vacuum. A monitoring rule fires a PagerDuty alert when CPU utilization crosses 90% for five consecutive minutes. A background worker pulls a message off a queue when a new record lands in an audit table.
+Even automation has usually followed the same philosophy.
 
-These systems run without a human pressing a button, but their behavior remains entirely predetermined by rigid rules written ahead of time.
+A scheduled job may run every hour. A monitoring system may send an alert when CPU exceeds 90%. A workflow may execute when a new record appears in a database.
 
-Agentic systems introduce a fundamentally different execution model. Software can continuously observe runtime environments, evaluate whether an observed state change matters, synthesize context across disparate systems, formulate hypotheses, propose concrete mitigations, and—under bounded conditions—execute them autonomously.
+These systems can act without a human pressing a button, but their behavior is still highly predefined.
 
-The interaction model shifts to:
+Agentic systems introduce a different possibility.
+
+Software can continuously observe some part of the world, decide whether something interesting is happening, gather additional context, formulate hypotheses, propose actions, and sometimes execute them.
+
+The interaction model becomes closer to:
 
 ```text
-observe environment
+observe
   ↓
-detect meaningful state change
+detect something potentially important
   ↓
-gather cross-system context
+investigate
   ↓
-formulate causal hypothesis
+evaluate
   ↓
-evaluate risk, cost, and confidence
+decide whether action is justified
   ↓
 act / recommend / escalate
   ↓
-observe downstream result
+observe the result
 ```
 
-This represents the transition to **proactive software**: systems that do not sit idle waiting for an explicit invocation, but continuously evaluate runtime state to find useful work worth doing.
+This creates the possibility of **proactive software**: systems that do not merely wait for instructions, but continuously search for things worth doing.
 
 ---
 
-```text
-REACTIVE TRADITIONAL PIPELINE:
-  [ User Event / API Call / Cron Trigger ]
-                   │
-                   ▼
-       [ Hardcoded Procedural Flow ]
-                   │
-                   ▼
-        [ Deterministic Execution ]
-        (Idles until explicitly triggered; blind to latent systemic failures)
+## Reactive automation already exists
 
+None of the individual building blocks are entirely new.
 
-PROACTIVE AGENTIC LOOP:
-  [ Continuous Environment Observation ]
-  (Stream telemetry, log anomalies, Git history, queue depths, cost spikes)
-                   │
-                   ▼
-  [ Cross-System Context Synthesis ]
-  (Correlates traces, commits, and specs to formulate causal hypotheses)
-                   │
-                   ▼
-  [ Blast-Radius & Policy Gating ]
-  ├─ Safe / Low-Risk  ─────────────► [ Autonomous Execution ] (Canary rollback, cache warm)
-  └─ High Blast-Radius / Ambiguous ─► [ Human Escalation ]     (Schema drop, vendor payment)
-```
+We already have:
 
----
+- cron jobs,
+    
+- event-driven architectures,
+    
+- monitoring alerts,
+    
+- workflow engines,
+    
+- rules engines,
+    
+- scheduled reports,
+    
+- background workers,
+    
+- automated trading systems,
+    
+- recommendation systems,
+    
+- anomaly detection.
+    
 
-## Reactive Automation Already Exists
+The difference is that these systems traditionally require humans to define relatively explicit conditions and procedures.
 
-The individual infrastructure components behind this shift are familiar:
-
-- Cron schedulers
-- Event-driven message buses (Kafka, RabbitMQ)
-- Time-series metric alerts (Prometheus, Datadog)
-- Distributed workflow engines (Temporal, Airflow)
-- Business rules engines
-- Scheduled reporting scripts
-- Asynchronous background workers
-- Algorithmic trading pipelines
-- Recommendation engines
-- Statistical anomaly detectors
-
-The defining constraint of traditional automation is that engineers must explicitly define both the trigger conditions and the mitigation routines beforehand:
+For example:
 
 ```text
-IF error_rate > 5% OVER 5m
-THEN page_oncall_engineer
+IF error_rate > 5%
+THEN send alert
 ```
 
 or:
 
 ```text
-EVERY Monday AT 00:00 UTC
-RUN dependency_vulnerability_scan
+EVERY Monday
+RUN dependency report
 ```
 
-An agent can be given a high-level operational objective rather than a static procedural condition:
+An agent can receive a substantially less formal objective:
 
-> Monitor production health for the billing subsystem, investigate non-obvious performance degradation, and determine whether recent deployments caused subtle behavioral regressions.
+> Look for signs that production quality is deteriorating and investigate anything that appears meaningful.
 
-No single threshold or static SQL query can capture that objective. A latency spike might be benign during a batch backfill, but fatal if paired with elevated database connection pool exhaustion and a recent commit modifying connection acquisition logic. 
+There may be no single metric, threshold, or algorithm capable of expressing that requirement.
 
-An agent can query telemetry, pull recent merge requests, correlate distributed traces across service boundaries, and determine whether the observed pattern warrants an operational intervention. That dramatically expands what can be automated in complex environments.
+The agent can inspect several data sources, compare time periods, notice a novel pattern, investigate deployments, and decide whether the observation is likely to matter.
 
----
+That expands the range of work that can be automated.
 
-## Generic Classes of Proactive Agent Behavior
-
-Strip away industry-specific marketing, and most proactive agent architectures resolve to a small set of operational patterns. A sales prospecting agent, an SRE remediation agent, and an automated cloud-cost optimizer use nearly identical loops: they continuously inspect an environment, gather state, filter out noise, and execute or recommend an intervention.
-
-### 1. Monitoring Change
-
-The baseline pattern is continuous environmental observation. The agent observes a system boundary and evaluates four core questions:
-
-- What state changed?
-- Is the delta statistically or operationally significant?
-- Does a human or upstream service need to know?
-- Does the change demand an active intervention?
-
-Common operational domains include:
-
-- Production telemetry and distributed traces
-- Source code repositories and dependency lockfiles
-- Cloud infrastructure state and configuration drift
-- Customer usage patterns and contract utilization
-- Upstream vendor pricing and service availability
-- Regulatory compliance filings and security CVE feeds
-- Competitive product surface changes
-
-Unlike static monitoring, the exact failure mode does not need to be hardcoded into an alerting rule.
+In production, a latency spike during a batch backfill is benign, but that exact same spike is fatal if paired with database connection pool exhaustion and a recent commit that modified connection acquisition logic. An agent can query telemetry, pull recent merge requests, and correlate distributed traces across service boundaries to determine whether the observed pattern warrants intervention.
 
 ---
 
-### 2. Detecting Anomalies (Unknown Unknowns)
+# Generic classes of proactive agent behavior
 
-Threshold alerts excel when the failure profile is already understood:
+Many apparently different agent products can be reduced to a small number of generic behaviors.
+
+A sales agent looking for prospects, an SRE agent looking for production problems, and a procurement agent looking for cheaper suppliers are structurally much more similar than they initially appear.
+
+They all continuously inspect an environment and search for actionable signals.
+
+## 1. Monitoring change
+
+The simplest class is continuous observation.
+
+An agent watches some domain and asks:
+
+- What changed?
+    
+- Is the change significant?
+    
+- Does somebody need to know?
+    
+- Does this require action?
+    
+
+Possible monitored domains include:
+
+- production systems,
+    
+- repositories,
+    
+- dependencies,
+    
+- infrastructure,
+    
+- customer activity,
+    
+- contracts,
+    
+- regulations,
+    
+- prices,
+    
+- competitors,
+    
+- security advisories,
+    
+- scientific publications,
+    
+- market conditions.
+    
+
+The important difference from traditional monitoring is that the monitored condition does not always need to be defined in advance.
+
+---
+
+## 2. Detecting anomalies
+
+Traditional monitoring works very well when the anomaly is known.
+
+For example:
 
 ```text
-p99_latency > 250ms
-http_5xx_rate > 1%
-disk_utilization > 85%
+CPU > 90%
+error rate > 5%
+disk usage > 85%
 ```
 
-Agents excel at identifying multi-dimensional patterns that slip past univariate thresholds:
+Agents can additionally search for unexpected patterns.
 
-- Is an error signature appearing that has never been logged before?
-- Has a specific enterprise tenant altered their API calling pattern in a way that risks cascading cache invalidation?
-- Has the correlation between request volume and database write amplification broken down?
-- Is memory consumption gradually climbing over weeks across worker nodes in a manner that bypasses simple pod-restart alerts?
+They can ask:
 
-This moves monitoring from checking known failure thresholds to surfacing latent systemic drift.
+- Is something happening that normally does not happen?
+    
+- Has a new type of error appeared?
+    
+- Is one customer behaving differently?
+    
+- Has a metric changed its relationship with another metric?
+    
+- Is some process gradually deteriorating?
+    
 
----
+This introduces a form of exploratory monitoring.
 
-### 3. Searching for Opportunities
+The system is not only detecting known failure modes. It is also searching for **unknown unknowns**.
 
-Proactive agents do not merely look for breakage; they actively search for systemic optimizations:
-
-- Identifying unattached EBS volumes, over-provisioned RDS instances, or idle GPU nodes
-- Flagging internal tooling workflows that can be consolidated into shared platform libraries
-- Pinpointing high-volume, read-heavy database queries that lack covering indexes
-- Detecting SaaS seat licenses that have sat dormant for over 90 days
-- Identifying open grants, public tenders, or enterprise sales leads matching specific operational criteria
-
-The objective is simply:
-
-> Continuously evaluate target resources against these operational constraints, and surface candidates where expected value exceeds the cost of intervention.
+This moves monitoring from univariate thresholds to multi-dimensional patterns: catching a tenant whose altered call pattern risks cascading cache invalidation, identifying that request volume and database write amplification have decoupled, or detecting slow memory leaks across worker nodes that stay just below pod-restart limits.
 
 ---
 
-### 4. Searching for Risk
+## 3. Searching for opportunities
 
-The same evaluation loop operates in reverse to identify emerging risks before they manifest as critical incidents:
+Agents do not have to look only for problems.
 
-- Identifying upstream dependencies approaching deprecation or end-of-life (EOL)
-- Detecting single-supplier dependencies within procurement or software supply chains
-- Spotting early leading indicators of customer churn (e.g., dropping API call volume, increasing ticket resolution times)
-- Catching gradual CI/CD test coverage erosion across critical business paths
-- Tracking cloud spend burn rates against quarterly budget allocations
-- Flagging operational bottlenecks, such as a single engineer approving 80% of pull requests for a core service
+They can actively search for opportunities.
 
-The key advantage is early detection: catching weak signals while mitigation is still trivial and cheap, rather than responding after an outage or contract breach occurs.
+Examples include:
 
----
+- potential sales leads,
+    
+- new suppliers,
+    
+- cheaper infrastructure configurations,
+    
+- grants,
+    
+- tenders,
+    
+- acquisition targets,
+    
+- investment opportunities,
+    
+- available talent,
+    
+- unused cloud capacity,
+    
+- opportunities to consolidate systems,
+    
+- technologies that could replace internal workarounds.
+    
 
-### 5. Continuous Optimization
+The general instruction might simply be:
 
-System optimization is historically treated as a periodic, scheduled project: an engineering team sets aside a sprint to profile slow endpoints or reduce cloud infrastructure spend. 
+> Continuously search for opportunities that satisfy these constraints and surface the ones that appear unusually valuable.
 
-Agentic systems convert optimization into a persistent, low-priority background process:
-
-> Scan the service mesh for RPC paths with high p99 latency regressions, correlate them with recent query plan changes, and benchmark candidate indexes.
-
-Optimization targets include:
-
-- Cloud infrastructure spend and compute rightsizing
-- Query execution plans and index utilization
-- Memory allocation profiles and garbage collection pauses
-- Cache hit ratios and invalidation thrashing
-- Distributed build durations and pipeline step caching
-- Operational toil and manual ticket resolution overhead
-
----
-
-### 6. Maintaining System Hygiene
-
-A large fraction of engineering toil involves cleaning up artifacts that teams forget to decommission. Humans avoid this work because it is repetitive and unrewarding. Agents are well-suited for it:
-
-- Scanning codebases for abandoned feature flags whose rollout reached 100% months ago
-- Deleting orphaned staging databases and unattached persistent volumes
-- Pruning stale Git branches and merging automated dependency bumps
-- Identifying unused API routes that can be deprecated
-- Rotating credentials and renewing certificates well ahead of expiration
-- Flagging undocumented services that lack clear team ownership metadata
-
-Agents do not suffer from fatigue, making them ideal for sustaining continuous operational hygiene.
+A human no longer has to initiate every search.
 
 ---
 
-### 7. Detecting Missing Elements
+## 4. Searching for risk
 
-Traditional deterministic assertions test the state of existing objects:
+The same mechanism works in the opposite direction.
+
+An agent can continuously look for emerging risk:
+
+- dependency approaching end-of-life,
+    
+- supplier concentration,
+    
+- customer churn indicators,
+    
+- deteriorating service quality,
+    
+- escalating cloud costs,
+    
+- security vulnerabilities,
+    
+- regulatory changes,
+    
+- expiring contracts,
+    
+- declining test coverage,
+    
+- operational bottlenecks.
+    
+
+The useful property is early detection.
+
+Instead of discovering a problem when it becomes critical, the system can notice weak signals while intervention is still cheap.
+
+---
+
+## 5. Continuous optimization
+
+Traditional optimization usually happens because someone starts an optimization project.
+
+Agentic software can turn optimization into a continuous background activity.
+
+For example:
+
+> Look for changes that could reduce infrastructure cost without materially reducing reliability.
+
+or:
+
+> Look for performance regressions and identify likely causes.
+
+or:
+
+> Periodically search for unnecessary complexity in this system.
+
+Possible targets include:
+
+- cloud cost,
+    
+- CPU consumption,
+    
+- memory consumption,
+    
+- latency,
+    
+- database load,
+    
+- storage,
+    
+- network traffic,
+    
+- build time,
+    
+- deployment time,
+    
+- operational toil.
+    
+
+The agent can identify candidates continuously rather than waiting for humans to notice that optimization is required.
+
+Instead of waiting for a quarterly performance sprint, a background agent can profile slow RPC paths across the service mesh, inspect query execution plans for missing covering indexes, or flag cache invalidation thrashing as soon as workload patterns shift.
+
+---
+
+## 6. Maintaining system hygiene
+
+A surprisingly large amount of organizational work consists of cleaning up things nobody remembers to clean.
+
+Agents can continuously search for:
+
+- abandoned feature flags,
+    
+- obsolete dashboards,
+    
+- unused infrastructure,
+    
+- stale branches,
+    
+- dormant accounts,
+    
+- duplicated issues,
+    
+- outdated runbooks,
+    
+- forgotten experiments,
+    
+- unused API endpoints,
+    
+- old dependencies,
+    
+- expired certificates,
+    
+- unowned components.
+    
+
+This is not glamorous work, but it may be one of the highest-value applications because humans systematically postpone it.
+
+An agent does not get bored.
+
+---
+
+## 7. Detecting missing things
+
+Agents can search not only for things that exist, but also for things that should exist and do not.
+
+Examples:
+
+- missing documentation,
+    
+- missing tests,
+    
+- missing alerts,
+    
+- missing ownership,
+    
+- missing rollback procedures,
+    
+- missing backups,
+    
+- missing security reviews,
+    
+- missing reproduction steps in bug reports,
+    
+- missing links between requirements and implementation.
+    
+
+The general task becomes:
+
+> Inspect the system and identify important absences.
+
+This is extremely difficult to represent with conventional deterministic automation.
+
+Deterministic assertions easily verify that an existing service is healthy, but they fail to catch critical omissions: a new microservice deployed without alerting rules or a linked runbook, a production table created without point-in-time recovery (PITR) enabled, or an endpoint merged without schema validation.
+
+---
+
+## 8. Checking consistency
+
+Large systems often slowly diverge.
+
+An agent can continuously compare different representations of reality:
 
 ```text
-assert service.status == "healthy"
+documentation ↔ implementation
+architecture rules ↔ repository structure
+Jira ↔ actual development
+declared dependencies ↔ deployed dependencies
+runbooks ↔ current infrastructure
+contracts ↔ implemented behavior
+configuration ↔ organizational policy
 ```
 
-They struggle to test for critical omissions—things that *should* exist within an operational context, but do not:
+The agent searches for contradictions.
 
-- A new microservice deployed without alerting rules or a linked runbook
-- An API endpoint merged without unit tests or schema validation
-- A production database table created without point-in-time recovery (PITR) enabled
-- A high-severity bug ticket logged without reproducible environment logs
-- An architectural change merged without an accompanying Architecture Decision Record (ADR)
-
-The evaluation mandate is:
-
-> Inspect current system state, compare it against engineering standards, and surface critical structural absences.
+This creates a continuous consistency audit.
 
 ---
 
-### 8. Auditing System Consistency
+## 9. Investigating signals
 
-Complex distributed architectures inevitably suffer from state divergence over time. A proactive agent can continuously reconcile multiple representations of reality:
+One of the most important agentic capabilities is the ability to move from observation to investigation.
+
+Traditional software may say:
+
+> Something changed.
+
+An agent can ask:
+
+> Why?
+
+For example:
 
 ```text
-OpenAPI specifications     ↔   Actual HTTP wire payloads
-Architecture diagrams      ↔   Terraform / CloudFormation state
-Issue tracker status       ↔   Production deployment reality
-Declared package manifests ↔   Running container base images
-Disaster recovery runbooks ↔   Current IAM permissions & VPC peering
-Service Level Objectives   ↔   Customer contracts & SLAs
+latency increased
+      ↓
+when did it start?
+      ↓
+what deployments happened then?
+      ↓
+which commits affected this path?
+      ↓
+did traffic composition change?
+      ↓
+did database behavior change?
+      ↓
+which hypothesis best explains the evidence?
 ```
 
-The agent runs a continuous consistency audit, surfacing discrepancies before they trigger runtime failures or compliance violations.
+The procedure itself may not be fully predetermined.
+
+The agent decides which source to inspect next based on what it has discovered so far.
+
+This is where a workflow becomes genuinely agentic rather than merely automated.
 
 ---
 
-### 9. Investigating Signals
+## 10. Generating proposals
 
-The most critical transition occurs when moving from simple signal detection to automated root-cause investigation. Traditional monitoring systems only report a symptom:
+An agent does not necessarily need permission to make changes in order to be useful.
 
-> "API gateway p99 latency exceeded 500ms."
+It can continuously generate proposals.
 
-An agent initiates a diagnostic tree:
+Examples:
+
+- architecture improvements,
+    
+- backlog items,
+    
+- cost optimizations,
+    
+- product ideas,
+    
+- refactoring candidates,
+    
+- security improvements,
+    
+- process changes,
+    
+- candidate experiments.
+    
+
+A software organization could effectively have agents continuously asking:
+
+> What could be improved here?
+
+The results can enter a prioritization system rather than being executed automatically.
+
+This keeps the blast radius zero while delivering high utility. The agent operates in a read-only diagnostic loop and emits concrete, reviewable artifacts: pull requests with candidate database indexes benchmarked via `EXPLAIN ANALYZE`, pre-filled incident tickets containing correlated distributed traces, or Terraform plans ready for engineering review.
+
+---
+
+## 11. Running experiments
+
+An agent may also test its own hypotheses.
+
+Instead of only saying:
+
+> I suspect caching would improve this endpoint,
+
+it may be able to:
+
+1. create a benchmark,
+    
+2. implement several alternatives,
+    
+3. run them,
+    
+4. compare results,
+    
+5. discard poor variants,
+    
+6. recommend the best candidate.
+    
+
+The same pattern applies outside software development.
+
+An agent can formulate an experiment, gather evidence, and use the outcome to update its recommendation.
+
+This makes autonomous experimentation particularly powerful.
+
+---
+
+## 12. Forecasting
+
+Agents can use current trends to reason about future constraints.
+
+Examples:
+
+- When will the database reach its current capacity?
+    
+- When will storage become a problem?
+    
+- Will current hiring capacity support the roadmap?
+    
+- Which dependency will become unsupported first?
+    
+- At the current growth rate, when will infrastructure cost become unacceptable?
+    
+- Which customer segment is likely to churn?
+    
+
+The important part is not merely forecasting.
+
+It is connecting forecasts with actions.
+
+For example:
+
+> At the current growth rate, this cluster will reach approximately 80% capacity in four months. Increasing capacity is possible, but query optimization in service X would probably delay expansion substantially.
+
+---
+
+# Business agents are examples of the same pattern
+
+Many commercially promoted agent products appear highly specialized:
+
+- sales prospecting agents,
+    
+- recruitment agents,
+    
+- trading agents,
+    
+- procurement agents,
+    
+- customer success agents,
+    
+- real estate opportunity agents.
+    
+
+But structurally they follow the same generic pattern.
+
+### Sales agent
 
 ```text
-latency increased on /checkout
-         ↓
-when did the inflection start? (14:32 UTC)
-         ↓
-what deployments went out within ±15 minutes? (commit 4f8a12)
-         ↓
-which files were changed in that deployment? (db/queries/cart.sql)
-         ↓
-did database query performance degrade concurrently? (sequential scan detected)
-         ↓
-did incoming traffic volume or payload structure shift? (stable)
-         ↓
-synthesize evidence: commit 4f8a12 dropped index idx_cart_user_id
+observe companies
+      ↓
+detect potential fit
+      ↓
+collect context
+      ↓
+estimate probability of interest
+      ↓
+prepare outreach
 ```
 
-The diagnostic procedure is dynamic. The agent decides what logs to pull, what traces to correlate, and what profiling data to query based on what each preceding discovery reveals.
-
----
-
-### 10. Generating Guarded Proposals
-
-Proactive agents do not need complete write access to production environments to deliver substantial value. They can run read-only diagnostic loops and emit structured, actionable proposals:
-
-- Pull requests implementing candidate database indexes complete with `EXPLAIN ANALYZE` benchmarks
-- Pre-filled Jira or Linear tickets containing full log traces, reproduction steps, and root-cause hypotheses
-- Cost-saving infrastructure changes compiled into ready-to-apply Terraform plans
-- Architectural refactoring tickets flagging tightly coupled domain boundaries
-
-This feeds cleanly into existing engineering review workflows without introducing operational instability.
-
----
-
-### 11. Autonomous Experimentation
-
-Agents can validate their own hypotheses within sandboxed environments:
-
-1. Formulate a hypothesis: "Enabling connection pooling on service X will reduce p95 latency under high concurrency."
-2. Stand up an ephemeral test environment using an infrastructure-as-code template.
-3. Run a synthetic load test against baseline and candidate configurations.
-4. Measure latency, connection churn, and memory overhead.
-5. Tear down the test environment.
-6. Submit a pull request with the benchmark data attached directly to the description.
-
-The agent shifts from passive analysis to active empirical validation.
-
----
-
-### 12. Forecasting and Capacity Planning
-
-Proactive agents can extrapolate trend lines to anticipate systemic bottlenecks before they cause downtime:
-
-- Calculating the exact date a PostgreSQL auto-incrementing integer primary key will hit exhaustion
-- Projecting when S3 storage costs for raw telemetry will exceed reserved platform budgets
-- Forecasting when connection pools will saturate based on current user onboarding velocity
-- Predicting which internal platform dependencies will block planned framework upgrades
-
-Crucially, the agent ties the forecast directly to an actionable recommendation:
-
-> At current write rates, the analytics cluster storage volume will reach 85% capacity in 26 days. Resizing the EBS volume is straightforward, but running the attached partitioning script on table `events` will defer storage expansion by at least six months.
-
----
-
-## Business Workflows Follow the Same Topology
-
-Specialized commercial agents—whether designed for sales outreach, talent acquisition, procurement, or financial execution—share the exact same architectural loop. Only the underlying data sources and tool bindings change:
-
-### Sales Prospecting Agent
-```text
-observe company hiring / funding events
-        ↓
-evaluate ICP (Ideal Customer Profile) fit
-        ↓
-extract context from technical blog posts & job boards
-        ↓
-calculate conversion probability
-        ↓
-draft personalized outreach email for SDR review
-```
-
-### Procurement Optimization Agent
-```text
-monitor vendor price lists & SaaS renewal dates
-        ↓
-detect uncompetitive pricing or unfavorable renewal terms
-        ↓
-pull alternative vendor quotes and compliance certifications
-        ↓
-model switching cost vs annual contract savings
-        ↓
-generate contract negotiation brief for procurement lead
-```
-
-### Automated Trading Agent
-```text
-ingest real-time order books & market feeds
-        ↓
-identify pricing inefficiency across venues
-        ↓
-evaluate capital risk, slippage, and liquidity
-        ↓
-execute hedging trade within predefined risk limits
-        ↓
-monitor fill performance and adjust limit orders
-```
-
-The domain logic shifts from infrastructure metrics to financial balances or sales pipelines, but the underlying system architecture is identical.
-
----
-
-## Organizational Watchers and Signal Pipelines
-
-A robust proactive architecture avoids monolithic agents that try to do everything. Instead, it relies on a fleet of narrow, specialized watchers:
+### Procurement agent
 
 ```text
-[ Infrastructure Watcher ]    [ Security CVE Watcher ]    [ Dependency Watcher ]
-             │                          │                           │
-             └──────────────────────────┼───────────────────────────┘
-                                        ▼
-                         [ Signal Ingestion Bus ]
-                                        │
-                                        ▼
-                  [ Deduplication & Correlation Engine ]
-                                        │
-                                        ▼
-                     [ Causal Hypothesis Validation ]
-                                        │
-                                        ▼
-                     [ Policy & Blast-Radius Gate ]
-                      ┌─────────────────┴─────────────────┐
-                      ▼                                   ▼
-             [ Autonomous Action ]               [ Human Escalation ]
-            (Safe, idempotent task)             (Presents findings & PR)
+observe suppliers and prices
+      ↓
+detect better terms
+      ↓
+compare alternatives
+      ↓
+estimate switching cost
+      ↓
+recommend action
 ```
 
-Each watcher monitors a tight blast radius. Its sole job is to emit structured events containing high-fidelity context. Downstream aggregator services deduplicate duplicate alerts, enrich findings with broader system metadata, evaluate confidence scores, and determine whether the signal requires autonomous execution, a pull request, or immediate human escalation.
-
----
-
-## The Bottleneck: Human Attention and Alert Fatigue
-
-The primary failure mode of proactive software is notification spam. If 50 background agents each emit five recommendations a day, the engineering team faces 250 daily interruptions:
+### Trading agent
 
 ```text
-50 agents  ×  5 findings/day  =  250 notifications/day
+observe markets
+      ↓
+identify signal
+      ↓
+evaluate expected return and risk
+      ↓
+take or recommend position
+      ↓
+monitor outcome
 ```
 
-At that point, the system has not created intelligence—it has built an unmaintainable noise generator. Engineers will ignore the alerts, mute the Slack channels, and miss critical signals.
-
-Proactive software requires aggressive filtering. An agent must evaluate not just:
-
-> "Can I find something to fix or optimize?"
-
-but rather:
-
-> "Is the expected utility of this action high enough to justify interrupting a human or consuming operational risk budget?"
-
-Filtering systems must evaluate:
-
-- **Confidence**: How strong is the causal link between the observation and the root cause?
-- **Expected Value**: Does the financial or operational benefit outweigh the time cost of review?
-- **Reversibility**: Can the change be trivially rolled back if it causes downstream issues?
-- **Urgency**: Does this require action within minutes, or can it wait for a weekly rollup?
-- **Blast Radius**: What is the worst-case failure scenario if this change is applied incorrectly?
-
-The ability to **silently discard low-value findings** is what separates production-grade proactive systems from chaotic notification bots.
-
----
-
-## Graduated Autonomy Levels
-
-Not every proactive action should be handled with the same level of authority. Production systems implement graduated blast-radius gates:
-
-| Level | Mode | Execution Mechanics | Example Use Case |
-| :--- | :--- | :--- | :--- |
-| **1** | **Observe** | Scans environment, writes structured findings to an internal data store. No alerts generated. | Logging slow database query trends over a 90-day window. |
-| **2** | **Notify** | Decides a pattern crosses an importance threshold and routes a structured summary to a team channel. | Alerting that a third-party payment gateway is returning an elevated rate of transient timeouts. |
-| **3** | **Recommend** | Diagnoses an issue, formulates a specific fix, and presents options with trade-offs to an engineer. | Outlining two alternative migration strategies for an overloaded database table. |
-| **4** | **Prepare** | Stages the entire action deterministically. All code, configs, or drafts are generated, awaiting a single human click. | Submitting a tested pull request that updates an outdated library and fixes broken call sites. |
-| **5** | **Act** | Executes the change autonomously within strict, deterministic boundaries. Verifies downstream health. | Rolling back a failed canary deployment after an error spike; scaling down idle staging pods. |
-| **6** | **Delegate** | Classifies an incoming issue and orchestrates multiple downstream specialist agents or teams. | Routing an ambiguous outage report to both network and database investigation sub-agents. |
-
-Engineers can grant agents Level 1 autonomy immediately, promoting them to Level 4 or 5 as the agent's diagnostic accuracy and deterministic guardrails prove reliable over time.
-
----
-
-## Work Orchestration Between Agents
-
-Complex remediation rarely happens inside a single model invocation. Instead, specialized agents hand off structured tasks across defined system boundaries:
+### Recruitment agent
 
 ```text
-[ Production Telemetry Watcher ]
-               │
-               ▼ (Emits: Latency Regression Signal on Service B)
-   [ Diagnostic Specialist ]
-               │
-               ▼ (Identifies: N+1 query bug introduced in Commit 8f3c)
-    [ Code Remediation Agent ]
-               │
-               ▼ (Generates: Branch with batching logic & unit test)
-       [ CI Pipeline Agent ]
-               │
-               ▼ (Runs: Test suite & performance regression benchmark)
-   [ Human-in-the-Loop Review ]
-               │
-               ▼ (Engineer approves PR)
-     [ Deployment Engine ]
+observe candidate market
+      ↓
+identify matching people
+      ↓
+collect evidence
+      ↓
+rank candidates
+      ↓
+initiate or prepare contact
 ```
 
-Each component is constrained. The diagnostic agent does not write code. The code generation agent does not deploy directly to production. The CI pipeline applies deterministic validation checks. This separation of concerns mirrors high-performing engineering organizations.
+The business domain changes.
+
+The architecture remains remarkably similar.
 
 ---
 
-## Moving from Explicit Procedures to High-Level Objectives
+# Agents as organizational watchers
 
-The transition from traditional automation to proactive systems inverts how engineers configure software:
-
-*Traditional Workflow Specification:*
-> "Run query X every night at 02:00. If any customer row shows `status == 'pending'` for more than 48 hours, insert a record into the review table and page team Y."
-
-*Objective-Based Specification:*
-> "Ensure customer onboarding state machines do not stall. If an account is blocked, diagnose the root cause across identity verification, fraud scores, and payment gateways. If the fix is known and low risk, resolve it; otherwise, route a detailed briefing to operations."
-
-This does not replace deterministic software. The agent relies heavily on deterministic code: compilers, test runners, API clients, schema validators, and deployment pipelines provide ground-truth feedback. The agent operates primarily as the dynamic decision layer that chooses which deterministic tool to run next based on the evidence it uncovers.
+One possible future architecture is an organization containing many specialized watchers.
 
 ```text
-High-Level Objective
-         ↓
-Agent determines necessary investigation path
-         ↓
-Deterministic tools fetch concrete telemetry & logs
-         ↓
-Agent synthesizes findings & formulates action
-         ↓
-Policy engine evaluates safety constraints & blast radius
-         ↓
-Deterministic tools execute validated commands
+watch production
+watch customers
+watch costs
+watch security
+watch dependencies
+watch regulations
+watch competitors
+watch contracts
+watch infrastructure
+watch repositories
+watch documentation
+watch hiring
+watch suppliers
 ```
 
----
+Each watcher does not necessarily perform large autonomous tasks.
 
-## Software That Initiates Work
+Its job may simply be to continuously observe one domain and produce structured signals.
 
-The historical constant across decades of computing has been that **humans initiate work**:
-
-- An engineer files a ticket to refactor a slow service.
-- An analyst runs a query to spot customer churn patterns.
-- An SRE notices elevated error rates and starts an incident call.
-- A developer writes a script to clean up old database records.
-
-Software has served almost entirely as an execution engine for human intent.
-
-Proactive agent systems invert this dynamic. Software continuously surveys the environment and generates candidate intent:
-
-> "I identified a memory leak in the worker pool, isolated the root cause to commit 9a2f, verified the fix against the integration test suite, and staged a pull request with the benchmark attached. Does this look good to deploy?"
-
-The human role shifts from actively discovering problems and manually executing fixes to evaluating hypotheses and acting as a policy governor over automated actions.
-
----
-
-## Agency Versus Uncontrolled Activity
-
-Unconstrained proactivity is dangerous. 
-
-An agent incentivized purely to surface optimizations will flood repositories with trivial refactoring PRs that introduce merge conflicts for minimal real-world benefit. An agent searching for security vulnerabilities will flag thousands of theoretical, un-exploitable edge cases, burning team bandwidth. An agent authorized to optimize cloud spend might aggressively shut down underutilized instances that were specifically pre-warmed for incoming batch spikes.
-
-Proactive software requires hard structural guardrails:
+Those signals can then flow into another layer.
 
 ```text
-Candidate Action Proposed
-            ↓
-Expected Utility Calculation (Benefit vs Disruption)
-            ↓
-Deterministic Invariant Check (Security policies, rate limits)
-            ↓
-Blast-Radius Boundary Check (Is the action reversible?)
-            ↓
-Confidence & Evidence Validation
-            ↓
-Decision: Execute Autonomously / Escalate to Human / Discard Silently
+many observers
+      ↓
+candidate findings
+      ↓
+deduplication
+      ↓
+evidence validation
+      ↓
+priority assessment
+      ↓
+risk / cost / confidence
+      ↓
+ignore / record / recommend / act
 ```
 
-Without rigorous stopping criteria, utility functions, and blast-radius controls, a proactive system rapidly degrades into an erratic, hyperactive loop that consumes more operational attention than it saves.
+This hierarchy may be more scalable than giving every agent complete autonomy.
+
+Each watcher maintains a tight blast radius, continuously observing its subsystem and emitting structured events with high-fidelity context. Downstream aggregator services deduplicate alerts, correlate findings with deployment metadata, calculate confidence scores, and determine whether a finding warrants autonomous remediation, a staged pull request, or immediate human escalation.
 
 ---
 
-## The Broader Shift
+# The new scarcity: attention
 
-The most profound shift introduced by agentic systems is not that they help developers write boilerplate code faster. It is that they change the fundamental operating posture of software:
+A critical problem appears immediately.
 
-- Traditional software waits for commands. **Proactive software continuously observes.**
-- Traditional systems execute predefined tasks. **Proactive software discovers what tasks need to be done.**
-- Traditional monitoring reports raw symptoms. **Proactive software investigates root causes.**
-- Traditional automation executes hardcoded workflows. **Proactive software formulates contextual plans.**
+If autonomous agents become good at finding things worth doing, they may find far more things than humans can process.
 
-Software is shifting from a passive tool operated by humans into an active participant that monitors its environment, reasons about system health, and initiates meaningful work within carefully governed boundaries.
+Suppose:
+
+```text
+100 agents
+×
+5 findings per day
+=
+500 recommendations per day
+```
+
+The organization has not gained intelligence.
+
+It has created another notification system.
+
+Therefore proactive software requires aggressive filtering.
+
+A useful agent should not merely answer:
+
+> Can I find something?
+
+It must answer:
+
+> Is this important enough to interrupt someone?
+
+This introduces concepts such as:
+
+- confidence,
+    
+- expected value,
+    
+- urgency,
+    
+- reversibility,
+    
+- cost,
+    
+- risk,
+    
+- novelty,
+    
+- severity.
+    
+
+The ability to **ignore** may become as important as the ability to detect.
+
+Silently discarding low-value findings is what separates a reliable proactive platform from an unmaintainable noise generator. If an agent surfaces 5 findings a day across 100 systems, engineers will simply mute the channels. Evaluating reversibility, operational blast radius, and whether the expected value exceeds the human review cost ensures the system protects engineering attention rather than consuming it.
 
 ---
 
-## Related Notes & References
+# Autonomy levels
 
-- [[Designing APIs for LLM-Generated Integration Code]] – Principles for building deterministic, machine-readable interfaces that agents can safely inspect and execute.
-- [[How AI Agents May Control Computers, Applications, and the Web]] – Architectural execution layers for computer-use and browser-based agent automation.
-- [[Personal Digital Models as the Foundation of Agent Ecosystems]] – Context modeling and authorization boundaries for agents acting on behalf of individual operators.
-- [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] – Exposing structured web application capabilities directly to autonomous background loops.
-- [[Singularity Without AGI - The Civilizational Automation Loop]] – How decoupled, proactive automation loops coordinate to handle complex engineering workflows without general intelligence.
+Not every proactive agent should have the same authority.
+
+A practical architecture can define several levels.
+
+## Observe
+
+The agent only gathers information.
+
+```text
+observe → record
+```
+
+## Notify
+
+The agent decides that something deserves human attention.
+
+```text
+observe → investigate → notify
+```
+
+## Recommend
+
+The agent produces a proposed course of action.
+
+```text
+observe → investigate → recommend
+```
+
+## Prepare
+
+The agent prepares the action but does not execute it.
+
+Examples:
+
+- draft an email,
+    
+- create a PR,
+    
+- prepare an infrastructure change,
+    
+- prepare a purchase order.
+    
+
+```text
+observe → investigate → prepare → human approval
+```
+
+## Act
+
+The agent executes within predefined limits.
+
+```text
+observe → decide → execute → verify
+```
+
+## Delegate
+
+The agent can create work for another agent or human.
+
+```text
+observe
+   ↓
+investigate
+   ↓
+classify problem
+   ↓
+delegate to specialist
+```
+
+This model allows autonomy to increase gradually as confidence in a workflow grows.
+
+Teams can grant Level 1 (Observe) authority immediately across all systems, promoting agents to Level 4 (Prepare) or Level 5 (Act) only after diagnostic accuracy and deterministic guardrails have proven reliable over time.
+
+---
+
+# Agents that create work for other agents
+
+An especially interesting development is that one proactive agent does not need to solve everything itself.
+
+Consider an operational watcher:
+
+```text
+production watcher
+        ↓
+detects regression
+        ↓
+investigation agent
+        ↓
+identifies probable code change
+        ↓
+coding agent
+        ↓
+creates candidate fix
+        ↓
+review agent
+        ↓
+PR
+```
+
+No single agent needs to understand the entire process.
+
+The system behaves more like an organization of specialized workers.
+
+This may eventually create software systems containing thousands of small, persistent responsibilities rather than a few giant universal agents.
+
+Constraining each agent to a single boundary keeps the system reliable. The diagnostic watcher does not modify code, the remediation agent does not deploy to production, and deterministic CI test suites gate every step. This strict separation of concerns mirrors high-performing engineering teams.
+
+---
+
+# From explicit workflows to objectives
+
+The deeper transition is from specifying procedures to specifying objectives.
+
+Traditional automation:
+
+> Every night at 01:00, query table X and alert if value Y exceeds 100.
+
+Agentic automation:
+
+> Keep an eye on this subsystem and tell us if its behavior appears to be deteriorating.
+
+Traditional automation:
+
+> Check whether package versions differ from this list.
+
+Agentic automation:
+
+> Keep this platform reasonably current and tell us when an upgrade becomes worthwhile.
+
+Traditional automation:
+
+> Search this database using these filters.
+
+Agentic automation:
+
+> Continuously look for potential customers that fit our business.
+
+This does not eliminate deterministic software.
+
+Quite the opposite.
+
+Agents should still rely heavily on deterministic tools for execution and verification.
+
+The change happens mainly at the decision layer.
+
+```text
+objective
+   ↓
+agent decides what to inspect
+   ↓
+deterministic tools provide facts
+   ↓
+agent interprets facts
+   ↓
+deterministic systems execute allowed actions
+```
+
+---
+
+# Software that initiates work
+
+Historically, humans have been the primary source of intent.
+
+Humans decide:
+
+- there is a problem,
+    
+- something should be investigated,
+    
+- an optimization is needed,
+    
+- a supplier should be changed,
+    
+- a customer should be contacted,
+    
+- a system should be upgraded.
+    
+
+Software then assists with execution.
+
+With proactive agents, software can begin generating candidate intent itself.
+
+It can say:
+
+> I noticed something.
+
+> I investigated it.
+
+> I believe this matters.
+
+> Here is what I think should happen.
+
+This does not mean software should autonomously control every decision.
+
+It means software is no longer restricted to waiting for humans to formulate every problem first.
+
+The human role shifts from discovering raw symptoms and manually orchestrating fixes to evaluating hypotheses and acting as a policy governor over automated execution.
+
+---
+
+# The important boundary: agency versus uncontrolled activity
+
+Proactivity has obvious failure modes.
+
+An agent that is rewarded for finding optimizations will always find optimizations.
+
+An agent searching for risks will always find risks.
+
+A sales agent may contact too many people.
+
+A maintenance agent may continuously propose unnecessary upgrades.
+
+An optimization agent may make the system harder to understand in exchange for negligible savings.
+
+An unconstrained agent will aggressively optimize for its narrow objective: flooding git logs with trivial refactoring pull requests, flagging theoretical security edge cases that cannot be exploited, or terminating idle compute instances that were intentionally pre-warmed for batch traffic.
+
+Therefore agents need explicit stopping and filtering criteria.
+
+The system should reason not only about:
+
+> Can this be improved?
+
+but also:
+
+> Is improving it worth the disruption?
+
+A mature proactive system therefore needs some equivalent of organizational judgment:
+
+```text
+potential action
+      ↓
+expected value
+      ↓
+confidence
+      ↓
+cost
+      ↓
+risk
+      ↓
+urgency
+      ↓
+reversibility
+      ↓
+priority
+```
+
+Without this layer, proactive software becomes hyperactive software.
+
+---
+
+# A broader implication
+
+The major opportunity of agentic systems may not be that they let humans perform existing tasks faster.
+
+It may be that they enable completely new classes of software behavior.
+
+Traditional software waits.
+
+Agentic software can watch.
+
+Traditional software processes requests.
+
+Agentic software can discover that a request should exist.
+
+Traditional monitoring reports signals.
+
+Agentic monitoring can investigate them.
+
+Traditional automation follows procedures.
+
+Agentic automation can decide which procedure is appropriate.
+
+Traditional systems execute work.
+
+Proactive systems can **find work worth doing**.
+
+That may ultimately be one of the most important consequences of agentic computing:
+
+> **Software changes from a passive tool operated by humans into an active participant that continuously observes its environment, identifies problems and opportunities, and initiates useful work.**
+```

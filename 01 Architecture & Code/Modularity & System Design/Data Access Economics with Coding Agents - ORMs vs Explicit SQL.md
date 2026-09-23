@@ -1,180 +1,307 @@
 ---
-title: Data Access Economics with Coding Agents - ORMs vs Explicit SQL
+title: Agentic Coding with EF Core and SQL Server
 tags:
   - ai-agents
   - software-architecture
+  - dotnet
+  - sql-server
+  - entity-framework
+  - testing
   - database
   - persistence-layers
-  - orm
-  - sql
   - mechanical-sympathy
-  - testing
 aliases:
-  - Agentic Coding with EF Core and SQL Server
+  - EF Core with AI Agents
+  - SQL Server and Agentic Coding
   - Data Access Economics with Coding Agents
   - ORMs vs Explicit SQL in the AI Era
-  - Hybrid Data Access Architecture
-  - Database Contract Tests for Agents
 ---
 
-# Data Access Economics with Coding Agents - ORMs vs Explicit SQL
+# Agentic Coding with EF Core and SQL Server
 
-## Core Principle: The Inverted Economics of Database Access
+## Thesis
 
-For decades, engineering teams defaulted to heavy Object-Relational Mappers (ORMs) like Hibernate, Entity Framework, or ActiveRecord. We did not choose them because they generated superior SQL; we chose them because writing data access layers by hand was an exhausting typing bottleneck. 
+Coding agents change the economics of choosing between EF Core, handwritten SQL, and database-side code.
 
-Hand-crafting hundreds of flat Data Transfer Objects (DTOs), writing boilerplate CRUD queries, manually wiring row mappers, and managing dirty-state tracking consumed thousands of senior engineering hours. We accepted the ORM tax—leaky abstractions, hidden N+1 query storms, runaway joins, and impedance mismatches—simply to save human keystrokes.
+Historically, handwritten SQL, result DTOs, mappers, stored procedures, and their tests created enough repetitive work that teams often preferred an ORM even when direct SQL would provide better control. An agent can generate and update much of this mechanical code cheaply. This makes a SQL-heavy approach more practical, but it does not make it automatically safer or architecturally superior.
+
+The main question is no longer whether an agent can write SQL and map a result set to C# objects. It can. The important questions are:
+
+- What is the source of truth?
+- How is schema compatibility verified?
+- Where should business logic live?
+- How do we verify semantics, concurrency, and performance?
+- Can humans still understand and review the resulting system?
+
+Teams historically accepted the ORM tax—leaky abstractions, hidden N+1 query storms, runaway joins, and object-relational impedance mismatches—simply because writing data access layers by hand was an exhausting typing bottleneck. When an agent drives the marginal cost of generating repetitive DTOs and explicit SQL queries close to zero, that typing bottleneck disappears. However, near-zero generation cost does not eliminate the hard problems of persistence; it introduces new failure modes around silent contract drift and split-backend logic sprawl.
+
+## An Agent Can Easily Generate the Mapping Layer
+
+Given a schema and a query, an agent can generate:
+
+1. parameterized SQL;
+2. command execution code;
+3. a result DTO or record;
+4. `DbDataReader` mapping or Dapper integration;
+5. integration and contract tests.
+
+Repetitive mapping code is not difficult for an agent. In fact, agents are less discouraged than humans by mechanical code. This reduces the cost of explicit implementations, but generated code still needs deterministic verification.
+
+## The Real Problem Is Contract Consistency
+
+A database read usually involves several representations that must agree:
+
+| Layer | Example |
+| --- | --- |
+| Database schema | `Users.CreatedAt datetime2 NOT NULL` |
+| SQL projection | `SELECT u.CreatedAt AS CreatedAt` |
+| Data reader or mapper | `GetDateTime(...)` |
+| C# result model | `DateTime CreatedAt` |
+
+Potential mismatches include:
+
+- `int` versus `bigint`;
+- `decimal` versus `double`;
+- `DateTime` versus `DateTimeOffset`;
+- nullable versus non-nullable values;
+- incorrect column aliases or order;
+- unexpected nullability introduced by an outer join;
+- provider-specific conversions;
+- a structurally valid but semantically incorrect join.
+
+These are often subtle errors: the code looks plausible and may survive superficial review.
+
+In agent-modified queries, these mismatches produce specific runtime failure modes:
+
+- **Nullability inversion**: A database column defined as `NOT NULL` in the table schema becomes silently nullable the moment an agent introduces a `LEFT JOIN`. If the target C# record or domain model expects a non-nullable value, the application throws an unhandled `NullReferenceException` in production the moment an outer relationship yields no matches.
+- **Semantic join alterations**: An agent may change a `LEFT JOIN` to an `INNER JOIN` to satisfy a prompt requirement. The SQL passes syntax validation, but it silently drops rows when optional relationships are empty, returning truncated result sets.
+- **Type truncation and precision loss**: An agent might map a database `bigint` to a standard 32-bit `int`, or map a high-precision `decimal(18, 4)` financial balance to a `double`, introducing silent rounding errors or overflow exceptions into production ledgers.
+- **Alias drift**: Renaming a SQL projection alias (such as `SELECT u.UserId AS Id`) without updating reflection- or dictionary-based row mappers fails silently, hydrating the C# property with a default zero, empty string, or `null`.
+
+## What Should Be the Source of Truth?
+
+For persistence models, the natural direction is:
 
 ```text
-HISTORICAL TRADEOFF:
-High manual typing cost   ──► Adopt heavy ORM to hide SQL plumbing
-                                    │
-                                    ▼
-                              Hidden N+1 queries, sluggish joins, unpredictable query plans
-
-AGENTIC TRADEOFF:
-Marginal code cost ≈ 0     ──► Explicit SQL & flat DTO projections become cheap
-                                    │
-                                    ▼
-                              Direct database engine features, visible query plans, fast execution
+Migrations → actual database schema → C# mapping
 ```
 
-When an autonomous coding agent can generate, update, and test explicit SQL queries and flat projection models in seconds, the historical economic calculation flips. Handwritten SQL and mechanical row mapping are no longer expensive maintenance bottlenecks.
-
-However, near-zero generation cost introduces a different set of failure modes. The fundamental hard problems of data engineering do not disappear when an agent writes the query:
-1. **Source of Truth**: Where does schema authority live—in migration files, schema snapshots, or application entity models?
-2. **Silent Contract Drift**: How do you guarantee that database column types, query projections, row mappers, and domain models stay strictly aligned without compiler-enforced end-to-end typing?
-3. **The Split-Backend Trap**: How do you prevent agents from haphazardly scattering business logic across the application runtime and database stored procedures simply because it is easy to generate both?
-
----
-
-## Where SQL Queries Break: The 4-Layer Contract Pipeline
-
-A database read is not an atomic operation. It is a multi-tier pipeline spanning four distinct boundaries that must maintain absolute mathematical alignment:
+For query result models, the complete direction is:
 
 ```text
-1. Physical Database Schema  ──► users.created_at TIMESTAMP WITH TIME ZONE NOT NULL
-               │
-               ▼
-2. Explicit Query Projection ──► SELECT u.created_at AS created_at
-               │
-               ▼
-3. Row Reader / Mapper       ──► row.get_timestamp("created_at")
-               │
-               ▼
-4. Host Application Model    ──► DateTimeOffset / Instant createdAt
+Migrations → actual schema → SQL query → result-set metadata → C# result type
 ```
 
-When humans or coding agents modify any segment of this pipeline, subtle, silent failure modes emerge that unit tests using mocked databases will never catch:
+A schema dump is useful but insufficient. A query result may include joins, aggregates, expressions, window functions, and nullability introduced by the query itself. The object often represents a use-case-specific projection rather than a table row.
 
-* **Nullability Inversion**: A database column defined as `NOT NULL` in the table schema becomes silently nullable the moment an agent introduces a `LEFT JOIN`. If the target DTO model or domain layer expects a non-null value, your application will throw an unhandled `NullReferenceException` or `TypeError` in production the moment an outer relationship yields no matches.
-* **Semantic Join Alterations**: An agent modifying an existing query may switch a `LEFT JOIN` to an `INNER JOIN` (or vice versa) to satisfy a prompt requirement. The SQL parses cleanly and passes syntax checks, but it silently drops rows when optional relationships are empty, returning logically corrupted result sets.
-* **Type Truncation and Overflows**: An agent might map a database `BIGINT` (64-bit integer) to a standard 32-bit integer in the host application, or map a high-precision `NUMERIC(18, 4)` financial balance to a double-precision floating-point type (`float64`), introducing silent rounding errors into production ledgers.
-* **Alias Drift**: An agent renames a SQL projection alias (e.g., `SELECT user_id AS id`) but forgets to update the reflection or dictionary-based row mapper. Depending on the driver, this fails silently by hydrating the domain field with a default zero, an empty string, or `null`.
+Migrations should therefore remain the authoritative history. A generated schema snapshot can help agents, reviewers, documentation, and environment comparisons, but it should not become a separately edited source of truth.
 
-Because these queries look structurally clean on paper, they easily bypass superficial code reviews (see [[Reviewing AI-Generated Code]]).
+## Discovering SQL-to-Type Dependencies
 
----
+Comments such as `// Maps GetUserSummaries.sql` are useful to humans but too weak as the primary mechanism. They are not compiler-checked and can become stale.
 
-## The Verification Gate: Automated Tests Against Real Migrations
+A stronger option is an explicit attribute:
 
-An ORM does not prevent schema drift; it merely defers the explosion to runtime when an unmapped property is accessed. Whether you run a heavy ORM or explicit SQL, agent-maintained systems require **automated contract tests executed against an actual migrated database** (see [[Testing in the Model, Agent, LLM Era]]).
+```csharp
+[SqlResult("Users/GetUserSummaries.sql")]
+public sealed record UserSummaryRow(
+    long Id,
+    string Email,
+    int OrderCount,
+    DateTime? LastOrderAt);
+```
+
+An even more structural option is a common query abstraction:
+
+```csharp
+public sealed class GetUserSummaries : SqlQuery<UserSummaryRow>
+{
+    public override string Sql => """
+        SELECT ...
+        """;
+}
+```
+
+The attribute or abstraction is only valuable if an analyzer, source generator, or test reads it and performs real verification. The annotation itself does not guarantee correctness.
+
+For many systems, checking all registered queries after every migration is simpler and safer than attempting sophisticated impact analysis. Dependency indexing can be added later if validation becomes too slow.
+
+## Contract Tests Against a Real Migrated Database
+
+EF Core also fails when the database changes without a corresponding mapping change. An ORM does not eliminate schema drift; it only changes where and how it appears. Therefore, both EF and handwritten SQL require tests against a database created from the real migrations.
+
+A useful CI pipeline is:
 
 ```text
-CONTINUOUS DATABASE VERIFICATION PIPELINE:
-Spin up clean DB container ──► Run all migrations ──► Validate ORM metadata ──► Execute all SQL in schema mode ──► Run integration tests
+Create an empty database
+→ apply every migration
+→ validate EF mappings
+→ validate every registered SQL query and result type
+→ run integration tests
 ```
 
-### The Automated Contract Check
+The contract validator should compare:
 
-In your CI pipeline, an automated test harness must validate every registered query directly against an ephemeral, migrated database instance (e.g., using Testcontainers):
+| Property | Verification |
+| --- | --- |
+| Column count | SQL result versus DTO properties or constructor |
+| Name | SQL alias versus C# property |
+| Type | SQL Server type versus CLR type |
+| Nullability | Result nullability versus nullable C# type |
+| Order | Required when positional mapping is used |
+| Conversion | Only explicitly allowed conversions |
 
-| Property | What the Test Verifies |
-| :--- | :--- |
-| **Column Count** | Projected columns match the target DTO constructor or struct field count exactly. |
-| **Column Names** | SQL projection aliases match DTO property names without case or spelling mismatches. |
-| **Data Types** | Database column types map to compatible host language types (e.g., PostgreSQL `BIGINT` $\rightarrow$ 64-bit integer). |
-| **Nullability** | Nullable SQL expressions are strictly mapped to nullable host types (`Option<T>`, `T?`, or nullable pointers). |
-| **Conversions** | Only explicitly registered, deterministic type conversions are permitted. |
+For SQL Server, result metadata can be inspected using facilities such as `sp_describe_first_result_set`. A provider-independent alternative is executing the command in a schema-only mode and inspecting `DbDataReader.GetColumnSchema()`, although provider behavior and nullability reporting must be verified.
 
-Modern database engines allow you to inspect query result metadata without executing the underlying query logic or mutating state. For example:
-* **PostgreSQL**: You can prepare a statement (`PREPARE stmt AS SELECT ...`) and inspect `pg_prepared_statements` or query metadata directly.
-* **SQL Server**: System stored procedures like `sp_describe_undeclared_parameters` and the `sys.dm_exec_describe_first_result_set` Dynamic Management Function return the exact schema contract of any ad-hoc query string without running it.
+Using dynamic management functions like `sys.dm_exec_describe_first_result_set` or system stored procedures like `sp_describe_undeclared_parameters` returns the exact schema contract of any ad-hoc query string without executing the query logic or mutating data. Running this validation harness in CI against an ephemeral database container (such as Testcontainers) verifies the entire query suite in milliseconds before code ever reaches staging.
 
-This technique catches 100% of structural and typing mismatches in milliseconds, long before code reaches a staging environment.
+The test suite should include at least:
 
----
+1. rebuilding a database from all migrations;
+2. upgrading a database from the currently deployed version, including representative existing data;
+3. validating EF mappings;
+4. validating SQL-to-DTO contracts;
+5. testing important write/read round trips;
+6. testing business semantics with representative data;
+7. exercising critical end-to-end paths.
 
-## What Explicit SQL Unlocks
+Contract tests detect structural incompatibility. They cannot detect that two fields with the same type were accidentally exchanged, or that a valid `INNER JOIN` removed required rows. Behavioral tests remain necessary.
 
-When teams stop treating SQL as an inconvenient implementation detail, they unlock the native power of the relational engine—capabilities that heavy ORMs either obscure or break entirely:
+## What Explicit SQL Provides
 
-* **Advanced Engine Primitives**: Agents can generate and maintain recursive Common Table Expressions (CTEs) for hierarchical data, window functions (`ROW_NUMBER()`, `DENSE_RANK()`, `LEAD()`, `LAG()`) for analytical pagination, lateral joins (`CROSS JOIN LATERAL`) for correlated subqueries, and temporal table queries.
-* **Set-Based Batch Operations**: Rather than pulling 10,000 entity graphs across the network into application memory, mutating fields in an in-memory loop, and generating 10,000 discrete `UPDATE` statements, explicit SQL allows you to execute a single set-based `UPDATE ... WHERE` directly on the database engine. This cuts memory allocations, prevents buffer pool churn, and reduces execution time from seconds to milliseconds.
-* **Direct Query Observability**: An explicit SQL query can be copied verbatim from code into command-line tooling (`psql`, `sqlcmd`), analyzed via `EXPLAIN (ANALYZE, BUFFERS)`, and paired directly with targeted partial or covering indexes. There is no need to reverse-engineer how a proprietary ORM LINQ provider or criteria builder will translate an expression tree.
-* **Predictable Execution Plans**: Eliminates surprise Cartesian explosions caused by eager-loading multiple collections simultaneously, as well as unpredictable subquery generation triggered by dynamic ORM query builders.
+Handwritten SQL gives direct access to the capabilities of SQL Server rather than only the subset naturally expressible and translated through LINQ. This includes, among other things:
 
----
+- window functions;
+- recursive CTEs;
+- `APPLY`;
+- table-valued parameters;
+- `OUTPUT`;
+- temporal tables;
+- JSON and full-text features;
+- set-based bulk operations;
+- inline table-valued functions;
+- indexed views;
+- exact transaction and isolation behavior;
+- direct control over the executed statement.
 
-## Logic Placement: Avoiding the Split-Backend Trap
+The executed query is visible and can be copied into SSMS, measured, and inspected using actual execution plans, IO statistics, and timing data.
 
-Because coding agents can write procedural SQL (PL/pgSQL, T-SQL) just as fluidly as TypeScript, Go, or C#, teams face a serious architectural temptation: **pushing business logic into the database simply because the agent can write the SQL.**
+EF Core does not necessarily produce bad SQL. For ordinary filtering, projection, pagination, joins, and CRUD, it often produces perfectly adequate queries. Its limitations become more visible with complex graphs, multiple includes, complicated aggregation, provider-specific features, or queries whose translated shape is difficult to predict.
 
-This leads to the "split-backend" disaster. Domain rules become bifurcated across two entirely different execution environments, wrecking observability, local testability, and deployment pipelines:
+The distinction is therefore not simply “good SQL versus bad EF.” EF provides type information, convenient change tracking, refactoring support, and a discoverable model. Explicit SQL provides precise control and access to the database's full language.
 
-```text
-APPLICATION RUNTIME (Domain Logic & Orchestration):
-- Complex business workflow orchestration
-- External API integrations, webhooks, and third-party I/O
-- Idempotency boundaries and domain event publishing
-- Fast-evolving, high-churn business rules
+Set-based operations illustrate the mechanical advantage clearly. Pulling thousands of entity graphs across the network into memory, mutating properties in a loop, and relying on change tracking emits thousands of individual `UPDATE` statements, saturating connection pools and churning the buffer cache. A handwritten, set-based `UPDATE ... WHERE` executes inside the engine in a single round trip with minimal log and memory overhead. Furthermore, explicit SQL eliminates surprise Cartesian explosions caused by eager-loading multiple navigation collections simultaneously (`.Include()`), allowing queries to be tuned directly with targeted covering or filtered indexes.
 
-DATABASE ENGINE (State Reduction, Integrity, & Storage):
-- Relational integrity constraints, foreign keys, and unique indexes
-- High-throughput set-based bulk transformations
-- Mass data filtering, projection, and mathematical aggregation
-- ACID transactional boundaries across multi-table updates
-```
+## Moving Code into the Database
 
-To maintain a clean boundary, evaluate database mechanisms against these practical patterns:
+Agents also reduce the implementation cost of views, functions, and stored procedures. These mechanisms have different appropriate roles:
 
-| Mechanism | Good Use Case | Anti-Pattern to Avoid |
-| :--- | :--- | :--- |
-| **Database View** | Stable, shared read projections across multiple distinct reporting queries. | Multi-tenant filtering and dynamic permission checks that change on a weekly basis. |
-| **Inline Table Function** | Parameterized relational operations that compose cleanly inside larger queries. | Procedural business workflows with branching logic and conditional status updates. |
-| **Stored Procedure** | High-throughput, atomic batch operations requiring minimal network round-trips. | Orchestrating downstream HTTP calls, queuing external jobs, or sending user notifications. |
-| **Application SQL File** | Use-case-specific read models and DTO queries owned by the application codebase. | Copy-pasting identical validation rules across five different ad-hoc queries. |
+| Mechanism | Suitable use |
+| --- | --- |
+| View | Stable shared projection |
+| Inline table-valued function | Parameterized, composable query |
+| Stored procedure | Atomic command, batch operation, or stable read contract |
+| Scalar function | Small deterministic calculation, used carefully |
+| SQL file owned by the application | Query specific to one use case |
 
----
+Good candidates for database-side implementation are operations that:
 
-## The Pragmatic Hybrid Architecture
+- are strongly set-oriented;
+- process much data but return a small result;
+- need SQL Server-specific features;
+- benefit from a single round trip;
+- must update multiple objects atomically;
+- are performance-critical;
+- represent a stable data-access contract.
 
-Rather than engaging in dogmatic debates between pure ORM usage and raw SQL, mature production systems often leverage a hybrid model:
+Poor candidates include:
 
-1. **ORMs for Domain Mutations**: Use an ORM for core transactional writes and aggregate root persistence. Change tracking, optimistic concurrency checks via row versioning, and transaction boundaries are areas where ORMs provide real mechanical value.
-2. **Explicit SQL for Reads**: Use lightweight query runners (such as Dapper, sqlc, or jOOQ) and explicit SQL for reporting endpoints, search projections, and read-heavy views. Hydrate results directly into flat, immutable DTOs without change-tracking overhead.
-3. **Migrations as the Absolute Source of Truth**: Never let an application auto-generate your database schema in production. Every table, constraint, view, and index must live in deterministic, version-controlled migration files (e.g., Flyway, Liquibase, Goose, or raw SQL migrations).
-4. **Contract Verification in CI**: Make automated, containerized schema-to-DTO verification tests a mandatory gate on every pull request to eliminate query drift before merge.
-5. **Measure Before Optimizing**: Require agents to pull actual execution plans (`EXPLAIN (ANALYZE, BUFFERS)`) and record I/O metrics before accepting any query refactoring as an "optimization."
+- orchestration across external systems;
+- queues, retries, and long-running workflows;
+- frequently changing business decisions;
+- behavior that is difficult to observe and test in the database;
+- logic moved merely because SQL can express it.
 
----
+Otherwise the system develops two backends: one in C# and another hidden in stored procedures. An agent can cheaply add code to both, but reviewers and maintainers must still understand both.
 
-## Practical Rules for Coding Agents
+To avoid this split-backend trap, keep the operational boundaries distinct:
+- **Application runtime**: Domain workflow orchestration, external API calls and webhooks, idempotency boundaries, domain event publishing, and volatile business policies that change frequently.
+- **Database engine**: Relational integrity constraints (foreign keys, check constraints, unique indexes), high-throughput set-based transformations, mass aggregation, and strict ACID transactional boundaries across multi-table writes.
 
-When configuring prompts, agent instructions, or repository guardrails for database interactions, enforce these non-negotiable rules:
+## What Agents Reduce—and What They Do Not
 
-1. **Mandate Parameterized Queries**: Never permit string interpolation, string formatting, or concatenation when assembling SQL statements. Parameterization is mandatory to eliminate SQL injection vulnerabilities and allow database engines to reuse cached execution plans.
-2. **Ban Wildcard Queries (`SELECT *`)**: Mandate explicit, named column projection lists in every query. Wildcard selections cause application mappers to break silently whenever columns are reordered or updated in the underlying schema.
-3. **Keep Domain Rules in the Host Service**: Do not permit agents to generate stored procedures or database triggers for business validation without an explicit, documented architectural exception.
-4. **Enforce Atomic File Updates**: Require that whenever an agent updates a query's projected columns, it must update the matching DTO model and the corresponding integration contract test within the exact same commit.
+Agents substantially reduce the cost of:
 
----
+- writing SQL and DTOs;
+- generating mappers;
+- updating mechanical mappings after migrations;
+- creating procedures and functions;
+- generating representative test data;
+- writing contract and integration test scaffolding;
+- finding references to changed tables and columns;
+- documenting query contracts;
+- performing an initial analysis of execution plans.
+
+They reduce much less of the cost of:
+
+- validating business meaning;
+- selecting architectural boundaries;
+- reasoning about locks, isolation, and concurrency;
+- safely migrating production data;
+- judging whether an optimization works on real data;
+- preserving institutional knowledge;
+- reviewing a large body of clever SQL.
+
+Cheap generation can even increase risk by making it easy to create more complex database code than the team can realistically review.
+
+## A Practical Hybrid Architecture
+
+A pragmatic .NET and SQL Server architecture could use:
+
+- EF Core for ordinary writes, change tracking, relationships, and straightforward CRUD;
+- explicit SQL or Dapper for use-case-specific read models;
+- stored procedures for justified atomic or high-volume operations;
+- views and inline table-valued functions for carefully selected shared projections;
+- migrations as the only mechanism for changing tables, views, functions, and procedures;
+- generated schema snapshots as agent and reviewer context;
+- automatic SQL-to-DTO contract validation after every migration;
+- integration tests for query semantics and important commands;
+- measured execution plans for performance-critical queries.
+
+A useful policy is:
+
+> Start with the simplest representation appropriate to the operation. Move to explicit SQL, a view, a function, or a procedure when it provides a concrete benefit in performance, atomicity, composability, or access to SQL Server features.
+
+## Guidance for Coding Agents
+
+An agent working in this architecture should be instructed to:
+
+1. inspect migrations and the generated schema snapshot before changing database code;
+2. identify all affected queries, mappings, functions, views, and procedures;
+3. use parameters rather than string interpolation;
+4. avoid `SELECT *` in application contracts;
+5. make aliases and nullability explicit;
+6. create or update contract tests with every SQL result change;
+7. add semantic tests for changed joins, filters, aggregation, and mutations;
+8. run migrations and database integration tests locally;
+9. measure rather than merely claim performance improvements;
+10. keep business reasoning in the application unless database placement is explicitly justified.
+
+Enforcing atomic changes across files is critical: whenever an agent modifies a query projection, it must update the corresponding C# result DTO and its contract test in the same pass. Leaving mapping or test updates for a subsequent prompt invites prompt drift and broken builds.
+
+## Conclusion
+
+Agentic coding makes explicit SQL and database-side programming economically more attractive because it lowers the cost of repetitive implementation and maintenance. It does not remove the need for strong contracts, migrated-database tests, semantic review, or architectural discipline.
+
+The likely outcome is not a return to putting the entire application in stored procedures. It is a more balanced architecture in which teams are less afraid of handwritten SQL, use SQL Server's strengths deliberately, and rely on deterministic validation rather than trusting either the ORM or the agent.
 
 ## Related Notes
 
-- **[[Designing Software for AI Agents]]**: How clean architectural boundaries and explicit schemas make systems easier for agents to modify safely.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: Why heavy, dynamic ORM abstractions create maintenance hazards compared to explicit, inspectable code.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing sprawling, unchecked database complexity when agents can generate code effortlessly.
-- **[[Testing in the Model, Agent, LLM Era]]**: How automated contract tests and integration suites act as the non-negotiable verification gate for persistence layers.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Isolating domain business rules from underlying database persistence mechanisms.
-- **[[AI Changes the Economics of Technical Debt]]**: Analyzing how near-zero generation costs change the build-versus-abstract calculation in data pipelines.
+- [[Designing Software Architecture with LLM Assistance]]
+- [[Designing Software for AI Agents]]
+- [[LLM Coding Agents Reliability]]
+- [[Agentic Harnesses for Software Development]]
+- [[Testing as Executable Documentation]]
+- [[Testing in the Model, Agent, LLM Era]]
+- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]
+- [[Why Business Logic Is the Hardest Part of Agentic Coding]]

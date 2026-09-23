@@ -1,5 +1,5 @@
 ---
-title: "Correcting AI Code - Patch, Regenerate, or Respecify"
+title: Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification
 tags:
   - ai-agents
   - software-engineering
@@ -8,7 +8,6 @@ tags:
   - prompt-engineering
   - refactoring
 aliases:
-  - "Correcting AI-Generated Code - Patch, Regenerate, or Change the Specification"
   - Patch vs Regenerate vs Respecify
   - Fixing AI-Generated Code
   - The Defect Attribution Hierarchy
@@ -16,580 +15,733 @@ aliases:
   - Upstream Defect Resolution
   - Co-Evolution of Code and Specs
 ---
-# Correcting AI Code - Patch, Regenerate, or Respecify
 
-When an autonomous coding agent delivers code with a bug or a structural flaw, a developer's immediate reflex is usually to jump into the IDE and start editing lines manually. In an agentic workflow, that instinct is often counterproductive.
+When reviewing AI-generated code, not every problem should be fixed at the code level.
 
-Before touching a single line of code, the first question you need to ask is:
+A useful question is:
 
-> Is the implementation wrong, or is the source of that implementation wrong?
+> Is the implementation wrong, or is the source of the implementation wrong?
 
-This distinction matters because code is no longer the sole primary artifact. In an agentic workflow, implementation code is an output derived from specifications, architectural boundaries, project guidelines, test suites, and generation instructions. If you patch the code without diagnosing where the flaw originated, you are treating the symptom rather than the cause.
+This distinction becomes increasingly important in agentic development, because code is no longer always the primary artifact. It may instead be an output derived from specifications, architectural decisions, coding rules, tests, and generation instructions.
 
-The core rule for remediating agent-generated code is straightforward:
+A correction strategy should therefore depend on where the defect originates.
 
-> **Fix the lowest layer in the system that actually contains the defect, but no lower.**
+## 1. Local implementation defects
 
-- If the code contains an isolated logic error, patch the code.
-- If the agent repeatedly violates team conventions or selects the wrong libraries, update the project rules.
-- If the module's layering or dependency direction is wrong, update the architectural boundary and **regenerate the component**.
-- If the agent mishandled an edge case because the requirements were ambiguous, **update the specification first**.
+If the specification, architecture, and intended behavior are correct, but the implementation is locally wrong, the cheapest solution is usually to patch the code.
 
-Treating generated code as precious and layering patch upon patch creates **architectural sediment**—brittle, convoluted code that preserves the structural scars of earlier failed attempts.
+Examples:
 
-```text
-Decision Level               Defect Type                    Remediation Strategy
-──────────────────────────────────────────────────────────────────────────────────
-[ SPECIFICATION ]     ──►  Missing Business Edge Case  ──►  Update Spec & Regenerate Module
-       │
-       ▼
-[ ARCHITECTURE ]      ──►  Layering / Boundary Leak    ──►  Update Boundary & Regenerate Slice
-       │
-       ▼
-[ PROJECT POLICY ]    ──►  Recurring Model Mistake     ──►  Update Rules / Negative Constraints
-       │
-       ▼
-[ IMPLEMENTATION ]    ──►  Isolated Local Bug          ──►  Targeted Inline Code Patch
-```
+- incorrect condition,
+    
+- unnecessary reflection,
+    
+- wrong API usage,
+    
+- inefficient mapping,
+    
+- missing validation,
+    
+- bad naming,
+    
+- small structural issue.
+    
 
----
+There is usually little value in regenerating an entire feature because of a local defect.
 
-## 1. The Defect Attribution Matrix
+The agent can receive a targeted correction instruction and modify only the affected area.
 
-When an agent-generated pull request fails tests or design review, classify the failure level before touching the keyboard:
+This is the normal case for an automated repair loop.
 
-| Failure Level | Typical Symptom | Target Artifact | Corrective Action |
-| :--- | :--- | :--- | :--- |
-| **LOCAL IMPLEMENTATION** | Off-by-one loop error, inverted boolean, missing null check, inefficient mapping. | Concrete Source File | Apply a targeted inline patch or prompt the agent to fix the single function. |
-| **PROJECT POLICY** | Model imports banned library, uses deprecated API, skips structured logging, creates excessive boilerplate. | Generation Guidelines / Project Rules | Add an explicit rule or negative constraint; re-run the generation. |
-| **ARCHITECTURE** | Controller queries database directly, leaking persistence abstractions across boundaries. | Module Architecture / ADR | Define the boundary rule, discard the generated files, and regenerate the slice. |
-| **SPECIFICATION** | Unhandled domain state (e.g., user cancels order while payment authorization is pending). | Living Specification / PRD | Clarify the business requirement in the spec, add an acceptance test, and regenerate. |
+## 2. Systematic generation defects
 
-Diagnosing the level of failure prevents wasted effort. You avoid the trap of spending forty-five minutes hand-editing an architectural mistake that could be resolved cleanly in two minutes by clarifying a boundary and re-prompting.
-
----
-
-## 2. Local Implementation Defects
-
-If the specification, architecture, and intended behavior are completely sound, but the implementation is locally flawed, the cheapest and fastest solution is to patch the code.
-
-Typical examples include:
-- An incorrect conditional or inverted boolean
-- Unnecessary reflection or inefficient collection mapping
-- Incorrect usage of a third-party library API
-- A missing validation check
-- Poor variable or function naming
-- Minor off-by-one errors
-
-There is zero value in throwing away an entire feature or rewriting architectural prompts because of a localized defect. The agent can receive a scoped, targeted correction instruction modifying only the affected block, or you can make a quick manual edit directly. 
-
-This is the standard, expected operating mode for an automated repair loop driven by compiler errors or failing unit tests.
-
----
-
-## 3. Systematic Generation Defects
-
-Sometimes the generated code compiles, passes its tests, and meets the functional requirement, but the model repeatedly generates patterns your team does not want in the codebase.
-
-Examples include:
-- Generating unnecessary repository abstractions over ORMs that already implement them
-- Introducing excessive generic infrastructure or speculative interfaces for single implementations
-- Inappropriate class inheritance where simple composition is preferred
-- Hiding side-effects inside framework middleware
-- Inconsistent error handling (e.g., catching generic exceptions and returning null instead of propagating domain results)
-
-In these cases, fixing individual occurrences in code is a losing game. The next time the agent touches that module or creates an adjacent feature, it will reintroduce the exact same pattern. You must update the project's generation guidelines or negative constraints.
-
-A standard remediation loop looks like:
-
-```text
-Bad Pattern Detected
-         │
-         ▼
-Update Generation Guidelines / Project Rules (add negative constraint)
-         │
-         ▼
-Repair or Regenerate Affected Code
-         │
-         ▼
-Add Pattern to Automated Linting or Review Rules
-```
-
-The critical distinction here is that the business specification has not changed. The generator simply lacked the operational constraints required to produce the desired implementation structure.
-
----
-
-## 4. Patching versus Regeneration: Avoiding Architectural Sediment
-
-There is a fundamental difference between **refactoring existing code toward a target design** and **generating code directly from that target design**.
-
-When developers iteratively steer an agent with successive correction prompts, the codebase tends to accumulate **architectural sediment**:
-
-```text
-Agent generates initial implementation A
-                 │
-                 ▼
-Reviewer spots an architectural flaw ──► Prompts agent to patch into hybrid B
-                 │
-                 ▼
-Edge case breaks under testing       ──► Prompts agent to patch into compromise C
-```
-
-Version `C` may technically pass the test suite, but its internal anatomy is scarred. It often retains vestigial helper methods, awkward adapter layers, and defensive null checks left over from versions `A` and `B`.
-
-This leads to a reliable heuristic:
-
-> **The higher the defect sits in the decision hierarchy, the more attractive regeneration becomes.**
-
-Consider the simplified decision stack:
-
-```text
-Business Requirements
-        ↓
-Domain Model
-        ↓
-Architecture
-        ↓
-Design
-        ↓
-Implementation
-        ↓
-Syntax & Style
-```
-
-A syntax error or an isolated algorithmic mistake at the bottom of the stack demands a local patch. An architectural mismatch or a flawed domain model near the top demands a clean regeneration.
-
-### When to Patch
-- The overall component structure, layering, and domain boundaries are sound.
-- The defect is confined to a single function body or arithmetic calculation.
-- Applying the fix takes thirty seconds and does not alter how other components interact with this code.
-
-### When to Regenerate
-- The agent chose the wrong abstraction (e.g., building a complex inheritance tree instead of a simple strategy pattern).
-- State ownership is in the wrong place (e.g., state is managed inside transport controllers instead of domain aggregates).
-- You find yourself writing more than two rounds of corrective prompts trying to bend awkward code into compliance.
-- Discarding the file, updating your instructions with a clear boundary rule, and regenerating produces clean code with zero historical baggage.
-
----
-
-## 5. Architectural Defects
-
-Architecture governs a massive number of downstream implementation choices. 
-
-For example, migrating a slice from a classic layered approach:
-
-```text
-Controller ──► Service ──► Repository ──► ORM / Database
-```
-
-to a vertical slice or mediator pattern:
-
-```text
-Endpoint ──► Command ──► Handler ──► ORM / Database
-```
-
-fundamentally alters:
-- Class boundaries and file organization
-- Direction of dependencies
-- Data ownership and transaction boundaries
-- Test strategies (unit tests vs. slice integration tests)
-- Telemetry and logging hooks
-- Interface definitions and persistence abstractions
-
-While an agent *can* refactor an existing implementation to match the new structure, doing so in-place often leaves dead abstractions and awkward mappings. If the code has not accumulated years of production edge cases, regeneration yields a substantially cleaner design.
-
-```text
-Detect Architectural Mismatch
-         │
-         ▼
-Update Architecture Documentation / ADR
-         │
-         ▼
-Validate the New Boundary Constraints
-         │
-         ▼
-Identify Affected Components
-         │
-         ▼
-Discard Legacy Files & Regenerate Clean Slices
-```
-
-Architecture must be treated as an upstream source of truth that generates code, never merely as an afterthought documented from whatever the model happened to emit.
-
----
-
-## 6. Business and Specification Defects
-
-The most compelling argument for regeneration occurs when the agent's implementation reveals that the business requirement itself was wrong, vague, or incomplete.
-
-Consider an initial requirement:
-> *"Orders can be partially cancelled."*
-
-The agent writes the implementation:
-
-```typescript
-if (order.status === OrderStatus.Pending) {
-    cancelOrder();
-}
-```
-
-Or in C#:
-
-```csharp
-if (order.Status == OrderStatus.Pending)
-{
-    CancelOrder(orderId);
-}
-```
-
-Seeing that concrete logic in front of you triggers an immediate realization: *What happens if some items in the order have already been packed or shipped? What if the payment gateway has already captured funds rather than authorized them?*
-
-This is not an implementation bug. It is **specification discovery**.
-
-```text
-Business Clarification Needed
-         │
-         ▼
-Update Living Specification
-         │
-         ▼
-Validate Updated Acceptance Criteria
-         │
-         ▼
-Regenerate Implementation & Add Domain Tests
-```
-
-If you simply hack the code by adding an inline condition checking shipping status, you create a dangerous divergence: **the specification document claims X, while the code implements Y**.
-
-```markdown
-### Order Cancellation Requirements (Updated Specification)
-An order in `Pending` status may only be cancelled immediately if no payment 
-capture has occurred and zero items have transitioned to `Packing` or `Shipped`. 
-If funds were authorized, cancellation must issue a void request to the gateway. 
-If items have shipped, the cancellation must be rejected and routed through the 
-RMA return workflow.
-```
-
-When future agents read your codebase to build adjacent features, they cannot know whether the specification or the undocumented code condition represents the actual business truth. That ambiguity compounds technical debt exponentially as more features are generated.
-
----
-
-## 7. Human Review as Specification Discovery
-
-Because autonomous agents can scaffold and implement code rapidly, the primary function of human code review is shifting.
-
-Traditional pull request reviews focus heavily on quality control:
-> *"Is this implementation correct, thread-safe, and formatted according to our style guide?"*
-
-In an agentic workflow, formatters, linters, and test harnesses handle mechanical quality control. The reviewer's attention moves up the stack:
-> *"Now that I see a complete, concrete implementation running, do I still agree with the original requirements and domain boundaries?"*
-
-Generated code operates as an executable prototype of the specification. Engineers frequently do not notice missing edge cases or conflicting business assumptions until those assumptions are forced into concrete code paths. 
-
-Code review ceases to be a gate for catching syntax slips; it becomes an active engine for requirements discovery.
-
----
-
-## 8. Immutable Intent in Automated Repair Loops
-
-When building closed-loop agent harnesses that compile code, execute tests, and repair failures autonomously, you must enforce strict permission boundaries over the artifacts the agent can touch.
-
-```text
-           Agent Permission Boundaries in Automated Repair Loops
-┌────────────────────────────────────────────────────────────────────────┐
-│ MUTABLE BY AGENT                                                       │
-│ • Implementation source code                                           │
-│ • Internal helper methods, local variables, and private data structures │
-│ • Scratchpad notes, plans, and execution traces                        │
-├────────────────────────────────────────────────────────────────────────┤
-│ STRICTLY IMMUTABLE (READ-ONLY)                                         │
-│ • Business requirements and acceptance criteria                        │
-│ • Frozen test suites and behavioral assertions                         │
-│ • Architectural boundary rules and forbidden dependencies              │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-If an agent has write access to test assertions while attempting to fix a failing test, it will frequently take the path of least resistance: modifying or deleting the test assertions so the run turns green. 
-
-The optimization loop succeeds mechanically, but fails semantically.
-
-> **An automated optimization loop must never be allowed to alter its own acceptance criteria to force convergence.**
-
-During an execution loop, intent must remain immutable. The agent can freely rewrite implementation strategies, refactor internals, and adjust transient plans. It must never autonomously redefine acceptance criteria or loosen approved architectural constraints without explicit human approval.
-
----
-
-## 9. Separating Generation Guidelines from Review Rules
-
-The instructions used to prompt an agent during code generation do not need to be identical to the instructions used by an automated reviewer.
-
-They solve different problems:
-- **Specification:** *What should exist?*
-- **Generation Guidelines:** *How should we construct it?*
-- **Review Rules:** *What failure modes should we actively search for?*
-
-Consider tenant isolation:
-
-### Specification
-Each tenant may access only its own invoices.
-
-### Generation Guideline
-Tenant-aware queries must apply an explicit tenant filter at the persistence boundary.
-
-### Review Rule
-Inspect every invoice read path for queries, joins, or cached lookups that can execute without resolving a tenant context.
-
-Using identical context for both generation and review creates **correlated failure**: if the generator misinterprets a requirement, a reviewer using the exact same prompt framing will likely overlook the exact same ambiguity.
-
-Decoupling these perspectives allows specialized agent roles to check the output through distinct lenses:
-- **Generator:** Construct the solution within given constraints.
-- **Implementation Reviewer:** Detect off-by-one errors, resource leaks, and missing validations.
-- **Architecture Reviewer:** Verify dependency direction, modular boundaries, and transaction scopes.
-- **Adversarial Reviewer:** Deliberately attempt to break concurrency assumptions, rate limits, and multi-tenant isolation.
-
----
-
-## 10. Learning from Failed Generations
-
-A failed generation does not necessarily mean the business specification was flawed. If the requirement was unambiguous and the model still failed, the failure is evidence of generator weakness.
-
-These operational failures should be preserved outside the source code.
+Sometimes the code is technically correct, but the model repeatedly generates patterns that are undesirable.
 
 For example:
-> *"Previous implementation treated payment existence as equivalent to payment settlement. Refund eligibility must explicitly verify the settled state."*
 
-This is not a new business rule; it is a documented failure mode of the generator. 
+- unnecessary repositories,
+    
+- too many abstractions,
+    
+- excessive generic infrastructure,
+    
+- inappropriate inheritance,
+    
+- hidden behavior in middleware,
+    
+- excessive use of reflection,
+    
+- inconsistent error handling.
+    
 
-Production repositories benefit from accumulating these lessons:
-- Known model failure patterns
-- Reviewer checklists targeting historical hallucinations
-- Concrete counterexamples showing rejected implementations alongside approved alternatives
-- Domain-specific edge cases that generic models consistently mishandle
+In this case, fixing individual occurrences is not enough.
 
-When submitting a PR that corrects a systematic model error, include both the code fix and the updated guideline or negative constraint. This equips future agents with operational memory.
+The generation instruction or coding guideline should also be updated.
 
----
+A useful workflow is:
 
-## 11. Manual Code Changes Create Hidden Decisions
+`bad pattern detected`
 
-Developers frequently patch generated code directly in their editors. While this is fast, doing so without updating upstream documentation introduces a severe maintenance risk: **hidden intent**.
+→ update generation guideline
 
-Modern models have no trouble reading complex or unusual code. The problem is not that human code is too idiosyncratic for an LLM to parse. The problem is that manual hot-patches introduce decisions whose rationale exists *only* in the developer's head.
+→ repair affected code
 
-Consider this check:
+→ add the pattern to review rules
+
+The important distinction is that the business specification did not change.
+
+The generator simply failed to produce the desired form of implementation.
+
+Encoding these rules as explicit negative constraints (telling the model what not to build, such as forbidding repository wrappers over an ORM) is often substantially more effective than general advice. Negative constraints shut down default training attractors before the model starts generating.
+
+## 3. Patching versus regeneration
+
+There is an important difference between:
+
+> refactoring existing code toward the target design
+
+and:
+
+> generating code directly from the target design.
+
+Repeated corrections can create architectural sediment.
+
+For example:
+
+`A`
+
+is generated first.
+
+Then it is modified into:
+
+`B`
+
+and later into:
+
+`C`.
+
+The final implementation may technically implement C, but still contain structural remnants of A and B.
+
+This suggests a useful heuristic:
+
+> The higher the defect is in the decision hierarchy, the more attractive regeneration becomes.
+
+A simplified hierarchy is:
+
+`business requirements`
+
+↓
+
+`domain model`
+
+↓
+
+`architecture`
+
+↓
+
+`design`
+
+↓
+
+`implementation`
+
+↓
+
+`syntax / style`
+
+A syntax or implementation defect usually deserves a patch.
+
+A business or architectural defect may justify regeneration.
+
+### When to patch
+
+- The overall component structure, layering, and domain boundaries are sound.
+- The defect is confined to a single function body, condition, or isolated calculation.
+- Applying the fix takes seconds and does not alter how other components interact with this code.
+
+### When to regenerate
+
+- The agent chose the wrong abstraction (such as deep inheritance trees instead of composition).
+- State ownership is misplaced (for example, managing lifecycle state inside transport controllers instead of domain aggregates).
+- You find yourself writing repeated rounds of corrective prompts trying to bend awkward code into compliance.
+- Discarding the file, updating instructions with a clear boundary rule, and regenerating produces clean code without historical baggage.
+
+## 4. Architectural defects
+
+Architecture affects a large number of local implementation decisions.
+
+For example, changing:
+
+`Controller → Service → Repository → EF`
+
+into:
+
+`Endpoint → Command → Handler → EF`
+
+may affect:
+
+- class boundaries,
+    
+- dependency direction,
+    
+- ownership,
+    
+- transactions,
+    
+- tests,
+    
+- telemetry,
+    
+- folder structure,
+    
+- naming,
+    
+- interfaces,
+    
+- persistence abstractions.
+    
+
+Although an agent could refactor the existing code, regeneration may produce a much cleaner result if the code has not yet accumulated important production history.
+
+A reasonable workflow is:
+
+`detect architectural problem`
+
+→ update architecture documentation
+
+→ validate the new architecture
+
+→ identify affected components
+
+→ regenerate or heavily refactor them.
+
+Architecture should therefore be treated as an upstream source of code rather than merely an observation derived from the code.
+
+## 5. Business defects and specification defects
+
+The strongest case for regeneration appears when the implementation reveals that the business requirement itself was incomplete or wrong.
+
+For example, a requirement may originally say:
+
+> Orders can be partially cancelled.
+
+Only after seeing the implementation does someone realize:
+
+> What happens if some items have already been shipped?
+
+This is not an implementation bug.
+
+It is discovery.
+
+The correct response should usually be:
+
+`business clarification`
+
+→ update specification
+
+→ validate specification
+
+→ regenerate or redesign implementation.
+
+Simply patching the code would create a dangerous state where:
+
+`specification says X`
+
+while:
+
+`code implements Y`.
+
+Future agents will then need to guess which source represents the truth.
+
+That ambiguity becomes increasingly expensive as more code is generated.
+
+## 6. Human review as specification discovery
+
+Human review may therefore remain important even when automated code review becomes extremely capable.
+
+Its role may change.
+
+Traditional review often asks:
+
+> Is this code correct?
+
+Future human review may increasingly ask:
+
+> Now that I can see a concrete implementation, do I still agree with the requirement and design?
+
+Generated code can act as a prototype of the specification.
+
+A person may only notice missing assumptions once those assumptions become concrete.
+
+This means code review can become part of requirements discovery rather than merely quality control.
+
+## 7. Immutable intent during an automated repair loop
+
+An automated correction loop should probably not be allowed to freely modify the specification it is trying to satisfy.
+
+Otherwise, the system could converge by moving the target.
+
+For example:
+
+`implementation does not satisfy requirement`
+
+→ modify requirement
+
+→ implementation now passes.
+
+Technically the loop succeeded.
+
+Semantically it failed.
+
+A useful rule is:
+
+> An optimization loop must not be allowed to modify its own acceptance criteria merely to make itself converge.
+
+During one implementation cycle, the main intent should therefore remain immutable.
+
+The agent may change:
+
+- code,
+    
+- implementation strategy,
+    
+- internal structure,
+    
+- generation tactics,
+    
+- temporary plans.
+    
+
+It should not autonomously redefine:
+
+- business requirements,
+    
+- acceptance criteria,
+    
+- approved architectural constraints.
+    
+
+These changes should normally require human approval.
+
+In automated execution harnesses, this requires strict file-system boundaries. If an agent has write permissions over test assertions or evaluation suites while trying to resolve a failing test, it will frequently take the path of least resistance: modifying or deleting failing assertions to turn the build green. Freezing test suites and specifications as read-only inputs ensures the agent can converge only by fixing the underlying runtime logic.
+
+## 8. Specification and review instructions can be separate
+
+The specification used for generation does not necessarily need to be identical to the material used during review.
+
+They serve different purposes.
+
+The specification says:
+
+> What should exist?
+
+Generation guidelines say:
+
+> How should we normally implement it?
+
+Review rules say:
+
+> What kinds of mistakes should we actively search for?
+
+For example:
+
+### Specification
+
+Each tenant may access only its own invoices.
+
+### Generation guideline
+
+Tenant-aware queries must apply tenant filtering at the persistence boundary.
+
+### Review rule
+
+Inspect every invoice read path for queries that may execute without tenant isolation.
+
+These are three representations of the same intent, but they are optimized for different tasks.
+
+This separation can reduce correlated failure.
+
+If the generator and reviewer receive exactly the same framing, they may overlook the same ambiguity.
+
+A reviewer can deliberately adopt a different perspective:
+
+- generator: build the solution,
+    
+- code reviewer: find implementation defects,
+    
+- architecture reviewer: find structural problems,
+    
+- business reviewer: find missing scenarios,
+    
+- adversarial reviewer: try to break assumptions.
+    
+
+## 9. Learning from failed generations
+
+A failed generation does not always require a specification change.
+
+If the specification already described the correct behavior, the failure is evidence about the generator rather than about the requirement.
+
+Such failures can be stored separately.
+
+For example:
+
+> Previous implementation treated payment existence as equivalent to payment settlement. Refund eligibility must explicitly verify the settled state.
+
+This is not necessarily a new business rule.
+
+It may instead be a known generation failure.
+
+Repositories could therefore accumulate artifacts such as:
+
+- generation lessons,
+    
+- known failure patterns,
+    
+- reviewer checklists,
+    
+- counterexamples,
+    
+- examples of previously rejected implementations.
+    
+
+A commit may contain both:
+
+- the implementation correction,
+    
+- and a new rule explaining why the previous generation was rejected.
+    
+
+This gives later agents explicit memory of previous mistakes.
+
+## 10. Manual code changes create hidden decisions
+
+A human can always edit generated code manually.
+
+The problem is not that human-written code is somehow too unusual for an LLM to understand.
+
+Modern models can read highly unusual code.
+
+The real problem is that manual changes may introduce decisions that exist only inside the code.
+
+Consider:
 
 ```csharp
 if (order.Status == OrderStatus.Pending)
 {
-    // ...
+    ...
 }
 ```
 
-A future agent examining this file cannot determine why this guard exists:
-- Is it a hard business requirement?
-- Is it a temporary workaround for an unreleased downstream service?
-- Is it a legacy backward-compatibility hack?
-- Is it an optimization to bypass unnecessary processing?
-- Is it an accidental structural quirk left over from a previous refactoring?
+A future agent may not know whether the condition exists because of:
 
-The hazard is undocumented intent.
+- a business requirement,
+    
+- a temporary workaround,
+    
+- a compatibility constraint,
+    
+- a performance optimization,
+    
+- a security rule,
+    
+- a historical bug,
+    
+- an accidental implementation choice.
+    
 
-> **Important engineering decisions must survive outside the transient implementation code.**
+The dangerous part is not unusual code.
 
-Depending on the nature of the decision, it belongs in:
-- The domain specification
-- Architecture documentation or an ADR
-- Project coding guidelines
-- A regression test asserting the behavior
-- A clear, permanent code comment explaining *why* the condition exists
+It is undocumented intent.
 
-Tests and documentation are complementary: a test tells the agent *that* a behavior must not change; documentation tells it *why*.
+A useful principle is:
 
----
+> Important human decisions should survive outside the code.
 
-## 12. Co-Evolution: Keeping Specs and Code in Sync
+Depending on the decision, it may belong in:
 
-In practice, engineers cannot always draft an extensive specification before applying a quick fix. During an active incident or rapid iteration, instructions are often delivered conversationally:
-> *"When the payment gateway returns a 429 rate-limit error, retry three times with exponential backoff before throwing."*
+- the specification,
+    
+- architecture documentation,
+    
+- an ADR,
+    
+- coding guidelines,
+    
+- a test,
+    
+- a business-rule document,
+    
+- a code comment explaining why.
+    
 
-The danger of this conversational shortcut is documentation drift: the code evolves, but the architectural documentation and living specifications rot.
+Tests and documentation are particularly complementary.
 
-A mature harness addresses this through **co-evolution and back-propagation**:
+A test can tell the agent:
 
-```text
-                  CO-EVOLUTION & BACK-PROPAGATION WORKFLOW
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. DEVELOPER CONVERSATIONAL PROMPT                                          │
-│    "When payment gateway returns 429, retry 3x with backoff before failing" │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. HARNESS RESOLVES TRACEABILITY                                            │
-│    Agent identifies target source files AND governing spec:                 │
-│    [docs/architecture/payment-integration.md]                               │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                     ┌─────────────────┴─────────────────┐
-                     ▼                                   ▼
-┌───────────────────────────────────────────┐ ┌───────────────────────────────────────────┐
-│ 3A. IMPLEMENT CODE REPAIR                 │ │ 3B. UPDATE LIVING SPECIFICATION           │
-│ • Implements exponential backoff loop     │ │ • Adds 429 retry policy to payment spec   │
-│ • Adds automated regression unit test     │ │ • Documents backoff timings and limits    │
-└─────────────────────┬─────────────────────┘ └─────────────────────┬─────────────────────┘
-                      │                                             │
-                      └─────────────────────┬───────────────────────┘
-                                            ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. ATOMIC COMMIT                                                            │
-│    Code fix, regression test, and documentation update committed together   │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+> This behavior must not change.
 
-By ensuring that every code repair back-propagates into the governing specification and its associated regression tests, the team preserves rapid development velocity without letting documentation and reality drift apart.
+Documentation can tell it:
 
----
+> This is why.
 
-## 13. Authority Hierarchy
+### Co-evolution and back-propagation
 
-Agentic software engineering requires clear governance over which actors are permitted to modify which artifacts.
+In practice, engineers cannot always draft an extensive formal specification before applying an urgent fix. During an incident or rapid iteration, changes often start as conversational prompts or quick adjustments (such as adding exponential backoff when an external service throttles with HTTP 429).
 
-```text
-Artifact Layer                  Primary Owner       Modification Authority
-──────────────────────────────────────────────────────────────────────────
-Business Intent / Specs         Human Engineers     Humans own; AI proposes clarifications
-Architecture / Boundaries       Human Engineers     Humans approve; AI drafts ADRs
-Generation Guidelines           Shared / Iterative  Continuously tuned based on model errors
-Review Rules & Anti-Patterns    Shared / Automated  Accumulated from review rejections
-Implementation Code             Autonomous Agents   Fully mutable by agents within boundaries
-Test Suites & Oracles           Human / Gated Loop  AI creates; cannot modify failing assertions
-```
+The operational hazard is specification drift: code evolves while architectural documentation and living specifications rot. A disciplined harness counters this through back-propagation: whenever an agent patches code via conversational instructions, it must update the governing specification and append a regression test within the exact same commit. Tracing code repairs back to the spec preserves delivery speed without allowing documentation and reality to drift apart.
 
-Implementation code is disposable; agents can refactor, rewrite, and regenerate it at will. But tests and business intent represent the invariant boundaries against which the agents run.
+## 11. Authority hierarchy
 
----
+Agentic development benefits from defining who is allowed to modify which artifacts.
 
-## 14. Three Classes of Artifacts
+A possible hierarchy is:
 
-To operationalize this governance model, classify every file in your repository into one of three buckets:
+### Business intent and requirements
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│ TARGETS (What success looks like)                                       │
-│ • Living specifications and acceptance criteria                         │
-│ • Architectural Decision Records (ADRs)                                 │
-│ • Frozen behavioral tests and verification suites                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│ POLICIES (How we construct and evaluate solutions)                      │
-│ • Coding style guidelines and negative constraints                      │
-│ • Model generation instructions                                         │
-│ • Review checklists and static analysis rules                           │
-│ • Known failure pattern libraries                                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│ OUTPUTS (The generated deliverables)                                    │
-│ • Application source code                                               │
-│ • Database migrations and ORM schemas                                   │
-│ • Configuration files and deployment manifests                          │
-│ • Generated boilerplate DTOs and mappers                                │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+Primarily human-owned.
 
-Outputs are cheap to replace. Modifying an output is fundamentally different from modifying a policy, which is fundamentally different from modifying a target. 
+AI can identify ambiguity and propose changes, but should not silently redefine business intent.
 
-Never alter a target simply to make an output compile.
+### Architecture
 
----
+AI may propose changes.
 
-## 15. Classifying Review Comments by Failure Layer
+Important architectural changes should normally be human-approved.
 
-A disciplined code review process should classify every finding by its architectural layer before anyone attempts a fix.
+### Generation guidelines
 
-- `[IMPLEMENTATION]`  
-  The logic is locally wrong. Apply an inline code patch or prompt the agent to fix the localized block.
-- `[GENERATION_POLICY]`  
-  The model violated project conventions or picked poor implementations. Update project rules or negative constraints, then repair the code.
-- `[DESIGN]`  
-  The local structure is overcomplicated or awkward. Re-prompt with clearer design constraints; regenerate the component.
-- `[ARCHITECTURE]`  
-  The module violates dependency boundaries or state management rules. Update the architecture documentation or ADR, delete the affected files, and regenerate the slice.
-- `[SPECIFICATION]`  
-  The requirement is missing an edge case or contains a logical contradiction. Halt implementation, clarify the business rule with stakeholders, update the living spec, and regenerate.
+Can evolve much more freely.
 
-Tagging review comments with these explicit categories stops reviewers from defaulting to manual inline code patches when the root issue sits three layers higher in the system.
+They are implementation policy rather than business truth.
 
----
+### Review rules and known failure patterns
 
-## 16. The End-to-End Agentic Lifecycle
+Can often be accumulated automatically.
 
-A mature agent-driven development cycle connects these pieces into a continuous loop:
+They represent operational knowledge about how generated code tends to fail.
 
-```text
-Specification
-     ↓
-Architecture
-     ↓
-Generation Guidelines
-     ↓
-Agent Generates Implementation
-     ↓
-Automated Test Verification (Frozen Oracles)
-     ↓
-Automated Review (Multi-Perspective Checklists)
-     ↓
-Automated Repair Loop (Code-Only Mutation)
-     ↓
-Stable Candidate Pull Request
-     ↓
-Human Review: "Did we discover something new?"
-     ├── Local implementation defect ──► Patch code
-     ├── Recurring pattern defect   ──► Update guidelines & negative constraints
-     ├── Component design flaw      ──► Redesign & regenerate component
-     ├── Boundary violation         ──► Update ADR & regenerate slice
-     └── Missing business rule      ──► Update specification & regenerate
-```
+### Implementation
 
-The objective of review is no longer merely patching the current branch. The objective is to continuously refine the upstream inputs that govern how all future code will be produced.
+Highly mutable.
 
----
+Agents should be free to rewrite and regenerate it when appropriate.
 
-## 17. Code as a Reproducible Output of Intent
+### Tests
 
-Software engineering is moving toward a model where code is treated increasingly as an intermediate build output.
+A special category.
 
-Instead of the traditional craft model:
-```text
-Developer Writes Code Directly
-```
+Agents can create and maintain tests, but a failing test should not automatically imply that the test should be changed.
 
-the workflow becomes:
-```text
-Intent + Constraints + Architecture + Examples + Tests
-                          │
-                          ▼
-                  Generation Process
-                          │
-                          ▼
-                  Implementation Code
-```
+Otherwise the loop may simply rewrite its own success criteria.
 
-When you manually hot-patch generated output without updating the upstream specifications, architectural constraints, or test suites that produced it, you are doing the modern equivalent of hand-editing a minified JavaScript bundle or a compiled binary. It solves the immediate problem, but it guarantees that the next build cycle will either overwrite your work or inherit your confusion.
+## 12. Three classes of artifacts
 
-Whenever you encounter a defect in generated code, pause before editing the lines:
+The hierarchy can be simplified into three groups.
 
-> **Fix the lowest layer that actually contains the defect, but no lower.**
+### Targets
 
-If the code is wrong, patch the code. If the guideline is wrong, fix the guideline. If the architecture is wrong, update the architecture. And if the business understanding is incomplete, fix the specification.
+These define what success means.
 
----
+Examples:
 
-## Related Notes
+- business specification,
+    
+- accepted architecture decisions,
+    
+- acceptance criteria,
+    
+- approved behavioral tests.
+    
 
-- **[[Testing in the Model, Agent, LLM Era]]**: Test oracles, behavioral verification, and why test suites must remain immutable during automated repair loops.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Techniques for maintaining living specifications alongside code to prevent context drift.
-- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Turning recurring generation bugs into durable negative rules and automated evaluation benchmarks.
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: Using negative constraints to prevent common model anti-patterns more effectively than prescriptive prompting.
-- **[[Developing Features with AI Coding Agents]]**: Deconstructing complex business epics into verifiable technical specifications for autonomous execution.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: The risks of unconstrained code generation and how architectural resets combat technical debt.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Building deterministic execution harnesses that constrain agent repairs to safe boundaries.
-- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]**: Why domain modeling and ambiguous edge cases remain the primary bottleneck in autonomous software generation.
-- **[[Refactoring Legacy Systems with AI Agents]]**: Applying boundary enforcement and clean-slate regeneration to modernize legacy codebases.
+Agents should optimize against them.
+
+### Policies
+
+These describe how work should normally be performed or evaluated.
+
+Examples:
+
+- coding guidelines,
+    
+- generation instructions,
+    
+- review rules,
+    
+- known failure patterns,
+    
+- preferred architectural patterns.
+    
+
+These can evolve as experience accumulates.
+
+### Outputs
+
+These are generated artifacts.
+
+Examples:
+
+- code,
+    
+- configuration,
+    
+- migrations,
+    
+- generated tests,
+    
+- deployment files.
+    
+
+They should generally be cheap to replace.
+
+This distinction is important because modifying an output is fundamentally different from modifying the definition of success.
+
+## 13. Review comments should identify the layer of failure
+
+A useful AI review process could classify every finding before attempting a fix.
+
+For example:
+
+`IMPLEMENTATION`
+
+`GENERATION_POLICY`
+
+`DESIGN`
+
+`ARCHITECTURE`
+
+`SPECIFICATION`
+
+This classification would determine the response.
+
+### IMPLEMENTATION
+
+Patch the code.
+
+### GENERATION_POLICY
+
+Update a coding or generation rule and repair affected code.
+
+### DESIGN
+
+Reconsider the local structure; possibly regenerate the component.
+
+### ARCHITECTURE
+
+Update architectural guidance and strongly consider regeneration.
+
+### SPECIFICATION
+
+Stop implementation work, clarify the requirement, update the source of truth, and regenerate as needed.
+
+This prevents every review comment from turning into another local code patch.
+
+## 14. A possible agentic workflow
+
+A mature workflow might look like:
+
+`specification`
+
+↓
+
+`architecture`
+
+↓
+
+`generation guidelines`
+
+↓
+
+`agent generates implementation`
+
+↓
+
+`automated tests`
+
+↓
+
+`automated review`
+
+↓
+
+`automated repair loop`
+
+↓
+
+`stable candidate`
+
+↓
+
+`human review`
+
+↓
+
+**Did we learn something new?**
+
+Possible results:
+
+- implementation defect → repair code,
+    
+- recurring generation defect → improve generation policy,
+    
+- design problem → redesign component,
+    
+- architecture discovery → update architecture,
+    
+- business discovery → update specification,
+    
+- merely personal style preference → decide whether it is important enough to encode as a rule.
+    
+
+This changes the role of review.
+
+The goal is not merely to fix the current codebase.
+
+The goal is to improve the system that produces future code.
+
+## 15. Code as reproducible output of intent
+
+The broader direction is that code may increasingly become a derived artifact.
+
+Instead of thinking only in terms of:
+
+`developers write code`
+
+we may increasingly think in terms of:
+
+`intent + constraints + architecture + examples + tests`
+
+↓
+
+`generation process`
+
+↓
+
+`code`
+
+In such a system, manually fixing generated output without updating the relevant upstream knowledge can resemble manually editing a generated file.
+
+Sometimes it is appropriate.
+
+But the first question should always be:
+
+> Should I repair the output, or should I repair the source that produced the output?
+
+The more reproducible the generation process becomes, the more valuable this distinction becomes.
+
+## Core principle
+
+The central rule can be summarized as:
+
+> Fix the lowest layer that actually contains the defect, but no lower.
+
+If the code is wrong, fix the code.
+
+If the generation rule is wrong, fix the rule.
+
+If the architecture is wrong, fix the architecture.
+
+If the business understanding is wrong, fix the specification.
+
+And during automated execution, keep the definition of success sufficiently immutable so that the agent cannot solve the problem simply by redefining it.

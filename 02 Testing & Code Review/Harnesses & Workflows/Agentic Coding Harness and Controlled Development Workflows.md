@@ -15,12 +15,8 @@ aliases:
   - Coding agent workflow
   - Controlled Development Workflows
   - Meta-Harnessing and Pattern Drift
-  - Autonomous Harness Synthesis in Next-Gen Models
   - Steering Agents via Negative Boundaries
   - Negative Bounding in Agent Workflows
-  - Bounding by Exclusion
-  - Harness Engineering vs Vibe Coding
-  - Vibe Coding vs Harness Engineering
   - SOTA Patterns for High-Assurance Agents
 ---
 
@@ -28,95 +24,77 @@ aliases:
 
 > See also: [[Agent Deployment and Execution Models]], [[Building Determinism from Unpredictable Models]]
 
-## Core Idea
+## Core idea
 
-An **agentic harness** is the software runtime that turns a large language model from a stateless text generator into a system that can reliably change software.
+An **agentic harness** is the software layer that turns an LLM from a text generator into an acting agent.
 
-Fundamentally, an LLM executes a single operation:
+The model itself fundamentally performs one operation:
 
-> receive context → produce a text response
+> receive context → produce a response
 
-The harness wraps that operation in the runtime machinery required to do real engineering work:
+The harness adds the operational machinery required to complete real tasks:
 
-- an execution loop that alternates between inference and tool dispatch;
-- filesystem, terminal, Git, browser, and API access;
-- instruction, context, and specification loading;
-- working memory management and history compaction;
-- sandboxing, credential masking, and permission gates;
-- retries, timeouts, and deterministic stop conditions;
-- test execution and automated verification;
-- tracing, token budgets, and cost tracking;
-- optional orchestration of isolated subagents.
+- a model interaction loop;
+- access to files, a terminal, Git, browsers, MCP servers and APIs;
+- instruction and context loading;
+- state and memory management;
+- permissions and sandboxing;
+- retries, timeouts and stop conditions;
+- test execution and result verification;
+- tracing, cost monitoring and evaluation;
+- optional coordination of subagents.
 
-A practical formulation is:
+A useful approximation is:
 
-$$\text{Agent} = \text{Model} + \text{Harness} + \text{Instructions} + \text{Tools}$$
+> **Agent = model + harness + instructions + tools**
 
-Tools like Codex, Claude Code, or custom internal runners are not simply models. They are purpose-built coding harnesses that connect a reasoning engine to a local repository, system tools, and an evaluation loop.
+Codex and Claude Code are not merely models. They are ready-made coding-agent harnesses. They connect a model to a repository, tools and an execution loop.
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        THE AGENTIC HARNESS RUNTIME                     │
-│                                                                        │
-│   [ Developer Intent / Task ] ──► [ Harness Controller ]               │
-│                                           │                            │
-│        ┌──────────────────────────────────┴───────────────┐            │
-│        ▼                                                  ▼            │
-│   [ Foundation Model ]                          [ Deterministic Tools ]│
-│   (Probabilistic Engine)                        - Shell & Compilers    │
-│        │                                        - Test Runners         │
-│        ▼ (Emits Tool Calls)                     - Git State Manager    │
-│   [ Tool Dispatch Gateway ] ────────────────────► Static Analyzers/AST │
-│        │                                                  │            │
-│        └────────────── [ Permission Fences ] ◄────────────┘            │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────────┘
-```
+## How the agent loop works
 
-Two agents running the exact same model checkpoint will produce completely different results if their harnesses differ in context pruning, tool interfaces, compiler feedback handling, or verification gates. The harness is what enforces engineering rigor on top of probabilistic text generation.
+A typical coding session follows this cycle:
 
-## How the Agent Loop Works
+1. The user provides a goal.
+2. The harness loads applicable instructions.
+3. The model decides which information or action is needed next.
+4. The harness reads a file, searches the repository or runs a command.
+5. The result is returned to the model.
+6. The model chooses the next action.
+7. The loop continues until completion or a stop condition is reached.
 
-A standard coding agent session runs through a continuous cycle:
+For example, when asked to add an API endpoint, the model does not directly open files or execute `dotnet test`. It requests these actions through tools exposed by the harness. The local harness performs them and sends the results back to the model.
 
-1. **Goal Ingestion**: The user specifies a target or picks an item from the backlog.
-2. **Context Assembly**: The harness loads project rules, architectural maps, specifications, and relevant file slices.
-3. **Model Planning/Action**: The model inspects the context and emits structured tool calls (read a file, search for symbols, run a build).
-4. **Execution**: The harness validates the tool call against permission policies and runs it locally.
-5. **Observation**: The harness captures the stdout, stderr, or file contents and feeds them back into the model's context window.
-6. **Next Action**: The model inspects the tool output and decides whether to continue modifying files, run tests, or declare completion.
-7. **Termination**: The loop runs until acceptance criteria are verified, a human gate is reached, or a circuit breaker trips.
+This distinction matters because the quality of an agent depends on more than model intelligence. Two agents using similarly capable models can perform differently because their harnesses differ in:
 
-When an agent adds an API endpoint, it never edits files or invokes `dotnet test` directly. It requests these actions through the tool schema exposed by the harness. The harness runs the processes on the local machine and feeds the structured results back into the conversation context.
+- context selection;
+- tool descriptions;
+- error handling;
+- history compaction;
+- permission management;
+- verification strategy;
+- criteria for deciding that a task is complete.
 
-Because of this, an agent's real-world reliability depends heavily on how the harness handles:
+## Harness versus workflow
 
-- **Context selection**: Loading only the code and documentation relevant to the current slice rather than flooding the context window.
-- **Tool schemas**: Exposing clear, unambiguous JSON tool signatures with explicit parameter descriptions.
-- **Error diagnostics**: Truncating massive stack traces while keeping the failure site and relevant line numbers intact.
-- **History compaction**: Pruning older, noisy bash outputs to prevent context saturation during extended debugging runs.
-- **Permission boundaries**: Blocking dangerous filesystem or network operations before they execute.
-- **Exit criteria**: Requiring green test suites rather than taking the model's self-assessed "looks good to me" at face value.
+The harness provides the execution engine. A **workflow** tells the harness how a particular kind of work should be performed.
 
-## Harness Versus Workflow
+Examples of workflow rules:
 
-The harness provides the execution engine. A **workflow** provides the operational rules telling the harness how a specific category of engineering work must proceed.
+- analyze the specification before editing code;
+- prepare a plan and wait for approval;
+- implement only one approved step;
+- add or update tests;
+- run targeted verification;
+- stop after the semantic step and present the diff;
+- do not push without explicit permission.
 
-Common workflow policies include:
+A workflow is often just a Markdown file. It does not need to be executable code when the process is primarily interpreted by an agent.
 
-- read and analyze the specification before touching any code;
-- formulate an implementation plan and block until human sign-off;
-- implement exactly one approved semantic step at a time;
-- write or update a targeted regression test before modifying production code;
-- run local verification scripts after every change;
-- stop after completing a single architectural slice and show the clean diff;
-- never push to remote branches without explicit confirmation.
+However, text instructions guide behavior rather than enforcing it technically. If an approval must be a hard gate, a programmatic orchestrator or harness must represent that approval as state and refuse to continue without it.
 
-In simple environments, a workflow can be captured in a Markdown file (`AGENTS.md`) interpreted by the model. However, text prompts provide soft guidance, not hard guarantees. When an operational boundary must not be bypassed—such as requiring a green test suite before committing, or requiring human approval before running database migrations—that boundary must be implemented as code within the harness itself.
+## A controlled plan-and-approval workflow
 
-## Controlled Plan-and-Approval Workflows
-
-For non-trivial tasks, running the agent in an unconstrained loop leads to drifted implementations. Splitting execution into separate planning and implementation phases prevents premature edits:
+For complex work, begin with a planning-only instruction:
 
 ```text
 Analyze SPEC.md and the repository.
@@ -134,7 +112,7 @@ Work only in planning mode:
 5. Stop and wait for plan approval.
 ```
 
-Once you review and adjust the plan, authorize a single, tightly scoped step:
+After reviewing the plan, authorize only a bounded step:
 
 ```text
 Step 1 is approved.
@@ -149,55 +127,40 @@ Implement only Step 1:
 Do not begin Step 2 without explicit approval.
 ```
 
-The explicit instruction to **stop** is mandatory. Without an unambiguous stop directive, models often treat "work step by step" as an invitation to chain every step into a single unreviewed run.
+The explicit instruction to **stop** is important. “Work step by step” can still be interpreted as completing all steps sequentially in one run.
 
-## Semantic Steps vs. Mechanical Steps
+## Semantic and mechanical steps
 
-Human attention should be reserved for decisions that change the architecture, risk profile, or semantics of the system. Routine tasks should execute automatically.
+Not every operation should require human approval.
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    HUMAN APPROVAL GATES                     │
-│  - Public API contract changes      - Dependency additions  │
-│  - Database migrations              - Module boundaries     │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ (Approved)
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 AUTOMATED MECHANICAL LOOPS                  │
-│  - Compiling & typechecking         - Running test suites   │
-│  - Auto-formatting & linting        - Parsing error traces  │
-└─────────────────────────────────────────────────────────────┘
-```
+### Semantic steps
 
-### Semantic Steps (Require Human Approval)
+These may change the meaning or architecture of the system and should usually require approval:
 
-These operations change the behavior, contracts, or structure of the codebase:
+- changing a public API contract;
+- changing business behavior;
+- selecting module boundaries;
+- introducing a database migration;
+- changing the domain model;
+- adding a production dependency;
+- adopting a new architectural abstraction.
 
-- modifying a public API signature or breaking an endpoint contract;
-- altering core business calculation rules;
-- establishing or modifying module boundaries;
-- adding or executing a database migration script;
-- altering domain entities or aggregate roots;
-- introducing a new third-party dependency;
-- introducing a new architectural abstraction or design pattern.
+### Mechanical steps
 
-### Mechanical Steps (Run Autonomously)
+These can usually run automatically within an approved semantic step:
 
-These operations are safe to run within an approved semantic step:
+- compiling the solution;
+- running tests;
+- formatting code;
+- rerunning a failed test after a correction;
+- examining logs;
+- fixing an unambiguous compiler error.
 
-- compiling the solution or running type checkers;
-- executing existing test suites;
-- applying automated code formatters and linters;
-- retrying a test run after a targeted code fix;
-- inspecting runtime or application logs;
-- resolving clean, unambiguous compiler diagnostics.
+The goal is not to approve every `dotnet test` invocation. The human should approve changes in meaning, scope and risk.
 
-The goal is not to micro-manage every terminal command. Developers should review semantic intent, data integrity, and system design; compilers and test runners should verify syntax and regression safety.
+## Bounded implementation loops (The Self-Healing Loop)
 
-## The Self-Healing Implementation Loop
-
-Instead of expecting an LLM to generate production-ready code in a single turn, the harness executes a cyclic Actor-Critic loop that feeds deterministic compiler and test failures back into the model:
+An agent can work in a loop, but the loop needs explicit success and failure conditions. Instead of expecting an LLM to generate production-ready code in a single prompt, the harness runs a cyclic, self-correcting feedback loop (Actor-Critic pattern):
 
 ```text
 [Task Prompt / Issue]
@@ -224,41 +187,40 @@ Instead of expecting an LLM to generate production-ready code in a single turn, 
                                             [Git Commit & Push]
 ```
 
-### Key Loop Mechanics
+### Key Loop Principles
+* **Structured Error Feedback:** Fixers receive raw error outputs (stack traces, failed test names, line numbers) rather than vague re-prompts.
+* **Hard Iteration Caps:** Enforce a maximum iteration threshold (e.g., N=3 to 5). If the agent cannot solve the issue within the budget, the loop aborts and triggers human escalation.
+* **Atomic Operations:** Each cycle works in a dedicated Git worktree or branch. Failed attempts can be cleanly rolled back (`git reset --hard`).
 
-* **Structured Diagnostics Feedback:** Fixer prompts receive trimmed, relevant stack traces, failing assertion details, and target file lines—not vague re-prompts like "that didn't work, try again."
-* **Strict Iteration Ceilings:** The loop must enforce a hard iteration cap (typically $N = 3 \text{ to } 5$). If the model cannot resolve an error within that budget, continuing usually leads to context pollution, hallucinated APIs, or thrashing. The loop must cleanly terminate and escalate to a human.
-* **Atomic Workspaces:** Every loop should run in an isolated Git branch or disposable Git worktree. If an attempt goes off the rails or burns its budget, the harness cleanly reverts the workspace (`git reset --hard` or worktree deletion) to a known good state.
+### Success conditions
 
-### Success Conditions
+A step is complete when:
 
-A step is considered complete only when:
+- its acceptance criteria are satisfied;
+- the relevant tests pass;
+- the solution builds;
+- no unrelated files were changed;
+- the result remains within the approved scope;
+- no unresolved assumption affects correctness.
 
-- all acceptance criteria defined in the step plan are satisfied;
-- relevant unit, integration, and architecture tests run green;
-- the solution compiles with zero new warnings or errors;
-- no files outside the approved scope were altered;
-- git diff reveals clean changes without leftover debugging prints or commented code;
-- no unresolved assumptions or unhandled edge cases remain.
+### Stop and escalation conditions
 
-### Stop and Escalation Conditions
+The agent should stop and ask for direction when:
 
-The harness must abort execution and yield to a human when:
+- the requirement is ambiguous;
+- a public contract or schema must change unexpectedly;
+- work must cross an unapproved module boundary;
+- the same failure remains after a bounded number of attempts;
+- a test appears flaky;
+- verification is blocked by unrelated existing failures;
+- completing the step requires expanding its scope;
+- credentials or access to a non-local environment would be required.
 
-- the business requirement or edge case behavior is ambiguous;
-- a public interface, schema, or persistence model requires unexpected changes;
-- a fix requires crossing an unapproved module boundary;
-- a test failure repeats across multiple attempts without progress;
-- a test failure appears flaky or tied to environment setup;
-- verification is blocked by unrelated existing bugs in the repository;
-- the agent attempts to broaden the scope of the task to bypass a difficult failure;
-- an operation requires external credentials, production keys, or elevated permissions.
+Without these boundaries, an agent may loop, broaden the change, weaken an assertion or modify unrelated code in an attempt to achieve a superficially successful result.
 
-Without explicit escalation gates, an agent will often try to "make the tests pass" by weakening assertion logic, deleting test cases, or introducing ad-hoc mocks.
+### Structure of an Escalation to Human Arbitration
 
-### Human Arbitration Artifacts
-
-When an agent hits an iteration limit, it should not dump raw terminal logs on the developer. The harness should generate a structured escalation artifact explaining the impasse:
+When the automated loop reaches its iteration ceiling without passing all gates, it must not dump uncontextualized code on the human reviewer. It should generate an escalation artifact:
 
 ```text
 [Loop Aborted at Iteration 3]
@@ -273,114 +235,111 @@ When an agent hits an iteration limit, it should not dump raw terminal logs on t
 [Draft PR with Inline Comments on GitHub]
 ```
 
-Here is an example escalation comment posted automatically to an issue or pull request review thread:
+Example inline PR escalation comment:
 
-> ⚠️ **HUMAN ARBITRATION REQUIRED** (Iteration ceiling reached: 3/3)
+> ⚠️ **HUMAN ARBITRATION REQUIRED** (Iteration limit reached)
 > 
-> **Failing Invariant:**
-> * The Security Reviewer agent flagged an unbatched database query inside a high-throughput loop (N+1 query risk).
-> * The Coder Agent attempted batching, but encountered a missing foreign key constraint in the SQLite local test harness that passes in Postgres.
+> **Conflict Summary:**
+> * Security Reviewer flagged SQL query in loop (potential N+1).
+> * Coder Agent attempted batching, but encountered missing foreign key constraint in SQLite/test setup.
 > 
 > **Options for Developer:**
-> - [ ] **Option A:** Add missing SQLite index migration and allow agent to retry query batching.
-> - [ ] **Option B:** Accept single-query fetch due to strict low-volume usage in this specific microservice.
+> - [ ] **Option A:** Add missing index migration and retry batch query.
+> - [ ] **Option B:** Accept single-query fetch due to strict low-volume usage.
 > - [ ] **Option C:** Revert module changes and revise high-level architecture.
 
-Replying directly in the thread triggers a webhook that passes the human decision back to the harness, resuming execution with clear guidance.
+The developer replies directly in the GitHub PR review thread, triggering a webhook that re-engages the harness with explicit human guidance.
 
-## The Limits of Soft Prompts: Hard Fences and the Probabilistic Hazard
+## The limits of soft prompts: hard fences and runtime containment
 
-A frequent trap in agent orchestration is relying on system prompts or instruction markdown files (`AGENTS.md`, `SKILL.md`) to prevent catastrophic errors:
+A common failure mode in harness design is relying on markdown prompts (`AGENTS.md`, system prompts) to prevent catastrophic actions:
 
 ```markdown
-<!-- Soft semantic instruction: Can and will fail probabilistically -->
-Never delete production database tables or clear root project directories.
+<!-- Soft semantic prompt: Can and will fail probabilistically -->
+Never delete database tables or wipe project directories.
 ```
 
-An LLM is a probabilistic system. Regardless of how well-crafted your instructions are, the likelihood of an out-of-distribution slip is never zero. Under high context saturation, foreign error formats, or long reasoning traces, model attention degrades. Eventually, an agent will interpret an environmental failure as a corrupt workspace and run `rm -rf *`, drop a local table, or rewrite an entire subsystem with empty stubs.
+An LLM is a probabilistic engine. Under heavy context saturation, long debugging loops, or novel compiler error formats, model attention degrades. Eventually, an agent will misinterpret a test failure as a corrupted directory and issue `rm -rf *`, drop a local table, or overwrite critical files with empty stubs.
 
-### The Asymmetry of Risk
+### The asymmetry of risk
 
-Human engineers operate with an innate awareness of consequence. We slow down when typing `drop table` or modifying core persistence layers because we understand the pain of data loss, the difficulty of recovery, and the business impact of downtime.
+Human developers slow down when typing `drop table` or touching shared persistence schemas because we understand the pain of data loss and production recovery.
 
-An LLM has no sense of consequence:
-- Dropping a core schema or deleting 3,000 lines of complex timing logic is simply another valid token completion or JSON tool call (`execute_command("rm -rf src/")`).
-- When a catastrophic deletion happens, the model will cheerfully parse the next empty directory listing and proceed to the next turn without hesitation.
-- System prompts are soft semantic guidance—they alter probability distributions, but they cannot enforce invariant physical laws.
+An LLM has no concept of consequence:
+- Dropping an active table or deleting an entire subsystem is just another syntactically valid JSON tool call (`execute_command("rm -rf src/")`).
+- When a catastrophic deletion executes, the model simply parses the empty directory listing and proceeds to its next turn without hesitation.
+- System prompts provide soft semantic steering; they alter token probabilities, but they cannot enforce physical invariants.
 
-### Hard Runtime Fences
+### Hard runtime fences
 
-Because models cannot guarantee their own containment, the harness must enforce non-negotiable architectural boundaries in code:
+Because models cannot guarantee their own containment, the harness must enforce non-negotiable boundaries in code:
 
-1. **The Clean Commit Prerequisite**: Agents must never operate in a dirty working directory with uncommitted local work. Every session must branch from a known clean commit, or run inside an isolated Git worktree. If an agent hallucinates or ruins a file, recovery must be an instantaneous, single-line command (`git checkout .` or `git worktree remove`).
-2. **Tool-Level Destructive Gating**: Destructive actions (file unlinking, mass directory deletion, raw database drops) must be disabled at the tool gateway layer, or gated behind an out-of-band human confirmation prompt. The model should physically lack an exposed tool capable of deleting project directories without approval.
-3. **Read-Only Path Sandboxing**: Critical directories—such as architecture specs, security guidelines, and environment configuration—should be mounted read-only to the agent process.
-4. **Human Review of Diffs**: Never auto-merge agent-written branches directly into mainline branches. Humans must review diffs to catch subtle logic decay, hallucinated dependencies, or weakened assertions.
+1. **The Clean Commit Prerequisite**: Never let an agent operate on an uncommitted, dirty working tree. Every task must run in an isolated Git branch or a dedicated worktree (`git worktree add`). If an agent corrupts files or thrashes, recovery is instantaneous (`git checkout .` or dropping the worktree).
+2. **Tool-Level Destructive Gating**: The model should physically lack tools capable of unrestricted directory unlinking or database drops. Destructive operations must be gated behind out-of-band confirmation or blocked entirely at the tool dispatch layer.
+3. **Read-Only Path Sandboxing**: Core specifications, architectural rules, and environment configurations must be mounted read-only to the agent process.
+4. **Human Review of Diffs**: Never auto-merge agent-authored branches. A human engineer must inspect diffs to catch subtle logic decay, hallucinated dependencies, or weakened assertions.
 
-### Fix the Harness, Not Just the Code
+### Fix the harness, not just the code
 
-When an agent violates an invariant, drops a table, or introduces bad code patterns, **never manually fix the code in your IDE and move on**. 
+When an agent breaks an invariant, introduces an anti-pattern, or deletes something it shouldn't, avoid manually patching the code in your editor and moving on.
 
-If you manually patch the code, the agent will make the same mistake on the next run. Instead, fix the harness:
-- Add a negative fence in `.agents/rules/`.
-- Introduce a deterministic architecture test that fails if that pattern is used.
-- Add an explicit validation script to your pre-flight checks.
+If you fix the code manually, the agent will make the same mistake on the next run. Instead, fix the harness:
+- Add an explicit negative fence in `.agents/rules/`.
+- Write an automated architecture test that fails if that pattern appears.
+- Add a deterministic check to your pre-flight verification script.
 
-Force the agent to re-run against the updated constraint until it passes. Hardening the environment ensures the failure mode is permanently eliminated for both agents and human contributors.
+Force the agent to re-run against the hardened constraint until it passes. Hardening the harness permanently eliminates that failure mode for both agents and future developers.
 
-## Steering via Negative Boundaries
+## Steering agents via negative boundaries
 
-A common failure mode when writing agent instructions is **prescriptive over-specification**: trying to document every single allowed path, variable name, and design decision in advance.
+A frequent mistake in repository instructions is prescriptive over-specification—attempting to dictate every internal method, variable name, and design decision in advance.
 
-### The Leaky Nature of Affirmative Instructions
+### The leaky nature of affirmative instructions
 
-Affirmative instructions are inherently leaky:
+Affirmative instructions are inherently leaky: telling an agent what it *should* do does not stop it from doing everything else.
 
-> Telling an agent what it *should* do does not stop it from doing everything else.
+If you instruct an agent: *"Use the command pattern to handle this request"*, the model may follow that instruction while also introducing reflection, allocating large heap buffers inside a tight audio loop, or wrapping operations in generic `catch (Exception ex)` blocks. Affirmative instructions guide probability, but they leave an unbounded operational surface.
 
-If you instruct an agent: *"Use the command pattern to handle this request"*, the model may follow that instruction while also introducing reflection, allocating large heap buffers inside a tight audio loop, or wrapping everything in generic `catch (Exception ex)` blocks. Affirmative instructions guide probability, but they leave an unbounded operational surface.
-
-### Bounding by Exclusion
+### Bounding by exclusion
 
 A more reliable approach pairs wide implementation freedom with rigid negative boundaries (see [[Negative Knowledge and Explicit Architectural Dissents]]):
 
-1. **Grant Implementation Latitude**: Allow the agent to select data structures, local helpers, and algorithm details within the target module scope.
+1. **Grant Implementation Latitude**: Allow the agent to choose local data structures, helper functions, and algorithm details within the target module scope.
 2. **Erect 2–3 Explicit Negative Fences**: Clearly define forbidden anti-patterns:
-   - *Forbidden*: Adding new external package dependencies without prior human approval.
-   - *Forbidden*: Mutating database schemas or public API contracts in this task slice.
-   - *Forbidden*: Introducing heap allocations, dynamic dispatch, or blocking I/O calls inside synchronous hot paths.
+   - Forbidden: Adding external package dependencies without prior approval.
+   - Forbidden: Mutating database schemas or public API contracts in this task slice.
+   - Forbidden: Introducing heap allocations, dynamic dispatch, or blocking I/O inside synchronous hot paths.
 3. **Outcome**: The agent retains the flexibility to solve edge cases without getting stuck in brittle, over-specified prompts, while your architectural invariants remain protected against drift.
 
-## Repository Layout and File Organization
+## Files used to guide an agent
 
-A well-structured repository cleanly separates permanent engineering rules, transient roadmaps, architectural documentation, and task state:
+A practical repository can separate permanent guidance from task-specific state:
 
 ```text
 repo/
-├── AGENTS.md               <-- Universal repository rules and core operating instructions
-├── README.md               <-- Environment setup, build commands, service dependencies
-├── ARCHITECTURE.md         <-- Module boundaries, dependency flow, component responsibilities
-├── ROADMAP.md              <-- Active pruned backlog (ZERO completed items retained)
-├── DIARY.md                <-- Living Engineering Chronicle (append-only rationale & logs)
+├── AGENTS.md
+├── README.md
+├── ARCHITECTURE.md
+├── ROADMAP.md
+├── DIARY.md
+├── .codex/
+│   └── config.toml
 ├── .agents/
-│   ├── rules/              <-- Granular invariant rules and negative fences
+│   ├── rules/
 │   │   ├── performance.md
 │   │   └── security.md
-│   └── skills/             <-- Reusable multi-step operational playbooks
-│       └── implement-approved-step/
-│           ├── SKILL.md
-│           └── references/
+│   └── skills/
 ├── tools/
-│   ├── log_diary.py        <-- Out-of-context CLI append tool (0 prompt tokens consumed)
-│   └── pre_flight.py       <-- Fast local gate verifying formats, types, and architecture
+│   ├── log_diary.py
+│   └── pre_flight.py
 ├── docs/
 │   ├── architecture/
 │   └── workflows/
 ├── tasks/
 │   └── order-cancellation/
-│       ├── SPEC.md         <-- Acceptance criteria and feature requirements
-│       ├── PLAN.md         <-- Granular, stepped implementation plan with states
-│       └── DECISIONS.md    <-- Settled architectural debates and rationale
+│       ├── SPEC.md
+│       ├── PLAN.md
+│       └── DECISIONS.md
 ├── scripts/
 │   ├── setup.ps1
 │   ├── build.ps1
@@ -392,35 +351,47 @@ repo/
 ```
 
 ### `README.md`
-Describes how to operate the system locally:
-- runtime and toolchain versions;
-- local dependency bootstrapping (databases, mock servers);
-- compile, lint, and test commands;
-- local endpoints, ports, and debugging profiles.
+
+Explains how to operate the project:
+
+- required SDK and tools;
+- environment setup;
+- starting local dependencies;
+- building and running the application;
+- running tests;
+- finding logs and local endpoints.
 
 ### `ARCHITECTURE.md`
-Provides a concise structural map of the repository:
-- primary modules, namespaces, and their discrete boundaries;
-- permitted dependency directions (e.g., Domain must not reference Infrastructure);
-- integration patterns and transport layers;
-- location of critical business logic versus glue code.
 
-### `ROADMAP.md` & Active Backlog Pruning
-Maintains the immediate plan for upcoming work. High-assurance workflows enforce **Active Backlog Pruning** (see [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]):
-- Completed items are **never retained** with `[x]` checkmarks or strikethrough text in the active backlog file.
-- Leaving hundreds of lines of completed tasks in view degrades model attention and wastes context tokens on settled work.
-- The moment a step is verified and committed, it is deleted from `ROADMAP.md`. High-level capabilities are summarized in a brief "Baseline Deliverables" list at the top, keeping the file small and forward-looking.
+Provides a short, practical map:
 
-### `DIARY.md` & Out-of-Context Tooling
+- modules and responsibilities;
+- important directories;
+- allowed dependency directions;
+- integration patterns;
+- where business rules, persistence and transport code belong.
+
+For a modular monolith, it should explain module boundaries explicitly. Whenever possible, these boundaries should also be enforced with architecture tests.
+
+### `ROADMAP.md` and active backlog pruning
+
+Maintains the immediate plan for upcoming work. High-assurance workflows enforce active backlog pruning (see [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]):
+
+- Completed items are deleted immediately from the active backlog file rather than retained with `[x]` checkmarks or strikethrough text.
+- Leaving dozens of completed tasks in view degrades model attention and burns context budget on settled work.
+- The moment a step is verified and committed, it is removed from `ROADMAP.md`. High-level capabilities are summarized in a brief baseline deliverables list at the top, keeping the file small and forward-looking.
+
+### `DIARY.md` and out-of-context tooling
+
 Because the active roadmap prunes completed work, project evolution and technical decisions must be captured in an append-only engineering diary (`DIARY.md`; see [[The Living Engineering Chronicle and Context Compaction]]).
 
 Each entry captures four key areas:
-1. Affected Subsystems;
-2. What Changed;
-3. Architectural Rationale;
-4. Verification Results.
+1. Affected subsystems;
+2. What changed;
+3. Architectural rationale;
+4. Verification results.
 
-To prevent a growing log file from consuming the agent's context window, the agent does not open or edit `DIARY.md` directly. Instead, it uses a lightweight CLI tool:
+To prevent a growing log file from saturating the agent's context window, the agent does not open or edit `DIARY.md` directly. Instead, it uses a lightweight CLI tool:
 
 ```bash
 python tools/log_diary.py \
@@ -430,10 +401,11 @@ python tools/log_diary.py \
   --verified "./scripts/test-module.ps1 Orders"
 ```
 
-The script appends formatted Markdown to disk instantly without passing the rest of the historical log through the model's context window. Periodically, older entries are summarized into high-level architectural digests via a compaction skill.
+The script appends formatted Markdown to disk directly without passing the historical log through the model's context window. Periodically, older entries can be summarized into architectural digests.
 
 ### `AGENTS.md`
-Contains durable, repository-wide rules that apply to every agent run:
+
+Contains durable repository instructions that apply to most tasks:
 
 ```markdown
 # Agent instructions
@@ -463,10 +435,13 @@ Contains durable, repository-wide rules that apply to every agent run:
 - Stop after completing the approved step.
 ```
 
-Keep `AGENTS.md` focused and concise. Use it to point the model to detailed documentation rather than trying to fit the entire architecture into a single file.
+Keep `AGENTS.md` concise. It should route the agent to more detailed documentation rather than duplicate all project knowledge.
+
+More specific `AGENTS.md` files can be placed closer to individual modules when their rules differ.
 
 ### `SPEC.md`
-Defines feature behavior and acceptance criteria, independent of implementation details:
+
+Defines what the system must do, independently of the implementation:
 
 ```markdown
 # Cancel order
@@ -481,7 +456,8 @@ An order can be cancelled only before shipment.
 ```
 
 ### `PLAN.md`
-Breaks the specification down into bounded implementation slices, tracking their state:
+
+Describes implementation steps and their state:
 
 ```markdown
 ## Step 1: Domain cancellation behavior
@@ -512,16 +488,24 @@ Status: approved
 - all Orders domain tests pass.
 ```
 
-Standard step states include: `pending`, `approved`, `in-progress`, `completed`, `blocked`, and `rejected`.
+Useful states include:
 
-Explicitly detailing what is **Out of scope** is essential: it prevents agents from refactoring adjacent systems, adding unrequested endpoints, or introducing scope creep.
+- `pending`;
+- `approved`;
+- `in-progress`;
+- `completed`;
+- `blocked`;
+- `rejected`.
+
+The `Out of scope` section is especially valuable because it prevents opportunistic expansion of the change.
 
 ### `DECISIONS.md`
-Maintains an append-only register of settled technical trade-offs, options considered, and selected paths. This stops models and developers from reopening resolved design choices during subsequent runs.
 
-## Reusable Agent Skills
+Records decisions made while refining the plan, including alternatives and rationale. This prevents the agent or a later developer from reopening settled questions without context.
 
-When a workflow pattern is repeated across projects—such as setting up a new vertical slice, running an upgrade migration, or applying a hotfix—it should be packaged as a reusable skill:
+## Reusable agent skills
+
+When a workflow is repeated frequently, it can become a skill rather than a long prompt.
 
 ```text
 .agents/skills/implement-approved-step/
@@ -532,7 +516,7 @@ When a workflow pattern is repeated across projects—such as setting up a new v
     └── verify.ps1
 ```
 
-A skill document outlines a repeatable operational sequence:
+Example procedure:
 
 ```markdown
 1. Read AGENTS.md, SPEC.md and PLAN.md.
@@ -546,35 +530,38 @@ A skill document outlines a repeatable operational sequence:
 9. Stop; never begin the next step automatically.
 ```
 
-### Skills as Native Code Functions
+Skills remain mostly text, but they can also contain scripts, templates, examples and reference material.
 
-While skills can be written as text instructions running standard bash commands, writing skills as native code functions (Python, Go, or C#) provides significant advantages:
+### Skills as Native Code Functions (Beyond Shell Commands)
 
-1. **AST-Filtered Context**: Instead of reading a 3,000-line source file into context, a native skill can use AST parsers (`tree-sitter`, Roslyn, Python `ast`) to extract only the target class, method signatures, and relevant docstrings.
-2. **Structured API Integration**: Using official SDKs (e.g., GitHub, AWS, Docker) avoids fragile stdout string parsing from CLI tools, eliminating errors caused by terminal formatting or unexpected color codes.
-3. **Deterministic Sandboxing**: Native functions can spin up lightweight in-memory databases, apply migrations, run test passes, and tear the environment down cleanly, ensuring side-effect-free verification.
+While agents can run terminal commands, building skills as native code functions (e.g. in Python or C#) provides:
+1. **Pre-filtering Context (AST Parsers):** Instead of dumping a 3,000-line file into context, a native skill uses `ast` or `tree-sitter` to extract only the target class or method signature.
+2. **Direct SDK Integration:** Interacting with GitHub (`PyGithub` / Octokit), cloud providers (`boto3`, Azure SDK), or databases directly avoids fragile CLI stdout parsing.
+3. **Deterministic Sandboxing:** Skills can manage local Docker containers or ephemeral in-memory databases to validate migrations without side effects.
 
-## Deterministic Tools Enforce Deterministic Rules
+## Deterministic tools should enforce deterministic rules
 
-Never waste context tokens or rely on an LLM to check rules that can be evaluated deterministically by a compiler, linter, or static analyzer.
+An LLM should not replace tools that can check a rule exactly.
 
-| Concern | Preferred Mechanism |
-| :--- | :--- |
-| Code Formatting | `.editorconfig`, Prettier, `dotnet format` |
-| Compiler Warnings & Errors | `Directory.Build.props`, `tsconfig.json` (`strict: true`) |
-| Module & Architecture Boundaries | NetArchTest, ArchUnit, native static analysis rules |
-| Behavior & Regression Safety | Automated unit and integration test suites |
-| Test Assertiveness & Gap Detection | Mutation testing (e.g., Stryker.NET, Mutmut) |
-| Dependency Vulnerabilities | Trivy, Snyk, Dependabot |
-| Hardcoded Secret Detection | Gitleaks, Trufflehog |
-| Design & Scope Approval | Human engineer reviewing `SPEC.md` / diff |
-| Implementation & Patch Synthesis | LLM coding agent |
+| Concern | Preferred mechanism |
+| --- | --- |
+| Formatting | `.editorconfig` and formatter |
+| Compiler warnings | `Directory.Build.props` |
+| Module boundaries | architecture tests or static analysis |
+| Unit and integration behavior | automated tests |
+| Test quality | mutation testing |
+| Dependency vulnerabilities | security scanner |
+| Secret detection | secret scanner |
+| Approval and design decisions | human plus specification |
+| Planning and diagnosis | LLM agent |
 
-> Rule of thumb: If a constraint can be verified mathematically or deterministically, use a deterministic tool. Use the LLM to understand requirements, plan edits, write patches, and interpret error output.
+The principle is:
 
-### Executable Architecture Tests
+> If a rule can be checked deterministically, let a deterministic tool check it. Use the LLM to interpret, plan and repair.
 
-Architecture rules should be enforced through test suites rather than text guidelines alone. In .NET, for instance, you can write executable tests using `NetArchTest` to verify that architectural boundaries remain intact:
+### Executable architecture tests
+
+Architecture rules should be enforced through executable test suites rather than text guidelines alone. In .NET, for instance, you can write automated tests using `NetArchTest` (or `ArchUnit` in Java) to verify that architectural boundaries remain intact:
 
 ```csharp
 [Fact]
@@ -589,16 +576,16 @@ public void DomainLayer_ShouldNotHaveDependencyOn_InfrastructureLayer()
 }
 ```
 
-You can also use architecture tests to enforce physical guardrails on the harness itself:
-- asserting that no source file in the domain exceeds 800 lines;
-- asserting that public API handlers do not contain unhandled `try-catch` blocks;
+Architecture tests can also enforce structural guardrails on the codebase:
+- asserting that no source file in the domain exceeds a given line threshold;
+- asserting that public API handlers do not swallow exceptions with empty catch blocks;
 - asserting that all repository methods accept a cancellation token.
 
-When the agent breaks an architectural rule, the test suite fails with a clear, targeted assertion error, guiding the agent to correct itself through the standard test-fix loop.
+When an agent breaks an architectural boundary, the test runner fails with a clear, targeted assertion error, guiding the agent to correct itself through the standard test-fix loop.
 
-## Stable Verification Commands
+## Stable verification commands
 
-The repository must provide simple, predictable commands that execute identically for a human developer, a local agent, or a CI runner:
+The repository should offer simple commands that work for humans, agents and CI:
 
 ```powershell
 ./scripts/setup.ps1
@@ -608,363 +595,396 @@ The repository must provide simple, predictable commands that execute identicall
 ./scripts/mutation-test.ps1 Orders
 ```
 
-Effective verification scripts should:
-- run completely non-interactively without prompting for user input;
-- exit with code `0` on success and non-zero on any failure;
-- emit clean, concise terminal output that prioritizes failing assertions over verbose noise;
-- leave the working tree clean without modifying checked-in files;
-- execute cleanly from a fresh git clone;
-- share identical logic between local development and CI pipelines.
+Scripts should:
 
-### Layered Verification Strategy
+- run non-interactively;
+- return exit code `0` on success and non-zero on failure;
+- produce concise failure summaries;
+- avoid modifying production code during verification;
+- work from a clean checkout;
+- be shared by local development and CI.
 
-Running the entire test suite on every small edit quickly becomes a bottleneck. A layered test strategy keeps iteration cycles fast:
+A layered strategy avoids running an expensive entire suite after every small edit:
 
-1. **Inner Loop**: Run a single targeted test file or method while making code changes.
-2. **Module Loop**: Run the unit and integration tests for the current module after completing the step.
-3. **Pre-Commit / Pre-Flight**: Run the complete local test suite, formatters, and architecture linters (`./scripts/verify.ps1`).
-4. **Outer Loop**: Offload expensive end-to-end integration tests and full mutation coverage runs to CI or background jobs.
+1. run focused tests while iterating;
+2. run all tests for the affected module after the step;
+3. run full verification before completion;
+4. run expensive mutation or end-to-end suites separately.
 
-## Mutation Testing as the Real Test Oracle
+## Mutation testing
 
-High line coverage can be deceiving. LLM agents often write tests that run every line of code without actually asserting meaningful behavioral boundaries—producing tests that pass regardless of whether the business logic is correct.
+Mutation testing is a good example of combining a deterministic tool with an LLM agent.
 
-Mutation testing verifies the quality of your tests by introducing deliberate defects into your code's abstract syntax tree (AST):
+A mutation tool deliberately introduces small defects, such as replacing:
 
 ```csharp
-// Original
-if (order.TotalAmount >= 100) ApplyDiscount();
-
-// Mutated (Boundary flipped)
-if (order.TotalAmount > 100) ApplyDiscount();
+value <= limit
 ```
 
-The test runner is then executed against each mutation:
-- **Killed**: A test failed, successfully catching the defect.
-- **Survived**: The code changed, but the test suite still passed (indicating weak assertions or missing test coverage).
-- **No Coverage**: The mutated line was never executed by any test.
-- **Timeout**: The mutation caused an infinite loop or hanging process.
+with:
 
-An LLM should not manually generate mutations. Mutation tools handle generation and test runs efficiently; the model should be used to analyze survivors and write targeted tests that kill them.
-
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                 MUTATION TESTING CYCLE                      │
-│                                                             │
-│   [ Mutation Tool (e.g. Stryker) ]                          │
-│   - Injects AST mutations (e.g. >= to >)                    │
-│   - Runs tests & produces machine-readable JSON report      │
-│                         │                                   │
-│                         ▼ (Identifies Surviving Mutants)    │
-│   [ Agent Test Analyst ]                                    │
-│   - Parses JSON report for surviving mutants                │
-│   - Analyzes missing edge cases                             │
-│   - Writes new targeted tests with real assertions          │
-│                         │                                   │
-│                         ▼ (Re-runs Mutation Pass)           │
-│   [ Verification Gate ] ────────────────────────────────────┘
-│   - Mutant killed: Test suite hardened                      │
-└─────────────────────────────────────────────────────────────┘
+```csharp
+value < limit
 ```
 
-### Division of Responsibilities
+It then runs the test suite:
 
-- **Mutation Runner (e.g., Stryker.NET, Mutmut)**: Parses the AST, injects mutations, executes tests, reverts changes, and exports structured JSON reports.
-- **Agent**: Parses surviving mutants from the report, pinpoints missing edge-case assertions, writes tests specifically designed to kill those mutants, and explains the behavioral regression being guarded.
-- **Human**: Decides which mutations represent critical business logic versus low-value implementation details, avoiding the trap of chasing a 100% mutation score on non-critical glue code.
+- **killed** — a test detected the mutation;
+- **survived** — all tests still passed;
+- **no coverage** — the mutated code was not executed;
+- **timeout** — the mutation caused execution to exceed the limit.
 
-## Reproducible Local Environments
+For .NET, Stryker.NET already generates mutations, runs tests and produces reports. An LLM should not manually mutate every class and operator.
 
-An agent cannot operate reliably if setting up dependencies requires undocumented tribal knowledge. A project should provide a clear, automated path from a fresh clone to a passing test suite:
+The useful division of responsibilities is:
 
-- runtime SDKs pinned in declarative files (`global.json`, `.nvmrc`, `rust-toolchain.toml`);
-- centralized dependency lockfiles (`Directory.Packages.props`, `pnpm-lock.yaml`, `poetry.lock`);
-- local tool manifests for project-specific CLIs (`dotnet-tools.json`);
-- container configurations (`docker-compose.yml`) for databases, queues, and backing services;
-- deterministic local test seeds and fixture data;
-- standard bootstrap and verification scripts;
-- optional Dev Container configurations for full environment isolation.
+### Stryker.NET
 
-A fresh setup should work with a few standardized commands:
+- generates mutations;
+- selects and runs tests;
+- restores or switches mutated code;
+- calculates results;
+- produces a structured and HTML report.
 
-```bash
-# Example local bootstrapping flow
+### Agent
+
+- analyzes surviving mutants;
+- groups them by class and business risk;
+- distinguishes likely missing tests from equivalent or low-value mutations;
+- proposes boundary cases and assertions;
+- implements an approved test;
+- reruns the relevant mutation scope;
+- explains why the new test kills the mutant.
+
+### Human
+
+- prioritizes business-critical gaps;
+- approves tests that encode intended behavior;
+- rejects tests coupled only to implementation details;
+- decides which mutations are irrelevant.
+
+Do not chase a 100% mutation score blindly. Focus on business-critical behavior and meaningful survivors.
+
+## Reproducible local environment
+
+An agent performs best when the repository can be initialized without undocumented manual work.
+
+Useful components for .NET include:
+
+- `global.json` for the SDK version;
+- `Directory.Packages.props` for centralized package versions;
+- a local .NET tool manifest;
+- `docker-compose.yml` for local infrastructure;
+- deterministic test fixtures and seed data;
+- setup and verification scripts;
+- optionally, a Dev Container.
+
+The ideal path from checkout to verification should be close to:
+
+```powershell
 dotnet tool restore
 docker compose up -d
 ./scripts/setup.ps1
 ./scripts/verify.ps1
 ```
 
-## Permissions, Sandboxing, and Secrets
+## Permissions and secrets
 
-Because local agents execute terminal commands, they can potentially access SSH keys, local databases, container runtimes, and cloud provider CLIs. The harness should enforce least privilege by default:
+A local agent can potentially access credentials, local databases, Docker, GitHub, Azure or Kubernetes. It should not receive more authority than necessary.
 
-- restrict file writes exclusively to the active workspace directory;
-- block outbound network connections from the shell tool, except for explicit package restores;
-- never expose production credentials or live cluster endpoints to the local agent environment;
-- inject mock keys or local credentials via environment variables, keeping production `.env` files in `.gitignore`;
-- require explicit human confirmation before running cloud CLI tools (`aws`, `az`, `gcloud`, `kubectl`);
-- physically block execution of deployment or migration commands against remote hosts.
+Recommended defaults:
+
+- restrict writes to the active workspace;
+- require approval for network access and operations outside the workspace;
+- use only local development services;
+- do not expose production credentials;
+- keep secrets in ignored local files or a secret store;
+- ask before using authenticated cloud CLIs;
+- never deploy or migrate a non-local environment without explicit approval.
+
+Example instructions:
 
 ```markdown
-<!-- Standard safety rules in AGENTS.md -->
-- Never log, print, or commit private keys, API tokens, or secrets.
-- Use only local database instances running on localhost/docker-compose.
-- Never run cloud provider authentication or deployment commands.
+- Never display secret values.
+- Use only services defined in docker-compose.yml.
+- Never run database commands against a non-local host.
+- Ask before using GitHub, Azure or Kubernetes credentials.
 ```
 
-Sandboxing physically restricts what the agent's process can do at the OS and network level. Permission policies define when the agent must stop and prompt for human approval. Both are necessary to keep the development environment secure.
+Sandboxing controls what the agent can technically do. Approval policy controls when it must stop and ask before doing it. These are separate controls.
 
-## Git, Commits, and Pull Requests
+## Git, commits and pull requests
 
-An agent running inside a capable harness can manage the complete local Git lifecycle:
+An agent can perform the full Git workflow if it has the required tools, network access and repository permissions:
+
+1. create a feature branch;
+2. modify code;
+3. run verification;
+4. stage selected changes;
+5. create one or more commits;
+6. push the branch;
+7. open a GitHub pull request;
+8. respond to review comments with further commits.
+
+For a local agent, this commonly uses `git` and the authenticated GitHub CLI:
 
 ```bash
-git switch -c feature/order-cancellation
-git add src/Orders/Domain/Order.cs tests/Orders.UnitTests/OrderTests.cs
-git commit -m "feat(orders): enforce cancellation invariant before shipment"
-git push -u origin feature/order-cancellation
-gh pr create --draft --title "feat(orders): order cancellation support"
+git switch -c feature/cancel-order
+git add <explicit files>
+git commit -m "feat(orders): support order cancellation"
+git push -u origin feature/cancel-order
+gh pr create --draft
 ```
 
-### Git Policy Matrix
+Recommended initial policy:
 
-| Operation | Agent Authority | Policy & Conditions |
-| :--- | :--- | :--- |
-| Create feature branch | Automatic | Must follow repo naming conventions (`feature/`, `fix/`). |
-| Stage modified files | Automatic | Explicit file paths only; `git add .` or `git add -A` is prohibited. |
-| Create local commit | Allowed | Permitted only after `./scripts/verify.ps1` runs clean. |
-| Push to remote branch | Approval Required | Must prompt human before publishing branch to origin. |
-| Create Draft PR | Approval Required | Opens as draft with diff summary and test evidence. |
-| Ready for Review | Human Only | Human developer marks PR ready after reviewing the diff. |
-| Merge PR | Human Only | Merges require human approval and passing CI checks. |
-| Direct commit to `main` | Prohibited | Blocked by local rules and remote branch protection. |
-| Force push (`-f`) | Prohibited | Blocked entirely to prevent history loss. |
+| Operation | Policy |
+| --- | --- |
+| Create a local branch | automatic |
+| Stage task-related files | automatic |
+| Create a local commit | allowed after verification |
+| Push the branch | explicit approval |
+| Create a draft PR | explicit approval |
+| Mark PR ready for review | human decision |
+| Merge PR | human or protected process |
+| Push directly to `main` | prohibited |
+| Force push | prohibited unless explicitly approved |
 
-### Enforcing Clean Commits
+Example `AGENTS.md` rules:
 
-Commits should represent coherent, verified units of work rather than a messy stream of trial-and-error edits:
+```markdown
+## Git workflow
+
+- Work only on a feature branch.
+- Never commit directly to main.
+- Preserve pre-existing uncommitted changes.
+- Stage files explicitly; do not use `git add .`.
+- Create small commits grouped by purpose.
+- Run ./scripts/verify.ps1 before the final commit.
+- Do not push without explicit approval.
+- Create pull requests as drafts.
+- Never merge a pull request.
+- Never bypass branch protection or required CI.
+```
+
+For larger changes, multiple logical commits can make review easier:
 
 ```text
-test(orders): add failing tests for order cancellation rules
-feat(orders): implement cancellation checks on order aggregate
+test(orders): cover cancellation rules
+feat(orders): implement cancellation behavior
 feat(api): expose order cancellation endpoint
-docs(orders): update order lifecycle documentation
+docs(orders): document cancellation workflow
 ```
+
+A commit should represent a coherent, reviewable and preferably verified unit—not every tiny correction made during the loop.
+
+## Pull requests as an additional approval gate
+
+A useful development path is:
+
+1. specification approved;
+2. implementation plan approved;
+3. one bounded step implemented;
+4. tests and diff reviewed locally;
+5. commit and push approved;
+6. draft PR created;
+7. CI and independent review executed;
+8. human decides whether to merge.
+
+Branch protection, required checks and human review should remain in place even when the agent reliably creates good pull requests.
 
 ### Docs-as-Code Drift Prevention
 
-Autonomous changes frequently introduce drift between implementation details and architectural documentation. A high-assurance harness should verify that documentation updates accompany code changes within the same commit:
+An autonomous harness must enforce documentation synchronization as part of its **Definition of Done**:
 
 ```text
-[Code Patch Generated]
+[Code Change Generated]
           │
           ▼
-[Docs-Drift Gate]
-  ├── Inspects modified interfaces, endpoints, and domain models
-  ├── Compares signatures against /docs, OpenAPI specs, and README.md
-  └── Generates matching documentation updates within the same branch
+[Docs-Drift Agent]
+  ├── Compares API signatures against /docs, OpenAPI specs, and README.md
+  ├── Detects missing parameters or outdated return types
+  └── Generates matching Markdown updates in the same branch commit
 ```
 
-If a public interface, configuration flag, or database schema changes without a corresponding update in `/docs` or the relevant `README.md`, the verification check should flag the omission before the branch is pushed.
+* **Atomicity:** Code changes, unit tests, and documentation diffs must live within the same pull request commit.
+* **Gatekeeper Rule:** Architecture reviewers reject patches where public interfaces changed without corresponding updates in `/docs/*.md`.
 
-## Multi-Agent Roles and Worktree Isolation
+## Multiple agents
 
-Rather than relying on a single agent trying to juggle every task in a massive context window, complex workflows benefit from splitting responsibilities among specialized personas:
+A small set of explicit roles is usually more useful than many loosely defined agents.
+
+### Implementer
+
+- implements one approved step;
+- writes and runs tests;
+- stays within scope;
+- produces a reviewable diff.
+
+### Reviewer
+
+- starts from the specification and diff;
+- does not assume the implementation is correct;
+- looks for behavioral regressions, architecture violations and missing tests;
+- preferably does not edit the code during the initial review.
+
+### Test analyst
+
+- analyzes test coverage and mutation reports;
+- prioritizes important surviving mutants;
+- proposes test cases;
+- does not change production code without separate approval.
+
+Parallel agents should normally work in separate Git worktrees or branches. Two write-capable agents sharing the same working tree can overwrite or confuse each other's changes.
+
+## High-assurance engineering patterns
+
+When configuring harnesses for production repositories, five operational patterns help keep agent execution aligned with system invariants:
+
+- **Repro-First (Regression Guard)**: Require an isolated, failing reproduction test *before* touching any production code. This prevents unanchored edits, speculative fixes, and masking existing bugs.
+- **Pre-Flight Gate**: Run a single local gate script (`./tools/pre_flight.py` or `./scripts/verify.ps1`) that bundles formatting, architecture boundary tests, and type checking before committing.
+- **Platform Quirks Catalog**: Maintain a concise document listing non-obvious runtime behaviors, OS differences, and edge cases. This prevents agents from refactoring intentional, low-level platform workarounds.
+- **Reference Triangulation**: Provide clean-room reference examples, internal ADRs, or official SDK documentation directly in the context. This eliminates hallucinated third-party SDK calls and divergent code patterns.
+- **Git Worktree Sandbox**: Execute experimental spikes and multi-agent tasks in disposable Git worktrees (`git worktree add`). This isolates file churn and prevents dirty working states from polluting the primary repository.
+
+## Execution location
+
+An agentic harness may run locally, in a managed cloud environment, in infrastructure controlled by the organization, or in a hybrid arrangement.
+
+The execution location is largely independent from the workflow itself. The same plan–implement–verify–review process can be executed on a developer workstation, inside a managed agent platform, or by a custom-hosted agent service.
+
+For deployment models, shared team agents, cloud execution, self-hosting and hosting options, see:
+
+[[Agent Deployment and Execution Models]]
+
+## Recommended adoption path
+
+Start with the smallest useful system:
+
+1. Install the coding agent in the IDE.
+2. Choose a small repository that you already understand.
+3. Add a concise `AGENTS.md`.
+4. provide a single `verify` command.
+5. describe one feature in `SPEC.md`.
+6. ask the agent to create `PLAN.md` without editing code.
+7. approve one step only.
+8. let the agent implement and verify it.
+9. run an independent review of the diff.
+10. record repeated mistakes as repository guidance or deterministic checks.
+
+Only introduce skills, subagents and a custom orchestrator after the basic workflow reveals a repeated need. Cloud and remote execution are discussed separately in [[Agent Deployment and Execution Models]].
+
+## When a custom harness is justified
+
+A text workflow inside Codex or Claude Code is sufficient for interactive development. A custom harness or orchestrator becomes useful when the process requires hard guarantees or automation, for example:
+
+- approval state must be enforced by code;
+- tasks run unattended in CI;
+- retries and budgets must be centrally controlled;
+- many repositories or agents must be coordinated;
+- execution traces and costs must be recorded;
+- outputs must conform to a machine-readable schema;
+- failed steps must be resumed deterministically;
+- only particular commands may run in particular states.
+
+At that point, the workflow becomes a state machine rather than merely a set of instructions:
 
 ```text
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   Implementer   │       │  Test Analyst   │       │    Reviewer     │
-│ - Scoped edits  │       │ - Coverage gaps │       │ - Spec fidelity │
-│ - Unit tests    │       │ - Mutation runs │       │ - Arch rules    │
-│ - Passes build  │       │ - Hardens tests │       │ - Read-only diff│
-└────────┬────────┘       └────────┬────────┘       └────────┬────────┘
-         │                         │                         │
-         └─────────────────────────┼─────────────────────────┘
-                                   ▼
-              ┌────────────────────────────────────────┐
-              │      ISOLATED GIT WORKTREE SPACES      │
-              │  worktrees/agent-impl                  │
-              │  worktrees/agent-review                │
-              └────────────────────────────────────────┘
+Planning
+  → Awaiting approval
+  → Implementing
+  → Verifying
+  → Awaiting step approval
+  → Commit and draft PR
 ```
 
-- **Implementer**: Focuses entirely on implementing the approved semantic step, writing supporting unit tests, and getting the local build to pass cleanly.
-- **Test Analyst**: Evaluates test coverage and mutation test reports. Pinpoints surviving mutants, identifies missing edge-case coverage, and writes tests to harden the suite without altering production code.
-- **Reviewer**: Operates in read-only mode, evaluating the implementation diff against `SPEC.md` and `ARCHITECTURE.md`. Identifies regressions, security risks, or architectural drift before human review.
+The custom harness controls the transitions. The LLM proposes and executes work only within the currently permitted state.
 
-When running multiple agents simultaneously, **never let two write-capable agents share the same working directory**. They will overwrite files, create race conditions, and invalidate each other's test runs. Use dedicated Git worktrees (`git worktree add ../feature-slice-a`) to give each agent its own isolated workspace on disk.
+### Custom Python Harness vs. Interactive CLI Agents
 
-## High-Assurance Engineering Patterns
-
-When building or configuring high-assurance harnesses, five operational patterns help keep agent execution aligned with production requirements:
-
-| Pattern | Operational Purpose | Failure Mode Prevented |
-| :--- | :--- | :--- |
-| **Repro-First (Regression Guard)** | Write an isolated, failing reproduction test *before* touching any production code. | Prevents unanchored edits, speculative fixes, and masking existing bugs. |
-| **Pre-Flight Gate** | Run a single script that verifies code formatting, architecture boundaries, type safety, and logs. | Eliminates manual review checklist fatigue and catches broken conventions early. |
-| **Platform Quirks Catalog** | Maintain a Markdown document listing non-obvious runtime behaviors, OS differences, and edge cases. | Prevents agents from "fixing" intentional, low-level platform workarounds. |
-| **Reference Triangulation** | Provide official API docs, internal ADRs, and clean-room reference examples in the context. | Eliminates hallucinated third-party SDK calls and divergent code patterns. |
-| **Git Worktree Sandbox** | Execute experimental tasks or spikes in disposable, isolated Git worktrees. | Keeps experimental changes from cluttering the primary working tree. |
-
-## Interactive CLI Agents vs. Custom Programmatic Harnesses
-
-Teams often debate whether to use off-the-shelf interactive CLIs (like Claude Code, Codex, or Cursor) or write a custom, code-driven orchestration harness in-house.
+There is a fundamental trade-off between interactive pair-programming tools (e.g., Claude Code, Cursor) and custom program-driven harnesses:
 
 | Dimension | Interactive CLI / UI (Claude Code, Cursor) | Custom Programmatic Harness |
 | :--- | :--- | :--- |
-| **Execution Mode** | Synchronous, interactive (developer at the keyboard). | Asynchronous, headless, event-driven (CI pipelines, webhooks). |
-| **Architecture** | Single-agent context processing conversational turns. | Multi-agent coordination with isolated context windows. |
-| **Escalation** | Interactive prompts directly in the terminal interface. | Machine-readable artifacts (Draft PRs, structured JSON comments). |
-| **Control Flow** | Vendor-managed tool-calling and retry loops. | Deterministic state machine (`while`, `try-catch`, state engines). |
-| **Best For** | Feature exploration, day-to-day coding, interactive fixes. | Automated bug-fix queues, batch repo migrations, strict CI gates. |
+| **Execution Mode** | Synchronous, interactive (human at keyboard). | Asynchronous, headless, event-driven (CI/CD, webhooks). |
+| **Architecture** | Single-agent context handling tasks sequentially. | Multi-agent orchestration (distinct personas with isolated contexts). |
+| **Escalation** | Prompts directly in the terminal interface. | Generates structured escalation artifacts (Draft PRs, inline diff comments). |
+| **Control Flow** | Black-box logic governed by vendor abstractions. | Deterministic flow (`while`, `try...except`, custom state machines). |
+| **Best For** | Feature exploration, ad-hoc refactoring, solo dev. | Background bug-fixing, batch repository migrations, strict CI gates. |
 
-For day-to-day engineering, a well-configured interactive CLI backed by comprehensive `AGENTS.md` and `SKILL.md` files is often plenty. A custom programmatic harness becomes necessary when workflows need to run unattended in CI, enforce rigid security sandboxes, or process event-driven queues at scale.
-
-### Minimal Programmatic Harness Skeleton
-
-Here is a functional Python skeleton illustrating the core mechanics of a headless implementation loop:
+### Minimal Python Harness Skeleton
 
 ```python
 import subprocess
 from dataclasses import dataclass
-from typing import Tuple, Dict, Any
+from typing import Tuple
 
 @dataclass
 class HarnessState:
-    task_id: str
-    spec_path: str
+    task: str
     iteration: int = 0
     max_iterations: int = 3
-    last_error: str = ""
+    error_log: str = ""
 
-def run_tests() -> Tuple[bool, str]:
-    """Runs the deterministic test runner and captures output."""
-    res = subprocess.run(
-        ["pytest", "tests/", "-q", "--tb=short"],
-        capture_output=True,
-        text=True
-    )
-    return res.returncode == 0, res.stdout + res.stderr
+def run_deterministic_tests() -> Tuple[bool, str]:
+    """Runs test suite and returns pass status with stdout/stderr."""
+    result = subprocess.run(["pytest", "tests/"], capture_output=True, text=True)
+    return result.returncode == 0, result.stdout + result.stderr
 
-def apply_llm_patch(state: HarnessState) -> None:
-    """Invokes the model with the task spec and recent failure output to apply edits."""
-    prompt = f"Task: {state.spec_path}\n"
-    if state.last_error:
-        prompt += f"Previous verification failed:\n{state.last_error}\nFix the minimal code necessary."
-    
-    # In a full harness, this calls your LLM client with file edit tools exposed
-    pass
-
-def self_healing_loop(state: HarnessState) -> Dict[str, Any]:
+def self_healing_loop(state: HarnessState):
     while state.iteration < state.max_iterations:
         state.iteration += 1
-        print(f"[Loop] Running iteration {state.iteration}/{state.max_iterations}")
-
-        # 1. Apply code changes via LLM
+        
+        # 1. Generate / Edit Code via LLM Tool Call
         apply_llm_patch(state)
-
-        # 2. Run deterministic verification gate
-        passed, output = run_tests()
-        if passed:
-            print("[Loop] Tests passed cleanly.")
-            subprocess.run(["git", "commit", "-am", f"fix({state.task_id}): automated implementation"])
-            return {"status": "SUCCESS", "iterations": state.iteration}
-
-        # 3. Capture errors to steer the next iteration
-        state.last_error = output
-        print(f"[Loop] Verification failed. Capturing diagnostics.")
-
-    # 4. Iteration ceiling hit: escalate to human with context
-    print("[Loop] Iteration limit exceeded. Generating human escalation artifact.")
-    return {
-        "status": "ESCALATED",
-        "iterations": state.iteration,
-        "error_summary": state.last_error[-1000:]
-    }
+        
+        # 2. Deterministic Verification Gate
+        tests_passed, test_output = run_deterministic_tests()
+        if not tests_passed:
+            state.error_log = test_output
+            continue
+            
+        # 3. Static Analysis & Multi-Agent Gate
+        if run_security_audit_agent():
+            subprocess.run(["git", "commit", "-am", f"fix: {state.task}"])
+            return {"status": "SUCCESS"}
+            
+    # 4. Limit Exceeded -> Escalate to Human
+    return trigger_human_escalation(state)
 ```
 
-## The Evolution of Meta-Harnessing and System Drift
+## The evolution of meta-harnessing and system drift
 
-As model capabilities advance, how agentic harnesses are built and configured will shift:
+As model capabilities advance, how agentic harnesses are built and maintained will shift from manual rule-authoring to automated scaffolding.
 
-```text
-Current State:
-Human engineers write harnesses, author rules/*.md, and keep agents on tight rails.
+### The pretraining bottleneck
 
-Next Generation:
-Agents inspect repository topologies, synthesize bespoke harnesses, and coordinate subagent teams.
-```
-
-### 1. The Pretraining Bottleneck
-
-Today's models are proficient at localized code editing, but struggle to configure multi-agent orchestration loops or design comprehensive rule systems from scratch.
+Current foundation models are proficient at localized code editing, but struggle to configure multi-agent orchestration loops or design comprehensive rule systems from scratch.
 
 This limitation stems from their training data: repositories created prior to 2024 contained almost no examples of agent harnesses, `.agents/rules/`, MCP server configurations, or programmatic subagent workflows. Because models have few training examples of self-governance, human engineers must define the ground rules—structuring context, configuring tools, and erecting boundary fences.
 
-This changes how platform and library maintainers should approach developer documentation:
-- **Documentation is no longer consumed only by humans in browsers**: Writing a Swagger UI or a static wiki is no longer enough.
-- **Ship Native MCP Servers**: Expose your platform's APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with your services directly.
+This changes how platform and library maintainers should approach developer tooling:
+- **Documentation is no longer consumed only by humans in browsers**: Static wikis and Swagger UIs are insufficient for automated agents.
+- **Ship Native MCP Servers**: Expose platform APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with services directly.
 - **Provide Executable Skills (`SKILL.md`)**: Package explicit, multi-step integration workflows, token refresh routines, and pagination logic directly into the repository so agents don't have to guess.
 
-### 2. Autophagous Data and Verifiable Selection Loops
+### Autophagous data and verifiable selection loops
 
-As code written by AI agents becomes a significant portion of public repositories, the next generation of models will inevitably train on synthetic code. In machine learning, training recursively on uncurated synthetic data can cause **Model Collapse**:
+As code written by AI agents becomes a significant portion of public repositories, future models will inevitably train on synthetic code. Training recursively on uncurated synthetic text risks model collapse—where edge cases are forgotten and hallucinated patterns compound.
 
-- long-tail edge cases and deep domain knowledge are forgotten;
-- hallucinated APIs and anti-patterns compound across training generations;
-- overall reasoning and code quality degrade.
+However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically**.
 
-```text
-The Degenerative Loop (Model Collapse):
-Model generates code ──► Unchecked code committed to repos ──► Model trains on synthetic output ──► Degraded reasoning
+If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection. Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
 
-The Verifiable Selection Loop (Robust Drift):
-Model generates code ──► Compilers, test suites, and mutation checks verify output ──► Only verified code enters training corpora ──► Hardened next-gen models
-```
+## Final principles
 
-Fortunately, software engineering has a built-in defense that natural language lacks: **software can be verified deterministically**.
-
-If future models are trained indiscriminately on all synthetic code on GitHub, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit test suites, eliminate mutation escapes, and run without warnings—the synthetic training loop becomes a form of **reinforcement learning via verifiable selection**, steadily steering future models toward cleaner, more robust patterns.
-
-## Recommended Adoption Path
-
-Start simple and add process only as your requirements demand:
-
-1. **Start in the IDE**: Install an interactive coding agent CLI or extension.
-2. **Pick a Familiar Codebase**: Start with a small, well-understood repository that already has solid test coverage.
-3. **Add a Baseline `AGENTS.md`**: Define core rules, module boundaries, and forbidden operations.
-4. **Create a Single `verify` Script**: Ensure a single command runs formatting, type checks, and unit tests cleanly.
-5. **Write a Focused `SPEC.md`**: Define clear, testable acceptance criteria for a single feature or bug fix.
-6. **Require a Plan First**: Direct the agent to produce a `PLAN.md` without modifying any code.
-7. **Approve One Slice**: Authorize the agent to implement Step 1 and nothing else.
-8. **Verify and Inspect**: Let the agent run its tests, inspect the resulting git diff, and run your independent verification script.
-9. **Capture Recurring Mistakes**: Whenever an agent makes a mistake, don't just patch the code—add a rule in `.agents/rules/` or write an automated architecture test to prevent it from happening again.
-10. **Automate Over Time**: Introduce custom skills, automated mutation testing, and programmatic harnesses only after your day-to-day workflow outgrows text-based instructions.
-
-## Core Operating Principles
-
-1. **Start with an established harness** before attempting to build a custom orchestrator in-house.
-2. **Decouple operational phases**: Keep specification, planning, implementation, and review distinct.
-3. **Approve semantic changes**, not every mechanical command or individual test run.
-4. **Enforce hard bounds on every loop**: Set explicit iteration limits, atomic Git boundaries, and clear escalation paths.
-5. **Enforce deterministic rules with deterministic tools**: Use linters, compilers, and test suites to verify code; use models to synthesize and repair it.
-6. **Use mutation testing to assess test quality**: Mutation tools introduce defects; models analyze survivors and write tests to catch them.
-7. **Steer with negative boundaries**: Forbidding catastrophic anti-patterns gives the model flexibility while keeping the architecture safe.
-8. **Harden the harness, not just the code**: Encode fixes in repository rules, scripts, and tests to eliminate entire categories of recurring mistakes.
-9. **Restrict permissions and sandboxes**: Gate destructive filesystem operations, mask production secrets, and require human confirmation for cloud environments.
-10. **Retain human oversight on merges**: Let agents write code, run verification, and open draft pull requests, but keep human review and protected branches as the final authority.
-
----
-
-### Related Notes
-- [[Building Determinism from Unpredictable Models]]
-- [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]
-- [[The Living Engineering Chronicle and Context Compaction]]
-- [[Negative Knowledge and Explicit Architectural Dissents]]
-- [[Executable Architecture Tests for Coding Agent Guardrails]]
-- [[The Conductor Pattern for High-Bandwidth Engineering]]
-- [[Agent Deployment and Execution Models]]
-- [[Constraint Saturation and Rule Oscillation in Coding Agents]]
-- [[Learning Coding Agents Through Failure-Driven Instructions]]
-- [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]
+1. Use a ready-made harness before building a custom one.
+2. Separate specification, plan, execution and review.
+3. Approve semantic steps, not every mechanical command.
+4. Give every loop explicit success, retry and stop conditions.
+5. Keep repository guidance concise and close to the relevant code.
+6. Make setup and verification reproducible with scripts.
+7. Use deterministic tools for deterministic checks.
+8. Use mutation tools to generate mutations and an LLM to interpret survivors.
+9. Restrict credentials, network access and production authority.
+10. Let agents prepare commits and draft PRs, but retain CI, branch protection and merge approval.

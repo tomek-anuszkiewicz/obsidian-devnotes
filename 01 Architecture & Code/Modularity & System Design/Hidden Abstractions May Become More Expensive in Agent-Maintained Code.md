@@ -1,5 +1,5 @@
 ---
-title: "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
+title: Hidden Abstractions May Become More Expensive in Agent-Maintained Code
 tags:
   - software-architecture
   - ai-agents
@@ -8,8 +8,6 @@ tags:
   - simplicity
   - software-engineering
 aliases:
-  - "Hidden Abstractions May Become More Expensive in Agent-Maintained Code"
-  - "The Cost of Hidden Abstractions in Agent-Maintained Code"
   - Cost of Hidden Abstractions with Agents
   - Explicit vs Magic Abstractions in AI Era
   - Semantic Locality in Agentic Architecture
@@ -17,22 +15,38 @@ aliases:
   - Domain Vocabulary Alignment
 ---
 
-# Hidden Abstractions May Become More Expensive in Agent-Maintained Code
+Modern software engineering often tries to remove repetitive concerns from local code.
 
-Modern software engineering often tries to strip repetitive mechanics out of application code. Instead of hand-rolling validation, authorization, retries, database transactions, logging, distributed tracing, and error mapping inside every single endpoint or command handler, we delegate them to reusable framework mechanisms:
+Instead of explicitly writing validation, authorization, retries, transactions, logging, tracing, error mapping, and other infrastructure in every operation, we move them into reusable mechanisms such as:
 
-- HTTP middleware pipelines
-- Interceptors and dynamic decorators
-- Inversion of Control (IoC) containers
-- Delegating HTTP message handlers
-- Framework action filters
-- MediatR and command pipeline behaviors
-- Entity Framework interceptors and global query filters
-- Global exception mappers
-- Assembly scanning and convention-based registrations
-- Ambient execution contexts (`AsyncLocal<T>`, `HttpContext.Current`)
+- middleware,
+    
+- interceptors,
+    
+- decorators,
+    
+- dependency injection,
+    
+- HTTP message handlers,
+    
+- framework filters,
+    
+- MediatR behaviors,
+    
+- Entity Framework interceptors and query filters,
+    
+- global exception handling,
+    
+- conventions,
+    
+- assembly scanning,
+    
+- ambient context.
+    
 
-This pattern makes individual methods look remarkably lean. Consider a common C# controller action or minimal API endpoint:
+This can make individual methods extremely small.
+
+For example:
 
 ```csharp
 public Task<Response> GetOrder(GetOrderRequest request)
@@ -41,148 +55,135 @@ public Task<Response> GetOrder(GetOrderRequest request)
 }
 ```
 
-On the surface, this method is trivial to read. But at runtime, execution looks more like this:
+The method appears simple.
+
+However, the actual execution may look more like:
 
 ```text
-HTTP Request
-→ Authentication middleware
-→ Authorization middleware
-→ Global exception handler
-→ Request validation behavior (FluentValidation)
-→ MediatR pipeline dispatch
-→ Logging and telemetry scope behavior
-→ Transaction scope behavior
-→ Concrete OrderHandler execution
-→ Entity Framework Core global query filter (TenantId check)
-→ Database command interceptor (Soft-delete filter)
-→ Generated SQL execution
-→ Response DTO mapping (AutoMapper)
-→ JSON serialization
-→ HTTP Response
+HTTP request
+→ authentication middleware
+→ authorization middleware
+→ exception middleware
+→ request validation
+→ MediatR
+→ logging behavior
+→ transaction behavior
+→ handler
+→ Entity Framework query filter
+→ database interceptor
+→ SQL
+→ response mapping
+→ serialization
 ```
 
-The method body has almost zero visual noise, but its runtime semantics are complex. 
+The local code is simple, but the semantics are not.
 
-For an experienced human engineer who built or lived in that codebase for two years, this ambient machinery is second nature. But when software is increasingly read, analyzed, and modified by AI coding agents entering a repository on demand, this split between visual brevity and operational reality becomes a serious liability.
-
----
+This distinction may become increasingly important when software is primarily modified by agents.
 
 ## Local Simplicity Is Not the Same as Semantic Simplicity
 
-An agent analyzing an isolated method must understand far more than the tokens visible within that method's curly braces.
+An agent working on a method must understand more than the code visible inside the method.
 
-Consider an outbound network call:
+Consider:
 
 ```csharp
 await httpClient.SendAsync(request);
 ```
 
-To an LLM scanning the file, this looks like a straightforward, one-shot HTTP request. But in a typical enterprise setup, the underlying `HttpClient` handler chain silently injects:
+The request may implicitly include:
 
-- Ambient authentication headers (OAuth bearer token refresh flows)
-- Distributed tracing correlation identifiers (`traceparent`, `tracestate`)
-- Centralized retry policies (Polly handlers with exponential backoff)
-- Circuit breakers and bulkhead isolators
-- Dynamic timeouts
-- Client-side metrics emission
-- Active tenant context headers
+- authentication headers,
+    
+- correlation identifiers,
+    
+- retry policies,
+    
+- circuit breakers,
+    
+- timeouts,
+    
+- telemetry,
+    
+- logging,
+    
+- tenant context.
+    
 
-The actual runtime behavior is scattered across remote startup classes, configuration files, and framework extensions.
+The important behavior is distributed across configuration and framework mechanisms.
 
-The same problem shows up in modern data access:
+Similarly:
 
 ```csharp
 context.Orders.ToListAsync();
 ```
 
-Because of underlying EF Core configurations, this single call might actually translate to:
-
-```sql
-SELECT [o].[Id], [o].[OrderNumber], [o].[Total]
-FROM [Orders] AS [o]
-WHERE [o].[TenantId] = @__ef_filter__CurrentTenantId_0
-  AND [o].[IsDeleted] = 0
-```
-
-The call site looks like an unrestricted read of the entire table. In reality, it executes with an implicit multi-tenant constraint, an implicit soft-delete filter, and custom interceptor logic attached to the underlying database connection.
-
-The core problem here is not abstraction. Software cannot function without abstractions. The problem is **non-local semantics**: the meaning, constraints, and side effects of a line of code depend entirely on logic that is nowhere to be seen at the call site.
-
----
-
-## The Spectrum of Semantic Locality
-
-Codebases exist on a spectrum between total explicit clarity and completely invisible mechanics:
+may actually mean:
 
 ```text
-Level 1: Explicit Parameterization (Highest Semantic Locality)
-CalculatePrice(order, customerTier, discountPolicy);
--> All operational inputs, rules, and runtime dependencies are directly visible.
-
-Level 2: Direct Interface Composition
-priceCalculator.Calculate(order);
--> Clean interface boundary, navigable via standard symbol navigation.
-
-Level 3: Runtime-Resolved Dependency Injection
-priceCalculator.Calculate(order);
--> Implementation is conditionally chosen at runtime by the container based on 
-   configuration, feature flags, or request metadata.
-
-Level 4: Ambient Execution Magic (Lowest Semantic Locality)
-priceCalculator.Calculate(order);
--> Behavior silently relies on ambient AsyncLocal user context, global DB interceptors, 
-   middleware ordering, and auto-enlisted transaction scopes.
+load Orders
+where TenantId == CurrentTenant
+excluding soft-deleted records
+using an interceptor-defined database command behavior
 ```
 
-When an agent works on Level 1 or Level 2 code, it can reason about inputs, side effects, and failure modes directly from the surrounding context. 
+because of global query filters and other Entity Framework configuration.
 
-When it encounters Level 4 code, visual brevity provides zero safety. The method is an iceberg: 10% visible application code, 90% hidden runtime plumbing.
+The problem is therefore not simply abstraction.
 
----
+The deeper problem is **non-local semantics**.
 
-## Hidden Execution Context and Ambient State
+The meaning of a line of code depends on code that is not locally visible.
 
-The most problematic dependencies are those never passed through a method signature or constructor. They ride along in ambient execution state:
+## Hidden Execution Context Is Particularly Difficult
 
-- `HttpContext.Current` / `IHttpContextAccessor`
-- `AsyncLocal<T>` and thread-local storage
-- `Activity.Current` (distributed tracing baggage)
-- `ClaimsPrincipal.Current`
-- Ambient tenant resolution services
-- Thread culture and timezone settings
-- Container service locators resolving scoped instances mid-execution
-- Feature flag state fetched dynamically from remote providers
-- Ambient database transaction scopes (`TransactionScope`)
+Some dependencies are not passed explicitly at all.
 
-A method signature may state:
+They may come from:
+
+```text
+HttpContext
+AsyncLocal
+Activity.Current
+ClaimsPrincipal
+current tenant services
+current culture
+scoped dependency resolution
+feature flags
+environment configuration
+```
+
+A method can therefore appear to depend on:
 
 ```csharp
-public void Process(Order order)
+Process(Order order)
 ```
 
-while its actual execution requirements are:
+while its real inputs include:
 
 ```text
-order 
-+ current authenticated user
-+ active organization / tenant ID
-+ active distributed transaction
-+ dynamic feature flag snapshot
-+ request routing metadata
-+ ambient culture info
+order
+current user
+tenant
+feature configuration
+current transaction
+request metadata
+culture
+authorization context
 ```
 
-The real dependency graph is significantly wider than the function signature reveals.
+This makes the true dependency graph much larger than the function signature suggests.
 
-A human engineer slowly internalizes these hidden conventions through institutional memory, onboarding, and painful debugging sessions. An agent entering a repository to resolve an issue or add an endpoint has to rediscover this invisible context from scratch every single run.
+Humans often tolerate this because experienced developers gradually learn the architecture.
+
+An agent entering a repository for a single task must rediscover it.
 
 This creates a distinct failure mode: an agent writes code that compiles, passes localized unit tests using standard mocks (where ambient contexts default to empty or null), and then breaks in multi-tenant production because it bypassed an implicit ambient filter or failed to populate an `AsyncLocal` state variable.
 
----
+## Dynamic Dependency Injection Makes the Problem Worse
 
-## Dynamic Dependency Injection Obscures the Call Graph
+Constructor injection itself is usually relatively easy to understand.
 
-Standard constructor injection is usually straightforward for automated tools to trace. The friction increases dramatically when the IoC container uses runtime context to select implementations:
+The situation becomes more difficult when implementations depend on runtime context:
 
 ```csharp
 services.AddScoped<IPriceCalculator>(sp =>
@@ -198,332 +199,536 @@ services.AddScoped<IPriceCalculator>(sp =>
 });
 ```
 
-At the call site, the code appears clear:
+Local code may only contain:
 
 ```csharp
 priceCalculator.Calculate(order);
 ```
 
-Yet neither an engineer nor an LLM can determine what code actually runs without reverse-engineering the container registration, identifying how `OperationContext.Channel` is set in the HTTP pipeline, and mapping that against the current scenario.
+but the implementation that actually runs depends on external state.
 
-This opacity compounds when systems lean heavily on:
+Similar problems appear with:
 
-- Keyed and tagged service resolutions
-- Dynamic runtime decorators
-- Assembly scanning (`services.Scan(...)`) that auto-registers classes by naming convention
-- Open generic registrations (`typeof(IValidator<>)`)
-- Conditional feature-flag registrations
-- Plugin architectures loading assemblies via reflection
+- keyed services,
+    
+- decorators,
+    
+- assembly scanning,
+    
+- open generic registrations,
+    
+- conditional registration,
+    
+- plugin architectures.
+    
 
-When static analysis cannot determine which concrete class implements an interface for a given execution path, the agent loses the ability to reliably verify its changes.
+The call site no longer tells the agent what code it is calling.
 
----
+When static analysis cannot determine which concrete class implements an interface for a given execution path, the agent loses the ability to trace dependencies or reliably verify its changes.
 
-## Interceptors and Pipelines: Where Infrastructure Meets Business Semantics
+## Interceptors and Pipelines Can Hide Business-Relevant Semantics
 
-Cross-cutting pipelines become dangerous when they quietly take on business-critical responsibilities.
+Cross-cutting abstractions become especially problematic when they contain behavior that changes the meaning of an operation.
 
-Take a seemingly innocent data call:
+A call such as:
 
 ```csharp
 repository.Save(order);
 ```
 
-In a framework-heavy codebase, that single line might trigger a chain of interceptors:
+may secretly perform:
 
 ```text
-repository.Save(order)
-→ Check tenant permissions (Authorization)
-→ Run domain validation rules (Validation)
-→ Begin database transaction (Data integrity)
-→ Write audit trail entry (Compliance)
-→ Commit state to database (Persistence)
-→ Publish Domain Events to message broker (Integration)
-→ Invalidate Redis cache keys (Consistency)
+authorization
+→ validation
+→ transaction creation
+→ audit logging
+→ persistence
+→ event publication
+→ cache invalidation
 ```
 
-Some of these are pure infrastructure: timing metrics, standard SQL tracing, connection pooling. But others—transaction boundaries, authorization rules, idempotency gates, domain events, and cache invalidations—are direct expressions of business semantics.
+Some of these are infrastructure concerns.
+
+Others are part of the operation's semantics.
+
+The distinction matters.
+
+A generic timing metric being invisible is usually harmless.
+
+A transaction boundary, retry policy, tenant filter, authorization rule, or business validation being invisible can fundamentally change how an agent should modify the operation.
 
 When an agent needs to alter how an order is saved, it cannot see where the transaction begins or commits, whether the cache update is atomic, or whether domain events fire before or after the database write. If those operations are buried inside generic decorators or database interceptors, an agent trying to fix a bug or add a step will frequently introduce race conditions, partial writes, or security bypasses.
 
----
+## Agents May Change the Economics of Explicit Code
 
-## The Changing Economics of Explicit Code
+Traditional software engineering strongly rewards removing repetition.
 
-Traditional software engineering placed an immense premium on minimizing line counts and keystrokes. The rationale was obvious:
-
-```text
-Human writes duplicate code
-→ More code to read and maintain
-→ Higher surface area for human error
-→ High risk of inconsistent implementations
-```
-
-This dynamic drove developers toward strict DRY patterns: extract every common pattern into a global filter, hide repeated mechanics behind ambient interceptors, and keep methods under five lines at all costs.
-
-AI coding agents change the economics of this tradeoff. Agents generate, read, and verify code at negligible marginal cost compared to humans. Conversely, their failure modes skew heavily toward hallucinating unstated assumptions, misinterpreting implicit behavior, and missing cross-file conventions.
-
-This shifts the engineering balance:
+The reasoning is understandable:
 
 ```text
-Traditional DRY Strategy:
-Eliminate visual repetition 
-→ Move logic into ambient frameworks and dynamic interceptors
-→ Result: High cognitive load, non-local semantics, fragile automated edits
-
-Agent-Friendly Strategy:
-Maximize semantic locality 
-→ Use explicit pipelines, direct parameters, and visible boundaries
-→ Result: Slightly higher line counts, zero hidden runtime assumptions, low blast radius
+duplication
+→ more code
+→ more maintenance
+→ more opportunities for inconsistency
 ```
 
-The goal is not to write sprawling, unmaintainable boilerplate. The goal is to eliminate **invisible semantics**.
+This encourages patterns such as:
 
----
+```text
+DRY
+→ centralize behavior
+→ hide repeated mechanics behind abstractions
+```
+
+But agents reduce the cost of producing and maintaining repetitive code.
+
+Agents generate, read, and verify code at negligible marginal cost compared to humans. Conversely, their failure modes skew heavily toward hallucinating unstated assumptions, misinterpreting implicit behavior, and missing cross-file conventions.
+
+This creates the possibility of a different tradeoff:
+
+```text
+some duplication
+→ greater semantic locality
+→ easier reasoning
+→ safer automated modification
+```
+
+The goal does not need to be eliminating abstractions.
+
+It may instead be eliminating **invisible semantics**.
 
 ## Explicit Execution Pipelines
 
-Instead of routing execution through opaque runtime buses:
+One possible direction is to make important operation semantics visible directly in the operation definition.
+
+Instead of:
 
 ```csharp
-public Task<Response> Handle(GetOrderRequest request)
-{
-    return mediator.Send(request);
-}
+return mediator.Send(request);
 ```
 
-we can compose operations using explicit pipelines that state their execution graph openly:
+an operation might resemble:
 
 ```csharp
-public static Task<OrderResponse> Handle(
-    GetOrderRequest request, 
-    IOrderRepository repository,
-    CancellationToken ct)
-{
-    return Operation
-        .From(request)
-        .Validate(new GetOrderValidator())
-        .Authorize(Permissions.OrdersRead)
-        .Retry(RetryPolicies.ExternalNetworkRead)
-        .Execute(req => repository.GetOrderAsync(req.OrderId, ct))
-        .ValidateResponse(response => response != null)
-        .MapErrors(OrderErrorMapper.ToHttpResult)
-        .Return();
-}
+return Operation
+    .From(request)
+    .Validate<GetOrderValidator>()
+    .Authorize<ReadOrderPolicy>()
+    .Retry(ExternalPolicies.Read)
+    .Execute<GetOrderHandler>()
+    .ValidateResponse<GetOrderResponseValidator>()
+    .MapErrors<OrderHttpErrors>()
+    .Return();
 ```
 
-The syntax can vary based on language and team preferences. The architectural win is that the operational execution graph is laid out directly in the file:
+The exact syntax is not important.
+
+The important property is that the execution graph becomes visible:
 
 ```text
-Incoming request
-→ Specific validator
-→ Explicit permission check
-→ Configured retry strategy
-→ Database operation execution
-→ Response verification
-→ Error mapping
-→ Return response
+request
+→ validation
+→ authorization
+→ retry policy
+→ execution
+→ response validation
+→ error mapping
+→ response
 ```
 
-An agent modifying this workflow does not have to hunt down MediatR pipeline registrations, check whether validation happens before or after authorization, or guess if the call is wrapped in a retry handler. The operational sequence is right in front of it.
+An agent can reason about the operation without reconstructing several layers of framework configuration.
 
----
+## This Does Not Mean Eliminating All Abstraction
 
-## The Boundary: Framework Owns Mechanics, Operation Owns Semantics
+Some abstractions should remain hidden.
 
-Making code semantically explicit does not mean stripping out all abstractions and writing low-level socket code. 
-
-For instance, an ASP.NET Core controller or endpoint handler accepts a strongly typed DTO:
+For example, an ASP.NET action can reasonably receive:
 
 ```csharp
-public async Task<Results<Ok<Order>, NotFound>> GetOrder(GetOrderRequest request)
+GetOrderRequest request
 ```
 
-The handler does not—and should not—manually orchestrate:
+without explicitly handling:
 
-- TCP handshake and connection management
-- TLS decryption
-- HTTP/2 or HTTP/3 frame parsing
-- UTF-8 byte decoding
-- JSON tokenization and memory allocation
-- Request buffer recycling
+```text
+TCP
+HTTP parsing
+TLS
+UTF-8
+JSON tokenization
+object allocation
+deserialization
+```
 
-Those are **implementation mechanics**. The business operation does not care how the bytes on the wire turned into a `GetOrderRequest` instance, so long as the conversion adheres to the standard protocol.
+These are implementation mechanisms.
 
-The boundary is straightforward:
+The operation usually does not care how the DTO was produced.
 
-> **The framework owns mechanics. The operation owns semantics.**
+Similarly, returning a response object does not require the business operation to explicitly handle HTTP serialization or socket writes.
 
-The framework should silently handle how an HTTP packet becomes an object in memory. The operation itself must explicitly declare the rules that determine its business outcome: who can call it, what invariants must hold, how transactions are bounded, and what happens when an external dependency fails.
+A useful boundary may therefore be:
 
----
+```text
+framework owns mechanics
+operation owns semantics
+```
 
-## What Can Stay Implicit vs. What Must Be Explicit
+The framework can hide how input becomes a DTO.
 
-Not every system concern needs to be exposed at the call site. The dividing line comes down to whether the behavior alters business outcomes or operational invariants:
+The operation should make visible the decisions that influence what the operation means.
 
-| System Behavior | Recommended Approach | Architectural Rationale |
-| :--- | :--- | :--- |
-| **Low-Level Plumbing** | **Implicit / Framework-Owned** | TCP framing, TLS negotiation, JSON tokenization, memory buffer pooling. These mechanics have no bearing on business logic; keep them hidden. |
-| **Generic Telemetry** | **Implicit / Middleware** | Execution duration timers, Prometheus request counters, standard OpenTelemetry tracing spans. Safe to handle globally. |
-| **Tenant Isolation** | **Explicit** | Multi-tenant leaks are severe security bugs. Passing tenant context explicitly or scoping queries visibly prevents silent cross-tenant data access. |
-| **Transaction Scopes** | **Explicit** | Agents need to see exactly where units of work begin, commit, or abort to avoid deadlocks, partial writes, and distributed state corruption. |
-| **Retries & Idempotency** | **Explicit Policy Attachment** | Knowing an operation can run multiple times dictates how side effects, unique constraints, and payment charges must be structured. |
-| **Authorization Checks** | **Explicit Gates** | Security policies should be visible in the execution pipeline so agents cannot inadvertently bypass access controls during refactors. |
-| **Cache Invalidation** | **Explicit Handlers** | Hiding cache updates in database interceptors causes stale reads and split-brain states that are notoriously hard for automated tools to trace. |
+## Infrastructure Can Be Implicit More Safely Than Business Semantics
 
----
+Not all hidden behavior has the same cost.
 
-## Global Policy Configuration, Local Semantic Binding
+Relatively safe candidates for implicit handling include:
 
-Writing explicit code does not mean copy-pasting complex implementation details across every file.
+```text
+generic logging
+tracing
+request timing
+metrics
+compression
+correlation IDs
+serialization
+```
 
-Consider retry logic. Instead of burying retry rules inside a generic, opaque HTTP client factory:
+More dangerous hidden behavior includes:
+
+```text
+authorization
+tenant selection
+business validation
+transaction boundaries
+retry behavior
+idempotency
+cache semantics
+feature flags
+currency or locale selection
+handler selection
+error interpretation
+```
+
+A possible rule is:
+
+> Infrastructure may be implicit. Business-relevant semantics should preferably be explicit.
+
+The boundary will not always be perfect, but it provides a useful design direction.
+
+The operational distinction comes down to failure blast radius. When generic timing metrics or trace baggage fail, the endpoint degrades slightly. When tenant filters, transaction boundaries, or cache invalidations are hidden in interceptors, an agent modifying the code risks introducing silent cross-tenant leaks, partial writes, or split-brain cache states that localized unit tests will not catch.
+
+## Global Configuration Still Has Value
+
+Making behavior explicit does not require copying implementation details into every operation.
+
+For example, retry may still be centrally configured:
 
 ```csharp
-// Silent global injection: the call site has no idea it retries
+RetryPolicies.ExternalRead
+```
+
+could define:
+
+```text
+3 attempts
+exponential backoff
+jitter
+retry on timeout
+retry on HTTP 502/503/504
+```
+
+while the operation only says:
+
+```csharp
+.Retry(RetryPolicies.ExternalRead)
+```
+
+This separates two different concerns:
+
+```text
+local code:
+WHAT semantic policy applies
+
+central configuration:
+HOW that policy works
+```
+
+This may be a particularly useful compromise.
+
+Global configuration defines reusable policy.
+
+The call site explicitly declares that the policy participates in the operation.
+
+## Named Semantics Are Better Than Silent Global Behavior
+
+Compare:
+
+```csharp
 await client.SendAsync(request);
 ```
 
-you centralize the policy's implementation, but bind it explicitly at the call site:
+where retry is silently injected by global `HttpClient` configuration,
+
+with:
 
 ```csharp
-// Reusable policy defined centrally:
-public static class RetryPolicies
-{
-    public static readonly IAsyncPolicy ExternalRead = Policy
-        .Handle<HttpRequestException>()
-        .Or<TimeoutException>()
-        .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * Math.Pow(2, attempt)));
-}
-
-// Call site:
 await request
-    .WithPolicy(RetryPolicies.ExternalRead)
-    .ExecuteAsync(ct);
+    .Retry(RetryPolicies.ExternalRead)
+    .Execute();
 ```
 
-This neatly separates two concerns:
+The second version still uses abstraction.
 
-- **Local code declares WHAT semantic policy applies**: "This call retries using external read policies."
-- **Central configuration defines HOW that policy executes**: 3 attempts, exponential backoff, jitter, specific exception filters.
+However, the abstraction leaves a visible semantic trace.
 
-The call site retains a visible semantic trace. An agent reading this code instantly understands an essential operational invariant: **this block of code may execute multiple times**.
-
-That single piece of explicit context directly influences whether the agent can safely place an un-keyed database insert, a third-party charge, or an external messaging call inside that block.
-
----
-
-## Why Truly Global Policies Break Down at Scale
-
-Decoupling policies from call sites creates operational headaches even without AI in the mix. 
-
-In large-scale production systems—spanning hundreds of endpoints, multiple databases, varied third-party integrations, and tight SLAs—a single "global" policy rarely stays truly global. It inevitably degrades into a maze of exceptions:
+The agent immediately knows that:
 
 ```text
-Global HTTP Policy
-  ├─ Default: 3 retries on failure
-  ├─ Except Payments (never retry non-idempotent charges)
-  ├─ Except Reporting (extended 60s timeout, no retries)
-  ├─ Except Inventory Bulk Import (custom streaming timeout)
-  └─ Except Legacy ERP (disable HTTP/2, custom headers)
+this operation may execute more than once
 ```
 
-The central configuration file turns into a brittle, high-cyclomatic-complexity router packed with conditional type checks, path matching, and custom attributes. You gain the illusion of simple endpoint handlers by shifting that complexity into an opaque, central configuration that is terrifying to modify.
+That knowledge can affect decisions about:
 
-Organizing policies by domain class or module, and binding them explicitly to operations, scales much better:
+- idempotency,
+    
+- database writes,
+    
+- external side effects,
+    
+- request identifiers,
+    
+- duplicate handling.
+    
+
+The exact implementation of retry remains reusable and centrally controlled.
+
+## Large Applications Already Struggle With Truly Global Policies
+
+This approach may also address a problem that exists even without AI.
+
+In a large system containing:
 
 ```text
-Catalog Service:
-    All read operations use CatalogPolicies.ResilientRead
-
-Billing Service:
-    Mutations explicitly require an IdempotencyKey
-    No automatic retries without an Idempotency-Token header
-
-Analytics Service:
-    Read-only transaction semantics
-    Extended command timeouts
+hundreds of endpoints
+many modules
+multiple databases
+different external integrations
+different SLA requirements
+different business risks
 ```
 
-The policies remain centralized and maintainable, but their application is declared clearly at the operational boundary.
+a single global policy is rarely actually global.
 
----
+It gradually becomes:
 
-## Mechanically Expandable Abstractions
+```text
+default behavior
+except Payments
+except Reporting
+except legacy integration
+except bulk operations
+except endpoint X
+unless attribute Y exists
+unless interface Z is implemented
+```
 
-An alternative to writing verbose call sites is providing tooling that lets agents mechanically expand abstractions on demand.
+The centralized configuration eventually becomes another complex program.
 
-If source code contains:
+The apparent simplicity of each endpoint is paid for by complexity elsewhere.
+
+Module-level or operation-class policies may therefore scale better:
+
+```text
+system defaults
+→ module defaults
+→ operation category
+→ explicit operation override
+```
+
+For example:
+
+```text
+Catalog:
+    external reads may retry
+
+Payments:
+    commands do not retry unless explicitly idempotent
+
+Reporting:
+    long timeout
+    read-only transaction semantics
+```
+
+The policy implementation remains centralized, while the semantic choice stays close to the operation.
+
+## Abstractions Could Become Mechanically Expandable
+
+There is another possible solution that does not require removing existing abstractions.
+
+Future frameworks and development tools could expose the resolved semantics of an operation.
+
+The source might contain:
 
 ```csharp
-.WithPolicy(RetryPolicies.ExternalRead)
+.Retry(RetryPolicies.ExternalRead)
 ```
 
-an agent equipped with static analysis tools or language server protocol (LSP) integrations can query the environment:
+while an agent can request:
 
 ```text
-$ tool resolve-policy RetryPolicies.ExternalRead
-
-Result:
-  Type: ExponentialBackoffRetry
-  MaxAttempts: 3
-  BaseDelay: 200ms
-  HandledExceptions:
-    - System.Net.Http.HttpRequestException
-    - System.TimeoutException
-  IdempotencyRequired: true
+resolve RetryPolicies.ExternalRead
 ```
 
-The same tooling could resolve an entire endpoint's operational profile:
+and receive:
 
 ```text
-$ tool describe-endpoint OrdersController.GetOrder
-
-Endpoint: OrdersController.GetOrder(Guid orderId)
-Runtime Profile:
-  Authentication: Required (JWT Bearer)
-  Authorization: Policy "OrdersRead" (Claims: scope=orders:read)
-  Tenant Isolation: Enforced (Query filter: TenantId == CurrentUser.TenantId)
-  Transaction: Read-Only (Enlisted: false)
-  Dependencies:
-    - IOrderRepository (Scoped: SqlOrderRepository)
-    - ICacheService (Scoped: RedisCacheService)
-  Execution Pipeline:
-    1. Validate Request (GetOrderValidator)
-    2. Check Cache (Key: "orders:{tenant}:{orderId}", TTL: 300s)
-    3. Query Database (EF Core - Tracking: Disabled)
+max attempts: 3
+backoff: exponential
+jitter: enabled
+retry:
+  timeout
+  502
+  503
+  504
 ```
 
-If modern application frameworks exposed this kind of resolved semantic execution model via machine-readable endpoints or CLI commands, agents wouldn't have to guess how your dynamic dependencies assemble at runtime. 
+The same mechanism could resolve an entire endpoint:
 
-The rule of thumb for designing modern framework layers is simple: **if you hide implementation details behind an abstraction, make sure that abstraction can be expanded mechanically by static tooling.**
+```text
+GetOrder
 
----
+authentication:
+    required
 
-## Encoding Business Meaning in Domain Vocabulary
+authorization:
+    ReadOrderPolicy
 
-Semantic locality isn't limited to control flow and execution graphs; it also applies to business vocabulary. Code should express concepts using the same ubiquitous domain language that appears across system documentation, API schemas, database tables, tests, and operational runbooks.
+validation:
+    GetOrderValidator
 
-Consider a pattern found in many codebases:
+tenant:
+    request tenant
+
+transaction:
+    read-only
+
+retry:
+    ExternalRead
+    attempts: 3
+
+handler:
+    GetOrderHandler
+
+cache:
+    OrderById
+    TTL: 5 minutes
+```
+
+This suggests an important property for future abstractions:
+
+> Abstractions should be mechanically expandable.
+
+Documentation is useful.
+
+A machine-readable resolved execution model is much more useful to an agent.
+
+## Good Abstractions for Agents May Optimize for Different Things
+
+Traditional APIs often optimize for:
+
+```text
+few lines
+few parameters
+minimal boilerplate
+maximum reuse
+```
+
+Agent-oriented APIs may increasingly optimize for:
+
+```text
+semantic locality
+explicit dependencies
+visible execution flow
+mechanically discoverable behavior
+predictable composition
+```
+
+This does not imply that code must become low-level.
+
+For example:
+
+```csharp
+.RetryTransient(3)
+```
+
+is still an abstraction.
+
+It hides backoff implementation, timers, exception matching, and scheduling.
+
+But it preserves the fact that matters semantically:
+
+```text
+the operation may execute multiple times
+```
+
+By contrast:
+
+```csharp
+.ExecuteUsingStandardEnterprisePolicies()
+```
+
+may hide almost everything the agent needs to know.
+
+A useful distinction is therefore:
+
+> A good abstraction reduces syntax without hiding important semantics.
+
+## Business Meaning Should Be Encoded in the Same Vocabulary
+
+Semantic locality is not only about where behavior executes.
+
+It is also about whether the code uses the same concepts and vocabulary as the domain, documentation, API contracts, database schema, tests, and operational descriptions.
+
+Consider:
 
 ```csharp
 if (payment != null)
 {
-    // ...
+    ...
 }
 ```
 
-In the original developer's head, this null-check represents a distinct business state: *the invoice has an active payment attempt underway, and is therefore unpaid*. 
+In a particular system, this may implicitly mean:
 
-An engineer reading that code after two years on the team might remember that convention. An AI agent scanning the file sees only the technical check: *an object reference exists*. It has to infer the business state, and that inference is often wrong.
+```text
+the invoice is unpaid
+```
 
-Now look at the explicit version:
+A developer who has worked on the system for years may know that convention.
+
+An agent may not.
+
+The agent sees evidence:
+
+```text
+Payment exists
+```
+
+but must infer the business conclusion:
+
+```text
+invoice is unpaid
+```
+
+That inference may be correct, incorrect, or missed entirely.
+
+Compare that with:
 
 ```csharp
 if (payment.Status == PaymentStatus.Unpaid)
 {
-    // ...
+    ...
 }
 ```
 
@@ -532,146 +737,263 @@ or:
 ```csharp
 if (payment.IsUnpaid)
 {
-    // ...
+    ...
 }
 ```
 
-The code directly reflects the business concept.
+Now the business concept is explicitly represented in the code.
 
-This alignment becomes crucial when tracking behavior across an entire repository. If your architectural runbook states:
+This matters particularly when the same concept appears elsewhere in the system.
+
+Suppose the documentation says:
 
 ```text
-"Retry all unpaid payments after 24 hours"
+retry unpaid payments
 ```
 
-and your OpenAPI specification exposes:
+the API specification contains:
 
-```yaml
-PaymentResponse:
-  properties:
-    status:
-      type: string
-      enum: [unpaid, processing, completed, failed]
+```text
+paymentStatus: unpaid
 ```
 
-and your test suite includes:
+and tests are named:
 
-```csharp
-[Fact]
-public async Task ShouldRetryUnpaidPayment_WhenGracePeriodExpires()
+```text
+ShouldRetryUnpaidPayment
 ```
 
-an agent searching the codebase to implement a new billing rule can instantly link the docs, contracts, and tests to:
+An agent searching for or reasoning about "unpaid payment" can directly associate all of these artifacts with:
 
 ```csharp
 PaymentStatus.Unpaid
 ```
 
-If the implementation instead hides behind:
+It has a much weaker semantic connection to:
 
 ```csharp
-if (payment != null)
+payment != null
 ```
 
-the agent's semantic search loses the trail.
-
-The same problem shows up with magic numbers and sentinel values:
+The same problem appears with sentinel values and technical representations:
 
 ```csharp
-// Unclear sentinel values (require inferential jumps):
-if (amount == 0)              // Means: "Price is complimentary/free"
-if (endDate == null)          // Means: "Subscription is actively running"
-if (retryCount == -1)         // Means: "Policy allows unlimited retries"
-if (status == 2)              // Means: "Order is pending fulfillment"
-if (customerId != null)       // Means: "Guest user has converted to registered account"
+amount == 0
+endDate == null
+retryCount == -1
+status == 2
+customerId != null
 ```
 
-Each of these checks requires the reader to infer a business conclusion from raw technical data. 
+These values may encode business meanings such as:
 
-Eliminate the guesswork by modeling the domain state explicitly:
+```text
+free
+active
+unlimited retries
+awaiting payment
+customer assigned
+```
+
+but the meaning is not present in the expression itself.
+
+A more agent-friendly model exposes the conclusion:
 
 ```csharp
-// Explicit domain representations:
-if (price.IsFree)
-if (subscription.IsActive)
-if (retryPolicy.IsUnlimited)
-if (order.Status == OrderStatus.PendingFulfillment)
-if (customer.IsRegisteredAccount)
+price.IsFree
+subscription.IsActive
+retryPolicy.IsUnlimited
+payment.Status == PaymentStatus.Unpaid
+order.HasAssignedCustomer
 ```
 
-Always prefer code that directly states business conclusions over code that merely exposes low-level technical evidence.
+This suggests a broader rule:
+
+> Prefer code that encodes business conclusions rather than only technical evidence from which those conclusions must be inferred.
+
+The principle extends beyond source code.
+
+Ideally, the same domain vocabulary should appear consistently in:
+
+```text
+domain model
+API contracts
+database schema
+tests
+documentation
+events and messages
+logs and telemetry
+```
+
+For example:
 
 ```text
 Documentation:
-  "Unpaid invoices trigger a reminder email."
+    unpaid payment
 
-Domain Model:
-  InvoiceStatus.Unpaid
+Code:
+    PaymentStatus.Unpaid
 
-API Contract:
-  "status": "unpaid"
+API:
+    paymentStatus = "unpaid"
 
-Database Schema:
-  status_code = 'unpaid'
+Database:
+    payment_status = "unpaid"
 
-Domain Event:
-  InvoicePaymentMarkedUnpaid
+Event:
+    PaymentBecameUnpaid
 
-Test Name:
-  ShouldSendReminderEmail_WhenInvoiceIsUnpaid()
+Test:
+    ShouldRetryUnpaidPayment
 ```
 
-When domain vocabulary is aligned across all artifacts:
+This creates **semantic alignment across artifacts**.
 
-- Semantic search and RAG indexing hit exact references.
-- Documentation maps directly to executable code.
-- Agents make edits using the domain model instead of hardcoded technical workarounds.
-- Automated code reviews can cross-reference business requirements directly against diffs.
+For an agent, that alignment has several benefits:
 
----
+- repository search becomes more reliable,
+- embeddings and RAG retrieval are more likely to connect relevant artifacts,
+- documentation can be mapped to implementation more directly,
+- fewer hidden conventions must be reconstructed,
+- code review requires less inference,
+- generated changes are more likely to use the correct business concept.
 
-## Semantic Locality as a Core Architectural Metric
-
-For decades, software architecture evaluated code through metrics like cyclomatic complexity, coupling, cohesion, and duplication.
-
-When systems are maintained and refactored by AI agents, **semantic locality** becomes just as critical.
+Comments can help:
 
 ```csharp
-// 1. Highest Semantic Locality:
+// A non-null Payment means the invoice has not been paid yet.
+if (payment != null)
+```
+
+but comments are weaker than encoding the meaning in the model itself.
+
+They can become stale, they may not participate in all tooling, and they still leave the underlying representation semantically indirect.
+
+Documentation or schema descriptions are also useful when the technical representation cannot be changed.
+
+For example, if a legacy database uses:
+
+```text
+payment_state = 2
+```
+
+then the schema or mapping layer should make the meaning mechanically discoverable:
+
+```text
+2 = unpaid
+```
+
+or preferably expose it to application code as:
+
+```csharp
+PaymentStatus.Unpaid
+```
+
+This leads to another useful design principle:
+
+> Use the same business vocabulary across code, contracts, schemas, tests, and documentation whenever practical.
+
+For humans, this reduces the amount of institutional knowledge needed to understand the system.
+
+For agents, it reduces the number of semantic translations that must be inferred before a change can be made safely.
+
+In this sense, agent-friendly code should not merely be readable.
+
+It should be **semantically searchable and cross-referenceable**.
+
+## Semantic Locality May Become an Architectural Goal
+
+We can think about code as having different levels of semantic locality.
+
+High semantic locality:
+
+```csharp
 CalculatePrice(order, customer, pricingRules);
+```
 
-// 2. Lower Semantic Locality:
-priceCalculator.Calculate(order);
+The important inputs are visible.
 
-// 3. Significantly Lower Semantic Locality:
-// Concrete implementation chosen dynamically at runtime via ambient state
-priceCalculator.Calculate(order);
+Lower semantic locality:
 
-// 4. Near-Zero Semantic Locality:
-// Real outcome depends on ambient thread state, dynamic middleware, and interceptors
+```csharp
 priceCalculator.Calculate(order);
 ```
 
-In all four cases, the line of code looks almost identical. But the cognitive work required to understand, test, and safely modify that line skyrockets as semantic locality drops.
+The implementation must be discovered.
 
-The answer is not to abandon abstractions or return to writing monolithic 1,000-line procedures. The goal is to build architectures that:
+Even lower semantic locality:
 
-- Hide low-level technical mechanics (parsing, allocations, transports).
-- Expose business-relevant semantics (transactions, security, retries).
-- Centralize policy definitions, but bind them explicitly at the call site.
-- Make composite abstractions inspectable by automated tooling.
-- Model explicit domain concepts instead of relying on implicit technical sentinels.
+```csharp
+priceCalculator.Calculate(order);
+```
 
-Code written this way is slightly more explicit than systems built around deep interceptor stacks. In exchange, it is radically easier for agents to update safely, faster for humans to review, and far more resilient to operational regressions.
+where dependency injection selects the implementation based on runtime context.
 
----
+Very low semantic locality:
 
-## Related Notes
+```csharp
+priceCalculator.Calculate(order);
+```
 
-- [[Designing Software for AI Agents]]
-- [[Software Decay and the Hidden Costs of Frictionless AI Code]]
-- [[Software Engineering May Shift Toward Code Optimized for Agents]]
-- [[Designing Internal Packages as an Explicit, Composable Framework]]
-- [[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]
-- [[Internal Shared Packages vs Agent-Generated Code]]
-- [[Testing in the Model, Agent, LLM Era]]
+where the result also depends on:
+
+```text
+current tenant
+feature flags
+ambient user
+interceptors
+global cache
+transaction context
+dynamic configuration
+```
+
+The textual code can remain equally short while the reasoning cost increases dramatically.
+
+For agent-maintained systems, **semantic locality may become as important as traditional measures such as coupling, cohesion, and duplication**.
+
+## The Likely Direction Is Not "No Abstractions"
+
+The more realistic direction is:
+
+```text
+hide mechanisms
+expose semantic decisions
+centralize implementation
+localize intent
+make abstractions inspectable
+```
+
+This could lead to code that is somewhat more verbose than today's most heavily abstracted application architectures.
+
+But the code may also become:
+
+- easier for agents to modify,
+    
+- easier for humans to review,
+    
+- easier to test,
+    
+- easier to analyze statically,
+    
+- less dependent on institutional knowledge,
+    
+- safer to refactor automatically.
+    
+
+The important shift may therefore not be from abstraction to no abstraction.
+
+It may be from:
+
+```text
+implicit, non-local behavior
+```
+
+toward:
+
+```text
+explicit, composable, mechanically discoverable behavior
+```
+
+In software increasingly written and maintained by agents, the cost of repetition may fall while the cost of hidden semantics becomes much more visible.
+
+That could change what we consider "clean" architecture.

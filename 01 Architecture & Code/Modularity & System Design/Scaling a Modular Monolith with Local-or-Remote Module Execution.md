@@ -6,207 +6,218 @@ tags:
   - microservices
   - distributed-systems
   - scalability
-  - structural-isolation
+  - dotnet
 aliases:
   - Modular Monolith Scaling
   - Local or Remote Module Execution
-  - Location-Transparent Dispatch
-  - Evolutionary Modular Architecture
-  - Avoiding the Distributed Monolith
 ---
 
-# Scaling a Modular Monolith with Local-or-Remote Module Execution
+## Core idea
 
-> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
-> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+A modular monolith does not have to mean that every module must always run in every process.
 
-## Core Principle: Decouple Module Boundaries from Process Boundaries
+It is possible to keep:
 
-A modular monolith does not mean every module must run inside the same operating system process across every server. It means keeping a single codebase, unified domain contracts, compiler-enforced boundaries, and coordinated deployments, while retaining the freedom to run selected workloads in separate deployment units as scaling demands shift.
+- one codebase,
+    
+- strong module boundaries,
+    
+- shared contracts,
+    
+- coordinated development,
+    
 
-The architectural power of this approach comes from decoupling four boundaries that teams frequently conflate:
+while allowing selected modules or workloads to run in separate deployment units and scale independently.
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                 THE 4-BOUNDARY DECOUPLING PRINCIPLE                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 1. MODULE BOUNDARY        != PROCESS BOUNDARY                           │
-│    (Logical domain code   != The physical host process executing it)    │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 2. PROCESS BOUNDARY       != DATA BOUNDARY                              │
-│    (A process can connect to specific, isolated database schemas)       │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 3. DATA BOUNDARY          != SERVICE OWNERSHIP BOUNDARY                 │
-│    (Schema ownership can be partitioned independently of deployments)   │
-├─────────────────────────────────────────────────────────────────────────┤
-│ 4. LOCAL EXECUTION        == A TRANSPORT OPTIMIZATION                   │
-│    (Cross-module calls are designed as potentially remote;              │
-│     running in-process is just an optimized, zero-network shortcut)     │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-The underlying mechanism is a **local-or-remote command dispatcher**:
+A useful architecture is based on a **local-or-remote command dispatcher**:
 
 ```text
-Module A sends a command to Module B:
+Module A sends a command to Module B.
 
-┌─────────────────────────────────────────────────────────┐
-│                 COMMAND DISPATCH ROUTER                 │
-└────────────────────────────┬────────────────────────────┘
-                             │
-            Is Module B running in this process?
-                             │
-              ┌──────────────┴──────────────┐
-             YES                            NO
-              ▼                             ▼
-┌───────────────────────────┐ ┌───────────────────────────┐
-│ LOCAL IN-MEMORY HANDLER   │ │ REMOTE TRANSPORT OUTBOX   │
-│ - Direct memory dispatch  │ │ - Serialize command       │
-│ - Zero serialization      │ │ - Route to queue or RPC   │
-│ - Microsecond execution   │ │ - Await response if needed│
-└───────────────────────────┘ └───────────────────────────┘
+If Module B is available in the current process:
+    execute the handler locally.
+
+If Module B is not available locally:
+    serialize the command,
+    send it through a queue or RPC transport,
+    execute it in another process,
+    return the result if needed.
 ```
 
-From the caller’s perspective, the invocation syntax is identical:
+From the caller’s perspective, the invocation may look similar:
 
 ```csharp
 var result = await commandBus.InvokeAsync<ReserveInventoryResult>(
-    new ReserveInventory(orderId, items),
-    cancellationToken);
+    new ReserveInventory(orderId, items));
 ```
 
-The runtime inspects its local service registry. If a handler for `ReserveInventory` is registered in-process, it dispatches in memory. If not, the dispatcher serializes the command, forwards it over a message broker or RPC transport to a dedicated worker, and asynchronously returns the result.
+The runtime decides whether the handler is local or remote.
 
-This pattern is known variously as location-transparent invocation, local-or-remote dispatch, a distributed command bus, or a component-based distributed runtime.
+This pattern may be described as:
+
+- location-transparent invocation,
+    
+- local-or-remote dispatch,
+    
+- distributed command bus,
+    
+- component-based distributed runtime,
+    
+- service virtualization.
+    
 
 ---
 
-## Why This Architecture Works
+## Why this is attractive
 
-The primary benefit is that your logical architecture remains completely stable while your physical deployment topology evolves:
+The logical architecture can remain stable while the physical deployment topology changes.
 
 ```text
-Logical Architecture:
+Logical architecture:
 
 Orders -> Payments
 Orders -> Inventory
 Orders -> Notifications
 ```
 
-On day one, every module runs in a single process behind a load balancer:
+Initially, all modules may run in one process:
 
 ```text
-Application Instance (All-in-One)
+Application instance
 ├── Orders
 ├── Payments
 ├── Inventory
 └── Notifications
 ```
 
-Six months later, notification processing spikes during sales campaigns, and third-party payment gateways start stalling HTTP worker threads. You peel those two modules off into dedicated worker pools without rewriting business logic:
+Later, selected modules can be separated:
 
 ```text
-Main API Host
+Main API
 ├── Orders
 └── Inventory
 
-Payment Worker Host
+Payment workers
 └── Payments
 
-Notification Worker Host
+Notification workers
 └── Notifications
 ```
 
-The Orders module still issues the exact same command:
-
-```csharp
-var result = await commandBus.InvokeAsync<PaymentResult>(
-    new ChargePayment(paymentAttemptId, orderId, amount),
-    cancellationToken);
-```
-
-When Payments is loaded locally, the command runs in-process. When Payments runs on dedicated worker infrastructure, the command routes through the configured transport. 
-
-This gives your team an evolutionary path:
+Orders still sends the same command:
 
 ```text
-Modular Monolith
-  └─► Replicated Monolith (Multiple identical instances behind LB)
-        └─► Workload-Specialized Roles (API vs. Workers)
-              └─► Independently Scaled Modules (Remote dispatch)
-                    └─► Separately Deployed Services (Extracted only when required)
+ChargePayment
 ```
 
-You avoid the operational tax of microservices—distributed deployments, complex CI/CD pipelines, disparate repositories, and distributed tracing nightmares—until you genuinely have the operational and organizational scale to justify them.
+When Payments is loaded locally, the command is executed directly.
+
+When Payments is deployed elsewhere, the command is sent through the configured transport.
+
+This provides a gradual path between:
+
+```text
+modular monolith
+-> multiple application roles
+-> independently scalable modules
+-> separately deployed services
+```
+
+without forcing an immediate migration to conventional microservices.
 
 ---
 
-## One Codebase, Multiple Deployment Roles
+## One codebase, multiple deployment roles
 
-Instead of splitting a new system into ten separate repositories, keep the domain code inside a single repository organized cleanly into modules and host targets:
+A practical structure may look like this:
 
 ```text
 src/
 ├── Modules/
 │   ├── Orders/
-│   │   ├── Orders.Contracts/
-│   │   ├── Orders.Application/
-│   │   └── Orders.Infrastructure/
+│   │   ├── Orders.Contracts
+│   │   ├── Orders.Application
+│   │   └── Orders.Infrastructure
 │   │
 │   ├── Payments/
-│   │   ├── Payments.Contracts/
-│   │   ├── Payments.Application/
-│   │   └── Payments.Infrastructure/
+│   │   ├── Payments.Contracts
+│   │   ├── Payments.Application
+│   │   └── Payments.Infrastructure
 │   │
 │   └── Notifications/
-│       ├── Notifications.Contracts/
-│       ├── Notifications.Application/
-│       └── Notifications.Infrastructure/
+│       ├── Notifications.Contracts
+│       ├── Notifications.Application
+│       └── Notifications.Infrastructure
 │
 └── Hosts/
-    ├── FullApplication/
-    ├── MainApi/
-    ├── PaymentsWorker/
-    └── NotificationsWorker/
+    ├── FullApplication
+    ├── MainApi
+    ├── PaymentsWorker
+    └── NotificationsWorker
 ```
 
-Different host targets reference different modules:
+Different hosts load different modules:
 
-- **FullApplication**: References Orders, Payments, Notifications (ideal for local development, integration testing, and low-traffic environments).
-- **MainApi**: References Orders and Inventory.
-- **PaymentsWorker**: References Payments.
-- **NotificationsWorker**: References Notifications.
+```text
+FullApplication:
+- Orders
+- Payments
+- Notifications
 
-Alternatively, you can compile a single deployable artifact and activate specific application roles at startup via command-line flags or environment variables:
+MainApi:
+- Orders
 
-```bash
+PaymentsWorker:
+- Payments
+
+NotificationsWorker:
+- Notifications
+```
+
+The same deployable artifact may also support roles through configuration:
+
+```text
 app --role full
 app --role api
 app --role payments
 app --role notifications
 ```
 
-The role determines which message consumers, background schedulers, HTTP route endpoints, and command handlers are registered with the dependency injection container.
+The role determines which handlers, consumers, schedulers and endpoints are active.
 
 ---
 
-## Capability vs. Responsibility: Keep Connectors Broad
+## Capability versus responsibility
 
-When configuring specialized deployment roles, maintain a clear distinction between what a process *can* do and what it is currently *assigned* to do:
+An important distinction is:
 
 ```text
-Capability:     Broad and uniform across worker deployments.
-Responsibility: Tightly constrained and explicitly configured per role.
+Can this instance perform an operation?
+
+Is this instance currently responsible for performing it?
 ```
 
-By default, give all application roles access to shared infrastructure primitives:
-- The main database cluster (using separate schemas per module),
-- The message broker,
-- External HTTP egress,
-- Distributed caches,
-- Object storage.
+A safe default is often:
 
-Then, use role-specific configuration to activate only the workloads that specific host should run:
+```text
+Capability: broad and consistent
+Responsibility: explicitly configured
+```
+
+For example, all instances may have access to:
+
+- the main database,
+    
+- the message broker,
+    
+- external HTTP services,
+    
+- caches,
+    
+- object storage.
+    
+
+But only selected deployment roles activate specific workloads:
 
 ```yaml
 role: payments-worker
@@ -224,307 +235,495 @@ schedulers:
   enabled: false
 ```
 
-### Why Removing Connectors Too Early Is Risky
+This is usually safer than trying to predict which connector or dependency a deployment will never need.
 
-Teams often try to enforce architectural boundaries by aggressively stripping credentials, database access, or network routes from worker nodes. For example, a developer decides a reporting worker only needs access to a read replica and a message queue.
+Unused capability is often cheap.
 
-Two sprints later, a new business requirement demands that the reporting engine verify customer permissions, append order metadata, calculate regional tax overrides, and fire a notification. 
-
-If those capabilities were physically severed at the infrastructure level, this minor functional change suddenly requires:
-- Provisioning new cloud IAM credentials,
-- Modifying firewall and VPC security group rules,
-- Updating CI/CD secret management pipelines,
-- Passing infrastructure-as-code reviews,
-- Coordinating environment deployments across environments.
-
-A change that should have taken two hours turns into a two-week multi-team coordination bottleneck. 
-
-Unused capability in a binary is cheap. Prematurely restricted capability makes ordinary business evolution expensive. Connector removal should be reserved for explicit, high-value drivers:
-- Hard regulatory compliance (e.g., PCI-DSS cardholder data environments),
-- Strict security isolation around high-privilege keys,
-- Protecting sensitive databases from lateral movement during a breach,
-- Extreme resource constraints (e.g., memory-constrained edge nodes).
+Incorrectly restricted capability can make future changes unexpectedly expensive.
 
 ---
 
-## Scale Activity, Not Necessarily Dependencies
+## Scale activity, not necessarily dependencies
 
-Scaling problems are almost always driven by uneven workload activity, not by code co-location. You can solve 95% of performance bottlenecks by scaling operational controls rather than tearing apart application codebases:
+The most important scaling controls are usually:
 
-- **Load balancer routing**: Splitting high-throughput read traffic from mutating operations.
-- **Queue subscriptions**: Directing compute-heavy background tasks away from web servers.
-- **Consumer concurrency**: Running 50 concurrent payment processors on a dedicated machine while running only 2 on standard nodes.
-- **Queue partitioning**: Partitioning work by customer or order ID to avoid lock contention.
-- **Replica counts**: Scaling worker pods up during batch processing hours and down to zero at night.
-- **Resource allocation**: Giving memory-heavy PDF generation workers 16 GB of RAM, while running API gateways on 2 GB.
-- **Scheduled job ownership**: Guaranteeing that background schedulers run on only one active instance using distributed locks.
+- load balancer routing,
+    
+- queue subscriptions,
+    
+- consumer concurrency,
+    
+- queue partitioning,
+    
+- worker replica count,
+    
+- CPU and memory limits,
+    
+- autoscaling based on queue depth,
+    
+- scheduled job ownership.
+    
+
+For example:
 
 ```text
-HTTP Ingress Traffic
-    └─► Main API Replicas (High CPU, Low Memory, Fast Response)
+HTTP traffic
+    -> Main API replicas
 
-Payment Commands
-    └─► Payments Message Queue
-          └─► Payment Workers (High Concurrency, Strict Timeouts)
+Payment commands
+    -> Payments queue
+    -> Payment workers
 
-Notification Events
-    └─► Notification Queue
-          └─► Notification Workers (High I/O, Asynchronous Retries)
+Notifications
+    -> Notification queue
+    -> Notification workers
 ```
 
-Every deployment can run off the exact same built container image and configuration templates. The only variation between instances is which consumers, listeners, and handlers are enabled.
+All deployments may use the same codebase and similar infrastructure configuration.
+
+The difference is which workloads are active.
+
+This is often simpler than building multiple partially capable applications with different sets of connectors and secrets.
 
 ---
 
-## The Reality of Local vs. Remote Execution
+## Why removing connectors too early is risky
 
-While location transparency simplifies caller syntax, treating a remote network call as if it were a local in-memory method invocation is dangerous. The runtime may abstract the network transport, but it cannot abstract physics.
+Suppose a reporting deployment initially appears to need only:
 
-| Execution Dimension | Local In-Process Dispatch | Remote Dispatch Over Transport |
-| :--- | :--- | :--- |
-| **Latency** | Sub-microsecond ($\mu s$) | Single- to triple-digit milliseconds ($ms$) |
-| **Memory Boundaries** | Shared heap, zero serialization overhead | Network packet serialization (JSON, Protobuf) |
-| **Failure Modes** | Immediate, deterministic in-memory exception | Timeouts, dropped packets, partial connection failures |
-| **Transactions** | Can share an ambient ACID transaction | Distributed state; requires outbox pattern or sagas |
-| **Delivery Guarantees** | Exactly-once execution | At-least-once delivery (duplicates are routine) |
-| **Idempotency** | Optional | **Mandatory** for all mutating commands |
-| **Context Propagation** | Ambient `AsyncLocal` / execution context | Explicit metadata injection (trace headers, baggage) |
+```text
+Reporting database
+Message broker
+```
 
-Location transparency must never obscure these operational realities. Cross-module calls must always be designed to survive the remote column of this table:
-- They must be asynchronous.
-- They must accept cancellation tokens.
-- They must pass serializable, self-contained payloads.
-- They must assume that network packets will be delayed, dropped, or duplicated.
+Later, a new requirement may need:
+
+```text
+Reporting
+-> retrieve customer permissions
+-> read order metadata
+-> call pricing
+-> publish a notification
+```
+
+If those capabilities were deliberately removed, a small business change now requires:
+
+- new credentials,
+    
+- network policy changes,
+    
+- deployment configuration changes,
+    
+- secret provisioning,
+    
+- infrastructure review,
+    
+- additional environment testing.
+    
+
+The code change may be simple, but the deployment topology makes it expensive.
+
+Therefore, connector removal should usually be justified by a concrete benefit such as:
+
+- security isolation,
+    
+- compliance,
+    
+- sensitive data protection,
+    
+- reduced blast radius,
+    
+- expensive client resource usage,
+    
+- failure isolation,
+    
+- architectural enforcement.
+    
+
+It should not be based only on a guess that a deployment will never need something.
 
 ---
 
-## Local Execution as an Optimization
+## The importance of module contracts
 
-The primary architectural principle for this topology is:
+Modules should not directly reference each other’s implementation.
 
-> **Design every cross-module operation as though it is remote, then allow local execution to optimize away the transport.**
+For example:
 
-When you design for remote execution from the start, local dispatch simply runs faster. But if you design for local in-memory execution—passing mutable object graphs, relying on shared database transactions, or making dozens of round-trips in a loop—extracting that code to a separate process later will break your system.
-
-### The Granularity Rule
-
-Consider this anti-pattern:
-
-```csharp
-// ANTI-PATTERN: Fine-grained local calls disguised as clean code
-foreach (var item in items)
-{
-    var product = await productModule.GetProduct(item.ProductId, cancellationToken);
-    var price = await pricingModule.GetPrice(item.ProductId, cancellationToken);
-    var stock = await inventoryModule.GetStock(item.ProductId, cancellationToken);
-}
+```text
+Orders.Application
+    -> Payments.Contracts          allowed
+    -> Payments.Application        forbidden
+    -> Payments.Infrastructure     forbidden
+    -> Payments.DbContext          forbidden
 ```
 
-In-process, this code is merely sub-optimal: it executes in a few milliseconds over shared RAM. But when `Inventory` or `Pricing` is moved to a remote worker, this loop becomes an operational disaster: 100 items produce 300 sequential network round-trips, turning a 5 ms request into a 3,000 ms bottleneck.
+Cross-module communication should happen through approved contracts:
 
-Cross-module operations must be coarse-grained batch requests:
+- commands,
+    
+- queries,
+    
+- events,
+    
+- public module interfaces,
+    
+- immutable DTOs.
+    
+
+Example:
 
 ```csharp
-// CORRECT: Coarse-grained, batch-oriented contract
-var reservationResult = await commandBus.InvokeAsync<ReserveInventoryResult>(
+public sealed record ChargePayment(
+    Guid PaymentAttemptId,
+    Guid OrderId,
+    Money Amount);
+```
+
+The contract should be usable regardless of whether the handler is local or remote.
+
+This creates a stable logical boundary while allowing deployment topology to change.
+
+---
+
+## Static analysis as architectural enforcement
+
+Strong static analysis can prevent developers from accidentally bypassing module boundaries.
+
+A Roslyn analyzer, project-reference policy or architecture test can enforce rules such as:
+
+```text
+A module may reference another module’s Contracts project.
+
+A module may not reference another module’s:
+- application implementation,
+- infrastructure,
+- database context,
+- repositories,
+- entities,
+- internal handlers.
+```
+
+It may also verify that cross-module operations:
+
+- return `Task`,
+    
+- accept a `CancellationToken`,
+    
+- use serializable contracts,
+    
+- do not expose internal domain entities,
+    
+- use approved command or query abstractions.
+    
+
+This prevents code like:
+
+```csharp
+var payment = paymentDbContext.Payments.Find(id);
+```
+
+inside the Orders module.
+
+Instead, Orders must use an explicit contract:
+
+```csharp
+var result = await commandBus.InvokeAsync<PaymentStatus>(
+    new GetPaymentStatus(paymentId),
+    cancellationToken);
+```
+
+Static analysis is especially valuable because architecture rules then fail during compilation or CI instead of relying on documentation and developer discipline.
+
+---
+
+## Static analysis cannot validate runtime reality
+
+Static analysis can verify structural properties:
+
+```text
+Orders does not reference Payments internals.
+
+The command contract is serializable.
+
+Cross-module calls use the approved dispatcher.
+```
+
+It cannot prove that:
+
+```text
+The remote handler is deployed.
+
+The queue route is correctly configured.
+
+The destination service is healthy.
+
+The deployed version understands the message.
+
+The response will arrive before the timeout.
+
+A retry will not execute the operation twice.
+```
+
+Therefore, additional validation layers are needed.
+
+### Compile-time validation
+
+Check:
+
+- illegal project references,
+    
+- forbidden namespace dependencies,
+    
+- serializable contracts,
+    
+- approved module APIs,
+    
+- asynchronous method signatures.
+    
+
+### Startup validation
+
+Check:
+
+- every enabled local command has exactly one handler,
+    
+- every remote command has a configured route,
+    
+- required queues exist,
+    
+- handlers are not accidentally registered twice,
+    
+- enabled consumers match the selected application role.
+    
+
+### Deployment validation
+
+Check:
+
+- every command has at least one responsible deployment,
+    
+- required credentials are available,
+    
+- network policies allow required communication,
+    
+- singleton workloads are not started by every replica,
+    
+- queue ownership is unambiguous.
+    
+
+### Topology integration tests
+
+Run realistic combinations:
+
+```text
+Orders-only host
+Payments-only host
+Message broker
+Database
+```
+
+Then verify that the same business scenario works when modules are physically separated.
+
+A system may work perfectly when every handler is local but fail when the first module is moved into another process.
+
+---
+
+## Local execution as an optimization
+
+The safest mental model is:
+
+> Every cross-module operation is designed as though it may be remote.
+
+If the destination module is available locally, the runtime may optimize the transport away.
+
+This is safer than designing an ordinary local method call and later trying to convert it into RPC.
+
+A good distributed contract should therefore be:
+
+- coarse-grained,
+    
+- asynchronous,
+    
+- serializable,
+    
+- explicit about failure,
+    
+- explicit about timeout behavior,
+    
+- compatible with retries,
+    
+- independent of shared memory,
+    
+- independent of a shared database transaction.
+    
+
+Example:
+
+```csharp
+await bus.InvokeAsync<ReserveInventoryResult>(
     new ReserveInventory(orderId, items),
     cancellationToken);
 ```
 
-A properly designed cross-module contract:
-- Is coarse-grained and business-driven,
-- Operates asynchronously with cancellation support,
-- Uses strictly serializable primitives or DTOs,
-- Makes failure and timeout states explicit,
-- Is safe for automated retries,
-- Operates independently of shared heap memory,
-- Does not assume an ambient database transaction spans across the caller and handler.
+This is a good coarse-grained operation.
+
+A poor design would be:
+
+```csharp
+foreach (var item in items)
+{
+    var product = await productModule.GetProduct(item.ProductId);
+    var price = await pricingModule.GetPrice(item.ProductId);
+    var stock = await inventoryModule.GetStock(item.ProductId);
+}
+```
+
+When local, this may only be inefficient.
+
+When remote, it becomes a large sequence of network round trips.
+
+In-process, this fine-grained loop executes in a few milliseconds over shared RAM. When the target module is extracted to a separate worker, 100 items produce 300 sequential network round trips, turning a sub-10ms in-memory query into a multi-second latency bottleneck.
 
 ---
 
-## Module Contracts and Static Architectural Enforcement
+## A remote call is not a local call
 
-Modules must never reference each other's internal implementation details, persistence models, or infrastructure projects.
+Even when the API looks similar, the semantics are different.
+
+### Local call
 
 ```text
-Allowed:
-Orders.Application    ──► Payments.Contracts
-
-Forbidden:
-Orders.Application    ──X Payments.Application
-Orders.Application    ──X Payments.Infrastructure
-Orders.Application    ──X Payments.Domain
-Orders.Application    ──X Payments.DbContext
+Very low latency
+Shared process memory
+No serialization
+Immediate exceptions
+Potentially shared transaction
+No network timeout
 ```
 
-Cross-module communication must route exclusively through an explicit contract library defining commands, queries, events, and immutable data transfer objects:
+### Remote call
 
-```csharp
-namespace Payments.Contracts;
-
-public sealed record ChargePayment(
-    Guid PaymentAttemptId,
-    Guid OrderId,
-    decimal Amount,
-    string Currency);
-
-public sealed record PaymentResult(
-    bool Success,
-    string TransactionReference,
-    string? FailureReason);
+```text
+Network latency
+Serialization
+Version compatibility concerns
+Timeouts
+Partial failure
+Retry behavior
+Possible duplicate execution
+No ordinary shared transaction
 ```
 
-### Static Analysis via Roslyn and Architecture Tests
+Location transparency should not hide these differences completely.
 
-Never rely on developer discipline alone to protect module boundaries. Use automated compile-time analyzers (such as Roslyn analyzers in .NET, ArchUnit in Java, or project dependency graph linters) to enforce boundary rules directly in CI:
+The caller should understand that a cross-module operation:
 
-1. **Enforce Project References**: The project build configuration should physically prevent `Orders.Application` from referencing `Payments.Application`.
-2. **Forbid Cross-Module Data Access**: Block queries like:
-   ```csharp
-   // CAUGHT BY ANALYZER: Orders querying Payments schema directly
-   var payment = paymentDbContext.Payments.Find(id);
-   ```
-   Orders must route through the command bus:
-   ```csharp
-   var status = await commandBus.InvokeAsync<PaymentStatus>(
-       new GetPaymentStatus(paymentId),
-       cancellationToken);
-   ```
-3. **Validate Boundary Types**: Analyzers should verify that any method signature crossing a module boundary:
-   - Returns a `Task` or `ValueTask`,
-   - Accepts a `CancellationToken`,
-   - Uses parameters that implement a specific contract interface (e.g., `ICommand`, `IQuery`),
-   - Contains only serializable properties (no raw entity classes, open streams, or database connections).
+- may be remote,
+    
+- may time out,
+    
+- may succeed after the caller gives up,
+    
+- may be delivered more than once,
+    
+- may require idempotency,
+    
+- cannot rely on shared mutable state.
+    
+
+The abstraction may hide transport details, but it should not hide distributed-system semantics.
+
+Context propagation also shifts across this boundary. In-process dispatch preserves ambient execution context (`AsyncLocal`), user identity, and cancellation tokens automatically. Once dispatch crosses a network transport, trace context (such as OpenTelemetry W3C `traceparent` headers), security tokens, and correlation identifiers must be explicitly serialized into message metadata and rehydrated at the receiving worker.
 
 ---
 
-## Static Analysis Cannot Validate Runtime Reality
+## Synchronous result over a queue
 
-Static analysis only proves that the code compiled without referencing forbidden dependencies. It tells you nothing about whether the distributed runtime can successfully execute the request.
+A command can be executed remotely while still returning a synchronous-looking result.
 
-Static analysis cannot verify:
-- Whether the remote payment worker is running and healthy,
-- Whether the underlying RabbitMQ or SQS queue has been provisioned,
-- Whether routing keys match message serialization contracts,
-- Whether the deployed worker version understands the serialized schema,
-- Whether response timeouts are tuned longer than downstream gateway latencies,
-- Whether duplicate message retries will corrupt application state.
-
-To guarantee operational stability, implement validation across four separate layers:
+The mechanism is usually request/reply messaging:
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    THE 4 RUNTIME VALIDATION LAYERS                      │
-└─────────────────────────────────────────────────────────────────────────┘
-  1. COMPILE-TIME
-     - Project reference rules (no direct access to internal packages)
-     - Serializability checks on all Contract records
-     - Async signatures with CancellationToken enforcement
-  
-  2. STARTUP VALIDATION (In-Process Host Boot)
-     - Fail-fast checks verifying every registered local command has 1 handler
-     - Assert that every remote command has a valid, mapped transport route
-     - Verify queue listeners match the current host's activated application role
-  
-  3. DEPLOYMENT & ENVIRONMENT VALIDATION (Health Checks / CD)
-     - Smoke test message broker and database connectivity
-     - Validate IAM permissions and network security group routing
-     - Confirm at least one active worker instance is subscribed to every queue
-  
-  4. TOPOLOGY INTEGRATION TESTS (Pre-Production CI Pipeline)
-     - Spin up split hosts: Orders Host, Payments Host, Message Broker
-     - Run end-to-end integration tests over real network transports
-     - Ensure features execute identically whether running all-in-one or split
+Caller
+    -> sends command
+    -> includes correlation ID and reply address
+    -> waits for response
+
+Handler
+    -> executes command
+    -> sends response
+
+Caller
+    -> matches response using correlation ID
 ```
 
-If your integration suite passes when every module runs in-process inside `FullApplication`, but fails when `PaymentsWorker` is run as a separate container, your module contracts are leaking in-memory assumptions.
-
----
-
-## Synchronous Results Over a Queue
-
-There are times when a caller needs an immediate result from a command handled by a separate process. You can accomplish this over message queues using request/reply correlation:
-
-```text
-Caller Host                                              Worker Host
-┌─────────────────────┐                                  ┌─────────────────────┐
-│ 1. Send Command     │───► [ Request Queue ] ──────────►│ 2. Read Command     │
-│    Correlation ID: X│                                  │                     │
-│    ReplyTo: Queue_A │                                  │ 3. Execute Business │
-│                     │                                  │    Logic            │
-│ 5. Read Response    │◄─── [ Reply Queue_A ] ◄──────────│                     │
-│    Match ID: X      │                                  │ 4. Send Response    │
-└─────────────────────┘                                  └─────────────────────┘
-```
-
-The application code remains clean and sequential:
+From application code:
 
 ```csharp
-var result = await commandBus.InvokeAsync<PaymentResult>(
-    new ChargePayment(paymentAttemptId, orderId, 150.00m, "USD"),
-    cancellationToken);
+var result = await bus.InvokeAsync<PaymentResult>(
+    new ChargePayment(paymentAttemptId, orderId, amount));
 ```
 
-Under the hood, the dispatcher creates a temporary reply queue (or uses a dedicated, partitioned response queue), injects a unique `CorrelationId`, serializes the payload, sends the message, and registers a `TaskCompletionSource` that awaits the matching response or times out.
+Internally, the operation may use:
 
-### The Temporal Coupling Problem
+- request queue,
+    
+- response queue,
+    
+- correlation ID,
+    
+- timeout,
+    
+- temporary reply endpoint.
+    
 
-While this looks like a normal asynchronous method call, it introduces direct temporal coupling: the calling thread cannot complete its work until the remote worker picks up, processes, and returns the result.
-
-The critical failure scenario in this pattern is:
-
-> **What happens if the worker charges the customer, but the reply queue drops the confirmation message?**
-
-The caller encounters a timeout exception. But the operation **did not fail**—the state change succeeded, while the notification of that success was lost. If the caller blindly retries, the customer is billed twice:
+This can be useful, but it still creates temporal coupling:
 
 ```text
-Caller                                               Worker
-  │                                                    │
-  │─── ChargePayment(Attempt #1) ─────────────────────►│
-  │                                                    │─── Processes Payment ($50)
-  │◄── [TIMEOUT: Response dropped over network] ───────X    (Payment Succeeded!)
-  │
-  │─── RETRY: ChargePayment(Attempt #1 or #2) ────────►│
-  │                                                    │─── Processes Payment AGAIN ($50)
-  │◄── Payment Success ────────────────────────────────│    (Customer Overcharged!)
+Orders cannot continue until Payments responds.
 ```
 
-### The Idempotency Rule: Timeouts Are Not Failures
+The main failure question becomes:
 
-In any distributed architecture, **a timeout is an unknown outcome, not a confirmed failure**.
+```text
+What happens if Payments completes successfully,
+but the response is lost?
+```
 
-Every cross-module mutating command must include a unique idempotency key:
+The caller sees a timeout, but the operation may already have happened.
+
+A retry can then execute the command again.
+
+For operations such as payments, reservations or order creation, an idempotency key is essential:
 
 ```csharp
-public sealed record ChargePayment(
-    Guid PaymentAttemptId,  // Idempotency Key
-    Guid OrderId,
-    decimal Amount,
-    string Currency);
+new ChargePayment(
+    paymentAttemptId,
+    orderId,
+    amount);
 ```
 
-The receiving module must enforce deduplication at the storage layer:
+The handler should ensure that the same `paymentAttemptId` cannot cause a second charge.
+
+In any distributed setup, a timeout is an unknown outcome, never a confirmed failure. The receiving handler must enforce deduplication against its persistence store before triggering side effects:
 
 ```csharp
 public async Task<PaymentResult> Handle(ChargePayment command, CancellationToken ct)
 {
-    // 1. Check if this attempt has already been executed
     var existingAttempt = await _dbContext.PaymentAttempts
         .FirstOrDefaultAsync(p => p.Id == command.PaymentAttemptId, ct);
 
     if (existingAttempt is not null)
     {
-        // Return the recorded result without re-executing the charge
         return new PaymentResult(
-            existingAttempt.Success, 
-            existingAttempt.TransactionReference, 
+            existingAttempt.Success,
+            existingAttempt.TransactionReference,
             existingAttempt.FailureReason);
     }
 
-    // 2. Execute new payment attempt
-    var response = await _paymentGateway.ChargeAsync(command.Amount, command.Currency, ct);
+    var response = await _paymentGateway.ChargeAsync(command.Amount, ct);
 
-    // 3. Persist attempt record atomically
     _dbContext.PaymentAttempts.Add(new PaymentAttemptRecord
     {
         Id = command.PaymentAttemptId,
@@ -533,182 +732,273 @@ public async Task<PaymentResult> Handle(ChargePayment command, CancellationToken
         TransactionReference = response.Reference,
         FailureReason = response.Error
     });
-    
+
     await _dbContext.SaveChangesAsync(ct);
 
     return new PaymentResult(response.IsSuccess, response.Reference, response.Error);
 }
 ```
 
-Now, if a dropped response causes the caller to retry the command, the worker simply looks up `PaymentAttemptId`, sees that the charge already occurred, and immediately returns the cached transaction reference without double-charging.
+If a dropped response packet forces the caller to retry, the handler detects the existing record, skips the external payment call, and immediately returns the cached transaction reference.
 
 ---
 
-## When Synchronous Remote Calls Are Acceptable
+## When synchronous remote calls are reasonable
 
-Synchronous cross-module calls (whether via request/reply queues or direct gRPC) are reasonable when:
-- The caller genuinely cannot proceed without the result (e.g., verifying a user's credit balance before placing an order),
-- The operation is coarse-grained,
-- The downstream latency is low and bounded by aggressive timeouts,
-- Failure and timeout paths are explicitly handled,
-- The command is idempotent,
-- Distributed tracing context (e.g., OpenTelemetry traceparent headers) is propagated through message metadata,
-- The synchronous call chain is strictly limited to a depth of one.
+They are useful when:
 
-### Avoid Deep Synchronous Call Chains
+- the caller genuinely needs the result immediately,
+    
+- the operation is coarse-grained,
+    
+- latency is bounded,
+    
+- failure behavior is understood,
+    
+- idempotency is implemented where necessary,
+    
+- the call chain is short,
+    
+- tracing is available.
+    
 
-Synchronous calls become dangerous when they form cascading chains across multiple modules:
+Examples:
 
 ```text
-HTTP Request
-  └─► Orders Module
-        └─► Customers Module (RPC)
-              └─► Pricing Module (RPC)
-                    └─► Inventory Module (RPC)
-                          └─► Payments Module (RPC)
-                                └─► Third-Party Gateway (HTTP)
+Validate a promotion
+Reserve inventory
+Calculate a final price
+Check permissions
+Confirm a short-running business decision
 ```
 
-If each link has a 99% success rate, a chain of five services yields an overall success rate of $0.99^5 \approx 95.1\%$. More importantly, the system inherits the latency of the slowest downstream dependency, and thread pool exhaustion can cascade backward through the entire system, taking down unrelated modules.
+They become dangerous when used for long chains:
+
+```text
+HTTP request
+-> Orders
+-> Customer
+-> Pricing
+-> Promotions
+-> Inventory
+-> Payments
+-> Notifications
+```
+
+The source code may look like several normal method calls, while runtime behavior becomes a fragile distributed transaction.
+
+Cascading synchronous chains also wreck system availability. If each module in a synchronous chain has a 99% success rate, a call spanning five consecutive hops drops the overall transaction success rate to $0.99^5 \approx 95.1\%$. Worse, the upstream caller remains blocked for the entire duration of the slowest downstream dependency. Under load, this latency tail cascades backward, exhausting web server thread pools and causing catastrophic failure across completely unrelated modules.
 
 ---
 
-## Asynchronous Commands and Events Are Safer
+## Asynchronous commands are often safer
 
-When an operation does not need to return data immediately to the caller, eliminate synchronous coordination entirely:
+When an immediate result is not necessary, prefer:
 
 ```text
-Orders Module                                           Invoice Worker
-┌──────────────────┐                                   ┌──────────────────┐
-│ Accept Order     │                                   │ Consume Message  │
-│ Save to Database │                                   │ Generate PDF     │
-│ Send Command:    │───► [ Message Broker Queue ] ────►│ Upload to S3     │
-│  GenerateInvoice │                                   │ Emit Event:      │
-│ Return 202 / OK  │                                   │  InvoiceCreated  │
-└──────────────────┘                                   └──────────────────┘
+Command accepted
+-> queue
+-> processing
+-> event or status update
 ```
 
-The calling thread saves its local state, fires the command to a persistent queue, and immediately returns an HTTP `202 Accepted` response.
+Example:
+
+```text
+Orders
+-> GenerateInvoice command
+-> Invoice worker
+-> InvoiceGenerated event
+```
+
+The caller does not wait for the entire operation.
 
 This provides:
-- **Natural Backpressure**: Surges in orders sit safely in the queue; invoice workers process messages at their maximum sustainable throughput without crashing the API.
-- **Fault Tolerance**: If the invoice generator crashes due to an out-of-memory error on a massive document, the message returns to the queue and retries without dropping the customer's purchase.
-- **Workload Isolation**: Invoice generation can run on cheap spot instances with dedicated CPU limits.
 
-This pattern introduces eventual consistency. The user interface must be designed to reflect states like `Invoice Pending` rather than assuming the document is ready immediately.
+- backpressure,
+    
+- independent scaling,
+    
+- retry handling,
+    
+- workload isolation,
+    
+- reduced synchronous coupling.
+    
+
+However, it introduces eventual consistency and requires explicit status handling.
+
+Asynchronous queueing introduces critical operational shock absorbers. Traffic spikes sit safely in the broker instead of crashing ingress API servers. If a background worker throws an out-of-memory exception on a corrupt payload, the message returns to the broker for retry or dead-lettering without dropping the customer's checkout session. Furthermore, background workloads can be scheduled on dedicated, cheaper compute instances with tailored concurrency limits.
 
 ---
 
-## Avoiding the "Distributed Monolith" Trap
+## Avoid a distributed monolith
 
-A local-or-remote architecture can easily degrade into a distributed monolith if boundaries are neglected. A distributed monolith combines the deployment complexity of microservices with the tight coupling of a legacy monolith.
+This architecture can become a distributed monolith when:
 
-Watch for these warning signs:
+- synchronous calls form long chains,
+    
+- many modules must be deployed together,
+    
+- message contracts change in lockstep,
+    
+- developers do not know which calls are remote,
+    
+- one business operation assumes a global transaction,
+    
+- tracing is weak,
+    
+- the command bus becomes a magical global method dispatcher.
+    
+
+Warning signs include:
 
 ```text
-DISTRIBUTED MONOLITH WARNING SIGNS:
+Every module can call every other module.
 
-1. FINE-GRAINED REMOTE CALLS
-   Making repeated, fine-grained cross-module queries inside loops.
-   Result: Massive network serialization overhead and latency spikes.
+Commands are fine-grained.
 
-2. CHATTER-DRIVEN SYNCHRONOUS CHAINS
-   Module A calls B, which calls C, which calls D, all waiting synchronously.
-   Result: Cascading timeouts, fragile availability, and thread pool starvation.
+Deployment requires all services to be updated together.
 
-3. LOCKSTEP DEPLOYMENTS
-   Changing Module A requires deploying Module B at the exact same instant to prevent crashes.
-   Result: Destroys deployment independence and forces coordinated release trains.
+A timeout is treated as a definite failure.
 
-4. AMBIENT ASSUMPTIONS OF DISTRIBUTED TRANSACTIONS
-   Assuming a database transaction opened in Module A will seamlessly roll back state 
-   mutated in Module B over the command bus.
-   Result: Corrupted, inconsistent cross-module state when partial failures occur.
+Retries are enabled without idempotency.
 
-5. BLIND RETRIES WITHOUT IDEMPOTENCY
-   Configuring generic network retry policies around mutating commands.
-   Result: Duplicate charges, duplicated records, and phantom inventory reservations.
+Business transactions span many synchronous remote calls.
 ```
 
-Your command bus should never be used as a magical RPC layer to call arbitrary internal methods across servers. It is an explicit transport boundary for well-defined domain operations.
+The architecture should preserve explicit module ownership rather than turn the message bus into a distributed replacement for arbitrary method calls.
+
+The most common trap is relying on ambient database transactions. In-process dispatch allows developers to cheat by wrapping multiple module calls inside an ambient `TransactionScope` or shared EF Core `DbContext`. The moment any of those modules is moved to a remote host, that atomic guarantee evaporates. If Module A commits local state and the remote command to Module B fails, Module A cannot roll back without compensating transactions or an explicit transactional outbox.
 
 ---
 
-## The 8-Stage Evolution Path
+## Recommended rules
 
-You do not need to choose between a simple monolith and a fleet of microservices on day one. Walk this progressive path, advancing to the next stage only when forced by clear organizational, performance, or deployment bottlenecks:
+### Module boundaries
 
 ```text
-Stage 1: Modular Monolith
-         Keep everything in one project or solution. Enforce clean domain boundaries
-         and contract interfaces in code. Everything runs in-process.
+Each module owns its business logic and data.
 
-Stage 2: Replicated Monolith
-         Deploy multiple identical copies of the full application behind a load balancer.
-         Scale horizontally by adding standard nodes.
+Other modules may reference only public contracts.
 
-Stage 3: Role-Specialized Deployments
-         Use the same codebase to deploy distinct operational roles: separate your
-         user-facing HTTP API nodes from your asynchronous background workers.
-
-Stage 4: Formal Cross-Module Contracts
-         Replace direct inter-module method calls with explicit asynchronous Commands,
-         Queries, and Events defined in isolated contract libraries.
-
-Stage 5: Static Boundary Enforcement in CI
-         Implement Roslyn analyzers, ArchUnit tests, or build policies to strictly
-         forbid cross-module references to internal logic, entities, or databases.
-
-Stage 6: Location-Transparent Dispatch
-         Introduce the local-or-remote command bus. The runtime now dynamically routes
-         commands in memory or across a message broker depending on the host's active role.
-
-Stage 7: Independent Module Scaling
-         Extract high-throughput or resource-heavy modules (e.g., Payments, Reporting, 
-         Media Processing) into their own worker pools, scaling them based on queue depth.
-
-Stage 8: Standalone Microservices (Only Where Justified)
-         Physically carve out a module into a distinct repository and CI/CD pipeline 
-         ONLY when separate team ownership, release cadences, or security classifications 
-         make independent deployment mandatory.
+No direct access to another module’s:
+- database tables,
+- repositories,
+- entities,
+- internal handlers,
+- infrastructure.
 ```
 
-By following this path, you defer the operational complexity of distributed systems until your business actually requires it, while ensuring your code is cleanly structured to make that transition straightforward when the time comes.
+### Cross-module operations
+
+```text
+Use commands, queries and events.
+
+Prefer coarse-grained operations.
+
+Assume every call may become remote.
+
+Do not expose shared mutable objects.
+
+Do not rely on a shared in-memory transaction.
+```
+
+### Deployment
+
+```text
+Use one codebase where practical.
+
+Define a small number of explicit application roles.
+
+Enable workloads through:
+- routing,
+- consumers,
+- concurrency,
+- schedulers,
+- replica counts.
+
+Keep capabilities broad unless isolation has a concrete benefit.
+```
+
+### Reliability
+
+```text
+Use idempotency keys for retryable commands.
+
+Define timeouts explicitly.
+
+Distinguish timeout from confirmed failure.
+
+Use distributed tracing.
+
+Validate runtime topology during startup and deployment.
+```
+
+### Static analysis
+
+```text
+Enforce allowed project references.
+
+Forbid implementation-level cross-module dependencies.
+
+Require approved command/query abstractions.
+
+Validate serializable contracts.
+
+Run architecture tests in CI.
+```
 
 ---
 
-## Architectural Rules of Thumb
+## Practical evolution path
 
-### Module Boundaries
-- Each module strictly owns its business logic and persistence store.
-- Modules may reference another module's `.Contracts` project, but never its `.Application`, `.Domain`, or `.Infrastructure` projects.
-- Never execute cross-module database joins or access another module’s tables directly.
+A reasonable progression is:
 
-### Cross-Module Operations
-- Use explicit Commands for state mutations, Queries for read models, and Events for facts that have already occurred.
-- Every cross-module contract must be coarse-grained, asynchronous, and fully serializable.
-- Never pass mutable object graphs across module boundaries.
-- Assume any cross-module invocation may route over a network; never rely on shared ambient transactions.
+```text
+1. Modular monolith
 
-### Deployments and Operations
-- Maintain a single codebase and deployment pipeline for as long as possible.
-- Define a small set of explicit application roles (`api`, `worker-payments`, `worker-notifications`).
-- Keep infrastructure capabilities (database drivers, broker connections) broadly available across hosts, but activate operational responsibilities explicitly through configuration.
-- Restrict credentials, network access, or drivers only when justified by hard compliance, security isolation, or failure-domain boundaries.
+2. Replicate the whole application behind a load balancer
 
-### Distributed Reliability
-- Every mutating command routed over a network transport must include a unique idempotency key.
-- Receiving modules must verify idempotency keys at the persistence layer before executing business logic.
-- Configure explicit timeouts on every remote invocation, and treat a timeout as an indeterminate state, never as a confirmed failure.
-- Propagate OpenTelemetry trace context and security tokens across every command dispatch, whether in memory or over a message broker.
+3. Separate HTTP and background worker roles
+
+4. Add explicit commands, queries and events between modules
+
+5. Enforce module boundaries using project references and static analysis
+
+6. Allow selected commands to be routed remotely
+
+7. Scale expensive workers or modules independently
+
+8. Extract full services only where separate ownership,
+   release cadence, security or scaling clearly justify it
+```
+
+This avoids choosing microservices before the operational need is known.
 
 ---
 
-## Related Notes
+## Final mental model
 
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Architectural guidance on choosing between synchronous RPC, asynchronous queues, and streaming event buses.
-- **[[OpenTelemetry]]**: Instrumenting distributed trace contexts across in-memory dispatchers, message brokers, and downstream network endpoints.
-- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Structuring host configurations, dependency injection extensions, and platform harnesses across specialized deployment roles.
-- **[[Propagating User Context Between Services]]**: Handling user identity, ambient security claims, and authorization tokens across modular and distributed boundaries.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Preventing unchecked cross-boundary dependencies and architectural drift when using code-generation tools.
-- **[[Internal Shared Packages vs Agent-Generated Code]]**: Balancing centralized contract packages against local code generation when maintaining cross-module communication boundaries.
+```text
+Module boundary != process boundary
+Process boundary != data boundary
+Data boundary != service ownership boundary
+```
+
+These boundaries can be introduced independently.
+
+A module can remain part of one logical application while being deployed in another process.
+
+The most useful principle is:
+
+> Design cross-module operations as remote-capable contracts, then allow local execution as an optimization.
+
+The most important warning is:
+
+> Transport may be transparent, but latency, failure, retries and transaction semantics must remain visible in the design.
+
+And the safest deployment default is:
+
+> Keep instances broadly capable, activate responsibilities explicitly, and restrict connectors only when security, reliability or resource isolation provide a concrete reason.
+```

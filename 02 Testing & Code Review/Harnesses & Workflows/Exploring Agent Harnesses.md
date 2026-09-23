@@ -12,80 +12,69 @@ aliases:
   - Agent Execution Environments
   - The Operating Environment for AI Agents
   - From Model to Agent Runtime
-  - Harness Component Taxonomy
 ---
 
-# Exploring Agent Harnesses
+When working with modern AI systems, it is useful to stop thinking only in terms of **models**.
 
-When evaluating automated engineering workflows with modern LLMs, focusing solely on the foundation model is a category error. A model such as GPT-4o, Claude 3.7 Sonnet, or Gemini 2.5 Pro is an interchangeable reasoning backend. What actually determines whether an agent can autonomously write production code, resolve incidents, or refactor a service is the **agent harness** wrapping that model.
+> For detailed engineering workflows, the self-healing feedback loop, and custom harness implementation, see: [[Agentic Coding Harness and Controlled Development Workflows]].
 
-The harness serves as the execution environment. It defines how context is assembled, which tools the model can invoke, how long it is permitted to iterate, how execution errors are caught, and how changes are verified against reality before touching human review.
+A model such as GPT, Claude, or Gemini is only one component of a larger system. What increasingly determines the practical capabilities of an AI agent is the **agent harness** around the model.
 
-```text
-EVOLUTION OF AGENTIC RUNTIMES:
-Autocomplete ──► Chat Assistant ──► Tool-Using Agent ──► Agent Runtime ──► Multi-Agent Mesh
-                                                                              │
-                                                                              ▼
-                                                        OPERATING ENVIRONMENT FOR AUTONOMOUS WORK
-```
+The harness defines how the model receives context, what tools it can use, how long it can work, whether it can operate in a loop, how it verifies its own work, and how it interacts with external systems.
 
-A simplified architectural view illustrates the relationship:
+A simplified view looks like this:
 
 ```text
 Task
  ↓
 Agent Harness
- ├── instructions (repo guidelines, ADRs, constraints)
- ├── skills (reusable parameterized runbooks)
- ├── project context (AST indexing, file retrieval, living specs)
- ├── memory / semantic search
- ├── filesystem & Git management
- ├── terminal & shell execution
- ├── browser automation
- ├── MCP servers (databases, issue trackers, APIs)
- ├── verification layer (compilers, linters, test suites)
- ├── security & sandbox boundaries
- └── agent loop (planning, dispatch, error recovery)
+ ├── instructions
+ ├── skills
+ ├── project context
+ ├── memory / RAG
+ ├── filesystem
+ ├── terminal
+ ├── browser
+ ├── MCP servers
+ ├── external APIs
+ ├── tests / verification
+ └── agent loop
         ↓
-      Model (Claude / GPT / Gemini / Local Weights)
+      Model
 ```
 
-Because the harness mediates all access to external state, the underlying model is plug-and-play. You can swap Claude for Gemini or point to a local model via vLLM without modifying repository rules, build scripts, or tool integrations. The durable engineering asset is the harness and its accumulated operational procedures, not the specific model checkpoint.
+The model is therefore becoming increasingly interchangeable. The same underlying task can potentially be executed using Claude, GPT, Gemini, or another model while keeping much of the surrounding infrastructure unchanged.
 
----
+## What an Agent Harness Provides
 
-## 1. Architectural Anatomy of an Agent Harness
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        THE COMPLETE AGENT HARNESS                      │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. INSTRUCTIONS: Persistent repo guidelines, ADRs, and non-goals       │
-│ 2. SKILLS: Modular, composable operational playbooks & domain scripts  │
-│ 3. CONTEXT: Selective file retrieval, AST call-graphs, living specs    │
-│ 4. TOOLS: MCP servers, shell executors, git managers, AST parsers      │
-│ 5. REASONING LOOP: Planning, tool dispatch, error retry, stopping gates│
-│ 6. VERIFICATION: Compilers, linters, test oracles, and profilers       │
-│ 7. SANDBOX: Ephemeral containers, read-only mounts, credential scopes  │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-                      [ Plug-and-Play Model Plane ]
-                     (Claude / GPT / Gemini / Local)
-```
-
-An agent harness bridges the gap between probabilistic text generation and concrete software execution. It turns unpredictable model outputs into reliable engineering workflows through seven distinct layers:
+A useful agent environment may provide several layers.
 
 ### Instructions
-Persistent rules defining baseline operational constraints. Instead of repeatedly pasting instructions into interactive prompts, these constraints reside directly within the repository in files like `AGENTS.md`, `CLAUDE.md`, or `.cursorrules`:
-- Coding style conventions and language version targets.
-- Architectural non-goals (e.g., "Never introduce an external message bus for this microservice").
-- Code review criteria and pull request formatting standards.
-- Security policies (e.g., "Never read `.env` or write credentials to logs").
-- Specific operational workflows required by CI/CD pipelines.
+
+Persistent rules defining how the agent should work.
+
+Examples include:
+
+- coding conventions,
+    
+- architectural rules,
+    
+- review requirements,
+    
+- security constraints,
+    
+- preferred workflows,
+    
+- project-specific assumptions.
+    
+
+These may live in files such as `AGENTS.md`, `CLAUDE.md`, project rules, system prompts, or equivalent configuration.
 
 ### Skills
-Skills package reusable procedures and domain-specific operational runbooks into version-controlled modules. Rather than explaining multi-step workflows to an agent on every run, the harness defines parameterized routines:
+
+Skills package reusable procedures or domain knowledge.
+
+Instead of repeatedly explaining a workflow, we can define something conceptually similar to:
 
 ```text
 investigate-production-error
@@ -96,77 +85,148 @@ prepare-release
 summarize-meeting
 ```
 
-A skill encapsulates targeted system instructions, shell scripts, API integration hooks, and reference examples. As the engineering team encounters edge cases and operational nuances, these playbooks are committed back to the repository (e.g., inside `.agents/skills/`), allowing the harness to accumulate institutional memory.
+A skill may contain instructions, examples, scripts, references, or tool configuration.
 
-### Context and Memory Management
-Models struggle when flooded with raw tokens. A strong harness does not dump the entire repository into the prompt; it dynamically discovers and compacts relevant context:
-- Selective file tree retrieval and symbol indexing via Abstract Syntax Trees (ASTs).
-- Semantic search across documentation, architectural decision records (ADRs), and internal RFCs.
-- History compaction techniques that summarize long execution traces while preserving critical state variables, file diffs, and error messages.
-- Pulling state from issue trackers, monitoring dashboards, and previous execution sessions.
+This allows the agent environment to gradually accumulate organizational knowledge.
 
-### Tool Protocol Layer
-Agents must manipulate real environments rather than just generating text diffs. Modern harnesses standardize tool execution using protocols like Anthropic's Model Context Protocol (MCP) or direct shell interfaces:
-- Filesystem access with controlled read/write boundaries.
-- Shell command execution (bash, zsh, fish).
-- Git state management (creating branches, staging files, reading diffs, inspecting logs).
-- Build system drivers (compilers, package managers, test runners).
-- Headless browsers for integration testing and documentation scraping.
-- External APIs, SQL/NoSQL databases, and observability systems (Datadog, Grafana, OpenTelemetry).
+Storing these playbooks directly within the repository (such as in `.agents/skills/`) turns dynamic agent workflows into version-controlled engineering assets. When engineers encounter novel edge cases, updating the skill file permanently upgrades the agent's baseline capability across the team.
 
-### The Agent Reasoning Loop
-The fundamental operational difference between an interactive chatbot and an autonomous agent is the loop. Instead of a single turn:
+### Context
+
+The agent may receive context from many sources:
+
+- the current repository,
+    
+- documentation,
+    
+- architecture notes,
+    
+- issue trackers,
+    
+- previous conversations,
+    
+- logs,
+    
+- monitoring systems,
+    
+- meeting transcripts,
+    
+- databases,
+    
+- personal or organizational knowledge bases.
+    
+
+The quality of context may eventually matter almost as much as the model itself.
+
+Dumping whole repositories into the prompt burns token budget and degrades attention. An effective harness manages context dynamically: pruning AST symbol trees, retrieving targeted architectural decision records (ADRs), and compacting execution history so critical error traces and diffs remain visible while redundant tool noise is stripped away.
+
+### Tools
+
+Agents can increasingly interact with the environment rather than merely generate text.
+
+Typical tools include:
+
+- filesystem access,
+    
+- shell commands,
+    
+- Git,
+    
+- compilers,
+    
+- tests,
+    
+- browsers,
+    
+- databases,
+    
+- APIs,
+    
+- ticket systems,
+    
+- observability platforms.
+    
+
+MCP is becoming one important mechanism for exposing such capabilities to agents in a relatively standardized way.
+
+### Agent Loop
+
+The most important difference between a chatbot and an agent is often the ability to continue working.
+
+Instead of:
 
 ```text
 question → answer
 ```
 
-The harness drives an iterative execution cycle:
+the process becomes:
 
 ```text
 understand
-    ↓
-   plan
-    ↓
-    act (tool call)
-    ↓
-inspect result (stdout / stderr)
-    ↓
-  verify (compiler / test execution)
-    ↓
+↓
+plan
+↓
+act
+↓
+inspect result
+↓
+verify
+↓
 find problems
-    ↓
+↓
 modify approach
-    ↓
-  act again
+↓
+act again
 ```
 
-This cycle executes continuously until the task satisfies predefined stopping criteria, hits an iteration or token ceiling, or flags an ambiguity requiring human intervention.
+This loop may continue until the task succeeds, a stopping condition is reached, or human input is required.
+
+The ability to run this loop reliably is one of the most important properties to investigate when comparing agent environments.
 
 ### Verification Layer
-A harness cannot trust model output blindly. The verification layer grounds the agent's work using local tools:
-- Running language compilers and static typecheckers (e.g., `tsc`, `cargo check`, `mypy`).
+
+A production harness cannot treat probabilistic model output as working code. Instead of trusting raw text or conversational self-assessment, it grounds the agent using deterministic local tooling:
+
+- Running language compilers and static typecheckers (`tsc`, `cargo check`, `mypy`).
 - Executing unit and integration test suites against modified code.
 - Running linters and formatting tools (`eslint`, `ruff`, `prettier`).
-- Analyzing mutation coverage to verify that new tests actually fail when bugs are injected.
+- Analyzing mutation coverage or failing reproduction tests to ensure new tests actually fail when the bug is present.
 
 ### Sandboxing and Security Boundaries
-Allowing an autonomous model to run shell commands introduces risk. The harness enforces execution guardrails:
-- Ephemeral execution sandboxes using Docker, Podman, or system namespaces (chroot, cgroups).
-- Scoped filesystem permissions (mounting source code as read-write while keeping system configurations read-only).
-- Credential isolation: stripping API keys and secrets from the agent's accessible environment.
-- Command whitelisting or interactive confirmation gates for destructive operations (`rm -rf`, `git push --force`, `drop table`).
+
+Allowing an autonomous model to execute arbitrary shell commands introduces immediate operational risk. A robust harness enforces strict execution guardrails:
+
+- Ephemeral execution environments using containers (Docker, Podman) or system namespaces (chroot, cgroups).
+- Scoped filesystem permissions, keeping sensitive system paths read-only while mounting the working tree as read-write.
+- Credential isolation by stripping secrets, production tokens, and `.env` files from the agent's accessible environment.
+- Command gating or interactive confirmation before executing destructive operations (`rm -rf`, `git push --force`, or schema drops).
 
 ---
 
-## 2. Current Families of Agent Environments
+# Current Families of Agent Environments
 
-The ecosystem has coalesced around four distinct execution environments, each catering to different development tempos and autonomy requirements:
+There are already several overlapping categories.
 
-### Terminal-First Agents
-*Examples*: Claude Code, Codex CLI, Gemini CLI, Aider, OpenHands CLI.
+## Terminal-first Agents
 
-Terminal agents run as lightweight, native command-line processes directly inside the developer's working shell. They leverage the Unix philosophy: the command line is already a complete, composable interface for software engineering.
+Examples include:
+
+- Claude Code
+    
+- Codex CLI
+    
+- Gemini CLI
+    
+- GitHub Copilot CLI
+    
+- Aider
+    
+- OpenHands CLI
+    
+
+These environments are naturally suited to software engineering because the terminal already exposes an enormous amount of functionality.
+
+A terminal agent can often:
 
 ```text
 inspect repository
@@ -180,46 +240,115 @@ inspect repository
 → commit changes
 ```
 
-**Strengths**: Zero UI overhead, instant access to system tools, trivial integration into existing developer workflows and SSH sessions, and direct access to native compilers and local debuggers.
+This makes the command line a surprisingly powerful universal interface for agents.
 
-### IDE-Based Agent Control Environments
-*Examples*: VS Code with Copilot, Cursor, Cline, Roo Code, Antigravity.
+Terminal agents run with near-zero UI overhead, plug directly into existing shell aliases and SSH sessions, and have native access to compilers, debuggers, and local package caches without an intervening abstraction layer.
 
-These systems integrate directly into the developer's editor, anchoring into the Language Server Protocol (LSP), AST indexers, and visual diff viewers.
+## IDE-based Agents
 
-**Strengths**: The IDE evolves from a text editor into a **supervisory cockpit**. Developers can inspect side-by-side file diffs, approve or reject specific tool invocations, monitor background agent terminals, and step in when the agent strays. It is optimized for tightly coupled, real-time developer-agent pair programming.
+Examples include:
 
-### Cloud Coding Agents (Delegation Runtimes)
-*Examples*: Devin, GitHub coding agents, Cursor cloud agents, Codex cloud tasks.
+- VS Code with GitHub Copilot
+    
+- VS Code with Claude or Codex integrations
+    
+- Cursor
+    
+- Cline
+    
+- Roo Code
+    
+- Kilo Code
+    
+- Antigravity
+    
 
-Cloud agents embrace asynchronous delegation. They run in fully isolated, remote cloud containers:
+The IDE becomes not merely an editor with AI autocomplete but increasingly an **agent control environment**.
+
+It can provide:
+
+- repository context,
+    
+- terminals,
+    
+- diffs,
+    
+- code navigation,
+    
+- multiple agent sessions,
+    
+- human review,
+    
+- local and remote execution.
+    
+
+This may lead to IDEs becoming interfaces for supervising teams of agents rather than primarily tools for manually editing code.
+
+In this setup, the IDE acts as a supervisory cockpit. The developer reviews side-by-side diffs, monitors background terminal runs, and approves tool execution boundaries while the agent navigates the codebase using the Language Server Protocol (LSP) and AST indexers.
+
+## Cloud Coding Agents
+
+Another model is delegation.
 
 ```text
-issue / ticket
-      ↓
-cloud agent provisioned
-      ↓
+issue
+↓
+cloud agent
+↓
 clone repository
-      ↓
-implement change & run tests
-      ↓
-generate commit & push branch
-      ↓
-open pull request
+↓
+implement change
+↓
+run tests
+↓
+create commit
+↓
+prepare pull request
 ```
 
-**Strengths**: Offloads long-running, multi-step tasks (30 to 120 minutes) without tying up the developer's local workstation. The engineer's role shifts from pair programmer to asynchronous task author and code reviewer.
+Examples include systems such as:
 
-### Modular Agent Platforms
-*Examples*: OpenHands, custom enterprise agent runtimes.
+- Codex cloud tasks,
+    
+- GitHub coding agents,
+    
+- Cursor cloud agents,
+    
+- Devin.
+    
 
-These platforms expose the raw mechanics of the harness itself. Rather than locking the user into a specific loop or tool configuration, they allow architects to design custom state graphs, experiment with alternative subagent delegation patterns, plug in custom memory engines, and test novel tool protocols. They serve as the foundation for organizations building tailored in-house engineering agents.
+This model is particularly interesting when tasks take tens of minutes or hours and do not require constant human interaction.
+
+The human becomes more of a task author and reviewer than an interactive pair programmer.
+
+## Agent Platforms
+
+Tools such as OpenHands and similar systems expose more of the agent architecture itself.
+
+They can be useful for experimenting with:
+
+- alternative models,
+    
+- tool definitions,
+    
+- custom agent loops,
+    
+- context management,
+    
+- subagents,
+    
+- skills,
+    
+- orchestration.
+    
+
+These tools may be more useful when the goal is not simply to use an agent but to understand and modify how agents operate.
 
 ---
 
-## 3. The Model Is Only One Variable
+# The Model Is Only One Variable
 
-Architecturally, the model sits at the bottom of the execution stack:
+A useful way to think about the emerging architecture is:
 
 ```text
                   Agent System
@@ -230,7 +359,7 @@ Architecturally, the model sits at the bottom of the execution stack:
                   +
              Context / RAG
                   +
-          Tool Protocols (MCP)
+                 MCP
                   +
           Tools / APIs / CLI
                   +
@@ -241,37 +370,61 @@ Architecturally, the model sits at the bottom of the execution stack:
           ┌────────────────┐
           │     Model      │
           │ GPT / Claude   │
-          │ Gemini / Local │
+          │ Gemini / etc.  │
           └────────────────┘
 ```
 
-This structural reality changes how engineering teams evaluate AI tools. Asking simply "Which model scores highest on a benchmark?" misses how systems actually work in practice. The more critical architectural questions include:
+This changes how AI systems should be compared.
 
-- **Context Management**: How selectively does the harness locate and prune relevant files without exhausting the context window or introducing noise?
-- **Autonomy Depth**: How many coherent, multi-step actions can the agent execute before derailing or requiring human intervention?
-- **Error Recovery**: When a build or test fails with a non-zero exit code, does the agent parse the stack trace and adjust its strategy, or does it loop endlessly on the same edit?
-- **Tool Protocol Support**: Does the harness support open standards like MCP to easily expose internal microservices, databases, and profilers?
-- **Organizational Skills**: Can engineers capture bug-fix procedures into repository-level playbooks that persist across developer sessions?
-- **Verification Tightness**: Does the harness run deterministic build scripts and tests before reporting success?
-- **Observability**: Are tool calls, token costs, diffs, and intermediate reasoning steps transparently logged and inspectable?
-- **Model Decoupling**: Can you switch reasoning backends (e.g., from Claude to Gemini) via configuration without rewriting the surrounding tooling?
+Instead of asking only:
 
-A mid-tier model running inside an airtight harness—backed by accurate AST search, strict compiler checks, and a disciplined retry loop—routinely outperforms an industry-leading model operating inside a primitive chat wrapper with incomplete context.
+> Which model is best?
+
+we can ask:
+
+- Which harness manages context best?
+    
+- Which one can work autonomously for the longest time?
+    
+- Which one recovers best from mistakes?
+    
+- Which one has the best tool ecosystem?
+    
+- Which one supports MCP well?
+    
+- Which one supports reusable skills?
+    
+- Which one allows custom instructions?
+    
+- Which one can delegate to subagents?
+    
+- Which one verifies its work effectively?
+    
+- Which one provides good human supervision?
+    
+- How easily can the underlying model be replaced?
+    
+
+A weaker model inside a very good harness may sometimes outperform a stronger model operating with poor tools and limited context.
 
 ---
 
-## 4. Commercial "Work OS" vs. The In-Repository Harness
+# Commercial "Work OS" vs. The In-Repository Harness
 
-The market frequently markets generic enterprise **"Agentic Work OS"** platforms: drag-and-drop SaaS tools, high-level dashboards, and conversational layers built over issue trackers.
+The market frequently promotes generic enterprise **"Agentic Work OS"** platforms: drag-and-drop SaaS tools, high-level dashboards, and conversational layers built over issue trackers.
 
 ### The Abstraction Penalty for Software Engineering
-When applied to core software development and systems engineering, these generic SaaS wrappers break down quickly:
+
+When applied to core software development and systems engineering, generic SaaS wrappers break down quickly:
+
 - **Lowest Common Denominator**: Built for broad administrative tasks, they are blind to the mechanics of software engineering: compiler targets, AST navigation, memory constraints, and local thread concurrency.
 - **Debugging the Framework**: Engineers spend more time debugging the orchestration framework's idiosyncratic JSON schemas, complex UI wrappers, and brittle cloud integrations than writing code.
 - **Absence of Local Verification**: Generic platforms rely on conversational consensus between multiple models rather than binding validation to local compilers, linters, and unit test suites.
 
 ### The In-Repository Approach
+
 High-velocity engineering teams avoid generic SaaS wrappers in favor of a **tailored, repository-native harness**:
+
 - **Version-Controlled Instructions**: Plain Markdown policies (`AGENTS.md`, `.cursorrules`) that live alongside the codebase and evolve through standard Git workflows.
 - **Native Tool Integration**: Direct access to local compilers, test runners, and static analyzers via the shell or standard MCP servers.
 - **In-Tree Procedural Skills**: Reusable operational runbooks and scripts stored inside `.agents/skills/`, maintained and reviewed just like production code.
@@ -281,80 +434,190 @@ An effective agent harness reflects the working cadence of the engineer driving 
 
 ---
 
-## 5. Evaluation Dimensions & Benchmarking Strategy
+# A Useful Exploration Strategy
 
-When comparing agent environments, teams should run real, standardized software tasks rather than synthetic benchmarks.
+Rather than trying to choose a single winner immediately, it may be useful to treat the current ecosystem as an experimental field.
 
-### Practical Evaluation Matrix
-
-| Dimension | Key Architectural Indicator | Practical Test |
-| :--- | :--- | :--- |
-| **Context Management** | Selective retrieval via ASTs, embeddings, or file indexing. | Can it locate relevant architecture notes and interfaces without polluting the prompt with irrelevant files? |
-| **Autonomy Depth** | Number of coherent, sequential operations executed independently. | Can it traverse 15+ tool calls (search, edit, build, debug) to complete a ticket without stalling? |
-| **Error Recovery** | Parsing compiler and runtime stack traces to revise the plan. | When a test runner outputs an assertion failure, does it identify the root cause or rerun the identical command? |
-| **Verification Tightness**| Integration with deterministic test oracles and linters. | Does the agent refuse to declare a task complete if the compiler fails or a linter warning remains? |
-| **Tool Protocol (MCP)** | Support for open protocols and structured tool definitions. | Can it query a local Postgres database schema or call an internal REST API via standardized MCP servers? |
-| **Skills & Knowledge** | Ability to read and write modular operational procedures. | Can the agent follow a complex custom migration script documented inside the repository? |
-| **Observability** | Granular inspection of execution traces, token usage, and diffs. | Can the developer easily read the chain of shell commands and git diffs before merging? |
-| **Human Supervision** | Clean checkpoints for human approval of critical actions. | Does the harness pause for approval before executing destructive commands (`drop database`, `rm -rf`)? |
-
-### A Practical Benchmark Task
-To compare terminal-first tools (Claude Code, Codex CLI, Aider) against IDEs (Cursor, VS Code) and cloud agents (Devin), set up an identical bug reproduction task across all environments:
+A first comparison could include:
 
 ```text
-Investigate this bug:
-1. Determine whether the failure is reproducible via a minimal test case.
-2. Trace where the regression was introduced using git bisect or log search.
-3. Identify the specific commit and root cause.
-4. Verify whether identical bug patterns exist elsewhere in the codebase.
-5. Propose a targeted patch that satisfies project coding standards.
-6. Implement the fix and verify all existing and new unit tests pass cleanly.
-7. Generate a pull request summary detailing the cause, fix, and verification steps.
+Claude Code
+Codex CLI
+Gemini CLI
 ```
 
-Evaluate not merely whether the final code works, but the entire behavioral trace:
-- Did it blindly guess, or did it write a reproducing test first?
-- How many tokens did it burn to find the relevant code?
-- When a build failed, how quickly did it recover?
-- Was its final diff minimal and clean, or did it introduce unrelated formatting noise?
+These provide relatively comparable terminal-oriented agent environments.
+
+A second comparison could examine richer environments:
+
+```text
+VS Code + Copilot
+Cursor
+Cline / Roo / Kilo
+Antigravity
+OpenHands
+```
+
+The same tasks could be given to each environment.
+
+For example:
+
+```text
+Investigate this bug.
+
+Determine:
+- whether it is reproducible,
+- where it was introduced,
+- which commit is likely responsible,
+- whether similar bugs exist,
+- propose a fix,
+- implement it,
+- run tests,
+- prepare a summary.
+```
+
+We could then compare not merely whether the final answer was correct, but the entire behavior of the agent.
+
+Key behavioral signals to monitor include:
+- Whether the agent writes a minimal reproducing test before modifying code, or attempts blind speculative edits.
+- Token consumption and search efficiency when locating the relevant call paths.
+- Recovery mechanics when the build breaks or a test throws an assertion error.
+- Diff hygiene: whether the resulting patch is focused and minimal, or polluted with unrelated formatting changes.
 
 ---
 
-## 6. From AI Assistant to Agent Runtime
+# What to Evaluate
 
-The industry is moving past the paradigm of isolated chat assistants:
+The exploration should therefore focus on several dimensions.
+
+### Context handling
+
+How much of the repository does the agent understand?
+
+Can it locate relevant architecture documentation?
+
+Can it use external knowledge without overwhelming the context window?
+
+### Autonomy
+
+How many meaningful steps can it perform before human intervention is required?
+
+Can it independently discover the next necessary action?
+
+### Reliability
+
+Does it verify assumptions?
+
+Does it run tests?
+
+Does it notice when its solution does not work?
+
+### Recovery
+
+What happens when a command fails?
+
+Does the agent understand the failure and change strategy, or does it repeatedly attempt the same action?
+
+### Tool use
+
+How effectively does the agent use:
 
 ```text
-Autocomplete
-     ↓
-Chat Assistant
-     ↓
-Tool-Using Assistant
-     ↓
-Coding Agent
-     ↓
-Agent Runtime
-     ↓
-Multi-Agent Mesh
+Git
+shell
+tests
+browser
+databases
+MCP
+APIs
 ```
 
-The central architectural question is no longer "How well can an LLM generate syntax?" Modern models generate syntax proficiently. The real operational challenge is:
+### Skills and persistent knowledge
 
-> What execution environment allows a model to perform useful work reliably over long sequences of actions?
+Can we gradually teach the environment how our organization works?
 
-Solving that problem requires looking beyond the model to the engineering of the harness: context pruning, standardized tool protocols, persistent runbooks, deterministic verification suites, and disciplined sandboxing. The ongoing competition among developer tools is fundamentally a race to build the most reliable operating environment for autonomous engineering work.
+Can knowledge accumulated from one task improve future tasks?
+
+### Observability
+
+Can we understand what the agent did?
+
+Can we inspect:
+
+- actions,
+    
+- tool calls,
+    
+- diffs,
+    
+- intermediate results,
+    
+- decisions,
+    
+- costs?
+    
+
+### Human control
+
+Can the agent operate autonomously without becoming difficult to supervise?
+
+Ideally the system should support both:
+
+```text
+high autonomy
+```
+
+and
+
+```text
+clear checkpoints for human review
+```
 
 ---
 
-## Related Documentation and Architecture Patterns
+# From AI Assistant to Agent Runtime
 
-- [[Building Determinism from Unpredictable Models]]: The dual control planes, managing session drift (context rot, sycophancy), the Pyramid of Control, and Generation 3 state-graph orchestration.
-- [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: System architecture, security guardrails, and personal OS workflows for continuous background agent daemons.
-- [[Dynamic Model Routing and Inference Gateways]]: Decoupling the execution harness from specific model endpoints using automated fallbacks and multi-tier routing.
-- [[Agentic Coding Harness and Controlled Development Workflows]]: Self-healing feedback loops, controlled plan-and-approval workflows, and practical harness implementations.
-- [[The Conductor Pattern for High-Bandwidth Engineering]]: Orchestrating multi-agent, in-repository harnesses via voice and clear rule codification.
-- [[Agent Deployment and Execution Models]]: Trade-offs across local, cloud, and hybrid deployment runtimes for autonomous agents.
-- [[Multi-Agent Software Development]]: Coordinating specialized, decoupled agent topologies within a shared execution harness.
-- [[Model Access and Execution Infrastructure]]: Managing token budgets, inference latency, provider rate limits, and routing infrastructure.
-- [[Learning Coding Agents Through Failure-Driven Instructions]]: Building organizational procedural memory by turning system failures into persistent harness rules.
-- [[Testing in the Model, Agent, LLM Era]]: Using deterministic compilers and test oracles to steer agent generation.
+The broader transition may therefore be described as:
+
+```text
+autocomplete
+      ↓
+chat assistant
+      ↓
+tool-using assistant
+      ↓
+coding agent
+      ↓
+agent runtime
+      ↓
+multi-agent environment
+```
+
+The interesting question is no longer merely how well an LLM can write code.
+
+The more important question may become:
+
+> What environment allows a model to perform useful work reliably over long sequences of actions?
+
+This includes the model, but also everything around it:
+
+- context,
+    
+- tools,
+    
+- skills,
+    
+- memory,
+    
+- orchestration,
+    
+- verification,
+    
+- permissions,
+    
+- human supervision.
+    
+
+The emerging competition between Claude Code, Codex, Gemini CLI, Cursor, VS Code, Antigravity, OpenHands, and similar systems can therefore be viewed as competition over **how to build the operating environment for AI agents**.
+
+That is a useful starting point for further exploration.

@@ -19,143 +19,78 @@ aliases:
 
 # Embedding LLMs in Runtime Decision Paths and Operational Telemetry
 
-While the industry remains obsessed with build-time code generation, the far more significant architectural shift is happening in production runtimes: embedding language models directly into live execution pathways and operational telemetry meshes.
+Most discussion of AI in software still focuses on generating code before deployment. There is another architectural shift worth examining: using a language model while the system runs, to inspect telemetry or interpret input that ordinary rules cannot easily classify.
 
-$$\text{Raw Telemetry / Input Stream} \xrightarrow{\text{Statistical Filter}} \text{Supervisory LLM} \xrightarrow{\text{Invariant Verification}} \text{Deterministic Decision Envelope} \xrightarrow{\text{Gated Execution}} \text{System State}$$
+The path is straightforward: collect an input or telemetry stream, filter it with ordinary code, ask the model for a structured assessment, check that assessment against fixed rules, and only then let the system act. The model can correlate events across services, extract facts from narrative input, spot sensitive information in logs, or suggest a diagnostic probe. It must not be the component that commits a transaction or calls a mutation API on its own.
 
-In this model, LLMs act as probabilistic runtime decision components. They synthesize multi-service causal chains to eliminate manual dashboard triage, parse qualitative domain data into strongly typed data structures, catch contextual PII leaks, and spin up autonomous canary probes. 
+That last boundary matters. A model's output is a proposal. Schema checks, transaction rules, and business invariants decide whether the proposal can change state or trigger an external call. Code generated before deployment still goes through a compiler and the usual release path; a model invoked during a live request or telemetry review needs those checks at runtime.
 
-However, running an unpredictable model in a live environment requires a strict design rule: **the deterministic envelope**. The model should only ever produce advisory proposals. Before any system state mutates or external APIs fire, deterministic validators must enforce hard transactional rules, schema constraints, and business invariants.
+## What changes when the model runs in production
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        BUILD-TIME AI vs. RUNTIME AI                    │
-│                                                                        │
-│   BUILD-TIME (OFFLINE):                                                │
-│   Engineer ──► Prompt ──► LLM ──► Static Source Code ──► Compiler      │
-│                                                                        │
-│   RUNTIME (ONLINE / PRODUCTION):                                       │
-│   Incoming Request / Stream ──► Runtime Envelope ──► In-Line LLM       │
-│                                           │              │             │
-│                                           ▼              ▼             │
-│                                 Deterministic Rule   Structured Decision│
-│                                 Validation & Gate    Object (JSON)     │
-└────────────────────────────────────────────────────────────────────────┘
-```
+### Turn scattered signals into structured input
 
----
+A build-time assistant helps an engineer write code. A runtime model receives logs, traces, user text, or third-party payloads and turns ambiguous input into a typed result that another component can use. That makes it an active part of a production workflow, so its failures and permissions become architectural concerns.
 
-## Architectural Principles for Runtime LLMs
+### Spend less incident time switching between dashboards
 
-Deploying language models within live execution pipelines and observability streams changes how we handle distributed systems monitoring and operational triage.
+During an incident, engineers may spend 30–45 minutes comparing metrics across many Grafana dashboards. An operational agent can work downstream of OpenTelemetry collectors, metric aggregators, and log pipelines. With the service topology and business rules in view, it can connect signals across services and present a specific hypothesis for an engineer to verify.
 
-### 1. The Shift from Build-Time to Runtime Intelligence
-Build-time tools assist human developers writing static code. Runtime models execute as active computational components inside production service meshes. Their job is translating high-entropy, ambiguous signals—like scattered log traces, raw user inputs, or unstructured third-party payloads—into strongly typed, machine-actionable decisions.
+### Check business outcomes alongside infrastructure metrics
 
-### 2. Eliminating the "Dashboard Stare"
-During an incident, engineering teams routinely lose 30 to 45 minutes visually correlating metrics across dozens of disconnected Grafana dashboards. Operational supervisory agents sit downstream of OpenTelemetry span collectors, metric aggregators, and log pipelines. Instead of waiting for a human to notice a pattern, they continuously synthesize multi-service causal chains directly against codified business invariants.
+Two familiar monitoring failures show why a single health light is misleading:
 
-### 3. Solving the Tri-State Monitoring Problem
-Traditional monitoring breaks down into two failure modes:
-* **Zombie Green**: Infrastructure metrics look nominal (CPU at 20%, memory flat, HTTP 200s returning), while background workers silently drop messages, serialization failures poison queues, or downstream database rows fail to write.
-* **False Red**: A nightly batch job spikes queue depth past an arbitrary threshold, paging on-call engineers at 3:00 AM even though end-user latency and business SLAs are completely unaffected.
+- **Zombie green:** CPU sits at 20%, memory is stable, and requests return HTTP 200, while a worker drops messages, serialization failures poison a queue, or database rows never get written.
+- **False red:** A nightly batch pushes queue depth past a threshold and pages someone at 3:00 AM, while user latency and business SLAs remain unaffected.
 
-Semantic supervisors evaluate system health by checking whether transactional business invariants hold across service boundaries, rather than relying solely on decoupled scalar thresholds.
+The useful question is whether the required business transactions still complete across service boundaries. Infrastructure thresholds remain signals, but they do not answer that question alone.
 
-### 4. The Deterministic Envelope Pattern
-Never give an LLM unconstrained database credentials, arbitrary code execution privileges, or direct access to mutation APIs. The model produces a structured JSON proposal. That proposal must pass schema validation (e.g., via Pydantic or Zod) and clear a series of deterministic state-machine assertions before anything commits to storage or touches an external network interface.
+### Keep the model inside a checked execution path
 
-### 5. Cadence-Based Asynchronous Telemetry Inspection
-Piping 100,000 raw events per second into an LLM will instantly blow past rate limits and exhaust your budget. Production pipelines run high-throughput data through deterministic sliding-window filters (e.g., Redis, Apache Flink, or PromQL aggregations) to compute baseline statistics. Only anomalous, topologically correlated trace clusters get forwarded to the reasoning model, typically on a 5- to 15-minute evaluation cadence.
+Do not give the model unrestricted database credentials, arbitrary code execution, or direct access to APIs that change state. Have it return a structured JSON proposal. Validate the schema with a tool such as Pydantic or Zod, then check the relevant state-machine rules and business invariants before writing data or calling an external service.
 
-### 6. Autonomous Canary Diagnostic Probes
-For intermittent, non-deterministic bugs—race conditions or memory leaks that trigger once every 50,000 requests—supervisory agents automate diagnostic capture. When a trace exhibits an unmapped error profile, the agent provisions a temporary eBPF-instrumented canary node, routes a small slice of mirrored traffic to it, captures a full execution profile, and packages the data for offline analysis.
+### Filter telemetry before inference
 
-### 7. Semantic Security and Contextual PII Hunting
-Static regex scanners catch explicit credit card numbers or Social Security patterns, but they fail on contextual leaks—such as account balances serialized inside debug stack traces or customer home addresses split across custom payload fields. An asynchronous supervisory agent audits raw event logs to flag contextual privacy violations that regex patterns miss.
+Sending 100,000 raw events per second to a model would overwhelm rate limits and cost. A sliding-window filter can first compute baselines and find anomalies, using Redis, Apache Flink, or PromQL aggregations. Send the model correlated trace groups that warrant analysis, typically every 5–15 minutes; a statistical anomaly such as a p99 spike can also trigger an immediate review.
 
-### 8. Qualitative Decision Engines
-Historically, software required strict, quantitative data: booleans, integers, enums, and normalized relational schemas. However, real-world business logic frequently involves qualitative, narrative inputs—such as insurance dispute forms, regulatory circulars, or unstructured customer notes. The runtime LLM operates as an adapter, translating qualitative narrative text into typed payloads that standard state machines can execute.
+### Capture evidence for hard-to-reproduce failures
 
-### 9. Telemetry Hygiene and Preserving Operational Intuition
-Relying entirely on AI-generated summaries introduces a subtle failure mode: dashboard query rot and the erosion of an engineer's operational instincts. Resilient organizations pair supervisory agents with scheduled chart reviews to audit operational queries, while ensuring engineers still spend time inspecting raw traces and metric distributions.
+A race or leak that occurs once in 50,000 requests is difficult to diagnose from routine logs. When a trace shows an unfamiliar error pattern, an agent can prepare an isolated, instrumented canary, mirror a small amount of traffic to it, capture execution data, and package that evidence for offline analysis.
 
----
+### Look for leaks that have no simple string pattern
 
-## Conversational Observability: Eliminating the "Dashboard Stare"
+Regex rules catch recognizable credit card or Social Security number formats. They may miss an account balance inside a debug trace or an address spread across custom payload fields. An asynchronous review of event logs can flag these contextual exposures.
 
-Distributed architectures generate an overwhelming volume of telemetry: Prometheus time-series counters, structured JSON logs, and distributed trace graphs powered by [[OpenTelemetry]].
+### Parse narrative input for ordinary business code
 
-### The Pathology of the Dashboard Stare
-When an incident fires across a service mesh, the triage process typically breaks down like this:
-* Engineers open dozens of browser tabs, comparing CPU, memory, and latency spikes across multiple services.
-* They manually correlate whether a 5% latency jump in Service A stems from connection pool exhaustion in Service B or lock contention in a shared database.
-* They battle alert fatigue. Static alerts (`CPU > 85%` or `HTTP 500 rate > 1%`) fire during predictable batch jobs, yet stay silent during slow-burning data corruption bugs that still return HTTP 200 OK.
+Insurance disputes, regulatory notices, and customer notes do not arrive as booleans and enums. A model can extract typed fields from those narratives. A conventional state machine then applies the business rules to those fields.
 
-```text
-                       ┌─────────────────────────────────────┐
-                       │ Telemetry & Log Ingestion Pipeline  │
-                       │ (OpenTelemetry Spans, Metrics, Logs)│
-                       └──────────────────┬──────────────────┘
-                                          │ Continuous semantic
-                                          │ stream inspection
-                                          ▼
-                       ┌─────────────────────────────────────┐
-                       │ Operational Supervisory Agent       │
-                       │ - Knows service topology & contracts│
-                       │ - Holds operational invariants      │
-                       │ - Ingests historical incident data  │
-                       └──────────────────┬──────────────────┘
-                                          │
-                  ┌───────────────────────┴───────────────────────┐
-                  ▼                                               ▼
-         PROACTIVE ALERT SYNTHESIS                       CONVERSATIONAL QUERY
-     "Checkout failure rate is 0.4%,             Engineer: 'Is order settlement healthy?'
-      but payment gateway retry latency           Agent: 'Settlement is clearing, but
-      surged 400ms following deploy #42.          DB lock contention on Table X has
-      Correlated trace ID: #a78f2c.               tripled in the last 15 minutes.
-      Root cause: unindexed query in Service C."  No SLA breach yet, but exhaustion 
-                                                  projected in ~40 minutes.'"
-```
+### Keep dashboards and human judgment in use
 
-By maintaining an up-to-date map of service dependencies, active deployment tags, and interface contracts, a supervisory agent correlates telemetry across system boundaries. It shifts the operational workflow from manually hunting for metric anomalies to verifying specific architectural hypotheses.
+If the team reads only model summaries, dashboard queries can drift and engineers can lose familiarity with raw system behavior. Review charts and queries on a schedule, and keep checking traces and metric distributions directly.
 
----
+## Investigating incidents through telemetry
 
-## The "Traffic Light" Dilemma: Why Green/Amber/Red Fails
+Distributed systems produce Prometheus time series, structured JSON logs, and trace graphs linked by [[OpenTelemetry]]. During an incident, engineers open several dashboards and try to work out whether, for example, a 5% latency increase in Service A comes from Service B's connection pool or contention in a shared database. Static alerts such as `CPU > 85%` and `HTTP 500 rate > 1%` may fire during a predictable batch while missing data corruption behind successful HTTP responses.
 
-Engineering leadership often wants operational health boiled down to a simple status light: **Green (Healthy), Amber (Degraded), and Red (Critical)**. In complex distributed systems, static thresholds make this model borderline useless.
+An operational agent can use service dependencies, deployment tags, interface contracts, business invariants, and incident history to put those signals in context. Instead of asking an engineer to search for a matching chart, it can point to a trace and a likely path through the services. For example, it might report a 0.4% checkout failure rate, a 400 ms rise in payment gateway retry latency after deploy #42, trace `#a78f2c`, and an unindexed query in Service C as its root-cause hypothesis. An engineer could also ask whether order settlement is healthy and receive a report that settlement still clears, but lock contention on Table X has tripled in 15 minutes, with pool exhaustion projected in about 40 minutes. Those conclusions remain hypotheses to check against the traces.
 
-### 1. The "Zombie Green" Illusion
-A service can appear completely healthy on an infrastructure dashboard while being fundamentally broken:
-* A worker service consumes messages from a Kafka topic at a steady rate, maintaining normal CPU and memory usage.
-* Due to an unhandled schema change, the deserialization handler drops every message into an unmonitored dead-letter queue or silently swallows the error.
-* Infrastructure monitors show green across the board, but zero business operations are actually succeeding.
+## Why a green, amber, or red light can mislead
 
-### 2. The "False Red" Alarm Storm
-Thresholds lack operational context:
-* A scheduled batch reconciliation job spins up 64 concurrent workers, driving database connection utilization to 98% and worker queue depth past 20,000 items.
-* Alerts fire across Slack, paging engineers for database load, queue depth, and memory consumption.
-* However, end-user API endpoints show zero latency degradation, payment processing rates remain steady, and the batch job finishes cleanly within its allotted window.
+Leadership may want one status for the whole system. Static thresholds cannot represent what matters on every dependency path.
 
-### 3. Topology-Blind Scalar Thresholds
-Traditional monitoring setups evaluate metrics as isolated data points. They have no understanding of the system's underlying directed acyclic graph (DAG):
+### Green infrastructure, failed work
 
-```text
-           [ Edge API Gateway ]
-              /            \
-             ▼              ▼
-   [ Checkout Service ]   [ Recommendation Service ]
-           |                       |
-           ▼                       ▼
-   [ Payment Ledger ]     [ Vector Search Cache ]
-      (CRITICAL)               (BEST-EFFORT)
-```
+A Kafka worker may consume at a normal rate with ordinary CPU and memory use. After a schema change, its deserializer may send every message to an unmonitored dead-letter queue or swallow the error. The infrastructure dashboard stays green while no business operation succeeds.
 
-A 5% packet loss rate on the vector search cache path triggers the same alerting severity as a 5% packet loss rate on the payment ledger path, even though the recommendation failure can be masked with a simple fallback.
+### Red metrics, healthy service
 
-### Invariant-Aware Conversational Queries
-When an operational supervisor understands service dependencies and codified business rules, engineers can query the system based on operational guarantees rather than individual metrics:
+A scheduled reconciliation job may start 64 workers, drive database connection use to 98%, and push the queue above 20,000 items. Slack alerts page engineers about the database, queue, and memory. Yet user-facing API latency does not change, payments continue at the normal rate, and the batch finishes within its window.
+
+### The same metric on different paths
+
+Consider an edge gateway leading to a checkout service and payment ledger on one branch, and a recommendation service and vector search cache on another. Five percent packet loss on the ledger path is much more serious than five percent loss on the cache path, where a fallback can cover the failure. A threshold that sees only the number assigns the same severity to both.
+
+When a supervisor has the dependency map and explicit rules, an engineer can ask about guarantees instead of individual counters:
 
 ```text
 Engineer:
@@ -170,35 +105,13 @@ Downstream Impact: Financial ledger invariants remain consistent (GREEN). No dat
 Primary Trace Context: trace_id=4bf92f3577b34da6a3ce929d0e0e4736, span_id=00f067aa0ba902b7."
 ```
 
----
+That response ties a broken timing rule to a specific path while saying what still holds: settlement is slow, but the ledger remains consistent and no data was dropped. It gives the engineer trace and span IDs to inspect.
 
-## Cadence-Based Asynchronous Telemetry & Autonomous Canary Probes
+## Inspect telemetry in batches and capture difficult failures
 
-To make telemetry analysis computationally viable and cost-effective, high-throughput systems separate raw collection from model inference.
+Keep raw collection separate from model inference. An OpenTelemetry Collector pipeline and an asynchronous worker can identify latency shifts or error spikes in a sliding window and forward the relevant trace groups. At a volume of 100,000 events per second, the model sees periodic summaries or an immediate anomaly trigger instead of the entire stream.
 
-```text
-High-Volume Raw Telemetry Stream (100k events/sec)
-                      │
-                      ▼
-       ┌──────────────────────────────┐
-       │ Statistical Anomaly Filter   │ (Prometheus / OpenTelemetry Collector)
-       │ & Sliding Window Aggregator  │
-       └──────────────┬───────────────┘
-                      │ Batched summaries every 5–15 mins
-                      │ OR immediate trigger on statistical anomaly (p99 spike)
-                      ▼
-       ┌──────────────────────────────┐
-       │ Asynchronous Reasoning Agent │
-       │ - Evaluates correlated spans │
-       │ - Maps dependencies          │
-       │ - Compares against baseline  │
-       └──────────────┬───────────────┘
-                      ▼
-       High-Signal Operational Intelligence at a Fraction of the Token Cost
-```
-
-### Implementing Cadence-Based Telemetry Ingestion
-Instead of streaming every trace to an LLM, use an OpenTelemetry Collector pipeline coupled with an asynchronous worker. The collector uses a sliding window to identify latency shifts or error rate spikes, forwarding only anomalous trace structures:
+The following example passes an anomaly and a span-graph summary to a model, asks for a structured diagnosis, and validates the JSON before the result moves through the pipeline:
 
 ```python
 from pydantic import BaseModel, Field
@@ -249,46 +162,34 @@ def evaluate_telemetry_anomaly(anomaly: AnomalyContext, span_graph_summary: dict
     return OperationalDiagnosis.model_validate_json(raw_response)
 ```
 
-### Autonomous Canary Diagnostic Probes
-For subtle, non-deterministic bugs—like a thread-safety issue that only triggers under specific memory pressure—supervisory agents automate diagnostic capture:
+The `confidence_score` is part of the returned diagnosis, while schema validation ensures that downstream code receives the expected fields and types.
 
-1. **Automated Triage Dossier**: When an uncaught exception spikes in production, the agent pulls the trace context, inspects recent Git commits to the associated repository, flags changed lines, and generates an incident report containing the offending stack trace and relevant diffs.
-2. **Autonomous Canary Deployment**: If an error pattern resists offline diagnosis, the agent provisions an isolated canary pod instrumented with extended profiling tools:
-   * Attaches dynamic eBPF tracepoints (`kprobe`, `uprobe`) to track internal function arguments and system calls without changing application source code.
-   * Configures automatic heap dumps or process memory dumps if latency spikes past a set limit.
-   * Mirrors a small percentage of sanitized production traffic to the canary instance to capture reproduction payloads safely.
+### Build a dossier, then use an isolated canary if needed
 
-```text
-Production Traffic
-       │
-       ├──► Normal Cluster Pods (99%)
-       │
-       └──► Canary Pod (1% Mirrored)
-                 │
-                 ├── eBPF Dynamic Tracing (Tracing syscalls/allocations)
-                 ├── Memory Threshold Trigger ──► Core Dump / Heap Profile
-                 └── Isolation Boundary ──► DB writes redirected to mock sandbox
-```
+When uncaught exceptions rise, an agent can gather trace context, inspect recent Git commits in the relevant repository, mark changed lines, and assemble the stack trace and diffs into an incident report. If that does not explain a failure that appears only under particular memory pressure or timing, it can prepare a canary pod with extra instrumentation:
 
----
+1. Attach eBPF `kprobe` or `uprobe` tracepoints to inspect function arguments and system calls without changing application source.
+2. Trigger a heap or process-memory dump when latency exceeds a set limit.
+3. Mirror a small share of sanitized production traffic to the canary to capture a reproduction.
 
-## Semantic Security Log Triaging and Threat Hunting
+The original example sends 99% of production traffic to normal pods and mirrors 1% to the canary. The canary captures system calls and allocations, and redirects database writes to a mock sandbox. The result is a profile and reproduction evidence for offline analysis.
 
-Standard Security Information and Event Management (SIEM) tools rely on deterministic signatures and static thresholds (e.g., `Failed Logins > 5 in 60s → Flag IP`). Attackers regularly bypass these checks by running slow, distributed credential-stuffing attacks across thousands of IP addresses.
+## Review security events as sequences
 
-A semantic security analyzer looks at the behavioral intent across user event streams rather than matching isolated string signatures:
+SIEM rules often use fixed signatures, such as `Failed Logins > 5 in 60s → Flag IP`. Slow credential-stuffing spread across thousands of IP addresses can stay below a rule like that. A model can review a sequence of events in context rather than treating each request as an isolated string match.
 
-### 1. Fuzzy Sequence Analysis
-Consider an authenticated user session executing the following API calls over two hours:
-* `GET /api/v1/users/me`
-* `GET /api/v1/organizations/12/members?page=1&limit=5`
-* `GET /api/v1/organizations/12/members?page=2&limit=5`
-* `GET /api/v1/reports/export?format=csv&range=custom`
+For example, an authenticated session makes these requests over two hours:
 
-Each call returns an HTTP 200 OK and falls well within normal rate limits. A standard SIEM sees nothing wrong. However, an LLM evaluating the sequence can recognize the pattern: an account enumerating users and exfiltrating data right after an unexpected session token refresh.
+- `GET /api/v1/users/me`
+- `GET /api/v1/organizations/12/members?page=1&limit=5`
+- `GET /api/v1/organizations/12/members?page=2&limit=5`
+- `GET /api/v1/reports/export?format=csv&range=custom`
 
-### 2. Detecting Contextual PII and Data Leaks
-Regex scanners are great at finding explicit patterns like standard credit card numbers or Social Security formats. They fail completely when the data leak is contextual:
+Each returns HTTP 200 and stays below normal rate limits. A rule checking individual calls may see nothing. In sequence, especially after an unexpected session-token refresh, the calls may indicate user enumeration followed by data export.
+
+### Find private information from its context
+
+A scanner looking for credit card formats will not recognize every sensitive log entry. Consider this debug event:
 
 ```text
 [2024-10-24 16:42:10.102] DEBUG billing_reconciler.go:88 
@@ -299,7 +200,7 @@ Context dump: {
 }
 ```
 
-A standard regex scanning for credit card formats sees this as normal text. A semantic supervisor processing log batches flags the payload immediately:
+The sensitive content is the combination of a named person, an account amount, and legal context. A model reviewing batches could flag it with a structured result:
 
 ```json
 {
@@ -312,41 +213,15 @@ A standard regex scanning for credit card formats sees this as normal text. A se
 }
 ```
 
----
+## Convert narrative claims into checked decisions
 
-## Consuming Unstructured Qualitative Data: The Runtime Decision Engine
+Insurance claims, dispute descriptions, regulatory changes, and contract clauses often arrive as free text. Let the model extract a proposal from that text. Then validate its types and apply business rules in ordinary code. A state machine or Saga can consume the validated result; the model does not get to issue the refund itself.
 
-Historically, computers required clean, structured inputs to make decisions. But much of the information businesses handle is messy, qualitative narrative: insurance claims, regulatory updates, dispute descriptions, and contract clauses.
+The original flow gives the model domain rules, examples of boundary decisions, and a low temperature setting. It asks for JSON, validates that JSON with Pydantic or Zod, rejects invalid input, and then passes the result to a deterministic workflow. A low temperature setting reduces variation; the checks after inference are still necessary.
 
-A common anti-pattern is letting an LLM make an end-to-end decision and directly trigger downstream actions. A much safer approach uses the LLM as a translation layer: it parses the messy, qualitative text into a strongly typed, validated schema, which a deterministic state machine then evaluates against business rules.
+### An example: a customer dispute
 
-```text
-Incoming Unstructured Narrative
-(e.g., complex insurance claim description / regulatory amendment)
-                    │
-                    ▼
-┌────────────────────────────────────────────────────────┐
-│  Runtime LLM Evaluator                                 │
-│  - Prompt contains strict domain invariants            │
-│  - Few-shot examples of boundary decisions             │
-│  - Temperature = 0.0 (deterministic inference)         │
-└───────────────────┬────────────────────────────────────┘
-                    │ Structured JSON Output
-                    ▼
-┌────────────────────────────────────────────────────────┐
-│  Deterministic Execution Envelope                      │
-│  - Validates schema against strict Pydantic/Zod types  │
-│  - Executes business invariants                        │
-│  - Rejects execution if invariant validation fails     │
-└───────────────────┬────────────────────────────────────┘
-                    │
-                    ▼
-Deterministic Business Workflow Engine (Saga / State Machine)
-```
-
-### Implementing the Decision Envelope
-
-Here is an example showing how an unstructured dispute description is parsed into a structured decision, passed through a validation envelope, and then executed within a deterministic state machine:
+This example classifies a dispute and extracts the claimed amount, date, and other fields. If JSON parsing fails, it sends the case to human review. Code then compares the claimed amount with the original transaction, routes proposals below a confidence threshold of 0.85 to review, and allows an automatic refund of at most $50 only for an unauthorized charge. Other cases go to the standard review workflow.
 
 ```python
 from enum import Enum
@@ -454,43 +329,36 @@ def invoke_llm_extractor(text: str) -> str:
     """
 ```
 
-In this architecture, the LLM does not decide to issue the refund. It simply extracts the facts from the messy narrative. The code then deterministically verifies those facts against the transaction database and business policies, deciding whether to auto-refund, route to a manual queue, or reject the claim.
+The model extracts facts from the customer's story. The transaction record and business policy determine whether the claim can be refunded automatically, needs review, or should be rejected.
 
----
+## Keep the telemetry useful and the team familiar with it
 
-## Operational Lessons: Telemetry Hygiene and the "Tacit Knowledge" Risk
+### Clean up noisy logs
 
-Deploying supervisory agents into production environments reveals several hard lessons about telemetry pipelines and team dynamics:
+If services produce meaningless warnings, repeated unhandled exceptions, and abandoned spans, those entries consume the model's context and obscure useful evidence. An operational agent makes that problem hard to ignore: fix log levels, consolidate spans, and remove messages that do not help explain behavior.
 
-### 1. The Broken Window Effect in Logs
-LLMs are sensitive to noise. If your microservices continuously emit meaningless warning logs, noisy unhandled exceptions, and abandoned trace spans, the agent's context window fills up with garbage. Implementing an operational agent usually forces teams to clean up their telemetry: fixing broken log levels, consolidating trace spans, and removing uninformative logs.
+### Check dashboard queries
 
-### 2. Dashboard Query Drift
-Teams that rely entirely on conversational agents often stop looking at their Grafana dashboards. Over time, those queries rot: metric names change, dashboards reference deprecated labels, and alert configurations drift out of date. To prevent this:
-* Treat dashboards as code, storing definitions alongside service implementations in Git.
-* Run monthly **Chart Reviews** where the team walks through operational dashboards to verify that queries, alerts, and SLO mappings still match the live architecture.
+When teams stop opening Grafana, metric names change while queries keep referring to old labels and alerts drift out of date. Store dashboard definitions with service code in Git. In a monthly chart review, check that queries, alerts, and SLO mappings still match the running architecture.
 
-### 3. Preserving Operational Intuition
-If junior engineers only ever read AI-generated summaries, they struggle to build an intuitive mental model of how the system behaves under load. High-performing teams address this by having on-call engineers spend time inspecting raw traces, profiling real requests, and verifying the supervisory agent's reasoning against raw telemetry.
+### Read the raw evidence
 
----
+Engineers who only see generated summaries have less opportunity to learn how the system behaves under load. On-call work should still include reading traces, profiling actual requests, inspecting metric distributions, and checking the agent's explanation against the underlying data.
 
-## Summary of System Interactions
+## How the four uses fit together
 
-| Architectural Boundary | Input Data Type | Processing Mechanism | Safety Gate | Terminal Output |
-| :--- | :--- | :--- | :--- | :--- |
-| **Conversational Observability** | Raw OTel traces, Prometheus metrics, system logs | Asynchronous batch reasoning (5–15 min sliding window) | Static topology assertion & span correlation | Natural-language incident summaries & exemplar trace links |
-| **Autonomous Canary Diagnostics** | Unmapped exceptions & edge-case latency spikes | Automated eBPF probe provisioning & canary deployment | Sandboxed execution; mocks all external mutations | Full heap dumps, system call profiles, and reproduction traces |
-| **Semantic Security Hunting** | Authenticated session logs & distributed event streams | Sequence-aware semantic evaluation | Deterministic SIEM block-lists & schema validation | Prioritized incident dossiers and contextual PII redaction alerts |
-| **Runtime Decision Engine** | Unstructured narrative text (claims, disputes) | Low-temperature structured extraction (`temperature=0.0`) | Strict schema parsing (Pydantic) & deterministic invariant validation | Typed payloads driving deterministic state machines (Sagas) |
+| Use | Input and model work | Check before use | Result |
+| :--- | :--- | :--- | :--- |
+| **Incident investigation** | OTel traces, Prometheus metrics, and logs; batch analysis every 5–15 minutes | Check service topology and correlated spans | Incident explanation and links to example traces |
+| **Canary diagnostics** | Unfamiliar exceptions or latency spikes; instrument an isolated canary with eBPF | Sandbox execution and mock external mutations | Heap dumps, system-call profiles, and reproduction traces |
+| **Security and log review** | Session events and log streams; inspect sequences and contextual leaks | SIEM blocklists and schema validation | Prioritized incident reports and PII redaction alerts |
+| **Business decisions from text** | Claims or disputes; extract typed fields at low temperature | Parse the schema and enforce business invariants | Validated input for a state machine or Saga |
 
----
+## Related notes
 
-## Architectural Graph References
-
-* **[[OpenTelemetry]]**: The underlying distributed tracing, metrics, and log context structures that feed supervisory agents.
-* **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Network protocols, retries, and circuit-breaking patterns that shape runtime telemetry graphs.
-* **[[Designing Software for AI Agents]]**: Interface contracts, structured tool definitions, and isolation patterns for operational models.
-* **[[Workflow Orchestration in Agentic Systems]]**: State machines, sagas, and long-running execution engines that consume structured decision payloads.
-* **[[Formal Verification and Runtime Safety Boundaries]]**: Deterministic assertions and runtime invariant checks that constrain probabilistic models in production.
-* **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Moving from passive metric dashboards to proactive supervisory systems monitoring production state.
+- **[[OpenTelemetry]]**: Trace, metric, and log context used by operational agents.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Protocols, retries, and circuit breakers that shape traces across services.
+- **[[Designing Software for AI Agents]]**: Contracts, structured tools, and isolation for operational models.
+- **[[Workflow Orchestration in Agentic Systems]]**: State machines, Sagas, and long-running workflows that consume structured proposals.
+- **[[Formal Verification and Runtime Safety Boundaries]]**: Assertions and invariant checks around model output.
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Moving from passive dashboards to operational agents that monitor production state.

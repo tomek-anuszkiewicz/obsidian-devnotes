@@ -1,208 +1,868 @@
 ---
-title: Designing Internal Packages as an Explicit, Composable Framework
+title: Designing Internal NuGet Packages as an Explicit, Composable Framework
 tags:
+  - dotnet
+  - nuget
   - software-architecture
-  - package-management
   - framework-design
   - modular-design
   - maintainability
   - ai-agents
+  - package-management
 aliases:
-  - Designing Internal Packages as an Explicit Composable Framework
-  - Internal Framework Architecture
-  - Explicit Composable Packages
+  - Internal NuGet Framework Architecture
+  - Explicit Composable NuGet Packages
   - Designing Internal Shared Libraries
   - The Frozen Package Problem
 ---
 
-# Designing Internal Packages as an Explicit, Composable Framework
+## Core Idea
 
-## Core Principle: The Framework Provides Building Blocks; The Application Composes Them
+Internal NuGet packages may collectively form a corporate framework.
 
-Every internal shared library you publish—whether through npm, NuGet, Maven, Cargo, or Go modules—inevitably shapes your organization’s de facto corporate application framework. 
+That is not inherently a problem.
 
-Shared code is not inherently problematic. The architectural failure occurs when a platform framework inverts control: moving from an application that composes modular tools to an all-knowing framework that hijacks application startup and hides infrastructure behind ambient magic.
+The problem begins when the framework:
 
-```text
-HEALTHY MODEL: APPLICATION OWNS COMPOSITION
-Framework Packages ──(provide discrete blocks)──► Consuming Application
-                                                         │
-                                                  Explicit Setup,
-                                                  Visible Middleware Pipeline,
-                                                  Local Operational Policy
+- hides application configuration,
+    
+- silently registers large parts of the runtime,
+    
+- owns the bootstrap process,
+    
+- introduces a large dependency tree,
+    
+- becomes difficult to replace,
+    
+- accumulates unrelated features for many teams,
+    
+- grows so complex that nobody feels safe changing it.
+    
 
-UNHEALTHY MODEL: FRAMEWORK TAKES OVER STARTUP
-Consuming Application ──(delegates control)──► Monolithic Corporate Platform
-                                                         │
-                                                  Hidden Ambient Registrations,
-                                                  Magic Reflection Scanning,
-                                                  Opaque Bootstrap Lifecycle
-```
+A good internal framework should provide **modular building blocks** that are explicitly selected, configured, and composed by the consuming application.
 
-### The Defining Rule
+The application should remain the owner of its runtime configuration.
 
-**Build a framework that is composed by the application, not a framework that configures the application on its behalf.**
-
-The framework provides building blocks. The application explicitly selects, configures, orders, and wires them together.
-
-**The Decision Invariant**: Build a shared package when it makes systems easier to understand, operate, and maintain. Rely on local code, clear documentation, and automated conformance tests when a package would obscure more than it simplifies (see [[Internal Shared Packages vs Agent-Generated Code]]).
-
-When building systems alongside AI coding agents, magic shared packages become severe engineering bottlenecks. Coding agents cannot reliably navigate ambient framework hooks, reflection-based classpath scanning, or implicit dependency injection containers without guessing and hallucinating side effects (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
+When maintaining codebases alongside AI coding agents, magic shared packages become severe operational bottlenecks. Coding agents cannot reliably infer ambient reflection scanning, hidden dependency injection registrations, or implicit bootstrap hooks without hallucinating side effects. Explicit composition keeps the execution graph directly in the context window as executable documentation (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ---
 
-## The Trap: The All-in-One "Corporate Platform" Package
+## 1. Keep Dependency Trees Small
 
-When platform teams attempt to standardize architectures across an organization, they frequently fall into the trap of shipping a monolithic starter package:
+An internal package should not reference many unrelated packages.
+
+Adding one package should not silently bring in:
+
+- multiple cloud SDKs,
+    
+- logging providers,
+    
+- telemetry exporters,
+    
+- retry libraries,
+    
+- serializers,
+    
+- database clients,
+    
+- messaging frameworks,
+    
+- health-check packages,
+    
+- configuration providers.
+    
+
+A package should depend only on what is required for its primary responsibility.
+
+Instead of one large package:
 
 ```text
-company-starter-kit / Company.Platform
-├── Ambient Logging Provider
-├── Auto-registered Metrics Exporters
-├── Hardcoded Retry & Timeout Policies
-├── Mandatory Base Classes for Controllers/Handlers
-├── Database Context Interceptors
-└── Magic Bootstrap Method: app.UseCompanyPlatformDefaults()
+Company.Platform
 ```
 
-This monolithic model introduces four major failure modes into your runtime and development lifecycle:
+prefer smaller packages:
 
-### 1. Hijacked Startup Lifecycle
-The application surrenders control over initialization order, dependency lifetimes, and execution pipelines. When background workers, health checks, or database connections initialize via hidden hooks, diagnosing boot-time crashes or configuring custom shutdown hooks becomes an exercise in reverse-engineering the framework.
+```text
+Company.Logging.Core
+Company.Logging.Serilog
+Company.Telemetry.Core
+Company.Telemetry.OpenTelemetry
+Company.Telemetry.Grafana
+Company.Telemetry.AzureMonitor
+Company.Authentication
+Company.Azure.KeyVault
+```
 
-### 2. Dependency Bloat and Diamond Dependency Hell
-Importing a shared package just for structured logging or a consistent error model silently pulls in three cloud SDKs, heavy serialization engines, and specific database drivers. When two downstream packages depend on conflicting major versions of a transitive serialization library, consumer builds break across the company.
+This gives applications control over which components and transitive dependencies they actually use.
 
-### 3. The "Frozen Package" Problem
-Because dozens of heterogeneous services consume the same platform package, modifying a single class or upgrading an underlying driver risks breaking unknown downstream workflows. The library becomes terrified of change. It was originally introduced to centralize best practices, but it quickly calcifies because it is too critical and dangerous to touch.
+Small dependency trees provide:
 
-### 4. Architectural Colonization
-Domain models are forced to inherit from proprietary company base classes, handle platform-specific interfaces, or wrap business outputs in non-standard transport envelopes (`CompanyResult<T>`). This leaks infrastructure concerns into core business logic, preventing services from evolving, refactoring, or migrating independently.
+- fewer version conflicts,
+    
+- easier upgrades,
+    
+- lower security exposure,
+    
+- easier package removal,
+    
+- clearer ownership,
+    
+- better understanding of the runtime composition.
+    
+
+Pulling in broad transitive dependencies also triggers diamond dependency hell across an organization. When an internal package drags in a heavy JSON serializer, database driver, or cloud SDK, two unrelated libraries referencing incompatible major versions of that transitive dependency will break downstream builds and freeze upgrades across dozens of consumer repositories.
 
 ---
 
-## Practical Rules for Composable Internal Packages
+## 2. Prefer Configuration by Composition
 
-### 1. Minimal, Decoupled Dependencies
-A shared package must depend strictly on what is necessary to fulfill its single responsibility. An authentication package should handle tokens and cryptographic signatures—it should never pull in database drivers, HTTP servers, or logging exporters.
+The framework should provide building blocks.
 
-```text
-ANTIPATTERN (Monolithic Sprawl):
-  Company.Platform ──► [Cloud SDKs + Logger + OpenTelemetry + DB Drivers + Serializers]
+The application should compose them explicitly.
 
-CLEAN COMPOSITION (Granular Blocks):
-  Company.Telemetry.Contracts  (Zero external dependencies, pure interfaces)
-  Company.Telemetry.Core       (Concrete exporter and tracer implementations)
-  Company.Auth.Oidc            (Pure protocol parsing and token validation)
+For example:
+
+```csharp
+builder.Services.AddCompanyLogging(options =>
+{
+    options.ApplicationName = "Orders";
+});
+
+builder.Services.AddCompanyTracing();
+
+builder.Services.AddGrafanaExporter();
+
+builder.Services.AddCompanyAuthentication(options =>
+{
+    options.Authority = configuration["Auth:Authority"];
+});
+
+builder.Services.AddCompanyProblemDetails();
+
+var app = builder.Build();
+
+app.UseCompanyCorrelation();
+app.UseCompanyRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseCompanyExceptionHandling();
 ```
 
-Split packages along operational boundaries. Provide lightweight contract packages containing zero runtime dependencies, letting application teams consume interfaces without inheriting heavy vendor SDKs.
+This is more verbose than:
 
-### 2. Explicit Wiring Over Magic One-Liners
-Consuming applications must wire up infrastructure components line by line inside their entry point. Avoid meta-packages that register everything automatically behind an opaque setup method.
+```csharp
+builder.Services.AddCompanyPlatform(configuration);
 
-```typescript
-// EXPLICIT APPLICATION STARTUP (Clear, Visible, Auditable)
-import { createLogger } from "@company/telemetry-logging";
-import { registerTracing } from "@company/telemetry-tracing";
-import { configureOidcAuth } from "@company/auth-oidc";
-import { errorHandlerMiddleware } from "@company/http-errors";
+var app = builder.Build();
 
-// 1. Explicit Service Registrations
-const logger = createLogger({ serviceName: "orders-api", level: config.logLevel });
-const tracer = registerTracing({ serviceName: "orders-api", exporterEndpoint: config.otelUrl });
-const authProvider = configureOidcAuth({ authority: config.oidcAuthority, audience: "orders-api" });
-
-// 2. Visible Middleware Composition
-const app = createHttpServer();
-
-app.use(tracer.correlationMiddleware());
-app.use(logger.requestLoggingMiddleware());
-app.use(errorHandlerMiddleware());
-app.use(authProvider.authenticate());
-app.use(authProvider.requireScopes(["orders:read", "orders:write"]));
+app.UseCompanyPlatform();
 ```
 
-While this approach requires a dozen lines of setup code instead of a single `app.useCompanyDefaults()`, explicit setup acts as **executable architectural documentation**. Any engineer or AI agent reading the entry point can trace precisely what middleware is running, what dependencies exist, and how data moves through the runtime.
+However, the explicit configuration is valuable.
 
-### 3. Middleware Order Must Stay Visible in the Application
-Execution order in an HTTP or messaging pipeline dictates security, resource usage, and correctness. 
+It shows:
 
-If authentication runs *after* request body parsing, unauthenticated callers can send multi-megabyte payloads that consume server memory and trigger expensive garbage collection pauses before being rejected. If correlation ID extraction runs *after* error logging, unhandled exceptions will drop critical distributed tracing context.
+- which capabilities are enabled,
+    
+- how they are configured,
+    
+- which infrastructure providers are used,
+    
+- which middleware is active,
+    
+- the order in which the pipeline executes,
+    
+- which component can be removed or replaced.
+    
 
-A platform package should supply individual, reusable middleware components. The application entry point must wire them in plain sight. Never hide execution sequences inside monolithic wrapper methods.
+The startup code is not merely boilerplate.
 
-### 4. Insulate Domain Logic from Package Types
-Shared packages belong at the boundaries of your system (transport, serialization, external integrations). They must never invade core business logic:
-- Domain entities must never inherit from internal framework classes.
-- Command and query handlers must not extend platform-specific bases.
-- Business services should return native language types, standard library errors, or domain models—not internal wrappers like `CompanyResponse<T>`.
-
-When packages stay confined to the infrastructure layer, replacing or upgrading a library requires zero changes to core domain code.
-
-### 5. Separate Mechanism from Policy
-A library provides the **mechanism**; the consuming application decides the **policy**:
-- **Mechanism (Provided by the Package)**: A utility that computes exponential backoff with full jitter, or an interceptor that tracks HTTP call duration.
-- **Policy (Configured by the Application)**: The operational decision that payment processing endpoints must never automatically retry, while catalog read queries retry three times with a 250ms base delay and a strict 1-second timeout.
-
-Hardcoding operational policies inside a library removes control from the engineers operating the service in production. Keep the utilities flexible and leave tuning parameters to local configuration.
-
-### 6. Ship Conformance Tests Instead of Forcing Shared Binaries
-Platform teams often distribute shared packages solely to force standardization across downstream systems (for example, standardizing JSON error shapes, propagating tracing headers, or enforcing `/healthz` endpoints).
-
-Distributing shared binaries is not the only way to achieve standard behavior. **Shipping an automated conformance test suite often yields better architectural outcomes than enforcing a shared binary dependency** (see [[AI Changes the Economics of Software Libraries]]):
-
-```text
-┌─────────────────────────────────────────────────────────────┐
-│          CORPORATE CONFORMANCE TEST SUITE                   │
-│  - Verifies correlation ID header is propagated on egress   │
-│  - Verifies standard RFC 7807 JSON envelope on 400 errors   │
-│  - Verifies health check endpoint returns 200 OK            │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ (Validates black-box behavior)
-                               ▼
-   [Local Application Code (Implementation Owned Locally)]
-```
-
-With conformance suites, the platform team writes a containerized test harness or executable integration suite that verifies external system behavior over the network. Individual services implement their endpoints using whatever libraries or native language idioms make sense for their stack. The platform team enforces organizational standards without introducing dependency locks or runtime coupling.
-
-### 7. Documentation and Copy-Paste Can Beat a Package
-For small, low-churn utilities (such as computing HMAC signatures, generating deterministic idempotency keys, or normalizing headers), maintaining a shared package introduces high lifecycle overhead: separate source repositories, CI pipelines, semantic versioning gates, release notes, and vulnerability patching.
-
-For stable, low-complexity patterns, clear documentation and a reference implementation are superior to a shared package. Engineers and AI coding agents can drop clean, locally owned code directly into the service in seconds. Local ownership avoids dependency conflicts entirely, allows immediate refactoring, and keeps the full implementation visible to automated tooling.
+It is an executable description of the application architecture.
 
 ---
 
-## 15-Point Decision Checklist Before Building an Internal Package
+## 3. Middleware Must Be Explicit
 
-Before writing a shared library, run your design through this diagnostic checklist to ensure it stays a modular building block rather than an invasive corporate platform:
+Middleware order is part of application behavior.
 
-| # | Diagnostic Question | Healthy Answer | Warning Sign |
-| :--- | :--- | :--- | :--- |
-| **1** | Does the package have one single responsibility? | Yes; clear, narrow functional scope. | Marked as "common", "utils", or "platform". |
-| **2** | How many transitive third-party dependencies does it pull in? | Minimal or zero dependencies. | Pulls in heavy cloud SDKs, ORMs, and serializers. |
-| **3** | Can the application explicitly select every major feature? | Yes; features are opted into individually. | Importing the package forces a standard runtime stack. |
-| **4** | Is middleware registration and order visible in the app? | Yes; wired explicitly in the application entry point. | Opaque setup via a single `app.UseDefaults()` call. |
-| **5** | Can this package be removed without rewriting domain code? | Yes; isolated entirely to the infrastructure layer. | Business entities inherit from platform base classes. |
-| **6** | Are we adding toggles to accommodate one team's special case? | No; unique workflows are handled locally by the service. | Library contains dozens of custom conditional switches. |
-| **7** | Is the shared abstraction genuinely universal? | Yes; works identically across domains and environments. | Littered with environment checks and team-specific forks. |
-| **8** | Is the package easier to maintain than clean local code? | Yes; solves a legitimately complex, high-churn technical problem. | Teams avoid updating dependencies to avoid breaking changes. |
-| **9** | Can the package be removed in under a day of work? | Yes; interfaces are cleanly separated from application code. | Removing the package requires a multi-week service rewrite. |
-| **10** | Is the public API surface small and tightly bounded? | Yes; exposes only necessary functions and interfaces. | All classes and internal utilities exposed publicly. |
-| **11** | Does the package dictate operational policies? | No; consumers control timeouts, retries, and allocations. | Hardcoded retry loops and unconfigurable timeouts. |
-| **12** | Would an automated conformance test achieve compliance better? | Evaluated; package is only built if binary sharing is necessary. | Forcing a shared binary solely to validate wire formats. |
-| **13** | Does the package have an active, designated team owner? | Yes; dedicated team maintains, triages, and documents it. | Orphaned repository with pending bug reports. |
-| **14** | Are breaking changes governed by SemVer and deprecation paths? | Yes; documented upgrade paths and release cadences. | Unannounced breaking changes across minor versions. |
-| **15** | Do maintainers feel safe releasing updates to production? | Yes; comprehensive unit and integration test suites. | Changes delayed out of fear of breaking downstream callers. |
+A NuGet package may provide middleware, but the consuming application should explicitly add it to the pipeline.
+
+Prefer:
+
+```csharp
+app.UseCompanyCorrelation();
+app.UseCompanyRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseCompanyExceptionHandling();
+```
+
+Avoid hiding the complete pipeline behind:
+
+```csharp
+app.UseCompanyDefaults();
+```
+
+The hidden method may register several components whose ordering and behavior are not visible to the application.
+
+This creates problems when:
+
+- a middleware must be moved,
+    
+- one middleware must be removed,
+    
+- a custom implementation must be inserted,
+    
+- the order differs between applications,
+    
+- debugging requires understanding the execution path.
+    
+
+A framework should make the pipeline easier to assemble, not make it invisible.
+
+Pipeline order directly dictates resource utilization, security, and runtime correctness. If request body parsing executes before authentication, unauthenticated callers can stream multi-megabyte payloads that exhaust memory and trigger expensive garbage collection pauses before being rejected. Similarly, if exception logging runs before correlation ID extraction, unhandled failures drop the distributed tracing context needed for production triage.
 
 ---
 
-## Related Notes
+## 4. A Framework Is Acceptable When the Application Composes It
 
-- **[[Internal Shared Packages vs Agent-Generated Code]]**: Determining when to build a shared binary library versus letting coding agents generate and maintain locally owned implementations.
-- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: The hidden costs of magic frameworks, implicit reflection, and inheritance hierarchies when working with automated coding tools.
-- **[[Standardizing Service Infrastructure with Reusable Blocks]]**: Building an organizational paved road using modular infrastructure components without hijacking the application startup lifecycle.
-- **[[Designing Software for AI Agents]]**: Architectural design patterns that favor explicit composition and local transparency over ambient framework behavior.
-- **[[AI Changes the Economics of Software Libraries]]**: How cheap, accurate code generation shifts the engineering calculus between maintaining shared packages and writing bespoke local code.
-- **[[OpenTelemetry]]**: Implementing distributed tracing, metrics, and structured logging without wrapping standard APIs in proprietary internal abstractions.
-- **[[Testing in the Model, Agent, LLM Era]]**: Applying automated conformance test suites to validate architectural boundaries and network behaviors without forcing shared runtime dependencies.
+The goal is not to prevent internal packages from forming a framework.
+
+A useful corporate framework may provide:
+
+- logging components,
+    
+- telemetry integrations,
+    
+- authentication modules,
+    
+- middleware,
+    
+- cloud integrations,
+    
+- configuration helpers,
+    
+- API conventions,
+    
+- health checks,
+    
+- internal service clients.
+    
+
+The important distinction is between two models.
+
+### Framework composed by the application
+
+```csharp
+services.AddCompanyLogging();
+services.AddCompanyTracing();
+services.AddGrafanaExporter();
+services.AddCompanyAuthentication();
+services.AddAzureKeyVault();
+
+app.UseCompanyCorrelation();
+app.UseCompanyRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+The application owns the composition.
+
+### Framework that owns the application
+
+```csharp
+services.AddCompanyPlatform();
+app.UseCompanyPlatform();
+```
+
+The framework decides what is installed and how the application behaves.
+
+The first model preserves visibility and control.
+
+The second model hides architecture behind a small number of extension methods.
+
+A useful rule is:
+
+> Prefer a framework that is composed by the application over a framework that configures the application on its behalf.
+
+---
+
+## 5. Modularity Should Enable Replacement
+
+Each framework component should be replaceable without rebuilding the entire application.
+
+For example, an application may initially use:
+
+```csharp
+services.AddCompanyTelemetry();
+```
+
+Later, it should be possible to replace it with:
+
+```csharp
+services
+    .AddOpenTelemetry()
+    .WithTracing(...)
+    .WithMetrics(...);
+```
+
+Similarly:
+
+```csharp
+services.AddCompanySecrets();
+```
+
+should be replaceable with:
+
+```csharp
+services.AddAzureKeyVault(...);
+```
+
+without changing:
+
+- domain logic,
+    
+- handlers,
+    
+- endpoints,
+    
+- business services,
+    
+- unrelated infrastructure modules.
+    
+
+A module is properly isolated when it can be removed or replaced at the application boundary.
+
+---
+
+## 6. Prefer Replaceability Over Endless Configuration
+
+A package should be configurable within the scope of its responsibility.
+
+However, configurability should not mean supporting every possible scenario through dozens of flags.
+
+A problematic design may look like:
+
+```csharp
+services.AddCompanyLogging(options =>
+{
+    options.UseSerilog = true;
+    options.UseOpenTelemetry = false;
+    options.UseGrafana = true;
+    options.UseAzureMonitor = false;
+    options.UseCustomFormatter = true;
+    options.IncludeHeaders = false;
+    options.IncludeBodies = true;
+});
+```
+
+This often indicates that too many independent concerns were placed inside one module.
+
+A better design is composition:
+
+```csharp
+services.AddCompanyLoggingCore();
+services.AddSerilogLogging();
+services.AddGrafanaExporter();
+services.AddCompanyLogEnrichment();
+```
+
+This gives flexibility through replaceable components rather than one large configuration object.
+
+A useful distinction is:
+
+### Configurability
+
+The component can change some of its behavior.
+
+### Replaceability
+
+The component can be removed and replaced with another implementation.
+
+Replaceability is often more valuable than a large number of configuration switches.
+
+---
+
+## 7. Avoid the Multi-Consumer Feature Trap
+
+A shared package often starts with one clear purpose.
+
+Then different teams request different behavior:
+
+- one team needs Azure integration,
+    
+- another uses AWS,
+    
+- another needs Kafka,
+    
+- another requires a custom serializer,
+    
+- another needs a special retry policy,
+    
+- another cannot use the standard authentication setup.
+    
+
+The package gradually accumulates:
+
+- flags,
+    
+- callbacks,
+    
+- optional dependencies,
+    
+- provider factories,
+    
+- special cases,
+    
+- environment-specific branches.
+    
+
+This is often a sign that the package is sharing the wrong abstraction level.
+
+A better response may be:
+
+- keep a small common core,
+    
+- move integrations to separate packages,
+    
+- let applications compose the required modules,
+    
+- keep consumer-specific behavior local.
+    
+
+A useful rule is:
+
+> When consumers require fundamentally different behavior, do not keep extending one shared package. Reconsider the abstraction boundary.
+
+---
+
+## 8. Avoid the Package Nobody Wants to Change
+
+A complex internal package can become organizationally frozen.
+
+Typical symptoms include:
+
+- many unknown consumers,
+    
+- incomplete test coverage,
+    
+- unclear ownership,
+    
+- hidden side effects,
+    
+- undocumented configuration,
+    
+- many compatibility assumptions,
+    
+- no safe migration strategy,
+    
+- fear of breaking unrelated applications.
+    
+
+This creates a paradox:
+
+> The package was created to centralize change, but it becomes too risky to change centrally.
+
+A maintainable package should have:
+
+- a clear owner,
+    
+- a narrowly defined responsibility,
+    
+- semantic versioning,
+    
+- a changelog,
+    
+- consumer-facing integration tests,
+    
+- a sample application,
+    
+- a migration path,
+    
+- a deprecation policy,
+    
+- documented compatibility guarantees.
+    
+
+Tests should validate the package from the perspective of a consuming application, not only through isolated unit tests of internal classes.
+
+---
+
+## 9. Small Public API Surface
+
+A package should expose the smallest practical public API.
+
+Prefer:
+
+- a few stable interfaces,
+    
+- a few extension methods,
+    
+- explicit options,
+    
+- well-defined result types.
+    
+
+Keep implementation details internal.
+
+A small public API:
+
+- reduces coupling,
+    
+- makes versioning easier,
+    
+- prevents accidental dependencies,
+    
+- limits the number of behaviors that must remain compatible,
+    
+- makes the package easier to replace.
+    
+
+A package becomes difficult to evolve when consumers depend on many internal types, base classes, helper classes, and implementation details.
+
+---
+
+## 10. Do Not Let the Framework Penetrate the Entire Application
+
+Infrastructure packages should integrate at application boundaries.
+
+They should not force the whole codebase to use framework-specific types.
+
+Warning signs include:
+
+- all handlers inherit from a framework base class,
+    
+- domain models implement package interfaces,
+    
+- every result uses a corporate result wrapper,
+    
+- folder structure is dictated by the package,
+    
+- the package owns the mediator abstraction,
+    
+- business logic depends directly on infrastructure types,
+    
+- removing the package requires rewriting the application.
+    
+
+A replaceable framework should mainly appear in:
+
+- startup configuration,
+    
+- infrastructure adapters,
+    
+- API boundaries,
+    
+- integration layers.
+    
+
+Business logic should remain independent.
+
+---
+
+## 11. Separate Core, Integrations, and Testing
+
+Large packages should be split by responsibility.
+
+For example:
+
+```text
+Company.Telemetry.Abstractions
+Company.Telemetry.Core
+Company.Telemetry.AspNetCore
+Company.Telemetry.Grafana
+Company.Telemetry.AzureMonitor
+Company.Telemetry.Testing
+```
+
+This lets consumers reference only what they need.
+
+It also separates:
+
+- stable contracts,
+    
+- runtime implementation,
+    
+- framework integration,
+    
+- provider-specific code,
+    
+- test utilities.
+    
+
+This structure limits transitive dependencies and allows components to evolve independently.
+
+---
+
+## 12. README and Copy-Paste Can Be Better Than a Package
+
+Not every repeated implementation should become a NuGet package.
+
+For small, understandable, application-specific code, a better solution may be:
+
+```text
+/docs/patterns/request-auditing.md
+/examples/request-auditing/
+```
+
+The documentation can describe:
+
+- the required behavior,
+    
+- the intended structure,
+    
+- important invariants,
+    
+- why ordering matters,
+    
+- which parts may be changed,
+    
+- which tests must pass.
+    
+
+The code can then be copied into the application and become locally owned.
+
+This approach has several advantages:
+
+- the complete flow is visible,
+    
+- there is no runtime dependency,
+    
+- there are no package-version conflicts,
+    
+- the implementation can be adapted locally,
+    
+- agents can inspect and modify the code directly,
+    
+- the application is not coupled to an abstraction that may become obsolete.
+    
+
+Copy-paste may be preferable when the code:
+
+- is small,
+    
+- changes rarely,
+    
+- is easy to understand,
+    
+- requires local customization,
+    
+- does not need one centrally maintained runtime implementation.
+    
+
+Instead of writing:
+
+> Do not change this structure.
+
+prefer:
+
+> Preserve the documented invariants unless the specification and conformance tests are intentionally updated.
+
+The goal should be understanding and verifiable constraints, not ritualistic preservation of a copied structure.
+
+Maintaining a binary package for low-churn utilities—such as computing HMAC signatures, generating deterministic idempotency keys, or normalizing headers—incurs high organizational drag across CI pipelines, versioning gates, and release tracking. Keeping a clean reference implementation that developers or coding agents can copy into local code eliminates package release cycles, avoids dependency conflicts entirely, and keeps the full implementation visible to automated inspection (see [[Internal Shared Packages vs Agent-Generated Code]]).
+
+---
+
+## 13. Use Conformance Tests Where Shared Behavior Matters
+
+Sometimes applications do not need the same implementation.
+
+They only need the same externally observable behavior.
+
+In that case, an organization may provide a conformance test package instead of a production package.
+
+Examples:
+
+```text
+Company.Api.ConformanceTests
+Company.Security.ConformanceTests
+Company.Observability.ConformanceTests
+```
+
+These tests may verify:
+
+- error response format,
+    
+- correlation identifiers,
+    
+- required headers,
+    
+- authorization behavior,
+    
+- telemetry output,
+    
+- health endpoints,
+    
+- retry behavior,
+    
+- timeout behavior,
+    
+- audit events.
+    
+
+The implementation may remain local and explicit.
+
+The organization controls the contract through tests rather than forcing every application to use the same framework code.
+
+Tests should validate behavior, not internal implementation types.
+
+Bad:
+
+```csharp
+service.Should().BeOfType<CompanyRetryHandler>();
+```
+
+Better:
+
+```csharp
+await AssertRetriesTransientFailureAsync(
+    client,
+    expectedAttempts: 3);
+```
+
+Distributing shared binary packages is frequently the wrong mechanism for enforcing standards such as RFC 7807 error envelopes, correlation header propagation, or `/healthz` formats. An automated, containerized conformance test harness validates the contract at the network boundary as a black box. This enforces company-wide invariants without imposing shared runtime dependencies or version lockstep across services (see [[AI Changes the Economics of Software Libraries]]).
+
+---
+
+## 14. Mechanism and Policy Should Be Separated
+
+A package may provide a mechanism.
+
+The application should explicitly choose the policy.
+
+For example, the package may provide retry support:
+
+```csharp
+services.AddRequestRetry(options =>
+{
+    options.MaxAttempts = 3;
+    options.Timeout = TimeSpan.FromSeconds(5);
+    options.RetryNonIdempotentRequests = false;
+});
+```
+
+Avoid hiding policy inside:
+
+```csharp
+services.AddCompanyDefaults();
+```
+
+where the application cannot easily see:
+
+- how many retries are configured,
+    
+- which failures are retried,
+    
+- which requests are considered safe,
+    
+- what timeout is used,
+    
+- whether request bodies are logged,
+    
+- which exporters are enabled.
+    
+
+The framework may provide safe defaults, but important operational policies should remain visible.
+
+Mechanism is the generic capability—such as an interceptor executing exponential backoff with full jitter, or a filter measuring request durations. Policy is the operational trade-off decided by service owners: financial settlement calls must never retry automatically on timeouts, while idempotent catalog queries can safely retry three times with tight deadlines. Hardcoding operational policies into a shared package removes critical runtime tuning from the engineers who own the production on-call rotation.
+
+---
+
+## 15. Decision Questions
+
+Before creating or expanding an internal package, ask:
+
+1. Does the package have one clear responsibility?
+    
+2. How many transitive dependencies does it introduce?
+    
+3. Can the application explicitly select every major capability?
+    
+4. Is middleware registration and ordering visible?
+    
+5. Can one module be replaced without changing the rest of the application?
+    
+6. Are we adding another flag because one consumer has a special case?
+    
+7. Is the shared abstraction genuinely common?
+    
+8. Is the package easier to understand than equivalent local code?
+    
+9. Can the package be removed without rewriting business logic?
+    
+10. Is the public API small and stable?
+    
+11. Does the package hide operational policy?
+    
+12. Would README, example code, and conformance tests be simpler?
+    
+13. Who owns the package?
+    
+14. How are breaking changes migrated?
+    
+15. Is the package still safe to change?
+    
+
+---
+
+## Practical Principles
+
+A well-designed internal NuGet ecosystem should follow these principles:
+
+- Packages should be small and focused.
+    
+- Dependency trees should be intentionally limited.
+    
+- Applications should explicitly compose the framework.
+    
+- Middleware should be added explicitly.
+    
+- Runtime configuration should remain visible.
+    
+- Important operational policies should be local and readable.
+    
+- Components should be replaceable.
+    
+- Flexibility should come from composition rather than many flags.
+    
+- Consumer-specific features should not automatically enter the shared core.
+    
+- Public APIs should remain small.
+    
+- Infrastructure types should not spread through the domain.
+    
+- Core packages, integrations, and testing utilities should be separated.
+    
+- Small repeated code may be better documented and copied than packaged.
+    
+- Conformance tests may enforce standards without enforcing one implementation.
+    
+
+---
+
+## Mental Model
+
+Internal NuGet packages may form a framework.
+
+The framework itself is not the problem.
+
+The real question is who owns the composition.
+
+A healthy model is:
+
+> The framework provides the building blocks.  
+> The application selects, configures, orders, and composes them.
+
+An unhealthy model is:
+
+> The framework takes over application startup and silently decides how the application behaves.
+
+The preferred design can be summarized as:
+
+> Build a framework that is composed by the application, not a framework that configures the application on its behalf.
+
+And the final decision rule is:
+
+> Use a shared package when it makes the system easier to understand, change, and operate.  
+> Use local code, documentation, and tests when the package would hide more than it simplifies.

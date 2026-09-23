@@ -15,335 +15,316 @@ status: evergreen
 created: 2026-08-23
 ---
 
-# AI Era Software Engineering Recruitment
-
-## Central Thesis
-
-The primary hiring question for software engineers is no longer:
-
-> Can this candidate write the code independently from memory?
-
-It has shifted to:
-
-> Can this candidate turn an ambiguous business problem into a correct, understandable, and maintainable change—even when an AI agent generates part of the implementation?
-
-This shift does not make technical foundations obsolete. It changes where those foundations create value. Value has migrated away from syntax recall and boilerplate generation toward system decomposition, runtime mental models, adversarial verification of generated diffs, and end-to-end operational ownership.
-
-Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection. An engineering organization that hires for raw typing speed or syntax memorization selects for developers who will unthinkingly accept plausible-looking, subtly broken AI outputs into production.
-
-```text
-               RECRUITMENT FOCUS: SYNTAX RECALL VS. VERIFICATION
-
-PRE-AI SCREENING (Syntax & Memory Paradigm):
-  [ Algorithmic Puzzle ] ──> (Candidate recalls syntax / pointer logic) ──> PASS / FAIL
-  * Weak signal: Solved instantly by base models; blind to real-world architectural judgment.
-
-AGENTIC-ERA SCREENING (Decomposition & Verification Paradigm):
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 1. Problem Decomposition & Specification                               │
-  │    Ambiguous requirement ──> Candidate extracts invariants & test plan │
-  └───────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 2. Controlled Implementation (AI Permitted)                            │
-  │    Scoping context, running tight test loops, bounding diff size       │
-  └───────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 3. Adversarial Diff Audit (Reviewing Flawed AI PRs)                    │
-  │    Candidate interrogates plausible code to catch hidden race          │
-  │    conditions, leaky abstractions, and boundary violations             │
-  └────────────────────────────────────────────────────────────────────────┘
-```
-
----
+# AI-Era Software Engineering Recruitment
 
-## Do Not Hire for Knowledge of a Particular AI Tool
-
-Requiring experience with specific commercial products—whether Copilot, Cursor, Claude Code, or Codex—is an ineffective hiring criterion. Developer interfaces and agent harnesses evolve every few months, and tooling varies widely between organizations.
-
-The durable capability is not familiarity with a specific prompt box or IDE shortcut. It is the discipline required to drive probabilistic tools without losing architectural control:
-
-- **Decomposing problems into controlled increments**: Feeding an agent a single, well-bounded task rather than an entire distributed system redesign.
-- **Context management**: Supplying the agent with exact interface definitions, database schemas, and constraints rather than dumping an entire codebase into the prompt window.
-- **Defining explicit constraints and test oracles**: Writing the boundary conditions and expected invariants before triggering code generation.
-- **Bounding diff blast radius**: Forcing the tool to modify only the targeted modules and rejecting unrelated file edits.
-- **Reading diffs over summaries**: Auditing the actual lines of code changed rather than accepting the agent's natural-language summary of what it claims to have done.
-- **Runtime verification**: Validating claims using integration tests, execution traces, database query planners, and profiling tools.
-- **Recognizing ambiguity**: Pausing generation to clarify missing domain requirements rather than letting the model hallucinate business rules.
-- **Abandoning bad trajectories early**: Recognizing when an agent has entered a hallucination loop or architectural dead end, rolling back the working tree, and resetting context.
-- **Documenting decisions**: Leaving clear rationale for both human teammates and future agents.
-
-Useful interview questions to evaluate these behaviors include:
-
-- *What classes of engineering problems do you delegate to AI, and which do you handle manually?*
-- *Walk me through your verification process when an agent generates code in a language or framework you do not know deeply.*
-- *How do you respond when generated code looks clean, compiles, and passes unit tests, but you suspect the underlying architectural assumption is wrong?*
-- *How do you prevent an agent from introducing subtle scope creep across module boundaries?*
-- *At what point do you terminate an agent run and throw away its changes rather than trying to patch its output?*
-- *How do you verify whether AI tooling actually improved your cycle time on a task rather than just giving you the feeling of moving fast?*
-
-The question about perceived versus measured productivity is critical. In a 2025 randomized controlled trial conducted by METR, experienced open-source developers working in familiar repositories believed AI tools made them faster, but objective measurements showed a 19% slowdown on the studied tasks. Developers spent significant time reading, tweaking, and debugging complex, subtly flawed suggestions. Subjective confidence is not a proxy for delivery speed.
-
----
-
-## Does Low-Level Knowledge Still Matter?
-
-Yes, but it must be evaluated as an operational mental model rather than as trivia recall.
-
-### Low-Value Assessment: Trivia and Syntax Memorization
-Low-value interview questions test things easily looked up in documentation or generated by an LLM in milliseconds:
-- Recalling an obscure standard library method signature.
-- Writing boilerplate configuration from memory.
-- Reciting textbook definitions of data structures without practical systems context.
-- Inverting a binary tree on a whiteboard.
-- Recalling framework-specific lifecycle hooks that shift between major versions.
-
-### High-Value Assessment: Consequence and Systems Reasoning
-High-value questions test whether a candidate understands the runtime mechanics beneath the code:
-- **Database execution**: *What actually happens on the database engine when this query runs under load? How will missing indexes or sequential scans impact lock contention?*
-- **Concurrency and race conditions**: *Where can a data race occur in this read-modify-write sequence? How does the code behave under high concurrent throughput?*
-- **Resource lifecycles**: *Why might this implementation leak memory or exhaust a connection pool during a downstream network partition?*
-- **Cancellation and timeouts**: *What happens to background database work when the incoming HTTP request context is cancelled by the client?*
-- **Failure boundaries and retries**: *Is this network call idempotent? What happens to state if a retry fires after a partial database write?*
-- **Test fidelity**: *Why does this test suite pass even though the underlying concurrency model is broken? What critical path is unasserted?*
-- **Operational blind spots**: *What metrics, structured logs, or trace spans are missing from this change that would make a production outage difficult to debug?*
-
-A senior engineer does not need photographic memory of syntax. They need a sharp mental model of the runtime substrate—operating systems, networking, databases, and memory—to detect when plausible-looking generated code will fail under production conditions.
-
-```text
-SYNTAX RECALL (Low Value)            RUNTIME REASONING (High Value)
-┌──────────────────────────────┐     ┌──────────────────────────────────────────────┐
-│ "What is the exact signature │     │ "What happens to the Postgres connection     │
-│ of pthread_mutex_timedlock?" │     │  pool if downstream HTTP calls hit a 30s     │
-│                              │     │  timeout without context cancellation?"      │
-└──────────────────────────────┘     └──────────────────────────────────────────────┘
-               │                                            │
-               ▼                                            ▼
-   Easily solved by LLMs.                       Requires deep operational
-   Zero correlation with                        mental models to prevent
-   catching subtle outages.                     catastrophic production bugs.
-```
-
----
-
-## Replace the Coding Exam with a Work Simulation
+## Central thesis
 
-The most reliable way to evaluate an engineer is a multi-phase work simulation inside a realistic codebase. Candidates should have access to the tools they use daily: documentation, search engines, and AI assistants. The goal is to observe how they navigate ambiguity, bound scope, and verify correctness.
-
-### 1. Begin with an Incomplete Business Requirement
-Start with an intentionally ambiguous, realistic business requirement:
-
-> *A customer should be able to cancel an order before shipment.*
-
-Before writing or generating code, a strong candidate interrogates the problem domain to establish invariants:
-- **Payment processing**: Does cancellation issue an immediate refund, or does it transition to a `PENDING_REFUND` state handled asynchronously?
-- **Concurrency**: What happens if a cancellation request races with a warehouse packing event? How is that state conflict serialized?
-- **Authorization**: Can any user with the order ID cancel, or must the session assert tenant and ownership boundaries?
-- **Idempotency**: If the client retries the cancellation call due to a network drop, does the system process the refund twice?
-- **Domain events**: What downstream systems (inventory, notifications, analytics) must be notified, and must those events be published via a transactional outbox pattern to prevent split-brain state?
-- **Failure modes**: What does the client receive if the payment gateway fails during the cancellation handshake?
-
-Candidates who jump straight into prompting an LLM to "write an order cancellation endpoint" without resolving these questions demonstrate that they will delegate critical product thinking to an unconstrained model.
-
-### 2. Inspect a Realistic Repository
-Provide the candidate with a small but realistic multi-module repository (5 to 15 files) that contains established architectural boundaries, domain logic, persistence layers, and existing test suites.
-
-Ask the candidate to locate:
-- Where the new capability naturally belongs within the module hierarchy.
-- The existing patterns for transactions, logging, and error handling.
-- Downstream dependencies and integration boundaries.
-- Assumptions they are making about current behavior that must be validated before writing code.
-
-This evaluates whether the candidate respects architectural conventions or writes isolated code that clashes with the surrounding codebase.
-
-### 3. Produce a Bounded Plan Before Implementation
-Before generating code, the candidate should outline a brief, structured implementation plan covering:
-- Explicit scope and non-goals.
-- Domain invariants that cannot be violated.
-- Data model adjustments and migration considerations.
-- Test strategy (unit tests for domain rules, integration tests for transaction rollbacks).
-- Observability (metrics, structured audit logs).
-
-The purpose is not bureaucratic process; it proves the candidate can establish a clear boundary for the change before running generative tools.
-
-### 4. Implement with AI
-Observe how the candidate interacts with the tooling during implementation:
-- Do they supply the agent with relevant context (e.g., interface definitions, existing error types), or do they write vague, open-ended prompts?
-- Do they break the change into reviewable increments, or do they ask for a massive, single-shot implementation?
-- Do they read the generated diff line by line, or do they glance at it and immediately hit run?
-- Do they reject unnecessary refactorings or stylistic churn introduced by the tool?
-- When the tool generates an incorrect implementation, do they systematically debug the issue, or do they re-prompt blindly in circles hoping the model guesses correctly?
-
-### 5. Review a Deliberately Flawed Pull Request
-This is often the most revealing stage of the assessment. Present the candidate with a pull request generated by an AI agent that implements a feature, compiles cleanly, and passes superficial unit tests—but contains subtle, realistic engineering flaws:
-
-- **Missing Idempotency**: A payment refund endpoint that blindly charges or credits without a deduplication key.
-- **Race Conditions**: A read-modify-write pattern that checks inventory availability in application memory rather than using database-level locking (`SELECT ... FOR UPDATE`) or atomic balance checks.
-- **Broad Exception Swallowing**: A `try/catch` block that catches broad exceptions (e.g., `catch (Exception e)`) and returns a generic success or default, masking underlying network drops or database constraint violations.
-- **Tautological Tests**: A test suite that asserts mocked interfaces return their configured mock values without actually exercising the production code paths or validating state mutations.
-- **Module Boundary Violations**: Direct database calls made from inside an HTTP transport handler or presentation component, bypassing domain validation rules.
-- **Security & Logging Issues**: Sensitive data (tokens, PII, credit card details) written to structured logs during request serialization.
-- **Context Leaks**: Spawning background goroutines or asynchronous tasks that inherit cancelled request contexts, or dropping context entirely so database queries run indefinitely after a client disconnects.
+The main hiring question is no longer simply:
 
-A candidate who relies on surface-level impressions will see clean formatting, green tests, and clear variable names, and approve the PR. A skilled engineer will interrogate the diff, identify the broken invariants, and explain the operational failure mode.
-
----
-
-## Code Review as a Central Engineering Skill
-
-AI tools increase code production speed without increasing an engineering team's cognitive bandwidth to understand it. When code generation is cheap, the review step becomes the primary defense against technical debt, security vulnerabilities, and architectural drift.
+> Can this candidate write the code independently?
 
-Code review must evaluate multiple operational levels:
-
-| Review Level | Core Verification Question |
-| :--- | :--- |
-| **Business Domain** | Does this change solve the actual business problem without introducing invalid domain states? |
-| **Behavior & Concurrency**| What happens under network partitions, concurrent writes, timeouts, and edge-case inputs? |
-| **Architecture** | Does the change respect established package, service, and data boundaries, or does it bleed concerns? |
-| **Implementation** | Does the code do what it claims, without subtle off-by-one errors, resource leaks, or hidden performance penalties? |
-| **Test Integrity** | Do the tests make meaningful assertions against system invariants, or do they merely execute lines to satisfy coverage metrics? |
-| **Operations** | Can this code be monitored, debugged, deployed safely via feature flags, and rolled back without data corruption? |
-| **Security & Privacy** | Are tenant boundaries, sanitization, permissions, secrets, and data governance policies strictly maintained? |
-| **Maintainability** | Will a human engineer six months from now be able to understand the intent and control flow of this code? |
-
-In the 2025 Stack Overflow Developer Survey, more developers distrusted the accuracy of AI output than trusted it, with experienced engineers showing the highest skepticism. High-performing engineering teams treat generated code with the same scrutiny as an untrusted third-party pull request.
-
-An effective reviewer:
-- Separates blocking functional defects from non-blocking stylistic preferences.
-- Traces execution paths across system and process boundaries rather than evaluating functions in isolation.
-- Treats automated tests as claims about system behavior and looks for what the tests fail to assert.
-- Detects unrequested scope expansions and unneeded dependencies hidden in large diffs.
-- Explains operational risk clearly with concrete failure scenarios.
-- Has the discipline to withhold approval when a complex change lacks sufficient verification evidence.
-
----
-
-## Documentation as Machine-Readable Context
-
-In an environment where both humans and coding agents interact with a repository, documentation takes on a critical architectural role. If a system's domain rules and boundary constraints live only as tribal knowledge, agents will generate code that violates those rules, and human reviewers will burn time policing them.
-
-Documentation should be maintained close to the code, structured, version-controlled, and testable:
-
-```text
-                DOCUMENTATION AS OPERATIONAL CONSTRAINTS
-
-  ┌──────────────────────────────────────────────┐
-  │ System Contracts & Invariants                │
-  │ - Architecture Decision Records (ADRs)       │
-  │ - OpenAPI / Protobuf Schemas                 │
-  │ - Explicit Database Invariants & State Enums │
-  └──────────────────────┬───────────────────────┘
-                         │  Informs & Constrains
-                         ▼
-  ┌──────────────────────────────────────────────┐
-  │ Development Workflows                        │
-  │ - Context for LLM Agents & Human Engineers   │
-  │ - Deterministic CI Validation & Linting      │
-  │ - Executable Verification Oracles            │
-  └──────────────────────────────────────────────┘
-```
-
-Critical documentation artifacts include:
-- **Architecture Decision Records (ADRs)**: Concise summaries of why a specific technical approach was chosen, what trade-offs were accepted, and what alternatives were rejected.
-- **Explicit Invariant Lists**: Clear statements of non-negotiable system rules (e.g., "An order can never transition from `SHIPPED` back to `PROCESSING`," "All balance deductions must use optimistic concurrency control with retry limits").
-- **Strict Interface & Message Contracts**: Machine-readable schemas (Protobuf, OpenAPI, JSON Schema) that define boundary rules without ambiguity.
-- **Runnable Local Harnesses**: Documented, single-command setup scripts (`make test`, `docker compose up`) that allow both humans and agent harnesses to validate changes locally against realistic dependencies.
-- **Runbooks and Failure Playbooks**: Clear documentation detailing how the system is monitored, what error budgets exist, and how rollbacks are executed.
-
-During interviews, evaluate whether candidates treat documentation as an afterthought or as a core delivery artifact. Ask candidates to produce a brief ADR or update an interface contract alongside their code. An engineer who documents *why* a change was made and *what constraints govern it* leaves behind context that makes both subsequent humans and future agents vastly more effective.
-
-Research from DORA's 2025 report demonstrates that AI functions as an organizational amplifier: teams with disciplined engineering practices, automated testing, and clear architectural boundaries see delivery velocity improve, while teams with fragmented systems, weak testing, and poorly documented boundaries experience increased defect rates and operational drag.
-
----
-
-## Suggested Senior Engineer Scorecard
-
-When evaluating senior engineering candidates who use modern development tools, adapt your scoring weights to emphasize verification, systems thinking, and risk management over raw code generation:
-
-| Competency | Weight | Evaluation Criteria |
-| :--- | :---: | :--- |
-| **Problem Discovery & Requirements** | 20% | Identifies missing business rules, unstated assumptions, edge cases, and failure states before writing code. |
-| **System Modeling & Architecture** | 20% | Designs clean boundaries, defines clear data models, considers concurrency, and avoids leaky abstractions. |
-| **Adversarial Review & Defect Detection** | 20% | Identifies subtle semantic bugs, race conditions, security risks, and unverified assumptions in plausible-looking diffs. |
-| **Technical Foundations** | 15% | Demonstrates accurate mental models of databases, networking, memory, and OS runtime behavior. |
-| **Testing & Verification** | 15% | Writes meaningful test oracles, verifies state mutations rather than mock interactions, and validates failure paths. |
-| **Effective Agent Steering** | 5% | Supplies relevant context, scopes diffs narrowly, catches agent rabbit holes early, and rejects unneeded changes. |
-| **Documentation & Decision Rationale** | 5% | Writes clear, maintainable commit messages, ADRs, or boundary notes that preserve institutional context. |
-
-*Note on AI Tool Usage*: Tool usage is weighted at 5% as a standalone skill because true fluency with AI is already reflected across all other competencies. A candidate who knows how to prompt but lacks systems modeling, testing discipline, and review rigor will produce fragile software faster.
-
-### Calibrating for Junior Roles
-For junior engineers, weights should shift significantly toward technical fundamentals and learning mechanics. Junior developers have not yet built the deep production scar tissue needed to spot subtle architectural landmines in generated diffs. 
-
-If evaluated solely on how much working code they can generate with an LLM, a team risks hiring individuals who cannot debug their own systems when the tooling fails. Junior interviews must verify that the candidate understands the code they produce, can explain control flow without assistance, and possesses the foundational computer science knowledge required to grow into independent reviewers.
-
----
-
-## Additional Capabilities Worth Assessing
-
-### Calibrated Uncertainty
-Engineering safety depends on a developer knowing the limits of their own knowledge. In an era where AI agents provide confident answers regardless of correctness, candidates who exhibit calibrated uncertainty are invaluable.
-
-Listen for candidates who explicitly say:
-- *"I am not confident about how this framework handles this database connection under failover; I need to verify that in the documentation or test it directly."*
-- *"This implementation makes an unverified assumption about the upstream API's latency. We need to confirm that before committing to this design."*
-- *"The unit tests are green, but they do not exercise the concurrent update path. We cannot rely on them alone."*
-- *"The agent generated this entire utility module, but we only needed a five-line helper. I am cutting this down to avoid maintaining dead code."*
-
-A candidate who proactively identifies what they do not know and devises an experiment or test to find out is far more trustworthy than a candidate who produces quick, unverified answers to every question.
-
-### Security and Agent Governance
-Candidates should understand the security and operational boundaries required when integrating AI tools into development workflows:
-- **Context boundary hygiene**: Ensuring credentials, customer data, and proprietary API keys are not sent to third-party model context windows.
-- **Untrusted repository inputs**: Understanding prompt injection risks when an agent reads external issues, pull request comments, or untrusted web data.
-- **Principle of least privilege**: Ensuring local agents and automation harnesses do not run with destructive system privileges, open production access, or uncontrolled execution permissions.
-- **Dependency verification**: Auditing newly introduced third-party packages for software supply chain risks (e.g., hallucinated package names targeted by typosquatting attacks).
-- **Tool permissions**: Separating read-only exploration operations (e.g., searching a repository) from mutating actions (e.g., writing to disk, pushing commits, executing shell scripts).
-
-### Measuring Team Delivery Outcomes
-When bringing AI-assisted developers into an engineering organization, measure team success by delivery and operational health, never by lines of code or raw commit counts:
-- **Lead time for changes**: Time from initial commit to running safely in production.
-- **Change failure rate & escaped defects**: Frequency of production incidents, rollbacks, or hotfixes introduced by recent releases.
-- **Code review turnaround & queue size**: Whether pull requests are reviewed thoroughly or bottlenecked due to overwhelming diff volume.
-- **Rework and churn rate**: How often recently merged code must be patched or rewritten due to missed edge cases.
-- **Time to onboard / codebase clarity**: How easily a new engineer can read and reason about existing system code.
-
----
-
-## Warning Signs and Anti-Patterns
-
-Watch for these warning signs during interviews:
-
-- **The Rubber-Stamper**: Approves or submits generated code simply because it compiles and the automated tests pass, without being able to walk through the line-by-line execution path.
-- **Delegating Problem Decomposition**: Feeds raw, unvetted business requirements directly into an agent without establishing boundaries, invariants, or edge cases first.
-- **Context Thrashing**: Feeds massive, indiscriminate context dumps into a model when a localized, structured interface contract was required.
-- **Prompt Looping**: When generated code fails, re-prompts the agent with vague error messages repeatedly instead of reading the stack trace, identifying the root cause, and fixing it manually.
-- **Diff Blindness**: Accepts wide, sweeping changes across multiple unrelated files to solve a localized bug.
-- **Tautological Testing**: Generates tests using the same model that wrote the code, producing assertions that mirror the implementation's bugs rather than validating the business invariants.
-- **Output-Volume Metric Focus**: Measures their own productivity by the volume of code produced or the number of features superficially completed, showing indifference to operational maintainability or review load.
-- **Tool Helplessness**: Completely stalls or struggles to reason through basic debugging when AI tools are disconnected or provide unhelpful suggestions.
-
----
+It is increasingly:
+
+> Can this candidate turn an ambiguous business problem into a correct, understandable, and maintainable change—even when AI generates part of the implementation?
+
+This does not make technical knowledge obsolete. It changes where that knowledge creates value: less in recalling syntax, and more in understanding systems, directing work, evaluating output, detecting subtle mistakes, and accepting responsibility for the result.
+
+Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection. An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
+
+## Do not hire for knowledge of a particular AI tool
+
+Requiring experience with Copilot, Cursor, Claude Code, Codex, or another current product is a weak long-term hiring criterion. Tools and interfaces will change quickly, and many companies are still at very different stages of adoption.
+
+The durable capability is not knowledge of one interface. It is the ability to work effectively with probabilistic tools:
+
+- decompose a problem into controlled steps;
+- give an agent relevant context;
+- state constraints and acceptance criteria;
+- select appropriate tasks for AI assistance;
+- limit the scope of generated changes;
+- inspect the actual diff rather than trust the agent's summary;
+- verify claims using code, tests, documentation, and measurements;
+- recognize uncertainty and ask for missing information;
+- abandon an unproductive AI-generated direction;
+- document decisions for subsequent humans and agents.
+
+Useful interview questions include:
+
+- What kinds of work do you delegate to AI, and what do you avoid delegating?
+- How do you verify generated code?
+- How do you respond when an implementation looks convincing but may be based on a false assumption?
+- How do you prevent an agent from changing more than the task requires?
+- When should an agent be stopped and the problem reconsidered?
+- How do you determine whether AI actually improved delivery rather than merely creating a feeling of speed?
+
+The last question matters because perceived productivity can differ from measured productivity. In a 2025 randomized trial by METR, experienced open-source developers working in familiar repositories believed AI had made them faster, while the measured result for the studied tasks was a 19% slowdown. The result should not be generalized to every developer and task, but it demonstrates that subjective impressions are insufficient.
+
+## Does low-level knowledge still matter?
+
+Yes, but it should be tested as a mental model rather than as a memory contest.
+
+Low-value questions ask candidates to recall:
+
+- an obscure method signature;
+- framework syntax available in documentation;
+- textbook definitions without practical consequences;
+- an algorithmic puzzle unrelated to the job;
+- details likely to change in the next framework release.
+
+Higher-value questions examine whether the candidate can reason about consequences:
+
+- What actually happens when this database query is executed?
+- Where can a race condition occur?
+- Why might this code exhaust a connection pool?
+- What happens when an HTTP request is cancelled?
+- Is retry safe for this operation?
+- Is the operation idempotent?
+- Why does this test pass even though the implementation is incorrect?
+- Which property of the system is not covered by these tests?
+- What security or observability problem is hidden in this apparently correct implementation?
+
+A candidate does not need perfect recall. A strong candidate should be able to distinguish what they know, what they infer, and what must be verified.
+
+In an AI-assisted environment, the ability to write an implementation from memory is becoming less differentiating. The ability to evaluate a plausible but subtly incorrect implementation is becoming more important.
+
+## Replace the coding exam with a work simulation
+
+The most representative assessment is a small simulation of a real change. Candidates should normally be allowed to use AI, documentation, and the internet. This reveals how they will actually work instead of testing an artificial tool-free performance.
+
+### 1. Begin with an incomplete business requirement
+
+Example:
+
+> A customer should be able to cancel an order before shipment.
+
+Before generating code, a candidate should discover questions such as:
+
+- What happens to the payment?
+- Can cancellation race with shipment?
+- Who is authorized to cancel?
+- Must the operation be idempotent?
+- What should be audited?
+- Which events must be published?
+- What happens after a partial failure?
+- What should the user see when cancellation is no longer possible?
+
+This tests whether the candidate understands that implementation should not begin until the important ambiguity is made explicit.
+
+Candidates who jump straight into prompting an LLM to generate an endpoint without resolving these invariants demonstrate that they will delegate critical product and domain thinking to an unconstrained model.
+
+### 2. Inspect a small but realistic repository
+
+Ask the candidate to identify:
+
+- where the change probably belongs;
+- relevant module boundaries and existing patterns;
+- dependencies and integration points;
+- assumptions they are making;
+- areas they do not yet understand;
+- the main risks of the change.
+
+Repository comprehension is more representative than writing an isolated function on a blank screen.
+
+### 3. Produce a concise plan before implementation
+
+The plan should cover:
+
+- scope and non-goals;
+- assumptions requiring confirmation;
+- acceptance criteria;
+- tests and verification;
+- compatibility or migration concerns;
+- observability;
+- deployment and rollback where relevant.
+
+The objective is not extensive bureaucracy. It is evidence that the candidate can establish a controlled change boundary.
+
+### 4. Implement with or without AI
+
+Do not score the number of prompts or raw typing speed. Observe whether the candidate:
+
+- supplies useful context;
+- divides work into reviewable increments;
+- reads generated changes carefully;
+- rejects unnecessary modifications;
+- follows existing architectural conventions;
+- verifies behavior rather than accepting claims;
+- runs the appropriate tests;
+- examines the final diff;
+- can recover from a wrong direction.
+
+### 5. Review a deliberately flawed AI-generated pull request
+
+This may be the highest-value part of the interview. The pull request should be mostly plausible and contain subtle defects rather than obvious nonsense:
+
+- an incorrect business assumption;
+- missing idempotency;
+- a race condition;
+- an overly broad exception handler;
+- a test that executes code without verifying the important outcome;
+- a module-boundary violation;
+- duplication of existing domain logic;
+- missing telemetry;
+- sensitive information in logs;
+- an unnecessary abstraction;
+- an unrelated change hidden in a large diff.
+
+The important risk of AI-generated code is often not a spectacular hallucination. It is a small deviation that remains coherent, compiles, passes superficial tests, and looks reasonable during a quick review.
+
+In practice, these flaws manifest as concrete operational landmines: a read-modify-write race that checks inventory in application memory instead of issuing a `SELECT ... FOR UPDATE`, an un-scoped background task that drops cancellation context so database queries hang after a client disconnects, or a `catch (Exception e)` block that silently swallows constraint violations while returning an HTTP 200. A candidate relying on surface impressions sees clean formatting and passing mocks. A senior engineer audits state mutations, concurrency boundaries, and failure paths.
+
+## Code review becomes a central engineering skill
+
+AI can increase the rate of code production faster than a team can increase its capacity to understand that code. Review therefore needs to operate at several levels:
+
+| Level | Review question |
+|---|---|
+| Business | Are we solving the correct problem? |
+| Behavior | Are edge cases and failure modes correct? |
+| Architecture | Does the change respect system and module boundaries? |
+| Implementation | Does the code really do what it claims? |
+| Tests | Would the tests detect an incorrect implementation? |
+| Operations | Can the change be observed, deployed, and rolled back safely? |
+| Security | Are data, permissions, dependencies, and agent access handled safely? |
+| Maintenance | Will another engineer understand the decision later? |
+
+An AI reviewer can provide an additional signal, but it cannot be the final authority. In the 2025 Stack Overflow Developer Survey, more developers distrusted the accuracy of AI output than trusted it. Experienced developers were among the most cautious. Human verification therefore remains part of professional accountability.
+
+High-performing engineering teams treat generated diffs with the same adversarial scrutiny as an untrusted third-party pull request. When code authoring is cheap, code review serves as the primary barrier against silent architectural drift, security regressions, and unhedged operational risk.
+
+Review quality should also be assessed during hiring. A good reviewer:
+
+- separates blocking defects from preferences;
+- asks questions instead of merely prescribing code;
+- traces behavior across boundaries;
+- challenges assumptions and missing cases;
+- evaluates tests as claims about the system;
+- notices scope expansion;
+- can explain risk proportionally;
+- knows when a change is not yet understood well enough to approve.
+
+## Documentation becomes executable context
+
+AI increases the value of good documentation, but the answer is not necessarily to produce more pages. Documentation should be close to the system, structured, current, unambiguous, and verifiable.
+
+Particularly valuable artifacts include:
+
+- module-level README files;
+- architecture decision records;
+- API and message contracts;
+- acceptance criteria and examples;
+- explicitly documented invariants;
+- dependency and module-boundary rules;
+- build, test, and validation commands;
+- runbooks and rollback procedures;
+- ownership information;
+- clearly identified sources of truth.
+
+An interview can include the requirement:
+
+> Leave enough context for the next engineer—or agent—to understand not only what changed, but why this solution was chosen.
+
+This tests whether documentation is treated as part of delivery rather than as cleanup performed after the code is finished.
+
+When system rules exist solely as tribal knowledge, coding agents produce implementations that break unspoken boundary contracts, creating severe review drag. Explicit, executable documentation—such as machine-readable interface schemas (Protobuf, OpenAPI), unambiguous invariant lists, and single-command local validation harnesses (`make test`, containerized dependencies)—enables both human developers and automated harnesses to verify compliance before code ever reaches a pull request.
+
+DORA's 2025 research describes AI as an amplifier of the surrounding organizational system. Strong feedback loops, platforms, documentation, and engineering practices can be amplified; fragmented systems and weak controls can be amplified as well. AI adoption is therefore a systems problem, not merely a tool-purchasing decision.
+
+## Suggested senior-engineer scorecard
+
+The exact weights should depend on the role, but a reasonable starting point is:
+
+| Competency | Example weight |
+|---|---:|
+| Problem discovery and business communication | 20% |
+| System modeling and architecture | 20% |
+| Review and risk detection | 20% |
+| Technical foundations | 15% |
+| Testing and verification | 15% |
+| Effective use of AI tools | 5% |
+| Documentation of decisions | 5% |
+
+AI-tool usage receives a small separate weight because it should also be visible throughout every other competency. Prompt fluency without domain understanding, technical judgment, and verification is not sufficient.
+
+For a junior role, the weights should differ. Juniors need more explicit assessment of fundamentals and learning ability because they have fewer internal models with which to challenge plausible AI output. They should not be evaluated only on the amount of functioning code they can generate.
+
+Junior developers have not yet built the operational scar tissue needed to spot architectural pitfalls in generated diffs. Evaluating them solely on how much working code they can generate with an assistant risks hiring engineers who cannot debug their own systems when the tooling fails. Junior assessments must verify that the candidate understands control flow, can explain underlying runtime behavior without tooling assistance, and possesses the foundational mental models needed to grow into an independent reviewer.
+
+## Additional capabilities worth assessing
+
+### Calibrated uncertainty
+
+Look for candidates who can say:
+
+- “I am not certain about this.”
+- “This assumption requires confirmation from the business.”
+- “These tests do not verify the important property.”
+- “The agent changed more than requested.”
+- “I would not approve this without a measurement or experiment.”
+- “I do not yet understand this area well enough to modify or approve it.”
+
+The ability to expose uncertainty is more valuable than producing a confident answer to every question.
+
+### Security and agent governance
+
+Candidates working with agents should understand:
+
+- least-privilege access to repositories and external systems;
+- the risks of secrets and sensitive data entering prompts;
+- prompt injection through repository content or external sources;
+- approval gates for destructive or production actions;
+- dependency and license verification;
+- provenance and review of generated changes;
+- the distinction between read-only investigation and mutation.
+
+These considerations map to tangible failure boundaries: software supply chain attacks through hallucinated package dependencies, prompt injection embedded in untrusted issue trackers or third-party documentation, and accidental exfiltration of secrets or tenant data in agent prompt contexts. Candidate engineers should be able to configure and work within agent harnesses that enforce least privilege, strictly isolating read-only codebase discovery from mutating disk, network, and execution privileges.
+
+### Measuring outcomes
+
+Teams should evaluate AI adoption using delivery outcomes rather than generated lines of code:
+
+- lead time for changes;
+- review time and review queue size;
+- change failure rate;
+- escaped defects;
+- rollback and rework rates;
+- maintainability indicators;
+- time required for another engineer to understand a change;
+- developer cognitive load.
+
+AI can make code generation cheaper while making review, integration, and maintenance more expensive. Recruitment should favor candidates who understand the entire delivery system rather than optimizing only the coding step.
+
+## Warning signs
+
+Potential warning signs include a candidate who:
+
+- treats generated code as correct when it compiles;
+- cannot explain code produced during the interview;
+- delegates problem understanding to the agent;
+- accepts broad repository-wide changes for a small task;
+- uses tests only to obtain a green result;
+- cannot identify assumptions or uncertainty;
+- measures productivity in prompts or generated lines;
+- dismisses documentation and review as overhead;
+- focuses on tool brands rather than a verification process;
+- is unable to continue when AI is unavailable or wrong.
 
 ## Conclusion
 
-Hiring engineers in the AI era requires treating the interview as a compressed simulation of responsible change delivery:
+Software-engineering recruitment should increasingly resemble a compressed simulation of responsible change delivery:
 
-1. **Decompose an ambiguous requirement** into rigid constraints and domain invariants.
-2. **Inspect the existing system** to locate boundaries, dependencies, and architectural patterns.
-3. **Establish an explicit implementation plan** before generating code.
-4. **Use generative tools with discipline**, controlling context and scoping changes tightly.
-5. **Audit diffs adversarially**, looking specifically for subtle concurrency, security, and operational failure modes.
-6. **Verify runtime behavior** through deterministic tests and runtime mental models.
-7. **Document decisions and context** so the system remains maintainable for future teammates and agents alike.
-8. **Take uncompromising personal accountability** for the correctness and operational stability of the final result.
+1. understand an ambiguous business need;
+2. inspect the existing system;
+3. expose assumptions and risks;
+4. design a bounded solution;
+5. use AI selectively;
+6. verify behavior and review the diff;
+7. communicate and document the decision;
+8. remain accountable for the result.
 
-The greatest risk to an engineering organization today is not an engineer who writes code slowly. It is an engineer who produces and approves large volumes of plausible, untested, and uninspected code at high velocity. The most valuable hire is the engineer who possesses the technical judgment, domain clarity, and systems discipline to ensure that every change merged into main is one the team can safely operate for years to come.
+The dangerous engineer in the AI era is not necessarily someone who writes code slowly. It is someone who can produce and approve large amounts of convincing code without understanding it.
 
----
+The strongest candidate is therefore not simply the best programmer or the most fluent prompt writer. It is the person who can coordinate business knowledge, system understanding, tools, evidence, and human judgment to deliver a change that the team can safely own for years.
 
 ## Sources
 
@@ -351,17 +332,10 @@ The greatest risk to an engineering organization today is not an engineer who wr
 - [DORA — State of AI-assisted Software Development 2025](https://dora.dev/dora-report-2025/)
 - [Stack Overflow Developer Survey 2025 — AI](https://survey.stackoverflow.co/2025/ai)
 
----
+## Related notes
 
-## Related Notes
-
-- [[Reliability of LLM Coding Agents]] — Managing nondeterminism and failure profiles in automated code generation.
-- [[Agentic Coding Harness and Controlled Development Workflows]] — Building deterministic guardrails, validation sandboxes, and verification loops around coding agents.
-- [[LLM Agents and Institutional Memory]] — Retaining architecture rationale and preventing codebase drift across human and agent workflows.
-- [[Designing APIs for LLM-Generated Integration Code]] — Structuring libraries, contracts, and interfaces to minimize agent hallucination.
-- [[Testing in the Model, Agent, LLM Era]] — Shifting test strategies from basic coverage to high-fidelity verification oracles.
-- [[Reviewing AI-Generated Code]] — Heuristics and workflows for auditing high-velocity, machine-authored pull requests.
-- [[AI Changes the Role and Training of Software Engineers]] — Navigating the apprenticeship deficit and skill acquisition in an automated landscape.
-- [[The AI Agent as a Personal Behavioral and Communication Coach]] — Utilizing micro-scenario simulations for candidate preparation and technical communication.
-- [[The Implications of Having a Digital Model of Yourself]] — Evaluating machine-readable professional profiles and verification models.
-- [[Applications of LLM Agents Beyond Programming]] — Broader system orchestration and domain modeling across the technical organization.
+- [[LLM Coding Agents Reliability]]
+- [[Agentic Harness for Software Development]]
+- [[LLM Agents and Institutional Memory]]
+- [[Designing APIs for LLM-Assisted Code Generation]]
+- [[Applications of LLM Agents Beyond Programming]]

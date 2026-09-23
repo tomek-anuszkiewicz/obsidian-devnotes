@@ -18,137 +18,52 @@ aliases:
 
 # The Minimal Frame Pattern - Proving System Topology on Atomic Slices
 
-> **The Minimal Frame Principle**: If you prompt an AI coding agent to implement an entire stateful subsystem from a broad specification, the result looks deceptively complete. The model will generate dozens of files that compile cleanly, satisfy trivial mock tests, and then fail completely the moment you run them under sustained execution. Concurrency breaks, clock-step state machines drift, circular references leak memory, and bus arbitration deadlocks.
->
-> High-assurance agentic engineering requires starting with a **Minimal Frame**: isolating the absolute smallest operational slice of the architecture—a single instruction cycle, one clock phase, or a single message contention handoff—and proving your memory ownership, interface boundaries, and state transitions there first before scaling horizontally.
+Ask an AI coding agent to build an entire stateful subsystem from a broad specification and you may get twenty-five files that compile and pass a few simple tests. Then you run the system for longer than a test case and discover that its components do not agree on timing or ownership. A wait state advances the wrong phase, bus users contend in the wrong order, a circular reference keeps memory alive, or a lock stalls the whole loop.
 
-```mermaid
-flowchart TD
-    A["1. Explore System Constraints\n(Interface timing, memory models, hardware specs)"] --> B["2. Architectural Sparring\n(Agent proposes topology; Human challenges trade-offs)"]
-    B --> C["3. Prove the Minimal Frame\n(Validate 1 atomic state transition, bus cycle, or event handoff)"]
-    C --> D["4. Lock In the Pattern\n(Codify harness rules, operational skills, and test assertions)"]
-    D --> E["5. Autonomous Scale-Out\n(Agent generates remaining operations across subsystem)"]
-    E -->|Defect or Edge Case Found| F["Upgrade the Harness\n(Add rule, skill, or arch assertion — never patch code manually)"]
-    F --> D
-```
+The Minimal Frame is a way to settle those questions before the agent builds the rest. Pick the smallest operation that can exercise the path you care about: one instruction, one queue transition, or one handoff between two users of a resource. Make its ownership, interfaces and state transitions work. Check it against a reliable external reference. Only then ask the agent to repeat the pattern.
 
----
+The sequence is: inspect the system's constraints, work through the design with the agent, prove one operation, write down and test the resulting rules, then let the agent implement related operations. When it repeats a mistake, improve those rules and run it again.
 
-## Architectural Ground Rules
+## Architectural ground rules
 
-1. **The Scale-Out Fallacy**: LLMs cannot reliably design and connect multi-component subsystems in a single generation pass. When prompted to "build the coprocessor pipeline and bus arbiter," an agent will invent non-standard abstractions, introduce hidden circular references, and botch timing assumptions across twenty files simultaneously.
-2. **The Atomic Slice as Proof of Concept**: You have to prove system topology on the smallest indivisible unit of mechanical execution: the **Minimal Frame**. Whether you are building an instruction set emulator, a Raft consensus node, or an off-heap event broker, the minimal frame nails down memory layout, non-blocking state progression, and error signaling on a single operational primitive.
-3. **Locking the Pattern Before Delegation**: Once the minimal frame passes deterministic tests, you lock its contracts, memory layout, and transition rules into your repository guidelines (`.agents/rules/`) and reusable agent skills (`.agents/skills/`). The agent must never improvise high-level structural patterns during scale-out.
-4. **Upgrade the Harness, Never Patch the Code**: When an agent writes messy code or takes shortcuts during scale-out, do not open the file and clean it up yourself. Every manual fix is an uncaptured lesson. Diagnose the missing rule, update your linter or harness tests, and make the agent regenerate the code against that stricter constraint.
-5. **Separation of Architectural Sparring from Mass Production**: System engineering splits cleanly into two phases: a high-context dialogue where human and agent spar over system topology on the minimal frame, followed by high-throughput autonomous delegation where the agent implements dozens of sibling operations under frozen test oracles.
+1. **Do not delegate the whole subsystem in one pass.** An agent asked to build a coprocessor pipeline and bus arbiter together can spread a mistaken timing assumption, a hidden circular reference or an awkward abstraction across many files before anything runs.
+2. **Prove the complete path with one operation.** The operation should expose memory layout, how execution progresses without blocking, and how errors are reported. This applies to an instruction emulator, a Raft node or an off-heap event broker, although the operation differs in each case.
+3. **Record the pattern before delegating more work.** Once deterministic tests pass, put the contracts, layout and transition rules in `.agents/rules/`, the repeatable implementation procedure in `.agents/skills/`, and the checks in the test suite. The agent should follow that structure when implementing the remaining operations.
+4. **Fix the instruction that produced a recurring mistake.** If the agent puts a file in the wrong place or skips an endianness conversion, find the missing rule or check. Update the harness and have the agent redo the work. A manual edit to one file leaves the same mistake ready to appear in the next forty.
+5. **Separate design from repetition.** The architect and agent spend time arguing through one representative operation. Once that operation is verified, the agent can implement its siblings under the established tests.
 
----
+## 1. Why a whole-subsystem prompt breaks down
 
-## 1. The Collapse of Full-Subsystem Delegation
+For a business application, you can often give an agent a vertical slice: take an HTTP request through a service and ORM into a database table (see [[Developing Features with AI Coding Agents]]). The boundaries are familiar, and an error in one endpoint is comparatively contained.
 
-In line-of-business software, you can often delegate broad vertical slices to an agent—plumbing an HTTP endpoint down through a service layer into an ORM and out to a database table (see [[Developing Features with AI Coding Agents]]). The blast radius of an agent misunderstanding a boundary is small, and the runtime semantics are forgiving.
+A cycle-exact simulator, trading kernel, storage engine or embedded OS kernel gives the agent less room to guess. Every component depends on details that the others must get right. An underspecified prompt can produce code that compiles while hiding circular pointer handles, allocations in the execution loop, inconsistent clock phases, and events that arrive in the wrong order. Simple unit tests may miss all of them; sustained execution exposes the deadlock or the performance collapse.
 
-When you build complex, stateful backbones—like cycle-exact simulation engines, low-latency trading kernels, storage engines, or embedded OS kernels—broad vertical delegation breaks down completely:
+Consider a memory wait state. The processor must pause the relevant instruction step without losing track of the clock. Functional units have to communicate without circular handles or locks in a hot loop. A pipeline also needs an explicit answer for a branch misprediction or an asynchronous interrupt. If those decisions are made independently in twenty files, untangling the result can take days. Start with one operation that crosses the necessary boundaries and make those decisions there.
 
-```text
-CONVENTIONAL PROMPT DELEGATION BREAKDOWN:
-[Vague Subsystem Prompt] ──► Agent synthesizes 25 files simultaneously
-                                   │
-                                   ▼
-          ┌─────────────────────────────────────────────────┐
-          │ Hidden Circular Pointer Handles (Memory Leaks)   │
-          │ Uncontrolled Heap Allocations in Hot Paths       │
-          │ Inconsistent Clock / Micro-Step State Machines   │
-          │ Desynchronized Event Ordering & Bus Contention   │
-          └─────────────────────────────────────────────────┘
-                                   │
-                                   ▼
-Result: Code compiles cleanly, passes 3 trivial unit tests,
-        yet deadlocks and thrashes under real-world workloads.
-```
+## 2. What the Minimal Frame contains
 
-In these environments, system integrity depends entirely on the low-level mechanics of execution:
-- How memory wait-states stall the processing unit without advancing instruction micro-steps.
-- How decoupled functional units communicate without circular handles or runtime locking overhead.
-- How execution pipelines handle branch mispredictions or asynchronous interrupts.
+A Minimal Frame is a small operation carried through the complete execution path. It might be an arithmetic instruction, a queue transition or a packet handshake. Small refers to the **amount of behavior implemented**, not to the number of design questions you leave unanswered.
 
-If an agent hallucinates the architectural foundation across twenty interdependent files, untangling the resulting mess takes days. The fix is simple: restrict the agent's generative perimeter to an atomic slice.
+For a clocked execution engine, follow the operation through its phases, resource arbitration and wait states, state capture and restoration, and status-flag updates. You can then ask concrete questions before multiplying the implementation:
 
----
+- Can functional units communicate without circular references?
+- Does the hot path avoid dynamic allocations?
+- Does the timing state machine move correctly across clock sub-phases?
+- Can you serialize and restore the complete state at any clock edge?
 
-## 2. Anatomy of a Minimal Frame
+Keep the example easy to inspect: no custom macros that conceal control flow, clear ownership of files and state, and contiguous arrays where fragmented heap objects would obscure the layout. The point is to expose the path the remaining operations will follow.
 
-A **Minimal Frame** is the smallest cohesive slice of a system that exercises the entire operational lifecycle:
+## 3. Work through one frame in five stages
 
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        THE MINIMAL FRAME SLICE                         │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. ONE ATOMIC OPERATION:                                               │
-│    A single arithmetic instruction, one queue transition, or one       │
-│    network packet handshake.                                           │
-│                                                                        │
-│ 2. COMPLETE TOPOLOGICAL PATH:                                          │
-│    - Clock progression: micro-step advancement across sub-phases.      │
-│    - Resource arbitration: memory bus lock, contention, wait-states.   │
-│    - State snapshotting: clean state serialization without heap churn. │
-│    - Status flags: zero-overhead condition code register updates.      │
-│                                                                        │
-│ 3. ZERO EXTRA ABSTRACTIONS:                                            │
-│    - No custom macros hiding control flow.                             │
-│    - Flat file organization with strict ownership semantics.           │
-│    - Contiguous array storage over fragmented heap allocations.        │
-└────────────────────────────────────────────────────────────────────────┘
-```
+### Stage 1: Explore the constraints
 
-By proving the architecture on just **one operation**, you force every hard design question to the surface before writing hundreds of lines of code:
-- *Are functional units decoupled without circular reference pointers?*
-- *Is the execution hot path completely free of dynamic heap allocations?*
-- *Does the timing state machine progress cleanly across sub-clock boundaries?*
-- *Can the system state be completely serialized and restored at any clock edge?*
+Read the specifications, hardware manuals and protocol documentation before writing the operation. For a hardware-oriented system, map timing, memory layout, bus priorities, endianness and exception vectors. The agent can use local retrieval over the reference manuals and AST dependency graphs to find relevant material (see [[Retrieval-Augmented Generation and Context Architecture]]). These facts define what the design has to preserve.
 
----
+### Stage 2: Debate the boundaries
 
-## 3. The 5-Stage Minimal Frame Lifecycle
+Use the agent as a design partner, then challenge the proposed ownership and dispatch. Why put dynamic dispatch in an execution path if a static match table fits the operation? Why pass references between subsystems if one machine loop can decide who owns the bus? Check especially for shared mutable state, circular references and locks that would sit in the runtime path.
 
-High-assurance systems require a five-stage progression:
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                    THE 5-STAGE MINIMAL FRAME WORKFLOW                  │
-├────────────────────────────────────────────────────────────────────────┤
-│ Stage 1: Constraint Exploration                                        │
-│ - Parse official specifications, hardware manuals, and protocol docs.  │
-│ - Map physical timing, memory layout, and bus priority rules.          │
-│                                                                        │
-│ Stage 2: Architectural Sparring & Boundary Design                      │
-│ - Human architect and agent debate ownership topology.                 │
-│ - Challenge abstractions: ban shared mutable state and runtime locks.  │
-│                                                                        │
-│ Stage 3: Proving the Minimal Frame                                     │
-│ - Implement exactly ONE operation (e.g. one ALU instruction).          │
-│ - Validate against external ground truth (hardware test vectors).      │
-│                                                                        │
-│ Stage 4: Locking Invariants into Rules & Skills                        │
-│ - Codify the discovered micro-step sequence into `.agents/rules/`.     │
-│ - Package the implementation recipe into an executable agent skill.    │
-│ - Add automated architectural assertions (file limits, zero panics).   │
-│                                                                        │
-│ Stage 5: Autonomous Scale-Out                                          │
-│ - Agent scales implementation across remaining 50-100 operations.      │
-│ - Zero architectural drifting: agent strictly follows frozen recipe.   │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-### Stage 1: Constraint Exploration
-Before writing code, the agent inspects authoritative documentation (using local vector retrieval over system reference manuals and AST dependency graphs; see [[Retrieval-Augmented Generation and Context Architecture]]). The goal is to uncover non-negotiable system realities: endianness conversions, bus cycle timing, and hardware exception vectors.
-
-### Stage 2: Architectural Sparring
-Here, you act as the sparring partner, pushing back against the agent’s default tendencies:
-- *Why use runtime dynamic dispatch when a static match table eliminates cache misses?*
-- *Why pass references across subsystems when a centralized machine loop can arbitrate bus ownership cleanly?*
-
-For example, when designing an execution unit, an agent might propose an object-oriented layout:
+An agent might start with trait objects stored in a vector and a bus behind `Arc<Mutex<MemoryBus>>`:
 
 ```rust
 // The agent's first instinct: Trait objects and heap allocation
@@ -162,7 +77,7 @@ pub struct Cpu {
 }
 ```
 
-You step in and force a zero-allocation, cache-aligned design:
+That shape introduces pointer indirection and a runtime lock where the execution loop needs predictable progress. The alternative in this note keeps register state in an array and represents the current phase explicitly:
 
 ```rust
 // The corrected topology: Contiguous memory, static dispatch, explicit phase progression
@@ -190,8 +105,11 @@ pub struct ExecutionFrame {
 }
 ```
 
-### Stage 3: Proving the Minimal Frame
-The agent writes the implementation for a single primitive. In an execution kernel, this means implementing one single addition instruction, verifying its sub-phase micro-steps, memory operand fetching, status register mutations, and cycle count against verified external ground truth captures:
+This is a starting layout for the frame. It makes the phase and the state needed by that phase visible in one place.
+
+### Stage 3: Prove the operation
+
+Implement one primitive and compare its behavior with verified external captures or hardware test vectors. For the addition example, check fetching, phase changes, operands, status flags and cycles. The intended frame also needs to account for memory operands and bus waits when those are part of the operation.
 
 ```rust
 impl Cpu {
@@ -244,74 +162,39 @@ impl Cpu {
 }
 ```
 
-This single method answers your core performance and design questions: memory accesses stay within predictable bounds, state machines step cleanly across sub-clock boundaries, and execution never touches the heap.
+The sketch shows how a frame can advance from fetch through decode, execution and writeback. It is an illustration of the structure, not the validation itself: the tests must still establish cycle counts, flag behavior, memory access and any required bus wait. The execution path should stay free of heap allocation, and its state should remain inspectable at each step.
 
-### Stage 4: Locking the Pattern
-Once verified against ground-truth tests, you extract the structural blueprint into `.agents/rules/` and `.agents/skills/`:
-- **File structure**: Enforce a flat source layout, mapping each category of operation to its own file (e.g., `src/ops/alu.rs`, `src/ops/branch.rs`).
-- **Inlining rules**: Require `#[inline(always)]` on leaf ALU routines and `#[inline(never)]` on cold exception traps to preserve the instruction cache.
-- **Memory invariants**: Zero dynamic heap allocations in execution methods, and zero unchecked panics or `.unwrap()` calls.
+### Stage 4: Put the rules in the harness
 
-### Stage 5: Autonomous Scale-Out
-With the pattern locked down, you unleash the agent. Implementing the next fifty arithmetic or logical operations is no longer an open-ended design problem. It is an assembly-line task: the agent stamps out sibling operations that follow the exact same micro-step layout under strict automated test gates.
+After the frame passes its reference tests, record the structure in `.agents/rules/` and the implementation procedure in `.agents/skills/`. The note proposes a flat source layout with operation categories in files such as `src/ops/alu.rs` and `src/ops/branch.rs`. It also calls for inlining leaf ALU routines, keeping cold exception traps out of the hot instruction path, and banning dynamic allocations and unchecked panics in execution methods.
 
----
+Automate what you can verify, including file size and forbidden calls. That gives the agent a specific pattern to follow and a test failure when it breaks one of its boundaries.
 
-## 4. Minimal Frames vs. Enterprise Vertical Slices
+### Stage 5: Expand under the same checks
 
-It helps to contrast the Minimal Frame with traditional enterprise vertical slices:
+Now the agent can write the next fifty arithmetic or logical operations using the established phase layout. Each one still has to pass the relevant reference tests and architectural checks. The difficult design work happened on the first representative operation; the remaining work applies and verifies that decision repeatedly. When a new edge case exposes a gap, return to the rules and tests before continuing.
 
-| Dimension | Enterprise Vertical Slice | Minimal Operational Frame |
+## 4. Minimal Frames and enterprise vertical slices
+
+Both approaches cut down the amount of work you ask an agent to handle at once. They cut in different directions:
+
+| Question | Enterprise vertical slice | Minimal operational frame |
 | :--- | :--- | :--- |
-| **System Domain** | CRUD APIs, web services, business SaaS. | Simulation engines, high-performance kernels, state machines. |
-| **Slice Direction** | **Vertical through architectural layers** (HTTP $\rightarrow$ Service $\rightarrow$ ORM $\rightarrow$ DB). | **Atomic through operational time** (Clock Phase 1 $\rightarrow$ Phase 2 $\rightarrow$ Bus Arbitration $\rightarrow$ State Commit). |
-| **Core Risk Addressed** | Missing business logic, misaligned API contracts. | Memory contention, pipeline stalls, circular handles, state desynchronization. |
-| **Verification Basis** | Mocked unit tests and synthetic database fixtures. | External ground-truth captures and hardware execution vectors. |
-| **Primary Artifact** | DTOs, controllers, database migrations. | Micro-step state machines, contiguous memory buffers, cycle-exact buses. |
+| Where is it useful? | CRUD APIs, web services and business SaaS. | Simulation engines, performance-sensitive kernels and state machines. |
+| What does one slice cross? | Application layers: HTTP → service → ORM → database. | Execution steps: clock phase → resource arbitration → state commit. |
+| What can go wrong? | Business logic or API contracts do not line up. | Memory contention, pipeline stalls, circular handles or state that falls out of sync. |
+| What verifies the work? | Unit tests with mocks and database fixtures. | External captures and hardware execution vectors. |
+| What does it produce? | DTOs, controllers and database migrations. | Explicit phase machines, contiguous buffers and cycle-aware bus behavior. |
 
-Enterprise slices validate business semantics across different application tiers. The Minimal Frame validates mechanical execution at the lowest level of system physics.
+A vertical slice checks that a business operation works across application layers. A Minimal Frame checks that a small operation behaves correctly over time and across the resources it uses.
 
----
+## 5. Upgrade the harness when the agent slips
 
-## 5. Upgrade the Harness, Never Touch the Code
+During the repeated implementation phase, resist fixing the agent's code by hand. Suppose it writes an awkward helper, puts an operation in the wrong file or misses an endianness conversion. Correcting those lines solves the immediate case, but the next generated operation still has no reason to avoid the mistake.
 
-The core operating discipline of this pattern is simple: never patch the code by hand during autonomous scale-out.
+Trace the error to a rule that was missing or too vague. Add a naming or file rule, a linter check, a reference test, or a validation step in `.agents/skills/`. Then ask the agent to run the task again with the updated constraint. This is how one failure improves the procedure used for the rest of the subsystem.
 
-> If an agent writes an unidiomatic helper, misplaces a file, or forgets an endianness conversion, your immediate instinct is to open the IDE and fix those three lines yourself. **Resist it.** If you fix it by hand, the agent will make the exact same mistake across the remaining forty operations it still has to write.
-
-Run an automated immune-system loop instead:
-
-```text
-               ┌──────────────────────────────────────────────┐
-               │ Agent introduces bad pattern or breaks rule  │
-               └──────────────────────┬───────────────────────┘
-                                      │
-                                      ▼
-               ┌──────────────────────────────────────────────┐
-               │ 1. DIAGNOSE MISSING INVARIANT                │
-               │    Why did it fail? Undefined naming rule,   │
-               │    missing linter check, unstated boundary?  │
-               └──────────────────────┬───────────────────────┘
-                                      │
-                                      ▼
-               ┌──────────────────────────────────────────────┐
-               │ 2. UPGRADE THE HARNESS                       │
-               │    - Add file-limit or panic checks to tests │
-               │    - Update .agents/rules/ with code pattern │
-               │    - Embed validation step in .agents/skills/│
-               └──────────────────────┬───────────────────────┘
-                                      │
-                                      ▼
-               ┌──────────────────────────────────────────────┐
-               │ 3. COMMAND RE-EXECUTION                      │
-               │    Agent re-runs against the new constraint. │
-               │    Entire repository is permanently guarded. │
-               └──────────────────────────────────────────────┘
-```
-
-### Example: Architectural Guardrails in the Test Suite
-
-Instead of manually reviewing every pull request for allocation regressions or unwrap calls, write an architectural test directly into your test suite:
+The note's example adds architectural checks alongside ordinary tests. One rejects `.unwrap()` and `panic!` in `src/ops`; another rejects operation files above 800 lines:
 
 ```rust
 // tests/architecture_invariants.rs
@@ -363,19 +246,17 @@ fn test_single_file_line_limits() {
 }
 ```
 
-When you update the harness this way, you fix the bug across your current task and permanently protect the codebase against regressions.
+These checks cover the specific patterns shown in the example. They do not themselves detect an allocation regression or prove that an instruction is correct; those still need their own checks. Their job is to keep a known mistake from returning as the agent adds more files.
 
----
+## 6. Putting the pattern to work
 
-## 6. How This Fits Together
+First use the agent to explore constraints and make one complete operation work. Once that frame is verified against the system's real behavior, write its boundaries and checks into the harness. Then let the agent implement related operations under those same constraints. If the work exposes a missing case, improve the harness and repeat the affected work. That keeps architectural decisions in the small, inspectable frame while allowing the implementation to grow.
 
-The Minimal Frame Pattern bridges the gap between high-level architectural design and autonomous agent execution. It converts open-ended, high-risk code generation into a two-phase process: high-leverage sparring between the human architect and the agent on the atomic core, followed by machine-speed scale-out against frozen test suites.
+### Related notes
 
-### Related Notes
-
-- **[[Developing Features with AI Coding Agents]]**: How vertical slices apply to enterprise business domains, and how they contrast with minimal operational frames.
-- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Using disposable exploratory probes to prove the minimal frame without taking on permanent prototype debt.
-- **[[The Conductor Pattern for High-Bandwidth Engineering]]**: The working habits of the architect as constraint setter and sparring partner rather than a mechanical typist.
-- **[[Testing in the Model, Agent, LLM Era]]**: Using external ground-truth test oracles to anchor minimal frames to real-world system behavior.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The runtime infrastructure needed to enforce guardrails and self-healing agent loops.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Capturing specifications during the minimal frame proof rather than trying to draft perfect docs upfront.
+- **[[Developing Features with AI Coding Agents]]**: Vertical slices in business software and how they compare with minimal operational frames.
+- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Disposable probes for proving a frame without keeping prototype debt.
+- **[[The Conductor Pattern for High-Bandwidth Engineering]]**: The architect's role in setting constraints and challenging the agent's design.
+- **[[Testing in the Model, Agent, LLM Era]]**: External reference tests for real system behavior.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The rules and checks that keep repeated agent work within boundaries.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Recording specifications while proving the frame.

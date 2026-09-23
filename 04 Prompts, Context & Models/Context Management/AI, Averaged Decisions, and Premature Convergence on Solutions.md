@@ -12,63 +12,95 @@ aliases:
   - Averaged Solutions Problem
 ---
 
-# AI, Averaged Decisions, and Premature Convergence on Solutions
+## Introduction
 
-Large language models tend to produce answers that are complete, coherent, polished, and easy to justify. In software engineering, this characteristic often creates a misleading sense of completeness. 
+Large language models tend to produce answers that are complete, coherent, polished, and well justified.
 
-When an architectural or product problem is underspecified, a language model rarely pauses to flag missing constraints or demand clarification. Instead, it fills the gaps itself, generates the missing context from its pre-training distribution, and returns a fully realized design. At the same time, when asked to generate solutions, it typically converges on a narrow set of conventional patterns rather than exploring the broader trade-off space.
+This is useful, but it creates an important risk.
 
-These two behaviors stem from the same root mechanic:
+When a problem is underspecified, the model often does not stop and expose the missing information. Instead, it fills in the gaps and produces a complete solution.
 
-$$\text{Underspecified Requirements} + \text{Capable Model} = \text{Hidden Strategic Decisions Made by AI}$$
+At the same time, when asked to solve a problem, the model may immediately converge on a small set of conventional solutions rather than systematically exploring the full solution space.
 
-Large language models excel at completing incomplete problems. However, completion is fundamentally different from discovering the optimal architectural decision or product strategy for a specific engineering organization.
+These are two sides of the same broader problem:
 
-```text
-Naive Direct Inference (Single-Path Collapse)
-[Underspecified Requirements] ───> [Prior Distribution Sampling] ───> [Market-Average Default]
-                                   (Silently invents constraints)     (Coherent, plausible, undifferentiated)
-
-Deliberate Multi-Stage Exploration
-                                   ┌── Path A: Event-Driven Reactive ─────────┐
-                                   │                                          │
-[Underspecified Requirements] ────>│── Path B: Synchronous Orchestrated ──────┼──> [Trade-Off Matrix] ──> [Human Strategic
-      │                            │                                          │    (Context-Weighted)      Selection]
-      └──> [Extract Hidden Gaps] ─>└── Path C: State Machine / In-Process ────┘
-           (Flags unmade decisions)
-```
+**AI is very good at completing incomplete problems, but completion is not the same as discovering the best decision or the best solution for a particular company.**
 
 ---
 
 ## 1. The Problem of Underspecified Requirements
 
-Engineering requirements from product stakeholders regularly arrive in an incomplete state:
+The business may say:
 
-> "We need an ingestion pipeline for third-party webhook events."
+> We need feature A.
 
-On the surface, this looks straightforward. In practice, it leaves critical architectural and business questions completely unanswered:
+But A may leave many important questions unanswered.
 
-- What are the deduplication guarantees? Is at-least-once processing acceptable, or does downstream accounting require strict exactly-once semantics?
-- What is the expected traffic distribution? Are we designing for a steady 50 requests per second, or sudden 10,000 rps bursts?
-- How should the system behave during upstream vendor outages? Should it fail fast, buffer in durable storage, or degrade partially?
-- What are the latency and cost budgets? Is a 500ms delay acceptable if it cuts infrastructure spend by 80%?
-- Who has the authority to replay failed events or discard poisoned messages?
+For example:
 
-When an engineering team debates this requirement in a design review, these ambiguities surface immediately. The initial statement is probed, challenged, and refined into an explicit technical specification.
+- What exactly should happen in a particular edge case?
+    
+- Which customer segment has priority?
+    
+- Is speed more important than cost?
+    
+- Is flexibility more important than simplicity?
+    
+- What should happen when an external dependency fails?
+    
+- Should the user be allowed to override a particular decision?
+    
+- How should this feature support the company's broader strategy?
+    
 
-A language model bypasses this discovery phase entirely. It takes the sparse input, quietly invents the missing operational boundaries, and presents an end-to-end architecture as if those parameters were explicitly requested.
+If people analyzed the problem themselves or discussed it during a meeting, these questions would often emerge naturally.
+
+The initial requirement A would gradually become a more precise requirement B.
+
+An LLM can skip this process.
+
+It receives A and silently invents B in order to produce a complete answer.
+
+This creates a useful formula:
+
+**underspecified requirements + capable model = hidden decisions made by the model**
 
 ---
 
-## 2. Hidden Decisions Disguised as Implementation Details
+## 2. The Hidden Decision Problem
 
-The danger is not simply that the model makes assumptions. Human engineers make assumptions constantly. The danger is that the model's assumptions remain invisible.
+The dangerous part is not simply that the model makes assumptions.
 
-A model rarely emits an explicit disclaimer such as:
+Humans make assumptions as well.
 
-> "The prompt did not define retention requirements or consistency models, so I assumed a 30-day TTL and eventual consistency using DynamoDB."
+The problem is that the assumptions may become invisible.
 
-Instead, it presents a concrete implementation where those choices are already baked into the schemas, infrastructure definitions, and application code:
+The model does not necessarily say:
+
+> The specification does not define this behavior, so I am assuming X.
+
+Instead, it may simply generate a design in which X already exists.
+
+A business or product decision can therefore become disguised as an implementation detail.
+
+For example, the generated system may implicitly decide:
+
+- how long data should be retained,
+    
+- whether a failed request should be retried,
+    
+- whether an operation is synchronous or asynchronous,
+    
+- whether the user can have multiple active items,
+    
+- who is allowed to override a decision,
+    
+- what happens when information is incomplete.
+    
+
+Every one of these may look technical in the generated implementation.
+
+But some of them may actually represent significant business decisions.
 
 ```python
 # Example: The model silently resolves core business rules inside a data model
@@ -88,442 +120,659 @@ class WebhookPayload(BaseModel):
     is_idempotent: bool = True
 ```
 
-In this generated snippet, several critical business and architectural policies were decided without engineering review:
-
-- **Data retention:** Why 7 days instead of 90 days for audit compliance, or 24 hours to reduce storage costs?
-- **Failure policy:** What happens after 3 retries? Does it route to a dead-letter queue, drop the message, or alert an on-call engineer?
-- **Execution semantics:** Is processing synchronous or asynchronous?
-- **Concurrency control:** Can a tenant submit concurrent payloads, or must events process in strict sequence?
-- **Operational override:** Can an internal operator re-drive failed events manually?
-
-Every one of these choices looks like mundane plumbing in the generated code. In reality, each represents a product or operational trade-off that directly affects operating costs, customer experience, and system reliability.
+Consider how easily this sneaks into production code. A generated data model hardcodes a 7-day retention TTL and a 3-retry ceiling. If downstream consumers expect a 90-day window for regulatory compliance or need failed events held in a dead-letter queue for manual re-drive, the system fails silently at runtime. The developer reviewing the pull request sees clean, idiomatic typing, but the model has quietly resolved core policies around data lifecycle, delivery guarantees, and backpressure without a single engineering discussion.
 
 ---
 
-## 3. Why Default Assumptions Favor the Statistical Average
+## 3. Why the Model's Default May Not Be the Company's Best Decision
 
-When a language model fills in missing specifications, it pulls from its pre-training distribution: public documentation, open-source repositories, tutorials, and standard architectural templates.
+When the model has to fill a gap, it usually has access to broad general knowledge.
 
-This knowledge base gives the model a broad grasp of standard engineering practices:
-- Standard REST conventions
-- Popular cloud patterns (e.g., API Gateway to Lambda to DynamoDB)
-- Widely documented microservice patterns
-- Common operational defaults (exponential backoff, standard connection pools)
+It can draw from:
 
-Because these defaults come from broad industry consensus, the generated design is almost always reasonable, syntactically clean, and easy to justify.
+- common market practices,
+    
+- popular product patterns,
+    
+- common UX conventions,
+    
+- standard architecture patterns,
+    
+- frequently seen business models,
+    
+- publicly documented best practices,
+    
+- its training data.
+    
 
-However, "reasonable" is not the same as optimal. A solution can be statistically sensible across thousands of public repositories while being completely wrong for a company's specific operating environment. 
+This makes its assumptions likely to be reasonable.
 
-A startup running on lean margins may deliberately favor a boring, monolithic SQLite design to avoid distributed systems overhead. A high-frequency trading platform may deliberately discard standard message queues in favor of kernel-bypass networking. A company's competitive advantage often lives precisely in the areas where it deliberately rejects standard market patterns.
+But reasonable is not the same as optimal.
 
----
+The resulting decision may be:
 
-## 4. The Impact on Competitive Advantage and Architectural Diversity
+**statistically sensible, but strategically wrong for the specific company.**
 
-Consider what happens when multiple engineering teams ask an LLM the same fundamental question:
+A company may intentionally want to behave differently from the market.
 
-> "Design a scalable event processing pipeline for multi-tenant SaaS."
-
-If those teams provide minimal operational context, the model will output nearly identical architectures for each of them: an API Gateway, a managed message bus (such as SQS or Kafka), worker pools running in containers or serverless functions, and an established document store or relational database.
-
-```text
-Team A ──┐
-Team B ──┼──> [LLM with Minimal Context] ──> Standard Cloud Architecture
-Team C ──┘                                   (Kafka + Workers + Document DB)
-```
-
-The teams certainly gain advantages:
-- Accelerated initial scaffolding
-- Lower implementation effort
-- Standard, well-documented conventions
-- Avoidance of beginner architectural bugs
-
-However, they lose differentiation. When every team builds on the same default suggestions, their technical foundations, cost curves, and operational bottlenecks converge toward the industry average.
-
-This leads to a distinct engineering paradox:
-
-**AI accelerates implementation speed while flattening strategic and architectural diversity.**
-
-Systems become cleaner and more idiomatic in an absolute sense, but functionally indistinguishable across the broader market. When engineering organizations routinely accept the model's first plausible output, the technology stack regresses to the median of public training data.
+Its competitive advantage may exist precisely in those differences.
 
 ---
 
-## 5. Premature Convergence on Solutions
+## 4. The Connection to Competitive Advantage
 
-This dynamic surfaces in another common scenario: evaluating alternative solutions for an already well-defined problem.
+Suppose ten companies ask similar models:
 
-Suppose the engineering team understands its constraints and asks:
+> How should we solve problem A?
 
-> "What are the viable patterns to handle cache invalidation across distributed edge nodes?"
+If each company provides only limited context, the models may produce similar solutions.
 
-The model returns three common designs:
-1. Short TTLs with conditional HTTP `If-None-Match` requests.
-2. Centralized pub/sub message broadcasting to purge nodes on update.
-3. Key-based versioning where URLs include content hashes.
+The companies gain:
 
-The team reviews these options, evaluates the trade-offs, and chooses Option 2.
+- faster execution,
+    
+- lower development cost,
+    
+- better access to established practices,
+    
+- fewer obvious mistakes.
+    
 
-This process appears disciplined and rational. However, it relies on an unverified premise: that Options 1, 2, and 3 accurately represent the full landscape of practical solutions.
+But they may simultaneously lose differentiation.
 
-If an alternative approach—such as using a distributed transactional database with change-data-capture streaming directly to edge workers—was never surfaced, the downstream comparison is flawed. The critical failure occurred before the evaluation even started: the search space collapsed too early.
+This creates a paradox:
 
----
+**AI can increase execution efficiency while reducing strategic diversity.**
 
-## 6. The Asymmetry Between Generation and Evaluation
+The products may become better in an absolute sense, but more similar to each other.
 
-This failure mode highlights an important mechanical characteristic of large language models:
+The same compressed body of market knowledge is being used by everyone.
 
-**A model's ability to evaluate a proposed solution is often far superior to its ability to surface that solution spontaneously during open generation.**
-
-If an engineer notices the gap and asks:
-
-> "Why didn't you consider using change-data-capture directly from the primary database to trigger edge invalidations via lightweight worker scripts?"
-
-The model will often analyze the suggestion with high technical precision:
-
-> "That is an effective alternative. Under your write-heavy workload, CDC eliminates the overhead of managing a dedicated pub/sub broker, guarantees causal ordering, and avoids race conditions between cache purging and database commits."
-
-This asymmetry reveals a crucial distinction:
-
-The model already possessed the necessary information to validate and score the CDC approach. Yet during top-down generation, the higher token probabilities associated with conventional pub/sub architectures dominated the search path, crowding out the more specialized design.
-
-Therefore, an engineering team should never treat a model's initial list of alternatives as an exhaustive survey of the solution space. It is merely a collection of high-probability continuations based on the phrasing of the prompt.
+If all companies accept the model's default decisions, AI becomes a force that pushes products toward the center of the distribution.
 
 ---
 
-## 7. Mechanics of Solution-Space Collapse
+# 5. A Second Problem: Premature Convergence on Solutions
 
-Language models generate text by sampling likely continuations given a prompt context. When asked to brainstorm technical approaches, the model naturally favors patterns that are:
-- Heavily documented in public technical literature
-- Frequently discussed in standard engineering forums
-- Closely tied to the specific keywords in the prompt
+There is another version of the same problem.
 
-A specialized or counter-intuitive design may carry lower token probabilities in the base distribution, even when it is technically superior for the problem at hand.
+Suppose the problem itself is already understood.
 
-This dynamic triggers **solution-space collapse**: the model converges prematurely on a cluster of common designs, effectively hiding less conventional approaches from the engineering team.
+We ask:
 
----
+> What are the possible solutions?
 
-## 8. Why Requesting Higher Output Volume Fails
+The model generates:
 
-A common workaround is to simply ask the model for more options:
+- solution A,
+    
+- solution B,
+    
+- solution C.
+    
 
-> "Give me ten different solutions instead of three."
+We compare them and choose B.
 
-This rarely produces genuine conceptual diversity. Instead of discovering distinct architectural paradigms, the model usually outputs ten minor variations of the same underlying pattern:
+This appears to be a rational process.
 
-1. Standard microservice with an SQS queue.
-2. Standard microservice with a RabbitMQ queue.
-3. Serverless Lambda worker consuming from an SQS queue.
-4. Serverless worker consuming from an event bridge.
-5. Containerized worker running on ECS with a Redis queue.
+But it assumes that A, B, and C adequately represent the relevant solution space.
 
-While these options differ in infrastructure tooling, they belong to the exact same architectural class: an asynchronous distributed queue backed by background compute workers.
+That assumption may be false.
 
-True diversity in technical design requires exploring fundamentally different *classes* of solutions—such as comparing an asynchronous queue against an append-only log, an in-memory ring buffer, or a synchronous backpressure-driven streaming model.
+There may be a solution D that the model simply failed to generate.
 
----
+If D is actually the best approach, the later comparison between A, B, and C is already compromised.
 
-## 9. Separating Exploration from Selection
-
-To prevent premature convergence and uncover hidden assumptions, engineering teams should decouple the decision process into clear, distinct phases.
-
-Instead of jumping directly from problem to recommendation:
-
-$$\text{Problem} \longrightarrow \text{Selected Solution}$$
-
-Use an explicit multi-stage discovery pipeline:
-
-$$\text{Problem} \longrightarrow \text{Decomposition} \longrightarrow \text{Assumption Extraction} \longrightarrow \text{Divergent Exploration} \longrightarrow \text{Coverage Audit} \longrightarrow \text{Trade-Off Scoring} \longrightarrow \text{Human Selection}$$
+The mistake happened before the evaluation started.
 
 ---
 
-## 10. Phase 1: Problem Framing and Invariant Identification
+## 6. Generation Ability Is Not the Same as Evaluation Ability
 
-Before generating architectures, pin down the fundamental constraints of the problem.
+A particularly interesting LLM behavior exposes this problem.
 
-Direct the model to identify:
-- What hard physical or business constraints exist (e.g., network latency boundaries, regulatory requirements)?
-- Which assumptions are treated as facts without empirical backing?
-- Who are the system's consumers, and what failure modes can they tolerate?
-- What constitutes success: p99 latency, development velocity, monthly cloud spend, or maintainability by a small team?
-- Which trade-offs are completely non-negotiable?
+The model may fail to propose solution D.
 
-The objective here is not to solve the problem. The objective is to define its true boundaries.
+But when a human says:
 
----
+> What about D?
 
-## 11. Phase 2: Detecting Missing Decisions
+the model may immediately respond:
 
-Before designing an architecture, require the model to explicitly flag every area where the requirements leave technical or business behavior ambiguous.
+> Yes. D is a very strong solution and under these constraints may actually be better than A, B, and C.
 
-A reliable prompt pattern is:
+This reveals an important distinction:
 
-```text
-Review the following requirements. Do NOT propose an architecture or write code yet.
-Identify every area where the requirements fail to uniquely determine how the system 
-should behave. 
+**the ability to evaluate a solution is not the same as the ability to generate that solution.**
 
-Categorize findings into:
-1. Invariant / Confirmed Fact
-2. Hard Technical Constraint
-3. Unverified Assumption
-4. Unmade Business / Product Decision
-5. Open Technical Choice
-```
+A model may contain enough knowledge to recognize that D is good once D appears in the context.
 
-This prompt forces the model to expose hidden decisions before they disappear into implementation details.
+Yet its initial generation process may never surface it.
+
+This means that:
+
+**the model's list of solutions should not automatically be interpreted as the set of solutions.**
+
+It is only a set of solutions that happened to be generated.
+
+Take a concrete systems scenario: designing cache invalidation across distributed edge nodes. When asked for architectures, an LLM typically defaults to well-trodden paths like short TTLs with conditional HTTP `If-None-Match` requests or pub/sub cache purge broadcasting. If an architect explicitly asks, *"Why not stream Change Data Capture (CDC) events directly from the database write-ahead log to lightweight edge workers?"*, the model instantly provides a rigorous technical breakdown: it recognizes that CDC eliminates the dedicated message broker, avoids race conditions between cache purging and DB commits, and guarantees causal ordering. The model already possesses the operational knowledge to validate and score the pattern, but the high token probabilities of conventional pub/sub designs crowded it out during initial generation.
 
 ---
 
-## 12. Phase 3: Exploring Diverse Solution Classes
+## 7. Why This Happens
 
-Once the constraints are clear, direct the model to explore deliberately distinct classes of solutions rather than searching for a single "correct" answer.
+LLMs are fundamentally generative systems.
 
-Explicitly mandate exploration across different architectural philosophies:
+When asked for possible solutions, they tend to generate high-probability continuations.
 
-```text
-Propose four fundamentally different architectural approaches to solve this problem. 
-Each proposal must belong to a distinct structural class:
+Therefore, the first solutions produced are often:
 
-1. The Minimalist Path: The simplest design possible using boring, existing infrastructure 
-   (e.g., standard relational DB, in-process processing, monolithic worker).
-2. The Scaled Asynchronous Path: The standard cloud-native pattern (event buses, distributed queues, 
-   decoupled worker pools).
-3. The Radical Simplicity Path: An approach that avoids new software entirely by leveraging 
-   existing platform capabilities or adjusting business processes.
-4. The Unconventional / High-Performance Path: An approach that prioritizes extreme throughput 
-   or strict consistency at the cost of higher upfront complexity.
-```
+- common,
+    
+- conventional,
+    
+- well documented,
+    
+- widely discussed,
+    
+- semantically close to the way the problem was phrased.
+    
 
-This framing prevents the model from generating five minor variations of a message queue, forcing it to explore across radically different complexity and operational footprints.
+A genuinely different solution may have lower probability even if it would be better.
 
----
+This can cause what we might call:
 
-## 13. Phase 4: Running a Coverage Audit
+**solution-space collapse**
 
-After gathering an initial set of options, challenge the completeness of the exploration. Treat the first pass as an incomplete draft.
+or:
 
-Use adversarial prompts to push the boundaries:
+**premature convergence**
 
-> "Review the four approaches proposed above. What fundamentally different architectural paradigm is completely unrepresented in this list?"
-
-> "Assume our cloud provider suffers a major pricing shift, making managed queues and serverless functions 10x more expensive. How would we solve this problem using only long-lived processes and direct network protocols?"
-
-> "Assume the architecture we like best is completely banned by compliance. What is the next best alternative, and what compromises does it force us to make?"
-
-This step runs a second exploration pass, exposing blind spots in the initial brainstorm.
+The search converges too early around a few obvious approaches.
 
 ---
 
-## 14. Phase 5: Multi-Perspective Stress Testing
+## 8. More Answers Do Not Necessarily Solve the Problem
 
-Another effective way to escape statistical averages is to analyze the problem through deliberately constrained operational viewpoints.
+Simply asking:
+
+> Give me ten solutions instead of three.
+
+does not guarantee diversity.
+
+The model may produce ten variations of essentially the same concept.
 
 For example:
 
-- **The Early-Stage Startup View:** *"How would we design this if we had only two engineers, an absolute hard budget of $150 per month, and a requirement to ship within 72 hours?"*
-- **The High-Reliability Enterprise View:** *"How would we design this if every data loss event carried a direct $50,000 regulatory fine, requiring complete deterministic audit trails and zero data loss across multi-region failures?"*
-- **The Zero-New-Services View:** *"How would we solve this if the infrastructure operations team strictly prohibited introducing any new database engines, message brokers, or managed services?"*
+- microservice,
+    
+- slightly different microservice,
+    
+- event-driven microservice,
+    
+- serverless version of the microservice,
+    
+- microservice with a queue.
+    
 
-These prompts do not simulate abstract personas; they apply concrete engineering constraints that force the model out of its default generation paths.
+Technically these are different answers.
 
----
+Conceptually, they may occupy one small part of the solution space.
 
-## 15. Phase 6: Grounded Trade-Off Evaluation
+What matters is not the number of solutions.
 
-Only after establishing a genuinely diverse set of candidates should the team evaluate them.
+What matters is the **diversity of solution classes**.
 
-The evaluation must score options against criteria that reflect the company's real constraints, rather than generic industry metrics:
-
-```markdown
-| Evaluation Dimension | Option 1: Monolithic DB Worker | Option 2: Event-Driven SQS/Lambda | Option 3: Redis In-Memory Ring Buffer |
-| :--- | :--- | :--- | :--- |
-| **Operational Simplicity** | High (uses existing Postgres instance) | Low (requires new IAM, queues, DLQs) | Medium (requires Redis cluster management) |
-| **Cost at 5,000 rps** | High (DB connection limits, compute scaling) | Medium (serverless invocation costs scale linearly) | Low (in-memory, highly dense) |
-| **Recovery / Replayability** | High (standard SQL updates/transactions) | High (DLQ re-drive tooling) | Low (volatile memory, requires WAL dumps) |
-| **Failure Blast Radius** | High (shared database resource contention) | Low (isolated serverless workers) | Medium (isolated cache, but stateful) |
-| **Reversibility of Design**| High (migration away is straightforward) | Low (deep vendor SDK coupling) | Medium (standard key/value patterns) |
-```
-
-The engineering team, not the language model, must assign the weights to these evaluation criteria. The model's role is to highlight the trade-offs, not decide which trade-offs the business should accept.
+True diversity requires exploring orthogonal architectural axes: comparing an asynchronous distributed queue backed by worker pools against an append-only log, an in-memory ring buffer with kernel-bypass networking, or a synchronous backpressure-driven streaming model. Prompting for raw volume only yields cosmetic variations of the same underlying failure domain.
 
 ---
 
-## 16. Phase 7: Selection and Decision Logging
+# 9. Separate Exploration from Selection
 
-When an option is finally selected, capture the rationale along with an explicit record of what was considered and discarded.
+A better AI-assisted decision process should deliberately separate several stages.
 
-A complete Architectural Decision Record (ADR) should detail:
-1. The chosen architecture and why it won.
-2. The specific assumptions required for this choice to remain valid.
-3. The alternative approaches that were actively rejected, along with the concrete reasons for rejection.
-4. The operational changes that would invalidate this decision and require revisiting the design.
+Instead of:
 
-Documenting rejected alternatives protects the team from revisiting the same debates months later when production traffic shifts.
+**problem → best solution**
+
+use:
+
+**problem → assumptions → solution-space exploration → coverage check → evaluation → selection**
+
+Each stage has a different purpose.
 
 ---
 
-## 17. Enforcing Explicit Decision Logs
+## 10. Step 1: Problem Framing
 
-To prevent models from silently burying product and architectural decisions in code, teams should require the model to produce a structured decision manifest alongside any proposed design.
+Before solving anything, determine what the actual problem is.
 
-An example schema for extracting these hidden choices:
+Questions may include:
+
+- What outcome are we trying to achieve?
+    
+- What constraints actually exist?
+    
+- Which constraints are assumptions rather than facts?
+    
+- Who is affected?
+    
+- What does success mean?
+    
+- Which trade-offs matter?
+    
+
+The goal is not yet to find a solution.
+
+The goal is to define the problem correctly.
+
+---
+
+## 11. Step 2: Detect Missing Decisions
+
+The model should explicitly identify places where the available information does not uniquely determine the behavior of the solution.
+
+A useful instruction is:
+
+> Before proposing a solution, identify every place where the requirements do not uniquely determine what should happen.
+
+The model can classify information as:
+
+- fact,
+    
+- requirement,
+    
+- constraint,
+    
+- assumption,
+    
+- business decision,
+    
+- technical decision,
+    
+- unresolved question.
+    
+
+This makes hidden decisions visible.
+
+---
+
+## 12. Step 3: Explore the Solution Space
+
+Only after the problem is sufficiently clear should the model start generating possible approaches.
+
+But the goal should not be:
+
+> Give me the best solution.
+
+Instead:
+
+> Explore fundamentally different classes of solutions.
+
+For example:
+
+- the simplest possible solution,
+    
+- the conventional industry solution,
+    
+- a solution using existing infrastructure,
+    
+- a solution requiring new infrastructure,
+    
+- build versus buy,
+    
+- technical solution versus organizational solution,
+    
+- automation versus process change,
+    
+- a solution that removes the need for the feature entirely,
+    
+- centralized versus decentralized approach,
+    
+- synchronous versus asynchronous approach,
+    
+- short-term tactical solution,
+    
+- long-term strategic solution,
+    
+- a deliberately unconventional solution.
+    
+
+This encourages breadth rather than immediate convergence.
+
+---
+
+## 13. Step 4: Perform a Coverage Check
+
+After generating possible solutions, the model should challenge its own search.
+
+For example:
+
+> Which fundamentally different solution classes are missing from this list?
+
+or:
+
+> Find approaches that do not resemble any of the solutions already proposed.
+
+or:
+
+> Assume the currently preferred solution is forbidden. What would we do instead?
+
+This creates a second exploration pass.
+
+It is similar to an adversarial review of the brainstorming process itself.
+
+---
+
+## 14. Multiple Perspectives Can Improve Exploration
+
+Another useful technique is to deliberately change the perspective used to search the solution space.
+
+For example:
+
+> How would a startup with almost no infrastructure solve this?
+
+> How would a large regulated enterprise solve it?
+
+> How would we solve it if adding another service was forbidden?
+
+> How could we solve it without writing new software?
+
+> How could we eliminate the underlying need instead?
+
+> What would an organization optimizing purely for operational simplicity choose?
+
+The purpose is not to simulate personalities.
+
+The purpose is to force the model into different regions of the solution space.
+
+---
+
+## 15. Step 5: Evaluation
+
+Only once a reasonably broad solution space exists should the model evaluate the alternatives.
+
+The comparison should use criteria that actually matter to the company.
+
+For example:
+
+- implementation cost,
+    
+- operational complexity,
+    
+- time to market,
+    
+- scalability,
+    
+- reversibility,
+    
+- security,
+    
+- customer experience,
+    
+- organizational capability,
+    
+- strategic alignment,
+    
+- maintainability,
+    
+- vendor dependence,
+    
+- future optionality.
+    
+
+The model can help analyze these trade-offs.
+
+But the criteria should preferably come from the company rather than being silently invented by the model.
+
+---
+
+## 16. Step 6: Selection
+
+Selection should happen only after exploration and evaluation.
+
+At this stage the model may recommend an option.
+
+But ideally the recommendation should include:
+
+- why it wins,
+    
+- which assumptions it depends on,
+    
+- what alternatives were rejected,
+    
+- what would have to change for another solution to become preferable.
+    
+
+This prevents the recommendation from looking more certain than it really is.
+
+---
+
+# 17. Decision Logs
+
+A useful safeguard is to require an explicit decision log.
+
+After creating a design, the model should be able to answer:
+
+> What decisions did you have to make in order to produce this solution?
+
+For example:
+
+- I assumed users can have only one active cart.
+    
+- I assumed failed requests should be retried.
+    
+- I assumed eventual consistency is acceptable.
+    
+- I assumed administrators can manually change the state.
+    
+- I assumed data should be retained for 30 days.
+    
+
+This can reveal that part of what appeared to be implementation was actually product or business design.
+
+To operationalize this in an engineering pipeline, require the model to emit a structured decision manifest alongside any architecture proposal:
 
 ```json
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ArchitecturalDecisionManifest",
-  "type": "object",
-  "properties": {
-    "implicit_assumptions_made": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "area": { "type": "string", "description": "e.g., Retention, Retry, Concurrency" },
-          "assumed_default": { "type": "string" },
-          "alternative_options": { "type": "array", "items": { "type": "string" } },
-          "business_impact": { "type": "string" }
-        },
-        "required": ["area", "assumed_default", "alternative_options", "business_impact"]
-      }
+  "implicit_assumptions_made": [
+    {
+      "area": "Retry and Failure Semantics",
+      "assumed_default": "3 retries with exponential backoff before message discard",
+      "alternative_options": ["Block partition to guarantee strict ordering", "Route directly to DLQ after 1 failure"],
+      "business_impact": "Potential silent data loss if poison pills are discarded without alerting"
     },
-    "delegated_authority_breaches": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Decisions embedded in code that require human product/security sign-off"
+    {
+      "area": "Data Retention",
+      "assumed_default": "Hardcoded 30-day TTL in database records",
+      "alternative_options": ["Infinite retention with cold-tier S3 offload", "24-hour transient buffer"],
+      "business_impact": "Direct impact on storage cost and legal compliance audits"
     }
-  },
-  "required": ["implicit_assumptions_made", "delegated_authority_breaches"]
+  ],
+  "delegated_authority_breaches": [
+    "Model resolved consistency tier (eventual consistency) without product sign-off"
+  ]
 }
 ```
 
-If an LLM generates an architecture for an ingestion pipeline, its decision manifest should explicitly state:
-
-- *"I assumed failed payloads should retry up to 3 times with exponential backoff before being discarded to a DLQ. Alternative: halt the processing partition to guarantee strict ordering."*
-- *"I assumed tenant metadata can be cached in worker memory with a 60-second TTL. Alternative: query the primary database on every call to support instantaneous permission revocations."*
-
-Making these assumptions explicit allows engineers to review and adjust them before writing code.
+Extracting this structured artifact before writing code prevents invisible drift and catches policy assumptions before they become entrenched in production schemas.
 
 ---
 
-## 18. Using Proprietary Context to Counter the Regression to the Mean
+# 18. Company Context as Protection Against Averaging
 
-The most effective safeguard against generic, averaged designs is grounding the model in proprietary engineering context.
+Another line of defense is providing the model with proprietary company context.
 
-If an LLM is given only a generic problem statement, it relies entirely on public market patterns. But when supplied with internal technical context, its generation space shifts:
+This may include:
 
-- Internal Architectural Decision Records (ADRs)
-- Post-mortem reviews and root-cause analyses from prior production outages
-- Real telemetry baselines, traffic patterns, and cost breakdowns
-- Company-specific compliance rules and security standards
-- Long-term infrastructure roadmaps and operational constraints
+- product history,
+    
+- internal documentation,
+    
+- Jira issues,
+    
+- historical architectural decisions,
+    
+- meeting recordings,
+    
+- experiment results,
+    
+- customer feedback,
+    
+- operational data,
+    
+- known failures,
+    
+- strategy,
+    
+- internal constraints,
+    
+- domain knowledge.
+    
 
-$$\text{Generic Model} + \text{Public Documentation} \longrightarrow \text{Averaged Market Solution}$$
+Then the model no longer has to rely mainly on generic public knowledge.
 
-$$\text{Generic Model} + \text{Internal Systems Telemetry and Constraints} \longrightarrow \text{Context-Specific Architecture}$$
+A simplified comparison is:
 
-A standard model provided with deep internal context will reject a generic multi-region distributed pattern if your post-mortems show that your team repeatedly struggles to manage distributed consensus across regions. Internal engineering reality acts as a strong counterweight to the pull of the statistical average.
+**public model + public knowledge → averaged solution**
 
----
+**public model + unique company context → company-specific solution**
 
-## 19. Defining the Boundaries of Model Authority
-
-Even when equipped with deep internal context, an LLM should never have the authority to make every decision autonomously.
-
-Clear boundaries must separate technical implementation from strategic choice:
-
-```text
-+-------------------------------------------------------------------------------+
-|                        DECISION AUTHORITY BOUNDARY                            |
-+-------------------------------------------------------------------------------+
-| SAFE FOR AI AUTONOMY                 REQUIRES HUMAN SYSTEM ARCHITECT          |
-|                                                                               |
-| - Implementing idiomatic boilerplate  - Setting consistency / isolation tiers |
-| - Generating unit / integration tests - Determining data retention / privacy  |
-| - Drafting structural interfaces      - Defining blast-radius boundaries      |
-| - Analyzing time/space complexity     - Accepting regulatory / compliance risk|
-| - Synthesizing trade-off matrices     - Choosing build vs buy trade-offs      |
-+-------------------------------------------------------------------------------+
-```
-
-When a model encounters a design choice that crosses these boundaries, its instructions should forbid it from inventing a default. Instead, it must stop and escalate:
-
-> *"The requirements do not specify whether stale reads are acceptable during failover events. Because this affects billing reconciliation, this is a product risk that requires an explicit engineering decision before proceeding."*
+This means that proprietary context can itself become a source of competitive advantage.
 
 ---
 
-## 20. Shifting the Interaction Model: From Oracle to Engine
+# 19. The Boundary of the Model's Authority
 
-The default interaction with an AI assistant follows a simple pattern:
+Even with excellent context, the model should not necessarily be allowed to make every decision.
 
-$$\text{User Prompt} \longrightarrow \text{Model Answer}$$
+Some decisions should remain explicitly outside its authority.
 
-For production system design, this interaction model is dangerous. It encourages passive acceptance of plausible, averaged architectures.
+The correct response may sometimes be:
 
-A much safer interaction model treats the AI as an exploration and verification engine:
+> The available information does not determine this. This is a product decision.
 
-```text
-[Engineering Problem]
-         │
-         ▼
-[Decomposition & Invariant Analysis] ───> Flags hidden product decisions
-         │
-         ▼
-[Orthogonal Exploration Pass]         ───> Discovers distinct design classes
-         │
-         ▼
-[Coverage Audit & Adversarial Checks] ───> Breaks premature consensus
-         │
-         ▼
-[Context-Weighted Trade-Off Matrix]   ───> Evaluates against real constraints
-         │
-         ▼
-[Human Selection & ADR Logging]      ───> Preserves engineering ownership
-```
+A strong agent therefore needs more than problem-solving capability.
 
-In this framework, the model does not serve as an oracle that dictates how software should be built. It functions as an analytical engine that exposes hidden assumptions, broadens the search space, surfaces edge cases, and accelerates trade-off analysis.
+It also needs the ability to recognize:
+
+**the boundary of its decision-making authority.**
+
+In practice, this means establishing an explicit operational contract for what the model can decide autonomously:
+
+- **Safe for model autonomy:** Writing idiomatic scaffolding, generating deterministic test fixtures, refactoring purely structural interfaces, and analyzing time/space complexity.
+- **Requires human architectural ownership:** Choosing consistency tiers and isolation levels, fixing data retention and compliance windows, establishing blast-radius boundaries, and selecting irreversible build-versus-buy trade-offs.
+
+When an LLM hits an ambiguity that crosses into human architectural ownership—such as whether stale reads are acceptable during a database failover—it must halt and surface the trade-off rather than silently picking an eventual consistency default.
 
 ---
 
-## 21. Core Failure Modes and Pragmatic Countermeasures
+# 20. The Role of AI Should Change
 
-| Observed Failure Mode | Root System Mechanic | Practical Countermeasure |
-| :--- | :--- | :--- |
-| **Hidden Decision Injection** | Model completes underspecified prompts by silently sampling defaults from training data. | Require an explicit decision manifest flagging every unmade business choice before generating code. |
-| **Solution-Space Collapse** | High-probability tokens dominate the output, crowding out non-standard patterns. | Mandate exploration across four distinct structural classes (e.g., minimalist, standard cloud, radical simplicity, high-performance). |
-| **The "More Solutions" Illusion** | Asking for more options yields minor tactical variations of the same root architecture. | Constrain candidates along orthogonal design axes rather than requesting raw item counts. |
-| **Evaluation Asymmetry** | Models struggle to surface non-obvious designs spontaneously, but evaluate them effectively when prompted. | Supply external candidate architectures manually and use the model to stress-test their trade-offs. |
-| **Regression to the Mean** | Unconstrained models generate standard patterns that match the broader market. | Ground the prompt with proprietary constraints, historical post-mortems, and internal infrastructure limits. |
+The default interaction with AI often looks like:
+
+**question → answer**
+
+For important business and engineering decisions, a better model is:
+
+**question → decomposition → missing decisions → exploration → challenge → comparison → decision**
+
+In such a process, AI is not primarily the oracle that gives the answer.
+
+It becomes a tool for:
+
+- exposing hidden assumptions,
+    
+- expanding the search space,
+    
+- generating alternatives,
+    
+- challenging existing ideas,
+    
+- comparing trade-offs,
+    
+- identifying missing information,
+    
+- accelerating evaluation.
+    
+
+This is potentially much more valuable than simply asking it for the solution.
 
 ---
 
-## Conclusion
+# 21. Main Risk
 
-Language models automate far more than boilerplate code. Left unmonitored, they can quietly narrow technical possibilities, making strategic decisions that an engineering team never consciously reviewed.
+The broad risk can be summarized as follows:
 
-Because an LLM samples from an enormous corpus of public documentation and code, its output will usually look clean, plausible, and easy to justify. That is precisely why this problem is subtle. The model does not generate broken designs; it generates the **statistical average of industry designs**.
+**AI can silently reduce the size of the decision space before humans realize that a decision has been made.**
 
-The opportunity in using modern AI tools is not simply generating code faster. It lies in using the model to widen the search space, surface unstated assumptions, and stress-test trade-offs before an architecture is locked into place.
+It can do this in two ways.
 
-Keep two practical principles in mind:
+First, it fills in missing requirements.
 
-1. **Do not use language models merely to generate final answers. Use them to expose hidden decisions and expand the set of viable alternatives before committing to a design.**
-2. **A model will frequently fail to generate an optimal solution during open-ended brainstorming, yet analyze that exact solution with high precision once it is supplied in the context.**
+Second, it proposes a limited set of solutions and makes that set appear complete.
 
-The first design returned by a language model should almost never be the final architecture. It is simply the starting point of the search.
+Both mechanisms push toward plausible, conventional, averaged outcomes.
 
 ---
 
-## Related Notes
+# 22. Main Remedy
 
-- [[Competitive Advantage in the Age of Commodity AI]] — Why accepting default AI recommendations commoditizes technical strategy and how deliberate architectural variance builds defensibility.
-- [[How Context Narrows an AI's Solution Space]] — Analysis of the attention mechanisms and prompt constraints that restrict a model's exploratory paths.
-- [[How Reasoning Models Explore and Evaluate Solutions]] — A deep dive into search algorithms, multi-path exploration, and how models evaluate alternatives.
-- [[How Targeted Prompts Steer Model Solution Spaces]] — Practical techniques for using targeted prompt constraints to guide models out of their default probability distributions.
-- [[Designing Software Architecture with LLM Assistance]] — Operational patterns for using LLMs during architectural design while preventing superficial completeness.
-- [[Refactoring Legacy Systems with AI Agents]] — How language models anchor on existing git history and patterns when modernizing legacy codebases.
-- [[Software Engineering May Shift Toward Code Optimized for Agents]] — Examining system architectures optimized for automated machine maintenance rather than manual human editing.
-- [[AI Changes the Role and Training of Software Engineers]] — Why senior engineering requires shifting from syntax generation to problem framing and trade-off verification.
-- [[Proxy Metrics and Operational Invariants in AI Systems]] — The operational risks of letting automated systems optimize for proxy metrics over causal system performance.
+The remedy is to design AI-assisted workflows that preserve the distinction between:
+
+**what is known, what is assumed, what is possible, and what has actually been chosen.**
+
+Instead of asking:
+
+> What should we do?
+
+ask the model to help answer, in sequence:
+
+1. What problem are we actually solving?
+    
+2. What information is missing?
+    
+3. Which decisions have not yet been made?
+    
+4. What fundamentally different solution classes exist?
+    
+5. Which classes might still be missing?
+    
+6. What are the trade-offs between them?
+    
+7. Which solution best fits our specific context?
+    
+8. Which decisions should remain human or business decisions?
+    
+
+---
+
+# Conclusion
+
+AI can automate far more than implementation.
+
+If used carelessly, it can also automate the narrowing of possibilities and the making of decisions that the organization never consciously made.
+
+Because LLMs draw from a huge body of existing knowledge, their answers will often be sensible, polished, conventional, and easy to justify.
+
+That is precisely what makes the problem subtle.
+
+The model does not have to produce a bad answer to reduce competitive advantage.
+
+It may produce an excellent **average answer**.
+
+The strategic opportunity is therefore not merely to use AI more often.
+
+It is to use AI in a way that prevents premature convergence and preserves deliberate decision-making.
+
+A useful principle is:
+
+**Do not use AI only to produce answers. Use it to expose decisions and expand the space of possible answers before choosing one.**
+
+And an equally important principle is:
+
+**A model may be very good at recognizing a strong solution once it sees it, while still failing to generate that solution during its initial search.**
+
+Therefore, the first answer produced by an LLM should often be treated as:
+
+**the beginning of the search, not the result of the search.**

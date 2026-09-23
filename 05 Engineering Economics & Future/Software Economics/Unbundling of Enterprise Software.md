@@ -12,66 +12,76 @@ aliases:
   - SaaS Unbundling by AI Agents
 ---
 
-# Unbundling of Enterprise Software
+ERP and business intelligence are only two examples of a broader transformation in enterprise software.
 
-For decades, enterprise software has been sold as an all-in-one package: database schemas, transactional engines, role-based access control, workflow orchestration, and hundreds of static web forms bundled into expensive annual subscriptions.
-
-Generative models and autonomous agents are beginning to decouple that stack. The emerging pattern separates:
+The common pattern is a separation between:
 
 - durable systems of record;
+    
 - business rules and permissions;
+    
 - analytical and operational capabilities;
-- [[Workflow Orchestration in Agentic Systems|workflow orchestration]];
-- user interfaces generated on the fly for a specific task.
+    
+- workflow orchestration;
+    
+- user interfaces generated for a specific task.
+    
 
-AI reduces the defensibility of large, rigid applications without eliminating the underlying systems that store data, enforce policy, and commit transactions. This shift opens the door for [[A New Market for Small, Custom Business Software|small custom business software]] and accelerates the move toward [[Shifting from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]]. 
+AI may reduce the importance of large, permanently configured applications without eliminating the systems that store data, enforce policy, and execute transactions.
 
-The future is less about tearing out every enterprise platform and more about fundamentally changing how those platforms are composed and operated, illustrating why [[Software Itself Is No Longer a Moat When It Can Be Cloned in a Week|static software is no longer a defensive moat]].
-
-```text
-Traditional Bundled SaaS                Decoupled Agentic Architecture
-+-----------------------------------+   +-----------------------------------+
-| Fixed Web UI & Dashboard Menus    |   | Ephemeral Task-Specific UIs       |
-+-----------------------------------+   +-----------------------------------+
-| Embedded Workflow & Rule Engines  |   | Agent Orchestration & Scripts     |
-+-----------------------------------+   +-----------------------------------+
-| Proprietary Integration Adapters  |   | Tool Interfaces & OpenAPI Specs   |
-+-----------------------------------+   +-----------------------------------+
-| Database & System of Record       |   | Headless System of Record (ACID)  |
-+-----------------------------------+   +-----------------------------------+
-```
+The future may be less about replacing every enterprise platform and more about changing how these platforms are composed and used.
 
 ## The Current Enterprise Software Model
 
-Traditional enterprise software is usually packaged as a complete, self-contained application. 
+Traditional enterprise software is usually packaged as a complete application.
 
-A standard deployment bundles:
+It includes:
 
 - a data model;
+    
 - transaction processing;
+    
 - business rules;
-- permissions and access control;
+    
+- permissions;
+    
 - configuration screens;
+    
 - dashboards;
+    
 - forms;
+    
 - reports;
+    
 - workflow designers;
-- user interfaces spanning dozens of roles and scenarios.
+    
+- user interfaces for many roles and scenarios.
+    
 
-Because the vendor must support hundreds of different organizations through a single shared data model, the product inevitably becomes massive:
+The product must support many organizations through one shared model.
 
-- broad in surface area;
-- deeply configurable;
-- steep to learn;
+As a result, it often becomes:
+
+- very broad;
+    
+- highly configurable;
+    
+- difficult to learn;
+    
 - expensive to implement;
-- heavily reliant on certified consultants;
-- loaded with features any single customer never touches.
+    
+- dependent on specialists;
+    
+- full of functionality that an individual customer does not use.
+    
 
-Companies end up buying an enormous interface and configuration framework simply to access a small set of underlying business capabilities. As dynamic interfaces and agentic tool use become reliable, the economic value of that packaging falls apart.
+A company buys not only the capabilities it needs, but also a large interface and configuration framework designed to cover thousands of possible cases.
+
+AI may weaken the economic value of that packaging.
 
 ## The Emerging Architecture
 
-Enterprise environments are migrating toward a layered architecture:
+A possible future architecture is:
 
 ```text
 systems of record
@@ -90,510 +100,831 @@ generated interface
     temporary forms, dashboards, reports, explanations
 ```
 
-The lower layers remain rock-solid and slow-moving. The upper layers become dynamic and ephemeral.
+The stable lower layers remain important.
 
-Instead of forcing operators to click through a maze of static navigation trees, the system inspects the current operational intent and assembles the exact flow, inputs, and context required for the job.
+The upper layers become dynamic.
+
+Instead of forcing the user to navigate a permanent application, the system can assemble the process and interface required for the current task.
 
 ## Three Main Transformation Paths
 
-Different software categories will follow different evolutionary paths depending on regulatory weight, transaction risk, and integration complexity.
+Different software categories may follow different paths.
 
-### 1. Replacement by Small Specialized Software
+## 1. Replacement by Small Specialized Software
 
-A monolithic platform can be replaced for a specific team or workflow by a focused, custom application built and maintained with AI assistance.
+A large platform may be replaced for a narrow process by a smaller application generated or maintained with AI.
 
-This approach works best when:
+This is most plausible when:
 
-- the business process has a clear, contained scope;
-- regulatory and audit requirements are manageable;
-- integration touchpoints are minimal;
-- the legacy suite is over-engineered for the team's needs;
-- the company has unique internal workflows that resist vendor templates;
-- the cost of customizing the vendor's platform exceeds the cost of writing and maintaining dedicated code.
+- the process is limited in scope;
+    
+- regulation is weak;
+    
+- integration requirements are manageable;
+    
+- the existing platform is unnecessarily broad;
+    
+- the organization has unusual workflows;
+    
+- the cost of customization exceeds the value of the product.
+    
 
-Typical candidates:
+Examples include:
 
-- internal operations tools;
-- regional workflow engines;
-- focused field-service apps;
-- custom reporting pipelines;
-- lightweight inventory tracking;
-- proprietary customer-intake flows.
+- small internal tools;
+    
+- local workflow systems;
+    
+- narrow operational applications;
+    
+- custom reporting;
+    
+- lightweight inventory tools;
+    
+- specialized customer processes.
+    
 
-The replacement application does not need to recreate the entire vendor feature matrix. It only needs to solve the exact slice of the problem the team actually cares about.
+The replacement does not need to reproduce the entire enterprise suite.
 
-### 2. AI Configures the Existing Platform
+It only needs to solve the part that the organization actually uses.
 
-The underlying platform stays in place, but teams stop modifying it through manual admin panels.
+This shift accelerates the viability of [[A New Market for Small, Custom Business Software|small, custom business software]]. When an internal engineering team can build and maintain a dedicated micro-app in days, the economic justification for buying a massive, generic SaaS module evaporates. The software itself stops acting as a defensive moat when a tailored alternative can be assembled quickly around concrete operational needs.
 
-Historically, a specialist spent their day:
+## 2. AI Configures the Existing Platform
 
-- digging through nested configuration screens;
-- building validation rules;
-- mapping fields between schemas;
-- wiring up multi-step approval chains;
-- updating forms and layouts;
-- writing formula fields;
-- clicking through sandbox environments to verify changes.
+The system remains, but people stop configuring it manually.
 
-In an agent-assisted workflow, an operations lead can state the operational change directly:
+Today, an ERP or workflow specialist may need to:
 
-> "Add a second approval step for capital expenditures over $50,000, except for preferred hardware vendors on existing master agreements. Run a simulation against Q3 transactions to show what would have been flagged before we push to production."
+- navigate configuration screens;
+    
+- create rules;
+    
+- map fields;
+    
+- define approval paths;
+    
+- modify forms;
+    
+- write formulas;
+    
+- test multiple variants.
+    
 
-The agent handles the execution:
+In an AI-assisted model, a domain expert may describe the intended process:
 
-- translates intent into vendor-specific configuration schemas;
-- analyzes dependencies across active validation rules;
-- spins up automated tests;
-- replays historical transactions to identify blockers;
-- surfaces rule conflicts;
-- packages the change for production deployment.
+> Add a second approval for purchases above this threshold, except for strategic suppliers. Simulate the effect on last quarter's transactions before enabling it.
 
-The platform retains its value as a secure, auditable, and compliant execution runtime, but its proprietary admin UI ceases to be a bottleneck.
+The agent can:
 
-### 3. The Platform Becomes Invisible Infrastructure
+- translate the request into platform configuration;
+    
+- identify affected rules;
+    
+- generate tests;
+    
+- simulate the result;
+    
+- explain conflicts;
+    
+- prepare a controlled deployment.
+    
 
-The software continues to hold state and enforce transactions, but operators rarely touch its native user interface.
+The platform keeps its value as a secure and auditable runtime.
 
-Instead of authenticating into five distinct tabs for CRM, ERP, BI, and IT service management, users interact with an orchestration agent:
+Its manual configuration layer becomes less important.
+
+## 3. The Platform Becomes Invisible Infrastructure
+
+The system continues to store data and execute operations, but users no longer interact with its primary interface.
+
+Instead of opening separate applications for CRM, ERP, reporting, and support, the user communicates with an agent.
 
 ```text
 human
 → agent
-→ enterprise systems of record (APIs)
+→ several enterprise systems
 → completed business operation
 ```
 
-The agent acts as the primary workspace. The underlying enterprise platforms turn into headless systems of record, data validation, and transaction execution. For massive, heavily regulated platforms, this is the most durable long-term operating model.
+The agent becomes the visible workspace.
+
+The underlying platforms become systems of record and execution.
+
+This may be the strongest long-term path for large enterprise systems.
+
+This architecture turns legacy vendors into headless backends. For established platforms with complex regulatory compliance and deep transactional state, this shift protects their core database and business logic while stripping away the defensibility of their web portals. Interaction migrates to [[Designing APIs for LLM-Generated Integration Code|well-structured tool interfaces]], where agents query schemas and execute state changes programmatically.
 
 ## ERP: Stable Core, Dynamic Process Layer
 
-ERP systems handle hard operational requirements that are dangerous to rebuild from scratch:
+ERP systems solve problems that are difficult to reproduce safely:
 
-- general ledger and double-entry consistency;
-- GAAP/IFRS audit trails;
-- fiscal period close workflows;
-- granular role-based permissions;
-- tax calculation and regulatory reporting;
-- immutable transaction histories;
-- multi-entity consolidation;
-- inventory valuation methods (FIFO, LIFO, weighted average);
-- direct banking, payment rail, and tax authority integrations.
+- accounting consistency;
+    
+- auditability;
+    
+- financial periods;
+    
+- permissions;
+    
+- tax rules;
+    
+- transaction history;
+    
+- multi-entity operations;
+    
+- inventory valuation;
+    
+- compliance;
+    
+- integration with banks and regulators.
+    
 
-These capabilities are not going away. What changes is the operational surface.
+These capabilities are likely to remain valuable.
 
-The modern ERP shifts from:
+What may change is the surrounding experience.
+
+The ERP of the future may be less:
 
 ```text
 thousands of screens
-+ dense configuration panels
-+ rigid, manually drafted workflow trees
++ configuration panels
++ manually designed workflows
 ```
 
-to:
+and more:
 
 ```text
 trusted transactional core
-+ business policy enforcement
-+ callable, discoverable APIs
-+ dynamically orchestrated operational flows
++ business policies
++ callable capabilities
++ AI-generated processes
 ```
 
-Organizations will buy specialized systems of record from different providers, using orchestration agents to weave them into a unified operating model. The intelligence layer becomes the glue holding transactional components together.
+Companies may buy different core systems from different vendors while agents connect them into a company-specific operating model.
+
+AI becomes the glue between stable transactional components.
+
+The economic defensibility of the core ERP rests on strict invariant validation: general ledger double-entry balance, immutable transaction logs, fiscal period closing locks, and GAAP/IFRS compliance. These guarantees require ACID database transactions and deterministic code rather than probabilistic model generation.
 
 ## Business Intelligence: From Permanent Dashboards to On-Demand Analysis
 
-Traditional BI revolves around building and maintaining static reporting artifacts.
+Traditional BI is centered on reports and dashboards.
 
-An analytics team typically has to:
+An analyst:
 
-- build and clean a semantic model;
-- write DAX, SQL, or custom aggregations;
-- pick chart types and set color palettes;
-- lay out multi-page reports;
-- configure drill-downs and cross-filtering;
-- deploy, schedule, and maintain the pipeline.
+- prepares a semantic model;
+    
+- writes formulas;
+    
+- selects visualizations;
+    
+- creates report pages;
+    
+- defines drill-down paths;
+    
+- publishes and maintains the result.
+    
 
-In practice, operational leaders rarely want a permanent dashboard. They want an answer to an immediate problem:
+But the user usually does not want a dashboard for its own sake.
 
-- Why did gross margin dip in EMEA last month?
-- Which enterprise accounts drove the churn spike?
-- Was the drop in fulfillment speed caused by freight delays, inventory stockouts, or pick-pack bottlenecks?
-- How did the recent release impact conversion rates by browser tier?
+The user wants an answer:
 
-An agent can generate an ephemeral analytical pipeline on demand:
+- Why did margin fall?
+    
+- Which customers caused the change?
+    
+- Is the problem caused by volume, price, or product mix?
+    
+- Which production line behaves differently?
+    
+- What changed after the last release?
+    
+
+AI can generate a temporary analytical view for the question being asked.
 
 ```text
 business question
-→ metric selection and schema discovery
-→ SQL/aggregation query generation
-→ focused visualization
-→ root-cause explanation
-→ suggested follow-up queries
+→ metric selection
+→ data query
+→ appropriate visualization
+→ explanation
+→ follow-up analysis
 ```
 
-Instead of managing hundreds of stale dashboards, analysts will focus on:
+A large library of permanent dashboards may be replaced partly by dynamic analysis.
 
-- curating the metric layer and semantic definitions;
-- data freshness, integrity, and pipeline quality;
-- schema validation and access controls;
-- evaluating causal claims against statistical fallacies;
-- interpreting ambiguous edge cases;
-- translating data insights into company policy.
+The analyst's role moves toward:
 
-Rendering a chart is trivial. Ensuring the underlying numbers mean what the user thinks they mean remains hard.
+- metric definitions;
+    
+- semantic modeling;
+    
+- data quality;
+    
+- validation;
+    
+- causal reasoning;
+    
+- identifying misleading questions;
+    
+- explaining business consequences.
+    
+
+The chart becomes cheap.
+
+Reliable meaning remains difficult.
+
+Dynamic analytical pipelines rely on automated schema discovery and prompt-to-SQL synthesis. However, without clean metric layers and strict data contracts, generated queries fail on subtle join errors, fan-out bugs, or incorrect aggregation granularities. The analyst guarantees that the underlying relational logic reflects operational reality.
 
 ## CRM: From Manual Data Entry to Process Observation
 
-Traditional CRMs force sales teams to maintain a parallel digital record of reality.
+CRM systems often require users to maintain a parallel representation of reality.
 
-Reps spend hours:
+Salespeople must manually:
 
-- dragging deals across pipeline stages;
-- pasting email summaries into activity logs;
-- scheduling task reminders;
-- categorizing buyer roles;
-- logging calls;
-- updating close dates to keep sales management happy.
+- update opportunity stages;
+    
+- enter notes;
+    
+- schedule follow-ups;
+    
+- classify contacts;
+    
+- record activity;
+    
+- maintain forecasts.
+    
 
-An agent can infer almost all of this state directly from raw communications:
+An agent can infer much of this from:
 
-- incoming and outgoing emails;
-- calendar invitations and attendance;
-- contract revisions in document management;
-- call recordings and transcripts;
-- payment and billing events.
+- email;
+    
+- meetings;
+    
+- documents;
+    
+- call transcripts;
+    
+- calendar events;
+    
+- commercial systems.
+    
 
-The CRM shifts from a system that requires constant human data entry into an ambient ledger that observes business activity and prompts humans only when a real decision is required:
+The CRM may change from a system that users continuously update into a system that observes the sales process and asks for confirmation only when necessary.
 
 ```text
-Traditional:
-sales rep does the work
-+ manually transcribes work into CRM forms
+today:
+salesperson performs work
++ manually updates CRM
 
-Agentic:
-agent monitors communication streams
-+ reconciles state in CRM via API
-+ asks human for approval or strategic direction
+future:
+agent observes work
++ updates CRM
++ asks for decisions or corrections
 ```
 
-The CRM remains the single source of truth for pipeline state, but its endless forms and standard layouts become background plumbing.
+The CRM remains a system of record, but its forms and dashboards become less central.
 
 ## Customer Support: From Ticket Handling to Problem Resolution
 
-Standard support systems are organized around managing ticket queues:
+Traditional support software organizes work around tickets.
 
 ```text
-incoming request
-→ triage and categorize
-→ assign to queue
-→ tier-1 agent picks ticket
-→ templated reply
-→ escalation to tier-2
+request
+→ category
+→ queue
+→ support agent
+→ response
+→ escalation
 ```
 
-AI orients the process around direct resolution.
+AI can organize the process around the actual customer outcome.
 
-An agent can:
+An agent may:
 
-- authenticate and pull historical customer records across the CRM and billing databases;
-- parse error logs or order history for root causes;
-- verify shipping status with warehouse APIs;
-- execute a refund or account credit within policy limits;
-- update customer records and notify the shipping carrier;
-- send a clear, context-aware explanation back to the customer;
-- escalate to a human engineer only when confidence is low or policies are exceeded.
+- identify the customer;
+    
+- collect history from several systems;
+    
+- diagnose a known issue;
+    
+- check an order;
+    
+- initiate a refund;
+    
+- update account data;
+    
+- send an explanation;
+    
+- escalate only unusual cases.
+    
 
-The ticketing infrastructure still matters for tracking SLAs, audit trails, operational metrics, and ownership. But human reps no longer need to read, triage, and manually reply to standard requests.
+The ticketing platform may remain necessary for:
+
+- audit;
+    
+- SLA tracking;
+    
+- ownership;
+    
+- reporting;
+    
+- legal evidence.
+    
+
+But the human may no longer work through every ticket manually.
+
+The operational boundary here is policy enforcement and blast radius control. Autonomous resolution only works when the agent operates against strict idempotency keys and clear programmatic guardrails—such as refund caps, rate limits, and step-up authentication before mutating financial or account state.
 
 ## ITSM and Incident Management
 
-IT service management systems hold structural data essential for operations:
+IT service systems contain valuable operational structures:
 
-- service ownership and escalation matrices;
-- change management logs;
-- configuration management databases (CMDB);
+- incident ownership;
+    
+- change history;
+    
+- CMDB;
+    
 - service catalogs;
-- compliance approvals;
-- documented runbooks;
-- post-mortem timelines.
+    
+- approvals;
+    
+- runbooks;
+    
+- escalation paths.
+    
 
-An orchestration agent can sit on top of this operational substrate to triage incidents in real time:
+AI can interpret an operational problem and coordinate several tools:
 
-> "API error rates jumped on the payment gateway right after the 14:15 UTC release. Find the offending deployment, identify affected downstream services, run the rollback runbook, open a P1 incident ticket, and notify the on-call team."
+> Login failures increased after the latest deployment. Identify the affected services, correlate the change, prepare a rollback, open an incident, and notify the owners.
 
-The agent executes the operational legwork:
+The agent can:
 
-- pulls metrics from observability systems (Prometheus, Datadog);
-- correlates telemetry with recent deployment commits;
-- finds related historical post-mortems;
-- opens the incident ticket with pre-populated graphs and blast-radius estimates;
-- executes automated health checks or rollback scripts;
-- maintains a real-time incident timeline.
+- inspect logs and metrics;
+    
+- compare deployments;
+    
+- find similar incidents;
+    
+- update the ticket;
+    
+- execute an approved runbook;
+    
+- prepare a timeline.
+    
 
-The ITSM tool serves as the auditable record of change and incident state; the agent serves as the interactive operator.
+The ITSM platform remains the control and audit layer.
+
+The agent becomes the operational interface.
+
+In practice, the agent correlates telemetry across observability pipelines (Prometheus, Datadog) with git deployment metadata and change requests. By assembling the blast-radius estimate and linking past post-mortems directly inside the incident ticket, it compresses Mean Time to Resolution (MTTR) while leaving the formal ITSM platform intact as the compliance audit log.
 
 ## Workflow, BPM, and RPA
 
-Traditional business process management (BPM) and robotic process automation (RPA) rely heavily on:
+Classical workflow and RPA systems depend heavily on:
 
-- brittle visual flowchart editors;
-- rigid conditional logic;
-- DOM selectors and screen coordinates;
-- hardcoded column and field mappings;
-- fragile step-by-step branching;
-- strictly formatted inputs.
+- visual diagrams;
+    
+- rules;
+    
+- selectors;
+    
+- field mappings;
+    
+- manually defined branches;
+    
+- deterministic input formats.
+    
 
-Language models excel at handling the fuzzy, unstructured inputs that break standard RPA:
+LLMs are better at interpreting:
 
-- messy PDF invoices;
-- conversational email requests;
-- ambiguous ticket descriptions;
-- half-structured spreadsheets;
-- non-standard exception handling.
+- documents;
+    
+- messages;
+    
+- ambiguous requests;
+    
+- semi-structured data;
+    
+- unusual cases.
+    
 
-However, probabilistic models should not run mission-critical steps that demand exact execution. You still need deterministic code for:
+However, deterministic execution still matters for:
 
-- balance transfers and ledger entries;
-- payment execution;
-- retry backoff strategies;
-- idempotent operations;
-- strict regulatory checks;
-- irreversible system state mutations.
+- transactions;
+    
+- payments;
+    
+- retries;
+    
+- idempotency;
+    
+- compliance;
+    
+- irreversible operations.
+    
 
-The robust architecture is a hybrid:
+The most likely architecture is hybrid:
 
 ```text
-Probabilistic Layer (LLM):
-- interpret user intent
-- extract data from unstructured inputs
-- select appropriate downstream workflows
-- handle edge-case exceptions
+LLM:
+understand intent
+classify input
+select a path
+handle ambiguity
 
-Deterministic Layer (Code / Workflow Engine):
-- run transactional database writes
-- validate schema constraints
-- handle idempotent retries
-- enforce access boundaries
-- emit audit events
+workflow or code:
+execute deterministically
+validate
+retry
+record
+audit
 ```
 
-Rather than trying to reason through every single API call on the fly, agents should select, parameterize, and trigger deterministic code pipelines.
+AI may generate or choose the workflow rather than directly improvising every action.
 
 ## Low-Code and No-Code
 
-Low-code platforms aimed to let non-developers build business applications visually. In reality, users still had to master:
+Low-code platforms attempted to let business users build applications without traditional programming.
 
-- proprietary visual component models;
-- platform-specific scripting and formulas;
-- relational database modeling;
-- deployment and environment management;
-- access control matrices;
-- platform-specific performance quirks.
+In practice, users still had to understand:
 
-AI fundamentally shifts this dynamic. Operators can simply describe their business logic, provide sample data, and outline requirements in plain English.
+- the platform's component model;
+    
+- formulas;
+    
+- data structures;
+    
+- deployment;
+    
+- permissions;
+    
+- platform-specific limitations.
+    
 
-This development pushes low-code vendors in two very different directions:
+AI may finally make the interface more natural:
 
-### AI Strengthens the Governed Runtime
+> Describe the process, show sample data, and explain the rules.
 
-The vendor provides a secure, audited hosting environment:
+Two outcomes are possible.
 
-- corporate identity and SSO integration;
-- controlled API connectors;
-- RBAC and row-level security;
-- environment promotion and rollback tooling;
-- observability and audit logging.
+### AI strengthens low-code
 
-AI acts as the builder inside this sandbox, generating working components while the platform guarantees enterprise security.
+The platform provides:
 
-### AI Makes the Visual Layer Redundant
+- governance;
+    
+- identity;
+    
+- deployment;
+    
+- connectors;
+    
+- monitoring;
+    
+- safe execution.
+    
 
-Agents generate standard, clean code (TypeScript, Python, Go) against commodity cloud primitives. In this scenario, proprietary visual builders become unnecessary overhead. 
+AI generates the application inside this controlled environment.
 
-The durable value of low-code vendors lies not in their drag-and-drop canvas, but in their managed runtime, security boundaries, and pre-built integration connectors.
+### AI weakens low-code
+
+Agents generate ordinary maintainable code directly.
+
+The visual platform becomes an unnecessary intermediate abstraction.
+
+The long-term value of low-code may therefore lie less in its visual editor and more in its governed runtime.
+
+When an agent can output idiomatic TypeScript or Python targeting standard cloud primitives, proprietary drag-and-drop canvases become maintenance liabilities. A visual flowchart engine simply adds an opaque layer between the developer and the runtime, without providing better debugging, version control, or execution speed than standard code.
 
 ## HR and Human Capital Systems
 
-Core human resources data is sensitive, heavily audited, and subject to strict privacy laws.
+Core HR data will remain sensitive and regulated.
 
-The source systems will continue to manage:
+Systems will still need to store:
 
-- canonical employee identity and tenure;
-- payroll processing and tax deductions;
-- health insurance and equity records;
-- PTO balances and leave compliance;
-- legal and visa documentation;
-- access control policies.
+- employment records;
+    
+- payroll;
+    
+- benefits;
+    
+- leave;
+    
+- taxation;
+    
+- legal documents;
+    
+- access rules.
+    
 
-Agents will absorb the manual coordination layer:
+AI may absorb many surrounding workflows:
 
-- employee onboarding workflows;
-- equipment provisioning and accounts;
-- answering policy questions from internal handbooks;
-- performance review collection and synthesis;
-- handling complex leave requests.
+- onboarding;
+    
+- document preparation;
+    
+- policy questions;
+    
+- training recommendations;
+    
+- employee requests;
+    
+- organizational reporting.
+    
 
-An employee should be able to state a goal without navigating multiple portals:
+An employee may express a goal rather than navigate several modules:
 
-> "I need to work remotely from our Berlin office for three weeks in October. Check our international travel policy, figure out tax implications, submit the formal leave request, and let me know which approvals are pending."
+> I will work from another country for three weeks. Check the policy, prepare the required requests, and show me what needs approval.
 
-The agent talks to HR, payroll, tax compliance, and calendar APIs behind the scenes, presenting the employee with a single unified status.
+The agent coordinates HR, payroll, compliance, calendar, and travel systems.
 
 ## Finance and Accounting
 
-Double-entry bookkeeping is mathematically strict and legally binding. The core general ledger cannot tolerate probabilistic outputs.
+The financial core must remain deterministic and auditable.
 
-Where AI changes finance is in the operational buffer surrounding the ledger:
+AI is more likely to transform the work surrounding it:
 
-- automated invoice-to-purchase-order reconciliation;
-- general ledger coding and expense classification;
-- identifying variance anomalies during month-end close;
-- drafting journal entry adjustments for review;
-- surfacing suspicious transactions during fraud sweeps;
-- short-term cash flow forecasting;
-- vendor payment communication.
+- matching documents;
+    
+- classifying expenses;
+    
+- explaining discrepancies;
+    
+- preparing corrections;
+    
+- investigating unusual transactions;
+    
+- forecasting cash flow;
+    
+- communicating with suppliers.
+    
 
-The operating paradigm changes:
+The process may move from:
 
 ```text
-Manual Ledger Processing:
-human reviews every invoice
-→ human manually keys transaction into ERP
-
-Exception-Based Processing:
-system reconciles standard transactions automatically
-→ human reviews anomalies, policy overrides, and high-value exceptions
+human processes every item
+→ system records it
 ```
 
-Accountants spend less time typing invoice numbers into forms and more time evaluating business policies, accounting edge cases, and internal controls.
+toward:
+
+```text
+system processes normal items
+→ human reviews exceptions
+```
+
+The accountant or controller spends less time entering data and more time evaluating anomalies and policy.
 
 ## Procurement and Supply Management
 
-A procurement workflow often requires navigating a maze of supplier portals, ERP screens, and approval chains.
+A procurement agent could interpret an objective such as:
 
-An agent can translate a simple business request into structured procurement operations:
+> Purchase thirty laptops before the end of the month, comply with security standards, use existing supplier agreements, and stay within the budget.
 
-> "Order forty standardized engineering laptops before the end of the month. Match our standard hardware profile, use our preferred supplier pricing, keep the order under the team's remaining Q4 hardware budget, and send for manager sign-off."
+It could:
 
-The agent handles the execution:
+- inspect approved catalogs;
+    
+- compare agreements;
+    
+- evaluate delivery risk;
+    
+- prepare an order;
+    
+- trigger approvals;
+    
+- monitor delivery.
+    
 
-- queries inventory and approved hardware catalogs;
-- reviews supplier master service agreements (MSAs) for tiered discounts;
-- checks shipping lead times against delivery targets;
-- stages the purchase order in the procurement system;
-- verifies team budget headroom;
-- routes the order to the right cost-center owner for approval;
-- monitors shipment status through to receipt.
+The purchasing platform remains responsible for:
 
-The procurement platform maintains supplier records, master contracts, PO numbers, and financial auditability. The agent orchestrates the legwork.
+- suppliers;
+    
+- contracts;
+    
+- orders;
+    
+- policies;
+    
+- audit.
+    
+
+The agent coordinates the full outcome.
 
 ## Legal and Compliance Software
 
-Legal repositories, document management tools, and contract execution systems remain critical for provenance and non-repudiation.
+Document repositories and approval systems are likely to remain.
 
-Agents absorb the repetitive contract review cycle:
+AI may handle:
 
-- identifying differences against standard company playbooks;
-- checking vendor master agreements for liability caps and indemnification;
-- extracting renewal dates, termination notice periods, and payment milestones;
-- tracking regulatory compliance requirements across jurisdictions;
-- drafting initial clause redlines based on internal guidelines.
+- contract comparison;
+    
+- policy checks;
+    
+- clause suggestions;
+    
+- obligation extraction;
+    
+- deadline tracking;
+    
+- preparation of approval workflows.
+    
 
-The legal platform remains the secure system of record for executed documents, audit logs, and signatures. The agent acts as a first-line reviewer, packaging high-risk clauses and ambiguous edge cases for human counsel.
+The legal system becomes a controlled source of documents, rules, and decisions.
+
+The agent performs the first layer of analysis and sends ambiguous or high-risk cases to specialists.
+
+In this area, provenance, auditability, and access control become more important than interface design.
 
 ## Healthcare Systems
 
-Electronic Health Records (EHR), billing engines, and clinical databases operate under rigorous regulatory standards (HIPAA, FDA) where data consistency and audit logging are non-negotiable.
+Medical records, prescriptions, billing, and access history cannot be replaced casually.
 
-What changes is how clinicians interact with that data. A physician can query the system conversationally:
+However, the interaction layer may change substantially.
 
-> "Summarize this patient's cardiology history over the last 18 months. Highlight any new abnormal blood work from this morning, compare it against their baseline before starting the beta-blocker, and draft the clinical visit note."
+A clinician may ask:
 
-The system generates a focused clinical summary for the visit instead of forcing the doctor to click through dozens of legacy tabs. The EHR remains the authoritative medical record; the dynamic interface synthesizes the exact context needed for patient care.
+> Summarize the patient's history, identify new abnormal results, compare them with the previous visit, and prepare a draft note.
+
+The system can generate a temporary clinical view instead of forcing navigation through many screens.
+
+The medical record remains the authoritative source.
+
+AI reorganizes it around the current clinical question.
 
 ## Engineering, CAD, and Technical Design
 
-CAD tools and engineering design suites are deeply defensible because they bundle complex physical mathematics:
+Engineering software may evolve differently from transaction systems.
 
-- parametric geometric kernels;
-- finite element analysis (FEA) and computational fluid dynamics (CFD);
-- manufacturing and tooling tolerances;
-- verified material property libraries;
-- rigorous geometric solvers.
+The core products remain valuable because they provide:
 
-AI turns these platforms into interactive simulation loops. An engineer can declare constraints rather than drafting geometries by hand:
+- geometric models;
+    
+- simulations;
+    
+- material databases;
+    
+- manufacturing constraints;
+    
+- verified solvers.
+    
 
-> "Lighten this bracket assembly by 20% while maintaining yield strength under a 5 kN load on the primary axis. Keep the mounting interfaces identical and ensure the part can be manufactured on a standard 3-axis CNC mill."
+AI can transform them into environments for guided experimentation.
 
-The agent uses the CAD system's underlying solver to:
+An engineer may specify:
 
-- generate generative design variations;
-- adjust parametric variables;
-- run structural FEA simulations;
-- discard geometries that fail manufacturing constraints;
-- prepare 2D production drawings and toolpaths.
+> Reduce the weight while preserving strength, current dimensions, and compatibility with the existing manufacturing process.
 
-The CAD suite transforms from a manual vector-drawing tool into a programmatic design and simulation engine.
+The agent can:
+
+- generate variants;
+    
+- modify parameters;
+    
+- run simulations;
+    
+- compare tradeoffs;
+    
+- prepare documentation.
+    
+
+The software becomes less a manual drawing tool and more an executable design laboratory.
 
 ## Developer Tools and Operations
 
-The same unbundling pattern applies across software infrastructure:
+The same transformation applies to:
 
-- continuous integration and delivery (CI/CD) pipelines;
-- metric, log, and trace observability platforms;
-- cloud provider consoles;
-- dynamic and static application security testing (DAST/SAST);
-- container orchestrators and service meshes.
+- CI/CD;
+    
+- observability;
+    
+- cloud consoles;
+    
+- security scanners;
+    
+- container platforms;
+    
+- infrastructure management.
+    
 
-Site reliability engineers and platform operators currently spend substantial time translating mental intent into query languages (PromQL, LogQL, SQL) and clicking through vendor dashboards.
+Operators currently need to understand many query languages, dashboards, and configuration formats.
 
-A platform agent can consume operations queries directly:
+A future interaction may be:
 
-> "P99 latency spiked on the checkout service after the 16:00 rollout. Check if the error rate correlates with database connection pool exhaustion, pull the latest trace logs, and draft a pull request to increase pool limits if that's the bottleneck."
+> Errors increased after the 14:20 deployment. Identify the shared cause, estimate the impact, and prepare the safest rollback.
 
-The agent inspects telemetry, runs diagnostics across the service graph, correlates deployment events, and proposes a fix. The underlying observability engines, runtimes, and repositories remain unchanged; their APIs become callable capabilities for the agent.
+The agent queries logs, traces, metrics, deployment history, and source code.
+
+The underlying tools remain.
+
+Their interfaces become callable capabilities.
+
+Platform engineers spend significant time translating operational intent into domain-specific query languages like PromQL, LogQL, or vendor-specific trace filters. Wrapping these observability systems in agent-callable primitives allows an operator to diagnose connection pool exhaustion, p99 latency spikes, or cross-service cascading failures without context-switching between half a dozen browser dashboards.
 
 ## Project and Work Management
 
-Project management platforms are often filled with stale, manually maintained work state.
+Project management systems often contain a manually maintained model of work.
 
-Engineers, managers, and designers spend hours:
+People update:
 
-- updating ticket statuses (In Progress, Done);
-- writing daily standup updates;
-- linking blockers and dependencies;
-- updating delivery estimates;
-- generating burndown reports.
+- tickets;
+    
+- statuses;
+    
+- blockers;
+    
+- dependencies;
+    
+- estimates;
+    
+- reports.
+    
 
-An agent can observe the actual delivery pipelines to infer state:
+AI can infer much of this from:
 
-- pull request reviews, merges, and commit logs;
-- discussions in chat channels and design threads;
-- deployment pipeline successes and rollbacks;
-- shared technical RFCs and documentation changes.
+- conversations;
+    
+- pull requests;
+    
+- documents;
+    
+- deployments;
+    
+- calendars;
+    
+- decisions.
+    
 
-The project management database remains valuable as an auditable record of commitments and roadmaps, but manual transcription goes away. If an agent can determine that a feature was merged and deployed to production, it updates the ticket automatically.
+The system may remain useful as a durable representation of plans and commitments, but manual synchronization may decline.
 
-## Common Transformation Patterns
+Some project management software exists partly because machines could not previously understand unstructured work.
 
-Across every vertical, the same architectural patterns repeat:
+AI weakens that assumption.
 
-| Pattern | Description |
-| :--- | :--- |
-| **Bespoke Replacement** | A targeted, AI-generated application replaces a bloated SaaS tool for a focused workflow. |
-| **Automated Configuration** | The legacy platform stays intact, but an agent translates business intent into configuration updates. |
-| **Agentic Orchestration** | An agent operates headless tools across disparate systems to execute end-to-end operations. |
-| **Ephemeral Interfaces** | Views, forms, and analytical summaries are generated for a specific task and discarded when complete. |
-| **Exception-Based Routing**| The system processes standard transactions automatically, surfacing only anomalies and edge cases to human operators. |
-| **Decoupled Core** | Transactional backends remain immutable, secure, and compliant; workflows and frontends become dynamic. |
+## The Common Transformation Patterns
 
-## What Retains Value
+Across these categories, several paths repeat.
 
-As static user interfaces and manual administration panels lose their premium, the value of enterprise software shifts to fundamental systems properties:
+### Full replacement
+
+A small generated system replaces an unnecessarily broad application.
+
+### AI-generated configuration
+
+The existing platform remains, but AI creates its rules, forms, and workflows.
+
+### Agent orchestration
+
+The agent uses several platforms in the background to complete one business outcome.
+
+### Generated interface
+
+A form, report, dashboard, or control panel is created for one task and may disappear afterward.
+
+### Exception-based work
+
+The system handles normal cases and sends only ambiguous or high-risk cases to humans.
+
+### Stable core with dynamic edges
+
+The transactional core remains durable, while workflows and interfaces become flexible and generated.
+
+## What Becomes More Valuable
+
+If fixed screens and manual configuration lose importance, enterprise software will compete on different properties.
+
+The valuable assets may become:
+
+- trustworthy data;
+    
+- clear semantic models;
+    
+- reliable APIs;
+    
+- atomic capabilities;
+    
+- business policies;
+    
+- permissions;
+    
+- transaction guarantees;
+    
+- audit trails;
+    
+- domain-specific knowledge;
+    
+- portability;
+    
+- safe integration with agents.
+    
+
+A future enterprise product may be judged by how easily its capabilities can be:
 
 ```text
-discoverable
+discovered
 → understood
 → composed
 → authorized
@@ -601,113 +932,199 @@ discoverable
 → audited
 ```
 
-Defensibility moves to:
+by both humans and agents.
 
-- **Canonical Data Integrity**: Clean, authoritative operational state that reflects reality.
-- **Explicit Semantic Models**: Clearly defined metrics, business objects, and domain relationships.
-- **Predictable APIs**: Well-versioned, highly available, low-latency endpoints built for tool use (see [[Designing APIs for LLM-Generated Integration Code]]).
-- **Fine-Grained Permissions**: RBAC and ABAC engines that enforce row-, column-, and action-level security across human and agent callers.
-- **ACID Transaction Guarantees**: Reliable rollbacks, strict isolation levels, and idempotency guarantees.
-- **Immutable Audit Trails**: Non-repudiable ledgers of who (or what) triggered every state change.
+This transition fundamentally breaks traditional per-seat SaaS monetization. When autonomous agents replace humans clicking through web forms, seat-based licensing collapses. Defensibility and revenue migrate toward API availability, consumption-based throughput, and the transactional guarantees of the underlying data engine.
 
-This dynamic directly challenges standard per-seat SaaS monetization. When agents replace humans clicking buttons, seat-based pricing falls apart. Enterprise software vendors will have to shift their pricing models to consumption metrics, API throughput, and transactional value.
+At the infrastructure level, this demands robust fine-grained access control. Systems must enforce Attribute-Based Access Control (ABAC) and row-level security across automated callers, coupled with idempotent endpoints that guarantee safe retries and complete transaction rollbacks under network partitions.
 
 ## The Role of Generated Code
 
-Building production workflows does not mean routing every live business transaction through an LLM prompt. Two execution models will live side by side:
+AI orchestration does not always require an LLM inside every production workflow.
 
-### LLM in the Runtime Execution Loop
+Two approaches may coexist.
 
-Ideal when the task demands interpretation:
+### LLM in the execution loop
 
-- triaging ambiguous natural language emails;
-- classifying messy incoming support tickets;
-- parsing non-standard contract clauses;
-- choosing an operational path in an unfamiliar situation.
+Useful when the process requires:
 
-### Agent-Generated Deterministic Code
+- interpretation;
+    
+- classification;
+    
+- changing context;
+    
+- unstructured input;
+    
+- judgment among several safe options.
+    
 
-Ideal once a business process stabilizes:
+### Agent-generated deterministic code
 
-- zero stochastic variance;
-- predictable sub-millisecond execution;
-- near-zero token cost;
-- full test coverage and continuous integration;
-- clear, auditable error handling.
+Useful when the process becomes stable and requires:
 
-A team will often prototype a new workflow using an agentic loop. Once the operational edge cases are understood, the agent compiles that workflow into a deterministic, tested script or microservice:
+- predictable behavior;
+    
+- low cost;
+    
+- high throughput;
+    
+- auditability;
+    
+- strong testing;
+    
+- strict failure handling.
+    
+
+A workflow may begin as an agentic prototype and later be compiled into ordinary code.
 
 ```text
-natural-language specification
-→ agent-driven prototype (runtime LLM)
-→ observed operational stabilization
-→ compiled deterministic service (code)
+natural-language process
+→ agentic prototype
+→ observed stable pattern
+→ generated deterministic implementation
 ```
 
-This lifecycle bridges the flexibility of generative models with the reliability of standard production software.
+This may become a common lifecycle for business automation.
 
-## A Composable Capability Market
+Compiling an agentic prototype into deterministic code eliminates runtime token overhead, removes stochastic latency variance, and protects hot execution paths from rate limits. Once an agent explores and stabilizes an operational pattern, converting it into typed, tested code ensures sub-millisecond execution and rock-solid error handling.
 
-Monolithic enterprise suites have long defended their market share by bundling mediocre tools together under a single sign-on and a unified database.
+## A Market of Systems and Capabilities
 
-As agents become capable cross-system orchestrators, companies can unbundle those suites:
+The software market may gradually shift from complete applications toward composable layers.
 
-- general ledger from one specialized vendor;
-- warehouse operations from another;
-- enterprise identity from a third;
-- custom internal logic executed in private microservices.
+Companies may buy:
 
-An agentic layer integrates these pieces into a coherent internal operating workflow. Businesses no longer need to adopt a massive, rigid suite simply to get unified processes across their departments.
+- accounting from one provider;
+    
+- warehouse management from another;
+    
+- identity from a third;
+    
+- communication from another;
+    
+- models from several vendors.
+    
 
-This shift puts pressure on bloated suite vendors while rewarding vendors that build rock-solid transactional cores, transparent APIs, and robust interoperability (see [[From AI-Assisted Teams to Cross-System Feature Ownership]] and [[How Enterprise Complexity Blocks Grassroots Engineering]]).
+AI then connects these systems into a company-specific process.
 
-## Architectural Risks
+The organization is no longer forced to buy one enormous suite merely to obtain a coherent workflow.
 
-Decoupling enterprise architecture creates hard engineering trade-offs:
+The workflow becomes an owned layer above several systems of record.
 
-- **Semantic Drift**: Different systems often use identical words to mean entirely different things (e.g., "Active Account" in Salesforce vs. Stripe vs. Zendesk). An agent coordinating across them requires a verified semantic mapping layer to avoid disastrous assumptions.
-- **Amplified Blast Radius**: Granting an agent broad integration access breaks down traditional firewalls between departmental tools. A failure or hallucination in one system can quickly propagate corrupt state to others.
-- **Hidden Coupling**: Generated scripts and dynamic workflows may depend on undocumented edge cases or ephemeral API behaviors. If an upstream platform changes a schema without warning, brittle downstream automations can silently fail.
-- **Auditability and Traceability**: When an agent orchestrates an action across four different databases, operators need an immutable log detailing exactly which context, tools, and prompts led to that state change.
-- **Vendor Lock-in at the Orchestration Layer**: Replacing SaaS suite lock-in with a proprietary orchestration framework simply moves the architectural dependency up the stack.
-- **Uncontrolled Shadow Automations**: If domain experts can spin up business-critical workflows on demand, organizations risk a resurgence of unmanaged, untested, and unowned shadow IT.
+This could weaken suite vendors while strengthening vendors that provide:
+
+- reliable core systems;
+    
+- strong APIs;
+    
+- clear semantics;
+    
+- safe agent interfaces;
+    
+- excellent interoperability.
+
+This architectural shift directly favors [[Shifting from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]] over monolithic suites. When integration glue is written and maintained dynamically by agents, the historical lock-in created by suite vendors—who relied on mediocre sub-products bundled together with single sign-on—evaporates. Organizations can reassert ownership over their operational workflows while buying best-of-breed transactional backends.
+
+## Risks
+
+This model introduces new problems.
+
+### Semantic inconsistency
+
+Different systems may use the same term differently.
+
+The agent needs a trusted semantic layer.
+
+For example, an "active customer" means an account with an open contract in Salesforce, a tenant with an active card on file in Stripe, and a user with an open ticket in Zendesk. Without a verified semantic reconciliation layer, an agent orchestrating cross-system updates will silently corrupt downstream state.
+
+### Security
+
+Broad agent access can connect previously isolated systems.
+
+Permission design becomes critical.
+
+Granting an agent wide operational privileges tears down departmental network and system boundaries. An unhandled exception, model hallucination, or prompt injection in one low-priority tool can rapidly propagate destructive mutations across financial ledgers, customer records, and identity providers.
+
+### Hidden coupling
+
+A generated workflow may depend on many APIs and undocumented assumptions.
+
+Generated workflows and dynamic scripts often anchor against undocumented edge cases, implicit response formats, or ephemeral API behaviors. If an upstream team changes a payload schema or rate-limit policy without strict contract testing, brittle agentic integrations fail silently in production.
+
+### Auditability
+
+Organizations must know why an action occurred and which data informed it.
+
+When an autonomous agent mutates state across four separate databases, standard application logs are insufficient. Debugging and compliance require immutable execution traces recording the exact system prompts, retrieved context, tool invocations, parameters, and authorization grants that produced each transaction.
+
+### Vendor dependence
+
+Agent workflows may become tied to one model or orchestration platform.
+
+### Excessive complexity
+
+AI may make it easy to connect many systems without simplifying the underlying organization.
+
+### Uncontrolled end-user development
+
+Domain users may create business-critical processes without adequate tests, ownership, or governance.
+
+The ability to generate a process does not automatically make the process safe.
+
+When domain experts can generate business logic on demand, organizations face a resurgence of unmonitored shadow IT. Workflows running critical operational paths without automated test suites, CI/CD promotion pipelines, SLA monitoring, or clear team ownership create catastrophic operational blind spots.
 
 ## Working Hypothesis
 
-> Enterprise architecture will increasingly decouple stable systems of record from dynamic workflows, analytics, and task-specific interfaces generated by AI.
+> Enterprise software will increasingly separate stable systems of record from dynamic workflows, analysis, and user interfaces generated by AI.
 
-Large enterprise platforms will remain essential, but their value will shift away from static screens, manual workflows, and seat-license bundles. Their survival depends on delivering reliable transactional engines, robust policy enforcement, and discoverable, agent-native APIs.
+A stronger version is:
 
-The future is not a total replacement of enterprise systems by autonomous LLMs. It is an architecture where:
+> Large platforms may survive, but their value will move away from permanent screens and manual configuration toward data, rules, permissions, transactions, and callable capabilities.
+
+The likely future is not simply:
 
 ```text
-stable systems of record
-+ explicit semantic and policy engines
-+ agentic orchestration and tool use
-+ compiled deterministic execution pipelines
-+ ephemeral, task-specific user interfaces
+AI replaces ERP, CRM, BI, and workflow software
 ```
 
-Enterprise applications were built around a simple historical constraint: humans had to be trained to navigate complex software interfaces. 
+It is more likely:
 
-With agents capable of driving software via APIs, the application itself ceases to be the fundamental unit of enterprise software. The fundamental unit is the **capability**:
+```text
+stable enterprise systems
++ shared semantics and policies
++ AI orchestration
++ generated workflows or deterministic code
++ temporary task-specific interfaces
+```
 
-- query an operational ledger;
-- commit a state transaction;
-- validate an operational rule;
-- authorize an approval;
-- synthesize an analytical dataset;
-- run a mission-critical operation.
+## Mental Model
 
-Agents will assemble those capabilities into customized workflows on demand. The underlying systems of record remain the operational ground truth; the static applications wrapped around them become optional.
+Enterprise applications were designed for a world in which humans had to learn how to operate each system directly.
 
----
+AI introduces another possibility:
 
-## Relationship to the Knowledge Graph
+> Humans express intent, while agents learn how to operate the systems.
 
-- **[[A New Market for Small, Custom Business Software]]**: How cheap agentic development makes bespoke, right-sized applications economical against monolithic platforms.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Exposing core platform capabilities as composable primitives that agents can orchestrate into custom flows.
-- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Exposing decoupled enterprise capabilities directly to agents via standard protocols.
-- **[[Designing APIs for LLM-Generated Integration Code]]**: API design guidelines that allow agents to write stable, reliable integration glue between headless systems.
-- **[[From AI-Assisted Teams to Cross-System Feature Ownership]]**: How unbundling enterprise tools allows vertical engineering teams to manage systems without administrative gatekeeping.
-- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: The enterprise resistance, bureaucratic lock-in, and legacy architectural friction that slow down this unbundling.
+The application may therefore stop being the primary unit of enterprise software.
+
+The new unit may be the capability:
+
+- query this data;
+    
+- create this transaction;
+    
+- validate this rule;
+    
+- approve this request;
+    
+- generate this analysis;
+    
+- execute this operation.
+    
+
+Agents compose those capabilities into the process required at a particular moment.
+
+The system remains.
+
+The fixed application around it becomes optional.

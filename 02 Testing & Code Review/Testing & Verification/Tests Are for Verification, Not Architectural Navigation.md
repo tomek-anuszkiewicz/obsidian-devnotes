@@ -17,107 +17,76 @@ aliases:
 # Tests Are for Verification, Not Architectural Navigation
 
 > [!IMPORTANT]
-> **The Core Asymmetry**: Automated tests are binary verification checks (`actual == expected`); they are not architectural maps. While an exhaustive test suite makes rewriting self-contained modules straightforward, tests alone are completely inadequate for ongoing system maintenance. Tests tell you **if** your code produces the expected output; they cannot tell an AI agent **where** new code belongs or **which** architectural boundaries must be defended.
+> Tests check whether code behaves as expected. They do not tell an agent where to put a change, which component owns the data, or which boundaries the change must respect. A thorough test suite can make it relatively easy to rewrite a module behind a stable interface. Maintaining a larger system also requires a way to understand its architecture before changing it.
 
-```text
-Architectural Specs (The Map)   ──► ORIENTATION: Where code belongs & what boundaries to respect
-                                      │
-                                      ▼
-Agent Code Mutation             ──► IMPLEMENTATION: Writing the surgical change
-                                      │
-                                      ▼
-Automated Tests (The Oracle)    ──► VERIFICATION: Deterministic pass/fail check
-```
+The workflow has three parts: architectural documentation helps the agent find the right place for a change and understand the boundaries; the agent makes the change; tests check the resulting behavior.
 
----
+## What tests can tell an agent
 
-## Core Principle: Verification vs. Navigation
+Developers sometimes say that clean code and comprehensive unit tests document themselves. That may help when you are working inside a small, familiar module. It is not enough when an agent has to change a production system it does not know.
 
-In classical software engineering, developers often leaned on the maxim: *"Clean code and comprehensive unit tests are self-documenting."*
+Before editing, the agent needs to understand which service owns a table, how requests and asynchronous events move between components, where shared utilities belong, and which layers must not depend on each other. After editing, it needs to check that the change satisfies its functional contract and does not break existing behavior. These are different jobs.
 
-When directing AI coding agents across non-trivial production codebases, that assumption falls apart immediately. An agent requires two distinct, non-overlapping capabilities to safely modify a system:
+Tests are good at the second job. A failed assertion points to behavior that did not match an expectation. It does not explain whether the agent put business logic in the wrong layer or broke domain encapsulation to get a passing result.
 
-1. **Navigation (Orientation & Context)**: Understanding system topology before modifying a single line of code. It needs to know which service owns which database table, how synchronous requests and asynchronous events flow across boundaries, where shared utilities live, and what layers are strictly off-limits.
-2. **Verification (Validation & Safety)**: Proving deterministically that a concrete code diff satisfies functional contracts without causing regressions in existing runtime paths.
+## Why a rewrite is easier than ongoing maintenance
 
-Test suites excel at **Verification**. They are deterministic oracles of execution state. But they provide almost zero **Navigation**. A test runner will tell an agent that an assertion failed on line 84 of a test file; it will not tell the agent that it placed business logic in the wrong layer or violated domain encapsulation to make that assertion pass.
+If you build a new module or replace an old subsystem behind a stable interface, a comprehensive test suite gives the agent a clear target (see [[Testing in the Model, Agent, LLM Era|disposable code rewrites]]). It can work from the interface and the expected results, discard an implementation that does not work, and keep iterating until the tests pass. It does not need to reconstruct twenty years of organizational history to do that contained job.
 
----
+The mistake is to carry that conclusion over to everyday maintenance. When tests are the only guide, four problems appear.
 
-## Why Tests Excel at Rewrites, but Fail at Maintenance
+### 1. All tests pass while the architecture gets worse
 
-When building greenfield modules or swapping out a legacy subsystem behind a stable interface (see [[Testing in the Model, Agent, LLM Era|disposable code rewrites]]), a comprehensive test suite is an unbeatable safety net:
-- The agent does not need twenty years of organizational context. It only needs the target interface and a suite of test assertions to satisfy.
-- The agent can treat its implementation as disposable scrap, refactoring aggressively in a tight feedback loop until the test runner exits with code `0`.
+A test can check that `calculate_tax(order)` returns `15.50`. It may say nothing about how the code reached that value.
 
-The trap appears when engineering teams assume that because tests make contained rewrites easy, **tests are all an agent needs for ongoing system maintenance**. In reality, day-to-day maintenance breaks down across four specific failure modes when tests are the sole guide.
+An agent could import `db_session` into an API controller and read another bounded context's private table instead of going through the domain repository. It could copy pricing rules into an HTTP handler because that is quicker than finding the shared pricing service. Or it could make a blocking HTTP request while a database transaction is open. An in-memory test may pass, while the production request holds row locks longer and exhausts the connection pool under load.
 
-### 1. Tests Are Blind to Architectural Erosion (Green Tests, Rotting System)
-Test suites verify input and output: `assert calculate_tax(order) == 15.50`. They are blind to structural coupling and architectural boundaries:
-- An agent can make every test pass while bypassing the domain repository entirely, importing `db_session` directly into an API controller and querying another bounded context's private table.
-- An agent can copy-paste complex pricing logic directly into an HTTP handler because duplicating twenty lines of code is faster than discovering and importing the shared pricing domain service.
-- An agent can issue a blocking HTTP call inside an open database transaction. The in-memory test passes instantly, but in production, that transaction holds row locks open under load, exhausting the connection pool.
+Unit tests often isolate a function and check its return value or mocked side effects. They can stay green through all of these changes while the system becomes harder to maintain (see [[AI Changes the Economics of Technical Debt]]).
 
-Because unit tests run in controlled isolation and validate return values or side-effect mocks, **the test suite stays 100% green while the architecture quietly decays into an unmaintainable tangle** (see [[AI Changes the Economics of Technical Debt]]).
+### 2. Existing tests do not locate a new feature
 
-### 2. The Novelty Paradox: Tests Don't Exist for New Features
-Maintenance mostly consists of adding capabilities that do not yet exist:
-- Existing tests only protect historical behavior. They offer zero signal on where a new feature belongs.
-- Without explicit architectural documentation, an agent implementing a new capability works in a vacuum. It has to guess which module should own the state, whether to emit an asynchronous domain event or trigger a synchronous RPC, and where validation rules must live.
+Much of maintenance means adding behavior that does not exist yet. Existing tests protect the old behavior, but they do not say which module should own new state, whether a new step should emit an asynchronous domain event or make a synchronous RPC, or where validation rules belong.
 
-Tests can only verify an implementation after code has been written; they cannot steer an agent toward the right architectural home before it begins typing.
+You can write tests for the new feature once you have decided what to build. Those tests still do not make the architectural decision for you. Without documentation, the agent has to guess before it starts editing.
 
-### 3. The Trial-and-Error Token Tax
-Without architectural documentation (such as Operation Cards or C4 component maps), an agent has to navigate a codebase by trial and error:
+### 3. Trial and error costs time and context
 
-```text
-Guess mutation target ──► Run test suite ──► Tests fail ──► Parse stack traces ──► Guess again
-```
+Without an architectural guide, the agent may guess a file, make a change, run tests, read failures and stack traces, then guess again. Repeated runs consume tokens and fill the working context with failed diffs and diagnostic output (see [[How LLM Systems Build Context]]).
 
-This brute-force loop burns thousands of tokens on failed test runs, repeatedly polluting the context window with massive stack traces and intermediate failed diffs (see [[How LLM Systems Build Context]]). 
+A short Operation Card or C4 component map can tell the agent where to start, which files matter, and which boundaries to keep intact. A 30-line card can save that exploration and improve the chance that the first change lands in the right place (see [[AI-Generated Architectural Documentation from Code]]).
 
-In contrast, a 30-line Operation Card acts as an architectural index—a [[AI-Generated Architectural Documentation from Code|semantic cache]] that enables **first-pass success**: the agent reads the card, navigates directly to the correct file, applies the exact mutation required, and respects boundary invariants on turn one.
+### 4. Mocks hide production behavior
 
-### 4. The Mocking Mirage
-Unit tests run fast because they sanitize the messiness of production environments:
-- External payment gateways, message brokers, and transactional databases are replaced with in-memory mocks (`unittest.mock`, `jest.fn()`, or SQLite in-memory engines).
-- Asynchronous eventual consistency is collapsed into instantaneous, synchronous in-memory calls.
-- Real-world network timeouts, connection resets, transient 503s, and distributed race conditions are mocked out entirely.
+Unit tests often replace a payment gateway, message broker, or transactional database with `unittest.mock`, `jest.fn()`, or an in-memory SQLite database. They may turn eventual consistency into an immediate call and remove network timeouts, connection resets, temporary 503 responses, and races between services.
 
-An agent that relies exclusively on unit tests develops a distorted model of the system. It assumes network boundaries are infallible and immediate. It will happily emit un-retried network calls or skip idempotency keys, unaware that production demands transactional outboxes, exponential backoffs, and dead-letter queues.
+If an agent sees only those tests, it can assume a network call always succeeds immediately. It may omit retries or idempotency keys, or miss the need for a transactional outbox, exponential backoff, and a dead-letter queue. The tests describe the controlled test environment; they do not, by themselves, describe all the failure conditions in production.
 
----
+## Use documentation before the change and tests after it
 
-## The Dual-Steering Architecture
+Teams need both an architectural description and automated checks. They answer different questions:
 
-High-reliability engineering teams do not choose between tests and architectural documentation; they run them together as a dual-steering control plane:
-
-| Dimension | Architectural Documentation (The Map) | Automated Test Suite (The Oracle) |
+| | Architectural documentation | Automated tests |
 | :--- | :--- | :--- |
-| **Primary Role** | Orientation, navigation, boundary enforcement | Deterministic verification, regression gating |
-| **Phase of Use** | Pre-mutation (Scoping, routing, planning) | Post-mutation (Validation, gatekeeping) |
-| **Knowledge Encoded** | *Why* things exist, *where* they live, *who* owns them | *What* specific inputs must produce what outputs |
-| **Failure Mode** | Documentation drift (if not updated with code) | Structural blindness (green tests with decaying architecture) |
-| **Agent Action** | Enables immediate first-pass success | Prevents hallucinations and logic bugs from reaching production |
+| **Main job** | Show where code belongs and which boundaries to respect | Check behavior and catch regressions |
+| **When the agent uses it** | Before changing code, while locating and planning the work | After changing code, while validating it |
+| **What it records** | Why components exist, where responsibilities live, and who owns them | Which results particular inputs and actions should produce |
+| **What can go wrong** | It becomes outdated if it does not change with the code | Tests pass even though structural boundaries have been broken |
+| **How it helps the agent** | Helps it make the first change in the right place | Catches logic mistakes before the change reaches production |
 
-Architectural documentation is the **steering wheel and road map**; the test suite is the **brakes and seatbelt**. An agent without documentation drives blind into structural decay; an agent without tests drives without brakes into production outages.
+Documentation can guide an agent toward the right implementation. Tests can reject an implementation whose behavior is wrong. Neither replaces the other.
 
----
+## Rules for a team using coding agents
 
-## Practical Rules for Teams
+1. **Document ownership and boundaries alongside the code.** Keep concise Operation Cards for modules: who owns the data, which public entry points to use, what downstream dependencies exist, and which imports are forbidden (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
+2. **Review the shape of the change as well as the test results.** In an agent's pull request, check the files it touched, its imports, and how it accesses the database. Passing CI does not show that the change respects the architecture.
+3. **Test behavior through public contracts.** Use tests to verify what the system does, rather than tying tests to private helper functions in an attempt to explain where code belongs.
+4. **Make architectural boundaries executable where possible.** Use dependency checks such as `import-linter`, ArchUnit, or ESLint boundary plugins in CI. They can fail a build when a change crosses a forbidden layer or bypasses a service to query a database directly; ordinary runtime unit tests are not a reliable way to catch that violation.
 
-1. **Never rely on tests as the sole documentation**: Pair code modules with concise Operation Cards that explicitly document data ownership, public entry points, downstream dependencies, and strictly forbidden imports (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
-2. **Review architectural diffs, not just test results**: When reviewing an agent's pull request, audit file touchpoints, imported packages, and database access patterns first. A green CI run proves functional correctness, not architectural integrity.
-3. **Use tests to verify contracts, not navigation**: Write behavioral tests that evaluate system contracts through public APIs, rather than asserting against private internal helper functions.
-4. **Enforce architectural boundaries with static linters**: Do not rely on runtime unit tests to catch layering violations. Use dependency analyzers (such as `import-linter`, ArchUnit, or ESLint boundary plugins) in your CI pipeline to hard-fail builds when an agent bypasses service layers to query databases directly.
+## Related notes
 
----
-
-## Related Notes
-
-- **[[Testing in the Model, Agent, LLM Era]]**: The foundational verification hub explaining disposable implementation code and the Frozen Oracle Rule.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Generating concise architectural blueprints concurrently during code authoring to guide future agents.
-- **[[AI-Generated Architectural Documentation from Code]]**: Using models to extract high-level system models and Operation Cards from existing codebases.
-- **[[AI Changes the Economics of Technical Debt]]**: Why structural decay and hidden coupling sabotage agent productivity even when tests pass.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Designing closed-loop execution harnesses that combine architectural specs with automated CI gates.
-- **[[How LLM Systems Build Context]]**: Managing working memory and attention headroom during agent decision loops.
+- **[[Testing in the Model, Agent, LLM Era]]**: Disposable implementations and the Frozen Oracle Rule.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Writing architectural guides while building the code they describe.
+- **[[AI-Generated Architectural Documentation from Code]]**: Extracting system models and Operation Cards from existing code.
+- **[[AI Changes the Economics of Technical Debt]]**: How hidden coupling slows down agents even when tests pass.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Combining architectural guidance with automated CI checks.
+- **[[How LLM Systems Build Context]]**: Managing the agent's working context during a change.

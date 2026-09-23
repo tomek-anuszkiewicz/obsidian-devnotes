@@ -4,66 +4,108 @@ tags:
   - ai-agents
   - software-architecture
   - documentation
+  - knowledge-management
   - reverse-engineering
   - code-review
-  - system-design
 aliases:
-  - AI-Generated Architectural Documentation
+  - Architectural Documentation Generation
   - Extracting Architecture from Code with LLMs
+  - AI-Generated Architectural Documentation
   - Documentation as Semantic Cache
   - Architectural Drift Detection
   - Operation Cards from Code
 ---
 
-# AI-Generated Architectural Documentation from Code
+## Idea
 
-Large language models are frequently framed as automated code writers, but their higher-leverage role in real-world systems engineering is often the inverse: extracting, reconstructing, and maintaining high-level architectural documentation from existing source code.
+LLMs can be used not only to generate code from specifications, but also to reconstruct documentation, architecture, and system behavior from existing code.
 
-This pattern is especially valuable when dealing with:
-- Legacy codebases written long before automated documentation or AI tooling existed.
-- Systems where original design documentation is years out of date, incomplete, or abandoned.
-- Large repositories with hundreds of thousands of lines of code where no single engineer understands the entire system.
-- Organizations where architectural context lives entirely in the heads of a few senior engineers who are leaving or unavailable.
+This is especially useful for:
 
-The goal here is never to generate line-by-line docstrings or restate trivial method implementations (`GetOrder retrieves an order`). The true engineering objective is to reconstruct a **semantic model of the system** that explains:
-- Which components exist and what boundaries isolate them.
-- What each component is strictly responsible for.
-- How services communicate synchronously and asynchronously.
-- How data flows and transforms through the system.
-- How core business operations execute end-to-end.
-- What state transitions exist across domain entities.
-- What architectural rules, invariants, and negative constraints are implicit in the code.
+- legacy systems created before widespread AI adoption,
+    
+- systems with incomplete or outdated documentation,
+    
+- large repositories where the architecture is difficult to infer,
+    
+- codebases where architectural knowledge exists mostly in developers' heads.
+    
+
+The goal is not merely to generate class or method descriptions.
+
+The more valuable goal is to create a **semantic model of the system** that explains:
+
+- what components exist,
+    
+- what they are responsible for,
+    
+- how they communicate,
+    
+- how data flows through the system,
+    
+- how important business operations execute,
+    
+- what happens synchronously and asynchronously,
+    
+- what state transitions exist,
+    
+- what architectural rules and invariants are implicit in the code.
+    
 
 ---
 
-## Code as a Source of Architectural Knowledge
+# Code as a Source of Architectural Knowledge
 
-Source code is the ultimate ground truth of a system, but architectural knowledge is typically fragmented across dozens of discrete files. To trace a single business operation, an engineer or an agent must manually inspect:
-- Ingress controllers and route handlers
-- Application command and query handlers
-- Domain services and aggregate roots
-- Data repositories and database migration schemas
-- Message consumers, event listeners, and publishers
-- Dependency injection containers and runtime wire-ups
-- Ingress/egress middleware and interceptors
-- Scheduled background tasks and cron jobs
-- External API client wrappers and retry policies
+Existing source code contains a large amount of architectural information, but that information is often distributed across many files.
 
-An LLM paired with structural static analysis can compress this distributed reality into a coherent, high-density representation:
+A developer may need to inspect:
+
+- controllers,
+    
+- handlers,
+    
+- services,
+    
+- repositories,
+    
+- database models,
+    
+- message consumers,
+    
+- event publishers,
+    
+- configuration,
+    
+- dependency injection,
+    
+- middleware,
+    
+- scheduled jobs,
+    
+- external API clients,
+    
+
+before understanding how one business operation works.
+
+An LLM can help reconstruct this information into a more compact representation.
+
+The transformation can be seen as:
 
 ```text
 Code
   ↓
-Structural Analysis (ASTs, Call Graphs, Dependency Graphs)
+Structural Analysis
   ↓
-System Model (Extracted Topologies & Invariants)
+System Model
   ↓
-Semantic Documentation (Architecture & Operation Cards)
+Semantic Documentation
 ```
 
-Static analysis tools—such as dependency graphers, call-graph analyzers, symbol indexers, GitNexus, or Language Server Protocol (LSP) queries—provide verifiable, deterministic facts. The LLM then interprets those structural facts to articulate their domain and architectural intent.
+Structural analysis tools such as dependency graphs, call graphs, symbol graphs, GitNexus, Graphify, or static analysis can provide reliable structural facts.
 
-For example, a static call chain like this:
+The LLM can then interpret these facts and describe their architectural or business meaning.
+
+For example:
 
 ```text
 OrdersController
@@ -77,468 +119,753 @@ OrderRepository
 EventPublisher
 ```
 
-is synthesized into clear operational rules:
+can be interpreted as:
 
 ```text
 PlaceOrderHandler is the orchestration boundary for order creation.
 
-Pricing is resolved synchronously via PricingService.
+Pricing is resolved synchronously.
 
-The order is persisted to the local transactional database before downstream processing begins.
+The order is persisted before downstream processing begins.
 
-Inventory processing starts asynchronously after the OrderCreated event is published to the broker.
+Inventory processing starts asynchronously after OrderCreated is published.
 ```
 
-The structural graph provides the **relationships**. The LLM infers and articulates the **meaning**.
+The structural graph provides **relationships**.
+
+The LLM adds **meaning**.
 
 ---
 
-## Documentation as a Semantic Cache for Agents
+# Documentation as a Semantic Cache
 
-When an AI coding agent operates on a repository without up-to-date architectural documentation, it falls into an expensive, repetitive reconnaissance loop:
-
-```text
-Read code across 20 files
-  → Discover dependencies
-  → Reconstruct architecture
-  → Infer business workflows
-  → Burn 30,000 tokens
-  → Make first edit
-```
-
-If that architectural context is pre-computed, stored, and updated directly alongside the codebase, the workflow changes completely:
+Without architectural documentation, an agent working on a task may repeatedly perform:
 
 ```text
-Read architectural summary / Operation Card
-  → Inspect targeted implementation files
-  → Spend 2,000 tokens
-  → Make first edit
+Read code
+→ discover dependencies
+→ reconstruct architecture
+→ understand business flow
+→ solve task
 ```
 
-Documentation acts as a **semantic cache for the repository**. Instead of forcing an agent (or a newly hired engineer) to continuously reconstruct the system topology from raw code on every single prompt or task, the agent consumes a prepared, high-level structural model.
+With good generated documentation, the process can become:
 
-This approach yields immediate engineering gains:
-- **Context Efficiency**: Minimizes token consumption by avoiding massive grep-and-read exploration phases.
-- **Task Velocity**: Agents jump straight from task intake to implementation.
-- **Consistency**: Different agent runs rely on the same validated operational models rather than hallucinating or re-interpreting system design on the fly.
-- **Guardrail Enforcement**: Prevents accidental coupling. If a legacy codebase has loose boundaries, an agent will copy the bad patterns unless an explicit architectural document warns: *"Orders must never write to inventory tables directly."*
+```text
+Read architecture summary
+→ inspect relevant implementation
+→ solve task
+```
+
+Documentation therefore acts as a kind of **semantic cache for the repository**.
+
+Instead of repeatedly reconstructing the same system model from raw code, agents can reuse an already prepared high-level representation.
+
+This may improve:
+
+- reasoning quality,
+    
+- task completion speed,
+    
+- context efficiency,
+    
+- consistency between agent sessions.
+    
+
+For very large repositories, this can be particularly important.
+
+In token economics, this reconnaissance loop is brutal. An agent exploring an unfamiliar repository easily burns 30,000 to 50,000 tokens on multi-file grep and AST inspection before making its first edit. Pre-computed architectural cards drop that exploration tax to a couple thousand tokens of targeted navigation. More importantly, it acts as an architectural guardrail: without explicit documents stating module boundaries, an agent will take the path of least resistance—such as importing a repository across domains or executing direct cross-schema SQL joins.
 
 ---
 
-## Why Tests Alone Cannot Replace Architectural Documentation
+# Why Tests Alone Cannot Replace Architectural Documentation
 
-A common argument in automated engineering is that an exhaustive test suite makes architectural documentation obsolete. If the tests pass, the system works.
+A common assumption is that an exhaustive test suite makes architectural documentation redundant—if the tests pass, the system is correct.
 
-Deterministic test suites are non-negotiable for verifying behavioral correctness, but **test suites and architectural models address fundamentally different operational problems**:
-
-| Engineering Dimension | Automated Test Suites | Architectural Documentation |
-| :--- | :--- | :--- |
-| **Primary Purpose** | Verifies functional behavior (`assert actual == expected`) | Defines system boundaries, navigation paths, and ownership |
-| **Refactoring & Rewrites** | Validates that functional inputs/outputs remain stable | Explains why components were separated and how data flows |
-| **Ongoing Maintenance** | Blind to bad coupling (passes even if an internal DB is queried directly) | Explicitly defines and preserves boundary invariants |
-| **New Capabilities** | Zero coverage for unwritten code | Explains where the new feature belongs and what rules apply |
-
-A test suite will happily pass if an agent bypasses an event-driven flow, queries a private database table directly from an unrelated controller, and returns the expected payload. The functional test passes, but the architecture is compromised. Tests verify correctness; architectural models safeguard structure.
+In production, test suites and architectural models solve fundamentally different problems. A test suite verifies functional input-output contracts (`assert actual == expected`), but it is structurally blind. A coding agent can implement a feature by bypassing an event-driven queue, querying a private database table of another service directly, and returning the correct response. The functional tests pass cleanly, but the architectural boundary is broken. Tests guarantee functional behavior; architectural documentation safeguards system structure, data ownership, and navigation paths.
 
 ---
 
-## Hierarchical Zoom Levels
+# Useful Levels of Generated Documentation
 
-Dumping an entire monolithic 100-page architectural document into an LLM's context window dilutes attention and consumes excessive tokens. Architectural knowledge should instead be organized hierarchically across distinct zoom levels (mirroring patterns like the C4 model):
+Generated documentation should exist at several levels.
 
-```text
-Level 1: System Context  ──► Users, external third-party integrations, core system boundaries
-Level 2: Containers      ──► Web apps, API services, workers, databases, message brokers
-Level 3: Components      ──► Controllers, handlers, domain aggregates, repositories
-Level 4: Implementation  ──► Source code, method signatures, exact state transitions
-```
+## 1. System Level
 
-When an agent or developer approaches a task, they navigate top-down:
-1. **Macro Routing (Levels 1 & 2)**: Determine which service or runtime container owns the requested feature.
-2. **Component Mapping (Level 3)**: Identify existing handlers, boundaries, and interfaces without ingesting their full implementations.
-3. **Targeted Mutation (Level 4)**: Load only the specific file or interface needed to make the code change.
+Describe the major runtime components.
 
-### Level 1 — Business View
-```text
-Customer
-  → Orders
-  → Payments
-  → Inventory
-  → Shipping
-```
+Examples:
 
-### Level 2 — Architectural View
-```text
-REST API
-  → Command Handler
-  → PostgreSQL Database
-  → Message Broker
-  → Worker Consumer
-```
+- web applications,
+    
+- APIs,
+    
+- workers,
+    
+- databases,
+    
+- message brokers,
+    
+- schedulers,
+    
+- caches,
+    
+- external integrations.
+    
 
-### Level 3 — Implementation View
-```text
-POST /orders
-  → PlaceOrderController
-  → PlaceOrderCommand
-  → PlaceOrderHandler
-  → PricingClient
-  → OrderRepository
-  → UnitOfWork
-  → EventPublisher
-```
+This answers:
 
-Scoping context hierarchically allows the agent to execute accurately while using a fraction of the context window.
+> What does the system consist of?
 
 ---
 
-## Module-Level Architectural Boundaries
+## 2. Module Level
 
-For every module or bounded context, generated documentation must record concrete constraints, data ownership, and interfaces rather than prose:
+For each module, describe:
+
+- responsibility,
+    
+- owned data,
+    
+- public entry points,
+    
+- dependencies,
+    
+- emitted events,
+    
+- consumed events,
+    
+- architectural boundaries.
+    
+
+For example:
 
 ```text
 Orders Module
 
 Responsibility:
-Owns the lifecycle of customer orders from placement through fulfillment completion.
+Owns the lifecycle of customer orders.
 
 Owns:
-- Order aggregate root
-- Orders database schema (`orders`, `order_lines`, `order_discounts`)
-- Order management API endpoints
+- Order aggregate
+- Orders database tables
+- Order API
 
-Dependencies:
-- Pricing (Synchronous HTTP via PricingClient)
-- Inventory (Asynchronous via OrderCreated event)
-- Payments (Asynchronous via PaymentRequested event)
+Depends on:
+- Pricing synchronously
+- Inventory asynchronously
+- Payments asynchronously
 
-Architectural Invariants:
-- Must not query or modify inventory database tables directly.
-- Must not mutate payment state directly.
-- Must persist the order entity before emitting external domain events.
+Must not:
+- modify inventory tables directly
+- modify payment state directly
 ```
 
-Explicit constraints like `Must not query or modify inventory database tables directly` are high-value guardrails for coding agents that might otherwise take the path of least resistance and write direct cross-module SQL joins.
+This kind of documentation is particularly useful for coding agents because it explicitly describes architectural constraints.
 
 ---
 
-## Operation-Oriented Documentation
+# Operation-Oriented Documentation
 
-Organizing documentation purely by class, file, or package creates information silos. The most critical documentation in any production system is organized around **business operations**:
+Some of the most useful documentation should be organized around **business operations**, not classes.
+
+Examples:
+
 - Place Order
+    
 - Cancel Order
+    
 - Confirm Payment
+    
 - Issue Refund
+    
 - Register Customer
+    
 
-A single operation typically cuts across controllers, services, databases, queues, and downstream consumers. An Operation Document aggregates this distributed path into a single blueprint:
+A single operation may involve multiple modules and continue over time.
+
+An operation document can contain:
+
+- purpose,
+    
+- entry points,
+    
+- participating components,
+    
+- sequence of steps,
+    
+- data changes,
+    
+- events,
+    
+- asynchronous processing,
+    
+- failure modes,
+    
+- state transitions,
+    
+- links to relevant source code.
+    
+
+Example:
 
 ```text
-Operation: ConfirmPayment
+ConfirmPayment
 
 Purpose:
 Confirm an authorized payment and start downstream fulfillment.
 
 Entry points:
-- HTTP: POST /payments/{id}/confirm
-- Background Worker: PaymentConfirmationWorker
+- POST /payments/{id}/confirm
+- PaymentConfirmationWorker
 
-Synchronous Flow:
-1. Validate incoming HTTP request schema.
-2. Load payment entity from PostgreSQL with an exclusive lock.
-3. Verify current payment status is `Authorized`.
-4. Call external Payment Gateway API to capture funds.
-5. Persist payment status as `Confirmed`.
-6. Commit database transaction.
+Flow:
 
-Asynchronous Flow:
-7. Publish `PaymentConfirmed` event to Kafka topic `payments.v1`.
-8. Accounting consumer processes the event to update the financial ledger.
-9. Inventory consumer reserves physical stock.
+1. Validate request
+2. Load payment
+3. Verify payment state
+4. Call external payment provider
+5. Persist Confirmed state
+6. Publish PaymentConfirmed
+7. Accounting processes the event asynchronously
 
-Failure Modes & Fallbacks:
-- Payment not found: Return 404.
-- Invalid state transition: Return 409 Conflict.
-- Provider timeout: Exponential backoff with jitter (max 3 retries); leave payment in `PendingConfirmation`.
-- Event publication failure: Outbox pattern ensures message delivery on next worker poll.
+Failure modes:
+- payment not found
+- invalid state
+- provider timeout
+- event publication failure
 ```
 
-This structure is instantly actionable. If an agent is tasked with modifying payment error handling, it does not need to search the entire repository to find where the fallback happens; the Operation Card exposes the entire execution path.
+This can be significantly more useful than documentation organized around individual classes.
 
 ---
 
-## Generated Architectural Diagrams as Code
+# Generated Architectural Diagrams
 
-All generated architectural diagrams must be maintained as structured, text-based definitions—such as Mermaid, PlantUML, Graphviz, or JSON graph schemas—rather than binary image assets.
+LLMs can also generate diagrams from reconstructed system knowledge.
 
-Text diagrams provide vital operational characteristics:
-- **Versionable**: Maintained in Git right next to the code.
-- **Diffable**: PRs clearly show changes to system topology.
-- **Editable**: Engineers and agents can tweak nodes without proprietary diagramming tools.
-- **Machine-Readable**: Agents can parse the text diagram directly to understand dependencies.
+These diagrams should preferably be stored as structured text such as:
 
-### Component Diagrams
-Component diagrams document static topologies and data stores:
+- Mermaid,
+    
+- PlantUML,
+    
+- Graphviz,
+    
+- JSON graphs,
+    
+
+rather than only as images.
+
+This makes them:
+
+- versionable,
+    
+- diffable,
+    
+- editable,
+    
+- readable by agents,
+    
+- regenerable into visual diagrams.
+    
+
+---
+
+# Component Diagrams
+
+Component diagrams show the major parts of the system and their dependencies.
+
+Example:
 
 ```text
 Client
    ↓
-API Gateway
+API
    ↓
-Orders Service
-   ├── PostgreSQL (orders_db)
-   ├── Pricing Client (HTTP/gRPC)
-   └── Message Broker (Kafka)
+Orders
+   ├── PostgreSQL
+   ├── Pricing
+   └── Message Broker
              ↓
-       Inventory Worker
+          Inventory
              ↓
-       Inventory DB
+         Inventory DB
 ```
 
-They answer: *Which runtime components exist, and what are their physical connections?*
+They answer:
 
-### Sequence Diagrams
-Sequence diagrams trace the exact execution path of a single operation across synchronous boundaries:
-
-```text
-Client            Orders API        PricingClient    Orders DB       Event Broker      Inventory Worker
-  │                   │                   │              │                 │                  │
-  ├── POST /orders ──►│                   │              │                 │                  │
-  │                   ├── Fetch Prices ──►│              │                 │                  │
-  │                   │◄── Return Calculated ───────────│                 │                  │
-  │                   ├── Insert Order ─────────────────►│                 │                  │
-  │                   │◄── OK ───────────────────────────│                 │                  │
-  │                   ├── Publish OrderCreated ───────────────────────────►│                  │
-  │◄── 201 Created ───│                                                    ├── Consume ──────►│
-  │                   │                                                    │                  ├── Reserve Stock
-```
+> Which components exist and how are they connected?
 
 ---
 
-## Temporal and Asynchronous Flow Diagrams
+# Sequence Diagrams
 
-A common failure mode in distributed architectures is assuming that an operation behaves like a simple synchronous call:
+Sequence diagrams are especially useful for reconstructing how a concrete operation executes.
+
+They show:
+
+- who calls whom,
+    
+- in what order,
+    
+- request-response boundaries,
+    
+- event publication,
+    
+- callbacks,
+    
+- retries,
+    
+- asynchronous continuation.
+    
+
+Example:
+
 ```text
-Request → Business Logic → Database Mutation → Response
+Client
+  → Orders API
+  → PlaceOrderHandler
+  → Pricing
+  → Orders DB
+  → Event Broker
+
+Event Broker
+  → Inventory Consumer
+  → Inventory DB
 ```
 
-In real production systems, execution is distributed over time across queues, workers, and third parties:
-
-```text
-T0 (0ms)
-Client submits order via POST /orders
-
-T0 + 15ms
-API validates request and writes to Order table (status: Pending)
-
-T0 + 25ms
-API writes event to local transactional outbox table
-
-T0 + 30ms
-API returns HTTP 202 Accepted (Order ID returned, processing ongoing)
-
-T0 + 200ms
-Outbox poller reads record and publishes OrderPlaced to message broker
-
-T0 + 1.2s
-Payment Worker picks up event and initiates call to external payment gateway
-
-T0 + 3.5s
-External gateway times out; retry scheduled with exponential backoff
-
-T0 + 8.5s
-Second payment attempt succeeds; PaymentCaptured published
-
-T0 + 9.0s
-Order Consumer receives PaymentCaptured and updates Order status to Confirmed
-```
-
-Documenting the temporal distribution makes eventual consistency boundaries explicit. It clarifies that an HTTP `202 Accepted` indicates work has been **queued**, not that the business process has completed. 
-
-Temporal diagrams should capture:
-- Synchronous request-response phase
-- Queue delays and event publication
-- Background scheduler intervals
-- Retry schedules, backoffs, and circuit-breaker states
-- Dead-letter queue routing
-- Eventual consistency boundaries
+These diagrams expose behavior that may otherwise be distributed across many parts of the repository.
 
 ---
 
-## Data Flow and Ownership Diagrams
+# Temporal and Asynchronous Flow Diagrams
 
-Data-flow documentation clarifies lineage, schema mutations, and authoritative boundaries across services:
+A particularly valuable type of generated documentation is a diagram showing how one logical operation is distributed over time.
+
+Many real systems do not execute as:
 
 ```text
-HTTP Request (Payload: Raw Order Lines)
-   ↓
-CreateOrderCommand (Validated DTO)
-   ↓
-Order Aggregate (Applies business invariants)
-   ↓
-Orders Database (Writes to `orders`, `order_lines`)
-   ↓
-OrderCreated Event (Domain event published to broker)
-   ↓
-Inventory Projection (Read-model update in inventory database)
+request
+→ business logic
+→ response
 ```
 
-This level of documentation directly answers recurring production questions:
+Instead they behave more like:
+
+```text
+T0
+Client sends request
+
+T0 + milliseconds
+API validates request
+
+T0 + milliseconds
+State is persisted
+
+T0 + milliseconds
+Event is published
+
+T0 + milliseconds
+API returns 202 Accepted
+
+T0 + seconds
+Consumer receives event
+
+T0 + seconds
+Inventory is reserved
+
+T0 + seconds/minutes
+External provider responds
+
+T0 + minutes
+Final status is updated
+```
+
+This distinction is extremely important.
+
+An API response may mean only:
+
+> the operation was accepted for processing
+
+rather than:
+
+> the entire business process completed successfully.
+
+Temporal diagrams can make this explicit.
+
+They can show:
+
+- immediate processing,
+    
+- delayed work,
+    
+- scheduler execution,
+    
+- queue waiting,
+    
+- retries,
+    
+- callbacks,
+    
+- eventual consistency,
+    
+- timeout boundaries.
+    
+
+This is particularly valuable when debugging distributed systems.
+
+---
+
+# Data Flow Diagrams
+
+Data-flow documentation explains:
+
+- where data originates,
+    
+- how it is transformed,
+    
+- who owns it,
+    
+- where it is stored,
+    
+- where it is copied,
+    
+- which events contain it.
+    
+
+For example:
+
+```text
+HTTP Request
+   ↓
+CreateOrderCommand
+   ↓
+Order Aggregate
+   ↓
+Orders Database
+   ↓
+OrderCreated Event
+   ↓
+Inventory Projection
+```
+
+This can help answer questions such as:
+
 - Where is `CustomerTier` calculated?
-- Which service is the authoritative source of truth for `FinalPrice`?
-- At what exact point does the order status transition from `Pending` to `Paid`?
-- Why does downstream reporting display stale customer data?
-- Which service owns write access to the ledger?
+    
+- Which service owns `FinalPrice`?
+    
+- When does the order status change?
+    
+- Why does one system contain stale data?
+    
+- Which service is the source of truth?
+    
 
 ---
 
-## State Machine Documentation
+# State Machines
 
-For complex lifecycle entities (Orders, Payments, Subscriptions, Shipments), documentation must formally record valid state transitions, triggers, and terminal states.
+For important business entities, documentation can include generated state machines.
 
-```text
-           ┌──────────────────────┐
-           │       Pending        │
-           └──────────┬───────────┘
-                      │
-            PaymentConfirmed
-                      ▼
-           ┌──────────────────────┐
-           │      Confirmed       │─────────RefundRequested─────────┐
-           └──────────┬───────────┘                                 ▼
-                      │                                    ┌─────────────────┐
-                 OrderShipped                              │    Refunded     │
-                      ▼                                    │ (Terminal State)│
-           ┌──────────────────────┐                        └─────────────────┘
-           │       Shipped        │
-           └──────────┬───────────┘
-                      │
-               DeliveryConfirmed
-                      ▼
-           ┌──────────────────────┐
-           │      Completed       │
-           │   (Terminal State)   │
-           └──────────────────────┘
+Examples:
 
-[Pending]   ── OrderCancelled ──► [Cancelled] (Terminal State)
-```
+- Order
+    
+- Payment
+    
+- Shipment
+    
+- Subscription
+    
+- Support Ticket
+    
 
-Generated state machine docs must detail:
-- **Allowed transitions**: e.g., `Pending → Confirmed`.
-- **Forbidden transitions**: e.g., an order cannot move directly from `Pending` to `Shipped`.
-- **Command triggers**: Which specific handler or API call triggers the change.
-- **Side effects / Emitted events**: Events published upon entering a state.
-- **Terminal states**: States from which no further transitions can occur (`Completed`, `Cancelled`, `Refunded`).
-
----
-
-## Failure-Path Documentation
-
-Documentation that only covers the happy path is of limited use during an active production incident. Reconstructed documentation must prioritize failure paths, edge cases, and degradation policies:
+For example:
 
 ```text
-Operation: ConfirmPayment (Failure Flow)
-
-Provider Call Fails (Timeout / 5xx)
+Pending
    ↓
-Retry Policy: Max 3 attempts, exponential backoff (1s, 2s, 4s)
+Confirmed
    ↓
-[Exhausted?]
-   ├── NO  ──► Re-attempt external call
-   └── YES ──► Mark Payment status as `RequiresManualReview`
-               ↓
-               Emit `PaymentConfirmationFailed`
-               ↓
-               Route transaction ID to Dead-Letter Queue (DLQ)
-               ↓
-               Scheduled reconciliation cron handles resolution after 15 minutes
+Shipped
+   ↓
+Completed
+
+Pending
+   ↓
+Cancelled
+
+Confirmed
+   ↓
+Refunded
 ```
 
-Critical operational details to surface:
-- Connection and read timeouts on external dependencies.
-- Retry limits, backoff curves, and jitter.
-- Fallback strategies (e.g., returning cached pricing data if the pricing service is unreachable).
-- Compensation logic (e.g., rolling back inventory reservations if payment settlement fails).
-- Dead-letter queues and monitoring alerts.
-- Operations requiring manual operator intervention.
+The generated documentation should ideally also describe:
+
+- allowed transitions,
+    
+- conditions,
+    
+- commands causing transitions,
+    
+- events emitted,
+    
+- terminal states.
+    
+
+State machines are valuable because important business rules are often distributed across handlers, validators, and domain methods.
+
+Making state boundaries explicit eliminates one of the most common agent bugs: invalid lifecycle leaps, such as updating an order directly from `Pending` to `Shipped` because the agent only saw the shipping service handler. Once terminal states and validation triggers are documented in the state machine, agents can verify whether a proposed mutation violates domain rules before modifying code.
 
 ---
 
-## Intended Architecture vs. Implemented Architecture
+# Failure-Path Documentation
 
-Even when a system was built from a rigorous initial specification, production code drifts over time. Reconstructing the system model directly from code exposes the gap between **intended architecture** and **implemented reality**:
+Documentation should not describe only the happy path.
+
+Failure paths can be even more valuable for maintenance.
+
+Examples:
 
 ```text
-Intended Architecture (Specification / Design Doc)
-        │
-        ▼
-   Source Code
-        │
-        ▼
-Reconstructed Architecture (Extracted from Reality)
-        │
-        ▼
-Compare Models ──► Detect Architectural Drift
+Payment confirmation
+   ↓
+Provider timeout
+   ↓
+Retry
+   ↓
+Retry exhausted
+   ↓
+Payment remains Pending
+   ↓
+Manual reconciliation job
 ```
 
-This comparison routinely reveals critical design violations:
-- The design doc states communication between Orders and Inventory is asynchronous, but the implementation relies on a blocking HTTP client with an unbounded timeout.
-- Modules were designed to be isolated, but a newly added query directly joins across a private table in another module's database schema.
-- A mandatory validation or authorization step documented in the original RFC was bypassed in a hotfix.
-- An undocumented Redis cache was inserted into a data path, causing race conditions and stale reads under load.
-- A simple database write evolved into three separate consumer steps with distinct eventual consistency windows.
+Useful failure information includes:
+
+- retry behavior,
+    
+- timeout behavior,
+    
+- fallback logic,
+    
+- compensation,
+    
+- dead-letter queues,
+    
+- partial state,
+    
+- manual intervention.
+    
+
+This can make incident analysis significantly easier.
 
 ---
 
-## Architectural Diffs in Pull Requests
+# Multiple Levels of Detail
 
-Traditional code reviews focus on line-by-line file diffs: *"Which lines changed?"*  
-Generated documentation allows teams to review pull requests at a structural level: **"What changed architecturally?"**
+A single diagram for the entire system quickly becomes unreadable.
+
+Documentation should therefore support different zoom levels.
+
+## Level 1 — Business View
 
 ```text
-Traditional Git Diff:
-Modified: orders_controller.py, payment_client.py, events.py (+240 lines, -85 lines)
-
-Generated Architectural Diff:
-- Payment processing transitioned from synchronous HTTP to asynchronous event publishing via topic `orders.payment.requested`.
-- Introduced eventual consistency boundary: Order creation no longer guarantees immediate payment authorization.
-- Added dependency: Orders service now requires access to the Kafka event publisher interface.
-- New failure mode introduced: Orders remain in `PaymentPending` indefinitely if the downstream `PaymentWorker` experiences queue lag or consumer failure.
+Customer
+→ Orders
+→ Payments
+→ Inventory
+→ Shipping
 ```
 
-This structural summary allows a technical lead or senior reviewer to immediately evaluate trade-offs, security implications, and reliability boundaries before diving into implementation syntax.
-
----
-
-## Blending Static Analysis with Runtime Telemetry
-
-Static code analysis maps what the system *can* do. Runtime telemetry exposes what the system *actually* does under load.
-
-By feeding APM metrics, OpenTelemetry distributed traces, and log data into the documentation pipeline, generated architectural docs evolve into an **operational model of the system**:
+## Level 2 — Architectural View
 
 ```text
-Static Code Path:
-OrdersController ──► PricingService ──► Database
-
-Operational Realities (Aggregated Runtime Telemetry):
-- Throughput: 450 req/sec peak.
-- Latency Profile: P50: 35ms | P95: 180ms | P99: 1.2s
-- PricingService accounts for 75% of total P99 request latency.
-- PostgreSQL write pool reaches 85% connection utilization during peak hours.
-- External Payment Gateway times out on ~1.2% of calls, triggering background retry jobs.
-- Scheduled reconciliation job executes every 15 minutes, processing an average of 42 orphaned payments per batch.
+REST API
+→ Command Handler
+→ Database
+→ Message Broker
+→ Consumer
 ```
 
-This grounds architectural understanding in real-world behavior, preventing teams from designing around theoretical assumptions that do not reflect production realities.
+## Level 3 — Implementation View
+
+```text
+POST /orders
+→ PlaceOrderController
+→ PlaceOrderCommand
+→ PlaceOrderHandler
+→ PricingClient
+→ OrderRepository
+→ UnitOfWork
+→ EventPublisher
+```
+
+Agents can then load only the level of detail relevant to the current task.
+
+Hierarchical zoom prevents attention degradation and context exhaustion. An agent solving a localized bug does not need to parse the entire codebase into its prompt; it routes down from the system view to locate the owning container, inspects the component boundary, and only pulls the specific implementation files required for the patch.
 
 ---
 
-## Repository Documentation Structure
+# Intended Architecture vs Implemented Architecture
 
-Generated documentation should live in the repository, organized into concise, modular files rather than a single monolithic document:
+Generated documentation remains useful even when the original system was created from an existing specification.
+
+In that case there are two distinct representations:
+
+```text
+Intended architecture
+        ↓
+       Code
+        ↓
+Reconstructed architecture
+```
+
+The original documentation describes:
+
+> how the system is supposed to work.
+
+The reconstructed documentation describes:
+
+> how the system actually works.
+
+Comparing them can reveal **architecture drift**.
+
+Examples:
+
+- documentation says communication is asynchronous, but implementation performs synchronous HTTP calls,
+    
+- modules were supposed to be isolated, but one module accesses another module's database,
+    
+- a validation step described in the specification is missing,
+    
+- a new cache or queue exists in code but not in documentation,
+    
+- implementation contains additional business exceptions,
+    
+- an originally simple workflow evolved into several consumers and retries.
+    
+
+This gives a useful validation loop:
+
+```text
+Specification
+      ↓
+Implementation
+      ↓
+Reconstructed Model
+      ↓
+Compare with Specification
+```
+
+---
+
+# Architectural Diff
+
+The same idea can be applied between versions of the repository.
+
+Instead of asking only:
+
+> What files changed?
+
+the system can answer:
+
+> What changed architecturally?
+
+For example:
+
+```text
+Before:
+
+Orders
+→ Payments synchronously
+
+
+After:
+
+Orders
+→ PaymentRequested event
+→ Payment Consumer
+→ Payments
+```
+
+The generated architectural diff could report:
+
+```text
+Payment processing changed from synchronous communication
+to asynchronous event-driven communication.
+
+A new failure mode was introduced:
+PaymentRequested may remain unprocessed if the consumer is unavailable.
+
+Order completion is now eventually consistent.
+```
+
+This could be very useful during pull request review.
+
+Reviewing architectural diffs shifts pull request evaluation from line-by-line syntax checking to system-level impact analysis. A tech lead or reviewer can immediately see if a PR introduces an eventual consistency window, adds an unauthorized inter-module coupling, or changes an SLA boundary—issues that are almost invisible when scanning 500 lines of modified implementation code.
+
+---
+
+# Documentation Generated from Runtime Evidence
+
+Static code analysis describes what the system **can do**.
+
+Runtime telemetry can show what the system **actually does**.
+
+Useful sources include:
+
+- distributed tracing,
+    
+- logs,
+    
+- metrics,
+    
+- event streams,
+    
+- production request traces.
+    
+
+Combining code analysis with runtime evidence can produce richer documentation.
+
+For example:
+
+```text
+Code model:
+API → Service A → Service B → Database
+
+Runtime observation:
+
+P50: 80 ms
+P95: 420 ms
+P99: 2.1 s
+```
+
+Or:
+
+```text
+Payment callback normally arrives within 3–10 seconds.
+
+Approximately 2% of requests trigger one retry.
+
+The reconciliation job handles unresolved payments after 15 minutes.
+```
+
+This transforms architectural documentation into something closer to an **operational model of the system**.
+
+Grounding static analysis in APM metrics and OpenTelemetry traces prevents teams from architecting around theoretical assumptions. For instance, code analysis might show that a controller calls a pricing client and a repository. Telemetry exposes that the pricing client accounts for 75% of total P99 latency and that connection pools saturate under peak traffic. Feeding these runtime realities back into documentation ensures both human architects and AI agents optimize for real operational bottlenecks rather than imaginary ones.
+
+---
+
+# A Possible Documentation Structure
+
+A repository could contain:
 
 ```text
 /docs
+
     system-overview.md
 
     modules/
@@ -564,180 +891,232 @@ Generated documentation should live in the repository, organized into concise, m
         event-topics.md
 
     diagrams/
-        system-topology.mmd
+        system.mmd
         place-order-sequence.mmd
         payment-timeline.mmd
         order-state-machine.mmd
 ```
 
-Small, isolated markdown cards optimize context retrieval. An agent only loads `flows/confirm-payment.md` and `modules/payments.md` to resolve a bug in payment confirmation, saving thousands of tokens and eliminating irrelevant distractions.
+The documentation does not need to be large.
+
+Small, structured documents are often more useful for agents than large narrative documents.
 
 ---
 
-## Operation Cards
+# Operation Cards
 
-An **Operation Card** is a standardized, high-density format designed to provide everything needed to understand, debug, or modify a specific business operation:
+An especially useful abstraction may be an **Operation Card**.
+
+Each important operation receives a compact description containing everything needed to understand it.
+
+For example:
 
 ```text
 Operation: ConfirmPayment
 
 Purpose:
-Confirm an authorized payment and dispatch fulfillment events.
+Confirm an authorized payment.
 
 Entry points:
 - POST /payments/{id}/confirm
-- PaymentConfirmationWorker (Queue: `payments.confirm`)
 
-Components Involved:
-- Payments Ingress API
-- Payments Domain Aggregate
-- PostgreSQL (`payments` table)
-- Stripe PSP Gateway
-- Kafka Event Publisher
-- Accounting Ledger Consumer
+Components:
+- Payments API
+- Payments Domain
+- PostgreSQL
+- External PSP
+- Event Broker
+- Accounting Consumer
 
-Synchronous Execution:
-1. Validate request payload against schema.
-2. Load payment record; verify status == Authorized.
-3. Call Stripe `/v1/payment_intents/:id/capture`.
-4. Update local payment record to Confirmed.
-5. Commit transaction.
+Synchronous steps:
+1. Validate request
+2. Load payment
+3. Validate state
+4. Confirm with PSP
+5. Save status
 
-Asynchronous Execution:
-6. Write `PaymentConfirmed` event to Kafka topic `payments.events`.
-7. Accounting consumer reads event and updates general ledger.
+Asynchronous steps:
+6. Publish PaymentConfirmed
+7. Accounting updates ledger
 
-State Transitions:
-Authorized ──► Confirmed (Terminal: Failed on 4xx from PSP)
+State transition:
+Authorized → Confirmed
 
-Failure Modes & Retries:
-- Validation failure: 400 Bad Request.
-- State conflict: 409 Conflict.
-- Stripe network timeout: Exponential retry (max 3); falls back to DLQ on exhaustion.
-- Kafka write failure: Outbox entry retried by background daemon.
+Failure modes:
+- invalid state
+- PSP timeout
+- persistence failure
+- publication failure
 ```
 
-From this structured text, the system can generate:
-- Human-readable markdown docs.
-- Version-controlled Mermaid sequence diagrams.
-- Context injection blocks for coding agents.
-- Verification checklists for code review.
-- Automated integration test templates.
+From the same structured representation, the system could generate:
+
+- human-readable documentation,
+    
+- Mermaid diagrams,
+    
+- LLM context,
+    
+- tests,
+    
+- review checklists.
+    
 
 ---
 
-## Continuous Documentation in the Development Lifecycle
+# Continuous Documentation
 
-Document generation should not be treated as a one-off migration project. It must operate as an automated stage within the CI/CD development lifecycle:
+Documentation generation does not have to be a one-time migration project.
+
+It can become part of the development lifecycle.
+
+A possible process:
 
 ```text
-Developer / Agent pushes branch or creates PR
+Developer / Agent creates PR
         ↓
-Static analysis identifies changed symbols and files
+Changed symbols detected
         ↓
-Map changes to affected modules, states, and operations
+Affected modules and flows identified
         ↓
-LLM regenerates affected Operation Cards and state diagrams
+Architectural model regenerated
         ↓
-Architectural diff generated and posted to PR discussion
+Relevant documentation updated
         ↓
-Automated checks flag architectural drift or invariant violations
+Architectural diff generated
         ↓
-Updated documentation committed directly to the branch
+Consistency with intended design checked
 ```
 
-This model provides **living architectural documentation**. The documentation evolves directly with the source code, eliminating manual documentation rot.
+This creates a form of **living architecture documentation**.
+
+Instead of manually maintaining every diagram, the repository continuously reconstructs its own architectural representation.
 
 ---
 
-## Human-Targeted vs. Machine-Targeted Documentation
+# Human Documentation and AI Documentation May Differ
 
-Traditional software documentation is optimized for human readers, often relying on narrative framing, conceptual metaphors, and introductory tutorials.
+Traditional documentation is optimized primarily for people.
 
-Documentation designed for agent context requires high **thought density**—concise structural facts, clear data schemas, and explicit negative boundaries:
+Documentation intended as LLM context may have different priorities.
+
+For agents, concise structural facts can be more valuable than long prose.
+
+For example:
 
 ```text
 Module: Orders
 
 Owns:
-- Aggregates: Order, OrderLine
-- Tables: orders.*, order_lines.*
+- Order
+- OrderLine
 
-Data Access Patterns:
-- Writes: orders.*, order_lines.*
-- Reads: pricing.read_model (Read-only replica)
+Writes:
+- orders.*
+- order_lines.*
 
-Synchronous Ingress:
-- POST /orders
-- GET /orders/{id}
+Reads:
+- pricing.read_model
 
-Synchronous Egress:
-- PricingClient.calculate(items) -> PriceMatrix
+Calls synchronously:
+- Pricing
 
 Publishes:
-- Topic: orders.v1.events -> [OrderCreated, OrderCancelled]
+- OrderCreated
+- OrderCancelled
 
 Consumes:
-- Topic: payments.v1.events -> [PaymentConfirmed]
-- Topic: inventory.v1.events -> [InventoryRejected]
+- PaymentConfirmed
+- InventoryRejected
 
-Invariants & Constraints:
-- NEVER perform direct SQL writes to payment.* or inventory.* tables.
-- All state changes MUST be recorded in `orders` before publishing events.
-- Cancelling an order MUST verify shipment status != Dispatched.
+Forbidden:
+- direct writes to payment.*
+- direct writes to inventory.*
 ```
 
-This machine-oriented format strips fluff, allowing an agent to quickly ingest system invariants, verify constraints, and avoid architectural regressions.
+This format is extremely compact while providing high-value architectural constraints.
 
----
-
-## Core Operational Rules
-
-1. **Document relationships, not syntax**: Never waste context explaining what a single function does; document data ownership, module boundaries, async boundaries, and failure handling.
-2. **Organize around business workflows**: Group documentation into operations (e.g., `PlaceOrder`, `RefundPayment`) rather than isolated class hierarchies.
-3. **Record negative constraints explicitly**: Document what a component *must not* do. Agents avoid breaking architectural boundaries only when those boundaries are written down.
-4. **Use text-based diagrams**: Keep Mermaid, PlantUML, or Graphviz source files in Git so diagrams are versioned, diffed, and reviewed alongside code.
-5. **Automate documentation in CI**: Reconstruct models and generate architectural diffs on pull requests to catch drift before code merges.
-6. **Ground static analysis in runtime telemetry**: Supplement call graphs with actual latencies, timeout rates, and retry counts to accurately reflect operational behavior.
-
----
-
-## The Broader Model
-
-Software engineering is evolving past the unidirectional model where documentation is written once and slowly rots while code changes:
+The same repository can therefore maintain:
 
 ```text
-Traditional Model:
-Documentation ──► Code (Code changes, docs rot)
+Human documentation
++
+Machine-oriented semantic documentation
 ```
 
-Modern systems require a bidirectional, multi-representation model:
-
-```text
-            Specification
-                 ↕
-         Semantic Architecture
-            ↙            ↘
-         Code           Diagrams
-           ↕                ↕
-    Structural Graph    Runtime Model
-            \              /
-             \            /
-              Agent Context
-```
-
-In this model, the specification, source code, structural dependency graphs, architectural diagrams, runtime telemetry, and agent context are all representations of the same underlying system. 
-
-Each layer validates, constrains, and enriches the others. The end state is not a static folder of stale markdown files, but a **living semantic model of the system** that keeps human engineers aligned and allows AI agents to work within production architectures safely and reliably.
+generated from the same underlying model.
 
 ---
 
-## Related Notes
+# Key Principle
 
-- [[In-Flight Documentation as the Primary Framework for Coding Agents]]: Generating concise architectural blueprints concurrently during code authoring to guide future agents.
-- [[Tests Are for Verification, Not Architectural Navigation]]: Why deterministic test suites verify functionality but cannot guide agents on architectural boundaries.
-- [[Reviewing AI-Generated Code]]: How senior engineers pivot from line-by-line syntax checks to reviewing structural invariants and architectural diffs.
-- [[Comments May Become More Valuable in AI-Generated Code]]: Why non-derivable domain intent recorded in code comments feeds directly into generated architectural documentation.
-- [[LLM Agents and Institutional Memory]]: Preserving institutional engineering knowledge and system rationale across team transitions.
-- [[Software Engineering May Shift Toward Code Optimized for Agents]]: How codebases adapt their layout and boundaries to make semantic extraction and automated maintenance seamless.
-- [[Testing in the Model, Agent, LLM Era]]: The foundational verification layer that ensures reconstructed code and implementations adhere to specifications.
+The most valuable generated documentation is usually **not information that is obvious from one source file**.
+
+Automatically documenting every method:
+
+```text
+GetOrder retrieves an order.
+SaveOrder saves an order.
+```
+
+adds little value.
+
+Instead, generation should focus on information that requires understanding relationships across the repository:
+
+- module boundaries,
+    
+- responsibilities,
+    
+- ownership,
+    
+- dependencies,
+    
+- operation flows,
+    
+- asynchronous behavior,
+    
+- state transitions,
+    
+- side effects,
+    
+- failure paths,
+    
+- architectural invariants.
+    
+
+This is precisely the information that is expensive for both humans and agents to reconstruct repeatedly.
+
+---
+
+# Broader Model
+
+The long-term architecture of AI-assisted software development may therefore look less like:
+
+```text
+Documentation
+    ↓
+   Code
+```
+
+and more like:
+
+```text
+        Specification
+             ↕
+     Semantic Architecture
+        ↙            ↘
+     Code           Diagrams
+       ↕                ↕
+Structural Graph    Runtime Model
+        \              /
+         \            /
+          Agent Context
+```
+
+Code, documentation, graphs, diagrams, telemetry, and specifications become different representations of the same system.
+
+Each representation can validate and enrich the others.
+
+The result is not simply "automatically generated documentation".
+
+It is a **living semantic model of the software system** that can be consumed by both humans and AI agents.

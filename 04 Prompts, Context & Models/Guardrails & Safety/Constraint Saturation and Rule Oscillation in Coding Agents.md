@@ -15,206 +15,120 @@ aliases:
   - Whack-a-Mole Rule Thrashing
 ---
 
-# Constraint Saturation and Rule Oscillation in Coding Agents
+# When Coding Agents Get Stuck Between Too Many Rules
 
-> [!IMPORTANT] Core Engineering Reality: Attention Capacity Limits and Rule Oscillation
-> System prompts and agent instructions have hard attention limits. Patching every edge-case bug by appending another rule to your instructions triggers an exponential compliance drop. If an agent has an independent 95% chance ($p=0.95$) of following any single rule, its probability of following $M=30$ rules across a generation drops to roughly 21%:
-> $$P(\text{Full Compliance}) = \prod_{i=1}^M p_i \approx p^M$$
-> Past a critical threshold, adding rules triggers **Constraint Oscillation** (rule thrashing or whack-a-mole engineering). The agent edits code to satisfy Rule A, breaks Rule B in the process, patches B only to violate Rule C, and spins in an expensive loop. Fixing this requires **Lexicographical Constraint Tiering** (correctness > domain invariants > operational budgets > style), **Sequential Single-Objective Passes**, and **pushing all formatting and mechanical checks down to deterministic compilers and linters**.
+> [!IMPORTANT] Adding another instruction can make the next edit worse
+> A few clear rules help an agent avoid basic mistakes. Keep adding rules for every edge case, though, and the agent has to juggle more requirements while working on each change. It may fix one violation, introduce another, and then undo its first fix. Give the rules a clear order of priority, load the ones relevant to the task, split the work into passes, and let compilers, formatters, and linters check what they can check reliably.
 
-```text
-+----------------------------------------------------------------------------------------------------+
-|                         CONSTRAINT SATURATION & THE RULE THRASHING CYCLE                           |
-+----------------------------------------------------------------------------------------------------+
-|                                                                                                    |
-|  WHACK-A-MOLE OSCILLATION LOOP (Attention Displacement)                                            |
-|                                                                                                    |
-|            ┌───────────────────────────────────────────────────────────┐                           |
-|            │                                                           │                           |
-|            ▼                                                           │                           |
-|  [Agent satisfies Driver A] ──► [Breaks Driver B]                      │                           |
-|            ▲                             │                             │                           |
-|            │                             ▼                             │                           |
-|  [Re-violates Driver A]    ◄── [Breaks Driver C] ◄── [Agent fixes Driver B]                        |
-|                                                                                                    |
-|  HARNESS-LEVEL MITIGATIONS                                                                         |
-|                                                                                                    |
-|  1. Lexicographical Tiering: Tier 1 (Correctness) > Tier 2 (Boundary) > Tier 3 (Perf) > Tier 4     |
-|  2. Sequential Passes: Pass 1: Core Logic ──► Pass 2: Refinement ──► Pass 3: Tool Checks           |
-|  3. Tool Offloading: Push formatting, line caps, and import sorting to automated tooling          |
-|                                                                                                    |
-+----------------------------------------------------------------------------------------------------+
-```
+This note calls that back-and-forth **rule oscillation**. Imagine an agent follows each of 30 rules with an independent probability of 95%. In that simplified example, the chance of following all 30 is only about 21%:
 
----
+$$P(\text{following all } M \text{ rules}) = \prod_{i=1}^{M} p_i \approx p^M$$
 
-## Core Engineering Realities
+The calculation illustrates how small per-rule failure rates add up. It depends on the independence assumption; it is not a measured failure rate for a particular agent.
 
-### 1. The Math Behind Exponential Compliance Decay
-Assuming an agent has an optimistic 95% chance ($p=0.95$) of adhering to any individual constraint in your prompt, compound compliance drops off a cliff as the rule count grows:
-$$P(\text{satisfying all } M \text{ rules}) = p^M$$
-At $M=25$ rules, the compound probability of total compliance is $0.95^{25} \approx 27.7\%$. If your engineering team keeps appending instructions to patch past agent blunders, you guarantee that the model will violate at least one constraint on every single generation.
+## How another rule turns into another failure
 
-### 2. Attention Displacement and Rule Thrashing
-Transformers operate on finite attention budgets. Forcing a model to track complex local mechanics—such as cache alignment, zero-copy buffer layouts, or precise lifetime scopes—mechanically displaces its attention from high-level architectural rules parked higher up in the prompt context. When test feedback informs the agent that it broke Rule B, it over-indexes on B, immediately violates Rule A, and enters an infinite loop.
+When a team builds an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], a natural response to an agent mistake is to add a rule to the repository instructions. Over a few sprints, those instructions can grow into a collection of system prompts, [[Learning Coding Agents Through Failure-Driven Instructions|files written after earlier failures]], large `SKILL.md` definitions, static analysis checklists, architectural requirements, and policies for review by multiple agents.
 
-### 3. Lexicographical Constraint Tiering
-Never throw rules at an agent as a flat list of equal requirements. You need an explicit priority stack:
-$$\text{Tier 1: Correctness} \succ \text{Tier 2: Domain Boundaries} \succ \text{Tier 3: Performance Budgets} \succ \text{Tier 4: Style/Formatting}$$
-Make it unambiguous in the prompt harness: the agent must never break Tier 1 logic or Tier 2 security boundaries just to appease Tier 4 style guides.
+Some requirements are quite specific: no heap allocations on a hot path, immutable data structures, one class per file, or a strict 300-line limit. Each may have a reason behind it. The trouble starts when the agent must satisfy all of them during one edit. Adding a few rules initially improves the result; after a point, more instructions can make the agent less reliable. That is the failure mode described here and in [[Reliability of LLM Coding Agents|coding agent reliability]].
 
-### 4. Sequential Single-Objective Passes Over Monolithic Generation
-Asking an agent to emit code that is functionally complete, memory-optimized, styled, fully documented, and statically verified in a single turn inevitably fails. Production harnesses break execution down into discrete stages: **Business Logic** $\to$ **Performance Optimization** $\to$ **Automated Formatting and Linting**.
+Here is what the loop looks like in code:
 
-### 5. Push Predictable Checks to Tooling
-If a rule can be enforced by a compiler flag, a linter, an AST visitor, or a formatter (such as import ordering, maximum line lengths, or naming conventions), delete it from your system prompt. Natural language instructions must be reserved exclusively for domain logic and high-level architectural trade-offs that static tools cannot evaluate.
+1. The agent inlines a routine to remove an allocation from a hot path. This satisfies **Rule A**.
+2. A test or linter reports that the file now exceeds a 400-line limit, or that its responsibilities should be split. This is **Rule B**.
+3. The agent splits the code, then crosses a package boundary through an internal import. It has violated **Rule C**.
+4. It moves code again to respect that boundary and brings back the allocation that Rule A prohibited.
+5. The next retry starts the same sequence. Each pass uses more tokens and context while the code keeps changing without converging. Repeated patches can also contribute to the instability discussed in [[Software Decay and the Hidden Costs of Frictionless AI Code]].
 
----
+The requirements need not be logically impossible. Given enough time, an engineer could often design a solution that satisfies them all. The agent's problem is keeping every requirement in view while making local changes and responding to the latest failure.
 
-## The Paradox of Rule Accumulation
+## Why the agent loses track
 
-When teams set up an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], their default reaction to an agent mistake is to add another rule to the repository instructions. 
+An agent has limited context and does not keep a separate, dependable engineering notebook of every earlier decision. A difficult local problem can dominate the work in front of it. While it works through pointer arithmetic, concurrent state changes, a relational query, cache alignment, a zero-copy buffer, or a precise lifetime, a distant architectural instruction may receive less effective attention.
 
-Over a few sprints, the harness gets weighed down with:
-- Expanding system instructions and [[Learning Coding Agents Through Failure-Driven Instructions|failure-driven instruction files]],
-- Sprawling skill definitions (`SKILL.md`),
-- Static analysis checklists dumped into markdown prompts,
-- Architectural mandates (zero heap allocation, rigid immutability patterns, 1:1 file-to-class mappings, strict 300-line limits),
-- Multi-agent review policies.
+Feedback can make the problem worse. If the most recent message says, “The file is too long,” the next edit may focus on splitting the file. The agent may then overlook why it had inlined the code two turns earlier. It optimizes the current fix while losing sight of the earlier constraint. The loop can continue even when the original set of rules is consistent.
 
-Early on, adding a handful of rules helps eliminate basic mistakes. But past a certain density, **stacking more rules makes the agent less reliable, not more**.
+The simple probability example puts numbers on another part of the problem. If following each rule had an independent 95% chance, then following *all* $M$ rules would have a probability of $0.95^M$:
 
-The agent gets trapped in **Constraint Oscillation** (also called *rule thrashing* or *whack-a-mole engineering*), tanking [[Reliability of LLM Coding Agents|coding agent reliability]]:
-
-1. The agent refactors code to hit **Driver A** (e.g., inlining a routine to eliminate an allocation on a hot path).
-2. The harness test suite or linter reports a violation of **Driver B** (e.g., a hard 400-line-per-file limit or a single-responsibility modularity check).
-3. The agent splits the code to satisfy **Driver B**, which inadvertently violates **Driver C** (e.g., an architectural boundary prohibiting cross-package internal imports).
-4. The agent patches **Driver C**, which forces it to re-introduce the dynamic allocation from **Driver A**.
-5. The agent loops indefinitely, burning tokens and context window capacity while thrashing between conflicting goals, accelerating [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and codebase instability]].
-
----
-
-## Root Causes: Attention Budgets and Context Saturation
-
-On paper, your engineering constraints rarely contradict each other. A senior systems engineer given sufficient time could easily design an architecture that satisfies every single requirement.
-
-The failure happens because an LLM does not reason like a human engineer with an external notepad. It is constrained by **finite context capacity and attention fragmentation**:
-
-### 1. Multi-Objective Attention Slippage
-Transformers do not simultaneously weigh thirty competing constraints across a complex codebase. When a model dedicates its attention heads to solving a dense, localized problem—like managing pointer arithmetic, handling concurrent state transitions, or mapping a tricky relational query—its attention to distant system prompt instructions degrades. Fulfilling Constraint A actively pushes Constraints B, C, and D out of effective focus.
-
-### 2. The Multiplicative Failure Rate of Compound Rules
-If an agent has a 95% chance of respecting any single rule, compound reliability plummets as the rules accumulate:
-$$P(\text{satisfying all } M \text{ rules}) = p^M$$
-
-| Number of Rules ($M$) | Compliance per Rule ($p$) | Compound Probability ($p^M$) |
+| Rules to follow | Chance per rule | Chance of following all rules in this example |
 | :--- | :--- | :--- |
-| 5 rules | $0.95$ | $\approx 77.4\%$ |
-| 15 rules | $0.95$ | $\approx 46.3\%$ |
-| 30 rules | $0.95$ | $\approx 21.5\%$ |
+| 5 | 95% | About 77.4% |
+| 15 | 95% | About 46.3% |
+| 25 | 95% | About 27.7% |
+| 30 | 95% | About 21.5% |
 
-In an over-constrained system prompt, the model is mathematically primed to violate at least one architectural rule on nearly every turn.
+These figures are an illustration, not a prediction: real rules are neither equally difficult nor independent. They do show why success on each individual requirement would not guarantee success on the entire list. Appending another instruction after every mistake does not, by itself, solve the compound problem.
 
-### 3. Myopic Local Optimization
-LLMs prioritize the immediate turn context. When you inject corrective feedback (*"You broke Driver B: max file length exceeded"*), the model treats Driver B as the primary objective for its next generation. In hyper-focusing on Driver B, it forgets the design constraints and historical context that shaped its solution for Driver A two turns earlier.
+## Where the back-and-forth shows up in a codebase
 
----
+The same pattern appears in several familiar design choices:
 
-## Architectural Manifestations of Rule Thrashing
+| Rules in tension | What the agent keeps changing |
+| :--- | :--- |
+| Object-oriented wrappers and a zero-allocation, low-latency path | It adds wrapper classes for a cleaner structure, then removes them from the hot loop to avoid allocations. |
+| Limits on file length or file count and small, single-purpose modules | It puts several classes into one file to reduce the file count, then splits them when the file exceeds a line limit. |
+| DRY and isolation between modules | It moves repeated logic into a shared utility package, then duplicates the logic again to avoid coupling across module boundaries. |
+| Immutability and throughput in a state machine | It replaces mutable buffers with immutable records, sees warnings about garbage collection or memory churn, and switches back. |
 
-Below are four common oscillation loops seen in production repositories when prompt constraints conflict:
+In each case, a local correction can reverse an earlier decision. The agent needs to know which rule matters more in that part of the system and when the two goals require a deliberate design choice.
 
-| Manifestation | What the Agent Does | Underlying Conflict |
-| :--- | :--- | :--- |
-| **Allocation vs. Abstraction Ping-Pong** | Alternates between creating clean object-oriented wrapper classes and unwrapping raw structs in hot execution loops. | Clean Architecture mandates vs. Zero-Allocation/Low-Latency performance budgets. |
-| **File Budget vs. Modular Granularity** | Squeezes five classes into a single file to keep total file count down, then splits them across five files when warned about line count caps. | Hard line limits vs. Single-responsibility / touchpoint budgets. |
-| **DRY vs. Blast-Radius Isolation** | Deduplicates shared logic into a common utility package, then unrolls it back into copy-pasted implementations when warned about cross-module coupling. | Rigid DRY enforcement vs. Module boundary isolation. |
-| **Immutability vs. State Machine Throughput** | Converts mutable buffers into immutable record types, hits garbage-collection or memory churn warnings, and immediately reverts to mutable buffers. | Functional immutability rules vs. High-throughput runtime constraints. |
+## Put the rules in an order the agent can use
 
----
+A flat checklist makes every instruction look equally urgent. Give the agent an explicit order of priority:
 
-## Harness-Level Solutions: Breaking the Oscillation Trap
+1. **Technical correctness:** the code compiles, passes tests and type checks, and respects memory safety.
+2. **Domain and security boundaries:** data integrity, transaction scopes, authorization checks, and preventing data loss.
+3. **Operational and performance limits:** latency targets, allocation limits, query count caps, and hot-path performance.
+4. **Style and organization:** names, line limits, file structure, and comment formatting.
 
-To eliminate constraint saturation, stop treating your system prompt like an unbounded catch-all for every historical failure. Enforce structural isolation in the execution harness:
+If a style rule conflicts with correctness or a security boundary, the agent should keep the higher-priority requirement. State that directly in the harness instructions. The order does not make performance or style irrelevant; it tells the agent what to preserve when a quick fix would trade away something more important.
 
-### 1. Hierarchical Constraint Tiering
-Never feed rules to an agent as an unranked, flat list. The harness must declare an unambiguous, lexicographical priority order:
+## Load rules when they apply
 
-```text
-TIER 1: Inviolable Technical Invariants
-└── Clean compilation, passing tests, strict memory safety, type checking.
+Do not put the whole engineering handbook into every task. Select rules based on the files the agent is changing:
 
-TIER 2: Core Domain & Security Invariants
-└── Data integrity, explicit transaction scopes, authorization checks, zero data loss.
+- Load hot-path memory rules for modules under `src/core/engine/**` or files marked `@performance-critical`.
+- Load API validation and payload rules when the agent changes controllers, routes, or schemas.
+- Start an ordinary feature task with a small set of three to five core architectural guidelines.
 
-TIER 3: Operational & Performance Budgets
-└── Latency SLAs, allocation limits, query count caps, hot-path optimization.
+This leaves room for the local constraints the task actually needs, without asking the agent to carry unrelated rules throughout the run.
 
-TIER 4: Ergonomics & Style
-└── Naming conventions, line caps, file structures, comment formatting.
-```
+## Work through the objectives in passes
 
-When two rules collide, Tier 1 and Tier 2 win every time. Configure your harness prompt with clear instructions:
-> *"Never compromise Tier 1 correctness or Tier 2 domain boundaries to satisfy Tier 4 formatting or line limits."*
+Asking for complete business logic, optimized memory use, documentation, formatting, and static verification in one generation gives the agent several competing targets at once. Run the work in stages instead:
 
-### 2. Context-Relevant Dynamic Rule Scoping
-Do not feed your entire engineering handbook into every single agent run. Load constraints **just-in-time** based on the files being touched:
-- Hot-path memory guidelines load **only** when touching modules matching `src/core/engine/**` or files flagged with `@performance-critical`.
-- API validation and payload constraints load **only** when editing controllers, routes, or schema definitions.
-- Baseline feature tasks run with a lean prompt containing no more than three to five core architectural guidelines.
+1. **Make it work:** implement the business logic and get the unit tests passing. Leave line limits, formatting, and small optimizations for later.
+2. **Refine the working code:** profile the relevant paths, reduce allocations, and check the performance budget.
+3. **Run the tools:** format the code, sort imports, and apply deterministic linter fixes. Prettier or Ruff can handle the formatting where they fit the project.
 
-### 3. Sequential Multi-Pass Decomposition
-Stop asking a single agent to deliver code that is functionally correct, fully optimized, styled, and documented in one shot. Break execution into a discrete pipeline:
+Each pass has a clear immediate objective. The agent still needs to preserve the higher-priority constraints established earlier; the stages prevent it from trying to optimize every dimension during the same edit.
 
-```text
-[Raw Feature Prompt]
-         │
-         ▼
-┌──────────────────┐
-│ Pass 1: Logic    │ ──► Focus purely on functional correctness and passing unit tests.
-└──────────────────┘     Ignore line limits, formatting, and micro-optimizations.
-         │
-         ▼
-┌──────────────────┐
-│ Pass 2: Refine   │ ──► Profile and optimize hot paths, clean up memory allocations,
-└──────────────────┘     and enforce performance budgets on the working code.
-         │
-         ▼
-┌──────────────────┐
-│ Pass 3: Tooling  │ ──► Run auto-formatters (e.g., Prettier, Ruff), sort imports,
-└──────────────────┘     and execute deterministic linter fixes.
-```
+## Stop retries that return to the same code
 
-Each stage targets a single, isolated objective, which prevents multi-objective attention thrashing.
+The harness can watch file diffs or AST changes across retries. If file `F` alternates between two shapes, or the diff at iteration $N+2$ reverses the change from iteration $N$, stop the loop. Compare diff hashes if that is sufficient to detect the repeated changes.
 
-### 4. Oscillation Detection and Circuit Breakers
-Your agent harness should track file diffs and AST changes across internal retry loops:
-- If the harness detects that file `F` is oscillating between two AST shapes or generating cyclic git diffs across iterations $N$ and $N+2$, it should immediately trip an internal **Circuit Breaker**.
-- The harness stops the loop and raises an explicit error:
-  > *"Rule Oscillation Detected: The agent is thrashing between [Rule A: 300-Line Limit] and [Rule B: Zero Allocations]. Aborting loop. Requires human arbitration."*
+Report the rules involved, for example: “The agent is alternating between the 300-line limit and the zero-allocation rule. The retry loop has stopped and needs an engineer to decide how to satisfy both.” This gives a reviewer a concrete conflict to resolve instead of another superficial patch. [[Reviewing AI-Generated Code]] covers that kind of back-and-forth in review.
 
-### 5. Offload Mechanical Checks to Deterministic Tools
-Every rule an LLM tracks consumes attention and token budget. If an invariant can be checked by a compiler, a linter, a code formatter, or an architecture unit test (like ArchUnit or custom AST scripts), **strip it from the prompt**.
-Save the model's limited attention window for business domain architecture and structural choices that deterministic tools cannot evaluate.
+## Let deterministic tools check mechanical rules
 
----
+An agent does not need to remember import ordering or a maximum line length if a formatter or linter can check it. The same applies to rules a compiler flag, an AST script, or an architecture test such as ArchUnit can enforce. Remove those checks from the prompt and run the tools as part of the workflow.
 
-## Practical Rules of Thumb
+Use natural-language instructions for domain decisions and architectural trade-offs that those tools cannot evaluate. This reduces the number of mechanical details the agent must hold in context while it works on the design.
 
-1. **More rules yield diminishing, then negative returns**: Past a modest threshold, every rule added to a prompt increases the probability of constraint oscillation.
-2. **Context saturation drives rule failure**: Agents do not drop constraints because the rules logically conflict on paper. They drop them because their attention mechanisms degrade under multi-objective saturation.
-3. **Establish an explicit hierarchy**: Define constraint tiers so the model never sacrifices functional correctness or security to appease aesthetic formatting rules.
-4. **Decompose generations into single-objective steps**: Run correctness passes, performance optimizations, and static formatting in sequential, isolated stages.
-5. **Add harness-level circuit breakers**: Monitor diff hashes across turns. If the agent alternates between the same two implementations across iterations, break the loop and alert the engineer.
+## Practical rules of thumb
 
----
+1. **Treat every new prompt rule as a cost.** A few rules can prevent common mistakes; a growing list can increase the chance that one of them gets lost or causes another retry.
+2. **Look for loss of context before declaring the rules contradictory.** The agent may simply be focusing on the latest failure and overlooking an earlier decision.
+3. **Set priorities explicitly.** Correctness and domain or security boundaries take precedence over formatting and file-length preferences.
+4. **Separate the work into passes.** Get correct code first, refine performance, and let tools handle formatting and other mechanical checks.
+5. **Detect repeated diffs and stop.** If the agent moves between the same two implementations, show the conflict to an engineer instead of spending more retries on it.
 
-## Graph Connections
+## Related notes
 
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Practical loop construction, iteration limits, and escalation patterns designed to prevent infinite rule thrashing.
-- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: The systemic risks of appending rules to `AGENTS.md` whenever an edge-case bug occurs.
-- **[[Reviewing AI-Generated Code]]**: Spotting when an agent hits its reasoning limit and starts generating superficial patches back and forth during reviews.
-- **[[How Context Narrows an AI's Solution Space]]**: Using constraints constructively to narrow search spaces, and identifying the tipping point where over-constraint degrades attention.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Enforcing mechanical constraints via deterministic tooling without polluting prompt context.
-- **[[Reliability of LLM Coding Agents]]**: The math behind compound error rates when models are forced to juggle dozens of concurrent rules.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Replacing long lists of generic rules with lean, task-specific semantic blueprints to focus model attention.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — execution loops, retry limits, and escalation when the agent cannot converge.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]** — the risk of adding a rule to `AGENTS.md` for every edge-case failure.
+- **[[Reviewing AI-Generated Code]]** — recognizing superficial fixes that undo one another during review.
+- **[[How Context Narrows an AI's Solution Space]]** — when constraints help narrow the search and when too many make the work harder.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — using deterministic checks without filling the prompt with mechanical instructions.
+- **[[Reliability of LLM Coding Agents]]** — how per-rule failure can accumulate when an agent handles many rules at once.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — replacing long generic rule lists with concise guidance for the task at hand.
