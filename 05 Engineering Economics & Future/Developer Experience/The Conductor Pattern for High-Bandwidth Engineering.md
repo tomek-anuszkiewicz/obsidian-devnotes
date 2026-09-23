@@ -43,10 +43,10 @@ flowchart TD
 ## The main ideas
 
 1. **Typing can limit the pace of implementation.** An experienced engineer can often describe an architecture, its failure modes, and its data contracts faster than they can type all the code. Dictation at roughly 150–200 words per minute, compared with typing at roughly 40–60, makes it easier to put that thinking into a task brief. The agent handles the syntax and repetitive work.
-2. **The repository teaches the agent your standards.** Conway's Law says that a system reflects how its builders communicate. For an engineer working with agents, repository rules, tests, and reusable workflows are part of that communication. Loose prompts invite inconsistent implementations; explicit constraints and checks help keep them aligned.
+2. **The repository teaches the agent your standards.** Conway's Law says that a system reflects how its builders communicate. For an engineer working with agents, repository rules, tests, and reusable workflows are part of that communication (see [[Agentic Coding Harness and Controlled Development Workflows]]). Loose prompts invite inconsistent implementations; explicit constraints and checks help keep them aligned.
 3. **Reviewing a concrete result is often easier than specifying everything in advance.** Starting with an empty document and trying to cover every edge case can stall the work. Looking at an implementation makes an unindexed query, a missing timeout, or a poor abstraction much easier to point out. The original comparison of $O(N)$ generation with $O(1)$ recognition describes that difference in effort, not a literal complexity guarantee.
 4. **Do not let a useful correction stay in your head.** When an agent violates a boundary, fixing that one diff by hand leaves the reason for the mistake unstated. Turn the correction into a repository rule, a reusable skill, or an automated check, and have the agent apply it.
-5. **Review the first example closely; reuse the proven workflow.** The first implementation of a pattern deserves a line-by-line review. Once the approach is captured in a skill and checked by tests, later instances can be delegated with more attention on the checks and a focused diff review.
+5. **Review the first example closely; reuse the proven workflow.** The first implementation of a pattern deserves a line-by-line review. Once the approach is captured in a skill and checked by tests, later instances can be delegated with more attention on the checks and a focused diff review (leveraging [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]).
 
 ## 1. What changes when typing stops being the bottleneck
 
@@ -88,9 +88,9 @@ When that happens, first ask why the agent chose that path. Was the boundary mis
 
 1. **A repeatable rule:** Add it to `.agents/rules/`, for example: `Never import infrastructure adapters directly into domain entities`.
 2. **A sequence of steps:** Put the proven workflow in `.agents/skills/`.
-3. **A structural boundary:** Add a linter, architecture test such as ArchUnit or TS-Arch, or a pre-commit check.
+3. **A structural boundary:** Add a linter, architecture test such as ArchUnit or TS-Arch (see [[Executable Architecture Tests for Coding Agent Guardrails]]), or a pre-commit check.
 
-Point the agent to that new constraint and have it correct its own diff. Run the relevant checks. The goal is to turn an observed mistake into guidance or a check that applies beyond the current task. A rule can still need enforcement and maintenance; recording it alone does not guarantee that no future agent will repeat the mistake.
+Point the agent to that new constraint and have it correct its own diff. Run the relevant checks. The goal is to turn an observed mistake into guidance or a check that applies beyond the current task (see [[Learning Coding Agents Through Failure-Driven Instructions]]). A rule can still need enforcement and maintenance; recording it alone does not guarantee that no future agent will repeat the mistake.
 
 ## 5. Review the first implementation closely, then reuse the pattern
 
@@ -130,7 +130,7 @@ The repository structure also matters. Organize code into clear vertical slices 
 
 ## 7. You can direct the architecture without knowing every language detail
 
-Working with a coding agent does not require memorizing every compiler flag, language feature, or third-party API. The agent can write language-specific syntax, satisfy type requirements, and carry out routine refactors. You still need to decide the system boundaries, evaluate the trade-offs, and check the result against something more reliable than either person's memory.
+Working with a coding agent does not require memorizing every compiler flag, language feature, or third-party API. The agent can write language-specific syntax, satisfy type requirements, and carry out routine refactors. You still need to decide the system boundaries, evaluate the trade-offs, and check the result against something more reliable than either person's memory (see [[AI Changes the Role and Training of Software Engineers]]).
 
 Your part of the work includes deciding who owns each component and how components communicate; assessing data structures, caching, and allocation limits; supplying expected outputs and test vectors; and defining the checks that guard the architecture. The agent can turn those decisions into implementation code, tests, and documentation, then run the checks and repair failures.
 
@@ -146,16 +146,16 @@ If the language or framework is unfamiliar, do not try to validate it from memor
 
 When the agent misses a type check, uses a deprecated API, or fails a build, let it fix the immediate code. Also ask whether a repository rule or verification check was missing. A linter can catch an unhandled error; an integration test can check backward compatibility of a schema. Strengthening the check makes the next run easier to assess. It does not mean that every isolated compiler error needs a new rule.
 
-## Relationship to the Knowledge Graph
+## Related notes
 
-- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Check system boundaries on a small working slice before repeating the pattern.
-- **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Remove completed work from the active roadmap so it does not crowd the agent's context.
-- **[[The Living Engineering Chronicle and Context Compaction]]**: Keep architectural decisions available across long-running work.
-- **[[Executable Architecture Tests for Coding Agent Guardrails]]**: Enforce architectural boundaries with tests.
-- **[[AI Changes the Role and Training of Software Engineers]]**: Explore the move from writing each line to directing and reviewing the work.
-- **[[Multi-Agent Software Development]]**: Coordinate agents and engineers working at the same time.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: Examine code growth when generation is easy and architectural constraints are weak.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Set up repository rules, boundaries, and test loops.
-- **[[Learning Coding Agents Through Failure-Driven Instructions]]**: Turn corrections into instructions the agent can use again.
-- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: Use small end-to-end experiments before standardizing an implementation.
-- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]**: Consider the personal effect of moving from repetitive coding to architectural direction.
+- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]** — Check system boundaries on a small working slice before repeating the pattern.
+- **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** — Remove completed work from the active roadmap so it does not crowd the agent's context.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Keep architectural decisions available across long-running work.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Enforce architectural boundaries with tests.
+- **[[AI Changes the Role and Training of Software Engineers]]** — Explore the move from writing each line to directing and reviewing the work.
+- **[[Multi-Agent Software Development]]** — Coordinate agents and engineers working at the same time.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — Examine code growth when generation is easy and architectural constraints are weak.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Set up repository rules, boundaries, and test loops.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Turn corrections into instructions the agent can use again.
+- **[[How AI Changes Prototyping and the Path from PoC to Production]]** — Use small end-to-end experiments before standardizing an implementation.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — Consider the personal effect of moving from repetitive coding to architectural direction.

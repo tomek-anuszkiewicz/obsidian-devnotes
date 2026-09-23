@@ -22,7 +22,7 @@ Put a decision model in charge of credit underwriting, insurance pricing, fraud 
 
 Removing protected attributes from the input does not remove their influence. A model can recover much of the same information from postal codes, network data, and patterns of behavior. Once the model also decides where to investigate or allocate resources, its decisions shape the data collected next. Retraining on that data can reinforce the original pattern.
 
-The practical rule is simple: **a group-level proxy must not replace or override a fact you can verify directly about the case in front of you.** For decisions that matter, the pipeline needs direct checks and a way to examine what would happen under different conditions.
+The practical rule is simple: **a group-level proxy must not replace or override a fact you can verify directly about the case in front of you** (a principle central to [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]). For decisions that matter, the pipeline needs direct checks and a way to examine what would happen under different conditions.
 
 ```text
 Group-level proxy:       Postal area → Historical flood rate → Risk score
@@ -58,7 +58,7 @@ Postal area → Historical floods → Reject the home on the hill
 Water crest compared with foundation elevation → No flood exposure → Issue the policy
 ```
 
-That substitution creates two problems. People are penalized for the demographic, geographic, or network neighborhood around them, even when their own circumstances differ. The business also turns away low-risk, profitable cases while accepting high-risk exceptions hidden inside a group labeled safe. Those are false positives and false negatives from the same shortcut.
+That substitution creates two problems. People are penalized for the demographic, geographic, or network neighborhood around them, even when their own circumstances differ. The business also turns away low-risk, profitable cases while accepting high-risk exceptions hidden inside a group labeled safe (paralleling mechanisms examined in [[AI, Averaged Decisions, and Premature Convergence on Solutions]]). Those are false positives and false negatives from the same shortcut.
 
 ---
 
@@ -141,7 +141,7 @@ The decision pipeline needs a way to distinguish an observed correlation from a 
 2. **Intervention, $P(Y \mid \operatorname{do}(X))$.** What happens if the system actively verifies the applicant's ability to service debt through open-banking APIs, regardless of location? The pipeline checks a condition instead of accepting a group label.
 3. **Counterfactuals, $P(Y_{X=x} \mid X=x', Y=y)$.** Given that a business defaulted, would it have survived a revenue drop if its fixed overhead had been 20% lower? The system examines an alternative set of conditions rather than relying on the historical average of similar businesses.
 
-The rule for a high-stakes pipeline is: **never let a proxy override or substitute for a causal condition that can be measured directly.** In insurance, check LIDAR terrain data, foundation elevation, and drainage rather than only a broad geographic zone. In credit, check current cash flow, liquid reserves, and debt obligations through banking APIs rather than a ZIP code or demographic cluster. The same discipline applies to performance engineering: a general benchmark does not prove that a more complicated implementation will speed up your code. Profile the application under a representative workload on the system that will run it.
+The rule for a high-stakes pipeline is: **never let a proxy override or substitute for a causal condition that can be measured directly** (see [[Testing in the Model, Agent, LLM Era]] on embedding deterministic invariant checks). In insurance, check LIDAR terrain data, foundation elevation, and drainage rather than only a broad geographic zone. In credit, check current cash flow, liquid reserves, and debt obligations through banking APIs rather than a ZIP code or demographic cluster. The same discipline applies to performance engineering: a general benchmark does not prove that a more complicated implementation will speed up your code. Profile the application under a representative workload on the system that will run it.
 
 The following example makes the priority explicit. A proxy score gives an initial estimate. Verified physical measurements can override it. When those measurements are unavailable, the example falls back to a threshold on the unverified score and says so in the rejection reason.
 
@@ -224,8 +224,7 @@ class UnderwritingPolicyEngine:
 
 ## Related notes
 
-* [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] - How an agent can focus on recent conversational cues and lose track of earlier operational constraints.
-* [[AI, Averaged Decisions, and Premature Convergence on Solutions]] - How optimization can favor average solutions that miss conditions at the edges.
-* [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] - Putting probabilistic models into live workflows and limiting decisions based only on proxies.
-* [[The 5-Layer System Stack for Agentic Software Engineering]] - Where validation of causal conditions (Layer 4) fits alongside runtime policy (Layer 3) and operational economics (Layer 5).
-* [[Testing in the Model, Agent, LLM Era]] - Deterministic checks for drift and proxy failures in production models.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — How an agent can focus on recent conversational cues and lose track of earlier operational constraints.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]** — How optimization can favor average solutions that miss conditions at the edges.
+- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Putting probabilistic models into live workflows and limiting decisions based only on proxies.
+- **[[Testing in the Model, Agent, LLM Era]]** — Deterministic checks for drift and proxy failures in production models.

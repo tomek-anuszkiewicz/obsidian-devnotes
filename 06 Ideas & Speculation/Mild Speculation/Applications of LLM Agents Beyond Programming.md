@@ -44,7 +44,7 @@ LLMs and agents can be useful far beyond code generation. Their strongest role i
         
     - Ask it to follow specific workflows, inspect available functionality, and capture screenshots.
         
-    - Use the running application as an empirical source of truth rather than relying only on code or specifications.
+    - Use the running application as an empirical source of truth rather than relying only on code or specifications (see [[Proactive Software - From Reactive Systems to Autonomous Agents]]).
         
 
 ## Documentation generation and maintenance
@@ -81,7 +81,7 @@ The agent can therefore be used not only to **create documentation**, but also t
 
 ## Incident and failure analysis
 
-An agent can correlate information from multiple systems:
+An agent can correlate information from multiple systems (see [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]):
 
 - logs,
     
@@ -354,7 +354,7 @@ A useful way to think about the capabilities is:
 
 Steps 6–8 are especially important because they distinguish an **agent** from a simple one-shot LLM query.
 
-Steps 1 through 5 can be handled by standard single-shot LLM prompts. However, steps 6 through 8 transform the model into an active agent: the system forms an intent, chooses which diagnostic tools to execute across sandboxes, processes the resulting feedback, and verifies its own conclusions against runtime reality.
+Steps 1 through 5 can be handled by standard single-shot LLM prompts. However, steps 6 through 8 transform the model into an active agent: the system forms an intent, chooses which diagnostic tools to execute across sandboxes, processes the resulting feedback, and verifies its own conclusions against runtime reality (see [[Agent Advantage - Relentless, Methodical Work]] and [[The Living Engineering Chronicle and Context Compaction]]).
 
 ## Key idea
 
@@ -367,3 +367,11 @@ It may instead be:
 > **AI combines many previously disconnected sources of information into one continuous reasoning process.**
 
 As more of the system becomes declarative, version-controlled, observable, and machine-readable, this becomes increasingly practical.
+
+## Related notes
+
+- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]** — Transitioning software from human-triggered tools to autonomous operational loops.
+- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Integrating models directly into live telemetry and diagnostic pipelines.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Maintaining continuous architectural logs across systems.
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Local background agent daemons running routine monitoring and validation.
+- **[[Agent Advantage - Relentless, Methodical Work]]** — Why tireless methodical execution shines in multi-source correlation.

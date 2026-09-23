@@ -29,7 +29,7 @@ Agents automate many tasks traditionally assigned to juniors:
 - routine bug fixes.
     
 
-This may weaken the traditional path from junior to senior.
+This may weaken the traditional path from junior to senior (see [[The First AI-Native Generation of Software Engineers]]).
 
 A future training model may require deliberate practice:
 
@@ -88,7 +88,7 @@ person who designs the problem,
 constrains the agent,
 reviews meaning,
 controls risk,
-and accepts responsibility.
+and accepts responsibility (see [[AI Era Software Engineering Recruitment]]).
 ```
 
 Experience with legacy systems, refactoring, production incidents, and complex business logic becomes especially valuable.
@@ -97,7 +97,7 @@ Experience with legacy systems, refactoring, production incidents, and complex b
 
 ## The Fallback Problem: Why System Comprehension Cannot Be Abdicated
 
-The most dangerous operational failure mode in an agent-assisted workflow is treating generated code as an opaque black box. When a pull request compiles, unit tests pass, and the agent's summary sounds authoritative, rubber-stamping the change without tracing execution paths invites disaster.
+The most dangerous operational failure mode in an agent-assisted workflow is treating generated code as an opaque black box. When a pull request compiles, unit tests pass, and the agent's summary sounds authoritative, rubber-stamping the change without tracing execution paths invites disaster (see [[Reviewing AI-Generated Code]]).
 
 Every production system eventually encounters problems that exceed an agent's reasoning capacity and context window:
 
@@ -171,7 +171,7 @@ Moving away from direct syntax authoring changes how engineers derive satisfacti
 
 When an experienced lead can direct an agent to build a production-ready storage engine in three weeks instead of eighteen months of manual boilerplate typing, the leverage is unmistakable. Pride moves from typing speed and API memorization to architectural clarity: framing problems cleanly, catching edge cases early, and demanding provable invariants.
 
-This shift can create a nagging sense of authorship debt: *Did I build this, or did the model?* This question is resolved by the **Whiteboard Defense Test**:
+This shift can create a nagging sense of authorship debt: *Did I build this, or did the model?* (an identity challenge explored in [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]). This question is resolved by the **Whiteboard Defense Test**:
 
 > If you were stripped of the agent, placed in front of a whiteboard with your team, could you explain and defend every causal mechanism, state transition, and trade-off in the system using first-principles reasoning?
 
@@ -188,7 +188,7 @@ Human teammates have finite energy; debating thirty architectural variants befor
 - **Asynchronous Exploration**: An engineer can log speculative questions in a scratchpad and explore them in an isolated agent session.
 - **Fast Filtering**: Instead of spending days writing throwaway boilerplate to test a thesis, an engineer can instruct an agent to spin up a prototype, run performance benchmarks, and surface edge cases in minutes. Weak ideas are discarded before standup; strong ones are refined into concrete proposals.
 
-This transforms feature inception. Instead of the traditional "sunk-cost RFC meeting"—where an engineer spends two weeks writing a document and the team accepts compromised designs because pivoting is too expensive—teams use concrete counter-prototyping. An engineer feeds an RFC to an agent: *"Here is our proposed REST approach. Build a minimal event-driven slice using our existing queue harness, and compare throughput and failure semantics."* In under an hour, the team has working code and actual benchmark data to evaluate.
+This transforms feature inception. Instead of the traditional "sunk-cost RFC meeting"—where an engineer spends two weeks writing a document and the team accepts compromised designs because pivoting is too expensive—teams use concrete counter-prototyping (see [[How AI Changes Prototyping and the Path from PoC to Production]]). An engineer feeds an RFC to an agent: *"Here is our proposed REST approach. Build a minimal event-driven slice using our existing queue harness, and compare throughput and failure semantics."* In under an hour, the team has working code and actual benchmark data to evaluate.
 
 Lowering the cost of code generation introduces a new risk: prototyping sprawl and decision paralysis. When building a benchmarked prototype takes fifteen minutes, five developers can show up with five completely different implementations. While code generation is cheap, human review bandwidth remains fixed. This makes decisive technical leadership essential: setting non-negotiable operational boundaries before exploration begins, cutting through cosmetic prototype differences, and making the final binding architectural call.
 
@@ -206,11 +206,10 @@ However, zero-cost code generation brings the temptation to refactor working cod
 - **Strict Blast Radiuses**: Cap the number of files and lines touched per change to prevent runaway diffs.
 - **Business Justification**: Require a clear production reason (performance bottleneck, missing test coverage, upcoming feature dependency) before greenlighting a refactor.
 
-## Related Notes
+## Related notes
 
-- [[AI Era Software Engineering Recruitment]] - Evaluating architectural reasoning and verification skills over syntax memorization.
-- [[The First AI-Native Generation of Software Engineers]] - How junior engineers develop intuition when starting with coding agents.
-- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The psychological shift from typing code to managing cognitive review fatigue.
-- [[How AI Changes Prototyping and the Path from PoC to Production]] - Fast prototyping, divergent exploration, and path-to-production discipline.
-- [[Reviewing AI-Generated Code]] - Techniques for maintaining system comprehension during agentic code reviews.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Developer capabilities and engineering team leverage.
+- **[[AI Era Software Engineering Recruitment]]** — Evaluating architectural reasoning and verification skills over syntax memorization.
+- **[[The First AI-Native Generation of Software Engineers]]** — How junior engineers develop intuition when starting with coding agents.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The psychological shift from typing code to managing cognitive review fatigue.
+- **[[How AI Changes Prototyping and the Path from PoC to Production]]** — Fast prototyping, divergent exploration, and path-to-production discipline.
+- **[[Reviewing AI-Generated Code]]** — Techniques for maintaining system comprehension during agentic code reviews.

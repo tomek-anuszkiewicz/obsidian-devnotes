@@ -34,7 +34,7 @@ memorization and exercises
 exam
 ```
 
-Generative AI changes one of the assumptions underneath this system.
+Generative AI changes one of the assumptions underneath this system (see [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]).
 
 A student can increasingly have access to an individual tutor that can:
 
@@ -966,14 +966,13 @@ The long-term effect of LLMs on education may therefore not be that machines rep
 
 It may be that AI finally makes it possible for teachers and schools to stop spending so much of their effort on distributing information and instead concentrate on the much harder problem:
 
-> **helping people learn how to learn, discover what interests them, and turn knowledge into real capability.**
+> **helping people learn how to learn, discover what interests them, and turn knowledge into real capability** (see [[AI Changes the Role and Training of Software Engineers]] and [[The First AI-Native Generation of Software Engineers]]).
 
 ---
 
-## Related Notes
+## Related notes
 
-- [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs|Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]] — How individual deep reading, cognitive friction, and internal mental models evolve when LLMs make surface explanations instant.
-- [[AI Changes the Role and Training of Software Engineers|AI Changes the Role and Training of Software Engineers]] — The educational pipeline shift from syntax memorization to specification, orchestration, and critical verification.
-- [[The First AI-Native Generation of Software Engineers|The First AI-Native Generation of Software Engineers]] — The operational mindset of developers who grew up building systems alongside autonomous code agents.
-- [[Personal Digital Models as the Foundation of Agent Ecosystems|Personal Digital Models as the Foundation of Agent Ecosystems]] — The persistence of user context, strengths, gaps, and personal cognitive models over a lifetime.
-- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack for Agentic Software Engineering]] — Foundational architecture connecting agent execution to formal systems and human intent.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]** — How individual deep reading, cognitive friction, and internal mental models evolve when LLMs make surface explanations instant.
+- **[[AI Changes the Role and Training of Software Engineers]]** — The educational pipeline shift from syntax memorization to specification, orchestration, and critical verification.
+- **[[The First AI-Native Generation of Software Engineers]]** — The operational mindset of developers who grew up building systems alongside autonomous code agents.
+- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — The persistence of user context, strengths, gaps, and personal cognitive models over a lifetime.

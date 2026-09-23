@@ -220,7 +220,7 @@ A model may be very good at evaluating a solution once someone mentions it, whil
 
 ### The Generation-Verification Asymmetry
 
-Language models consistently exhibit an asymmetry between generation and verification: they are often capable of verifying, critiquing, and selecting a non-obvious solution once it is explicitly in context, while failing to generate that same solution independently.
+Language models consistently exhibit an asymmetry between generation and verification: they are often capable of verifying, critiquing, and selecting a non-obvious solution once it is explicitly in context, while failing to generate that same solution independently (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]).
 
 Collapsing this dynamic into a single unguided generation pass causes the model to sample median, high-probability tokens and prematurely converge on obvious paths before verification can even occur.
 
@@ -228,7 +228,7 @@ Collapsing this dynamic into a single unguided generation pass causes the model 
 
 ## 7. Context Retrieval Has the Same Failure Mode
 
-The same problem occurs before reasoning even starts.
+The same problem occurs before reasoning even starts (see [[Retrieval-Augmented Generation and Context Architecture]]).
 
 Imagine the real relevant information is:
 
@@ -242,7 +242,7 @@ but retrieval returns:
 A B C
 ```
 
-The model can reason perfectly over A, B, and C and still reach the wrong conclusion.
+The model can reason perfectly over A, B, and C and still reach the wrong conclusion (see [[How Context Narrows an AI's Solution Space]]).
 
 Therefore there are at least three separate quality problems:
 
@@ -261,10 +261,9 @@ A bad answer does not necessarily mean that the reasoning model itself was weak.
 
 The system may simply have provided the wrong context.
 
-## Related Notes
+## Related notes
 
-- [[AI, Averaged Decisions, and Premature Convergence on Solutions]] - How standard generation converges on median solutions and how to prevent it.
-- [[How Context Narrows an AI's Solution Space]] - How context constraints and negative bounding prune model solution spaces.
-- [[Retrieval-Augmented Generation and Context Architecture]] - Context retrieval architecture and search quality.
-- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial evaluation and specialized review roles.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 4: Evaluation, verification, and reward models.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]** — How standard generation converges on median solutions and how to prevent it.
+- **[[How Context Narrows an AI's Solution Space]]** — How context constraints and negative bounding prune model solution spaces.
+- **[[Retrieval-Augmented Generation and Context Architecture]]** — Context retrieval architecture and search quality.
+- **[[LLMs as a Code Review Team]]** — Architecture for multi-agent adversarial evaluation and specialized review roles.

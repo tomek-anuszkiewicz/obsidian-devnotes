@@ -1128,3 +1128,11 @@ Agents compose those capabilities into the process required at a particular mome
 The system remains.
 
 The fixed application around it becomes optional.
+
+## Related notes
+
+- **[[A New Market for Small, Custom Business Software]]** — How lower implementation costs enable bespoke, single-tenant enterprise tools.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and capability interfaces so LLMs can generate reliable integration workflows.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Moving from monolithic UI features to flexible, agent-composable platform primitives.
+- **[[Software Implementation Is Becoming a Weaker Moat]]** — Why data gravity, business relationships, and core transactional engines matter more than application wrappers.
+- **[[Workflow Orchestration in Agentic Systems]]** — Composing underlying enterprise capabilities into multi-step agent execution workflows.

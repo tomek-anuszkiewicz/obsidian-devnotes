@@ -119,11 +119,11 @@ Start with one conversation you are allowed to record, or use a solo simulation.
 
 ## Related notes
 
-- [[Always-On Autonomous Agents - The 24-7 Local Operating System]] — running recurring personal analysis and coaching workflows locally.
-- [[Local vs Cloud and Hybrid Model Execution]] — options for keeping transcription and analysis on your own hardware.
-- [[AI Era Software Engineering Recruitment]] — the hiring situations where communication practice may matter.
-- [[The Implications of Having a Digital Model of Yourself]] — using records of your own behavior for reflection and coaching.
-- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] — the cost of workplace friction.
-- [[How Personal AI Models Reconcile External Knowledge]] — comparing personal patterns with outside examples.
-- [[AI Changes the Role and Training of Software Engineers]] — the shift toward architectural judgment and communication as agents do more implementation.
-- [[Finding Original Knowledge in an Internet Full of Repetition]] — preserving an authentic voice amid formulaic communication.
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Running recurring personal analysis and coaching workflows locally.
+- **[[Local vs Cloud and Hybrid Model Execution]]** — Options for keeping transcription and analysis on your own hardware.
+- **[[AI Era Software Engineering Recruitment]]** — The hiring situations where communication practice may matter.
+- **[[The Implications of Having a Digital Model of Yourself]]** — Using records of your own behavior for reflection and coaching.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The cost of workplace friction and interpersonal fatigue.
+- **[[How Personal AI Models Reconcile External Knowledge]]** — Comparing personal patterns with outside examples.
+- **[[AI Changes the Role and Training of Software Engineers]]** — The shift toward architectural judgment and communication as agents do more implementation.
+- **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Preserving an authentic voice amid formulaic communication.

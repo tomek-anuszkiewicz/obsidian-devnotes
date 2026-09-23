@@ -197,6 +197,9 @@ When user context is propagated, Service B should record structured audit events
 
 Capturing both `technicalActor` and `initiatedByUserId` allows incident response to determine which machine identity executed the network call versus which human user authorized the business action. It also correlates operations across services via `traceId` without forcing downstream capability services to store or query user-level access control tables.
 
----
+## Related notes
 
-Next steps: See [[User Context in Asynchronous Systems]] for message brokers and queues, or return to [[Propagating User Context Between Services]].
+- **[[Propagating User Context Between Services]]** — Patterns and headers for propagating trusted caller identity.
+- **[[User Context in Asynchronous Systems]]** — Retaining identity context across message brokers and batch jobs.
+- **[[Service-to-Service Authentication in Distributed Runtimes]]** — Workload identity and mTLS mechanisms.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]** — Communication topology and resilience.

@@ -617,3 +617,11 @@ This shifts the most valuable resource from **content production** to **knowledg
 The Internet contains enormous amounts of the former.
 
 The latter may become increasingly scarce — and increasingly valuable.
+
+## Related notes
+
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why empirical interaction with real systems is necessary to avoid synthetic model collapse.
+- **[[The Most Valuable Software Training Data May Be Private]]** — Internal incident post-mortems and proprietary commit diffs as high-value training signals.
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing verified runtime execution traces for continual model learning.
+- **[[How AI Breaks the Economic Model of the Open Web]]** — The collapse of ad-supported search indexing and open publication incentives.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]** — Personal knowledge filtering and semantic deduplication in Obsidian vaults.

@@ -1214,3 +1214,11 @@ A self-maintaining technological civilization potentially could.
 That may be one of the most interesting definitions of a singularity:
 
 > not a machine suddenly becoming infinitely intelligent, but civilization acquiring autonomous processes whose scale, speed and time horizon are no longer fundamentally human.
+
+## Related notes
+
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback, automated verifiers, and agentic workflows to train frontier models.
+- **[[Agent Adoption as a Learning Flywheel]]** — How operational attempts and error traces feed the continuous data flywheel for future models.
+- **[[AI Productivity Is Limited by the Delivery System]]** — Why downstream delivery pipelines and physical constraints bound organizational output.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Automated loops where agents refine their own instructions based on execution failures.
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why empirical interaction with the physical world remains the ultimate governor on closed-loop automation.

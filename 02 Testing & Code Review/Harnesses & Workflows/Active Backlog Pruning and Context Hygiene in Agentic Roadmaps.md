@@ -22,7 +22,7 @@ On a typical project board, completed tickets stay visible. Their checkmarks and
 
 An LLM does not retain a reliable working memory between sessions. It rebuilds its working context from the prompt and the files it reads. A completed task, a replaced interface specification, or an obsolete constraint therefore takes up room in the context window alongside the current acceptance criteria. Old text can also influence how the agent interprets the next task.
 
-The rule I use here is **Active Backlog Pruning**, or **Zero Retention**: once a step has passed verification, remove its detailed entry from the active roadmap. Record what happened in `DIARY.md` and the Git history. Keep the roadmap focused on work still pending or in progress, with only a short summary of established capabilities.
+The rule I use here is **Active Backlog Pruning**, or **Zero Retention**: once a step has passed verification, remove its detailed entry from the active roadmap. Record what happened in `DIARY.md` and the Git history (see [[The Living Engineering Chronicle and Context Compaction]]). Keep the roadmap focused on work still pending or in progress, with only a short summary of established capabilities.
 
 ```mermaid
 flowchart TD
@@ -48,7 +48,7 @@ Five rules keep the plan usable:
 
 The problem builds up across turns. Imagine a roadmap that starts with 10 pending steps and about 2,000 tokens. By turn 10 it carries five completed steps and about 6,000 tokens. By turn 30 it carries 25 completed steps and about 25,000 tokens. The agent now spends much of its input budget on work it cannot use as its current plan.
 
-That creates several practical failure modes:
+That creates several practical failure modes (see [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] and [[How Context Narrows an AI's Solution Space]]):
 
 - **The current task becomes harder to find.** Acceptance criteria and important constraints are surrounded by old implementation notes. Negative boundaries, such as an instruction to avoid a particular interface, may be less prominent.
 - **Old solutions look current.** Suppose a completed step described a temporary shim, mock, or disposable adapter. If that description stays in the roadmap after the shim is removed, the agent may copy the old pattern and bring a retired interface back into the code.
@@ -63,7 +63,7 @@ A Markdown strikethrough changes what a person sees; it does not remove those wo
 
 Use this sequence when an agent finishes a milestone:
 
-1. **Run the checks.** Run the unit tests, integration suites, and automated architecture checks that apply to the milestone. Do not prune the step before it passes the verification gates.
+1. **Run the checks.** Run the unit tests, integration suites, and automated architecture checks that apply to the milestone (see [[Executable Architecture Tests for Coding Agent Guardrails]]). Do not prune the step before it passes the verification gates.
 2. **Write the engineering record.** Append what changed, the design trade-offs, touched files, and test results to `DIARY.md`. A script or tool call can update the diary without loading the entire history into the agent's prompt.
 3. **Remove the finished step.** Delete its heading, acceptance criteria, and implementation notes from Section 2, “Remaining Milestones”, in `ROADMAP.md`.
 4. **Update the baseline when appropriate.** If the step establishes a major architectural capability, add a single-sentence summary to Section 1, “Verified Baseline Deliverables”.
@@ -198,17 +198,17 @@ if __name__ == "__main__":
 
 If the agent tries to finish a milestone by changing it to `- [x] Step 1: Initialize Bus`, this check fails. The agent must remove the completed text, record the result in `DIARY.md`, and renumber the pending steps before the next run.
 
-The script checks for `[x]`, `[COMPLETED]`, `[DONE]`, and strikethrough text in the remaining-milestones section. It also checks that steps numbered in the form `- Step N:` run from 1 without gaps, and sets ceilings of 500 lines and 40 KB for `ROADMAP.md`. Those checks turn the file convention into a repeatable repository rule.
+The script checks for `[x]`, `[COMPLETED]`, `[DONE]`, and strikethrough text in the remaining-milestones section. It also checks that steps numbered in the form `- Step N:` run from 1 without gaps, and sets ceilings of 500 lines and 40 KB for `ROADMAP.md`. Those checks turn the file convention into a repeatable repository rule (see [[Agentic Coding Harness and Controlled Development Workflows]]).
 
 ## Keep history available without carrying it into every turn
 
 The agent needs the verified state of the system and a clear next task. It does not need the full story of each completed step in every prompt. Pruning the active roadmap leaves room for current constraints and acceptance criteria; `DIARY.md` and Git preserve the technical history when someone needs to inspect it.
 
-### Related notes
+## Related notes
 
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: File responsibilities, state transitions, and the broader execution loop.
-- **[[The Living Engineering Chronicle and Context Compaction]]**: Where the removed history goes and how to consult it without loading the entire diary into the prompt.
-- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Verifying small roadmap steps before expanding them.
-- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]**: How old prompt text can affect later decisions.
-- **[[Executable Architecture Tests for Coding Agent Guardrails]]**: Checks for repository rules, file limits, and hygiene.
-- **[[How Context Narrows an AI's Solution Space]]**: How large prompts affect what the agent considers.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — File responsibilities, state transitions, and the broader execution loop.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Where the removed history goes and how to consult it without loading the entire diary into the prompt.
+- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]** — Verifying small roadmap steps before expanding them.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — How old prompt text can affect later decisions.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Checks for repository rules, file limits, and hygiene.
+- **[[How Context Narrows an AI's Solution Space]]** — How large prompts affect what the agent considers.

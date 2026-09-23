@@ -187,3 +187,11 @@ A better model alone may improve the system, but so can:
 - better safety and policy enforcement.
 
 The future progress of AI agents may therefore come as much from improving this entire loop as from increasing the raw capability of the underlying language model.
+
+## Related notes
+
+- **[[How LLM Systems Build Context]]** — Context assembly pipelines and token budget allocation strategies.
+- **[[How Reasoning Models Explore and Evaluate Solutions]]** — Search trees, evaluation functions, and test-time compute in reasoning models.
+- **[[How LLM Systems Enforce Safety and Higher-Level Instructions]]** — Multi-layered guardrails, deterministic sandboxes, and policy judges.
+- **[[How Context Narrows an AI's Solution Space]]** — How domain rules, constraints, and negative prompting prune candidate paths.
+- **[[Building Determinism from Unpredictable Models]]** — Outer loops, verification gates, and harness design for stochastic foundation models.

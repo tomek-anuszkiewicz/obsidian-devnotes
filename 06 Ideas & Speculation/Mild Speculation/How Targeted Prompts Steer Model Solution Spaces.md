@@ -86,7 +86,7 @@ If you want more than standard programming advice, start with the awkward observ
 
 As code generation becomes easier to obtain, the ability to notice an unusual failure and frame a precise question becomes more valuable. The model can range across ideas you would not have had time to gather yourself. Its output still needs the person who knows the system to decide whether the connection holds.
 
-## Knowledge graph references
+## Related notes
 
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Why precise questions grounded in unusual observations matter when code generation is widely available.
 - **[[AI Changes the Role and Training of Software Engineers]]** — The engineer's role in shaping and defending architectural decisions, including the whiteboard test.

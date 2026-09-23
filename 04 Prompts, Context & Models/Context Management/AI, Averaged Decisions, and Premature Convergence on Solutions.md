@@ -777,9 +777,9 @@ Therefore, the first answer produced by an LLM should often be treated as:
 
 **the beginning of the search, not the result of the search.** (See [[How Reasoning Models Explore and Evaluate Solutions]] and [[How Context Narrows an AI's Solution Space]]).
 
-## Related Notes
+## Related notes
 
-- [[How Reasoning Models Explore and Evaluate Solutions]] — Search trees, evaluation functions, and test-time compute in reasoning models.
-- [[How Context Narrows an AI's Solution Space]] — How context framing and attractors restrict the model's exploratory radius.
-- [[How Targeted Prompts Steer Model Solution Spaces]] — Steering model attention toward non-obvious solution regimes.
-- [[Designing Software Architecture with LLM Assistance]] — Countering model convergence on generic, unverified architectural designs.
+- **[[How Reasoning Models Explore and Evaluate Solutions]]** — Search trees, evaluation functions, and test-time compute in reasoning models.
+- **[[How Context Narrows an AI's Solution Space]]** — How context framing and attractors restrict the model's exploratory radius.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]** — Steering model attention toward non-obvious solution regimes.
+- **[[Designing Software Architecture with LLM Assistance]]** — Countering model convergence on generic, unverified architectural designs.

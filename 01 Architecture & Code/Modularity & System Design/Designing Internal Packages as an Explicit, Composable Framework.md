@@ -837,9 +837,9 @@ A well-designed internal NuGet ecosystem should follow these principles:
     
 - Core packages, integrations, and testing utilities should be separated.
     
-- Small repeated code may be better documented and copied than packaged.
+- Small repeated code may be better documented and copied than packaged (see [[Internal Shared Packages vs Agent-Generated Code]]).
     
-- Conformance tests may enforce standards without enforcing one implementation.
+- Conformance tests may enforce standards without enforcing one implementation (see [[Executable Architecture Tests for Coding Agent Guardrails]] and [[Standardizing Service Infrastructure with Reusable Blocks]]).
     
 
 ---
@@ -869,3 +869,10 @@ And the final decision rule is:
 
 > Use a shared package when it makes the system easier to understand, change, and operate.  
 > Use local code, documentation, and tests when the package would hide more than it simplifies.
+
+## Related notes
+
+- **[[Internal Shared Packages vs Agent-Generated Code]]** — Why cheap generation changes the trade-off between packaging common code and letting agents generate it locally.
+- **[[Standardizing Service Infrastructure with Reusable Blocks]]** — Providing common infrastructure foundations without imposing opinionated application runtime coupling.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — The hidden operational cost of complex shared frameworks in agent workflows.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Verifying package dependency boundaries and consumer contracts with automated architecture tests.

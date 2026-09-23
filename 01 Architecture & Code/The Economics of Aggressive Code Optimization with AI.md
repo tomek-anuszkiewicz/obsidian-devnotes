@@ -44,7 +44,7 @@ because they make software easier for humans to write, understand, extend, and m
 
 The resulting code is often less efficient than a highly specialized implementation, but the engineering cost of maintaining that specialization usually outweighs the infrastructure savings.
 
-AI agents may change this tradeoff.
+AI agents may change this tradeoff (see [[Replacing Source Generators with Explicit Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ## Optimization Becomes Cheaper When the Agent Does the Work
 
@@ -95,7 +95,7 @@ repeat
 
 The agent does not become tired of producing twenty implementations only to discard nineteen of them.
 
-This makes brute-force exploration of implementation strategies much more realistic.
+This makes brute-force exploration of implementation strategies much more realistic (see [[Agent Advantage - Relentless, Methodical Work]]).
 
 ## Small Improvements Can Accumulate for Years
 
@@ -550,7 +550,7 @@ The important question would no longer be:
 
 It may instead become:
 
-> Can we reliably regenerate it, test it, benchmark it, and verify its behaviour?
+> Can we reliably regenerate it, test it, benchmark it, and verify its behaviour? (see [[Testing in the Model, Agent, LLM Era]] and [[Building Determinism from Unpredictable Models]]).
 
 ## A Reversal of a Long-Term Software Trend
 
@@ -595,3 +595,11 @@ Millions of services each consuming slightly less CPU, memory, database capacity
 The long-term consequence may therefore be surprisingly physical:
 
 > AI-generated software may become larger in source code while requiring less hardware to execute.
+
+## Related notes
+
+- **[[Replacing Source Generators with Explicit Generated Code]]** — Why explicit, specialized generated code replaces runtime metaprogramming and dynamic reflection.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — How general-purpose abstractions create friction for automated maintenance.
+- **[[Agent Advantage - Relentless, Methodical Work]]** — Leveraging tireless iterative agent loops for profiling, benchmarking, and refactoring.
+- **[[Testing in the Model, Agent, LLM Era]]** — Validating specialized optimizations with automated regression suites and performance benchmarks.
+- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]** — Shifting from general ORM abstractions to specialized SQL projections.

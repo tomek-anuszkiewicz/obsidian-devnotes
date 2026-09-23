@@ -683,3 +683,11 @@ Increasingly, the stronger reason may be:
 > I do not want to own this problem.
 
 That shift may become one of the most important changes in how software dependencies are evaluated in the age of AI agents.
+
+## Related notes
+
+- **[[Internal Shared Packages vs Agent-Generated Code]]** — Cost of synchronization and ownership boundaries for shared components.
+- **[[Designing Internal Packages as an Explicit, Composable Framework]]** — Packaging foundational code that agents can easily consume without hidden magic.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How cheap generation increases maintenance footprint and dependency bloat.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Why transparent, explicit local code is easier for coding agents to navigate than deep inheritance or meta-programming.
+- **[[AI Changes the Economics of Technical Debt]]** — Economic models of code generation versus maintenance overhead.

@@ -21,7 +21,7 @@ aliases:
 
 We build web applications for people who read a page and operate it with a mouse, keyboard, or touchscreen. An agent using the same application often has to take screenshots, send them to a vision model, work out where to click, and repeat after the layout changes. Each step consumes tokens and time. A shifted button, modal, or responsive layout can break the sequence.
 
-WebMCP offers a more direct route. A page registers tools through `navigator.modelContext`, and an agent in the browser can discover and call them with structured arguments. The tools run in the context of an open page, with its application state and authenticated session. The application can expose actions it already performs without making the agent navigate the visual interface.
+WebMCP offers a more direct route (see [[How AI Agents May Control Computers, Applications, and the Web]] and [[Designing APIs for LLM-Generated Integration Code]]). A page registers tools through `navigator.modelContext`, and an agent in the browser can discover and call them with structured arguments. The tools run in the context of an open page, with its application state and authenticated session. The application can expose actions it already performs without making the agent navigate the visual interface.
 
 ```text
 Traditional web application:
@@ -42,21 +42,21 @@ Consider booking a flight. A visual agent has to interpret a calendar picker, wa
 
 ### 2. Browser actions no longer need a screenshot at every step
 
-Sending full-resolution screenshots to a vision model can add two to five seconds per interaction and consume a substantial token budget. Responsive layouts and infinite scrolling make the result less reliable. Calling a JavaScript tool avoids that visual interpretation step and returns structured data from the application runtime.
+Sending full-resolution screenshots to a vision model can add two to five seconds per interaction and consume a substantial token budget (see [[Token Optimization and Context Economics in Agentic Workflows]]). Responsive layouts and infinite scrolling make the result less reliable. Calling a JavaScript tool avoids that visual interpretation step and returns structured data from the application runtime.
 
 ### 3. Existing frontend code can become an agent interface
 
 A separate public REST or GraphQL API brings work: an API gateway, OAuth flows, rate limits, client SDKs, documentation, and version support. That cost helps explain why many internal tools, dashboards, and portals have no public API.
 
-The web application already has an authenticated client and a way to communicate with its backend. A tool can call an existing client-side store or dispatch action, such as `cartStore.add`, `reportStore.generate`, or `editor.insertBlock`. That makes the application's existing functions available to an agent without adding a new backend endpoint or a separate public integration layer.
+The web application already has an authenticated client and a way to communicate with its backend. A tool can call an existing client-side store or dispatch action, such as `cartStore.add`, `reportStore.generate`, or `editor.insertBlock`. That makes the application's existing functions available to an agent without adding a new backend endpoint or a separate public integration layer (see [[Shifting from Fixed Features to Agent-Extensible Primitives]]).
 
 ### 4. Tools use the user's current session
 
-Conventional integrations often ask users to create access tokens or configure OAuth scopes. A WebMCP tool runs in the open tab, where the application already uses cookies, local storage, session tokens, and CSRF protection. Its requests can use that session, including the application's existing tenant context, without a separate set of integration credentials.
+Conventional integrations often ask users to create access tokens or configure OAuth scopes. A WebMCP tool runs in the open tab, where the application already uses cookies, local storage, session tokens, and CSRF protection. Its requests can use that session, including the application's existing tenant context, without a separate set of integration credentials (see [[Personal AI Subscriptions and Unified Model Access]]).
 
 ### 5. Tests can check actions and results directly
 
-Playwright and Cypress tests can break when CSS classes change, hydration delays interaction, a component sits in Shadow DOM, or an animation changes the timing. A test could instead discover a registered tool, invoke it, and assert on its structured result. For example, it could check the order ID returned by checkout rather than whether `#checkout-btn-v3` received a click. This checks the application's action contract; visual behavior can still be tested where it matters.
+Playwright and Cypress tests can break when CSS classes change, hydration delays interaction, a component sits in Shadow DOM, or an animation changes the timing. A test could instead discover a registered tool, invoke it, and assert on its structured result (see [[Agentic Coding Harness and Controlled Development Workflows]]). For example, it could check the order ID returned by checkout rather than whether `#checkout-btn-v3` received a click. This checks the application's action contract; visual behavior can still be tested where it matters.
 
 ### 6. An agent can coordinate work across open services
 
@@ -289,12 +289,12 @@ The note proposes three responses:
 - **Control which accounts receive tools.** Register them for verified users, enterprise accounts, or particular subscription tiers according to the application's authorization rules.
 - **Identify programmatic requests.** Have the browser supply a signed indication that a request came from `modelContext` rather than a manual page interaction. A backend could then route agent traffic to isolated, rate-limited queues instead of rejecting the user altogether.
 
-## Related concepts
+## Related notes
 
-- **[[Designing APIs for LLM-Generated Integration Code]]**: Designing the browser-side tool contract as an application interface.
-- **[[Token Optimization and Context Economics in Agentic Workflows]]**: Avoiding screenshot tokens and repeated exploratory calls.
-- **[[How AI Agents May Control Computers, Applications, and the Web]]**: Moving from screenshot-based automation toward explicit actions.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Using defined actions in testing and coding loops.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Exposing composable actions alongside UI features.
-- **[[How AI Breaks the Economic Model of the Open Web]]**: The effect of agent actions on pageviews and ad impressions.
-- **[[Personal AI Subscriptions and Unified Model Access]]**: User credentials and local context for browser-side agents.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Designing the browser-side tool contract as an application interface.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]** — Avoiding screenshot tokens and repeated exploratory calls.
+- **[[How AI Agents May Control Computers, Applications, and the Web]]** — Moving from screenshot-based automation toward explicit actions.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Using defined actions in testing and coding loops.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Exposing composable actions alongside UI features.
+- **[[How AI Breaks the Economic Model of the Open Web]]** — The effect of agent actions on pageviews and ad impressions.
+- **[[Personal AI Subscriptions and Unified Model Access]]** — User credentials and local context for browser-side agents.

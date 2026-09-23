@@ -39,7 +39,7 @@ At first, AI is used selectively:
 
 The organization can still function without it.
 
-In the early phase, this capability is fully reversible. If an API provider suffers an outage or developer tools are disabled, team velocity drops by a predictable typing margin, but git workflows, CI pipelines, and service architectures remain entirely functional.
+In the early phase, this capability is fully reversible. If an API provider suffers an outage or developer tools are disabled, team velocity drops by a predictable typing margin, but git workflows, CI pipelines, and service architectures remain entirely functional (see [[AI Productivity Is Limited by the Delivery System]]).
 
 Later, workflows are redesigned around its availability:
 
@@ -751,7 +751,7 @@ Then it is convenient.
 
 Later, it becomes expected.
 
-Finally, the surrounding system evolves so deeply around it that removing it is possible only by accepting a major loss of capability.
+Finally, the surrounding system evolves so deeply around it that removing it is possible only by accepting a major loss of capability (see [[Agent Adoption as a Learning Flywheel]] and [[Competitive Advantage in the Age of Commodity AI]]).
 
 The strategic objective should therefore not be to preserve a fictional ability to return completely to the past.
 
@@ -780,10 +780,9 @@ It may become:
 
 ---
 
-## Related Notes
+## Related notes
 
-- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack for Agentic Software Engineering]] — Architectural framework detailing the layers required to maintain determinism, policy enforcement, and operational safety.
-- [[AI Productivity Is Limited by the Delivery System|AI Productivity Is Limited by the Delivery System]] — Why downstream delivery pipelines, test harnesses, and review gates bottleneck agent-generated software output.
-- [[Agent Adoption as a Learning Flywheel|Agent Adoption as a Learning Flywheel]] — How compounding organizational familiarity with agent tooling drives competitive lock-in.
-- [[Competitive Advantage in the Age of Commodity AI|Competitive Advantage in the Age of Commodity AI]] — Why proprietary architectures, operational discipline, and organizational invariants matter when models are commoditized.
-- [[Software Engineering May Shift Toward Code Optimized for Agents|Software Engineering May Shift Toward Code Optimized for Agents]] — The architectural shift toward machine-verifiable contracts, explicit schemas, and deterministic test boundaries.
+- **[[AI Productivity Is Limited by the Delivery System]]** — Why downstream delivery pipelines, test harnesses, and review gates bottleneck agent-generated software output.
+- **[[Agent Adoption as a Learning Flywheel]]** — How compounding organizational familiarity with agent tooling drives competitive lock-in.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — Why proprietary architectures, operational discipline, and organizational invariants matter when models are commoditized.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]** — The architectural shift toward machine-verifiable contracts, explicit schemas, and deterministic test boundaries.

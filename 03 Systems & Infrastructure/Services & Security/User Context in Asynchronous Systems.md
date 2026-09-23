@@ -150,6 +150,9 @@ User context carries very different semantics depending on whether the message i
 > [!TIP]
 > **Anti-Pattern:** Never inject tokens or authorization requirements into Domain Events. An event is an immutable historical statement; consumers simply record or react to it.
 
----
+## Related notes
 
-Related core guideline: [[Propagating User Context Between Services]] and [[Service vs User Authorization Models]].
+- **[[Propagating User Context Between Services]]** — Core patterns for propagating trusted user identity and headers.
+- **[[Service vs User Authorization Models]]** — Caller vs user identity evaluation in distributed runtimes.
+- **[[Service-to-Service Communication - How Service A Should Call Service B]]** — Asynchronous queuing, messaging reliability, and idempotency.
+- **[[Standardizing Service Infrastructure with Reusable Blocks]]** — Message envelopes, correlation tracing, and telemetry blocks.

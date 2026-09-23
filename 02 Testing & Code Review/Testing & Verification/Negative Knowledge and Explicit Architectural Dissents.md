@@ -31,8 +31,8 @@ This matters when coding agents work in the repository. An agent can reach for a
 
 - **Record rejected designs alongside accepted ones.** Documentation of what runs today does not explain why a plausible alternative was ruled out. A rejection record keeps that history available to people and agents.
 - **Tell agents which familiar patterns failed here.** Models tend to suggest common patterns, including unnecessary microservices, deep inheritance trees and extra caching layers. An explicit restriction can stop an agent from bringing one of them back into this codebase.
-- **Set a few firm boundaries, then leave room to implement.** A prompt that dictates every class and method consumes context and can create conflicting rules. Two or three restrictions tied to serious failure modes let the agent solve the task without crossing known boundaries.
-- **Keep code maintainable rather than treating it as disposable output.** A natural-language prompt cannot serve as the full specification for a production system. Continually replacing code makes it harder for a team to understand the system and debug it during an incident.
+- **Set a few firm boundaries, then leave room to implement.** A prompt that dictates every class and method consumes context and can create conflicting rules (see [[Constraint Saturation and Rule Oscillation in Coding Agents]]). Two or three restrictions tied to serious failure modes let the agent solve the task without crossing known boundaries (see [[How Context Narrows an AI's Solution Space]]).
+- **Keep code maintainable rather than treating it as disposable output.** A natural-language prompt cannot serve as the full specification for a production system. Continually replacing code makes it harder for a team to understand the system and debug it during an incident (see [[Software Decay and the Hidden Costs of Frictionless AI Code]] and [[How AI Changes Prototyping and the Path from PoC to Production]]).
 - **Keep rejection records in the repository.** An Architectural Dissent Record (ADR-) complements a conventional Architecture Decision Record (ADR) by explaining a rejected option, the evidence behind the rejection and the conditions for reconsidering it.
 
 For example, a knowledge base might say only that the system uses Service X, Database Y and Event Bus Z. It leaves an agent free to propose Framework W again, even though the team rejected it. A more useful record distinguishes the designs currently accepted, the designs rejected with evidence, and the options that remain open for architectural review.
@@ -82,7 +82,7 @@ The restrictions target specific failure modes. The agent can still decide how t
 
 ## 3. Why production code is not disposable
 
-One proposed workflow treats a Markdown specification as the lasting artifact: an agent regenerates the code when requirements change, and tests validate the new version. Under this approach, maintaining and refactoring the existing implementation become less important.
+One proposed workflow treats a Markdown specification as the lasting artifact: an agent regenerates the code when requirements change, and tests validate the new version (see [[Testing in the Model, Agent, LLM Era]]). Under this approach, maintaining and refactoring the existing implementation become less important.
 
 That idea runs into two problems in production.
 
@@ -126,7 +126,7 @@ An agent looking only at one file and a local test runner will not see those clu
 
 ## 6. Keep rejected decisions next to the code
 
-Put **Architectural Dissent Records (ADR-)** in the source tree alongside ordinary architecture records. Each one should say what was proposed, why the team rejected it, what evidence supports the decision and what would have to change before revisiting it.
+Put **Architectural Dissent Records (ADR-)** in the source tree alongside ordinary architecture records (see [[Agentic Coding Harness and Controlled Development Workflows]] and [[Designing Software for AI Agents]]). Each one should say what was proposed, why the team rejected it, what evidence supports the decision and what would have to change before revisiting it.
 
 ### Example ADR-
 
@@ -163,13 +163,13 @@ When a new engineer or an agent proposes the cache again, the record shows why i
 
 ---
 
-## Related Notes
+## Related notes
 
-- **[[Testing in the Model, Agent, LLM Era]]**: The Frozen Oracle Rule and the limits of using automated tests in place of architectural understanding.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: Harnesses that enforce constraints and boundary rules during agent development loops.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: How too many prompt rules compete, and how negative boundaries address that problem.
-- **[[How Context Narrows an AI's Solution Space]]**: How explicit structural constraints narrow the designs an agent will consider.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How easy code generation can add maintenance debt when boundaries are missing.
-- **[[How AI Changes Prototyping and the Path from PoC to Production]]**: The difference between disposable experiments and production code that a team must maintain.
-- **[[AI Changes the Economics of Technical Debt]]**: How generated code affects maintenance and structural refactoring costs.
-- **[[Designing Software for AI Agents]]**: Explicit module boundaries that help agents understand system intent.
+- **[[Testing in the Model, Agent, LLM Era]]** — The Frozen Oracle Rule and the limits of using automated tests in place of architectural understanding.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Harnesses that enforce constraints and boundary rules during agent development loops.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]** — How too many prompt rules compete, and how negative boundaries address that problem.
+- **[[How Context Narrows an AI's Solution Space]]** — How explicit structural constraints narrow the designs an agent will consider.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How easy code generation can add maintenance debt when boundaries are missing.
+- **[[How AI Changes Prototyping and the Path from PoC to Production]]** — The difference between disposable experiments and production code that a team must maintain.
+- **[[AI Changes the Economics of Technical Debt]]** — How generated code affects maintenance and structural refactoring costs.
+- **[[Designing Software for AI Agents]]** — Explicit module boundaries that help agents understand system intent.

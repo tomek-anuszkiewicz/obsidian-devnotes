@@ -266,7 +266,6 @@ def handle_git_hook():
 def scan_vault():
     """Scans all public markdown files in the vault."""
     md_files = sorted(list(REPO_ROOT.glob("0*/**/*.md")) + [
-        REPO_ROOT / "The 5-Layer System Stack for Agentic Software Engineering.md",
         REPO_ROOT / "_Explore.md",
         REPO_ROOT / "Preamble.md"
     ])

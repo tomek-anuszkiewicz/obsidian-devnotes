@@ -29,7 +29,7 @@ It is increasingly:
 
 This does not make technical knowledge obsolete. It changes where that knowledge creates value: less in recalling syntax, and more in understanding systems, directing work, evaluating output, detecting subtle mistakes, and accepting responsibility for the result.
 
-Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection. An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
+Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection (see [[Reviewing AI-Generated Code]] and [[Reliability of LLM Coding Agents]]). An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
 
 ## Do not hire for knowledge of a particular AI tool
 
@@ -38,15 +38,15 @@ Requiring experience with Copilot, Cursor, Claude Code, Codex, or another curren
 The durable capability is not knowledge of one interface. It is the ability to work effectively with probabilistic tools:
 
 - decompose a problem into controlled steps;
-- give an agent relevant context;
+- give an agent relevant context (see [[How LLM Systems Build Context]]);
 - state constraints and acceptance criteria;
 - select appropriate tasks for AI assistance;
-- limit the scope of generated changes;
+- limit the scope of generated changes (leveraging an [[Agentic Coding Harness and Controlled Development Workflows]]);
 - inspect the actual diff rather than trust the agent's summary;
 - verify claims using code, tests, documentation, and measurements;
 - recognize uncertainty and ask for missing information;
 - abandon an unproductive AI-generated direction;
-- document decisions for subsequent humans and agents.
+- document decisions for subsequent humans and agents (preserving [[LLM Agents and Institutional Memory]]).
 
 Useful interview questions include:
 
@@ -324,7 +324,7 @@ Software-engineering recruitment should increasingly resemble a compressed simul
 
 The dangerous engineer in the AI era is not necessarily someone who writes code slowly. It is someone who can produce and approve large amounts of convincing code without understanding it.
 
-The strongest candidate is therefore not simply the best programmer or the most fluent prompt writer. It is the person who can coordinate business knowledge, system understanding, tools, evidence, and human judgment to deliver a change that the team can safely own for years.
+The strongest candidate is therefore not simply the best programmer or the most fluent prompt writer. It is the person who can coordinate business knowledge, system understanding, tools, evidence, and human judgment (as framed in [[The Conductor Pattern for High-Bandwidth Engineering]]) to deliver a change that the team can safely own for years.
 
 ## Sources
 
@@ -334,8 +334,10 @@ The strongest candidate is therefore not simply the best programmer or the most 
 
 ## Related notes
 
-- [[Reliability of LLM Coding Agents]]
-- [[Agentic Coding Harness and Controlled Development Workflows]]
-- [[LLM Agents and Institutional Memory]]
-- [[Designing APIs for LLM-Generated Integration Code]]
-- [[Applications of LLM Agents Beyond Programming]]
+- **[[Reliability of LLM Coding Agents]]** — Empirical failure rates, verification loops, and testing disciplines for generated code.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Constraining agent scope with sandboxes, worktrees, and linters.
+- **[[LLM Agents and Institutional Memory]]** — Why shared mental models and business context cannot be delegated to automated tools.
+- **[[Reviewing AI-Generated Code]]** — Review practices designed to catch plausible but invalid AI changes.
+- **[[The Conductor Pattern for High-Bandwidth Engineering]]** — Managing parallel agent tasks and human orchestrator roles.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring interfaces and contracts so probabilistic tools fail loudly.
+- **[[Applications of LLM Agents Beyond Programming]]** — Extending agent workflows into infrastructure, documentation, and operational processes.

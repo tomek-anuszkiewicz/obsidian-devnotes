@@ -65,7 +65,7 @@ Historically, many good engineering practices were considered too expensive.
 
 A team might agree that a migration should be divided into five safe deployments, but preparing all five pull requests, tests, documentation, telemetry, and cleanup work would take too much time.
 
-Consider a standard non-breaking database schema evolution: first introduce a nullable field with dual-write logic; second, backfill historical rows via background jobs; third, shift reads to the new column; fourth, remove the legacy write fallback; fifth, drop the old column and delete the compatibility shims. In practice, preparing five distinct pull requests with dedicated test suites and deployment gates takes days of manual effort, so teams routinely take the riskier shortcut of an atomic, lock-heavy maintenance window.
+Consider a standard non-breaking database schema evolution: first introduce a nullable field with dual-write logic; second, backfill historical rows via background jobs; third, shift reads to the new column; fourth, remove the legacy write fallback; fifth, drop the old column and delete the compatibility shims. In practice, preparing five distinct pull requests with dedicated test suites and deployment gates takes days of manual effort, so teams routinely take the riskier shortcut of an atomic, lock-heavy maintenance window (an economic calculation analyzed in [[AI Changes the Economics of Technical Debt]]).
 
 As a result, the team accepts a riskier shortcut.
 
@@ -85,7 +85,7 @@ compatibility layer
 
 The important effect is not merely faster coding.
 
-The agent can make thoroughness cheaper than taking shortcuts.
+The agent can make thoroughness cheaper than taking shortcuts (unlocking methodical migration workflows detailed in [[Refactoring Legacy Systems with AI Agents]]).
 
 ## Methodical to the Point of Irritation
 
@@ -514,7 +514,7 @@ Therefore, the team must define proportionality:
 
 The agent should be relentless inside a bounded scope, not unlimited in every direction.
 
-In practice, teams enforce this through concrete operational guardrails. Critical paths like financial ledgers or auth boundaries receive exhaustive mutation testing and matrix validation, while internal scripts receive simple smoke tests. Agents should operate under strict touchpoint caps on modified files per pull request, negative constraints that forbid speculative abstractions, and deterministic halting criteria tied to compiler or test passes rather than open-ended exploration.
+In practice, teams enforce this through concrete operational guardrails. Critical paths like financial ledgers or auth boundaries receive exhaustive mutation testing and matrix validation, while internal scripts receive simple smoke tests. Agents should operate under strict touchpoint caps on modified files per pull request, negative constraints that forbid speculative abstractions, and deterministic halting criteria tied to compiler or test passes rather than open-ended exploration (see [[Developing Features with AI Coding Agents]] and [[Enforcing Hard-to-Formalize Architectural Rules with Agents]]).
 
 ## A Better Mental Model
 
@@ -549,10 +549,9 @@ The agent advantage is relentless execution.
 
 This is one of the most practical ways agents can outperform humans in software development: not by being wiser, but by being tireless, systematic, and methodical to the point where incomplete work becomes less acceptable.
 
-## Related Notes
+## Related notes
 
-- [[AI Changes the Economics of Technical Debt]] - How reduced execution costs make refactoring and cleanup economically viable.
-- [[Refactoring Legacy Systems with AI Agents]] - Methodical patterns for codebase modernization and migration.
-- [[Enforcing Hard-to-Formalize Architectural Rules with Agents]] - Using tirelessness to police code standards and conventions.
-- [[Developing Features with AI Coding Agents]] - Closed-loop development workflows combining speed and verification.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 Harness and Layer 4 Verification engines.
+- **[[AI Changes the Economics of Technical Debt]]** — How reduced execution costs make refactoring and cleanup economically viable.
+- **[[Refactoring Legacy Systems with AI Agents]]** — Methodical patterns for codebase modernization and migration.
+- **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]** — Using tirelessness to police code standards and conventions.
+- **[[Developing Features with AI Coding Agents]]** — Closed-loop development workflows combining speed and verification.

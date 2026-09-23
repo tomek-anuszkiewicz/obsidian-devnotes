@@ -16,7 +16,7 @@ aliases:
 
 As AI systems become broadly available, access to a strong model may stop being a meaningful competitive advantage on its own.
 
-If many companies use similar models trained on largely the same public internet data, then the default solutions suggested by those models will often be similar. AI is very good at reconstructing, combining, and adapting existing patterns, but if every company simply accepts its default suggestions, the resulting products and architectures may converge.
+If many companies use similar models trained on largely the same public internet data, then the default solutions suggested by those models will often be similar. AI is very good at reconstructing, combining, and adapting existing patterns, but if every company simply accepts its default suggestions, the resulting products and architectures may converge (see [[AI, Averaged Decisions, and Premature Convergence on Solutions]]).
 
 This does not mean that competitive advantage disappears. It means that it moves elsewhere.
 
@@ -58,7 +58,7 @@ Its advantage may come from:
     
 - and better selection of which problems are worth solving.
 
-Owning this operational loop is what separates high-velocity teams from organizations drowning in generated code. When code generation is ubiquitous, the primary constraint shifts from typing speed to delivery infrastructure: controlled agentic harnesses, automated regression gates, and maintaining direct, unbroken contact with production reality.
+Owning this operational loop is what separates high-velocity teams from organizations drowning in generated code. When code generation is ubiquitous, the primary constraint shifts from typing speed to delivery infrastructure: controlled agentic harnesses, automated regression gates, and maintaining direct, unbroken contact with production reality (see [[Agentic Coding Harness and Controlled Development Workflows]] and [[Fresh Contact With Reality May Become the Training Bottleneck]]).
 
 ## AI can commoditize solutions
 
@@ -86,7 +86,7 @@ This can change the economics of entire markets.
 
 A product that previously needed hundreds of thousands of customers to justify its development may become viable with a few thousand customers, a few hundred customers, or even one large customer.
 
-This creates space for extreme specialization.
+This creates space for extreme specialization (such as [[A New Market for Small, Custom Business Software]]).
 
 Instead of building a generic CRM, a company may build a system optimized for one specific industry, workflow, country, and regulatory environment.
 
@@ -390,7 +390,7 @@ The model itself may increasingly become a commodity.
 
 The surrounding system does not have to.
 
-The underlying models will continue to advance, commoditize, and shift toward parity. They can be treated as interchangeable execution runtimes—swapping between proprietary cloud APIs and open-weights models running on local hardware depending on latency budgets, cost profiles, and data sovereignty requirements. The durable advantage does not live in the model weights; it lives in the private operational context, the verification harnesses that validate every change, and the live production loops that feed back into the system.
+The underlying models will continue to advance, commoditize, and shift toward parity. They can be treated as interchangeable execution runtimes—swapping between proprietary cloud APIs and open-weights models running on local hardware depending on latency budgets, cost profiles, and data sovereignty requirements (see [[Local vs Cloud and Hybrid Model Execution]]). The durable advantage does not live in the model weights; it lives in the private operational context, the verification harnesses that validate every change, and the live production loops that feed back into the system (see [[The Most Valuable Software Training Data May Be Private]]).
 
 ## Core thesis
 
@@ -398,12 +398,11 @@ The strongest form of the argument is:
 
 > In the age of AI, competitive advantage may increasingly come not from owning the best solution, but from owning the better system for creating, deploying, measuring, and continuously improving solutions.
 
-And a company's accumulated history — its code, decisions, incidents, experiments, meetings, customer feedback, and operational experience — may become one of the most important parts of that system.
+And a company's accumulated history — its code, decisions, incidents, experiments, meetings, customer feedback, and operational experience — may become one of the most important parts of that system (see [[What Should Organizations Preserve from AI-Assisted Development]] and [[Agent Adoption as a Learning Flywheel]]).
 
-## Related Notes
+## Related notes
 
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding organizational knowledge and flywheel economics.
-- [[Agent Adoption as a Learning Flywheel]] - How early adoption and failure instrumentation create self-reinforcing moats.
-- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of proprietary corporate execution history.
-- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
-- [[AI Changes the Economics of Technical Debt]] - Shifting trade-offs in software maintenance and operational velocity.
+- **[[Agent Adoption as a Learning Flywheel]]** — How early adoption and failure instrumentation create self-reinforcing moats.
+- **[[The Most Valuable Software Training Data May Be Private]]** — The strategic value of proprietary corporate execution history.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, review comments, and domain invariants.
+- **[[AI Changes the Economics of Technical Debt]]** — Shifting trade-offs in software maintenance and operational velocity.

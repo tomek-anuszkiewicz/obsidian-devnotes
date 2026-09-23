@@ -19,7 +19,7 @@ aliases:
 
 ## Core idea
 
-An LLM agent with access to the codebase, documentation, tickets, commit history, and a good RAG system can make a complex project much easier to navigate. However, this is not the same as preserving institutional knowledge or maintaining a shared understanding of the system.
+An LLM agent with access to the codebase, documentation, tickets, commit history, and a good RAG system (see [[Retrieval-Augmented Generation and Context Architecture]]) can make a complex project much easier to navigate. However, this is not the same as preserving institutional knowledge or maintaining a shared understanding of the system.
 
 There is an important distinction between:
 
@@ -72,7 +72,7 @@ RAG preserves **accessible information**. Institutional memory also contains int
 
 Agents can reduce the visible cost of complexity without reducing complexity itself.
 
-If finding the correct implementation previously took a developer two hours and now takes an agent two minutes, the organization may lose the incentive to simplify the system. A codebase can therefore become increasingly difficult for humans while remaining superficially productive with agent assistance.
+If finding the correct implementation previously took a developer two hours and now takes an agent two minutes, the organization may lose the incentive to simplify the system. A codebase can therefore become increasingly difficult for humans while remaining superficially productive with agent assistance (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 This creates a dangerous state:
 
@@ -86,7 +86,7 @@ Frontier foundation models are trained predominantly on public open-source softw
 
 ### Decoding context and intent
 
-The most expensive question in enterprise engineering is rarely algorithmic. It is figuring out why a bizarre four-line conditional exists in a checkout pipeline, and whether removing it will break billing at month-end. A generic model flags the check as an anti-pattern and proposes a refactoring. An agent with deep repository and issue context traces the block back to an incident ticket from three years ago, surfacing the comment explaining that a specific vendor API sends corrupted payloads on a legacy tier. The tool transitions from naive syntax cleanup to revealing historical and operational intent.
+The most expensive question in enterprise engineering is rarely algorithmic. It is figuring out why a bizarre four-line conditional exists in a checkout pipeline, and whether removing it will break billing at month-end. A generic model flags the check as an anti-pattern and proposes a refactoring. An agent with deep repository and issue context traces the block back to an incident ticket from three years ago, surfacing the comment explaining that a specific vendor API sends corrupted payloads on a legacy tier. The tool transitions from naive syntax cleanup to revealing historical and operational intent (a mechanism explored in [[The Living Engineering Chronicle and Context Compaction]]).
 
 ### Internalizing Conway's Law
 
@@ -102,7 +102,7 @@ Most enterprises maintain two parallel systems: the formal architecture document
 
 ## Code review as knowledge distribution
 
-In an agent-assisted team, code review should not only verify correctness. It should also protect comprehensibility and distribute knowledge.
+In an agent-assisted team, code review should not only verify correctness (see [[Reviewing AI-Generated Code]]). It should also protect comprehensibility and distribute knowledge.
 
 Useful review questions include:
 
@@ -153,7 +153,7 @@ Agents can generate and update descriptions of what the code currently does. The
 - what could be simplified in the future;
 - which users, teams, or processes depend on a mechanism.
 
-Agents are well suited to documenting **how** a system works. Humans need to remain responsible for **why it works this way** and **whether it should continue to do so**.
+Agents are well suited to documenting **how** a system works. Humans need to remain responsible for **why it works this way** and **whether it should continue to do so** (see [[What Should Organizations Preserve from AI-Assisted Development]] and [[Why Business Logic Is the Hardest Part of Agentic Coding]]).
 
 ## Onboarding with agents
 
@@ -197,11 +197,11 @@ LLM agents can lower the cost of navigating a complicated codebase. They do not 
 
 The goal should not be to build a system that only an agent can navigate. The goal should be to use agents while preserving a system that people can reason about, explain, review, and collectively own.
 
-## Related Notes
+## Related notes
 
-- [[Retrieval-Augmented Generation and Context Architecture]] - Context architecture and retrieval indexing patterns.
-- [[What Should Organizations Preserve from AI-Assisted Development]] - Organizational memory and intellectual property in AI workflows.
-- [[The Living Engineering Chronicle and Context Compaction]] - Preserving operational rationale and architecture decision chronicles.
-- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] - Managing complexity masking and abstraction costs.
-- [[Reviewing AI-Generated Code]] - Code review practices that defend comprehensibility and team mental models.
-- [[Why Business Logic Is the Hardest Part of Agentic Coding]] - Why business semantics cannot be completely delegated to automated agents.
+- **[[Retrieval-Augmented Generation and Context Architecture]]** — Context architecture and retrieval indexing patterns.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Organizational memory and intellectual property in AI workflows.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Preserving operational rationale and architecture decision chronicles.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Managing complexity masking and abstraction costs.
+- **[[Reviewing AI-Generated Code]]** — Code review practices that defend comprehensibility and team mental models.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]** — Why business semantics cannot be completely delegated to automated agents.

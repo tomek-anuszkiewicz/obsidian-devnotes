@@ -325,11 +325,10 @@ Reliability is therefore not merely a property of the model. It is a property of
 model + context + specification + tools + tests + review + harness
 ```
 
-## Related Notes
+## Related notes
 
-- [[Building Determinism from Unpredictable Models]] - Harness engineering patterns for repeatable execution.
-- [[Constraint Saturation and Rule Oscillation in Coding Agents]] - The limits of prompt instructions and context saturation.
-- [[Reviewing AI-Generated Code]] - Operational guidelines for reviewing agentic pull requests.
-- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial code audits.
-- [[Formal Verification and Runtime Safety Boundaries]] - Enforcing non-negotiable invariants through compilers and types.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 3 (Harness & Execution) and Layer 4 (Evaluation & Verification).
+- **[[Building Determinism from Unpredictable Models]]** — Harness engineering patterns for repeatable execution.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]** — The limits of prompt instructions and context saturation.
+- **[[Reviewing AI-Generated Code]]** — Operational guidelines for reviewing agentic pull requests.
+- **[[LLMs as a Code Review Team]]** — Architecture for multi-agent adversarial code audits.
+- **[[Formal Verification and Runtime Safety Boundaries]]** — Enforcing non-negotiable invariants through compilers and types.

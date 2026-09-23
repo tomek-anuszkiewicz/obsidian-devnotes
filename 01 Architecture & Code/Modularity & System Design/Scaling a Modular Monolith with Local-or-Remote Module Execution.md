@@ -385,7 +385,7 @@ public sealed record ChargePayment(
 
 The contract should be usable regardless of whether the handler is local or remote.
 
-This creates a stable logical boundary while allowing deployment topology to change.
+This creates a stable logical boundary while allowing deployment topology to change (see [[Designing Software for AI Agents]]).
 
 ---
 
@@ -393,7 +393,7 @@ This creates a stable logical boundary while allowing deployment topology to cha
 
 Strong static analysis can prevent developers from accidentally bypassing module boundaries.
 
-A Roslyn analyzer, project-reference policy or architecture test can enforce rules such as:
+A Roslyn analyzer, project-reference policy or architecture test can enforce rules such as (see [[Executable Architecture Tests for Coding Agent Guardrails]]):
 
 ```text
 A module may reference another module’s Contracts project.
@@ -618,7 +618,7 @@ Possible duplicate execution
 No ordinary shared transaction
 ```
 
-Location transparency should not hide these differences completely.
+Location transparency should not hide these differences completely (see [[Service-to-Service Communication - How Service A Should Call Service B]]).
 
 The caller should understand that a cross-module operation:
 
@@ -849,7 +849,7 @@ This architecture can become a distributed monolith when:
     
 - one business operation assumes a global transaction,
     
-- tracing is weak,
+- tracing is weak (see [[Propagating User Context Between Services]] and [[Standardizing Service Infrastructure with Reusable Blocks]]),
     
 - the command bus becomes a magical global method dispatcher.
     
@@ -1005,7 +1005,7 @@ And the safest deployment default is:
 
 > Keep instances broadly capable, activate responsibilities explicitly, and restrict connectors only when security, reliability or resource isolation provide a concrete reason.
 
-## Related Notes
+## Related notes
 
 - [[Standardizing Service Infrastructure with Reusable Blocks]] — Reusable platform infrastructure for decoupled service runtimes.
 - [[Service-to-Service Communication - How Service A Should Call Service B]] — Remote communication patterns, circuit breakers, and idempotency.

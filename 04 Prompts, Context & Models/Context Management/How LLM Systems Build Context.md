@@ -665,10 +665,9 @@ The goal should not be to provide the maximum possible context.
 
 The goal should be to provide context relevant to the decision.
 
-## Related Notes
+## Related notes
 
-- [[Retrieval-Augmented Generation and Context Architecture]] - Detailed architectural patterns for enterprise RAG pipelines.
-- [[How Context Narrows an AI's Solution Space]] - How context constraints filter model reasoning paths.
-- [[Token Optimization and Context Economics in Agentic Workflows]] - Techniques for prompt curation and memory management.
-- [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]] - Mitigating attention degradation and anchor bias.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Architectural overview of Layer 2 Context Engines and Layer 3 Harnesses.
+- **[[Retrieval-Augmented Generation and Context Architecture]]** — Detailed architectural patterns for enterprise RAG pipelines.
+- **[[How Context Narrows an AI's Solution Space]]** — How context constraints filter model reasoning paths.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]** — Techniques for prompt curation and memory management.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — Mitigating attention degradation and anchor bias.

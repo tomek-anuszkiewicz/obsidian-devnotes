@@ -21,7 +21,7 @@ aliases:
 
 Today, someone can pay around $20 a month for an AI chat application and still need a separate, metered API account to use a model from an editor, terminal agent, or personal script. That division comes from how the products were packaged, not from a technical need to keep the two accounts apart.
 
-A personal subscription could cover three things under one identity and bill: interactive access to reasoning and multimodal models, a managed search index over the user's own data, and API access for the user's other tools. The same account would work in a browser, on a phone, and through a third-party application, subject to appropriate limits and permissions.
+A personal subscription could cover three things under one identity and bill: interactive access to reasoning and multimodal models, a managed search index over the user's own data, and API access for the user's other tools (see [[Personal Digital Models as the Foundation of Agent Ecosystems]] and [[Retrieval-Augmented Generation and Context Architecture]]). The same account would work in a browser, on a phone, and through a third-party application, subject to appropriate limits and permissions.
 
 That arrangement would change what an AI application has to sell. An app that mainly resells model calls at a 3x to 5x markup and keeps its own copy of the user's documents has a weaker case when the user can bring model access and personal context with them. The application still has plenty to do: provide a useful interface, run a specific workflow, manage local state, validate results, and carry out transactions.
 
@@ -37,7 +37,7 @@ The old split asks users to pay a fixed fee for chat and then configure a second
 
 A third-party tool could ask the user to provide a personal API credential or authorize access through OAuth. Model calls and embedding generation would then count against the user's subscription allowance. The tool would charge for the workflow and interface it provides, rather than including another $15–$30 per month to pay the model provider on the user's behalf.
 
-The application remains responsible for domain logic, user experience, local state, deterministic checks, and integrations. For example, an IDE assistant, terminal agent, task manager, CAD tool, web agent, or finance tool could build its own workflow around the same user-supplied model access.
+The application remains responsible for domain logic, user experience, local state, deterministic checks, and integrations (see [[Shifting from Fixed Features to Agent-Extensible Primitives]] and [[Unbundling of Enterprise Software]]). For example, an IDE assistant, terminal agent, task manager, CAD tool, web agent, or finance tool could build its own workflow around the same user-supplied model access.
 
 ### 3. Search over personal data managed where that data lives
 
@@ -59,7 +59,7 @@ Imagine an agent drafting a project plan. With a standalone service, the user ma
 
 ### 6. Credentials need narrow permissions
 
-A single master API key would be dangerous if it also unlocked personal search. Giving such a key to an untrusted code linter could expose tax records, legal files, or private email. A third-party app should receive a short-lived credential that states which models, tools, data areas, and token allowances it may use. Access to one open-source project should not imply access to financial documents or Gmail.
+A single master API key would be dangerous if it also unlocked personal search. Giving such a key to an untrusted code linter could expose tax records, legal files, or private email. A third-party app should receive a short-lived credential that states which models, tools, data areas, and token allowances it may use (see [[Service vs User Authorization Models]]). Access to one open-source project should not imply access to financial documents or Gmail.
 
 ### 7. Background work must not consume the interactive allowance
 
@@ -67,11 +67,11 @@ An autonomous terminal agent can run a long repair loop or make repeated request
 
 ### 8. Moving providers gets harder when context stays with one provider
 
-Exporting documents is only part of a move. The provider may also have built embeddings, relationships between people and projects, preference models, and relevance signals from years of searches. A replacement service can read exported files but still needs to index the history again, rebuild relationships, and tune retrieval. This creates a switching cost in the search and context layer, even when the raw files remain portable.
+Exporting documents is only part of a move. The provider may also have built embeddings, relationships between people and projects, preference models, and relevance signals from years of searches. A replacement service can read exported files but still needs to index the history again, rebuild relationships, and tune retrieval. This creates a switching cost in the search and context layer, even when the raw files remain portable (see [[The Implications of Having a Digital Model of Yourself]]).
 
 ## How a third-party application would use the subscription
 
-The user signs in or supplies a scoped credential. The application sends model requests against the user's allowance and, when needed, queries the managed personal index through a tool interface such as Model Context Protocol or function calling. The application supplies its own focused UI and domain workflow. The provider runs inference, embeddings, and retrieval. This avoids making every app ingest and store the same documents.
+The user signs in or supplies a scoped credential. The application sends model requests against the user's allowance and, when needed, queries the managed personal index through a tool interface such as Model Context Protocol or function calling (see [[WebMCP - Turning Web Applications into Agent-Native Toolkits]]). The application supplies its own focused UI and domain workflow. The provider runs inference, embeddings, and retrieval. This avoids making every app ingest and store the same documents.
 
 The following sketch shows the proposed integration. Its endpoint, model, and retrieval tool names are illustrative; they describe an interface an ecosystem would have to offer, rather than a currently portable API contract.
 
@@ -195,13 +195,12 @@ A priority scheme could give interactive requests a reserved P0 pool to protect 
 
 Export rules such as GDPR or CCPA address access to raw personal records. They do not necessarily make a provider's internal embeddings, entity relationships, preference models, or historical retrieval weights portable. On a move, the new provider may need to re-index millions of tokens of history and rebuild those associations. The files can move while the useful behavior of the old search layer does not immediately move with them.
 
-## Cross-System References
+## Related notes
 
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]**: Persistent personal identity and memory behind this kind of subscription.
-- **[[The Implications of Having a Digital Model of Yourself]]**: Security, data boundaries, and risks of keeping personal history with one provider.
-- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]**: Browser tools used with portable client credentials.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Applications built around user-supplied models and modular workflows.
-- **[[Unbundling of Enterprise Software]]**: How BYOB changes SaaS pricing.
-- **[[Service vs User Authorization Models]]**: Authorization for requests made with user-owned agent credentials, including Macaroons, OAuth Token Exchange, and UMA.
-- **[[Introduction to RAG]]**: How retrieval-augmented generation works.
-- **[[Advanced RAG Architectures]]**: Sparse and dense search, graph indexing, and late-interaction retrieval in personal data stores.
+- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — Persistent personal identity and memory behind this kind of subscription.
+- **[[The Implications of Having a Digital Model of Yourself]]** — Security, data boundaries, and risks of keeping personal history with one provider.
+- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]** — Browser tools used with portable client credentials.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Applications built around user-supplied models and modular workflows.
+- **[[Unbundling of Enterprise Software]]** — How BYOB changes SaaS pricing and architecture.
+- **[[Service vs User Authorization Models]]** — Authorization for requests made with user-owned agent credentials, including token exchange and delegation.
+- **[[Retrieval-Augmented Generation and Context Architecture]]** — Sparse and dense search, graph indexing, and late-interaction retrieval in personal data stores.

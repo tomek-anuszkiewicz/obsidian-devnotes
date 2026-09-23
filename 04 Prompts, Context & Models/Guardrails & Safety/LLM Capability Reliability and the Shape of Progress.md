@@ -213,7 +213,7 @@ The most plausible near-term future is not a model that never makes mistakes. It
 
 Human work is likely to shift from producing every implementation detail toward defining intent, constraints, acceptance criteria, and review boundaries.
 
-In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested.
+In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested (see [[Reliability of LLM Coding Agents]]).
 
 ## Why software engineering may automate faster
 
@@ -228,7 +228,7 @@ Programming has unusually strong external feedback:
 
 Tasks with a strong verifier can improve much faster than tasks whose quality is subjective or whose requirements are hidden.
 
-This feedback loop is amplified by disposable execution environments. Running agents inside ephemeral sandboxes (like Docker containers or Firecracker microVMs) allows them to safely trigger real builds, execute migrations against disposable database instances, and parse actual runtime logs. When the oracle is unambiguous—a passing test suite, a validated OpenAPI schema, or a clean compiler pass—the model can iterate autonomously until the contract is satisfied.
+This feedback loop is amplified by disposable execution environments. Running agents inside ephemeral sandboxes (like Docker containers or Firecracker microVMs) allows them to safely trigger real builds, execute migrations against disposable database instances, and parse actual runtime logs. When the oracle is unambiguous—a passing test suite, a validated OpenAPI schema (see [[Designing APIs for LLM-Generated Integration Code]]), or a clean compiler pass—the model can iterate autonomously until the contract is satisfied.
 
 Likely faster areas:
 
@@ -241,7 +241,7 @@ Likely faster areas:
 Likely slower areas:
 
 - discovering what product should be built;
-- reconstructing undocumented business knowledge;
+- reconstructing undocumented business knowledge (see [[LLM Agents and Institutional Memory]]);
 - resolving conflicting stakeholder intentions;
 - choosing architecture for uncertain future requirements;
 - judging maintainability over several years.
@@ -267,7 +267,7 @@ It is increasingly:
 
 ## Practical conclusion
 
-LLMs should not be treated as deterministic components. They are probabilistic workers operating inside a deterministic control system.
+LLMs should not be treated as deterministic components. They are probabilistic workers operating inside a deterministic control system (see [[Building Determinism from Unpredictable Models]]).
 
 For serious agentic work, reliability should come from the complete system:
 
@@ -287,11 +287,11 @@ The model supplies capability. The [[Agentic Coding Harness and Controlled Devel
 
 ## Related notes
 
-- [[Reliability of LLM Coding Agents]]
-- [[Agentic Coding Harness and Controlled Development Workflows]]
-- [[Designing APIs for LLM-Generated Integration Code]]
-- [[LLM Agents and Institutional Memory]]
-- [[Building Determinism from Unpredictable Models]]
+- **[[Reliability of LLM Coding Agents]]** — Empirical failure modes, benchmark ceilings, and practical verification loops.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Deterministic outer loops, sandboxing, and execution constraints.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and error schemas for automated verification.
+- **[[LLM Agents and Institutional Memory]]** — Why automated retrieval cannot replace shared human mental models and rationale.
+- **[[Building Determinism from Unpredictable Models]]** — Architectural patterns for wrapping stochastic model outputs in deterministic safety layers.
 
 ## Sources
 

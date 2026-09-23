@@ -24,7 +24,7 @@ Some future engineers may begin their careers in an environment where agents wri
 
 This raises an important question:
 
-> How will engineers learn to evaluate, review, and supervise work they have rarely performed themselves?
+> How will engineers learn to evaluate, review, and supervise work they have rarely performed themselves? (see [[AI Changes the Role and Training of Software Engineers]])
 
 ## The Transitional Generation
 
@@ -584,7 +584,7 @@ The profession can safely lose some execution skills only if it preserves evalua
 
 A stronger version is:
 
-> Code review, debugging, and architectural judgment may require deliberate manual practice even after manual coding stops being economically necessary.
+> Code review, debugging, and architectural judgment may require deliberate manual practice even after manual coding stops being economically necessary (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] and [[AI Era Software Engineering Recruitment]]).
 
 And the central risk is:
 
@@ -621,10 +621,9 @@ Those activities may stop happening automatically during normal work.
 
 They may need to become an intentional part of engineering education and professional development.
 
-## Related Notes
+## Related notes
 
-- [[AI Changes the Role and Training of Software Engineers]] - Structural challenges in junior training and the role of experienced developers.
-- [[AI Era Software Engineering Recruitment]] - Interviewing and evaluating engineers when syntax generation is commoditized.
-- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The cognitive burden of continuous supervision and review fatigue.
-- [[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]] - Deliberate reading and cognitive grounding in AI-rich environments.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Engineering capabilities and team leverage.
+- **[[AI Changes the Role and Training of Software Engineers]]** — Structural challenges in junior training and the role of experienced developers.
+- **[[AI Era Software Engineering Recruitment]]** — Interviewing and evaluating engineers when syntax generation is commoditized.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The cognitive burden of continuous supervision and review fatigue.
+- **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]** — Deliberate reading and cognitive grounding in AI-rich environments.

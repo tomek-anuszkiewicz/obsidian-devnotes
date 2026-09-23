@@ -31,8 +31,8 @@ What is becoming clear is that AI does not eliminate software engineering. It mo
 - providing usable repository context;
 - designing architecture and boundaries;
 - creating reliable feedback loops;
-- reviewing and validating changes;
-- maintaining shared understanding of the system.
+- reviewing and validating changes (see [[Reviewing AI-Generated Code]]);
+- maintaining shared understanding of the system (see [[LLM Agents and Institutional Memory]]).
 
 The likely future is therefore not simply â€œagents write the code.â€  It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
 
@@ -58,7 +58,7 @@ An LLM generalizes this mechanism. Instead of copying a visible Stack Overflow a
 
 This is probably the strongest organizational analogy. Cloud infrastructure did not automatically repair weak engineering practices. It allowed strong organizations to deliver faster, but also allowed weak organizations to create distributed operational complexity faster. Mature value appeared only after practices such as infrastructure as code, CI/CD, observability, platform engineering, and delivery metrics became established.
 
-Agents appear to behave similarly. A model alone is not the engineering system. Useful adoption requires an **agentic harness** around it:
+Agents appear to behave similarly. A model alone is not the engineering system. Useful adoption requires an **agentic harness** around it (see [[Agentic Coding Harness and Controlled Development Workflows]]):
 
 - repository instructions and discoverable documentation;
 - explicit permissions and tool boundaries;
@@ -90,7 +90,7 @@ Historically, software engineering shifts were anchored by foundational literatu
 Today, agentic software engineering operates in an empirical vacuum:
 
 1. **Absence of long-term studies**: There are no longitudinal studies tracking how codebases survive hundreds of automated agent refactorings across a multi-year lifecycle.
-2. **The training data bias**: Current frontier models were trained on historical open-source repositories written under human constraints—saving keystrokes, deep inheritance hierarchies, heavy runtime reflection, and extreme DRY (Don't Repeat Yourself) abstraction layers. These patterns often degrade agent performance. Agents navigate flat, explicit, modular codebases with colocated unit tests far more effectively than deep inheritance trees with dynamic runtime dispatch. Left unguided, models instinctively reproduce the complex human-centric patterns found in their training weights.
+2. **The training data bias**: Current frontier models were trained on historical open-source repositories written under human constraints—saving keystrokes, deep inheritance hierarchies, heavy runtime reflection, and extreme DRY (Don't Repeat Yourself) abstraction layers. These patterns often degrade agent performance (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] and [[Software Decay and the Hidden Costs of Frictionless AI Code]]). Agents navigate flat, explicit, modular codebases with colocated unit tests far more effectively than deep inheritance trees with dynamic runtime dispatch. Left unguided, models instinctively reproduce the complex human-centric patterns found in their training weights.
 3. **Living field literature**: Teams shipping real software cannot wait for academic consensus or authoritative textbooks. The most valuable knowledge currently exists as living field notes, internal engineering post-mortems, and iterative repository rules built by teams running agents in production.
 
 ## 2. At what stage are we now?
@@ -351,7 +351,7 @@ The role is more likely to shift toward:
 - controlling complexity and deleting unnecessary code;
 - preserving institutional knowledge across humans and agents.
 
-Manual implementation will remain important where it is the fastest way to understand a problem, where behavior is safety-critical, or where the abstraction itself is being invented. However, routine translation from a clear design into code will increasingly be delegated.
+Manual implementation will remain important where it is the fastest way to understand a problem, where behavior is safety-critical, or where the abstraction itself is being invented. However, routine translation from a clear design into code will increasingly be delegated (shifting developer ergonomics toward [[The Conductor Pattern for High-Bandwidth Engineering]] and reshaping [[AI Changes the Role and Training of Software Engineers]]).
 
 ## Conclusion
 
@@ -372,8 +372,9 @@ The central shift can be summarized as:
 
 ## Related notes
 
-- [[The 5-Layer System Stack for Agentic Software Engineering]]
-- [[Agentic Coding Harness and Controlled Development Workflows]]
-- [[Reliability of LLM Coding Agents]]
-- [[LLM Agents and Institutional Memory]]
-- [[Designing APIs for LLM-Generated Integration Code]]
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Practical harness engineering, execution guardrails, and verification feedback loops.
+- **[[Reliability of LLM Coding Agents]]** — Benchmark limits, empirical failure modes, and long-horizon task completion.
+- **[[LLM Agents and Institutional Memory]]** — Why automated retrieval cannot substitute for shared mental models and business rationale.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Building interfaces and error contracts optimized for automated client code generation.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How cheap code generation creates long-term architectural maintenance debt.
+- **[[The Conductor Pattern for High-Bandwidth Engineering]]** — Cognitive ergonomics and the transition from manual typist to system orchestrator.

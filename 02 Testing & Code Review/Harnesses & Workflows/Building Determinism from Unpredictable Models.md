@@ -21,7 +21,7 @@ aliases:
 # Building Determinism from Unpredictable Models
 
 > [!IMPORTANT]
-> **Who actually controls the session?** It can look as though the coding agent is issuing commands to your workstation. The model proposes actions, but the host runtime decides which actions it can execute. The remote model has no access to your files, processes, or network unless the harness gives it that access. A reliable harness treats tool calls as proposals, checks them, and runs fast, repeatable verification before changes reach the active branch. A detailed system prompt cannot provide the same guarantee.
+> **Who actually controls the session?** It can look as though the coding agent is issuing commands to your workstation. The model proposes actions, but the host runtime decides which actions it can execute. The remote model has no access to your files, processes, or network unless the harness gives it that access. A reliable harness treats tool calls as proposals, checks them, and runs fast, repeatable verification before changes reach the active branch (see [[Agentic Coding Harness and Controlled Development Workflows]] and [[Exploring Agent Harnesses]]). A detailed system prompt cannot provide the same guarantee.
 
 The two sides have different jobs:
 
@@ -37,7 +37,7 @@ System prompts, custom instructions, and role descriptions also become less reli
 
 ### Context rot: the agent keeps working around old failures
 
-Each failed command, long stack trace, and abandoned patch remains in the conversation unless the harness removes it. After five failed attempts to fix a dependency issue, recent context may consist mostly of errors. The agent can then keep producing small variations of the same broken fix instead of stepping back to reconsider the original goal.
+Each failed command, long stack trace, and abandoned patch remains in the conversation unless the harness removes it (see [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]] and [[The Living Engineering Chronicle and Context Compaction]]). After five failed attempts to fix a dependency issue, recent context may consist mostly of errors. The agent can then keep producing small variations of the same broken fix instead of stepping back to reconsider the original goal.
 
 ### Overconfidence: successful steps lead to unchecked actions
 
@@ -56,10 +56,10 @@ Running the entire test suite or an aggressive linter after every tool call slow
 | Level | What it covers | How to check it | When it belongs |
 | :--- | :--- | :--- | :--- |
 | **1. Critical** | Compilation, regression and unit tests, directory safety, Git index integrity. | Process exit codes, test runners, and Git guards such as `pytest`, `cargo check`, and `git status`. | Fast, repeatable gates before accepting work. |
-| **2. Structural** | Forbidden dependencies, architecture boundaries, import paths, API contracts, cyclomatic complexity. | Static analyzers, AST parsers such as tree-sitter, ESLint, and custom CLI rules. | Deterministic checks that can run on the accumulated change. |
+| **2. Structural** | Forbidden dependencies, architecture boundaries, import paths, API contracts, cyclomatic complexity (see [[Executable Architecture Tests for Coding Agent Guardrails]]). | Static analyzers, AST parsers such as tree-sitter, ESLint, and custom CLI rules. | Deterministic checks that can run on the accumulated change. |
 | **3. Semantic** | Prose clarity, documentation quality, names, and style. | Background review agents or asynchronous model-based review. | Advisory work that can tolerate variation and need not block each edit. |
 
-There is a useful asymmetry here. Producing a correct change across several files can take exploration and multiple attempts. Checking a proposed change is often much cheaper: the compiler returns an exit code, and a targeted test passes or fails. Have the harness run those tools against the proposed patch and report their results. Asking the same model to read its diff and declare it correct spends tokens and time without giving you a comparable gate.
+There is a useful asymmetry here. Producing a correct change across several files can take exploration and multiple attempts. Checking a proposed change is often much cheaper: the compiler returns an exit code, and a targeted test passes or fails. Have the harness run those tools against the proposed patch and report their results (see [[Tests Are for Verification, Not Architectural Navigation]] and [[Testing in the Model, Agent, LLM Era]]). Asking the same model to read its diff and declare it correct spends tokens and time without giving you a comparable gate.
 
 ## 3. Keep the active loop fast and review accumulated changes separately
 
@@ -128,16 +128,10 @@ Instructions such as *"Please be careful when modifying files"* or *"Ask before 
 
 Let the local agent write the patch, pass the unit tests, and get the feature working. Run formatting, documentation review, and architecture checks in background jobs or the pre-PR pipeline. This keeps active development moving while still reviewing the accumulated change.
 
-## Relationship to the Knowledge Graph
+## Related notes
 
-### Upward architectural anchor
-
-- [[The 5-Layer System Stack for Agentic Software Engineering|The 5-Layer System Stack]]: Places the harness, governance, and verification in Layer 2, at the boundary between model proposals and runtime execution.
-
-### Downward and peer links
-
-- [[Agentic Coding Harness and Controlled Development Workflows|Controlled Development Workflows]]: Practical orchestration, vertical slices, and constraints enforced by the harness.
-- [[Exploring Agent Harnesses|Exploring Agent Harnesses]]: Host processes, sandboxes, and execution wrappers.
-- [[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps|Active Backlog Pruning and Context Hygiene]]: Context compaction and management of long-running work.
-- [[Executable Architecture Tests for Coding Agent Guardrails|Executable Architecture Tests]]: Structural checks that enforce architecture boundaries.
-- [[Tests Are for Verification, Not Architectural Navigation|Tests Are for Verification, Not Architectural Navigation]]: Fast, repeatable tests for checking model-generated changes.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Practical orchestration, vertical slices, and constraints enforced by the harness.
+- **[[Exploring Agent Harnesses]]** — Host processes, sandboxes, and execution wrappers.
+- **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** — Context compaction and management of long-running work.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Structural checks that enforce architecture boundaries.
+- **[[Tests Are for Verification, Not Architectural Navigation]]** — Fast, repeatable tests for checking model-generated changes.

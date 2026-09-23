@@ -621,3 +621,11 @@ This includes the model, but also everything around it:
 The emerging competition between Claude Code, Codex, Gemini CLI, Cursor, VS Code, Antigravity, OpenHands, and similar systems can therefore be viewed as competition over **how to build the operating environment for AI agents**.
 
 That is a useful starting point for further exploration.
+
+## Related notes
+
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Practical orchestration, vertical slices, and constraints enforced by the harness.
+- **[[Building Determinism from Unpredictable Models]]** — State graphs, sandboxed tool dispatch, and verification gates.
+- **[[Agent Deployment and Execution Models]]** — Local, cloud, and hybrid infrastructure models for agent runtimes.
+- **[[Dynamic Model Routing and Inference Gateways]]** — Routing requests between local and remote model engines.
+- **[[Multi-Agent Software Development]]** — Coordinated specialist agents collaborating within a shared execution harness.

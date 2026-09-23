@@ -32,7 +32,7 @@ The main question is no longer whether an agent can write SQL and map a result s
 - How do we verify semantics, concurrency, and performance?
 - Can humans still understand and review the resulting system?
 
-Teams historically accepted the ORM tax—leaky abstractions, hidden N+1 query storms, runaway joins, and object-relational impedance mismatches—simply because writing data access layers by hand was an exhausting typing bottleneck. When an agent drives the marginal cost of generating repetitive DTOs and explicit SQL queries close to zero, that typing bottleneck disappears. However, near-zero generation cost does not eliminate the hard problems of persistence; it introduces new failure modes around silent contract drift and split-backend logic sprawl.
+Teams historically accepted the ORM tax—leaky abstractions, hidden N+1 query storms, runaway joins, and object-relational impedance mismatches—simply because writing data access layers by hand was an exhausting typing bottleneck. When an agent drives the marginal cost of generating repetitive DTOs and explicit SQL queries close to zero, that typing bottleneck disappears. However, near-zero generation cost does not eliminate the hard problems of persistence; it introduces new failure modes around silent contract drift and split-backend logic sprawl (see [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] and [[Why Business Logic Is the Hardest Part of Agentic Coding]]).
 
 ## An Agent Can Easily Generate the Mapping Layer
 
@@ -44,7 +44,7 @@ Given a schema and a query, an agent can generate:
 4. `DbDataReader` mapping or Dapper integration;
 5. integration and contract tests.
 
-Repetitive mapping code is not difficult for an agent. In fact, agents are less discouraged than humans by mechanical code. This reduces the cost of explicit implementations, but generated code still needs deterministic verification.
+Repetitive mapping code is not difficult for an agent. In fact, agents are less discouraged than humans by mechanical code. This reduces the cost of explicit implementations, but generated code still needs deterministic verification (see [[Building Determinism from Unpredictable Models]] and [[Testing in the Model, Agent, LLM Era]]).
 
 ## The Real Problem Is Contract Consistency
 
@@ -251,7 +251,7 @@ They reduce much less of the cost of:
 - preserving institutional knowledge;
 - reviewing a large body of clever SQL.
 
-Cheap generation can even increase risk by making it easy to create more complex database code than the team can realistically review.
+Cheap generation can even increase risk by making it easy to create more complex database code than the team can realistically review (see [[Software Decay and the Hidden Costs of Frictionless AI Code]]).
 
 ## A Practical Hybrid Architecture
 
@@ -286,7 +286,7 @@ An agent working in this architecture should be instructed to:
 9. measure rather than merely claim performance improvements;
 10. keep business reasoning in the application unless database placement is explicitly justified.
 
-Enforcing atomic changes across files is critical: whenever an agent modifies a query projection, it must update the corresponding C# result DTO and its contract test in the same pass. Leaving mapping or test updates for a subsequent prompt invites prompt drift and broken builds.
+Enforcing atomic changes across files is critical: whenever an agent modifies a query projection, it must update the corresponding C# result DTO and its contract test in the same pass. Leaving mapping or test updates for a subsequent prompt invites prompt drift and broken builds (see [[Agentic Coding Harness and Controlled Development Workflows]]).
 
 ## Conclusion
 
@@ -294,13 +294,13 @@ Agentic coding makes explicit SQL and database-side programming economically mor
 
 The likely outcome is not a return to putting the entire application in stored procedures. It is a more balanced architecture in which teams are less afraid of handwritten SQL, use SQL Server's strengths deliberately, and rely on deterministic validation rather than trusting either the ORM or the agent.
 
-## Related Notes
+## Related notes
 
-- [[Designing Software Architecture with LLM Assistance]]
-- [[Designing Software for AI Agents]]
-- [[Reliability of LLM Coding Agents]]
-- [[Agentic Coding Harness and Controlled Development Workflows]]
-- [[Executable Architecture Tests for Coding Agent Guardrails]]
-- [[Testing in the Model, Agent, LLM Era]]
-- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]
-- [[Why Business Logic Is the Hardest Part of Agentic Coding]]
+- **[[Designing Software for AI Agents]]** — Architectural boundaries and structural predictability for coding agents.
+- **[[Designing Software Architecture with LLM Assistance]]** — Balancing explicit SQL contracts against automated abstraction layers.
+- **[[Reliability of LLM Coding Agents]]** — Managing probabilistic errors and contract drift in generated database code.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Enforcing multi-file atomicity when updating queries, models, and tests.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Automated verification of SQL-to-DTO contracts and schema invariants.
+- **[[Testing in the Model, Agent, LLM Era]]** — Verifying generated persistence code with real migrations and integration tests.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Why complex ORM abstractions degrade agent maintainability compared to explicit SQL.
+- **[[Why Business Logic Is the Hardest Part of Agentic Coding]]** — Preventing business rules from being silently scattered across stored procedures and queries.

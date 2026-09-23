@@ -26,7 +26,7 @@ For decades, reliable software was slow and expensive to build. A team had to ha
 
 A competitor still needs engineers, domain knowledge, testing, distribution, and a reason for customers to switch. Agents can nevertheless reduce the amount of implementation work required to imitate what an outsider can observe.
 
-Given access to a running client application, agents can observe its state changes, inspect network payloads, infer likely data relationships, and generate a similar full-stack system. The exact reduction in time and cost depends on the product and on what remains hidden. The important change is that a large investment in implementation no longer guarantees an equally expensive path for a competitor.
+Given access to a running client application, agents can observe its state changes, inspect network payloads, infer likely data relationships, and generate a similar full-stack system (see [[Competitive Advantage in the Age of Commodity AI]]). The exact reduction in time and cost depends on the product and on what remains hidden. The important change is that a large investment in implementation no longer guarantees an equally expensive path for a competitor.
 
 ## How an agent can copy the visible product
 
@@ -86,11 +86,11 @@ An original team that stays close to customers can find edge cases, see performa
 
 The code still matters: it has to run, handle failures, and support the business. But the mere expense of writing it no longer buys the same protection. The lasting advantage comes from what the running product has accumulated, where it is connected, who uses it, and how quickly its team learns and ships.
 
-## Knowledge Graph Connections
+## Related notes
 
-* **[[Competitive Advantage in the Age of Commodity AI]]**: Asking the right domain questions, reaching customers, and owning private data when routine code becomes cheaper to produce.
-* **[[Fresh Contact With Reality May Become the Training Bottleneck]]**: Why direct feedback from the real world helps a team move ahead of copies based on past releases.
-* **[[The Most Valuable Software Training Data May Be Private]]**: Transaction histories, operational records, and domain edge cases that public scraping cannot access.
-* **[[A New Market for Small, Custom Business Software]]**: How lower implementation costs make specialized software for narrow markets practical.
-* **[[Shifting from Fixed Features to Agent-Extensible Primitives]]**: Moving from fixed UI features that others can copy to flexible platform building blocks agents can use.
-* **[[AI Changes the Economics of Software Libraries]]**: How cheaper code generation changes the choice between building, buying, and generating small libraries.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — Asking the right domain questions, reaching customers, and owning private data when routine code becomes cheaper to produce.
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why direct feedback from the real world helps a team move ahead of copies based on past releases.
+- **[[The Most Valuable Software Training Data May Be Private]]** — Transaction histories, operational records, and domain edge cases that public scraping cannot access.
+- **[[A New Market for Small, Custom Business Software]]** — How lower implementation costs make specialized software for narrow markets practical.
+- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Moving from fixed UI features that others can copy to flexible platform building blocks agents can use.
+- **[[AI Changes the Economics of Software Libraries]]** — How cheaper code generation changes the choice between building, buying, and generating small libraries.

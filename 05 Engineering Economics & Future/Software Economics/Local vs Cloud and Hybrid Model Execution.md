@@ -36,7 +36,7 @@ aliases:
 
 Using a model only through a browser chat is like digging a foundation with a hand shovel. You copy code into the chat, wait for the response, paste it back, format the result, and repeat. Usage tiers and rate limits can interrupt the work. The interaction is occasional and manual.
 
-A local machine connected to the shell, file watchers, background processes, and build tools can keep working while you do something else. It can inspect files without uploading them, run agents around the clock, maintain a repository index, and triage email or telemetry. Those capabilities change both how often you can use an agent and how much work you can hand it.
+A local machine connected to the shell, file watchers, background processes, and build tools can keep working while you do something else (see [[Always-On Autonomous Agents - The 24-7 Local Operating System]] and [[Agent Deployment and Execution Models]]). It can inspect files without uploading them, run agents around the clock, maintain a repository index, and triage email or telemetry. Those capabilities change both how often you can use an agent and how much work you can hand it.
 
 There is another benefit to running this yourself: you learn what actually limits the system. You see what happens when memory bandwidth becomes the bottleneck, how quantization affects model size and quality, how many requests an inference server can handle, and where tool calls slow an agent down. A browser chat hides most of those details. The analogy is the early engineers who learned networking and Unix by running their own servers: hands-on experience with the machinery built intuition they could later use on larger systems.
 
@@ -123,7 +123,7 @@ Cost is only one reason to run a model locally. The location of source code, int
 
 ### Keep the operational context on your side
 
-In a hosted service, the vendor owns the platform where your work runs. With local agents, the repository, data, and execution history can stay inside your security boundary, while the model is a component you can replace. You can switch checkpoints or choose to send a particular task to an external API without moving the entire working context to a provider.
+In a hosted service, the vendor owns the platform where your work runs. With local agents, the repository, data, and execution history can stay inside your security boundary, while the model is a component you can replace (protecting assets detailed in [[The Most Valuable Software Training Data May Be Private]]). You can switch checkpoints or choose to send a particular task to an external API without moving the entire working context to a provider.
 
 ### Avoid unexpected changes to unattended work
 
@@ -135,19 +135,19 @@ Keeping a specific checkpoint locally gives you control over which model version
 
 Cloud safety filters may reject legitimate engineering inputs: vulnerability dumps, suspicious binaries, attack payloads, or logs that contain offensive user text. An agent running low-level commands such as `rm -rf`, changing `iptables`, or editing partition tables may also trigger a refusal and stop an unattended workflow.
 
-The note also describes **abliterated local models**, whose refusal-related directions in the weights have been altered. Such models can be used for security analysis, reverse engineering, and systems administration without the provider's refusal layer interrupting the work. This gives the operator more control over those workflows.
+The note also describes **abliterated local models**, whose refusal-related directions in the weights have been altered. Such models can be used for security analysis, reverse engineering, and systems administration without the provider's refusal layer interrupting the work (requiring strict boundaries via an [[Agentic Coding Harness and Controlled Development Workflows]]). This gives the operator more control over those workflows.
 
 ## 7. Put the two execution paths together
 
-A task router can send frequent, sensitive, and repeatable work to a local unified-memory machine. That includes background agents, repository indexing and RAG, AST edits, linting, and reviews of proprietary code. It can send a difficult multi-subsystem design question, a complex refactor, ambiguous debugging, or a million-token-class input to a frontier cloud model.
+A task router can send frequent, sensitive, and repeatable work to a local unified-memory machine. That includes background agents, repository indexing and RAG, AST edits, linting, and reviews of proprietary code (as an operational moat explored in [[Competitive Advantage in the Age of Commodity AI]]). It can send a difficult multi-subsystem design question, a complex refactor, ambiguous debugging, or a million-token-class input to a frontier cloud model.
 
 The routing decision follows the task. Continuous local work avoids a per-token charge and keeps selected data close to the tools that use it. Cloud calls remain available when the task needs more reasoning capacity or context than the local model can provide.
 
-## Related Notes
+## Related notes
 
-- [[Agent Deployment and Execution Models]]: Separating model inference, agent orchestration, and the environment where tools run.
-- [[Agentic Coding Harness and Controlled Development Workflows]]: Boundaries and safeguards for autonomous local execution.
-- [[Competitive Advantage in the Age of Commodity AI]]: The value of operational data and feedback loops when models are interchangeable.
-- [[Finding Original Knowledge in an Internet Full of Repetition]]: Filtering repeated synthetic material from an agent's source pipeline.
-- [[The Most Valuable Software Training Data May Be Private]]: Private traces, incident reports, and git history as specialized engineering data.
-- [[The 5-Layer System Stack for Agentic Software Engineering]]: Hardware, inference servers, agent controls, and developer interfaces.
+- **[[Agent Deployment and Execution Models]]** — Separating model inference, agent orchestration, and the environment where tools run.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Boundaries and safeguards for autonomous local execution.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — The value of operational data and feedback loops when models are interchangeable.
+- **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Filtering repeated synthetic material from an agent's source pipeline.
+- **[[The Most Valuable Software Training Data May Be Private]]** — Private traces, incident reports, and git history as specialized engineering data.
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Hardware trade-offs and economics of continuous local agent daemons.

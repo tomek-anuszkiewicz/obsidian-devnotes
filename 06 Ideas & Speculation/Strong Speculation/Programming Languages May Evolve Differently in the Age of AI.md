@@ -40,7 +40,7 @@ The rise of LLM-based coding agents may change which of these goals matter most.
 
 The central shift is simple:
 
-> AI greatly reduces the cost of writing code, but it does not eliminate the cost of ambiguity or incorrect assumptions.
+> AI greatly reduces the cost of writing code, but it does not eliminate the cost of ambiguity or incorrect assumptions (see [[Software Engineering May Shift Toward Code Optimized for Agents]]).
 
 This may gradually change what we optimize programming languages for.
 
@@ -739,12 +739,11 @@ The most important principle may become:
 
 > **LLMs make verbosity cheap, but ambiguity remains expensive.**
 
-If that is true, programming language evolution in the AI era may move away from minimizing what must be written and toward maximizing what can be mechanically understood and verified.
+If that is true, programming language evolution in the AI era may move away from minimizing what must be written and toward maximizing what can be mechanically understood and verified (see [[Formal Verification and Runtime Safety Boundaries]]).
 
-## Related Notes
+## Related notes
 
-- [[Software Engineering May Shift Toward Code Optimized for Agents]] - Architectural choices and codebase conventions tailored for agentic maintenance.
-- [[Designing Developer Technologies for Agent-Readiness]] - Structuring tools, SDKs, and libraries for seamless agent consumption.
-- [[Replacing Source Generators with Explicit Generated Code]] - Why compile-time magic is replaced by transparent, inspectable code.
-- [[Formal Verification and Runtime Safety Boundaries]] - Enforcing invariants through compilers and formal types rather than soft prompts.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 1 (Foundational Models) and Layer 4 (Verification & Guardrails).
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]** — Architectural choices and codebase conventions tailored for agentic maintenance.
+- **[[Designing Developer Technologies for Agent-Readiness]]** — Structuring tools, SDKs, and libraries for seamless agent consumption.
+- **[[Replacing Source Generators with Explicit Generated Code]]** — Why compile-time magic is replaced by transparent, inspectable code.
+- **[[Formal Verification and Runtime Safety Boundaries]]** — Enforcing invariants through compilers and formal types rather than soft prompts.

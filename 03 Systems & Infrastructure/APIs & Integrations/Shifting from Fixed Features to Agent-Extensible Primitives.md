@@ -35,7 +35,7 @@ user consumes fixed feature set
 
 If a user needs something outside the predefined feature set, they face a familiar dilemma: wait months for the developer to prioritize the request, build a fragile external workaround, or accept that the software cannot adapt to their life.
 
-AI agents, protocols like MCP (Model Context Protocol) and WebMCP, and on-device machine learning suggest another architecture:
+AI agents, protocols like MCP (Model Context Protocol) and WebMCP, and on-device machine learning suggest another architecture (see [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] and [[Designing APIs for LLM-Generated Integration Code]]):
 
 ```text
 application
@@ -48,7 +48,7 @@ personal agent
 (generates custom workflows, UI widgets, and extensions on demand)
 ```
 
-Applications may gradually transition from **closed feature silos** into **agent-extensible primitives**.
+Applications may gradually transition from **closed feature silos** into **agent-extensible primitives** (see [[Unbundling of Enterprise Software]]).
 
 ---
 
@@ -94,7 +94,7 @@ That technical necessity is dissolving.
 
 ### 1. On-Device Intelligence (Bring Your Own Model)
 
-Modern mobile processors increasingly integrate dedicated Neural Processing Units (NPUs). Small, highly capable multimodal models can execute directly on the user's phone or laptop.
+Modern mobile processors increasingly integrate dedicated Neural Processing Units (NPUs). Small, highly capable multimodal models can execute directly on the user's phone or laptop (see [[Personal AI Subscriptions and Unified Model Access]]).
 
 When a user snaps a photo of a meal:
 
@@ -240,7 +240,7 @@ emerging value proposition:
 
 Developers transition from selling **rigid feature bundles** to selling **high-trust platforms and domain engines**. A medical or financial tracking app wins not because it has a pretty button for one specific calculation, but because its domain primitives are mathematically rigorous, legally compliant, and seamlessly extensible by any agent.
 
-This dynamic mirrors the broader unbundling of enterprise software. When UI presentation and inference compute are commoditized, commercial leverage moves to transaction execution guarantees, state synchronization, and regulatory compliance. A domain engine commands pricing power because its invariants are mathematically verified, its data schemas satisfy rigorous regulatory standards (such as HIPAA, GDPR, or SOC 2), and its exposed APIs reliably execute high-stakes state transitions on behalf of autonomous agents.
+This dynamic mirrors the broader unbundling of enterprise software (see [[Unbundling of Enterprise Software]] and [[Personal Digital Models as the Foundation of Agent Ecosystems]]). When UI presentation and inference compute are commoditized, commercial leverage moves to transaction execution guarantees, state synchronization, and regulatory compliance. A domain engine commands pricing power because its invariants are mathematically verified, its data schemas satisfy rigorous regulatory standards (such as HIPAA, GDPR, or SOC 2), and its exposed APIs reliably execute high-stakes state transitions on behalf of autonomous agents.
 
 ---
 
@@ -262,11 +262,9 @@ When applications stop trying to be everything to everyone, they can become smal
 
 They provide the foundational primitives of their domain, while the user's personal agent tailors the interface, logic, and integrations to the exact shape of that individual's life.
 
----
+## Related notes
 
-# Related Systems Notes
-
-- [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] — Exposing machine-discoverable primitives and capability schemas directly to in-browser agents.
-- [[Designing APIs for LLM-Generated Integration Code]] — Structuring typed interfaces and domain invariants for autonomous runtime integration.
-- [[Unbundling of Enterprise Software]] — The architectural shift from closed application silos to composable, agent-addressable domain engines.
-- [[Personal Digital Models as the Foundation of Agent Ecosystems]] — User-owned storage vaults and local context powering runtime personalization.
+- **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]** — Exposing machine-discoverable primitives and capability schemas directly to in-browser agents.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring typed interfaces and domain invariants for autonomous runtime integration.
+- **[[Unbundling of Enterprise Software]]** — The architectural shift from closed application silos to composable, agent-addressable domain engines.
+- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — User-owned storage vaults and local context powering runtime personalization.

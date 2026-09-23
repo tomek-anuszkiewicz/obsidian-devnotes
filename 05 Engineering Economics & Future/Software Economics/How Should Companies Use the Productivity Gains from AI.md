@@ -130,4 +130,10 @@ There is no universal allocation for the additional capacity. A team can use it 
 
 Preserving junior engineering paths requires restructuring early-career roles rather than cutting entry-level hiring. As highlighted in [[What Should Organizations Preserve from AI-Assisted Development]], junior engineers build deep mental models by reviewing generated code, tracing runtime execution, and writing verification tests. Slashing this pipeline starves the organization of future senior architects who understand systems at the metal. When production systems suffer distributed deadlocks, memory leaks, or race conditions under load, foundation models cannot debug the incident—teams must maintain deep in-house systems profiling expertise.
 
----
+## Related notes
+
+- **[[AI Productivity Is Limited by the Delivery System]]** — Why code generation speed cannot overcome downstream bottlenecks in review, testing, and deployment.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Preserving engineering pipelines, human mental models, and strategic architectural assets.
+- **[[AI May Increase Product Ambition Instead of Reducing Team Size]]** — How lower unit costs expand the scope of viable software engineering products.
+- **[[Early AI Adoption as Organizational Readiness]]** — Establishing cultural incentives and operational patterns for generative tooling.
+- **[[A New Market for Small, Custom Business Software]]** — Expanding into custom operational software previously priced out by high development costs.

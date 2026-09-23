@@ -187,7 +187,7 @@ Evaluating the full triplet handles nuances that simple keyword blocklists miss.
 
 ### Deterministic Sandboxes and Tool Boundaries
 
-When an agent has access to external tools—such as shell execution, database clients, or file APIs—evaluating text output after the fact is completely inadequate. If an agent executes a destructive tool call, checking the final conversational output cannot reverse the mutation.
+When an agent has access to external tools—such as shell execution, database clients, or file APIs—evaluating text output after the fact is completely inadequate (see [[LLM Capability Reliability and the Shape of Progress]]). If an agent executes a destructive tool call, checking the final conversational output cannot reverse the mutation.
 
 Safety checks for autonomous systems must intercept tool actions before execution:
 
@@ -322,6 +322,11 @@ current instructions
 current external information
 ```
 
-The same is true for many organizational policies and compliance requirements.
-
 Attempting to bake jurisdiction-specific compliance laws directly into neural weights guarantees obsolescence within months. The system architecture must decouple stable foundation reasoning and safety reflexes (in weights) from dynamic jurisdictional rules, licensing limits, and organizational policies (in context and deterministic policy engines). This separation keeps the system compliant, auditable, and maintainable over time.
+
+## Related notes
+
+- **[[Service vs User Authorization Models]]** — Preventing agent privilege escalation across tool calling and API integration layers.
+- **[[Proxy Metrics and Operational Invariants in AI Systems]]** — Designing deterministic checks and invariant validation over probabilistic classifiers.
+- **[[LLM Capability Reliability and the Shape of Progress]]** — Externalizing reliability from model weights into deterministic harnesses.
+- **[[Formal Verification and Runtime Safety Boundaries]]** — Mathematical and schema-based verification replacing probabilistic evaluation.

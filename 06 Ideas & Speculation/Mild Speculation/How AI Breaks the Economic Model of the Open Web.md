@@ -36,7 +36,7 @@ creator produces content
 
 This creates a fundamental tension.
 
-AI becomes more useful because it can consume and synthesize the web, but by doing so it may weaken the incentives for people to keep producing the information on which future AI systems depend.
+AI becomes more useful because it can consume and synthesize the web, but by doing so it may weaken the incentives for people to keep producing the information on which future AI systems depend (see [[Finding Original Knowledge in an Internet Full of Repetition]]).
 
 ---
 
@@ -62,7 +62,7 @@ query
 → perhaps a few citations
 ```
 
-This may already be changing user behavior. People can ask an AI system directly instead of searching, opening several results, and assembling an answer themselves. Stack Overflow has reported declining traffic and has said that some first-time coders may visit or ask questions less often because AI can provide answers directly, while also warning that several factors affect traffic ([Stack Overflow, 2023](https://stackoverflow.blog/2023/08/08/insights-into-stack-overflows-traffic/)).
+This may already be changing user behavior. People can ask an AI system directly instead of searching, opening several results, and assembling an answer themselves. Stack Overflow has reported declining traffic and has said that some first-time coders may visit or ask questions less often because AI can provide answers directly, while also warning that several factors affect traffic ([Stack Overflow, 2023](https://stackoverflow.blog/2023/08/08/insights-into-stack-overflows-traffic/)). As public engineering discussions diminish, high-signal technical documentation increasingly retreats behind corporate walls (see [[The Most Valuable Software Training Data May Be Private]]), while model training faces empirical limits (see [[Fresh Contact With Reality May Become the Training Bottleneck]]).
 
 When the generated answer satisfies the user's intent, the original source may receive no visit even though its material helped make the answer possible.
 
@@ -804,16 +804,11 @@ Users may increasingly stop caring which page contains the answer.
 They will ask an agent to:
 
 - find,
-    
 - compare,
-    
 - summarize,
-    
 - verify,
-    
 - decide,
-    
-- act.
+- act (see [[How AI Agents May Control Computers, Applications, and the Web]]).
     
 
 This does not necessarily destroy the internet.
@@ -836,10 +831,9 @@ to:
 
 > Who does the agent trust, cite, recommend, and ultimately choose?
 
-## Related Notes
+## Related notes
 
-- [[Finding Original Knowledge in an Internet Full of Repetition]] - Epistemological filtering and source verification in LLM-saturated environments.
-- [[Fresh Contact With Reality May Become the Training Bottleneck]] - Why empirical real-world grounding is the ultimate bottleneck for frontier models.
-- [[The Most Valuable Software Training Data May Be Private]] - The retreat of high-signal data behind corporate and authenticated firewalls.
-- [[How AI Agents May Control Computers, Applications, and the Web]] - The technical mechanics of autonomous agents interacting with software and web interfaces.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic dynamics of the software ecosystem.
+- **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Epistemological filtering and source verification in LLM-saturated environments.
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why empirical real-world grounding is the ultimate bottleneck for frontier models.
+- **[[The Most Valuable Software Training Data May Be Private]]** — The retreat of high-signal data behind corporate and authenticated firewalls.
+- **[[How AI Agents May Control Computers, Applications, and the Web]]** — The technical mechanics of autonomous agents interacting with software and web interfaces.

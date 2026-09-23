@@ -757,7 +757,7 @@ The ability to share an agent across a team makes centralized identity and permi
 
 Running agent-generated code and arbitrary shell commands on shared infrastructure requires defense-in-depth isolation:
 
-- **Ephemeral sandboxing**: Execute tool calls and compilation steps inside disposable containers or microVMs (such as gVisor or Firecracker). Tearing down the environment immediately after execution prevents state poisoning, contaminated package caches, or untrusted dependencies from persisting across tasks.
+- **Ephemeral sandboxing**: Execute tool calls and compilation steps inside disposable containers or microVMs (such as gVisor or Firecracker). Tearing down the environment immediately after execution prevents state poisoning, contaminated package caches, or untrusted dependencies from persisting across tasks (see [[Agentic Coding Harness and Controlled Development Workflows]]).
 - **Network egress filtering**: Restrict outbound network access from the execution runtime. Allowlist only required package registries, internal source control, and inference endpoints. Explicitly block access to cloud instance metadata endpoints (`169.254.169.254`) to prevent credentials from being extracted by untrusted dependencies.
 - **Short-lived credentials**: Avoid persisting long-lived API keys or deployment credentials on disk. Use short-lived, workload-identity-federated tokens (such as OIDC) scoped strictly to the task.
 - **Clean workspace trees**: Provision each task in a fresh, isolated Git worktree. Never allow untracked build artifacts or modified scripts to leak across unrelated agent runs.
@@ -775,7 +775,7 @@ A simple decision guide:
 | Webhook / CI-triggered execution | Managed or self-hosted agent |
 | Maximum control over agent execution | Self-hosted agent |
 | Private internal execution | Self-hosted or hybrid agent |
-| Code must not reach an external model provider | Self-hosted model inference |
+| Code must not reach an external model provider | Self-hosted model inference (see [[Local vs Cloud and Hybrid Model Execution]] and [[Dynamic Model Routing and Inference Gateways]]) |
 | Avoid buying GPUs while controlling model inference | Private rented GPU infrastructure |
 | No protected data may leave organization-controlled infrastructure | Fully self-hosted stack |
 | Maximum data sovereignty | On-premises or isolated inference |
@@ -798,5 +798,12 @@ A simple decision guide:
 10. The model inference location determines whether prompts and selected code cross the organizational trust boundary.
 11. Strict data-sovereignty requirements may require both self-hosted agent infrastructure and self-hosted model inference.
 12. Rented private GPU infrastructure can provide a middle ground between external model APIs and fully on-premises deployment.
-13. Keep deterministic workflow rules in code when they must be enforced.
+13. Keep deterministic workflow rules in code when they must be enforced (see [[Building Determinism from Unpredictable Models]]).
 14. Local, managed and hybrid agents can coexist in the same development organization.
+
+## Related notes
+
+- **[[Model Access and Execution Infrastructure]]** — Hardware architectures, API protocols, and runtime isolation for models.
+- **[[Dynamic Model Routing and Inference Gateways]]** — Dispatching agent requests between local hardware and cloud providers.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Designing deterministic harnesses, state machines, and execution loops.
+- **[[Local vs Cloud and Hybrid Model Execution]]** — Economic and privacy trade-offs of hosting local open-weights models vs proprietary cloud APIs.

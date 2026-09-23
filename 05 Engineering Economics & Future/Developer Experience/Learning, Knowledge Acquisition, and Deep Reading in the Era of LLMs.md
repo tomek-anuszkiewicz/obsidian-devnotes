@@ -25,7 +25,7 @@ aliases:
 
 A five-bullet summary of a book or architecture paper often throws away the useful part. You lose the edge cases, objections and trade-offs that explain *why* the author reached a particular conclusion. The aim here is to process a source in the context of an existing knowledge base, such as an Obsidian vault, while keeping that reasoning intact.
 
-The inputs could be books, RFCs, papers, talks, video transcripts or podcasts. An agent compares each source with what is already in the vault, fills in missing prerequisites, and prepares material for further reading and questions. It can then extract properties and links back into the vault through local tools such as MCP. The result should give the reader more time for the unfamiliar, difficult parts of the source, without pretending those parts are simple.
+The inputs could be books, RFCs, papers, talks, video transcripts or podcasts. An agent compares each source with what is already in the vault, fills in missing prerequisites, and prepares material for further reading and questions. It can then extract properties and links back into the vault through local tools such as MCP (see [[Finding Original Knowledge in an Internet Full of Repetition]]). The result should give the reader more time for the unfamiliar, difficult parts of the source, without pretending those parts are simple.
 
 ### Spend less time on what you already know
 
@@ -676,7 +676,7 @@ Azure Data API Builder can expose REST and GraphQL endpoints over SQL Server or 
 
 ### Coordinate agents and external actions
 
-LangGraph and LangSmith fit a workflow that needs state, repeated decisions, checkpoints and an explicit human approval step. n8n fits webhook routing and integration between services. In the proposed Slack flow, an n8n or MCP endpoint posts health summaries, schema diffs or canary notifications to a private channel. Block Kit buttons such as `Approve Deploy`, `Rollback` and `Inspect Trace` call back into the workflow; a callback could launch a deployment or change traffic through an Istio gateway.
+LangGraph and LangSmith fit a workflow that needs state, repeated decisions, checkpoints and an explicit human approval step (see [[The Conductor Pattern for High-Bandwidth Engineering]] and [[The Living Engineering Chronicle and Context Compaction]]). n8n fits webhook routing and integration between services. In the proposed Slack flow, an n8n or MCP endpoint posts health summaries, schema diffs or canary notifications to a private channel. Block Kit buttons such as `Approve Deploy`, `Rollback` and `Inspect Trace` call back into the workflow; a callback could launch a deployment or change traffic through an Istio gateway.
 
 ### Three exploratory product ideas
 
@@ -684,13 +684,12 @@ LangGraph and LangSmith fit a workflow that needs state, repeated decisions, che
 2. **A cross-border resale scanner.** Import listings from OLX, Allegro and eBay, use a local model to normalize descriptions across languages, then compare prices with shipping costs and exchange rates to surface possible arbitrage.
 3. **A searchable manga and anime index.** Scrape and OCR pages, describe panels, and embed images and dialogue so someone can search for visual framing or themes beyond text tags.
 
-## Related Notes
+## Related notes
 
-- [[Finding Original Knowledge in an Internet Full of Repetition]] - Epistemological filtering and source verification in LLM-saturated environments.
-- [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]] - The cognitive burden of constant code review and supervision.
-- [[LLMs as a Code Review Team]] - Architecture for multi-agent adversarial code audits and specialist reviewers.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Full system architecture from foundational models to economic flywheels.
-- [[The Living Engineering Chronicle and Context Compaction]] - Long-term engineering logs and institutional knowledge preservation.
+- **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Epistemological filtering and source verification in LLM-saturated environments.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The cognitive burden of constant code review and supervision.
+- **[[LLMs as a Code Review Team]]** — Architecture for multi-agent adversarial code audits and specialist reviewers.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Long-term engineering logs and institutional knowledge preservation.
 
 ## Technical resources
 

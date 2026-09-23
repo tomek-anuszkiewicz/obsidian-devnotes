@@ -45,7 +45,7 @@ but also complete interaction trajectories:
 
 This creates a feedback loop between model adoption and model capability.
 
-> Today's unsuccessful attempts to use agents can become part of the infrastructure and training signal that makes tomorrow's agents successful.
+> Today's unsuccessful attempts to use agents can become part of the infrastructure and training signal that makes tomorrow's agents successful (see [[Improving AI Models - From Scaling to Agent-Generated Training Data]]).
 
 ---
 
@@ -57,7 +57,7 @@ The process may look like this:
 People expect agents to automate task A
 → they try to automate task A with an imperfect model
 → the model fails in observable ways
-→ users correct it and build supporting tools
+→ users correct it and build supporting tools (a mechanism codified in [[Learning Coding Agents Through Failure-Driven Instructions]])
 → new examples, evaluations, and workflows are created
 → future models learn from these patterns
 → task A becomes more reliable
@@ -638,7 +638,7 @@ Even when public foundation models cannot train on proprietary logs due to data 
 
 - Hardening internal CI/CD pipelines and isolated sandbox harnesses.
 - Building domain-specific fine-tuning datasets tailored to private APIs and architectural patterns.
-- Curating golden evaluation suites to benchmark new model releases against real internal regressions.
+- Curating golden evaluation suites to benchmark new model releases against real internal regressions (see [[What Should Organizations Preserve from AI-Assisted Development]] and [[The Most Valuable Software Training Data May Be Private]]).
 
 ---
 
@@ -663,7 +663,7 @@ A good experiment should leave behind:
 - or improved architecture.
     
 
-This avoids a situation where the user performs expensive trial-and-error work that benefits only the model provider or the wider industry.
+This avoids a situation where the user performs expensive trial-and-error work that benefits only the model provider or the wider industry (rather than securing an internal moat, as discussed in [[Competitive Advantage in the Age of Commodity AI]]).
 
 The best early adoption strategy is:
 
@@ -687,11 +687,10 @@ Or more compactly:
 > Agents will not become capable merely because we wait.  
 > They become capable partly because people try, fail, verify, formalize, and try again.
 
-## Related Notes
+## Related notes
 
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding organizational knowledge and flywheel economics.
-- [[Competitive Advantage in the Age of Commodity AI]] - Where defensibility lives when model intelligence is commoditized.
-- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
-- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of proprietary corporate execution history.
-- [[Learning Coding Agents Through Failure-Driven Instructions]] - Turning agent execution breakdowns into durable constraints.
-- [[Improving AI Models - From Scaling to Agent-Generated Training Data]] - Harnessing execution feedback to train frontier models.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — Where defensibility lives when model intelligence is commoditized.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, review comments, and domain invariants.
+- **[[The Most Valuable Software Training Data May Be Private]]** — The strategic value of proprietary corporate execution history.
+- **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Turning agent execution breakdowns into durable constraints.
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback to train frontier models.

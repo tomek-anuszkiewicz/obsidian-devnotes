@@ -28,7 +28,7 @@ Writing code by hand takes time. So does reviewing a pull request that touches 4
 
 An agent has no such physical limit. It can produce 500 lines of scaffolding, dynamic proxy wrappers, and dependency-injection wiring as readily as it can produce a five-line utility. The time and effort of generating code no longer provide the same brake on unnecessary files and abstractions. Without explicit limits in the repository, that code can accumulate quickly.
 
-The proposed response is mechanical: keep operations in their own files, limit file size, and restrict how many files an agent can change in one task. These rules give the team a point at which to stop and review a change that is spreading.
+The proposed response is mechanical: keep operations in their own files, limit file size, and restrict how many files an agent can change in one task. These rules give the team a point at which to stop and review a change that is spreading (see [[Designing Software for AI Agents]] and [[Executable Architecture Tests for Coding Agent Guardrails]]).
 
 ---
 
@@ -60,7 +60,7 @@ Agents change both costs. An agent can search for copies with AST queries or sem
 
 Shared code has a cost of its own. If three distinct operations use one generic helper or base service, a change for Feature A can affect Feature B. The engineer may then add a flag to the helper to keep both behaviors working. When each operation keeps its business logic in its own file, a change to one operation has a smaller path through the code and is less likely to disturb the others.
 
-This is the case for preferring two clear, local implementations over a clever abstraction that couples unrelated operations. It gives both the engineer and the agent a smaller piece of code to inspect when something changes.
+This is the case for preferring two clear, local implementations over a clever abstraction that couples unrelated operations (see [[Internal Shared Packages vs Agent-Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]). It gives both the engineer and the agent a smaller piece of code to inspect when something changes.
 
 ---
 
@@ -74,7 +74,7 @@ Without clear instructions, an agent may reach for the same patterns: an abstrac
 
 ## Put the limits in CI
 
-Advice such as “keep classes focused” and “avoid touching too many files” is easy for an agent to ignore while it is trying to complete a task. A check in CI makes the limit visible and stops the change when it crosses it. The proposed rules are one operation per file, a file-length limit, and a small budget for files changed by a task.
+Advice such as “keep classes focused” and “avoid touching too many files” is easy for an agent to ignore while it is trying to complete a task. A check in CI makes the limit visible and stops the change when it crosses it (see [[Executable Architecture Tests for Coding Agent Guardrails]] and [[Agentic Coding Harness and Controlled Development Workflows]]). The proposed rules are one operation per file, a file-length limit, and a small budget for files changed by a task.
 
 ### One operation per file
 
@@ -129,7 +129,7 @@ The low cost of generating code can also work in our favor. Picture an engineer 
 
 An agent does not tire of editing those files. It can update 30 call sites and their tests, or rewrite a subsystem to use explicit types in place of unstructured dictionaries. It has no reason to choose a quick patch merely to finish the day.
 
-With clear architectural constraints, thorough tests, and type checking, that capacity can help remove old workarounds. The agent can make the broad, consistent change that a human team might postpone because of the effort involved.
+With clear architectural constraints, thorough tests, and type checking, that capacity can help remove old workarounds. The agent can make the broad, consistent change that a human team might postpone because of the effort involved (see [[Refactoring Legacy Systems with AI Agents]] and [[AI Changes the Economics of Technical Debt]]).
 
 ---
 
@@ -142,12 +142,12 @@ With clear architectural constraints, thorough tests, and type checking, that ca
 
 ---
 
-## Related Notes
+## Related notes
 
-* **[[Designing Software for AI Agents]]**: Structuring code so agents can inspect, change, and test it without spreading changes across the repository.
-* **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]**: How metaprogramming and hidden behavior make code harder for an agent to follow.
-* **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: How repository layout and component boundaries may change when agents write much of the code.
-* **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Using focused Markdown documentation to keep an agent on task.
-* **[[Refactoring Legacy Systems with AI Agents]]**: Using an agent to carry out broad code migrations that take substantial manual effort.
-* **[[Negative Knowledge and Explicit Architectural Dissents]]**: Recording rejected designs and failed approaches so agents do not repeat them.
-* **[[AI Changes the Economics of Technical Debt]]**: How cheap code generation can accelerate decay without discipline in the repository.
+- **[[Designing Software for AI Agents]]** — Structuring code so agents can inspect, change, and test it without spreading changes across the repository.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — How metaprogramming and hidden behavior make code harder for an agent to follow.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]** — How repository layout and component boundaries may change when agents write much of the code.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — Using focused Markdown documentation to keep an agent on task.
+- **[[Refactoring Legacy Systems with AI Agents]]** — Using an agent to carry out broad code migrations that take substantial manual effort.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]** — Recording rejected designs and failed approaches so agents do not repeat them.
+- **[[AI Changes the Economics of Technical Debt]]** — How cheap code generation can accelerate decay without discipline in the repository.

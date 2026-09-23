@@ -21,7 +21,7 @@ aliases:
 > [!IMPORTANT]
 > A local model becomes much more useful when it can work in the background, around the clock. It can watch incoming messages, filter technical news, check repositories, and monitor local systems without waiting for you to open a chat window. OpenClaw, Hermes Agent, and Open WebUI illustrate different ways to build this kind of setup.
 >
-> Continuous checks can become expensive when every wake-up sends another large prompt to a metered cloud API. A dedicated local machine changes that cost calculation. It also creates a serious security problem: an agent with persistent access to tools can make damaging changes or follow instructions planted in material it reads. Its permissions need firm boundaries.
+> Continuous checks can become expensive when every wake-up sends another large prompt to a metered cloud API. A dedicated local machine changes that cost calculation (see [[Local vs Cloud and Hybrid Model Execution]]). It also creates a serious security problem: an agent with persistent access to tools can make damaging changes or follow instructions planted in material it reads. Its permissions need firm boundaries.
 
 The basic arrangement is straightforward. Email, RSS, marketplace listings, and repository webhooks feed events to a local agent runtime. The runtime uses a local model to inspect them. It may read documents, parse data, write drafts, or send an alert. Sending a message, deleting data, or paying for something goes through a separate approval step. The agent should have only the tool access needed for each task.
 
@@ -33,7 +33,7 @@ The familiar AI workflow is still quite manual. You run into a problem, write a 
 
 A persistent agent changes when the work starts. OpenClaw can act as a personal agent reached through chat; Hermes Agent provides a runtime that retains and learns skills; Open WebUI Pipelines can orchestrate local automated work. In each case, an incoming event can start the task. The agent does the routine analysis in the background, creates a draft or performs an allowed action, and asks you only when a decision needs your approval.
 
-This can run as an unprivileged daemon on dedicated local hardware, for example an NVIDIA DGX Spark, Mac Studio, or AMD Strix Halo machine. You can receive updates through Telegram, Signal, WhatsApp, or Slack. The daemon listens for events and runs its checks whether or not you are at your desk. The point is to move routine monitoring and preparation out of your interactive workday while keeping consequential decisions in your hands.
+This can run as an unprivileged daemon on dedicated local hardware, for example an NVIDIA DGX Spark, Mac Studio, or AMD Strix Halo machine. You can receive updates through Telegram, Signal, WhatsApp, or Slack. The daemon listens for events and runs its checks whether or not you are at your desk. The point is to move routine monitoring and preparation out of your interactive workday while keeping consequential decisions in your hands (see [[The Conductor Pattern for High-Bandwidth Engineering]] and [[Agent Deployment and Execution Models]]).
 
 ---
 
@@ -61,7 +61,7 @@ It can also find commitments buried in ordinary messages, such as “Let's revie
 
 RSS feeds, video transcripts, upstream commit logs, and pull requests contain useful material mixed with repetitive posts, SEO content, and beginner tutorials. A background agent can process those streams as they arrive.
 
-Your reactions provide feedback. Bookmarking, starring, or spending time on an article tells the agent what you value. Dismissing a notification as a basic tutorial with no architectural depth tells it what to filter out. When it finds a long article, it can compare the content with your existing notes and send three points covering only new empirical findings, benchmarks, or edge cases, instead of forwarding the entire 3,000-word piece.
+Your reactions provide feedback. Bookmarking, starring, or spending time on an article tells the agent what you value. Dismissing a notification as a basic tutorial with no architectural depth tells it what to filter out. When it finds a long article, it can compare the content with your existing notes and send three points covering only new empirical findings, benchmarks, or edge cases (see [[Finding Original Knowledge in an Internet Full of Repetition]]), instead of forwarding the entire 3,000-word piece.
 
 ### Control local devices
 
@@ -81,7 +81,7 @@ A continuously running agent can be useful, but it does not experience the conse
 
 That difference matters when instructions are vague. Ask an unrestricted agent to “free up disk space,” and it may delete active database journal files or essential shared libraries because they match a simple search for large or old files. It has no personal reason to stop and worry about what happens next. A human engineer usually brings that caution because the operational and professional consequences are real.
 
-A polite instruction such as “verify paths before deleting files” is not a sufficient safeguard. When the agent encounters an unexpected state, the runtime must still prevent it from crossing a boundary it was never meant to cross. Permissions and execution limits need to be enforced by the system, not left to the model's judgment.
+A polite instruction such as “verify paths before deleting files” is not a sufficient safeguard. When the agent encounters an unexpected state, the runtime must still prevent it from crossing a boundary it was never meant to cross. Permissions and execution limits need to be enforced by the system, not left to the model's judgment (as explored in [[Agentic Coding Harness and Controlled Development Workflows]] and [[Reliability of LLM Coding Agents]]).
 
 ---
 
@@ -119,11 +119,11 @@ The useful work still happens in the background: gathering information, connecti
 
 ---
 
-## Related Notes
+## Related notes
 
-- [[Local vs Cloud and Hybrid Model Execution]]: Unified memory requirements and the cost of continuous local inference.
-- [[Agentic Coding Harness and Controlled Development Workflows]]: Sandboxes, tool permissions, and limits on damage in coding agent runtimes.
-- [[Reliability of LLM Coding Agents]]: Failure modes, prompt injection, and ways to handle model errors.
-- [[Finding Original Knowledge in an Internet Full of Repetition]]: Filtering technical material for information that is actually new.
-- [[Agent Deployment and Execution Models]]: Separating inference, orchestration state, and tool execution.
-- [[The AI Agent as a Personal Behavioral and Communication Coach]]: Background agents supporting communication and daily work.
+- **[[Local vs Cloud and Hybrid Model Execution]]** — Unified memory requirements and the cost of continuous local inference.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Sandboxes, tool permissions, and limits on damage in coding agent runtimes.
+- **[[Reliability of LLM Coding Agents]]** — Failure modes, prompt injection, and ways to handle model errors.
+- **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Filtering technical material for information that is actually new.
+- **[[Agent Deployment and Execution Models]]** — Separating inference, orchestration state, and tool execution.
+- **[[The AI Agent as a Personal Behavioral and Communication Coach]]** — Background agents supporting communication and daily work.

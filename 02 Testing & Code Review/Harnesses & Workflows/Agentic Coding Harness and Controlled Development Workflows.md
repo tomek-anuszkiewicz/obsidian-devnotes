@@ -964,16 +964,16 @@ This limitation stems from their training data: repositories created prior to 20
 
 This changes how platform and library maintainers should approach developer tooling:
 - **Documentation is no longer consumed only by humans in browsers**: Static wikis and Swagger UIs are insufficient for automated agents.
-- **Ship Native MCP Servers**: Expose platform APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with services directly.
+- **Ship Native MCP Servers**: Expose platform APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with services directly (see [[Designing APIs for LLM-Generated Integration Code]]).
 - **Provide Executable Skills (`SKILL.md`)**: Package explicit, multi-step integration workflows, token refresh routines, and pagination logic directly into the repository so agents don't have to guess.
 
 ### Autophagous data and verifiable selection loops
 
 As code written by AI agents becomes a significant portion of public repositories, future models will inevitably train on synthetic code. Training recursively on uncurated synthetic text risks model collapse—where edge cases are forgotten and hallucinated patterns compound.
 
-However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically**.
+However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically** (see [[Building Determinism from Unpredictable Models]] and [[Testing in the Model, Agent, LLM Era]]).
 
-If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection. Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
+If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models - From Scaling to Agent-Generated Training Data]]). Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
 
 ## Final principles
 
@@ -987,3 +987,12 @@ If future models are trained indiscriminately on unverified synthetic code, qual
 8. Use mutation tools to generate mutations and an LLM to interpret survivors.
 9. Restrict credentials, network access and production authority.
 10. Let agents prepare commits and draft PRs, but retain CI, branch protection and merge approval.
+
+## Related notes
+
+- **[[Building Determinism from Unpredictable Models]]** — Turning non-deterministic model outputs into reliable engineering outcomes through structured harnesses.
+- **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Automated checks that fail fast when an agent violates structural invariants.
+- **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** — Managing execution plans and preventing context pollution across iterative turns.
+- **[[Dynamic Model Routing and Inference Gateways]]** — Dispatching harness tasks between local and cloud models.
+- **[[The Living Engineering Chronicle and Context Compaction]]** — Maintaining long-term project history alongside short-lived execution state.
+- **[[Testing in the Model, Agent, LLM Era]]** — Designing test suites as deterministic feedback loops for coding agents.

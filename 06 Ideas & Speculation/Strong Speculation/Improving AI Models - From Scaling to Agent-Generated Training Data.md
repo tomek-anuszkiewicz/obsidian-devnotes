@@ -32,7 +32,7 @@ tool use and agent environments
 feedback from real-world AI work
 ```
 
-The next generation of models may therefore improve not only because they are larger, but because the entire training loop is becoming richer.
+The next generation of models may therefore improve not only because they are larger, but because the entire training loop is becoming richer (see [[Agent Adoption as a Learning Flywheel]]).
 
 ## The First Phase Was Mostly Scaling
 
@@ -531,15 +531,14 @@ toward learning:
 
 > How does an engineer get from an imperfect understanding of a requirement to a verified working system?
 
-If this feedback loop continues, progress in coding AI may remain significant even if improvements from simple model scaling begin to slow.
+If this feedback loop continues, progress in coding AI may remain significant even if improvements from simple model scaling begin to slow (see [[Fresh Contact With Reality May Become the Training Bottleneck]]).
 
-The next major gains may come from the interaction between better models, better tools, automatic verification, and the enormous new corpus of human–AI collaboration being created today.
+The next major gains may come from the interaction between better models, better tools, automatic verification, and the enormous new corpus of human–AI collaboration being created today (see [[What Should Organizations Preserve from AI-Assisted Development]]).
 
-## Related Notes
+## Related notes
 
-- [[Agent Adoption as a Learning Flywheel]] - How adoption attempts feed the data flywheel for future models.
-- [[Fresh Contact With Reality May Become the Training Bottleneck]] - Why empirical real-world grounding is the ultimate bottleneck for frontier models.
-- [[The Most Valuable Software Training Data May Be Private]] - Strategic advantages of proprietary organizational trajectories.
-- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, review comments, and domain invariants.
-- [[LLM Capability Reliability and the Shape of Progress]] - Jagged intelligence frontiers and non-linear capabilities.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Economic flywheels and compounding data loops.
+- **[[Agent Adoption as a Learning Flywheel]]** — How adoption attempts feed the data flywheel for future models.
+- **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why empirical real-world grounding is the ultimate bottleneck for frontier models.
+- **[[The Most Valuable Software Training Data May Be Private]]** — Strategic advantages of proprietary organizational trajectories.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, review comments, and domain invariants.
+- **[[LLM Capability Reliability and the Shape of Progress]]** — Jagged intelligence frontiers and non-linear capabilities.

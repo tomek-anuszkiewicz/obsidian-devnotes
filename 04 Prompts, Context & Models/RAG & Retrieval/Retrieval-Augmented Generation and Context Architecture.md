@@ -236,9 +236,7 @@ aliases:
 
 # Advanced RAG Architectures
 
-This note explores modern architectural paradigms for Retrieval-Augmented Generation, ranging from Agentic RAG and Graph RAG to local deployment stacks and permission-aware enterprise security.
-
-It builds upon [[RAG Ingestion and Chunking Strategies]] and [[RAG Retrieval and Search]], serving as an advanced architectural reference for [[Introduction to RAG]].
+This note explores modern architectural paradigms for Retrieval-Augmented Generation, ranging from Agentic RAG and Graph RAG to local deployment stacks and permission-aware enterprise security, synthesizing ingestion, chunking, and hybrid search foundations into production systems.
 
 ---
 
@@ -725,4 +723,10 @@ Without temporal filtering, an agent asking *"How do we configure database conne
 
 ---
 
-Next stage: [[Advanced RAG Architectures]] and [[Introduction to RAG]].
+## Related notes
+
+- **[[How LLM Systems Build Context]]** — Context assembly pipelines and token budget allocation strategies.
+- **[[LLM Agents and Institutional Memory]]** — Why retrieval indexing preserves accessible data but cannot substitute for shared mental models.
+- **[[Comments May Become More Valuable in AI-Generated Code]]** — Zero-latency co-located context anchors compared against multi-hop external RAG.
+- **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and schemas for automated agent consumption.
+- **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — Managing context degradation and attention drift over extended agent runs.

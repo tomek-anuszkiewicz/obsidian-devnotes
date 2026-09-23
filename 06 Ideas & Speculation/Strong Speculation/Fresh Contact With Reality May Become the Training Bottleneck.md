@@ -41,7 +41,7 @@ The amount of independent information does not necessarily grow at the same rate
 
 This suggests that **fresh contact with reality** may become one of the scarce resources in model training.
 
-A closed synthetic loop that feeds model outputs back into subsequent training runs without external verification inevitably drifts. Without hard friction against external systems, the learning process risks recycling its own assumptions, amplifying subtle hallucinations, and narrowing diversity. Token volume explodes, but independent entropy collapses.
+A closed synthetic loop that feeds model outputs back into subsequent training runs without external verification inevitably drifts (see [[Improving AI Models - From Scaling to Agent-Generated Training Data]]). Without hard friction against external systems, the learning process risks recycling its own assumptions, amplifying subtle hallucinations, and narrowing diversity. Token volume explodes, but independent entropy collapses, accelerating the data degradation dynamics described in [[How AI Breaks the Economic Model of the Open Web]].
 
 ---
 
@@ -939,12 +939,11 @@ It may look like:
 
 In such a world, the scarce resource is no longer content.
 
-It is **fresh contact with reality**.
+It is **fresh contact with reality** (see [[The Most Valuable Software Training Data May Be Private]]).
 
-## Related Notes
+## Related notes
 
-- [[Improving AI Models - From Scaling to Agent-Generated Training Data]] - Harnessing execution feedback and reality collisions to train frontier models.
-- [[The Most Valuable Software Training Data May Be Private]] - The strategic value of private operational trajectories over public scraping.
-- [[What Should Organizations Preserve from AI-Assisted Development]] - Capturing negative trajectories, rejection logs, and empirical evidence.
-- [[How AI Breaks the Economic Model of the Open Web]] - Autophagous data loops and the collapse of ad-supported web content.
-- [[The 5-Layer System Stack for Agentic Software Engineering]] - Layer 5: Compounding data loops and economic flywheels.
+- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback and reality collisions to train frontier models.
+- **[[The Most Valuable Software Training Data May Be Private]]** — The strategic value of private operational trajectories over public scraping.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, rejection logs, and empirical evidence.
+- **[[How AI Breaks the Economic Model of the Open Web]]** — Autophagous data loops and the collapse of ad-supported web content.

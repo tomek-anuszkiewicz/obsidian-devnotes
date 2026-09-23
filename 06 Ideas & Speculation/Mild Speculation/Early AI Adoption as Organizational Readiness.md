@@ -543,3 +543,11 @@ At the same time, the company can preserve the knowledge that future models will
 The central lesson is:
 
 > Early AI readiness is not only about adopting models early. It is about learning what must change and preserving the knowledge that cannot be recreated later.
+
+## Related notes
+
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Practical execution guardrails and repository structure for agentic operations.
+- **[[Agent Adoption as a Learning Flywheel]]** — How experimental failures produce high-value data for future models.
+- **[[What Should Organizations Preserve from AI-Assisted Development]]** — Retaining institutional memory and decision rationale.
+- **[[How Should Companies Use the Productivity Gains from AI]]** — Reinvesting automation capacity into organizational learning and quality.
+- **[[AI Productivity Is Limited by the Delivery System]]** — Why organizational readiness determines how much generated code actually reaches production.

@@ -22,7 +22,7 @@ If an agent workflow contains model names such as `gpt-4o` or `claude-3-7-sonnet
 
 An inference gateway puts model selection between the agent and the provider APIs. The agent asks for a capability through a stable endpoint; the router decides whether the request should go to a local model or a cloud model.
 
-For coding agents, a useful approach is to try routine work locally, run the compiler, type checker, linter, and tests, then send failures to a stronger cloud model. The note's proposed saving is **60% to 80% of cloud token spending**, provided that the verification step catches the problems that matter and the fallback works reliably.
+For coding agents, a useful approach is to try routine work locally, run the compiler, type checker, linter, and tests, then send failures to a stronger cloud model (see [[Local vs Cloud and Hybrid Model Execution]] and [[Testing in the Model, Agent, LLM Era]]). The note's proposed saving is **60% to 80% of cloud token spending**, provided that the verification step catches the problems that matter and the fallback works reliably.
 
 ```text
 Agent clients: OpenClaw/daemons, IDE extensions, CI/CD PR reviewers
@@ -46,7 +46,7 @@ First decide whether each agent owns its routing logic or all clients call a sha
 
 ### Inside the agent process
 
-The agent harness contains a routing interface or strategy class. It inspects the current task and calls either a local `vLLM` endpoint through an OpenAI-compatible client or a provider SDK such as `anthropic-sdk-python`.
+The agent harness contains a routing interface or strategy class (see [[Agent Deployment and Execution Models]] and [[Agentic Coding Harness and Controlled Development Workflows]]). It inspects the current task and calls either a local `vLLM` endpoint through an OpenAI-compatible client or a provider SDK such as `anthropic-sdk-python`.
 
 This works when the decision depends on state already inside the agent: the size of a git diff, AST complexity, compiler output held in memory, or the number of retries so far. Passing all of that through an HTTP request just to make a routing decision can be awkward.
 
@@ -77,7 +77,7 @@ The same mapping covers commit messages, docstrings parsed from ASTs, and basic 
 
 The gateway can make several decisions from measurable properties of the request:
 
-1. **Context size.** A prompt below **16k tokens** with small attachments is a candidate for local inference. A **64k to 128k+ token** prompt, such as a repository indexing pass or analysis of megabytes of logs, may go directly to the cloud. The KV cache for a large prompt can exhaust local GPU memory; a larger provider cluster can handle that memory demand across its infrastructure.
+1. **Context size.** A prompt below **16k tokens** with small attachments is a candidate for local inference. A **64k to 128k+ token** prompt, such as a repository indexing pass or analysis of megabytes of logs, may go directly to the cloud. The KV cache for a large prompt can exhaust local GPU memory; a larger provider cluster can handle that memory demand across its infrastructure (see [[Token Optimization and Context Economics in Agentic Workflows]]).
 2. **Sensitive data.** A regex and AST scan looks for private keys, database connection strings, JWTs, and identifiable customer data. If it finds them, the gateway blocks cloud egress and restricts the request to a local, isolated endpoint.
 3. **Required output format.** When a request must satisfy a complex JSON schema, it can go to a local engine with constrained decoding, such as `vLLM` with Outlines or `llama.cpp` with GBNF grammars. The grammar restricts token generation to valid syntax and can avoid repeated cloud calls to repair malformed JSON.
 
@@ -173,14 +173,14 @@ A 3B or 7B model may be adequate for mechanical tasks but a poor choice for syst
 
 ### Accepting local code without verification
 
-The local-first loop depends on an automated check. Without a substantial test suite, strict type checking, or a deterministic compiler pass, broken local output can slip into the repository. When the change cannot be checked automatically, the note recommends sending that task directly to a stronger cloud model. Passing a check supports the decision to accept a change only to the extent that the checks cover the relevant behavior.
+The local-first loop depends on an automated check. Without a substantial test suite, strict type checking, or a deterministic compiler pass, broken local output can slip into the repository (see [[Testing in the Model, Agent, LLM Era]] and [[Building Determinism from Unpredictable Models]]). When the change cannot be checked automatically, the note recommends sending that task directly to a stronger cloud model. Passing a check supports the decision to accept a change only to the extent that the checks cover the relevant behavior.
 
-## Related Notes
+## Related notes
 
-* [[Local vs Cloud and Hybrid Model Execution]]: Hardware limits, unified memory, and the economics of local versus cloud inference.
-* [[Token Optimization and Context Economics in Agentic Workflows]]: Token use, model tiers, and exact-hash proxy caching.
-* [[Always-On Autonomous Agents - The 24-7 Local Operating System]]: Background agents that use local gateways for routine work.
-* [[Agent Deployment and Execution Models]]: Boundaries between the agent runtime, inference gateway, and execution sandbox.
-* [[Agentic Coding Harness and Controlled Development Workflows]]: Agent harnesses, sandboxes, and boundaries on the changes agents can make.
-* [[Testing in the Model, Agent, LLM Era]]: Tests and harness fixtures for checking local attempts.
-* [[Competitive Advantage in the Age of Commodity AI]]: Orchestration, routing, and continuous domain evaluation beyond access to a model.
+- **[[Local vs Cloud and Hybrid Model Execution]]** — Hardware limits, unified memory, and the economics of local versus cloud inference.
+- **[[Token Optimization and Context Economics in Agentic Workflows]]** — Token use, model tiers, and exact-hash proxy caching.
+- **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Background agents that use local gateways for routine work.
+- **[[Agent Deployment and Execution Models]]** — Boundaries between the agent runtime, inference gateway, and execution sandbox.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — Agent harnesses, sandboxes, and boundaries on the changes agents can make.
+- **[[Testing in the Model, Agent, LLM Era]]** — Tests and harness fixtures for checking local attempts.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — Orchestration, routing, and continuous domain evaluation beyond access to a model.

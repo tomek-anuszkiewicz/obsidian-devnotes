@@ -40,7 +40,7 @@ The problem is that they often reserve architectural decisions for a central cou
 
 Consider an engineer who finds a missing composite index, an unnecessary distributed lock between services, or a wasteful layout in a document store. The fix may be clear. If it reaches into platform-owned infrastructure or falls outside the approved framework, the engineer may still be unable to make it. The issue waits for a central initiative with its own budget and steering committee.
 
-Standardization helps management move people between teams, but a framework can go too far. The implicit instruction becomes: fill in the handler and leave memory layout, thread scheduling, and cache behavior to the platform. Engineers who understand those details stop using that knowledge. Some become frustrated or disengaged; others leave.
+Standardization helps management move people between teams, but a framework can go too far. The implicit instruction becomes: fill in the handler and leave memory layout, thread scheduling, and cache behavior to the platform. Engineers who understand those details stop using that knowledge. Some become frustrated or disengaged; others leave (see [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]).
 
 ## 2. When a complicated system becomes a trophy
 
@@ -84,13 +84,13 @@ There is also a staffing effect. Engineers who care about memory layouts, protoc
 
 ## 6. What coding agents change
 
-Coding agents change the cost of investigating and implementing a simplification. In the example from this note, the old estimate is four engineers for six months, about $400,000, plus 50 committee meetings. The alternative estimate is one principal architect using an agent-assisted verification setup to build and check a vertical slice in three to five days, with less than $500 in model and test compute. These are illustrative estimates, but the difference matters: “too complicated to attempt” becomes harder to defend when the investigation and first implementation cost much less.
+Coding agents change the cost of investigating and implementing a simplification (see [[AI Changes the Economics of Technical Debt]]). In the example from this note, the old estimate is four engineers for six months, about $400,000, plus 50 committee meetings. The alternative estimate is one principal architect using an agent-assisted verification setup to build and check a vertical slice in three to five days, with less than $500 in model and test compute. These are illustrative estimates, but the difference matters: “too complicated to attempt” becomes harder to defend when the investigation and first implementation cost much less.
 
 Consider a legacy codebase of half a million lines. Tracing data flows by hand, reading old Confluence pages, and digging through abandoned Git history might take months. An experienced architect working with agents can map flows, locate state changes, and identify dead paths much faster—potentially in an afternoon for an initial investigation.
 
-The architect can then isolate a messy subsystem, put a verification boundary around it, and use differential tests and golden-master cases to compare the new behavior with the old one. A verified vertical slice gives reviewers something concrete to assess without first committing half a dozen teams to a long project plan.
+The architect can then isolate a messy subsystem, put a verification boundary around it, and use differential tests and golden-master cases to compare the new behavior with the old one (see [[Refactoring Legacy Systems with AI Agents]] and [[Testing in the Model, Agent, LLM Era]]). A verified vertical slice gives reviewers something concrete to assess without first committing half a dozen teams to a long project plan.
 
-As writing, profiling, and refactoring become cheaper, the administration built around large development programs can become the slowest part of the change. Smaller engineering groups with room to act can remove incidental complexity while larger platforms remain tied to their own frameworks and committees.
+As writing, profiling, and refactoring become cheaper, the administration built around large development programs can become the slowest part of the change. Smaller engineering groups with room to act can remove incidental complexity while larger platforms remain tied to their own frameworks and committees (driving the [[Unbundling of Enterprise Software]] and redefining [[Competitive Advantage in the Age of Commodity AI]]).
 
 ## 7. How to judge a team and work within it
 
@@ -104,10 +104,10 @@ Three working rules follow from the examples above:
 2. **Explain why simplification is possible now.** Point to changes in object storage, columnar query engines, hardware, or runtimes that make the proposed design viable. This gives the original authors a way to support the change without having to defend an old decision as a mistake.
 3. **Look for teams that can act on evidence.** The useful measure is the time between an engineer finding a fundamental bottleneck and shipping a verified fix. Prefer days to quarterly planning cycles.
 
-## Related Notes
+## Related notes
 
-* [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]: Loss of technical autonomy, bureaucratic maintenance work, and disengagement among senior engineers.
-* [[Unbundling of Enterprise Software]]: Economic and architectural pressure toward leaner, specialized applications.
-* [[Refactoring Legacy Systems with AI Agents]]: Agent-assisted investigation, differential testing, and golden-master suites for legacy systems.
-* [[AI Changes the Economics of Technical Debt]]: How cheaper verification changes the cost of addressing neglected systems.
-* [[Competitive Advantage in the Age of Commodity AI]]: Small, autonomous teams of engineers with strong systems knowledge versus large teams and headcount.
+- **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — Loss of technical autonomy, bureaucratic maintenance work, and disengagement among senior engineers.
+- **[[Unbundling of Enterprise Software]]** — Economic and architectural pressure toward leaner, specialized applications.
+- **[[Refactoring Legacy Systems with AI Agents]]** — Agent-assisted investigation, differential testing, and golden-master suites for legacy systems.
+- **[[AI Changes the Economics of Technical Debt]]** — How cheaper verification changes the cost of addressing neglected systems.
+- **[[Competitive Advantage in the Age of Commodity AI]]** — Small, autonomous teams of engineers with strong systems knowledge versus large teams and headcount.

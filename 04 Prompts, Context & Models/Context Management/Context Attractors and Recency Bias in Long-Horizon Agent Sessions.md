@@ -21,7 +21,7 @@ Long conversations can give an agent useful context. They can also make one repe
 
 The output may sound thoughtful. That is part of the problem: a capable model can build a persuasive explanation around a connection that the current question does not warrant. Conversation compaction can carry the same fixation forward if its summary preserves the dominant topic and drops the objections and limits discussed along the way.
 
-My practical response is to work in short, focused sessions, record decisions in Markdown, and start a fresh session from that record. If I control the agent harness and need to shorten the conversation, I would also consider dropping old turns while retaining the active instructions and files, instead of repeatedly summarizing the whole exchange.
+My practical response is to work in short, focused sessions, record decisions in Markdown (see [[Agentic Coding Harness and Controlled Development Workflows]]), and start a fresh session from that record. If I control the agent harness and need to shorten the conversation, I would also consider dropping old turns while retaining the active instructions and files, instead of repeatedly summarizing the whole exchange.
 
 ## Why a longer conversation can start giving worse answers
 
@@ -57,7 +57,7 @@ A reviewer may initially read these answers as creative connections. The useful 
 
 When a conversation grows too large, an agent harness may summarize earlier turns and continue from that summary. This frees context space, but it also changes what the next model call receives.
 
-A summary of a 150-turn discussion may give the most frequently repeated idea a prominent place. If the summarizer states it as a settled principle, the next session of reasoning inherits a stronger claim than the conversation actually established. Qualifications, counterexamples, and disagreements can disappear in the compression.
+A summary of a 150-turn discussion may give the most frequently repeated idea a prominent place (compare with [[How Context Narrows an AI's Solution Space]] and [[AI, Averaged Decisions, and Premature Convergence on Solutions]]). If the summarizer states it as a settled principle, the next session of reasoning inherits a stronger claim than the conversation actually established. Qualifications, counterexamples, and disagreements can disappear in the compression.
 
 The sequence is easy to recognize:
 
@@ -85,7 +85,7 @@ At the end, have the agent write the concrete decisions and useful findings into
 
 When the context limit forces the harness to shorten a session, one option is a FIFO sliding window: remove enough of the oldest raw turns to make room while keeping the base instructions, active files, current decisions, and instructions relevant to the task.
 
-This removes old repetitions directly. A recursive summary may preserve them and give them more authority. FIFO pruning also loses older details, so the decisions you need later belong in the committed Markdown document. The amount to prune and the choice between pruning and summarizing are harness settings to evaluate on the actual task.
+This removes old repetitions directly. A recursive summary may preserve them and give them more authority (echoing issues analyzed in [[Constraint Saturation and Rule Oscillation in Coding Agents]]). FIFO pruning also loses older details, so the decisions you need later belong in the committed Markdown document. The amount to prune and the choice between pruning and summarizing are harness settings to evaluate on the actual task.
 
 ### Redirect the agent when it fixates
 
@@ -93,13 +93,13 @@ You can also intervene during the current session. State the task and exclude th
 
 > We are designing the operational health check for the ingress proxy. Do not use L1 cache invalidation, mechanical sympathy, or zero-cost abstractions to explain it. Evaluate Linux network socket states and TCP connection backlogs.
 
-This makes the relevant scope clear. It is a useful immediate correction when the agent keeps returning to the old subject, although a fresh session and a written decision record are a cleaner way to move on after a long discussion.
+This makes the relevant scope clear (leveraging [[How Targeted Prompts Steer Model Solution Spaces]]). It is a useful immediate correction when the agent keeps returning to the old subject, although a fresh session and a written decision record are a cleaner way to move on after a long discussion.
 
 ## Related notes
 
-- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]**: Models can settle too quickly on familiar answers; here, the familiar answer comes from the conversation itself.
-- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Competing prompt rules can crowd one another out, much as a repeated topic can crowd out other constraints.
-- **[[How Context Narrows an AI's Solution Space]]**: Context helps rule out unsuitable solutions, but too much emphasis on one idea can narrow the options too far.
-- **[[How Targeted Prompts Steer Model Solution Spaces]]**: Targeted instructions and exclusions can bring an answer back to the current task.
-- **[[Agentic Coding Harness and Controlled Development Workflows]]**: The harness can enforce focused sessions and control how context is shortened.
-- **[[Proxy Metrics and Operational Invariants in AI Systems]]**: Historical assumptions and proxy measures can reinforce themselves in an agent workflow.
+- **[[AI, Averaged Decisions, and Premature Convergence on Solutions]]** — Models can settle too quickly on familiar answers; here, the familiar answer comes from the conversation itself.
+- **[[Constraint Saturation and Rule Oscillation in Coding Agents]]** — Competing prompt rules can crowd one another out, much as a repeated topic can crowd out other constraints.
+- **[[How Context Narrows an AI's Solution Space]]** — Context helps rule out unsuitable solutions, but too much emphasis on one idea can narrow the options too far.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]** — Targeted instructions and exclusions can bring an answer back to the current task.
+- **[[Agentic Coding Harness and Controlled Development Workflows]]** — The harness can enforce focused sessions and control how context is shortened.
+- **[[Proxy Metrics and Operational Invariants in AI Systems]]** — Historical assumptions and proxy measures can reinforce themselves in an agent workflow.

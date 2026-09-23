@@ -24,7 +24,7 @@ When a team introduces coding agents, the pitch usually focuses on speed. Engine
 
 Writing a solution and supervising an agent demand different kinds of attention. If you spend the day steering an agent, reading its diffs, and fixing the places where it misunderstood the system, you lose much of the satisfaction of building the solution yourself. Some engineers enjoy that role. Others find that it turns their day into a long code review, with little room to recover between difficult decisions. For them, the change can bring review fatigue, lower job satisfaction, and doubts about what it means to be an engineer.
 
-A typical day illustrates the difference. After a difficult design decision, manually wiring DTOs, mapping entities, or setting up integration tests gives you a stretch of fairly routine work. The next hard decision comes later. An agent can produce that routine code in seconds, then hand you a 400- or 500-line diff to audit. As soon as you finish, another prompt can produce another diff. The typing time has disappeared; the need to check semantics, concurrency, and edge cases has not.
+A typical day illustrates the difference. After a difficult design decision, manually wiring DTOs, mapping entities, or setting up integration tests gives you a stretch of fairly routine work. The next hard decision comes later. An agent can produce that routine code in seconds, then hand you a 400- or 500-line diff to audit (see [[Reviewing AI-Generated Code]] on managing review fatigue and detecting hallucinations). As soon as you finish, another prompt can produce another diff. The typing time has disappeared; the need to check semantics, concurrency, and edge cases has not.
 
 ## When routine coding gave the brain a break
 
@@ -40,7 +40,7 @@ When you write a piece of code, you build its mental model along the way. You kn
 
 Agent output adds its own review work. A diff can look plausible while containing an invented flag, a quiet state mutation, a concurrency error, or a failure at a boundary condition. You have to stay skeptical even when the code compiles and the tests pass. When the agent goes off track, you also have to work out why, rewrite the instructions, and try again.
 
-Code review used to be a focused part of the day. If nearly the whole day becomes reviewing unfamiliar output, the job starts to feel less like building a system and more like policing changes to it. The problem gets worse when the agent generates large diffs faster than you can understand them. Fatigue can lead to approving code you have not really read, and that is how a subtle regression reaches production.
+Code review used to be a focused part of the day. If nearly the whole day becomes reviewing unfamiliar output, the job starts to feel less like building a system and more like policing changes to it. The problem gets worse when the agent generates large diffs faster than you can understand them (see [[Software Decay and the Hidden Costs of Frictionless AI Code]]). Fatigue can lead to approving code you have not really read, and that is how a subtle regression reaches production.
 
 ## The change does not suit every engineer equally
 
@@ -76,7 +76,7 @@ There is also a practical imbalance in responsibility. If a service fails at 3 a
 Long hours, impossible deadlines, and production incidents have always contributed to burnout. Agent-driven development adds another route: staying on alert for plausible mistakes throughout the day.
 
 - **A convincing diff can still be wrong.** An off-by-one error, missed concurrency case, or silent state change may pass the current unit tests and fail under production load. You keep looking for the defect that the ordinary checks did not catch.
-- **Parallel sessions split your attention.** One agent writes code, another runs tests, and you draft instructions for a third. Switching between those threads can consume more energy than working through one problem from code to tests to commit.
+- **Parallel sessions split your attention.** One agent writes code, another runs tests, and you draft instructions for a third (the cognitive trap in unstructured multi-agent work, contrasting with [[The Conductor Pattern for High-Bandwidth Engineering]]). Switching between those threads can consume more energy than working through one problem from code to tests to commit.
 - **Authorship becomes uncomfortable.** When a change works, the agent wrote it. When it breaks, you have to understand and repair hundreds of lines of unfamiliar logic. It is natural to ask whether you still built the system, or whether you could build it from scratch without the assistant. If you never connect your contribution to the design and verification, that doubt can wear down your confidence.
 - **The interface keeps sounding more understanding than it is.** Repeatedly restating the same domain constraints to a polite tool creates a steady, low-level irritation.
 
@@ -100,20 +100,20 @@ A core domain engine, a difficult state machine, or an interesting optimization 
 
 ### Put repeatable checks between the agent and production
 
-Manually inspecting every line an agent can produce is not sustainable. Let compiler checks, linters, deterministic tests, and mutation testing catch the problems they are suited to catch. That gives your review time to the decisions and failure cases that require engineering judgment. It also makes it harder for fatigue to turn into approving a diff simply because it looks reasonable.
+Manually inspecting every line an agent can produce is not sustainable. Let compiler checks, linters, deterministic tests, and mutation testing catch the problems they are suited to catch (see [[Testing in the Model, Agent, LLM Era]] and [[Formal Verification and Runtime Safety Boundaries]]). That gives your review time to the decisions and failure cases that require engineering judgment. It also makes it harder for fatigue to turn into approving a diff simply because it looks reasonable.
 
 ### Take ownership of the design and its verification
 
 Pride in engineering does not have to depend on having typed every line. Defining constraints, spotting a convincing but wrong implementation, choosing sound boundaries, maintaining trustworthy test oracles, and checking behavior under real traffic are also engineering work. They require experience; a junior engineer or a nontechnical manager cannot reliably substitute for it.
 
-A useful test is whether you can go to a whiteboard, without the model, and explain the system's state transitions, data flow, failure modes, and trade-offs. If you can defend those decisions and understand the code that implements them, you own the architecture, even if an agent did much of the typing.
+A useful test is whether you can go to a whiteboard, without the model, and explain the system's state transitions, data flow, failure modes, and trade-offs. If you can defend those decisions and understand the code that implements them, you own the architecture, even if an agent did much of the typing (see [[AI Changes the Role and Training of Software Engineers]]).
 
-## Related Notes & Deep Dives
+## Related notes
 
-- **[[AI Changes the Role and Training of Software Engineers]]**: The shift from writing syntax to asking architectural questions, verifying systems, and defending design decisions at a whiteboard.
-- **[[How Enterprise Complexity Blocks Grassroots Engineering]]**: How bureaucracy and centralized tools limit individual engineering agency and add to fatigue.
-- **[[Reviewing AI-Generated Code]]**: Reviewing large diffs, finding invented details, and managing review fatigue.
-- **[[The First AI-Native Generation of Software Engineers]]**: How new developers build technical foundations when generation handles much of the implementation.
-- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]**: How linters, compilers, and tests help protect human attention from unnecessary generated code.
-- **[[AI Productivity Is Limited by the Delivery System]]**: Why producing and reviewing code faster can hurt quality when testing and deployment cannot keep up.
-- **[[How Targeted Prompts Steer Model Solution Spaces]]**: How clear domain constraints guide output and reduce review effort and the feeling of detachment from generated code.
+- **[[AI Changes the Role and Training of Software Engineers]]** — The shift from writing syntax to asking architectural questions, verifying systems, and defending design decisions at a whiteboard.
+- **[[How Enterprise Complexity Blocks Grassroots Engineering]]** — How bureaucracy and centralized tools limit individual engineering agency and add to fatigue.
+- **[[Reviewing AI-Generated Code]]** — Reviewing large diffs, finding invented details, and managing review fatigue.
+- **[[The First AI-Native Generation of Software Engineers]]** — How new developers build technical foundations when generation handles much of the implementation.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How linters, compilers, and tests help protect human attention from unnecessary generated code.
+- **[[AI Productivity Is Limited by the Delivery System]]** — Why producing and reviewing code faster can hurt quality when testing and deployment cannot keep up.
+- **[[How Targeted Prompts Steer Model Solution Spaces]]** — How clear domain constraints guide output and reduce review effort and the feeling of detachment from generated code.

@@ -370,7 +370,6 @@ Pair explicit architecture with automated unit and integration tests that run lo
 
 ## Related Notes
 
-- [[The 5-Layer System Stack for Agentic Software Engineering]] — Foundational 5-layer framework connecting code, tests, runtime, context, and economics.
 - [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] — Why indirect abstractions increase reasoning cost and token usage.
 - [[Why Business Logic Is the Hardest Part of Agentic Coding]] — Isolating domain rules where automated inference is most fragile.
 - [[Executable Architecture Tests for Coding Agent Guardrails]] — Automated enforcement of structural boundaries and architectural rules.
