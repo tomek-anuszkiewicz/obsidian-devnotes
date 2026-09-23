@@ -12,6 +12,9 @@ aliases:
   - Context Propagation in Message Queues
 ---
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 # User Context in Asynchronous Systems
 
 Propagating user identity and context through asynchronous message brokers (RabbitMQ, Azure Service Bus, Apache Kafka) requires fundamentally different patterns than synchronous HTTP calls.

@@ -13,6 +13,9 @@ aliases:
   - Inter-Service Calling Patterns
 ---
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 ## Context
 
 Assume that Service A needs data or behavior owned by Service B.

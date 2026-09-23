@@ -12,6 +12,9 @@ aliases:
   - Local or Remote Module Execution
 ---
 
+> [!NOTE] Foundational Systems Architecture (Non-LLM Scope)
+> This note forms part of an emerging exploration into foundational distributed systems and runtime infrastructure (independent of LLM or agent workflows). While currently cataloged as an isolated architectural blueprint, it is slated for future consolidation into a unified backend systems pillar as broader operational notes are developed.
+
 ## Core idea
 
 A modular monolith does not have to mean that every module must always run in every process.
