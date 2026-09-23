@@ -29,7 +29,7 @@ Many familiar design choices reflect human constraints: we can hold only so much
 | **4. Prompts, context, and models** | Context pruning and attention budgets; AST-based code graphs with Graphify, GitNexus, and Obsidian export; MCP and SQL Data API Builder. |
 | **3. Systems and infrastructure** | AKS, Istio, Envoy, CQRS, sagas, and event topology; Polly policies and rate limits; OpenTelemetry, trend alerts, and conversational diagnosis. |
 | **2. Testing and code review** | Unit, snapshot, fuzz, and end-to-end tests; executable architecture rules; branch environments and several-agent PR review. |
-| **1. Architecture and code** | Memory layout and allocation on hot paths; one operation per feature slice; CPU-aware execution and source generation. |
+| **1. Architecture and code** | Runtime behavior on important paths; one operation per feature slice; explicit source generation. |
 
 The layers affect one another. Engineers set goals and boundaries; an agent loads relevant context and proposes code; tests check that code; production telemetry shows what actually happened and feeds the next decision.
 
@@ -37,7 +37,7 @@ The layers affect one another. Engineers set goals and boundaries; an agent load
 
 ## Layer 1: Architecture and code
 
-Start with the code that runs on actual hardware. CPU pipelines, caches, heap allocations, and database query planners still determine latency, even if an agent wrote the source.
+Start with the code that runs in production. Allocation, I/O, concurrency, and database queries still determine latency, even if an agent wrote the source.
 
 An agent trained on public repositories can readily produce deep inheritance trees, runtime reflection, many heap allocations, or several layers of dependency injection. Those patterns are common in examples, but they can be expensive on a hot path. Give the agent explicit performance constraints when throughput or latency matters, then check the result against the runtime.
 
@@ -74,7 +74,7 @@ When an operation has a real performance budget, specify the primitives and beha
 #### Execution in tight loops
 
 - In a performance-critical loop, inspect what `.Select()`, `.Where()`, and `.ToList()` allocate and dispatch. An explicit `for` or `foreach` over `Span<T>` can avoid that overhead.
-- For fixed-size operations such as checksum validation or financial parsing, consider loop unrolling where it helps branch prediction or SIMD vectorization.
+- For fixed-size operations such as checksum validation or financial parsing, compare a specialized implementation with the simple version under a representative benchmark.
 - Mark lambdas `static` where they must not capture local state, for example `static (state, item) => ...`. The compiler then rejects an accidental capture and its closure allocation.
 - Generate regular expressions at build time with `[GeneratedRegex]` instead of constructing them during execution:
 

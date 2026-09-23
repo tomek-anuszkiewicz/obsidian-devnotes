@@ -420,7 +420,7 @@ Generating a few lines of serialization code is easy.
 
 Reproducing the reliability of a mature serialization ecosystem is not.
 
-At this layer, the generator is not merely saving keystrokes; it is synthesizing high-performance systems code—such as zero-allocation UTF-8 byte stream parsing, unaligned memory reads, and SIMD-accelerated scanning—while guarding against subtle security vulnerabilities like hash-collision denial-of-service. An LLM can easily generate clean property assignments, but it cannot reliably improvise the decades of hardware-level optimization and RFC compliance embedded in a battle-tested infrastructure generator.
+At this layer, the generator is not merely saving keystrokes. It may contain carefully tested parsing behavior, protocol edge cases, and defenses against attacks such as hash-collision denial-of-service. An LLM can easily generate clean property assignments, but it cannot be assumed to reproduce the compatibility and security work embedded in a battle-tested infrastructure generator.
 
 Therefore the likely distinction is:
 

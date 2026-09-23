@@ -316,11 +316,11 @@ The organization becomes increasingly difficult to copy because competitors woul
 
 When agentic workflows make raw code generation virtually free, the engineering bottleneck shifts from writing syntax to framing inquiry and enforcing system constraints.
 
-Foundation models have an intense bias toward the "averaged prior"—the most common design patterns repeated across public repositories. If an engineer asks an agent to design an event-processing service for high-volume telemetry, the model defaults to a standard, bloated stack: an off-the-shelf web framework, an ORM, and generic JSON-over-HTTP endpoints. Under production load, that default architecture breaks under memory fragmentation, serialization overhead, and connection starvation.
+Foundation models tend to reproduce the common design patterns found across public repositories. If an engineer asks an agent to design an event-processing service without giving it workload constraints, the model may choose a familiar web framework, ORM, and JSON API whether or not those choices fit the system.
 
 The engineering moat lies in forcing the model outside its public training averages by applying rigorous architectural constraints:
 
-> "Design an append-only event ingest service in Rust. Use direct memory mapping, zero-allocation ring buffers via crossbeam channels, bypass the ORM entirely with raw prepared statements, and enforce a fixed 64-byte binary payload format. Write fuzz tests verifying zero allocations on the hot path."
+> "Design an append-only event ingest service for the expected traffic, durability requirements, and failure model. Make the storage and batching choices explicit. Provide a representative load test so we can compare the design with a simpler implementation."
 
 The model provides the raw implementation throughput, but the architect provides the mental model, system invariants, and mechanical empathy. Engineering leadership shifts from managing backlogs and assigning boilerplate tickets to defining non-negotiable invariants, property-based verification suites, and operational boundaries.
 

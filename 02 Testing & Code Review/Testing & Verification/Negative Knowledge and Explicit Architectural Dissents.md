@@ -110,16 +110,6 @@ Code also carries the team's working understanding of the system. Consider a pay
 
 During an incident, someone must understand the execution path, thread boundaries and invariants well enough to make a safe change. Continually replacing the implementation erodes that shared understanding.
 
-### The GitClear 2024 figures cited here
-
-The GitClear 2024 report examined more than 150 million lines of code in enterprise repositories using AI coding assistants. The note draws attention to three reported trends:
-
-- Code changed or deleted within two weeks of being written doubled relative to the pre-AI baseline.
-- Structural refactoring fell by 50%.
-- Duplication rose by 81%.
-
-These figures illustrate the concern: when generating another piece of code is easy, a team may add new logic alongside old logic instead of cleaning up the structure it already has. Without architectural constraints, that repeated churn makes the system harder to maintain.
-
 ---
 
 ## 5. A local benchmark can hide a production failure

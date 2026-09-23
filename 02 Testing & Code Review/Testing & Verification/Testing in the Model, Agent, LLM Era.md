@@ -264,14 +264,14 @@ Sometimes it is a component test.
 
 Sometimes it is an API or E2E test.
 
-### The oracle blind spot: hardware realities
+### The oracle blind spot: runtime behavior
 
-An exhaustive functional test suite verifies logical output equivalence (`actual == expected`). It is completely blind to hardware dynamics, memory topology, and resource contention.
+An exhaustive functional test suite can verify logical output equivalence (`actual == expected`) without measuring how the implementation behaves under production load.
 
-An agent can generate an implementation that passes every functional unit test while introducing serious performance pathologies in production:
-- **Instruction cache thrashing**: An agent might expand complex logic into extensive dispatch tables or deeply nested abstractions. Under production load across multiple threads, the instruction footprint blows out the L1/L2 instruction caches, causing constant stalls while the CPU fetches instructions from main memory.
-- **Heap fragmentation and pointer chasing**: Models heavily lean toward idiomatic object-oriented structures, allocating small objects and wrapping them in collections of references. While functionally correct, this scatters data across the heap, destroys data locality, increases memory bus traffic, and drives up garbage collection overhead.
-- **Concurrency contention and deadlocks**: Unit tests rarely replicate the timing and locking conditions of hundreds of concurrent threads contending for database connections or shared memory buffers.
+An agent can generate an implementation that passes every functional unit test while introducing serious runtime problems:
+- **Performance regressions:** More abstraction, allocation, or data conversion may make a frequently executed path slower without changing its output.
+- **Resource growth:** A test can finish before an unbounded queue, connection leak, or retained object becomes visible.
+- **Concurrency failures:** Unit tests rarely reproduce the timing and contention of production traffic.
 
 Functional tests prove that the code produces the right answer under clean conditions. They do not prove that the code will survive production traffic. Engineers remain responsible for memory layouts, data structures, and profiling under load.
 
@@ -279,9 +279,9 @@ Functional tests prove that the code produces the right answer under clean condi
 
 In high-throughput, stateful, or low-level systems (such as storage engines, simulation kernels, or financial ledger systems), synthetic unit tests written by agents are particularly vulnerable to shared blind spots: the agent writes the code and the tests based on the same flawed assumptions. To break out of this loop, verification must anchor to external, non-negotiable ground truth:
 
-1. **Direct-injection execution harnesses**: Integration suites frequently suffer from slow bootstrap cycles (migrations, server boot, network handshakes), requiring tens of seconds per run. Direct-injection harnesses bypass this by injecting test state and payloads directly into memory at target entry points, stubbing external dependencies with zero-allocation mock functions so complex integration flows execute headlessly in milliseconds.
+1. **Direct-injection execution harnesses**: Integration suites can spend most of their time on migrations, server startup, and network setup. A focused harness can inject test state at a supported entry point and replace external dependencies with lightweight test implementations. This shortens the feedback loop, but it does not replace tests of the complete deployed system.
 2. **Golden reference differencing and anti-tamper contracts**: For serialized pipelines, parsers, codecs, and renderers, tests compare output buffers directly against verified reference data (byte-for-byte binary diffs or exact frame captures). The harness must enforce an anti-tamper contract: golden benchmark files and reference hashes reside in protected paths with read-only permissions during agent tasks. Modifying a golden file without an explicit human override flag fails the build immediately.
-3. **Host performance micro-benchmarking**: Micro-benchmarks backed by statistical anomaly detection catch hardware regressions before they reach production. They detect execution time spikes in hot paths relative to baselines, flag sudden increases in pointer indirection or unexpected heap allocations, and monitor branch predictor thrashing (where execution jitter exceeding 5% variation indicates pipeline flushes caused by unpredictable branching).
+3. **Host performance measurement**: Benchmarks can compare latency distributions, throughput, allocations, and hardware counters against a baseline. A change in execution time is a signal to investigate, not proof of a particular CPU-level cause. Profiling and performance counters are needed before attributing it to branching, cache behavior, allocation, or another mechanism.
 
 ---
 

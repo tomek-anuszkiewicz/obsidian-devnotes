@@ -103,15 +103,13 @@ Task: refactor a database query to avoid N+1 queries
            to a stronger cloud model
 ```
 
-The note estimates that a capable local model, such as Qwen-2.5-Coder 32B or a DeepSeek-R1 distillation, can resolve **60% to 75%** of routine engineering tickets: off-by-one fixes, straightforward interfaces, boilerplate updates, and mock tests. Give it a bounded retry budget, usually one or two repair attempts.
+A capable local model may resolve some routine engineering tickets, such as off-by-one fixes, straightforward interfaces, boilerplate updates, and mock tests. The useful share has to be measured on the team's own workload. Keep repair attempts bounded so that repeated local failures do not consume more time than an escalation would.
 
 When escalation is needed, send the cloud model the **original task, the failed local diff, and the precise compiler or test trace**. It sees what was attempted and why that attempt failed, which can help it fix the problem on the first try and reduce expensive calls.
 
 ### Level 5: Use a trained routing classifier
 
 RouteLLM-style routing uses a small preference model trained on many comparisons between model answers. The proposed implementations include a fine-tuned BERT classifier or a lightweight matrix-factorization scoring layer. Instead of a fixed rule, the router assigns a score from `0.0` for a simple prompt to `1.0` for one needing stronger reasoning.
-
-You then set a quality target, for example `quality_target = 0.95`, intended to preserve **95%** of the quality of sending the whole workload to Claude 3.7 Sonnet or GPT-4o while reducing token spend. The note proposes routing the easier requests locally and sending the hardest **20% to 30%** to cloud models. Its estimated saving for that setup is **50% to 70%** compared with using a frontier API for every request.
 
 ## 3. What the gateway does when a model is unavailable
 

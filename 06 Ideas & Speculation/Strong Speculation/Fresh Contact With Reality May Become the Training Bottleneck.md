@@ -353,31 +353,9 @@ C succeeds
 
 This is almost a ready-made curriculum for the next model.
 
-Consider how this plays out in concrete systems programming:
+Consider an agent that proposes a familiar implementation for a concurrent service. A human rejects it because measurements from the real workload show contention that the local tests did not reproduce. A second implementation passes those tests but introduces a lock-ordering risk. The human changes the boundary again, and production telemetry shows whether the change actually helped.
 
-```text
-Model:
-"Implement this cache with a simple sync.Map in Go to handle concurrent reads."
-
-Human:
-"That won't work here. The access pattern is heavily write-skewed on cache misses,
-which degrades sync.Map performance due to cache line bouncing. We need a sharded map."
-
-Model:
-"Understood. Here is a sharded map implementation using RWMutex per shard."
-
-Human:
-"The tests pass, but you introduced a deadlock risk: shard A calls shard B during
-eviction callbacks while holding the shard A write lock."
-
-Human:
-[Refactors eviction to an asynchronous ring buffer outside the critical section]
-
-Production:
-Deployment stabilizes; latency drop confirmed.
-```
-
-The resulting trajectory explicitly encodes negative search paths and runtime failure modes that static code cannot convey: Pattern A fails due to hardware cache line bouncing, Pattern B passes local unit tests but deadlocks under concurrency, and Pattern C stabilizes production p99 latency.
+That trajectory records more than the final code. It records which plausible approaches failed, what evidence exposed each failure, and which change survived contact with production.
 
 ---
 

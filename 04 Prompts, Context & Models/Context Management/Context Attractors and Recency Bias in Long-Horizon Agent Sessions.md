@@ -83,9 +83,9 @@ At the end, have the agent write the concrete decisions and useful findings into
 
 ### If you control the harness, consider dropping old turns
 
-When the context limit forces the harness to shorten a session, one option is a FIFO sliding window: remove the oldest raw turns and keep the base instructions, active files, and instructions relevant to the current task. The original proposal was to drop roughly **50% to 60%** of the oldest conversation turns.
+When the context limit forces the harness to shorten a session, one option is a FIFO sliding window: remove enough of the oldest raw turns to make room while keeping the base instructions, active files, current decisions, and instructions relevant to the task.
 
-This removes old repetitions directly. A recursive summary may preserve them and give them more authority. FIFO pruning also loses older details, so the decisions you need later belong in the committed Markdown document. I would treat the percentage and the choice between pruning and summarizing as a harness setting to evaluate, not as a proven universal optimum.
+This removes old repetitions directly. A recursive summary may preserve them and give them more authority. FIFO pruning also loses older details, so the decisions you need later belong in the committed Markdown document. The amount to prune and the choice between pruning and summarizing are harness settings to evaluate on the actual task.
 
 ### Redirect the agent when it fixates
 

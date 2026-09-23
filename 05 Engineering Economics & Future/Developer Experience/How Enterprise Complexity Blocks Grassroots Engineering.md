@@ -60,9 +60,9 @@ Why would a team reject the proposal? Leadership may say, “You are technically
 
 Teams need to remember past incidents. Trouble starts when they remember the prohibition but forget the condition that made it necessary.
 
-Suppose pattern X failed because 1 GbE links were saturated and the runtime's garbage collector stalled. Two years later, the story has become “Never use X; it broke production.” Four years later, 100 GbE interfaces and a runtime with non-blocking collection and vectorization arrive. By year six, the engineers who saw the incident have left. New hires still hear the rule, but nobody can explain or test its original cause.
+Suppose pattern X failed because the network was saturated and the runtime paused under load. Later, the story has become “Never use X; it broke production.” The hardware and runtime change, and the engineers who saw the incident eventually leave. New hires still hear the rule, but nobody can explain or test its original cause.
 
-The same drift can happen with storage latency on NVMe, PCIe throughput, L3 cache sizes, network topology and sub-millisecond datacenter links, compiler optimizations such as SIMD and escape analysis, or serialization that no longer relies on dynamic JSON reflection. A design that failed in 2017 because cross-datacenter calls exhausted distributed lock leases might work under different network and runtime conditions today.
+The same drift can happen when storage, network topology, runtimes, compilers, or serialization libraries change. A design that failed because cross-datacenter calls exhausted distributed lock leases might behave differently after the underlying constraint changes.
 
 That does not mean the old design is automatically safe now. It means “we tried it once” is not enough. Find the constraint that broke it, check whether that constraint still holds, and benchmark the proposed change. Otherwise an old incident keeps deciding the architecture after its technical cause has disappeared.
 

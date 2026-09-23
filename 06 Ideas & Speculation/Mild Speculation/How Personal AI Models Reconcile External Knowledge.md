@@ -20,7 +20,7 @@ aliases:
 > [!IMPORTANT]
 > **The idea:** An experienced engineer often reads a long book or watches a talk to find a few things they do not already know. A personal agent could compare the material with that engineer's notes, ADRs, and code. It would bring forward new ideas and direct disagreements, while recording independent confirmation of existing practices without making the engineer read the familiar explanation again. It must also remember approaches the engineer has already rejected and recognize when new evidence warrants reconsidering them.
 
-A technical author may spend months collecting lessons in a book, paper, or repository. The reader then spends hours going through the result in order. For an experienced engineer, as much as 80% of a new source may cover familiar ground. The useful part might be two or three implementation details, edge cases, or decisions that conflict with an existing design.
+A technical author may spend months collecting lessons in a book, paper, or repository. The reader then spends hours going through the result in order. For an experienced engineer, much of a new source may cover familiar ground. The useful part may be a small number of implementation details, edge cases, or decisions that conflict with an existing design.
 
 As more of our working knowledge ends up in linked Markdown notes, Obsidian vaults, Git-tracked ADRs, code repositories, and internal wikis, an agent can compare a new source with what we have already recorded. I will call that comparison a **knowledge diff**. It should answer three questions: What is new? What challenges something I believe? What independently confirms something I already use?
 
@@ -131,13 +131,13 @@ The proposed workflow has four stages:
 2. **Compare it with your notes.** Record independent confirmation of existing practices, and identify unfamiliar implementation details, performance results, edge cases, and direct disagreements.
 3. **Return exact intervals.** Keep the surrounding explanation where it matters instead of replacing the talk with a broad summary. For example:
 
-   > Watch 14:20–18:10: The speaker shows an eBPF trace of L2 cache-line bouncing that challenges your assumptions about a lock-free ring buffer.
+   > Watch 14:20–18:10: The speaker shows a production trace that challenges your assumption about how the service behaves under sustained load.
    >
    > Watch 42:15–46:30: The speaker explains a fallback protocol for partitioned Raft clusters.
 
-4. **Prepare a note for your review.** The agent creates a Markdown note with links to those moments and focused questions, such as: “Does their ring-buffer allocation strategy remove your lock-contention bottleneck?” You watch the selected eight minutes, write your conclusion and edge cases, and commit the change. The agent then links the note from the relevant indexes and related notes.
+4. **Prepare a note for your review.** The agent creates a Markdown note with links to those moments and focused questions, such as: “Does their evidence change your decision about this design?” You watch the selected passages, write your conclusion and edge cases, and commit the change. The agent then links the note from the relevant indexes and related notes.
 
-The same pass can quietly record that a talk supports your existing multi-region Raft practices while pointing you to a claim about event-bus latency at 14:20 and a SIMD batching method at 42:15. The useful output is a set of passages to examine and a place to record your verdict, rather than an unindexed hour of video.
+The same pass can record that a talk supports one of your existing practices while pointing you to a conflicting latency result or an unfamiliar implementation method. The useful output is a set of passages to examine and a place to record your verdict, rather than an unindexed hour of video.
 
 ## 6. Do not let the filter seal off unfamiliar ideas
 

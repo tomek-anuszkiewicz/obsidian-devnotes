@@ -199,7 +199,7 @@ Related technologies include:
 
 They differ substantially in production readiness and intended use, but they share the idea that model inference can be operated independently from the original model creator.
 
-In practice, production suitability divides this tier. Tools like Ollama and LM Studio optimize for single-developer ergonomics and quick local experimentation. In contrast, runtimes like vLLM and NVIDIA NIM are built for production inference pipelines, leveraging continuous batching and PagedAttention to saturate GPU memory bandwidth across concurrent requests. Operating on owned hardware changes the economic model: marginal token costs drop to raw electricity and hardware amortization, making high-frequency loops—like AST parsing, continuous linting, or real-time embeddings—cost-effective at scale while guaranteeing that source code and sensitive data never cross external network boundaries.
+In practice, production suitability divides this tier. Tools like Ollama and LM Studio optimize for single-developer ergonomics and quick local experimentation. Runtimes like vLLM and NVIDIA NIM are built to handle concurrent inference workloads through features such as continuous batching and managed attention memory. Operating on owned hardware changes the cost model and can keep source code and sensitive data inside an owned environment, provided the surrounding telemetry, update, and network configuration does not send them elsewhere.
 
 ## Dedicated inference providers
 
@@ -248,7 +248,7 @@ Model gateway
    Models
 ```
 
-The core advantage of dedicated inference clouds is latency optimization and execution throughput. Hardware architectures like Groq LPUs or Cerebras wafer-scale engines eliminate memory bandwidth bottlenecks, generating 300 to 800+ tokens per second. That order-of-magnitude reduction in Time to First Token (TTFT) makes multi-turn agentic loops and deep reasoning traces practical where standard multi-tenant cloud APIs would feel unresponsive. Additionally, because multiple providers host identical open weights (like Llama or Qwen), teams can implement multi-provider redundancy: if one provider experiences an outage or performance degradation, traffic shifts to another provider running the exact same model weights without altering prompt formatting or output parsing.
+Dedicated inference clouds compete on latency and throughput, but actual performance depends on the model, workload, batching, hardware, and provider configuration. Multiple providers may host the same open weights, which can make multi-provider redundancy possible. The endpoints are not necessarily interchangeable: serving configuration, quantization, prompt templates, supported features, and output behavior still need compatibility tests before traffic can move safely.
 
 ## A useful mental model
 

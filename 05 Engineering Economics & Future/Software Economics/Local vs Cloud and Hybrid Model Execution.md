@@ -102,23 +102,11 @@ A 10 GbE or USB4 link offers roughly 1.25–4 GB/s for these transfers in the no
 
 A fast RDMA connection changes the calculation. DGX Spark's 200 Gbps ConnectX-7 interface can move data between two units with much lower overhead by avoiding the normal network stack. That makes the two-machine setup described above more practical than joining ordinary desktops over consumer links.
 
-## 5. When local hardware pays for itself
+## 5. The cost depends on the workload
 
-A local system has an upfront price, electricity costs, maintenance, and a limited useful life. An API avoids the hardware purchase and infrastructure work, but each agent step consumes paid usage and the provider can change its service.
+A local system has an upfront price, electricity costs, maintenance work, depreciation, and a limited useful life. An API avoids the hardware purchase and infrastructure work, but charges for usage and leaves the workflow exposed to provider, price, and model changes.
 
-| | Local unified-memory system | Cloud API |
-| :--- | :--- | :--- |
-| Initial hardware | $3,000–$4,700 in the note's comparison | No local hardware purchase |
-| Monthly running expense | Electricity estimated at $5–$10, plus your maintenance time | Variable usage, illustrated as $50–$300 per month |
-| Upkeep | OS, drivers, inference server | Provider runs the infrastructure; your workflow still depends on its API |
-| Longer-term constraint | Hardware depreciation over two to three years | Token charges, service changes, and model deprecations |
-| Extra tokens | No per-token bill after buying the hardware | Each additional step can add cost |
-
-### The break-even point depends on how often agents run
-
-For 10–30 interactive coding prompts a day, the cloud is cheaper in the example. At $30–$60 of API usage per month, it would take 6–10 years of token savings to recover the price of a $4,500 local machine. That is longer than the hardware's expected useful life.
-
-Continuous agents change the volume. A process that watches repositories, summarizes new issues, reads execution logs, and repeatedly runs lint and tests can consume 15–50 million tokens a month. The note estimates $300–$1,000 or more per month at frontier API rates for that workload. On a local machine it estimates about $6 a month in electricity to process 50 million tokens, after the hardware purchase. At sustained volumes of that kind, it estimates a six- to twelve-month payback. These are workload-dependent estimates, not a universal price comparison.
+There is no useful break-even calculation without a real workload. Interactive use and continuous agents have different demand patterns, and the comparison also depends on model quality, latency, utilization, idle time, maintenance, and how often the hardware must be replaced. Measure those factors in the intended workflow before deciding whether local execution pays for itself.
 
 ### Software improvements can keep the same hardware useful longer
 

@@ -61,7 +61,7 @@ In a fast agent workflow, several substantial refactors can happen before the en
 
 An ADR has a different weakness: it is usually written when the team knows the least about implementation details. If a hardware limit, API restriction, or runtime behavior forces a different design, the ADR may remain as it was. It is also separate from the actual diff and the test suite that verified the eventual choice.
 
-The diary fills the space between those sources. Suppose an engineer asks weeks later why a dispatch kernel uses a flat lookup table instead of binary search. The dated entry can show the choice and the L1/L2 cache hit rates behind it, even if the intermediate branch is gone. When an agent begins work in an unfamiliar subsystem, a compact summary of recent entries gives it the relevant decisions without making it infer intent from thousands of lines of code.
+The diary fills the space between those sources. Suppose an engineer asks weeks later why a dispatch kernel uses a flat lookup table instead of binary search. The dated entry can show the measured workload and benchmark behind that choice, even if the intermediate branch is gone. When an agent begins work in an unfamiliar subsystem, a compact summary of recent entries gives it the relevant decisions without making it infer intent from thousands of lines of code.
 
 ## 2. What an entry must contain
 
@@ -97,7 +97,7 @@ python tools/log_diary.py \
   --title "Fix Bus Arbitration Race Condition" \
   --subsystems "kernel/bus/, scheduler/" \
   --changes "Added phase-latching; aligned wait-states" \
-  --rationale "Prevented CPU prefetch starvation during DMA burst" \
+  --rationale "Reduced stalls during sustained input bursts" \
   --results "All 18 architecture tests passed cleanly"
 ```
 

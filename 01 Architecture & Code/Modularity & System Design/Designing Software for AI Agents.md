@@ -255,7 +255,7 @@ public sealed record OrderCancelledEvent(Guid OrderId, DateTime OccurredUtc);
 
 Co-locating these components delivers dense context without wasting attention budget on navigating directory trees. When an agent updates the feature, it produces a clean, isolated diff against a single file, eliminating orphaned files, broken imports, and mismatched cross-file contracts.
 
-However, vertical co-location is not a license to create monolithic God files. Cramming thirty unrelated operations or a massive entity mapping into a 3,000-line file degrades attention and creates constant merge collisions. Keep each file focused on a single capability or vertical slice, bounded between 200 and 500 lines of code. When a slice exceeds that size, extract shared pure domain calculations or split compound flows into distinct feature files.
+However, vertical co-location is not a license to create monolithic files. Split a file when it accumulates unrelated responsibilities, becomes difficult to navigate or test, or causes frequent merge collisions. Keep tightly coupled parts together when separating them would hide the behavior behind more navigation and cross-file contracts. Line count alone is not a useful boundary.
 
 ---
 

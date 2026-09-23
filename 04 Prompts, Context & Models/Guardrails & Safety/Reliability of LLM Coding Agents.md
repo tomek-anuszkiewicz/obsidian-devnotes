@@ -49,11 +49,7 @@ Public benchmarks measure performance in a particular environment. They are not 
 
 A frequent mistake when designing agentic workflows is assuming that a high per-step accuracy translates to reliable autonomous task completion.
 
-LLMs are probabilistic token generators. Even if a model executes individual tool calls or edits with a high per-step reliability—say, 98%—compound probability across a multi-turn autonomous loop dictates that long, unbounded runs will inevitably fail:
-
-$$P(\text{success}) = p^N$$
-
-Over a 50- or 100-step trajectory, an agent will encounter tool failures, unexpected command outputs, or context degradation. If the harness allows the agent to loop autonomously without intermediate validation, the model eventually branches off into unrecoverable states. Reliability requires keeping operational turn counts small, validating state after every discrete modification, and resetting to clean Git checkpoints when a turn goes sideways.
+Reliability does not compose as a simple fixed probability multiplied across steps. Agent actions are dependent, tasks vary in difficulty, and validation or recovery can correct an earlier mistake. Even so, long unbounded trajectories expose more opportunities for tool failures, unexpected command output, stale context, and incorrect assumptions to influence later work. A harness should validate meaningful state transitions, bound retries, and preserve recoverable checkpoints instead of assuming that one successful step predicts the whole run.
 
 ## Why an unreliable model can still be useful
 

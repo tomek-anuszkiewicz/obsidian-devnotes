@@ -62,9 +62,9 @@ query
 → perhaps a few citations
 ```
 
-Research on Google AI Overviews already shows substantially lower click-through rates when an AI-generated answer is displayed.
+This may already be changing user behavior. People can ask an AI system directly instead of searching, opening several results, and assembling an answer themselves. Stack Overflow has reported declining traffic and has said that some first-time coders may visit or ask questions less often because AI can provide answers directly, while also warning that several factors affect traffic ([Stack Overflow, 2023](https://stackoverflow.blog/2023/08/08/insights-into-stack-overflows-traffic/)).
 
-Early production telemetry across answer engines and Google AI Overviews consistently shows referral drop-offs between 60% and 90% for purely informational queries. When the retrieval pipeline synthesizes an exhaustive response directly in the viewport, the query layer satisfies the user's intent without triggering downstream navigation or session telemetry.
+When the generated answer satisfies the user's intent, the original source may receive no visit even though its material helped make the answer possible.
 
 This means that the search platform may continue to attract users and advertisers while sending less traffic to the underlying web.
 

@@ -50,7 +50,7 @@ During training, a model encounters material from domains that engineers usually
 
 - Software evolution: Lehman's laws, recurring design mistakes, the limits of DRY, and Conway's law.
 - Developer work: working memory, the effort of reviewing diffs, context switching, and the resistance imposed by writing code manually.
-- Systems programming: instruction caches, compiler passes, macro preprocessors, kernel dispatch loops, and memory fences.
+- Systems programming: ownership rules, operating-system interfaces, compiler passes, and concurrency boundaries.
 - Information and inference: compression, context window limits, AST traversal, and loops of tool calls made by an agent.
 
 These are not stored as a neat collection of independent folders. They influence the model's learned representations and the next words it can generate in a given context. One useful way to picture this is as a large space of possible connections. A prompt determines which parts of that space become relevant to the answer.

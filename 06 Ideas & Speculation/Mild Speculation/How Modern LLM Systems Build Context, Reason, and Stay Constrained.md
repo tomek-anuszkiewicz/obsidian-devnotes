@@ -118,7 +118,7 @@ Putting everything together gives a more realistic architecture:
 Before spending tokens on context retrieval or reasoning, requests pass through fast, lightweight guardrails. This layer catches prompt injections, obvious policy violations, or out-of-scope queries using cheap classifiers or deterministic keyword and regex filters, saving latency and compute.
 
 ### 2. Context Planning and Assembly
-Rather than treating the model's context window as an unbounded dumping ground, production harnesses treat it like working memory or an L1 cache. The context planning step determines what information is actually necessary to solve the task:
+Rather than treating the model's context window as an unbounded dumping ground, production harnesses fill it deliberately. The context planning step determines what information is actually necessary to solve the task:
 - **Conversational state**: Truncated or summarized history of the current interaction.
 - **Episodic memory**: Long-term user preferences, past execution failures, or cross-session facts pulled from a key-value or vector store.
 - **Retrieval-Augmented Generation (RAG)**: Relevant documentation, code snippets, or knowledge base chunks.

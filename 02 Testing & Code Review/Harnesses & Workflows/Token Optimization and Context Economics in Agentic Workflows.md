@@ -22,7 +22,7 @@ aliases:
 > [!IMPORTANT]
 > **Tokens affect what an agent sees, not just what you pay.** A large context costs money and makes it harder for the agent to keep the relevant code, constraints, and current decision in view. Longer sequences also increase the work involved in attention. Treat the context window as working memory that you fill deliberately.
 >
-> A useful working target is to spend roughly 80% of the budget on implementation, focused diffs, and verification, and no more than 20% on open-ended design and exploration. If the agent spends most of its time wandering through files, reading stale documentation, or debating a local variable name, fix the workflow.
+> Keep open-ended exploration bounded and preserve enough context for implementation and verification. The useful allocation depends on the task. If the agent spends most of its time wandering through files, reading stale documentation, or debating a local variable name, fix the workflow.
 >
 > The practical tools are straightforward: match model and reasoning budget to the task; keep related code close together; give the agent a few clear rules; run deep checks at useful milestones; keep subagent output short; reuse identical results; and put repetitive work in scripts.
 

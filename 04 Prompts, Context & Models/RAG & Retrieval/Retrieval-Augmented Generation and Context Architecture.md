@@ -670,9 +670,9 @@ Stage 2: Cross-Encoder Reranking (Precision Scoring)
 Candidate Pool (50 items) ───[ Cross-Encoder Reranker ]───> High-Precision Context (5 items) ───> LLM Context
 ```
 
-Reranking drastically improves context density and reduces hallucination rates.
+Reranking should improve the accuracy of retrieval by removing candidates that are semantically similar to the query but do not answer it.
 
-Bi-encoder embedding models vectorize the query and documents independently into fixed-width vectors. While this enables fast approximate nearest neighbor (ANN) searches, it completely misses token-level cross-attention between the query and candidate passages. A cross-encoder reranker feeds the query and candidate chunk jointly through full attention layers to evaluate exact contextual relevance. Pruning candidate pools from 50–100 chunks down to the top 3–7 with a cross-encoder typically yields a 20–35% improvement in answer accuracy while stripping out semantic near-misses.
+Bi-encoder embedding models vectorize the query and documents independently into fixed-width vectors. This enables fast approximate nearest-neighbor searches, but it does not evaluate the query and passage together. A cross-encoder reranker does, so it can distinguish a directly relevant passage from a semantic near-match. The size of the candidate pool and the resulting improvement depend on the corpus, query mix, and evaluation method.
 
 ---
 

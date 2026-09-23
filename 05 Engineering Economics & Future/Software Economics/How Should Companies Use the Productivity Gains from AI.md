@@ -103,7 +103,7 @@ Cost reduction is easier to measure. Growth requires:
 
 Organizations unable to generate good decisions may not benefit from greater coding throughput. Their new bottleneck becomes product management, business analysis, compliance, or deployment.
 
-When coding speed accelerates, the constraint immediately shifts away from the IDE. As detailed in [[AI Productivity Is Limited by the Delivery System]], writing code five times faster yields zero business value if the surrounding system cannot absorb it. If an agent drafts a microservice in three hours but architectural sign-off, security compliance, and staging pipelines take six weeks, throughput simply backs up as unreleased inventory in front of the bottleneck.
+When coding speed accelerates, the constraint can shift away from the IDE. As detailed in [[AI Productivity Is Limited by the Delivery System]], faster implementation does not guarantee faster delivery if the surrounding system cannot absorb it. Product decisions, architectural review, security, compliance, integration, and deployment may become the limiting steps. The same elapsed time may therefore produce more completed work or more available capacity rather than a proportionally shorter delivery cycle.
 
 The strongest competitive advantage may come not from owning the best model, but from knowing how to turn additional engineering capacity into new revenue and better systems.
 
@@ -126,7 +126,7 @@ The strongest competitive advantage may come not from owning the best model, but
 - Keep enough internal expertise to recognize systemic agent failure.
     
 
-A sustainable capacity split divides gains across concrete buckets: roughly 40% for roadmap feature velocity, 30% for system hardening and refactoring technical debt, 20% for high-upside exploration, and 10% for operational slack to eliminate pager fatigue. Crucially, engineering effort must shift into building rigorous verification oracles. Because agents easily generate syntactically convincing implementations that fail on subtle edge cases, developer time is best spent on property-based test suites, integration contracts, and regression harnesses.
+There is no universal allocation for the additional capacity. A team can use it for roadmap work, system hardening, debt reduction, experiments, or operational slack according to its current bottleneck. Some of that effort should also improve verification, because syntactically convincing generated code can still fail on subtle edge cases. Property-based tests, integration contracts, and regression harnesses are possible investments, not a fixed prescription.
 
 Preserving junior engineering paths requires restructuring early-career roles rather than cutting entry-level hiring. As highlighted in [[What Should Organizations Preserve from AI-Assisted Development]], junior engineers build deep mental models by reviewing generated code, tracing runtime execution, and writing verification tests. Slashing this pipeline starves the organization of future senior architects who understand systems at the metal. When production systems suffer distributed deadlocks, memory leaks, or race conditions under load, foundation models cannot debug the incident—teams must maintain deep in-house systems profiling expertise.
 

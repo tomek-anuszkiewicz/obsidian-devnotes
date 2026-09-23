@@ -471,7 +471,7 @@ In an agent-maintained repository, scattering a single business capability acros
 
 Co-locating an entire vertical slice—the command, validation rules, handler, and response schemas—into a single file allows the agent to ingest the complete operational surface in a single pass.
 
-However, semantic locality is not an excuse for 3,000-line monoliths. Files that large suffer from "lost in the middle" attention degradation, frequent git merge conflicts across automated runs, and high risk of diff patch collisions when agents use fuzzy search anchors. The architectural target is bounded vertical cohesion: keep tightly coupled operations together in unified files bounded between 200 and 500 lines.
+However, semantic locality is not an excuse for monolithic files. Split a file when unrelated responsibilities accumulate, navigation and testing become difficult, or concurrent changes create repeated merge and patch conflicts. Keep tightly coupled operations together when the alternative would scatter one behavior across many files. The useful boundary depends on the code and workflow, not a universal line count.
 
 ## Human Review Becomes the Meeting Point of Two Worlds
 
