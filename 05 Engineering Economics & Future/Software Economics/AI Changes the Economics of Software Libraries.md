@@ -78,7 +78,7 @@ more explicit local code
 
 The number of lines of code may become much less important than before.
 
-Pulling in an external dependency brings a permanent tax: supply-chain attack surface, transitive dependencies, security alerts, and periodic breaking upgrades across runtime versions. When an agent can generate and verify the code in seconds, importing an external package solely to avoid thirty lines of clear boilerplate introduces [[Software Decay and the Hidden Costs of Frictionless AI Code|software decay]] without delivering tangible architectural value.
+Pulling in an external dependency brings a permanent tax: supply-chain attack surface, transitive dependencies, security alerts, and periodic breaking upgrades across runtime versions. When an agent can generate and verify the code in seconds, importing an external package solely to avoid thirty lines of clear boilerplate introduces [[Software Decay and the Hidden Costs of Frictionless AI Code|software decay]] without delivering tangible architectural value (see [[The Economics of Aggressive Code Optimization with AI]]).
 
 ## Validation Is a Good Example
 
@@ -690,4 +690,5 @@ That shift may become one of the most important changes in how software dependen
 - **[[Designing Internal Packages as an Explicit, Composable Framework]]** — Packaging foundational code that agents can easily consume without hidden magic.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How cheap generation increases maintenance footprint and dependency bloat.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Why transparent, explicit local code is easier for coding agents to navigate than deep inheritance or meta-programming.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — Why specialized generated code often outperforms generic third-party library abstractions at runtime.
 - **[[AI Changes the Economics of Technical Debt]]** — Economic models of code generation versus maintenance overhead.

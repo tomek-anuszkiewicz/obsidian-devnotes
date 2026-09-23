@@ -38,7 +38,7 @@ Here is what the loop looks like in code:
 2. A test or linter reports that the file now exceeds a 400-line limit, or that its responsibilities should be split. This is **Rule B**.
 3. The agent splits the code, then crosses a package boundary through an internal import. It has violated **Rule C**.
 4. It moves code again to respect that boundary and brings back the allocation that Rule A prohibited.
-5. The next retry starts the same sequence. Each pass uses more tokens and context while the code keeps changing without converging. Repeated patches can also contribute to the instability discussed in [[Software Decay and the Hidden Costs of Frictionless AI Code]].
+5. The next retry starts the same sequence. Each pass uses more tokens and context while the code keeps changing without converging. Repeated patches can also contribute to the instability discussed in [[Software Decay and the Hidden Costs of Frictionless AI Code]] and obscure the architectural trade-offs behind [[The Economics of Aggressive Code Optimization with AI|aggressive optimization]].
 
 The requirements need not be logically impossible. Given enough time, an engineer could often design a solution that satisfies them all. The agent's problem is keeping every requirement in view while making local changes and responding to the latest failure.
 
@@ -132,3 +132,4 @@ Use natural-language instructions for domain decisions and architectural trade-o
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — using deterministic checks without filling the prompt with mechanical instructions.
 - **[[Reliability of LLM Coding Agents]]** — how per-rule failure can accumulate when an agent handles many rules at once.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — replacing long generic rule lists with concise guidance for the task at hand.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — Navigating the tension between zero-allocation hot paths and modular code aesthetics.

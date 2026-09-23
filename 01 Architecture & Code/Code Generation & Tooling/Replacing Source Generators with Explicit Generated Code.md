@@ -357,7 +357,7 @@ The generated implementation can become very close to manually optimized, almost
 
 The important point is that AI does not necessarily replace optimized source generation with slower generic code.
 
-It may instead generate **even more specialized explicit code for the concrete application**.
+It may instead generate **even more specialized explicit code for the concrete application** (see [[The Economics of Aggressive Code Optimization with AI]]).
 
 ## Convenience Generators Are More Exposed Than Infrastructure Libraries
 
@@ -580,9 +580,10 @@ Their durable value will come from things such as:
 
 Where the primary value is merely generating repetitive application code, AI-generated explicit implementations may become a surprisingly strong competitor (see [[Internal Shared Packages vs Agent-Generated Code]] and [[AI Changes the Economics of Software Libraries]]).
 
-## Related Notes
+## Related notes
 
-- [[Internal Shared Packages vs Agent-Generated Code]] — Deciding between centralized shared packages and agent-generated local code.
-- [[AI Changes the Economics of Software Libraries]] — How cheap code synthesis changes the economic value of utility libraries.
-- [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]] — The trade-off between implicit metaprogramming and plain, inspectable code.
-- [[Designing Internal Packages as an Explicit, Composable Framework]] — Constructing composable primitives rather than opaque code generators.
+- **[[Internal Shared Packages vs Agent-Generated Code]]** — Deciding between centralized shared packages and agent-generated local code.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — The macroeconomic shift toward specialized, low-overhead implementations enabled by cheap automated generation.
+- **[[AI Changes the Economics of Software Libraries]]** — How cheap code synthesis changes the economic value of utility libraries.
+- **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — The trade-off between implicit metaprogramming and plain, inspectable code.
+- **[[Designing Internal Packages as an Explicit, Composable Framework]]** — Constructing composable primitives rather than opaque code generators.

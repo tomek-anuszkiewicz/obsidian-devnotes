@@ -137,12 +137,12 @@ Static verification cannot predict every condition the deployed system will meet
 
 If production measurements disagree with what we expected from the model, we need to revisit the model and its assumptions. An accepted proof does not override what the running system is doing.
 
-## Related Notes
+## Related notes
 
-- **[[Testing in the Model, Agent, LLM Era]]**: Deterministic test oracles and testing boundaries in agent workflows.
-- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]**: Keeping specifications current alongside automated checks.
-- **[[The Economics of Aggressive Code Optimization with AI]]**: The cost of poor execution efficiency and memory locality in an otherwise correct algorithm.
-- **[[Refactoring Legacy Systems with AI Agents]]**: Shadow execution and differential tests when rewriting critical code.
-- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]**: Tracing and runtime measurements after static checks end.
-- **[[Negative Knowledge and Explicit Architectural Dissents]]**: Explicitly stating forbidden behavior and failure modes.
-- **[[Software Engineering May Shift Toward Code Optimized for Agents]]**: Making architectures easier for agents and automated verifiers to inspect.
+- **[[Testing in the Model, Agent, LLM Era]]** — Deterministic test oracles and testing boundaries in agent workflows.
+- **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — Keeping specifications current alongside automated checks.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — The cost of poor execution efficiency and memory locality in an otherwise correct algorithm.
+- **[[Refactoring Legacy Systems with AI Agents]]** — Shadow execution and differential tests when rewriting critical code.
+- **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Tracing and runtime measurements after static checks end.
+- **[[Negative Knowledge and Explicit Architectural Dissents]]** — Explicitly stating forbidden behavior and failure modes.
+- **[[Software Engineering May Shift Toward Code Optimized for Agents]]** — Making architectures easier for agents and automated verifiers to inspect.

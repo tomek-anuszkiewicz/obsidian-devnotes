@@ -175,7 +175,9 @@ Examples include:
     
 - introducing typed identifiers;
     
-- updating documentation examples.
+- updating documentation examples;
+    
+- generating and benchmarking dozens of specialized hot-path optimization variants (see [[The Economics of Aggressive Code Optimization with AI]]).
     
 
 A human can perform this work, but attention usually degrades as repetition increases.
@@ -552,6 +554,7 @@ This is one of the most practical ways agents can outperform humans in software 
 ## Related notes
 
 - **[[AI Changes the Economics of Technical Debt]]** — How reduced execution costs make refactoring and cleanup economically viable.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — Leveraging tireless iterative agent loops for multi-variant profiling, benchmarking, and hot-path specialization.
 - **[[Refactoring Legacy Systems with AI Agents]]** — Methodical patterns for codebase modernization and migration.
 - **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]** — Using tirelessness to police code standards and conventions.
 - **[[Developing Features with AI Coding Agents]]** — Closed-loop development workflows combining speed and verification.

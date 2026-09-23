@@ -290,7 +290,7 @@ Enforcing atomic changes across files is critical: whenever an agent modifies a 
 
 ## Conclusion
 
-Agentic coding makes explicit SQL and database-side programming economically more attractive because it lowers the cost of repetitive implementation and maintenance. It does not remove the need for strong contracts, migrated-database tests, semantic review, or architectural discipline.
+Agentic coding makes explicit SQL and database-side programming economically more attractive because it lowers the cost of repetitive implementation and maintenance (see [[The Economics of Aggressive Code Optimization with AI]]). It does not remove the need for strong contracts, migrated-database tests, semantic review, or architectural discipline.
 
 The likely outcome is not a return to putting the entire application in stored procedures. It is a more balanced architecture in which teams are less afraid of handwritten SQL, use SQL Server's strengths deliberately, and rely on deterministic validation rather than trusting either the ORM or the agent.
 
@@ -298,6 +298,7 @@ The likely outcome is not a return to putting the entire application in stored p
 
 - **[[Designing Software for AI Agents]]** — Architectural boundaries and structural predictability for coding agents.
 - **[[Designing Software Architecture with LLM Assistance]]** — Balancing explicit SQL contracts against automated abstraction layers.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — How agent-driven optimization inverts the historical trade-off between runtime machine efficiency and human development time.
 - **[[Reliability of LLM Coding Agents]]** — Managing probabilistic errors and contract drift in generated database code.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Enforcing multi-file atomicity when updating queries, models, and tests.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Automated verification of SQL-to-DTO contracts and schema invariants.

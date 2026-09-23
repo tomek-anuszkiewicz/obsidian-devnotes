@@ -78,7 +78,7 @@ For an individual contributor, this has a practical consequence. Taking on a pol
 
 An internal developer platform has a reasonable job. Across hundreds of developers and dozens of teams, it can standardize observability, trace IDs, security headers, and deployments. The trouble starts when the standard becomes a mandatory application framework that cannot accommodate a different implementation where the workload needs one.
 
-Such platforms can preserve choices made when the platform team first formed: reflection-heavy dependency injection, chatty HTTP/1.1 REST calls, and large JSON payloads that spend CPU time parsing text. An engineer trying to improve a hot path with low-allocation byte buffers, binary serialization, or compile-time code generation may be blocked because the approach does not fit the standard application structure.
+Such platforms can preserve choices made when the platform team first formed: reflection-heavy dependency injection, chatty HTTP/1.1 REST calls, and large JSON payloads that spend CPU time parsing text. An engineer trying to improve a hot path with low-allocation byte buffers, binary serialization, or compile-time code generation may be blocked because the approach does not fit the standard application structure (even when [[The Economics of Aggressive Code Optimization with AI|aggressive optimization economics]] justify the specialized path).
 
 There is also a staffing effect. Engineers who care about memory layouts, protocols, and system behavior can tire of arguing with the framework and leave. People who remain may become very good at its annotations and configuration while getting fewer chances to practice the underlying skills. Those platform-specific habits can be hard to carry to another company.
 
@@ -109,5 +109,6 @@ Three working rules follow from the examples above:
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — Loss of technical autonomy, bureaucratic maintenance work, and disengagement among senior engineers.
 - **[[Unbundling of Enterprise Software]]** — Economic and architectural pressure toward leaner, specialized applications.
 - **[[Refactoring Legacy Systems with AI Agents]]** — Agent-assisted investigation, differential testing, and golden-master suites for legacy systems.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — Replacing heavy platform abstractions with specialized low-allocation hot paths.
 - **[[AI Changes the Economics of Technical Debt]]** — How cheaper verification changes the cost of addressing neglected systems.
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Small, autonomous teams of engineers with strong systems knowledge versus large teams and headcount.

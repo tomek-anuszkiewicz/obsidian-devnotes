@@ -994,13 +994,14 @@ toward:
 explicit, composable, mechanically discoverable behavior
 ```
 
-In software increasingly written and maintained by agents, the cost of repetition may fall while the cost of hidden semantics becomes much more visible (see [[Software Decay and the Hidden Costs of Frictionless AI Code]] and [[Designing Internal Packages as an Explicit, Composable Framework]]).
+In software increasingly written and maintained by agents, the cost of repetition may fall while the cost of hidden semantics becomes much more visible (see [[Software Decay and the Hidden Costs of Frictionless AI Code]], [[Designing Internal Packages as an Explicit, Composable Framework]], and [[The Economics of Aggressive Code Optimization with AI]]).
 
 That could change what we consider "clean" architecture.
 
-## Related Notes
+## Related notes
 
-- [[Designing Internal Packages as an Explicit, Composable Framework]] — Turning implicit convention magic into explicit, typed components.
-- [[Designing Software for AI Agents]] — Architectural patterns that reduce cognitive overhead and token burn for agents.
-- [[Software Decay and the Hidden Costs of Frictionless AI Code]] — Why rapid generation without semantic transparency accelerates system entropy.
-- [[Internal Shared Packages vs Agent-Generated Code]] — Balancing central abstractions against self-contained local implementations.
+- **[[Designing Internal Packages as an Explicit, Composable Framework]]** — Turning implicit convention magic into explicit, typed components.
+- **[[The Economics of Aggressive Code Optimization with AI]]** — How shedding layers of indirection and reflection unlocks compiler optimizations and lowers hardware execution costs.
+- **[[Designing Software for AI Agents]]** — Architectural patterns that reduce cognitive overhead and token burn for agents.
+- **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — Why rapid generation without semantic transparency accelerates system entropy.
+- **[[Internal Shared Packages vs Agent-Generated Code]]** — Balancing central abstractions against self-contained local implementations.
