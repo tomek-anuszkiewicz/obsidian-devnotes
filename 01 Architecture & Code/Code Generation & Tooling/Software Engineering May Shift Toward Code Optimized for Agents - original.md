@@ -60,6 +60,8 @@ Without additional context, asking an agent to implement something effectively m
 
 This is important because the model may produce something locally reasonable while violating assumptions that exist only inside the organization.
 
+The model does not pick these patterns because they fit your p99 latency budget or concurrency profile. They simply represent the densest statistical clusters in public training data—heavy dependency injection wiring, dynamic ORM change tracking, and reflection-based validators. In isolation, the generated code compiles and looks idiomatic, but it silently violates operational constraints that live outside public framework tutorials.
+
 ## Mainstream Code Has a Built-In Advantage
 
 Consider two systems.
@@ -137,6 +139,8 @@ changes more than generation behavior.
 It changes the agent's interpretation of the surrounding code.
 
 Something that previously looked like unnecessary ceremony now becomes an architectural invariant.
+
+Without this explicit invariant, an agent tasked with "optimizing query performance" or "adding a status flag" will treat `OperationRunner` as dispensable boilerplate. It will bypass the abstraction and write directly to the database context. The change passes unit tests, but in production it silently bypasses tenant isolation, drops outbox event publishing, and corrupts transactional consistency.
 
 ## Guidelines Can Shape the Future Evolution of the System
 
@@ -292,6 +296,8 @@ If this rule survives only as tribal knowledge, an agent entering the repository
 
 In an agent-heavy environment, architecture knowledge may increasingly need to exist as repository-accessible context.
 
+Consider a production invariant: `BillingService` must never be called synchronously from `OrderProcessingWorker`, but must flow through an asynchronous dispatch queue. If that rule exists only in Slack threads or senior engineers' heads, an agent looking at available interfaces will wire up a direct HTTP call to resolve a ticket. The code runs fine in staging, but triggers thread pool starvation and cascading retry storms under production peak loads.
+
 ## Humans May Need to Adapt to Agent-Generated Code
 
 An even deeper possibility is that the agent should not always adapt to human coding preferences.
@@ -359,6 +365,8 @@ From an agent perspective, the benefits may include:
 - easier automated transformation.
     
 
+There is also a mechanical dividend to this verbosity. Chained LINQ expressions and stream lambdas allocate closure instances, delegate objects, and state machines on the heap. A flat procedural loop generates zero closure allocations and makes branch prediction straightforward for the CPU. Just as importantly, when an agent needs to add a metric or an early-exit guard, modifying a flat loop is a trivial 2-line diff. Modifying a chained pipeline requires restructuring nested lambda captures, dramatically increasing the risk of hallucinated method overloads or broken syntax.
+
 ## More Code May No Longer Mean More Maintenance Cost
 
 Historically, an approximate relationship existed:
@@ -397,6 +405,8 @@ we may ask:
 > Does this duplication create semantic synchronization risk?
 
 That is a very different criterion.
+
+This distinction separates business rules from structural boilerplate. Duplicating semantic logic—like discount formulas, tax calculations, or auth policies—creates serious risk because those rules must change in lockstep. But duplicating syntactic boilerplate—like separate DTO definitions, flat input mappings, or dedicated request payloads—is often preferable. Forcing three unrelated endpoints to inherit from a common generic base class just to save fifteen lines of mapping creates tight coupling that confuses both human reviewers and automated tools.
 
 ## Some Traditional Best Practices May Need Re-Evaluation
 
@@ -448,6 +458,20 @@ This could lead to more:
     
 
 The source code may become larger while remaining easier for agents to evolve.
+
+## Bounded Vertical Cohesion: Context-Per-File Locality Beats Fragmentation
+
+For decades, object-oriented conventions promoted "one class per file". That habit was formed when IDEs had slow indexing, file-locking VCS systems caused check-out collisions, and human developers preferred scanning shallow directory trees.
+
+In an agent-maintained repository, scattering a single business capability across six files—`Command`, `Validator`, `Handler`, `Result`, `Event`, and `Repository`—imposes a heavy operational penalty:
+
+- **Context Blindness and Hallucinations**: While editing the handler, the agent cannot see boundary checks enforced in the validator. It either duplicates checks unnecessarily or assumes missing preconditions. Worse, guessing missing contracts injects bad assumptions into the context window, biasing subsequent edits.
+- **Tool Protocol Overhead**: Every separate file inspection requires a tool call roundtrip. The model spends attention budget processing JSON envelopes, file paths, and environment prompts instead of business logic.
+- **Attention Density**: Attention heads resolve relationships with far higher fidelity when an input contract, domain invariants, and mutation logic sit within fifty lines of each other in the same physical file.
+
+Co-locating an entire vertical slice—the command, validation rules, handler, and response schemas—into a single file allows the agent to ingest the complete operational surface in a single pass.
+
+However, semantic locality is not an excuse for 3,000-line monoliths. Files that large suffer from "lost in the middle" attention degradation, frequent git merge conflicts across automated runs, and high risk of diff patch collisions when agents use fuzzy search anchors. The architectural target is bounded vertical cohesion: keep tightly coupled operations together in unified files bounded between 200 and 500 lines.
 
 ## Human Review Becomes the Meeting Point of Two Worlds
 
@@ -605,6 +629,8 @@ and more often:
     
 
 This moves review from style policing toward verification of intent and consequences.
+
+When senior developers spend their cognitive budget debating whether a loop should be refactored into a fluent one-liner, critical failure modes slip through unnoticed. Code review becomes the place to verify partial failure handling, database lock contention, retry storm exposure, and tenant isolation boundaries. Automated linters and formatters can enforce syntax; humans must verify system invariants and blast radius.
 
 ## Source Code May No Longer Be Primarily for Human Authors
 
