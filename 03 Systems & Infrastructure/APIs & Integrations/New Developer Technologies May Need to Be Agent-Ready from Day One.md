@@ -8,6 +8,7 @@ tags:
   - software-ecosystems
   - api-design
 aliases:
+  - Designing Developer Technologies for Agent-Readiness
   - Agent-Ready Developer Tools
   - Agent First Frameworks
 ---
@@ -743,11 +744,11 @@ agent knowledge
 agent evaluation
 ```
 
-In that environment, the ability to teach an agent quickly may become almost as important as the quality of the API itself (see [[Designing APIs for LLM-Generated Integration Code]] and [[Shifting from Fixed Features to Agent-Extensible Primitives]]).
+In that environment, the ability to teach an agent quickly may become almost as important as the quality of the API itself (see [[Designing APIs for LLM-Generated Integration Code]] and [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]).
 
 ## Related Notes
 
 - [[Designing APIs for LLM-Generated Integration Code]] — Structuring APIs and strongly typed clients for agent discovery.
-- [[Shifting from Fixed Features to Agent-Extensible Primitives]] — Architecting systems around composable agent primitives.
+- [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]] — Architecting systems around composable agent primitives.
 - [[Programming Languages May Evolve Differently in the Age of AI]] — How language syntax and compiler diagnostics adapt for coding agents.
 - [[Software Implementation Is Becoming a Weaker Moat]] — Why implementation alone is commoditizing in developer ecosystems.

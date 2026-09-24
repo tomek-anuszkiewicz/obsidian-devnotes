@@ -148,7 +148,7 @@ The replacement does not need to reproduce the entire enterprise suite.
 
 It only needs to solve the part that the organization actually uses.
 
-This shift accelerates the viability of [[A New Market for Small, Custom Business Software|small, custom business software]]. When an internal engineering team can build and maintain a dedicated micro-app in days, the economic justification for buying a massive, generic SaaS module evaporates. The software itself stops acting as a defensive moat when a tailored alternative can be assembled quickly around concrete operational needs.
+This shift accelerates the viability of [[AI May Create a New Market for Small, Custom Business Software|small, custom business software]]. When an internal engineering team can build and maintain a dedicated micro-app in days, the economic justification for buying a massive, generic SaaS module evaporates. The software itself stops acting as a defensive moat when a tailored alternative can be assembled quickly around concrete operational needs.
 
 ## 2. AI Configures the Existing Platform
 
@@ -1024,7 +1024,7 @@ This could weaken suite vendors while strengthening vendors that provide:
     
 - excellent interoperability.
 
-This architectural shift directly favors [[Shifting from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]] over monolithic suites. When integration glue is written and maintained dynamically by agents, the historical lock-in created by suite vendors—who relied on mediocre sub-products bundled together with single sign-on—evaporates. Organizations can reassert ownership over their operational workflows while buying best-of-breed transactional backends.
+This architectural shift directly favors [[Applications May Shift from Fixed Features to Agent-Extensible Primitives|agent-extensible primitives]] over monolithic suites. When integration glue is written and maintained dynamically by agents, the historical lock-in created by suite vendors—who relied on mediocre sub-products bundled together with single sign-on—evaporates. Organizations can reassert ownership over their operational workflows while buying best-of-breed transactional backends.
 
 ## Risks
 
@@ -1131,8 +1131,8 @@ The fixed application around it becomes optional.
 
 ## Related notes
 
-- **[[A New Market for Small, Custom Business Software]]** — How lower implementation costs enable bespoke, single-tenant enterprise tools.
+- **[[AI May Create a New Market for Small, Custom Business Software]]** — How lower implementation costs enable bespoke, single-tenant enterprise tools.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and capability interfaces so LLMs can generate reliable integration workflows.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Moving from monolithic UI features to flexible, agent-composable platform primitives.
+- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]** — Moving from monolithic UI features to flexible, agent-composable platform primitives.
 - **[[Software Implementation Is Becoming a Weaker Moat]]** — Why data gravity, business relationships, and core transactional engines matter more than application wrappers.
 - **[[Workflow Orchestration in Agentic Systems]]** — Composing underlying enterprise capabilities into multi-step agent execution workflows.

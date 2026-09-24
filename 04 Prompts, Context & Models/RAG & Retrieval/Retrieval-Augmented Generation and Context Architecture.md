@@ -726,7 +726,7 @@ Without temporal filtering, an agent asking *"How do we configure database conne
 ## Related notes
 
 - **[[How LLM Systems Build Context]]** — Context assembly pipelines and token budget allocation strategies.
-- **[[LLM Agents and Institutional Memory]]** — Why retrieval indexing preserves accessible data but cannot substitute for shared mental models.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Why retrieval indexing preserves accessible data but cannot substitute for shared mental models.
 - **[[Comments May Become More Valuable in AI-Generated Code]]** — Zero-latency co-located context anchors compared against multi-hop external RAG.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and schemas for automated agent consumption.
 - **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — Managing context degradation and attention drift over extended agent runs.

@@ -205,7 +205,7 @@ Formal documentation usually describes the final state. Conversations preserve t
 
 That historical reasoning may be more valuable than the final document, especially when a future employee or agent needs to understand whether an old decision is still valid.
 
-Without that historical context, agents and developers alike will refactor an unconventional code pattern, only to re-introduce the catastrophic production bug that the original hack was explicitly designed to prevent. Capturing the operational reasoning behind architectural trade-offs directly protects [[LLM Agents and Institutional Memory]].
+Without that historical context, agents and developers alike will refactor an unconventional code pattern, only to re-introduce the catastrophic production bug that the original hack was explicitly designed to prevent. Capturing the operational reasoning behind architectural trade-offs directly protects [[LLM Agents and Institutional Memory in Software Teams]].
 
 ## Raw Material for RAG
 

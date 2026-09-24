@@ -10,6 +10,7 @@ tags:
   - llm-agents
   - architecture
 aliases:
+  - LLM Agents and Institutional Memory
   - LLM Agents and Team Memory
   - Institutional Knowledge Preservation
   - Code Archaeology and Corporate Memory

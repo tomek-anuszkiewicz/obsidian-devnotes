@@ -187,7 +187,7 @@ Evaluating the full triplet handles nuances that simple keyword blocklists miss.
 
 ### Deterministic Sandboxes and Tool Boundaries
 
-When an agent has access to external tools—such as shell execution, database clients, or file APIs—evaluating text output after the fact is completely inadequate (see [[LLM Capability Reliability and the Shape of Progress]]). If an agent executes a destructive tool call, checking the final conversational output cannot reverse the mutation.
+When an agent has access to external tools—such as shell execution, database clients, or file APIs—evaluating text output after the fact is completely inadequate (see [[LLM Capability, Reliability, and the Shape of Progress]]). If an agent executes a destructive tool call, checking the final conversational output cannot reverse the mutation.
 
 Safety checks for autonomous systems must intercept tool actions before execution:
 
@@ -328,5 +328,5 @@ Attempting to bake jurisdiction-specific compliance laws directly into neural we
 
 - **[[Service vs User Authorization Models]]** — Preventing agent privilege escalation across tool calling and API integration layers.
 - **[[Proxy Metrics and Operational Invariants in AI Systems]]** — Designing deterministic checks and invariant validation over probabilistic classifiers.
-- **[[LLM Capability Reliability and the Shape of Progress]]** — Externalizing reliability from model weights into deterministic harnesses.
+- **[[LLM Capability, Reliability, and the Shape of Progress]]** — Externalizing reliability from model weights into deterministic harnesses.
 - **[[Formal Verification and Runtime Safety Boundaries]]** — Mathematical and schema-based verification replacing probabilistic evaluation.

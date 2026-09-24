@@ -142,5 +142,5 @@ Because the authoring agent is biased toward justifying its own implementation c
 
 - [[LLMs as a Code Review Team]] — Designing multi-perspective review teams to spot structural defects.
 - [[Tests Are for Verification, Not Architectural Navigation]] — Preventing tests from becoming fragile rubber stamps.
-- [[Correcting AI Code - Patch, Regenerate, or Respecify]] — Tactical decision-making when review identifies model defects.
+- [[Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification]] — Tactical decision-making when review identifies model defects.
 - [[Software Decay and the Hidden Costs of Frictionless AI Code]] — Why uninspected AI additions degrade long-term code quality.

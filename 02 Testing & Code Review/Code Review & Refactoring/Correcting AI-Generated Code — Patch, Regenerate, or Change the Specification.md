@@ -8,6 +8,7 @@ tags:
   - prompt-engineering
   - refactoring
 aliases:
+  - Correcting AI Code - Patch, Regenerate, or Respecify
   - Patch vs Regenerate vs Respecify
   - Fixing AI-Generated Code
   - The Defect Attribution Hierarchy

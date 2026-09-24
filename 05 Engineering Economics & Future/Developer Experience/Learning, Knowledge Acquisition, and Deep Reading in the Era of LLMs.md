@@ -52,7 +52,7 @@ Raw notes can also be processed into YAML properties: topic, domain, tags, invar
     - "Log entries flow strictly unidirectionally from leader to follower"
   relations:
     - "[[Standardizing Service Infrastructure with Reusable Blocks]]"
-    - "[[Service-to-Service Communication - How Service A Should Call Service B]]"
+    - "[[Service-to-Service Communication — How Service A Should Call Service B]]"
   status: draft
   ---
   ```

@@ -8,6 +8,7 @@ tags:
   - software-architecture
   - maintainability
 aliases:
+  - Internal Shared Packages vs Agent-Generated Code
   - Shared Libraries vs Generated Code
   - NuGet vs AI Generation
   - Internal Packages vs Agent-Generated Code
@@ -700,15 +701,15 @@ The first question should be:
 
 > Is this a reusable implementation, or merely a repeatable instruction?
 
-If it is a repeatable instruction, an agent can generate the code (see [[AI Changes the Economics of Software Libraries]] and [[Replacing Source Generators with Explicit Generated Code]]).
+If it is a repeatable instruction, an agent can generate the code (see [[AI Changes the Economics of Software Libraries]] and [[AI May Replace Some Source Generators with Explicit Generated Code]]).
 
 If correctness can be described externally, conformance tests can validate it (see [[Executable Architecture Tests for Coding Agent Guardrails]]).
 
-If one exact implementation must be trusted and maintained centrally, a package or service is still the better abstraction (see [[Designing Internal Packages as an Explicit, Composable Framework]]).
+If one exact implementation must be trusted and maintained centrally, a package or service is still the better abstraction (see [[Designing Internal NuGet Packages as an Explicit, Composable Framework]]).
 
 ## Related Notes
 
-- [[Designing Internal Packages as an Explicit, Composable Framework]] — Constructing composable, discoverable shared packages.
+- [[Designing Internal NuGet Packages as an Explicit, Composable Framework]] — Constructing composable, discoverable shared packages.
 - [[AI Changes the Economics of Software Libraries]] — Economic implications when utility code is cheap to synthesize locally.
-- [[Replacing Source Generators with Explicit Generated Code]] — Trade-offs between compile-time generators and transparent agent-generated code.
+- [[AI May Replace Some Source Generators with Explicit Generated Code]] — Trade-offs between compile-time generators and transparent agent-generated code.
 - [[Executable Architecture Tests for Coding Agent Guardrails]] — Conformance and structural checks to validate generated implementations.

@@ -9,6 +9,7 @@ tags:
   - end-user-programming
   - generative-ui
 aliases:
+  - Shifting from Fixed Features to Agent-Extensible Primitives
   - Agent-Extensible Applications
   - Malleable Software in the Agent Era
   - From Monolithic Apps to Agent Primitives
@@ -240,7 +241,7 @@ emerging value proposition:
 
 Developers transition from selling **rigid feature bundles** to selling **high-trust platforms and domain engines**. A medical or financial tracking app wins not because it has a pretty button for one specific calculation, but because its domain primitives are mathematically rigorous, legally compliant, and seamlessly extensible by any agent.
 
-This dynamic mirrors the broader unbundling of enterprise software (see [[Unbundling of Enterprise Software]] and [[Personal Digital Models as the Foundation of Agent Ecosystems]]). When UI presentation and inference compute are commoditized, commercial leverage moves to transaction execution guarantees, state synchronization, and regulatory compliance. A domain engine commands pricing power because its invariants are mathematically verified, its data schemas satisfy rigorous regulatory standards (such as HIPAA, GDPR, or SOC 2), and its exposed APIs reliably execute high-stakes state transitions on behalf of autonomous agents.
+This dynamic mirrors the broader unbundling of enterprise software (see [[Unbundling of Enterprise Software]] and [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]). When UI presentation and inference compute are commoditized, commercial leverage moves to transaction execution guarantees, state synchronization, and regulatory compliance. A domain engine commands pricing power because its invariants are mathematically verified, its data schemas satisfy rigorous regulatory standards (such as HIPAA, GDPR, or SOC 2), and its exposed APIs reliably execute high-stakes state transitions on behalf of autonomous agents.
 
 ---
 
@@ -267,4 +268,4 @@ They provide the foundational primitives of their domain, while the user's perso
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]** — Exposing machine-discoverable primitives and capability schemas directly to in-browser agents.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring typed interfaces and domain invariants for autonomous runtime integration.
 - **[[Unbundling of Enterprise Software]]** — The architectural shift from closed application silos to composable, agent-addressable domain engines.
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — User-owned storage vaults and local context powering runtime personalization.
+- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]** — User-owned storage vaults and local context powering runtime personalization.

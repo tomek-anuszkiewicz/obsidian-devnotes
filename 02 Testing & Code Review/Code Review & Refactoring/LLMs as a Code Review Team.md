@@ -195,7 +195,7 @@ A performance reviewer may inspect:
     
 - database access;
     
-- hot-path behavior (see [[The Economics of Aggressive Code Optimization with AI]]).
+- hot-path behavior (see [[AI May Make Aggressive Code Optimization Economically Viable]]).
     
 
 A correctness reviewer may concentrate on:
@@ -998,7 +998,7 @@ For code review, those properties may matter almost as much as raw intelligence 
 ## Related notes
 
 - **[[Reviewing AI-Generated Code]]** — Review heuristics and inspection methods for AI-authored changes.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — The architectural and economic justification for eliminating unnecessary abstractions and allocations on hot paths.
-- **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]** — Using review agents to enforce architectural standards at scale.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — The architectural and economic justification for eliminating unnecessary abstractions and allocations on hot paths.
+- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]** — Using review agents to enforce architectural standards at scale.
 - **[[Multi-Agent Software Development]]** — Coordinating multiple specialized agent personas across development lifecycles.
 - **[[Building Determinism from Unpredictable Models]]** — Verification gates and deterministic checks to validate reviewer hypotheses.

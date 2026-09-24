@@ -8,6 +8,7 @@ tags:
   - reinforcement-learning
   - agent-generated-data
 aliases:
+  - Improving AI Models - From Scaling to Agent-Generated Training Data
   - Scaling Laws to Synthetic Data
   - Agent-Generated Training Data
 ---
@@ -541,4 +542,4 @@ The next major gains may come from the interaction between better models, better
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why empirical real-world grounding is the ultimate bottleneck for frontier models.
 - **[[The Most Valuable Software Training Data May Be Private]]** — Strategic advantages of proprietary organizational trajectories.
 - **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, review comments, and domain invariants.
-- **[[LLM Capability Reliability and the Shape of Progress]]** — Jagged intelligence frontiers and non-linear capabilities.
+- **[[LLM Capability, Reliability, and the Shape of Progress]]** — Jagged intelligence frontiers and non-linear capabilities.

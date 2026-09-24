@@ -8,6 +8,7 @@ tags:
   - agent-ecosystem
   - knowledge-management
 aliases:
+  - Personal Digital Models as the Foundation of Agent Ecosystems
   - The Personal Model
   - Digital Representation in Agent Ecosystems
 ---

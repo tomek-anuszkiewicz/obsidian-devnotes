@@ -1,5 +1,5 @@
 ---
-title: "Personal AI Subscriptions and Unified Model Access - Practitioner Rewrite"
+title: Personal AI Subscriptions and Unified Model Access
 tags:
   - ai-subscriptions
   - managed-rag
@@ -21,7 +21,7 @@ aliases:
 
 Today, someone can pay around $20 a month for an AI chat application and still need a separate, metered API account to use a model from an editor, terminal agent, or personal script. That division comes from how the products were packaged, not from a technical need to keep the two accounts apart.
 
-A personal subscription could cover three things under one identity and bill: interactive access to reasoning and multimodal models, a managed search index over the user's own data, and API access for the user's other tools (see [[Personal Digital Models as the Foundation of Agent Ecosystems]] and [[Retrieval-Augmented Generation and Context Architecture]]). The same account would work in a browser, on a phone, and through a third-party application, subject to appropriate limits and permissions.
+A personal subscription could cover three things under one identity and bill: interactive access to reasoning and multimodal models, a managed search index over the user's own data, and API access for the user's other tools (see [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]] and [[Retrieval-Augmented Generation and Context Architecture]]). The same account would work in a browser, on a phone, and through a third-party application, subject to appropriate limits and permissions.
 
 That arrangement would change what an AI application has to sell. An app that mainly resells model calls at a 3x to 5x markup and keeps its own copy of the user's documents has a weaker case when the user can bring model access and personal context with them. The application still has plenty to do: provide a useful interface, run a specific workflow, manage local state, validate results, and carry out transactions.
 
@@ -37,7 +37,7 @@ The old split asks users to pay a fixed fee for chat and then configure a second
 
 A third-party tool could ask the user to provide a personal API credential or authorize access through OAuth. Model calls and embedding generation would then count against the user's subscription allowance. The tool would charge for the workflow and interface it provides, rather than including another $15–$30 per month to pay the model provider on the user's behalf.
 
-The application remains responsible for domain logic, user experience, local state, deterministic checks, and integrations (see [[Shifting from Fixed Features to Agent-Extensible Primitives]] and [[Unbundling of Enterprise Software]]). For example, an IDE assistant, terminal agent, task manager, CAD tool, web agent, or finance tool could build its own workflow around the same user-supplied model access.
+The application remains responsible for domain logic, user experience, local state, deterministic checks, and integrations (see [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]] and [[Unbundling of Enterprise Software]]). For example, an IDE assistant, terminal agent, task manager, CAD tool, web agent, or finance tool could build its own workflow around the same user-supplied model access.
 
 ### 3. Search over personal data managed where that data lives
 
@@ -197,10 +197,10 @@ Export rules such as GDPR or CCPA address access to raw personal records. They d
 
 ## Related notes
 
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — Persistent personal identity and memory behind this kind of subscription.
+- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]** — Persistent personal identity and memory behind this kind of subscription.
 - **[[The Implications of Having a Digital Model of Yourself]]** — Security, data boundaries, and risks of keeping personal history with one provider.
 - **[[WebMCP - Turning Web Applications into Agent-Native Toolkits]]** — Browser tools used with portable client credentials.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Applications built around user-supplied models and modular workflows.
+- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]** — Applications built around user-supplied models and modular workflows.
 - **[[Unbundling of Enterprise Software]]** — How BYOB changes SaaS pricing and architecture.
 - **[[Service vs User Authorization Models]]** — Authorization for requests made with user-owned agent credentials, including token exchange and delegation.
 - **[[Retrieval-Augmented Generation and Context Architecture]]** — Sparse and dense search, graph indexing, and late-interaction retrieval in personal data stores.

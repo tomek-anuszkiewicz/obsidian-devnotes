@@ -262,6 +262,6 @@ Service B logs both identities in its audit trail.
 
 - **[[Service vs User Authorization Models]]** — Detailed breakdown of caller-centric, end-user-centric, and token-exchange authorization patterns.
 - **[[User Context in Asynchronous Systems]]** — Managing user identity, tenant boundaries, and correlation across queues and background tasks.
-- **[[Service-to-Service Authentication in Distributed Runtimes]]** — mTLS, workload identity, and signed technical tokens between services.
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]** — Communication patterns, timeouts, and transport resilience.
+- **[[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]** — mTLS, workload identity, and signed technical tokens between services.
+- **[[Service-to-Service Communication — How Service A Should Call Service B]]** — Communication patterns, timeouts, and transport resilience.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]** — Platform middleware for tracing, headers, and security context.

@@ -44,7 +44,7 @@ LLMs and agents can be useful far beyond code generation. Their strongest role i
         
     - Ask it to follow specific workflows, inspect available functionality, and capture screenshots.
         
-    - Use the running application as an empirical source of truth rather than relying only on code or specifications (see [[Proactive Software - From Reactive Systems to Autonomous Agents]]).
+    - Use the running application as an empirical source of truth rather than relying only on code or specifications (see [[Proactive Software — From Reactive Systems to Autonomous Agents]]).
         
 
 ## Documentation generation and maintenance
@@ -141,7 +141,7 @@ The goal is not just to find matching text, but to answer questions such as:
 
 To use agents safely in production diagnostics, you must establish strict architectural boundaries:
 
-- **Read-Only Telemetry Bridges**: The agent should query Prometheus, inspect [[OpenTelemetry]] traces, query Elasticsearch, and read GitHub commit histories, but it must lack permissions to mutate production infrastructure directly.
+- **Read-Only Telemetry Bridges**: The agent should query Prometheus, inspect [[OpenTelemetry — Architecture, Signals, and Collector]] traces, query Elasticsearch, and read GitHub commit histories, but it must lack permissions to mutate production infrastructure directly.
 - **Bounded Remediation Proposals**: When an agent suggests an action (such as rolling back a deployment, cycling a connection pool, or flipping a flag), that remediation must pass through human-in-the-loop review or an automated, verified deployment pipeline with pre-configured rollback capabilities.
 
 ## Semantic testing
@@ -354,7 +354,7 @@ A useful way to think about the capabilities is:
 
 Steps 6–8 are especially important because they distinguish an **agent** from a simple one-shot LLM query.
 
-Steps 1 through 5 can be handled by standard single-shot LLM prompts. However, steps 6 through 8 transform the model into an active agent: the system forms an intent, chooses which diagnostic tools to execute across sandboxes, processes the resulting feedback, and verifies its own conclusions against runtime reality (see [[Agent Advantage - Relentless, Methodical Work]] and [[The Living Engineering Chronicle and Context Compaction]]).
+Steps 1 through 5 can be handled by standard single-shot LLM prompts. However, steps 6 through 8 transform the model into an active agent: the system forms an intent, chooses which diagnostic tools to execute across sandboxes, processes the resulting feedback, and verifies its own conclusions against runtime reality (see [[Agent Advantage — Relentless, Methodical Work]] and [[The Living Engineering Chronicle and Context Compaction]]).
 
 ## Key idea
 
@@ -370,8 +370,8 @@ As more of the system becomes declarative, version-controlled, observable, and m
 
 ## Related notes
 
-- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]** — Transitioning software from human-triggered tools to autonomous operational loops.
+- **[[Proactive Software — From Reactive Systems to Autonomous Agents]]** — Transitioning software from human-triggered tools to autonomous operational loops.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Integrating models directly into live telemetry and diagnostic pipelines.
 - **[[The Living Engineering Chronicle and Context Compaction]]** — Maintaining continuous architectural logs across systems.
 - **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Local background agent daemons running routine monitoring and validation.
-- **[[Agent Advantage - Relentless, Methodical Work]]** — Why tireless methodical execution shines in multi-source correlation.
+- **[[Agent Advantage — Relentless, Methodical Work]]** — Why tireless methodical execution shines in multi-source correlation.

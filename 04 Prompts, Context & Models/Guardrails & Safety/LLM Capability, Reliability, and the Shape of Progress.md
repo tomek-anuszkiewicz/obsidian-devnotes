@@ -9,6 +9,7 @@ tags:
   - software-engineering
   - agents
 aliases:
+  - LLM Capability Reliability and the Shape of Progress
   - "Where Are LLMs on the Progress Curve?"
   - LLM Capability and Reliability S-Curve
 created: 2026-08-23
@@ -213,7 +214,7 @@ The most plausible near-term future is not a model that never makes mistakes. It
 
 Human work is likely to shift from producing every implementation detail toward defining intent, constraints, acceptance criteria, and review boundaries.
 
-In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested (see [[Reliability of LLM Coding Agents]]).
+In practice, this verification loop is shifting out of the model weights and into the execution harness. Rather than relying on the model's internal confidence, production harnesses wrap the agent in deterministic verification gates: language servers (LSP) for immediate type checking and import validation, disposable git worktrees for isolated changes, and schema validators for wire contracts. High-stakes workflows increasingly use speculative execution (such as Best-of-$N$ parallel rollouts in isolated worktrees), running the full integration test suite against each candidate diff and discarding branches that fail invariant checks before human review is ever requested (see [[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]).
 
 ## Why software engineering may automate faster
 
@@ -241,7 +242,7 @@ Likely faster areas:
 Likely slower areas:
 
 - discovering what product should be built;
-- reconstructing undocumented business knowledge (see [[LLM Agents and Institutional Memory]]);
+- reconstructing undocumented business knowledge (see [[LLM Agents and Institutional Memory in Software Teams]]);
 - resolving conflicting stakeholder intentions;
 - choosing architecture for uncertain future requirements;
 - judging maintainability over several years.
@@ -287,10 +288,10 @@ The model supplies capability. The [[Agentic Coding Harness and Controlled Devel
 
 ## Related notes
 
-- **[[Reliability of LLM Coding Agents]]** — Empirical failure modes, benchmark ceilings, and practical verification loops.
+- **[[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]** — Empirical failure modes, benchmark ceilings, and practical verification loops.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Deterministic outer loops, sandboxing, and execution constraints.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring API contracts and error schemas for automated verification.
-- **[[LLM Agents and Institutional Memory]]** — Why automated retrieval cannot replace shared human mental models and rationale.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Why automated retrieval cannot replace shared human mental models and rationale.
 - **[[Building Determinism from Unpredictable Models]]** — Architectural patterns for wrapping stochastic model outputs in deterministic safety layers.
 
 ## Sources

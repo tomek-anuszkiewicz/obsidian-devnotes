@@ -1,5 +1,5 @@
 ---
-title: "AI-Assisted Software Engineering — Where Are We Now?"
+title: AI-Assisted Software Engineering — Where Are We Now
 tags:
   - ai
   - llm
@@ -8,6 +8,7 @@ tags:
   - maintainability
   - agentic-workflows
 aliases:
+  - AI-Assisted Software Engineering - Where Are We Now
   - AI Coding Agents — Historical Perspective
   - State of AI-Assisted Programming
   - AI Coding Agents â€” Historical Perspective
@@ -16,7 +17,7 @@ created: 2026-08-23
 status: evergreen
 ---
 
-# AI-Assisted Software Engineering â€” Where Are We Now?
+# AI-Assisted Software Engineering — Where Are We Now
 
 ## Executive summary
 
@@ -32,7 +33,7 @@ What is becoming clear is that AI does not eliminate software engineering. It mo
 - designing architecture and boundaries;
 - creating reliable feedback loops;
 - reviewing and validating changes (see [[Reviewing AI-Generated Code]]);
-- maintaining shared understanding of the system (see [[LLM Agents and Institutional Memory]]).
+- maintaining shared understanding of the system (see [[LLM Agents and Institutional Memory in Software Teams]]).
 
 The likely future is therefore not simply â€œagents write the code.â€  It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
 
@@ -373,8 +374,8 @@ The central shift can be summarized as:
 ## Related notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Practical harness engineering, execution guardrails, and verification feedback loops.
-- **[[Reliability of LLM Coding Agents]]** — Benchmark limits, empirical failure modes, and long-horizon task completion.
-- **[[LLM Agents and Institutional Memory]]** — Why automated retrieval cannot substitute for shared mental models and business rationale.
+- **[[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]** — Benchmark limits, empirical failure modes, and long-horizon task completion.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Why automated retrieval cannot substitute for shared mental models and business rationale.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Building interfaces and error contracts optimized for automated client code generation.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — How cheap code generation creates long-term architectural maintenance debt.
 - **[[The Conductor Pattern for High-Bandwidth Engineering]]** — Cognitive ergonomics and the transition from manual typist to system orchestrator.

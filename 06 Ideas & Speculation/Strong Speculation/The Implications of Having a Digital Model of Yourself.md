@@ -14,7 +14,7 @@ aliases:
 
 A sufficiently rich personal AI memory may eventually become something more important than a searchable archive of our lives.
 
-It may become a **digital model of the person** (see [[Personal Digital Models as the Foundation of Agent Ecosystems]]).
+It may become a **digital model of the person** (see [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]).
 
 Such a model could continuously accumulate information about:
 
@@ -1452,7 +1452,7 @@ The difference may depend less on how intelligent the model becomes and more on 
 
 ## Related notes
 
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — The architectural blueprint for decentralized, local-first personal models acting across agent networks.
+- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]** — The architectural blueprint for decentralized, local-first personal models acting across agent networks.
 - **[[How LLM Systems Build Context]]** — The operational mechanics of prompt assembly, episodic memory retrieval, and grounding in LLM systems.
 - **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]** — How human internal comprehension and memory retention evolve when persistent models manage factual retrieval.
 - **[[The AI Agent as a Personal Behavioral and Communication Coach]]** — Using private conversational records and personal models for objective behavioral feedback.

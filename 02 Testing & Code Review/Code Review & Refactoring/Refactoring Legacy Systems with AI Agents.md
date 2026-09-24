@@ -175,5 +175,5 @@ A good history allows a reviewer to distinguish:
 
 - [[AI-Generated Architectural Documentation from Code]] — Extracting semantic architecture and invariants from legacy code before refactoring.
 - [[AI Changes the Economics of Technical Debt]] — Assessing the return on investment for automated technical debt reduction.
-- [[Correcting AI Code - Patch, Regenerate, or Respecify]] — Determining whether to patch code or respecify upstream intent during modernization.
+- [[Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification]] — Determining whether to patch code or respecify upstream intent during modernization.
 - [[Testing in the Model, Agent, LLM Era]] — Characterization testing and baseline protection during refactoring.

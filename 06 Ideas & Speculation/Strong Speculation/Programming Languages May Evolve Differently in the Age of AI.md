@@ -744,6 +744,6 @@ If that is true, programming language evolution in the AI era may move away from
 ## Related notes
 
 - **[[Software Engineering May Shift Toward Code Optimized for Agents]]** — Architectural choices and codebase conventions tailored for agentic maintenance.
-- **[[Designing Developer Technologies for Agent-Readiness]]** — Structuring tools, SDKs, and libraries for seamless agent consumption.
-- **[[Replacing Source Generators with Explicit Generated Code]]** — Why compile-time magic is replaced by transparent, inspectable code.
+- **[[New Developer Technologies May Need to Be Agent-Ready from Day One]]** — Structuring tools, SDKs, and libraries for seamless agent consumption.
+- **[[AI May Replace Some Source Generators with Explicit Generated Code]]** — Why compile-time magic is replaced by transparent, inspectable code.
 - **[[Formal Verification and Runtime Safety Boundaries]]** — Enforcing invariants through compilers and formal types rather than soft prompts.

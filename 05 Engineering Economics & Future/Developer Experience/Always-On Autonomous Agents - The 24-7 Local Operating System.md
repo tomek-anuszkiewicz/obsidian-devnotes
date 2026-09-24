@@ -81,7 +81,7 @@ A continuously running agent can be useful, but it does not experience the conse
 
 That difference matters when instructions are vague. Ask an unrestricted agent to “free up disk space,” and it may delete active database journal files or essential shared libraries because they match a simple search for large or old files. It has no personal reason to stop and worry about what happens next. A human engineer usually brings that caution because the operational and professional consequences are real.
 
-A polite instruction such as “verify paths before deleting files” is not a sufficient safeguard. When the agent encounters an unexpected state, the runtime must still prevent it from crossing a boundary it was never meant to cross. Permissions and execution limits need to be enforced by the system, not left to the model's judgment (as explored in [[Agentic Coding Harness and Controlled Development Workflows]] and [[Reliability of LLM Coding Agents]]).
+A polite instruction such as “verify paths before deleting files” is not a sufficient safeguard. When the agent encounters an unexpected state, the runtime must still prevent it from crossing a boundary it was never meant to cross. Permissions and execution limits need to be enforced by the system, not left to the model's judgment (as explored in [[Agentic Coding Harness and Controlled Development Workflows]] and [[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]).
 
 ---
 
@@ -123,7 +123,7 @@ The useful work still happens in the background: gathering information, connecti
 
 - **[[Local vs Cloud and Hybrid Model Execution]]** — Unified memory requirements and the cost of continuous local inference.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Sandboxes, tool permissions, and limits on damage in coding agent runtimes.
-- **[[Reliability of LLM Coding Agents]]** — Failure modes, prompt injection, and ways to handle model errors.
+- **[[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]** — Failure modes, prompt injection, and ways to handle model errors.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Filtering technical material for information that is actually new.
 - **[[Agent Deployment and Execution Models]]** — Separating inference, orchestration state, and tool execution.
 - **[[The AI Agent as a Personal Behavioral and Communication Coach]]** — Background agents supporting communication and daily work.

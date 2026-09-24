@@ -9,6 +9,7 @@ tags:
   - microservices
   - mtls
 aliases:
+  - Service-to-Service Authentication in Distributed Runtimes
   - S2S Auth in Azure and K8s
   - Service Authentication Patterns
 ---
@@ -1719,5 +1720,5 @@ Or more concisely:
 
 - [[Service vs User Authorization Models]] — Distinguishing between ambient service identity and end-user delegated authorization.
 - [[Propagating User Context Between Services]] — Forwarding caller identities, claims, and tenant context across microservice chains.
-- [[Service-to-Service Communication - How Service A Should Call Service B]] — Synchronous and asynchronous communication mechanics between distributed services.
+- [[Service-to-Service Communication — How Service A Should Call Service B]] — Synchronous and asynchronous communication mechanics between distributed services.
 - [[Standardizing Service Infrastructure with Reusable Blocks]] — Standardizing token validation, mTLS, and identity bootstrapping.

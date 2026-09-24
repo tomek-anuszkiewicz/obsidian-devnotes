@@ -10,6 +10,7 @@ tags:
   - ai-agents
   - package-management
 aliases:
+  - Designing Internal Packages as an Explicit, Composable Framework
   - Internal NuGet Framework Architecture
   - Explicit Composable NuGet Packages
   - Designing Internal Shared Libraries
@@ -663,7 +664,7 @@ prefer:
 
 The goal should be understanding and verifiable constraints, not ritualistic preservation of a copied structure.
 
-Maintaining a binary package for low-churn utilities—such as computing HMAC signatures, generating deterministic idempotency keys, or normalizing headers—incurs high organizational drag across CI pipelines, versioning gates, and release tracking. Keeping a clean reference implementation that developers or coding agents can copy into local code eliminates package release cycles, avoids dependency conflicts entirely, and keeps the full implementation visible to automated inspection (see [[Internal Shared Packages vs Agent-Generated Code]]).
+Maintaining a binary package for low-churn utilities—such as computing HMAC signatures, generating deterministic idempotency keys, or normalizing headers—incurs high organizational drag across CI pipelines, versioning gates, and release tracking. Keeping a clean reference implementation that developers or coding agents can copy into local code eliminates package release cycles, avoids dependency conflicts entirely, and keeps the full implementation visible to automated inspection (see [[Internal NuGet Packages vs Agent-Generated Code]]).
 
 ---
 
@@ -837,7 +838,7 @@ A well-designed internal NuGet ecosystem should follow these principles:
     
 - Core packages, integrations, and testing utilities should be separated.
     
-- Small repeated code may be better documented and copied than packaged (see [[Internal Shared Packages vs Agent-Generated Code]]).
+- Small repeated code may be better documented and copied than packaged (see [[Internal NuGet Packages vs Agent-Generated Code]]).
     
 - Conformance tests may enforce standards without enforcing one implementation (see [[Executable Architecture Tests for Coding Agent Guardrails]] and [[Standardizing Service Infrastructure with Reusable Blocks]]).
     
@@ -872,7 +873,7 @@ And the final decision rule is:
 
 ## Related notes
 
-- **[[Internal Shared Packages vs Agent-Generated Code]]** — Why cheap generation changes the trade-off between packaging common code and letting agents generate it locally.
+- **[[Internal NuGet Packages vs Agent-Generated Code]]** — Why cheap generation changes the trade-off between packaging common code and letting agents generate it locally.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]** — Providing common infrastructure foundations without imposing opinionated application runtime coupling.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — The hidden operational cost of complex shared frameworks in agent workflows.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Verifying package dependency boundaries and consumer contracts with automated architecture tests.

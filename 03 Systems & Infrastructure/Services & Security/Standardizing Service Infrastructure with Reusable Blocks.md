@@ -1258,11 +1258,11 @@ The preferred outcome is a paved road rather than a walled garden:
 
 > Make the correct path easy, visible, tested, and well supported—without hiding the application or making alternative implementations impossible.
 
-(See [[Designing Internal Packages as an Explicit, Composable Framework]] and [[Scaling a Modular Monolith with Local-or-Remote Module Execution]]).
+(See [[Designing Internal NuGet Packages as an Explicit, Composable Framework]] and [[Scaling a Modular Monolith with Local-or-Remote Module Execution]]).
 
 ## Related Notes
 
-- [[Designing Internal Packages as an Explicit, Composable Framework]] — Constructing composable infrastructure building blocks instead of magic wrappers.
+- [[Designing Internal NuGet Packages as an Explicit, Composable Framework]] — Constructing composable infrastructure building blocks instead of magic wrappers.
 - [[Scaling a Modular Monolith with Local-or-Remote Module Execution]] — Standardizing communication and worker execution across module boundaries.
-- [[Service-to-Service Communication - How Service A Should Call Service B]] — Shared patterns for inter-service RPC and resilience.
-- [[OpenTelemetry]] — Standard telemetry collection and logging infrastructure across services.
+- [[Service-to-Service Communication — How Service A Should Call Service B]] — Shared patterns for inter-service RPC and resilience.
+- [[OpenTelemetry — Architecture, Signals, and Collector]] — Standard telemetry collection and logging infrastructure across services.

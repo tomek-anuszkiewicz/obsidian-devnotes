@@ -22,7 +22,7 @@ aliases:
 
 A technical author may spend months collecting lessons in a book, paper, or repository. The reader then spends hours going through the result in order. For an experienced engineer, much of a new source may cover familiar ground. The useful part may be a small number of implementation details, edge cases, or decisions that conflict with an existing design.
 
-As more of our working knowledge ends up in linked Markdown notes, Obsidian vaults, Git-tracked ADRs, code repositories, and internal wikis (see [[Personal Digital Models as the Foundation of Agent Ecosystems]] and [[The Implications of Having a Digital Model of Yourself]]), an agent can compare a new source with what we have already recorded. I will call that comparison a **knowledge diff**. It should answer three questions: What is new? What challenges something I believe? What independently confirms something I already use?
+As more of our working knowledge ends up in linked Markdown notes, Obsidian vaults, Git-tracked ADRs, code repositories, and internal wikis (see [[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]] and [[The Implications of Having a Digital Model of Yourself]]), an agent can compare a new source with what we have already recorded. I will call that comparison a **knowledge diff**. It should answer three questions: What is new? What challenges something I believe? What independently confirms something I already use?
 
 The same comparison needs a record of rejected ideas. Otherwise the agent will repeatedly present an old approach under a new name as if we had never evaluated it.
 
@@ -148,7 +148,7 @@ The agent therefore needs to notice arguments that challenge the structure of yo
 ## Related notes
 
 - **[[Negative Knowledge and Explicit Architectural Dissents]]** — Recording rejected approaches and the reasons to revisit them.
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — Building machine-readable models of personal technical knowledge.
+- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]** — Building machine-readable models of personal technical knowledge.
 - **[[The Implications of Having a Digital Model of Yourself]]** — Using those models in agent workflows.
 - **[[Personal AI Subscriptions and Unified Model Access]]** — Infrastructure for agent-based retrieval and distributed RAG.
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Finding original technical material amid repeated online content.

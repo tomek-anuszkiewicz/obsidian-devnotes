@@ -575,11 +575,11 @@ It becomes part of the semantic environment from which the LLM can infer:
 - what capabilities exist,
 - which capability matches the requested business operation,
 - how it should be called,
-- and which operations must not be confused with one another (see [[Designing Developer Technologies for Agent-Readiness]] and [[WebMCP - Turning Web Applications into Agent-Native Toolkits]]).
+- and which operations must not be confused with one another (see [[New Developer Technologies May Need to Be Agent-Ready from Day One]] and [[WebMCP - Turning Web Applications into Agent-Native Toolkits]]).
 
 ## Related Notes
 
-- [[Designing Developer Technologies for Agent-Readiness]] — Designing SDKs, frameworks, and developer platforms for agentic consumption.
+- [[New Developer Technologies May Need to Be Agent-Ready from Day One]] — Designing SDKs, frameworks, and developer platforms for agentic consumption.
 - [[WebMCP - Turning Web Applications into Agent-Native Toolkits]] — Exposing semantic application tools rather than brittle web UI automation.
-- [[Shifting from Fixed Features to Agent-Extensible Primitives]] — Replacing monolithic API endpoints with composable agent building blocks.
-- [[Service-to-Service Communication - How Service A Should Call Service B]] — Idempotency, contracts, and failure handling in distributed integrations.
+- [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]] — Replacing monolithic API endpoints with composable agent building blocks.
+- [[Service-to-Service Communication — How Service A Should Call Service B]] — Idempotency, contracts, and failure handling in distributed integrations.

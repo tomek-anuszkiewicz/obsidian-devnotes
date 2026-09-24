@@ -45,7 +45,7 @@ but also complete interaction trajectories:
 
 This creates a feedback loop between model adoption and model capability.
 
-> Today's unsuccessful attempts to use agents can become part of the infrastructure and training signal that makes tomorrow's agents successful (see [[Improving AI Models - From Scaling to Agent-Generated Training Data]]).
+> Today's unsuccessful attempts to use agents can become part of the infrastructure and training signal that makes tomorrow's agents successful (see [[Improving AI Models — From Scaling to Agent-Generated Training Data]]).
 
 ---
 
@@ -693,4 +693,4 @@ Or more compactly:
 - **[[What Should Organizations Preserve from AI-Assisted Development]]** — Capturing negative trajectories, review comments, and domain invariants.
 - **[[The Most Valuable Software Training Data May Be Private]]** — The strategic value of proprietary corporate execution history.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Turning agent execution breakdowns into durable constraints.
-- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback to train frontier models.
+- **[[Improving AI Models — From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback to train frontier models.

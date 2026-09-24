@@ -201,5 +201,5 @@ Capturing both `technicalActor` and `initiatedByUserId` allows incident response
 
 - **[[Propagating User Context Between Services]]** — Patterns and headers for propagating trusted caller identity.
 - **[[User Context in Asynchronous Systems]]** — Retaining identity context across message brokers and batch jobs.
-- **[[Service-to-Service Authentication in Distributed Runtimes]]** — Workload identity and mTLS mechanisms.
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]** — Communication topology and resilience.
+- **[[Service-to-Service Authentication and Authorization in Azure and Kubernetes]]** — Workload identity and mTLS mechanisms.
+- **[[Service-to-Service Communication — How Service A Should Call Service B]]** — Communication topology and resilience.

@@ -8,6 +8,7 @@ tags:
   - ai-systems
   - feedback-loops
 aliases:
+  - Singularity Without AGI - The Civilizational Automation Loop
   - "Networked Automation Loops and Software Output Without AGI"
   - Civilizational Automation Loop
   - Narrow AI Singularity
@@ -54,7 +55,7 @@ The system only needs to improve the machinery that produces further improvement
 
 Probabilistic generation alone cannot sustain self-improvement; left to itself, recursive generation on unverified outputs degrades model performance. The loop stabilizes and compounds only when paired with deterministic verification: compilers, linters, test suites, and empirical benchmarks that act as ground-truth filters.
 
-As captured in [[Learning Coding Agents Through Failure-Driven Instructions]], agents can systematically update their own prompt strategies and tool usage rules based on recorded execution errors. This operational telemetry then feeds [[Improving AI Models - From Scaling to Agent-Generated Training Data]], transforming synthetic traces and verified code executions into clean, high-signal training datasets. Through this mechanism, [[Agent Adoption as a Learning Flywheel]] operates as a compounding loop rather than an open-ended operational cost.
+As captured in [[Learning Coding Agents Through Failure-Driven Instructions]], agents can systematically update their own prompt strategies and tool usage rules based on recorded execution errors. This operational telemetry then feeds [[Improving AI Models — From Scaling to Agent-Generated Training Data]], transforming synthetic traces and verified code executions into clean, high-signal training datasets. Through this mechanism, [[Agent Adoption as a Learning Flywheel]] operates as a compounding loop rather than an open-ended operational cost.
 
 Software development is an obvious first domain because iteration is cheap.
 
@@ -1219,7 +1220,7 @@ That may be one of the most interesting definitions of a singularity:
 
 ## Related notes
 
-- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback, automated verifiers, and agentic workflows to train frontier models.
+- **[[Improving AI Models — From Scaling to Agent-Generated Training Data]]** — Harnessing execution feedback, automated verifiers, and agentic workflows to train frontier models.
 - **[[Agent Adoption as a Learning Flywheel]]** — How operational attempts and error traces feed the continuous data flywheel for future models.
 - **[[AI Productivity Is Limited by the Delivery System]]** — Why downstream delivery pipelines and physical constraints bound organizational output.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Automated loops where agents refine their own instructions based on execution failures.

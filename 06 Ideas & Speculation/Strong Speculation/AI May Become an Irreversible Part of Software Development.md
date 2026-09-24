@@ -7,6 +7,7 @@ tags:
   - industry-trends
   - ai-adoption
 aliases:
+  - The Irreversible Integration of AI in Software Engineering
   - Irreversibility of AI in Software
   - AI as Core Development Substrate
   - AI as Core Development Infrastructure

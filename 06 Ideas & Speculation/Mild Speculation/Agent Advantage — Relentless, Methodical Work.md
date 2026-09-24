@@ -8,6 +8,7 @@ tags:
   - developer-experience
   - endurance
 aliases:
+  - Agent Advantage - Relentless, Methodical Work
   - Methodical Execution Advantage
   - Relentless Agent Work
 ---
@@ -177,7 +178,7 @@ Examples include:
     
 - updating documentation examples;
     
-- generating and benchmarking dozens of specialized hot-path optimization variants (see [[The Economics of Aggressive Code Optimization with AI]]).
+- generating and benchmarking dozens of specialized hot-path optimization variants (see [[AI May Make Aggressive Code Optimization Economically Viable]]).
     
 
 A human can perform this work, but attention usually degrades as repetition increases.
@@ -516,7 +517,7 @@ Therefore, the team must define proportionality:
 
 The agent should be relentless inside a bounded scope, not unlimited in every direction.
 
-In practice, teams enforce this through concrete operational guardrails. Critical paths like financial ledgers or auth boundaries receive exhaustive mutation testing and matrix validation, while internal scripts receive simple smoke tests. Agents should operate under strict touchpoint caps on modified files per pull request, negative constraints that forbid speculative abstractions, and deterministic halting criteria tied to compiler or test passes rather than open-ended exploration (see [[Developing Features with AI Coding Agents]] and [[Enforcing Hard-to-Formalize Architectural Rules with Agents]]).
+In practice, teams enforce this through concrete operational guardrails. Critical paths like financial ledgers or auth boundaries receive exhaustive mutation testing and matrix validation, while internal scripts receive simple smoke tests. Agents should operate under strict touchpoint caps on modified files per pull request, negative constraints that forbid speculative abstractions, and deterministic halting criteria tied to compiler or test passes rather than open-ended exploration (see [[Developing Features with AI Coding Agents]] and [[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]).
 
 ## A Better Mental Model
 
@@ -554,7 +555,7 @@ This is one of the most practical ways agents can outperform humans in software 
 ## Related notes
 
 - **[[AI Changes the Economics of Technical Debt]]** — How reduced execution costs make refactoring and cleanup economically viable.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — Leveraging tireless iterative agent loops for multi-variant profiling, benchmarking, and hot-path specialization.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — Leveraging tireless iterative agent loops for multi-variant profiling, benchmarking, and hot-path specialization.
 - **[[Refactoring Legacy Systems with AI Agents]]** — Methodical patterns for codebase modernization and migration.
-- **[[Enforcing Hard-to-Formalize Architectural Rules with Agents]]** — Using tirelessness to police code standards and conventions.
+- **[[Agentic Review Can Enforce Rules That Were Previously Too Hard to Formalize]]** — Using tirelessness to police code standards and conventions.
 - **[[Developing Features with AI Coding Agents]]** — Closed-loop development workflows combining speed and verification.

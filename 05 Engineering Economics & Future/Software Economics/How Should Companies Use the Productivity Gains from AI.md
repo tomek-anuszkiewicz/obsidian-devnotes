@@ -84,7 +84,7 @@ We can build more products, modernize faster,
 improve quality, and enter markets that were previously uneconomical.
 ```
 
-Defensive cost cutting misapplies Jevons Paradox to software engineering. Historically, when the unit cost of creating software drops, total demand does not stay flat—it explodes. Lowering implementation friction makes it economically viable to automate secondary and tertiary business workflows, opening up opportunities like [[A New Market for Small, Custom Business Software]]. Reinvesting capacity into [[AI May Increase Product Ambition Instead of Reducing Team Size]] captures this expansion rather than abandoning it for short-term margin extraction.
+Defensive cost cutting misapplies Jevons Paradox to software engineering. Historically, when the unit cost of creating software drops, total demand does not stay flat—it explodes. Lowering implementation friction makes it economically viable to automate secondary and tertiary business workflows, opening up opportunities like [[AI May Create a New Market for Small, Custom Business Software]]. Reinvesting capacity into [[AI May Increase Product Ambition Instead of Reducing Team Size]] captures this expansion rather than abandoning it for short-term margin extraction.
 
 Cost reduction is easier to measure. Growth requires:
 
@@ -136,4 +136,4 @@ Preserving junior engineering paths requires restructuring early-career roles ra
 - **[[What Should Organizations Preserve from AI-Assisted Development]]** — Preserving engineering pipelines, human mental models, and strategic architectural assets.
 - **[[AI May Increase Product Ambition Instead of Reducing Team Size]]** — How lower unit costs expand the scope of viable software engineering products.
 - **[[Early AI Adoption as Organizational Readiness]]** — Establishing cultural incentives and operational patterns for generative tooling.
-- **[[A New Market for Small, Custom Business Software]]** — Expanding into custom operational software previously priced out by high development costs.
+- **[[AI May Create a New Market for Small, Custom Business Software]]** — Expanding into custom operational software previously priced out by high development costs.

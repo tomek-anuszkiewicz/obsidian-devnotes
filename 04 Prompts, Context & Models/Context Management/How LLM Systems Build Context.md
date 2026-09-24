@@ -487,7 +487,7 @@ This complements rather than replaces other sources:
     
 - **Static code graphs / Graphify-like tools** describe structural relationships present in the code.
     
-- **Runtime graphs** describe relationships actually exercised in production (such as [[OpenTelemetry]] traces).
+- **Runtime graphs** describe relationships actually exercised in production (such as [[OpenTelemetry — Architecture, Signals, and Collector]] traces).
 - **MCP/tools** allow the agent to query those sources dynamically.
     
 

@@ -975,4 +975,4 @@ It may be that AI finally makes it possible for teachers and schools to stop spe
 - **[[Learning, Knowledge Acquisition, and Deep Reading in the Era of LLMs]]** — How individual deep reading, cognitive friction, and internal mental models evolve when LLMs make surface explanations instant.
 - **[[AI Changes the Role and Training of Software Engineers]]** — The educational pipeline shift from syntax memorization to specification, orchestration, and critical verification.
 - **[[The First AI-Native Generation of Software Engineers]]** — The operational mindset of developers who grew up building systems alongside autonomous code agents.
-- **[[Personal Digital Models as the Foundation of Agent Ecosystems]]** — The persistence of user context, strengths, gaps, and personal cognitive models over a lifetime.
+- **[[Personal Digital Representation May Become the Foundation of an AI Agent Ecosystem]]** — The persistence of user context, strengths, gaps, and personal cognitive models over a lifetime.

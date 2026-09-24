@@ -527,5 +527,5 @@ Instructions tell an agent how to work; executable checks verify what it leaves 
 - **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Testing the system's shape on small vertical slices before generating more code.
 - **[[Testing in the Model, Agent, LLM Era]]**: Keeping test baselines out of reach of changes made only to satisfy failing tests.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Limiting stale context and instruction drift.
-- **[[Replacing Source Generators with Explicit Generated Code]]**: Choosing code that people and agents can read and debug over complex metaprogramming.
+- **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Choosing code that people and agents can read and debug over complex metaprogramming.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]**: Splitting rule files and checking their byte limits to reduce instruction conflicts.

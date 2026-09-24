@@ -8,6 +8,7 @@ tags:
   - ai
   - copyright
 aliases:
+  - How AI Breaks the Economic Model of the Open Web
   - Future of Open Web Under AI
   - Collapse of Ad-Supported Web Model
 ---

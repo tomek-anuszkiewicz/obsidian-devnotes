@@ -8,6 +8,7 @@ tags:
   - smb
   - software-markets
 aliases:
+  - A New Market for Small, Custom Business Software
   - Hyper-Custom Business Software
   - Long Tail of Software Created by AI
 ---
@@ -915,6 +916,6 @@ This may create a broad market for individuals and small teams who combine domai
 
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]** — Why business constraints and domain semantics are the real bottleneck in software.
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Where defensibility lives when software creation costs approach zero.
-- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]** — The shift from reactive dashboards to proactive background execution.
+- **[[Proactive Software — From Reactive Systems to Autonomous Agents]]** — The shift from reactive dashboards to proactive background execution.
 - **[[Standardizing Service Infrastructure with Reusable Blocks]]** — Building reusable platforms to lower the delivery cost of micro-software.
 - **[[Unbundling of Enterprise Software]]** — Why monolithic SaaS platforms fragment into reusable capabilities and dynamic interfaces.

@@ -60,7 +60,7 @@ Agents change both costs. An agent can search for copies with AST queries or sem
 
 Shared code has a cost of its own. If three distinct operations use one generic helper or base service, a change for Feature A can affect Feature B. The engineer may then add a flag to the helper to keep both behaviors working. When each operation keeps its business logic in its own file, a change to one operation has a smaller path through the code and is less likely to disturb the others.
 
-This is the case for preferring two clear, local implementations over a clever abstraction that couples unrelated operations (see [[Internal Shared Packages vs Agent-Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]). It gives both the engineer and the agent a smaller piece of code to inspect when something changes.
+This is the case for preferring two clear, local implementations over a clever abstraction that couples unrelated operations (see [[Internal NuGet Packages vs Agent-Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]). It gives both the engineer and the agent a smaller piece of code to inspect when something changes.
 
 ---
 

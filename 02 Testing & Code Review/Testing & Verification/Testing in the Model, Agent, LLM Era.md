@@ -153,7 +153,7 @@ If an agent cannot write a test that fails before the code change, it does not y
 
 When a subsystem is backed by an exhaustive, deterministic test suite, the economic equation around rewriting code changes. The test suite—not the transient implementation—becomes the true repository of domain knowledge. When an internal module becomes tangled, accumulates crippling technical debt, or requires an architectural shift, spending weeks delicately refactoring it line by line is often the wrong trade-off. With a frozen test oracle, you can wipe the implementation and instruct an agent to regenerate the module cleanly from scratch. As long as the test suite passes, every edge case and invariant remains satisfied.
 
-However, treat code disposability as an architectural release valve, not a daily habit. If a team lets agents regenerate production modules every week, human comprehension of the codebase collapses. When an incident occurs in production at 2:00 AM, the on-call engineer is forced to debug an alien system that was synthesized 48 hours earlier. Keep day-to-day work disciplined and incremental, and reserve full subsystem regeneration for major inflection points: migrating runtimes, replacing dead-end dependencies, or re-architecting for entirely new performance tiers (see [[The Economics of Aggressive Code Optimization with AI]]).
+However, treat code disposability as an architectural release valve, not a daily habit. If a team lets agents regenerate production modules every week, human comprehension of the codebase collapses. When an incident occurs in production at 2:00 AM, the on-call engineer is forced to debug an alien system that was synthesized 48 hours earlier. Keep day-to-day work disciplined and incremental, and reserve full subsystem regeneration for major inflection points: migrating runtimes, replacing dead-end dependencies, or re-architecting for entirely new performance tiers (see [[AI May Make Aggressive Code Optimization Economically Viable]]).
 
 ---
 
@@ -950,7 +950,7 @@ And perhaps the most important principle:
 ## Related notes
 
 - **[[Tests Are for Verification, Not Architectural Navigation]]** — Preventing tests from turning into bloated, brittle navigational crutches.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — Benchmarking and deterministic test suites as essential validation gates for automated performance optimization.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — Benchmarking and deterministic test suites as essential validation gates for automated performance optimization.
 - **[[Building Determinism from Unpredictable Models]]** — Verification asymmetry and inner/outer verification loops.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Writing automated architectural invariant tests for coding agents.
 - **[[Formal Verification and Runtime Safety Boundaries]]** — Combining symbolic invariants with machine learning implementations.

@@ -10,6 +10,7 @@ tags:
   - hardware-execution
   - database-optimization
 aliases:
+  - The Economics of Aggressive Code Optimization with AI
   - Code Optimization with AI
   - Economics of Aggressive Code Optimization
   - Direct Engine Optimization (Hardware & Database)
@@ -44,7 +45,7 @@ because they make software easier for humans to write, understand, extend, and m
 
 The resulting code is often less efficient than a highly specialized implementation, but the engineering cost of maintaining that specialization usually outweighs the infrastructure savings.
 
-AI agents may change this tradeoff (see [[Replacing Source Generators with Explicit Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
+AI agents may change this tradeoff (see [[AI May Replace Some Source Generators with Explicit Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
 ## Optimization Becomes Cheaper When the Agent Does the Work
 
@@ -95,7 +96,7 @@ repeat
 
 The agent does not become tired of producing twenty implementations only to discard nineteen of them.
 
-This makes brute-force exploration of implementation strategies much more realistic (see [[Agent Advantage - Relentless, Methodical Work]]).
+This makes brute-force exploration of implementation strategies much more realistic (see [[Agent Advantage — Relentless, Methodical Work]]).
 
 ## Small Improvements Can Accumulate for Years
 
@@ -352,7 +353,7 @@ But if generating and maintaining specialized queries becomes cheap, the balance
 
 The agent may generate custom data-access paths for hotspots while preserving a generic implementation elsewhere.
 
-Instead of loading a complete domain entity for a narrow endpoint, the agent can generate a projection that fetches only the required columns and maps them directly to the response. As explored in [[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]], this can reduce unnecessary data transfer and mapping work. Whether it helps depends on the query plan and the measured workload.
+Instead of loading a complete domain entity for a narrow endpoint, the agent can generate a projection that fetches only the required columns and maps them directly to the response. As explored in [[Agentic Coding with EF Core and SQL Server]], this can reduce unnecessary data transfer and mapping work. Whether it helps depends on the query plan and the measured workload.
 
 ## Agents Can Generate Fast Paths for Real Workloads
 
@@ -598,8 +599,8 @@ The long-term consequence may therefore be surprisingly physical:
 
 ## Related notes
 
-- **[[Replacing Source Generators with Explicit Generated Code]]** — Why explicit, specialized generated code replaces runtime metaprogramming and dynamic reflection.
+- **[[AI May Replace Some Source Generators with Explicit Generated Code]]** — Why explicit, specialized generated code replaces runtime metaprogramming and dynamic reflection.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — How general-purpose abstractions create friction for automated maintenance.
-- **[[Agent Advantage - Relentless, Methodical Work]]** — Leveraging tireless iterative agent loops for profiling, benchmarking, and refactoring.
+- **[[Agent Advantage — Relentless, Methodical Work]]** — Leveraging tireless iterative agent loops for profiling, benchmarking, and refactoring.
 - **[[Testing in the Model, Agent, LLM Era]]** — Validating specialized optimizations with automated regression suites and performance benchmarks.
-- **[[Data Access Economics with Coding Agents - ORMs vs Explicit SQL]]** — Shifting from general ORM abstractions to specialized SQL projections.
+- **[[Agentic Coding with EF Core and SQL Server]]** — Shifting from general ORM abstractions to specialized SQL projections.

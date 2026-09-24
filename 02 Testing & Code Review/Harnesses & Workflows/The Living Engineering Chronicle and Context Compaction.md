@@ -219,4 +219,4 @@ The diary gives successive agent sessions and the engineering team a searchable 
 - **[[The Conductor Pattern for High-Bandwidth Engineering]]** shows how a human lead maintains architectural continuity across agent sessions.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** covers recording architectural changes during implementation.
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]** covers turning debugging lessons from diary entries into lasting rules.
-- **[[LLM Agents and Institutional Memory]]** discusses retaining knowledge across short-lived agent contexts.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** discusses retaining knowledge across short-lived agent contexts.

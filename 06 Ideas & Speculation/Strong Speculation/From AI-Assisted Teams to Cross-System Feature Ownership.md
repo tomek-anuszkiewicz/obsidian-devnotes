@@ -648,4 +648,4 @@ The long-term structure is uncertain, but it will probably emerge from this proc
 - **[[AI Productivity Is Limited by the Delivery System]]** — Why code generation gains stall in manual deployment and verification pipelines.
 - **[[Why Business Logic Is the Hardest Part of Agentic Coding]]** — Domain intent and business semantics as the ultimate constraint.
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Why layer boundaries and complexity masking complicate agent maintenance.
-- **[[LLM Agents and Institutional Memory]]** — Navigating multi-repo systems vs maintaining shared architectural models.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Navigating multi-repo systems vs maintaining shared architectural models.

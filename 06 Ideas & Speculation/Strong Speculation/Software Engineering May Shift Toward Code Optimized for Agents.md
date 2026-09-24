@@ -575,7 +575,7 @@ need additional justification.
 
 They may still be wrong choices.
 
-But they are not automatically wrong merely because an experienced human would have written something more compact (see [[The Economics of Aggressive Code Optimization with AI|specialized code economics]]).
+But they are not automatically wrong merely because an experienced human would have written something more compact (see [[AI May Make Aggressive Code Optimization Economically Viable|specialized code economics]]).
 
 ## Human Review Could Accidentally Reduce Agent-Friendliness
 
@@ -730,5 +730,5 @@ It becomes the boundary where human intent is reconciled with code increasingly 
 - **[[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]** — Why deep abstractions impose high cognitive and context costs.
 - **[[Comments May Become More Valuable in AI-Generated Code]]** — Communicating intent and domain invariants to future agents.
 - **[[Reviewing AI-Generated Code]]** — Code review practices that prioritize invariants and execution boundaries.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — Why machine-maintained code may prioritize runtime CPU and memory efficiency over human-oriented brevity.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — Why machine-maintained code may prioritize runtime CPU and memory efficiency over human-oriented brevity.
 - **[[Designing Software for AI Agents]]** — Architectural patterns optimized for agent comprehension and manipulation.

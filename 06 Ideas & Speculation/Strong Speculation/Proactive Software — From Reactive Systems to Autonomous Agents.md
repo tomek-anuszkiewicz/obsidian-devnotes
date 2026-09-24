@@ -8,6 +8,7 @@ tags:
   - system-design
   - user-experience
 aliases:
+  - Proactive Software - From Reactive Systems to Autonomous Agents
   - Reactive to Proactive Software
   - Autonomous Proactive Agents
 ---
@@ -1025,4 +1026,4 @@ That may ultimately be one of the most important consequences of agentic computi
 - **[[Workflow Orchestration in Agentic Systems]]** — Architecture for multi-step agent execution, fan-out, and checkpoints.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Integrating probabilistic models into live operational paths.
 - **[[Building Determinism from Unpredictable Models]]** — Harness engineering to constrain agent behavior and enforce invariants.
-- **[[OpenTelemetry]]** — Standardized distributed tracing and metrics that empower proactive diagnostic agents.
+- **[[OpenTelemetry — Architecture, Signals, and Collector]]** — Standardized distributed tracing and metrics that empower proactive diagnostic agents.

@@ -61,7 +61,7 @@ To rule out those actions with a proof, we would have to state the relevant boun
 
 ### Memory use and execution cost
 
-A verified algorithm can still allocate millions of short-lived objects. On a hot path, those allocations can trigger garbage collection pauses and sharp latency spikes. It can also have poor memory locality: cache misses or fragmented virtual memory may make it slower than a flat loop over an array. [[The Economics of Aggressive Code Optimization with AI]] discusses that trade-off in more detail.
+A verified algorithm can still allocate millions of short-lived objects. On a hot path, those allocations can trigger garbage collection pauses and sharp latency spikes. It can also have poor memory locality: cache misses or fragmented virtual memory may make it slower than a flat loop over an array. [[AI May Make Aggressive Code Optimization Economically Viable]] discusses that trade-off in more detail.
 
 Even a termination proof leaves a performance question open. The function may always finish and still have hidden $O(N^2)$ behavior on the skewed inputs that actually arrive in production. We need to measure time, allocations, and memory use on representative inputs.
 
@@ -141,7 +141,7 @@ If production measurements disagree with what we expected from the model, we nee
 
 - **[[Testing in the Model, Agent, LLM Era]]** — Deterministic test oracles and testing boundaries in agent workflows.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — Keeping specifications current alongside automated checks.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — The cost of poor execution efficiency and memory locality in an otherwise correct algorithm.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — The cost of poor execution efficiency and memory locality in an otherwise correct algorithm.
 - **[[Refactoring Legacy Systems with AI Agents]]** — Shadow execution and differential tests when rewriting critical code.
 - **[[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]]** — Tracing and runtime measurements after static checks end.
 - **[[Negative Knowledge and Explicit Architectural Dissents]]** — Explicitly stating forbidden behavior and failure modes.

@@ -88,7 +88,7 @@ Manual implementation may therefore move from the normal way of producing softwa
 
 Once some teams deliver useful changes faster with agents, customers and managers adjust their expectations. A team that returns to a fully manual workflow may need more time and more people to produce the same visible result.
 
-The market does not need agents to be perfect. It only needs agent-assisted work to be sufficiently effective that refusing it creates a persistent disadvantage (see [[The Irreversible Integration of AI in Software Engineering]]).
+The market does not need agents to be perfect. It only needs agent-assisted work to be sufficiently effective that refusing it creates a persistent disadvantage (see [[AI May Become an Irreversible Part of Software Development]]).
 
 This is why personal preference may not preserve the old role. An engineer can still love manual implementation, just as someone can love drawing technical plans by hand. The activity can remain worthwhile even when employers stop buying much of it as a separate service.
 
@@ -131,6 +131,6 @@ The future expert may write fewer lines than before. That does not make the expe
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — What engineers may lose when direct implementation becomes supervision and review.
 - **[[AI Changes the Role and Training of Software Engineers]]** — Which abilities become scarce when writing syntax is no longer the main bottleneck.
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Why generic models commoditize common solutions while private context and feedback loops remain difficult to copy.
-- **[[The Irreversible Integration of AI in Software Engineering]]** — How staffing, delivery expectations, and organizational processes make AI adoption difficult to reverse.
+- **[[AI May Become an Irreversible Part of Software Development]]** — How staffing, delivery expectations, and organizational processes make AI adoption difficult to reverse.
 - **[[The First AI-Native Generation of Software Engineers]]** — Why manual implementation may remain necessary for training even after it becomes less common in production.
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — The narrow case in which human-only work may command a premium because it creates independent evidence.

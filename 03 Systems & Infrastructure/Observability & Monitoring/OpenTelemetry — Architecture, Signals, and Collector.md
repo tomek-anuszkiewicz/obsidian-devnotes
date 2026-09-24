@@ -9,6 +9,7 @@ tags:
   - microservices
   - infrastructure
 aliases:
+  - OpenTelemetry
   - OpenTelemetry Architecture
   - OTel Signals and Collector
 ---
@@ -1554,5 +1555,5 @@ And for Kubernetes logging specifically:
 
 - [[Embedding LLMs in Runtime Decision Paths and Operational Telemetry]] — Correlating distributed telemetry traces with real-time AI diagnosis.
 - [[Propagating User Context Between Services]] — Passing traceparent, security principal, and tenancy across microservices.
-- [[Service-to-Service Communication - How Service A Should Call Service B]] — Instrumenting RPC, HTTP, and message flows with standard telemetry.
+- [[Service-to-Service Communication — How Service A Should Call Service B]] — Instrumenting RPC, HTTP, and message flows with standard telemetry.
 - [[Standardizing Service Infrastructure with Reusable Blocks]] — Packaging OpenTelemetry collectors and logging pipelines into shared service blocks.

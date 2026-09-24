@@ -973,7 +973,7 @@ As code written by AI agents becomes a significant portion of public repositorie
 
 However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically** (see [[Building Determinism from Unpredictable Models]] and [[Testing in the Model, Agent, LLM Era]]).
 
-If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models - From Scaling to Agent-Generated Training Data]]). Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
+If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models — From Scaling to Agent-Generated Training Data]]). Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
 
 ## Final principles
 

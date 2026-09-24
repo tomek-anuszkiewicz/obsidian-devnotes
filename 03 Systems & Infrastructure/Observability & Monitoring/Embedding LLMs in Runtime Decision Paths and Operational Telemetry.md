@@ -70,7 +70,7 @@ If the team reads only model summaries, dashboard queries can drift and engineer
 
 ## Investigating incidents through telemetry
 
-Distributed systems produce Prometheus time series, structured JSON logs, and trace graphs linked by [[OpenTelemetry]]. During an incident, engineers open several dashboards and try to work out whether, for example, a 5% latency increase in Service A comes from Service B's connection pool or contention in a shared database. Static alerts such as `CPU > 85%` and `HTTP 500 rate > 1%` may fire during a predictable batch while missing data corruption behind successful HTTP responses.
+Distributed systems produce Prometheus time series, structured JSON logs, and trace graphs linked by [[OpenTelemetry — Architecture, Signals, and Collector]]. During an incident, engineers open several dashboards and try to work out whether, for example, a 5% latency increase in Service A comes from Service B's connection pool or contention in a shared database. Static alerts such as `CPU > 85%` and `HTTP 500 rate > 1%` may fire during a predictable batch while missing data corruption behind successful HTTP responses.
 
 An operational agent can use service dependencies, deployment tags, interface contracts, business invariants, and incident history to put those signals in context. Instead of asking an engineer to search for a matching chart, it can point to a trace and a likely path through the services. For example, it might report a 0.4% checkout failure rate, a 400 ms rise in payment gateway retry latency after deploy #42, trace `#a78f2c`, and an unindexed query in Service C as its root-cause hypothesis. An engineer could also ask whether order settlement is healthy and receive a report that settlement still clears, but lock contention on Table X has tripled in 15 minutes, with pool exhaustion projected in about 40 minutes. Those conclusions remain hypotheses to check against the traces.
 
@@ -356,9 +356,9 @@ Engineers who only see generated summaries have less opportunity to learn how th
 
 ## Related notes
 
-- **[[OpenTelemetry]]**: Trace, metric, and log context used by operational agents.
-- **[[Service-to-Service Communication - How Service A Should Call Service B]]**: Protocols, retries, and circuit breakers that shape traces across services.
+- **[[OpenTelemetry — Architecture, Signals, and Collector]]**: Trace, metric, and log context used by operational agents.
+- **[[Service-to-Service Communication — How Service A Should Call Service B]]**: Protocols, retries, and circuit breakers that shape traces across services.
 - **[[Designing Software for AI Agents]]**: Contracts, structured tools, and isolation for operational models.
 - **[[Workflow Orchestration in Agentic Systems]]**: State machines, Sagas, and long-running workflows that consume structured proposals.
 - **[[Formal Verification and Runtime Safety Boundaries]]**: Assertions and invariant checks around model output.
-- **[[Proactive Software - From Reactive Systems to Autonomous Agents]]**: Moving from passive dashboards to operational agents that monitor production state.
+- **[[Proactive Software — From Reactive Systems to Autonomous Agents]]**: Moving from passive dashboards to operational agents that monitor production state.

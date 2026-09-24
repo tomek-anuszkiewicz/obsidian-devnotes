@@ -91,6 +91,6 @@ The code still matters: it has to run, handle failures, and support the business
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Asking the right domain questions, reaching customers, and owning private data when routine code becomes cheaper to produce.
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why direct feedback from the real world helps a team move ahead of copies based on past releases.
 - **[[The Most Valuable Software Training Data May Be Private]]** — Transaction histories, operational records, and domain edge cases that public scraping cannot access.
-- **[[A New Market for Small, Custom Business Software]]** — How lower implementation costs make specialized software for narrow markets practical.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Moving from fixed UI features that others can copy to flexible platform building blocks agents can use.
+- **[[AI May Create a New Market for Small, Custom Business Software]]** — How lower implementation costs make specialized software for narrow markets practical.
+- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]** — Moving from fixed UI features that others can copy to flexible platform building blocks agents can use.
 - **[[AI Changes the Economics of Software Libraries]]** — How cheaper code generation changes the choice between building, buying, and generating small libraries.

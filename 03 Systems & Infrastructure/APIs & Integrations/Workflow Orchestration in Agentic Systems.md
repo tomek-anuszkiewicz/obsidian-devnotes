@@ -1,5 +1,5 @@
 ---
-title: Introduction to Workflow Orchestration
+title: Workflow Orchestration in Agentic Systems
 tags:
   - orchestration
   - distributed-systems

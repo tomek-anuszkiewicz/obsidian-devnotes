@@ -48,7 +48,7 @@ Sending full-resolution screenshots to a vision model can add two to five second
 
 A separate public REST or GraphQL API brings work: an API gateway, OAuth flows, rate limits, client SDKs, documentation, and version support. That cost helps explain why many internal tools, dashboards, and portals have no public API.
 
-The web application already has an authenticated client and a way to communicate with its backend. A tool can call an existing client-side store or dispatch action, such as `cartStore.add`, `reportStore.generate`, or `editor.insertBlock`. That makes the application's existing functions available to an agent without adding a new backend endpoint or a separate public integration layer (see [[Shifting from Fixed Features to Agent-Extensible Primitives]]).
+The web application already has an authenticated client and a way to communicate with its backend. A tool can call an existing client-side store or dispatch action, such as `cartStore.add`, `reportStore.generate`, or `editor.insertBlock`. That makes the application's existing functions available to an agent without adding a new backend endpoint or a separate public integration layer (see [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]).
 
 ### 4. Tools use the user's current session
 
@@ -295,6 +295,6 @@ The note proposes three responses:
 - **[[Token Optimization and Context Economics in Agentic Workflows]]** — Avoiding screenshot tokens and repeated exploratory calls.
 - **[[How AI Agents May Control Computers, Applications, and the Web]]** — Moving from screenshot-based automation toward explicit actions.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Using defined actions in testing and coding loops.
-- **[[Shifting from Fixed Features to Agent-Extensible Primitives]]** — Exposing composable actions alongside UI features.
-- **[[How AI Breaks the Economic Model of the Open Web]]** — The effect of agent actions on pageviews and ad impressions.
+- **[[Applications May Shift from Fixed Features to Agent-Extensible Primitives]]** — Exposing composable actions alongside UI features.
+- **[[AI May Break the Old Economic Model of the Open Web]]** — The effect of agent actions on pageviews and ad impressions.
 - **[[Personal AI Subscriptions and Unified Model Access]]** — User credentials and local context for browser-side agents.

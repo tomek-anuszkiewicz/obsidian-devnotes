@@ -618,7 +618,7 @@ Possible duplicate execution
 No ordinary shared transaction
 ```
 
-Location transparency should not hide these differences completely (see [[Service-to-Service Communication - How Service A Should Call Service B]]).
+Location transparency should not hide these differences completely (see [[Service-to-Service Communication — How Service A Should Call Service B]]).
 
 The caller should understand that a cross-module operation:
 
@@ -1008,6 +1008,6 @@ And the safest deployment default is:
 ## Related notes
 
 - [[Standardizing Service Infrastructure with Reusable Blocks]] — Reusable platform infrastructure for decoupled service runtimes.
-- [[Service-to-Service Communication - How Service A Should Call Service B]] — Remote communication patterns, circuit breakers, and idempotency.
+- [[Service-to-Service Communication — How Service A Should Call Service B]] — Remote communication patterns, circuit breakers, and idempotency.
 - [[Designing Software for AI Agents]] — Modularity patterns and mechanical boundary enforcement.
 - [[Propagating User Context Between Services]] — Carrying security and tracing context across process boundaries.

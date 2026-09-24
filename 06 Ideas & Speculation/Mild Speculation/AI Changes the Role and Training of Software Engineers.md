@@ -88,7 +88,7 @@ person who designs the problem,
 constrains the agent,
 reviews meaning,
 controls risk,
-and accepts responsibility (see [[AI Era Software Engineering Recruitment]]).
+and accepts responsibility (see [[AI-Era Software Engineering Recruitment]]).
 ```
 
 Experience with legacy systems, refactoring, production incidents, and complex business logic becomes especially valuable.
@@ -216,7 +216,7 @@ However, zero-cost code generation brings the temptation to refactor working cod
 
 ## Related notes
 
-- **[[AI Era Software Engineering Recruitment]]** — Evaluating architectural reasoning and verification skills over syntax memorization.
+- **[[AI-Era Software Engineering Recruitment]]** — Evaluating architectural reasoning and verification skills over syntax memorization.
 - **[[The First AI-Native Generation of Software Engineers]]** — How junior engineers develop intuition when starting with coding agents.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The psychological shift from typing code to managing cognitive review fatigue.
 - **[[How AI Changes Prototyping and the Path from PoC to Production]]** — Fast prototyping, divergent exploration, and path-to-production discipline.

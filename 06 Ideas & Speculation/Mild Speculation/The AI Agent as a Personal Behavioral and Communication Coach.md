@@ -107,7 +107,7 @@ The safest exercise is a solo one: record your own answer to a simulated intervi
 
 ## Where the practice can help in an engineering career
 
-As coding agents take on more routine implementation, hiring discussions may put more weight on trade-offs, disagreement across teams, and how candidates respond under pressure. Rehearsing those situations complements the recruitment changes described in [[AI Era Software Engineering Recruitment]].
+As coding agents take on more routine implementation, hiring discussions may put more weight on trade-offs, disagreement across teams, and how candidates respond under pressure. Rehearsing those situations complements the recruitment changes described in [[AI-Era Software Engineering Recruitment]].
 
 Workplace friction can also be exhausting even when the technical work itself is satisfying. Repeatedly difficult meetings and unresolved conflict take a toll. Practicing a less defensive response may reduce some of that cost, a concern connected to [[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]].
 
@@ -121,7 +121,7 @@ Start with one conversation you are allowed to record, or use a solo simulation.
 
 - **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — Running recurring personal analysis and coaching workflows locally.
 - **[[Local vs Cloud and Hybrid Model Execution]]** — Options for keeping transcription and analysis on your own hardware.
-- **[[AI Era Software Engineering Recruitment]]** — The hiring situations where communication practice may matter.
+- **[[AI-Era Software Engineering Recruitment]]** — The hiring situations where communication practice may matter.
 - **[[The Implications of Having a Digital Model of Yourself]]** — Using records of your own behavior for reflection and coaching.
 - **[[Developer Satisfaction, Identity, and Burnout in the Age of Coding Agents]]** — The cost of workplace friction and interpersonal fatigue.
 - **[[How Personal AI Models Reconcile External Knowledge]]** — Comparing personal patterns with outside examples.

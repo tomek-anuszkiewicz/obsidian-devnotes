@@ -196,7 +196,7 @@ Historically, such software would often have been too expensive to justify.
 
 With agents, much of it may become ordinary.
 
-This economic shift opens up [[A New Market for Small, Custom Business Software|a massive market for small, custom business software]]. When the labor overhead of writing boilerplate, basic API integrations, and database schemas drops, building an internal tool for a single department or twenty specialized operators becomes viable. Software no longer has to be a venture-scale SaaS product to justify its existence.
+This economic shift opens up [[AI May Create a New Market for Small, Custom Business Software|a massive market for small, custom business software]]. When the labor overhead of writing boilerplate, basic API integrations, and database schemas drops, building an internal tool for a single department or twenty specialized operators becomes viable. Software no longer has to be a venture-scale SaaS product to justify its existence.
 
 ---
 
@@ -1005,6 +1005,6 @@ It is how much more software society will choose to build once software creation
 
 - **[[How Should Companies Use the Productivity Gains from AI]]** — Reinvesting productivity dividends into architecture, testing, and product scope rather than simple headcount reduction.
 - **[[AI Productivity Is Limited by the Delivery System]]** — Why downstream delivery pipelines and verification latency bound organizational output.
-- **[[A New Market for Small, Custom Business Software]]** — How lower implementation costs make bespoke software economically viable for small business niches.
+- **[[AI May Create a New Market for Small, Custom Business Software]]** — How lower implementation costs make bespoke software economically viable for small business niches.
 - **[[Competitive Advantage in the Age of Commodity AI]]** — Where defensibility and differentiation live when routine implementation is commoditized.
 - **[[Software Implementation Is Becoming a Weaker Moat]]** — Why product ambition and domain integrations matter when visible UI and CRUD can be cloned rapidly.

@@ -9,6 +9,7 @@ tags:
   - code-review
   - documentation
 aliases:
+  - AI Era Software Engineering Recruitment
   - Hiring Software Engineers in the Age of AI
   - AI Recruitment Strategies
 status: evergreen
@@ -29,7 +30,7 @@ It is increasingly:
 
 This does not make technical knowledge obsolete. It changes where that knowledge creates value: less in recalling syntax, and more in understanding systems, directing work, evaluating output, detecting subtle mistakes, and accepting responsibility for the result.
 
-Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection (see [[Reviewing AI-Generated Code]] and [[Reliability of LLM Coding Agents]]). An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
+Anyone with an editor plugin can generate fifty lines of syntactically valid Go, Python, or TypeScript in seconds. The operational bottleneck is no longer code generation; it is code comprehension, review throughput, and defect detection (see [[Reviewing AI-Generated Code]] and [[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]). An engineering organization that hires for raw typing speed or syntax memorization selects for developers who unthinkingly accept plausible-looking, subtly broken AI outputs into production.
 
 ## Do not hire for knowledge of a particular AI tool
 
@@ -46,7 +47,7 @@ The durable capability is not knowledge of one interface. It is the ability to w
 - verify claims using code, tests, documentation, and measurements;
 - recognize uncertainty and ask for missing information;
 - abandon an unproductive AI-generated direction;
-- document decisions for subsequent humans and agents (preserving [[LLM Agents and Institutional Memory]]).
+- document decisions for subsequent humans and agents (preserving [[LLM Agents and Institutional Memory in Software Teams]]).
 
 Useful interview questions include:
 
@@ -334,9 +335,9 @@ The strongest candidate is therefore not simply the best programmer or the most 
 
 ## Related notes
 
-- **[[Reliability of LLM Coding Agents]]** — Empirical failure rates, verification loops, and testing disciplines for generated code.
+- **[[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]** — Empirical failure rates, verification loops, and testing disciplines for generated code.
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — Constraining agent scope with sandboxes, worktrees, and linters.
-- **[[LLM Agents and Institutional Memory]]** — Why shared mental models and business context cannot be delegated to automated tools.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Why shared mental models and business context cannot be delegated to automated tools.
 - **[[Reviewing AI-Generated Code]]** — Review practices designed to catch plausible but invalid AI changes.
 - **[[The Conductor Pattern for High-Bandwidth Engineering]]** — Managing parallel agent tasks and human orchestrator roles.
 - **[[Designing APIs for LLM-Generated Integration Code]]** — Structuring interfaces and contracts so probabilistic tools fail loudly.

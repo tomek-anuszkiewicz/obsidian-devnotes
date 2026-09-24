@@ -16,7 +16,7 @@ Large language models learn from available data, but in software engineering the
 
 Public repositories contain enormous amounts of code, but code is mostly the **final artifact**.
 
-In public git trees, squashed commits and scrubbed pull requests systematically strip away the exact signal an agent needs to learn causal reasoning: dead-end approaches, design debates, test failures, and emergency rollbacks (see [[What Should Organizations Preserve from AI-Assisted Development]]). The public artifact reflects survivorship bias, while the actual debugging journey and architectural context stay private (see [[LLM Agents and Institutional Memory]]).
+In public git trees, squashed commits and scrubbed pull requests systematically strip away the exact signal an agent needs to learn causal reasoning: dead-end approaches, design debates, test failures, and emergency rollbacks (see [[What Should Organizations Preserve from AI-Assisted Development]]). The public artifact reflects survivorship bias, while the actual debugging journey and architectural context stay private (see [[LLM Agents and Institutional Memory in Software Teams]]).
 
 Inside companies, there is a much richer record of how software was actually created.
 
@@ -480,7 +480,7 @@ The future limitation of LLM development may therefore not be a simple lack of d
 
 It may be:
 
-> **a lack of access to the private experience data that records how organizations actually solve complex problems** (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models - From Scaling to Agent-Generated Training Data]]).
+> **a lack of access to the private experience data that records how organizations actually solve complex problems** (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models — From Scaling to Agent-Generated Training Data]]).
 
 ---
 
@@ -488,5 +488,5 @@ It may be:
 
 - **[[What Should Organizations Preserve from AI-Assisted Development]]** — Preserving the institutional intent, failed branches, review transcripts, and verification records behind generated code.
 - **[[Fresh Contact With Reality May Become the Training Bottleneck]]** — Why grounded interactions with compilers, networks, production telemetry, and human judgment are essential to escape synthetic collapse.
-- **[[Improving AI Models - From Scaling to Agent-Generated Training Data]]** — Generating verifiable post-training datasets through execution, search, and self-correction loops.
-- **[[LLM Agents and Institutional Memory]]** — Architecture for embedding past decisions, incident postmortems, and codebase idioms into durable agent memory.
+- **[[Improving AI Models — From Scaling to Agent-Generated Training Data]]** — Generating verifiable post-training datasets through execution, search, and self-correction loops.
+- **[[LLM Agents and Institutional Memory in Software Teams]]** — Architecture for embedding past decisions, incident postmortems, and codebase idioms into durable agent memory.

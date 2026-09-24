@@ -30,7 +30,7 @@ The calculation illustrates how small per-rule failure rates add up. It depends 
 
 When a team builds an [[Agentic Coding Harness and Controlled Development Workflows|agentic coding harness]], a natural response to an agent mistake is to add a rule to the repository instructions. Over a few sprints, those instructions can grow into a collection of system prompts, [[Learning Coding Agents Through Failure-Driven Instructions|files written after earlier failures]], large `SKILL.md` definitions, static analysis checklists, architectural requirements, and policies for review by multiple agents.
 
-Some requirements are quite specific: no heap allocations on a hot path, immutable data structures, one class per file, or a strict 300-line limit. Each may have a reason behind it. The trouble starts when the agent must satisfy all of them during one edit. Adding a few rules initially improves the result; after a point, more instructions can make the agent less reliable. That is the failure mode described here and in [[Reliability of LLM Coding Agents|coding agent reliability]].
+Some requirements are quite specific: no heap allocations on a hot path, immutable data structures, one class per file, or a strict 300-line limit. Each may have a reason behind it. The trouble starts when the agent must satisfy all of them during one edit. Adding a few rules initially improves the result; after a point, more instructions can make the agent less reliable. That is the failure mode described here and in [[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors|coding agent reliability]].
 
 Here is what the loop looks like in code:
 
@@ -38,7 +38,7 @@ Here is what the loop looks like in code:
 2. A test or linter reports that the file now exceeds a 400-line limit, or that its responsibilities should be split. This is **Rule B**.
 3. The agent splits the code, then crosses a package boundary through an internal import. It has violated **Rule C**.
 4. It moves code again to respect that boundary and brings back the allocation that Rule A prohibited.
-5. The next retry starts the same sequence. Each pass uses more tokens and context while the code keeps changing without converging. Repeated patches can also contribute to the instability discussed in [[Software Decay and the Hidden Costs of Frictionless AI Code]] and obscure the architectural trade-offs behind [[The Economics of Aggressive Code Optimization with AI|aggressive optimization]].
+5. The next retry starts the same sequence. Each pass uses more tokens and context while the code keeps changing without converging. Repeated patches can also contribute to the instability discussed in [[Software Decay and the Hidden Costs of Frictionless AI Code]] and obscure the architectural trade-offs behind [[AI May Make Aggressive Code Optimization Economically Viable|aggressive optimization]].
 
 The requirements need not be logically impossible. Given enough time, an engineer could often design a solution that satisfies them all. The agent's problem is keeping every requirement in view while making local changes and responding to the latest failure.
 
@@ -130,6 +130,6 @@ Use natural-language instructions for domain decisions and architectural trade-o
 - **[[Reviewing AI-Generated Code]]** — recognizing superficial fixes that undo one another during review.
 - **[[How Context Narrows an AI's Solution Space]]** — when constraints help narrow the search and when too many make the work harder.
 - **[[Software Decay and the Hidden Costs of Frictionless AI Code]]** — using deterministic checks without filling the prompt with mechanical instructions.
-- **[[Reliability of LLM Coding Agents]]** — how per-rule failure can accumulate when an agent handles many rules at once.
+- **[[LLM Coding Agents — Reliability, Uncertainty, and Subtle Errors]]** — how per-rule failure can accumulate when an agent handles many rules at once.
 - **[[In-Flight Documentation as the Primary Framework for Coding Agents]]** — replacing long generic rule lists with concise guidance for the task at hand.
-- **[[The Economics of Aggressive Code Optimization with AI]]** — Navigating the tension between zero-allocation hot paths and modular code aesthetics.
+- **[[AI May Make Aggressive Code Optimization Economically Viable]]** — Navigating the tension between zero-allocation hot paths and modular code aesthetics.

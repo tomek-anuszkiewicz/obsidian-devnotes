@@ -94,7 +94,7 @@ This can change the economics of entire markets.
 
 A product that previously needed hundreds of thousands of customers to justify its development may become viable with a few thousand customers, a few hundred customers, or even one large customer.
 
-This creates space for extreme specialization (such as [[A New Market for Small, Custom Business Software]]).
+This creates space for extreme specialization (such as [[AI May Create a New Market for Small, Custom Business Software]]).
 
 Instead of building a generic CRM, a company may build a system optimized for one specific industry, workflow, country, and regulatory environment.
 
