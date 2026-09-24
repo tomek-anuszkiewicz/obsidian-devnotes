@@ -28,3 +28,7 @@ At roughly 800–1000 lines, perform an explicit structural review before recomm
 Base recommendations on the notes' actual claims and sections, not similar titles, shared words, folder placement, or a preference for fewer notes. For each recommendation, name the affected notes and sections, state whether the content should be merged, moved, or copied, and explain the reader benefit and the substance that must remain intact. If the evidence is weak, say so rather than inventing a restructuring proposal.
 
 When a copied explanation could drift, call out the shared claim that must stay consistent. Do not treat links as a substitute for enough local context, and do not prescribe a minimum number of recommendations.
+
+## After an implemented split
+
+When the user has asked you to carry out a split, use the `vault-linking` skill after the content changes to review links among the original note and the notes created from it. Limit this pass to those affected notes: add or repair links where one note meaningfully extends the other, and verify that each target resolves. Prefer a link beside the relevant explanation; use a related-notes entry when the connection is broader. Do not add reciprocal links merely for symmetry or replace context needed for a note to stand on its own with a link. A structure review that only recommends a split does not trigger this step.
