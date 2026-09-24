@@ -85,6 +85,8 @@ Block acceptance on the operational checks that matter now: does the project com
 
 A background worker, scheduled job, or pre-PR workflow can examine changes from several inner-loop cycles at once. Static analysis checks dependency and architecture rules. A faster, cheaper model can review docstrings, dead code, naming, and other matters of style. Package related fixes into one cleanup branch or PR instead of interrupting implementation with a series of small corrections.
 
+The timing needs to be part of the harness contract. A file-write hook can run a fast check, but the file may still be an intermediate edit; a task-completion hook can inspect the accumulated diff without waiting for a commit. A Git `pre-commit` hook checks a different boundary, and a scheduled job can catch later drift. A deterministic validator only protects the work if its trigger fires and a failed result has the intended effect. Test both the validator and that wiring (see [[Configuring and Testing Coding Agent Capabilities]]).
+
 ## 4. How harness control changes across three designs
 
 Agent harnesses can give the model different amounts of control over the workflow. The progression from an open conversation loop to a workflow encoded in host code makes that difference clear.
@@ -123,6 +125,10 @@ Instructions such as *"Please be careful when modifying files"* or *"Ask before 
 - Mount critical configuration files and directories read-only.
 - Allow automatic approval only after local verification passes, for example with a `--auto-approve=tests-pass-only` mode.
 - Withhold destructive filesystem operations such as `rm -rf` from the tool dispatcher until an explicit human intervention flag enables them.
+- Run risky or unattended work in an isolated branch or worktree, and preserve changes that were already present. A clean starting point makes recovery easier, but a blanket reset of a shared working tree can discard unrelated work.
+- Scope filesystem, network and credentials to the task. A rule saying "never touch production" cannot substitute for withheld production credentials and tool-level access control.
+
+When an agent repeatedly crosses a boundary, correct the immediate change and add an executable check where the violation is observable. A short instruction can explain the boundary; the host or test suite must enforce the part that cannot be left to model recall.
 
 ### Move secondary polish to the outer loop
 

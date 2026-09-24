@@ -115,6 +115,8 @@ An agent does not need to remember import ordering or a maximum line length if a
 
 Use natural-language instructions for domain decisions and architectural trade-offs that those tools cannot evaluate. This reduces the number of mechanical details the agent must hold in context while it works on the design.
 
+The check also needs a reliable trigger. A hook can run a local validator after a file write or check the accumulated diff when an agent finishes a task, even if it makes no commit. Test that trigger with a deliberately failing change; a correct validator does not help if nothing invokes it. [[Configuring and Testing Coding Agent Capabilities]] covers the different trigger points and how to test them.
+
 ## Practical rules of thumb
 
 1. **Treat every new prompt rule as a cost.** A few rules can prevent common mistakes; a growing list can increase the chance that one of them gets lost or causes another retry.

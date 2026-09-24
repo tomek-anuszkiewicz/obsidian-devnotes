@@ -333,6 +333,8 @@ This may become an important design property of developer technologies.
 
 A library or language feature could deliberately compensate for its lack of training representation by shipping a compact package designed for agents.
 
+The same problem applies to agent tooling itself. Harness configuration, MCP server setup and subagent workflows may have few reliable examples in a model's training data. Maintainers can ship focused skills and canonical examples instead of expecting an agent to invent those integration steps. A platform can also expose its operations through a documented MCP server so the agent has structured tools to call (see [[Configuring and Testing Coding Agent Capabilities]]).
+
 Instead of releasing only:
 
 ```text

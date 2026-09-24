@@ -740,6 +740,8 @@ Mutation testing therefore becomes especially useful as a quality check for AI-g
 
 When a mutation engine swaps relational operators (`>` to `>=`), inverts boolean conditions, shifts boundary values, or drops statements, the test suite must catch it. If the suite continues to pass against mutated code, the mutation survived—proving that the generated tests are merely stepping through code paths without asserting true invariants. Forcing an agent to kill mutants is the most reliable automated check against green-by-default suites.
 
+Keep the roles separate. A mutation tool such as Stryker.NET generates variants, runs the tests, restores the code and reports survivors. The agent can group survivors by business risk, propose boundary cases and implement approved tests. A human decides which survivors matter and rejects assertions tied only to implementation detail. A 100% mutation score is not the goal; the useful result is better coverage of intended behavior.
+
 ---
 
 ## 15. Coverage becomes an even weaker metric

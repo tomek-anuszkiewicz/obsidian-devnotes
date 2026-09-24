@@ -6,16 +6,12 @@ tags:
   - agentic-harness
   - software-engineering
   - testing
-  - mutation-testing
   - llm
   - codex
 aliases:
   - Agentic harness
   - Coding agent workflow
   - Controlled Development Workflows
-  - Meta-Harnessing and Pattern Drift
-  - Steering Agents via Negative Boundaries
-  - Negative Bounding in Agent Workflows
   - SOTA Patterns for High-Assurance Agents
 ---
 
@@ -249,66 +245,9 @@ Example inline PR escalation comment:
 
 The developer replies directly in the GitHub PR review thread, triggering a webhook that re-engages the harness with explicit human guidance.
 
-## The limits of soft prompts: hard fences and runtime containment
+## Runtime boundaries for the workflow
 
-A common failure mode in harness design is relying on markdown prompts (`AGENTS.md`, system prompts) to prevent catastrophic actions:
-
-```markdown
-<!-- Soft semantic prompt: Can and will fail probabilistically -->
-Never delete database tables or wipe project directories.
-```
-
-An LLM is a probabilistic engine. Under heavy context saturation, long debugging loops, or novel compiler error formats, model attention degrades. Eventually, an agent will misinterpret a test failure as a corrupted directory and issue `rm -rf *`, drop a local table, or overwrite critical files with empty stubs.
-
-### The asymmetry of risk
-
-Human developers slow down when typing `drop table` or touching shared persistence schemas because we understand the pain of data loss and production recovery.
-
-An LLM has no concept of consequence:
-- Dropping an active table or deleting an entire subsystem is just another syntactically valid JSON tool call (`execute_command("rm -rf src/")`).
-- When a catastrophic deletion executes, the model simply parses the empty directory listing and proceeds to its next turn without hesitation.
-- System prompts provide soft semantic steering; they alter token probabilities, but they cannot enforce physical invariants.
-
-### Hard runtime fences
-
-Because models cannot guarantee their own containment, the harness must enforce non-negotiable boundaries in code:
-
-1. **The Clean Commit Prerequisite**: Never let an agent operate on an uncommitted, dirty working tree. Every task must run in an isolated Git branch or a dedicated worktree (`git worktree add`). If an agent corrupts files or thrashes, recovery is instantaneous (`git checkout .` or dropping the worktree).
-2. **Tool-Level Destructive Gating**: The model should physically lack tools capable of unrestricted directory unlinking or database drops. Destructive operations must be gated behind out-of-band confirmation or blocked entirely at the tool dispatch layer.
-3. **Read-Only Path Sandboxing**: Core specifications, architectural rules, and environment configurations must be mounted read-only to the agent process.
-4. **Human Review of Diffs**: Never auto-merge agent-authored branches. A human engineer must inspect diffs to catch subtle logic decay, hallucinated dependencies, or weakened assertions.
-
-### Fix the harness, not just the code
-
-When an agent breaks an invariant, introduces an anti-pattern, or deletes something it shouldn't, avoid manually patching the code in your editor and moving on.
-
-If you fix the code manually, the agent will make the same mistake on the next run. Instead, fix the harness:
-- Add an explicit negative fence in `.agents/rules/`.
-- Write an automated architecture test that fails if that pattern appears.
-- Add a deterministic check to your pre-flight verification script.
-
-Force the agent to re-run against the hardened constraint until it passes. Hardening the harness permanently eliminates that failure mode for both agents and future developers.
-
-## Steering agents via negative boundaries
-
-A frequent mistake in repository instructions is prescriptive over-specification—attempting to dictate every internal method, variable name, and design decision in advance.
-
-### The leaky nature of affirmative instructions
-
-Affirmative instructions are inherently leaky: telling an agent what it *should* do does not stop it from doing everything else.
-
-If you instruct an agent: *"Use the command pattern to handle this request"*, the model may follow that instruction while also introducing reflection, allocating large heap buffers inside a tight audio loop, or wrapping operations in generic `catch (Exception ex)` blocks. Affirmative instructions guide probability, but they leave an unbounded operational surface.
-
-### Bounding by exclusion
-
-A more reliable approach pairs wide implementation freedom with rigid negative boundaries (see [[Negative Knowledge and Explicit Architectural Dissents]]):
-
-1. **Grant Implementation Latitude**: Allow the agent to choose local data structures, helper functions, and algorithm details within the target module scope.
-2. **Erect 2–3 Explicit Negative Fences**: Clearly define forbidden anti-patterns:
-   - Forbidden: Adding external package dependencies without prior approval.
-   - Forbidden: Mutating database schemas or public API contracts in this task slice.
-   - Forbidden: Introducing heap allocations, dynamic dispatch, or blocking I/O inside synchronous hot paths.
-3. **Outcome**: The agent retains the flexibility to solve edge cases without getting stuck in brittle, over-specified prompts, while your architectural invariants remain protected against drift.
+A Markdown rule can guide an agent away from destructive actions, but it cannot stop a tool call by itself. The host should scope files, credentials and commands to the approved task, and use an isolated branch or worktree when recovery matters. Preserve pre-existing changes rather than relying on a blanket reset. Review the resulting diff before accepting a semantic change. When an agent repeatedly crosses an observable boundary, turn that failure into an executable check instead of adding more detailed prose (see [[Building Determinism from Unpredictable Models]] and [[Configuring and Testing Coding Agent Capabilities]]).
 
 ## Files used to guide an agent
 
@@ -502,63 +441,11 @@ The `Out of scope` section is especially valuable because it prevents opportunis
 
 Records decisions made while refining the plan, including alternatives and rationale. This prevents the agent or a later developer from reopening settled questions without context.
 
-## Reusable agent skills
+## Agent configuration and verification
 
-When a workflow is repeated frequently, it can become a skill rather than a long prompt.
+A controlled workflow also needs scoped agent roles, concise rules, reusable skills, appropriate tool permissions and checks that run at defined points. As those parts grow, test both their selection and the hooks that invoke audits (see [[Configuring and Testing Coding Agent Capabilities]]).
 
-```text
-.agents/skills/implement-approved-step/
-├── SKILL.md
-├── references/
-│   └── plan-template.md
-└── scripts/
-    └── verify.ps1
-```
-
-Example procedure:
-
-```markdown
-1. Read AGENTS.md, SPEC.md and PLAN.md.
-2. Find the first approved step.
-3. Confirm that its completion criteria are measurable.
-4. Add or update tests.
-5. Implement the minimal production change.
-6. Run the specified verification.
-7. Review the diff against the specification.
-8. Mark the step completed only when all criteria pass.
-9. Stop; never begin the next step automatically.
-```
-
-Skills remain mostly text, but they can also contain scripts, templates, examples and reference material.
-
-### Skills as Native Code Functions (Beyond Shell Commands)
-
-While agents can run terminal commands, building skills as native code functions (e.g. in Python or C#) provides:
-1. **Pre-filtering Context (AST Parsers):** Instead of dumping a 3,000-line file into context, a native skill uses `ast` or `tree-sitter` to extract only the target class or method signature.
-2. **Direct SDK Integration:** Interacting with GitHub (`PyGithub` / Octokit), cloud providers (`boto3`, Azure SDK), or databases directly avoids fragile CLI stdout parsing.
-3. **Deterministic Sandboxing:** Skills can manage local Docker containers or ephemeral in-memory databases to validate migrations without side effects.
-
-## Deterministic tools should enforce deterministic rules
-
-An LLM should not replace tools that can check a rule exactly.
-
-| Concern | Preferred mechanism |
-| --- | --- |
-| Formatting | `.editorconfig` and formatter |
-| Compiler warnings | `Directory.Build.props` |
-| Module boundaries | architecture tests or static analysis |
-| Unit and integration behavior | automated tests |
-| Test quality | mutation testing |
-| Dependency vulnerabilities | security scanner |
-| Secret detection | secret scanner |
-| Approval and design decisions | human plus specification |
-| Planning and diagnosis | LLM agent |
-
-The principle is:
-
-> If a rule can be checked deterministically, let a deterministic tool check it. Use the LLM to interpret, plan and repair.
-
-### Executable architecture tests
+## Executable architecture tests
 
 Architecture rules should be enforced through executable test suites rather than text guidelines alone. In .NET, for instance, you can write automated tests using `NetArchTest` (or `ArchUnit` in Java) to verify that architectural boundaries remain intact:
 
@@ -610,59 +497,9 @@ A layered strategy avoids running an expensive entire suite after every small ed
 3. run full verification before completion;
 4. run expensive mutation or end-to-end suites separately.
 
-## Mutation testing
+## Mutation testing as a separate verification pass
 
-Mutation testing is a good example of combining a deterministic tool with an LLM agent.
-
-A mutation tool deliberately introduces small defects, such as replacing:
-
-```csharp
-value <= limit
-```
-
-with:
-
-```csharp
-value < limit
-```
-
-It then runs the test suite:
-
-- **killed** — a test detected the mutation;
-- **survived** — all tests still passed;
-- **no coverage** — the mutated code was not executed;
-- **timeout** — the mutation caused execution to exceed the limit.
-
-For .NET, Stryker.NET already generates mutations, runs tests and produces reports. An LLM should not manually mutate every class and operator.
-
-The useful division of responsibilities is:
-
-### Stryker.NET
-
-- generates mutations;
-- selects and runs tests;
-- restores or switches mutated code;
-- calculates results;
-- produces a structured and HTML report.
-
-### Agent
-
-- analyzes surviving mutants;
-- groups them by class and business risk;
-- distinguishes likely missing tests from equivalent or low-value mutations;
-- proposes boundary cases and assertions;
-- implements an approved test;
-- reruns the relevant mutation scope;
-- explains why the new test kills the mutant.
-
-### Human
-
-- prioritizes business-critical gaps;
-- approves tests that encode intended behavior;
-- rejects tests coupled only to implementation details;
-- decides which mutations are irrelevant.
-
-Do not chase a 100% mutation score blindly. Focus on business-critical behavior and meaningful survivors.
+Mutation testing can expose weak assertions after the ordinary tests pass. Run it selectively, then have the agent analyze surviving mutations and propose tests for the business-critical gaps. The mutation engine should generate and run the variants; the agent and human reviewer decide which results deserve action (see [[Testing in the Model, Agent, LLM Era]]).
 
 ## Reproducible local environment
 
@@ -952,29 +789,6 @@ def self_healing_loop(state: HarnessState):
     return trigger_human_escalation(state)
 ```
 
-## The evolution of meta-harnessing and system drift
-
-As model capabilities advance, how agentic harnesses are built and maintained will shift from manual rule-authoring to automated scaffolding.
-
-### The pretraining bottleneck
-
-Current foundation models are proficient at localized code editing, but struggle to configure multi-agent orchestration loops or design comprehensive rule systems from scratch.
-
-This limitation stems from their training data: repositories created prior to 2024 contained almost no examples of agent harnesses, `.agents/rules/`, MCP server configurations, or programmatic subagent workflows. Because models have few training examples of self-governance, human engineers must define the ground rules—structuring context, configuring tools, and erecting boundary fences.
-
-This changes how platform and library maintainers should approach developer tooling:
-- **Documentation is no longer consumed only by humans in browsers**: Static wikis and Swagger UIs are insufficient for automated agents.
-- **Ship Native MCP Servers**: Expose platform APIs as Model Context Protocol (MCP) servers, giving agents structured tools and resources to interact with services directly (see [[Designing APIs for LLM-Generated Integration Code]]).
-- **Provide Executable Skills (`SKILL.md`)**: Package explicit, multi-step integration workflows, token refresh routines, and pagination logic directly into the repository so agents don't have to guess.
-
-### Autophagous data and verifiable selection loops
-
-As code written by AI agents becomes a significant portion of public repositories, future models will inevitably train on synthetic code. Training recursively on uncurated synthetic text risks model collapse—where edge cases are forgotten and hallucinated patterns compound.
-
-However, software engineering has a structural defense that natural language lacks: **software can be verified deterministically** (see [[Building Determinism from Unpredictable Models]] and [[Testing in the Model, Agent, LLM Era]]).
-
-If future models are trained indiscriminately on unverified synthetic code, quality will degrade. But if training pipelines filter datasets through deterministic gates—requiring code to compile cleanly, pass unit and integration test suites, eliminate mutation escapes, and run without linter warnings—the synthetic training loop becomes a form of reinforcement learning via verifiable selection (see [[Fresh Contact With Reality May Become the Training Bottleneck]] and [[Improving AI Models — From Scaling to Agent-Generated Training Data]]). Deterministic verification filters out degenerative drift, steadily steering future models toward robust engineering patterns.
-
 ## Final principles
 
 1. Use a ready-made harness before building a custom one.
@@ -990,6 +804,7 @@ If future models are trained indiscriminately on unverified synthetic code, qual
 
 ## Related notes
 
+- **[[Configuring and Testing Coding Agent Capabilities]]** — Scoping agents, rules, skills and tools, then testing routing, hooks and audits.
 - **[[Building Determinism from Unpredictable Models]]** — Turning non-deterministic model outputs into reliable engineering outcomes through structured harnesses.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Automated checks that fail fast when an agent violates structural invariants.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** — Managing execution plans and preventing context pollution across iterative turns.

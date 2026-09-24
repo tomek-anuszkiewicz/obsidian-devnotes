@@ -299,6 +299,8 @@ The objective is the best trade-off between:
 
 > quality × reliability × iteration count × cost
 
+The same regression suite should test more than the wording of a rule. When agent roles, skill descriptions, tool permissions or hooks change, include tasks that should select a specialist and similar tasks that should not. Inspect the recorded tool use and changed files, then feed a deliberately invalid change through the audit to confirm that the hook fires and the failure is reported or blocks completion as intended. This catches routing and verification failures that a good final answer could hide (see [[Configuring and Testing Coding Agent Capabilities]]).
+
 ---
 
 ## Avoid Overfitting to Individual Tasks
