@@ -177,6 +177,10 @@ The agent may return:
 
 Only after the plan is reviewed does implementation begin.
 
+The plan can live in the agent session. A developer may discuss the change with the agent, revise the proposed steps, and approve execution without creating a Markdown plan in the repository. What matters during the task is that the agent and developer agree on the intended behavior, scope, and checks before editing begins.
+
+The plan does not necessarily need to survive the task. Once the change is complete, code and tests show what was implemented. Decisions that future work will depend on should be recorded where they can be found later, such as in an issue, pull request, or project documentation. The rest of the session plan can be discarded.
+
 This approach is particularly useful for:
 
 - cross-cutting changes,
@@ -200,13 +204,13 @@ Planning separates **understanding the problem** from **executing the change**.
 
 #sdd
 
-Spec-driven development pushes this idea further.
+Spec-driven development makes the intended behavior explicit before implementation.
 
 Instead of going directly from request to implementation, the workflow becomes:
 
 **Request → Requirements → Design → Tasks → Implementation**
 
-A specification may contain several layers.
+A specification may contain several layers. They can be worked out in a conversation and captured in an approved plan. Separate files become useful when the requirements need to be shared or revisited after the session.
 
 ### Requirements
 
@@ -249,11 +253,11 @@ Example:
 
 ### Implementation
 
-Only after these artifacts exist does the agent modify production code.
+Only after the intended behavior and implementation approach have been reviewed does the agent modify production code. The review does not require a particular file format.
 
 This reduces the probability that implementation decisions silently redefine the requirement.
 
-Spec-driven development is especially useful when the feature is large enough that the intended behavior should survive beyond a single chat session.
+If the intended behavior must survive beyond a single chat session, keep a durable specification or update the relevant project documentation. Otherwise, a reviewed session plan may be enough.
 
 ---
 
@@ -635,7 +639,7 @@ Business Request
       ↓
 Clarify Requirements
       ↓
-Write Specification
+Agree on Intended Behavior
       ↓
 Explore Repository
       ↓
@@ -676,7 +680,7 @@ These approaches should not necessarily be treated as competing methodologies.
 
 They describe different dimensions of the development process.
 
-**Spec-driven development** defines what should exist.
+**Spec-driven development** makes the intended behavior explicit before implementation. It does not require a permanent specification file for every task.
 
 **Plan-driven development** determines how the work should be decomposed.
 
@@ -693,6 +697,8 @@ They describe different dimensions of the development process.
 **Goal-driven development** allows the agent to search for solutions to measurable outcomes.
 
 A practical agent workflow may therefore combine several of them.
+
+A reviewed plan can bring these concerns together for one task: what should change, which steps the agent will take, when tests should be written, and how the result will be checked. Preparing the plan does not replace those steps. A test-driven plan still needs a test that fails before the implementation, and a verification-driven plan still needs observable checks to run.
 
 For example:
 
