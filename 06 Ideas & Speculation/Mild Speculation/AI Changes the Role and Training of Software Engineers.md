@@ -93,6 +93,14 @@ and accepts responsibility (see [[AI Era Software Engineering Recruitment]]).
 
 Experience with legacy systems, refactoring, production incidents, and complex business logic becomes especially valuable.
 
+## Adaptation Is More Than Learning Another Tool
+
+Software engineers are used to learning new languages, frameworks, and platforms. Those changes usually preserve the basic activity: the engineer still translates a problem into code and learns the system through implementation.
+
+Working through agents changes the division of labor. The engineer has to externalize requirements that previously stayed in their head, decide what context the model needs, design checks for work they did not personally produce, and maintain a mental model while implementation happens elsewhere. Some experienced developers may dislike that role. Others may try to adopt it but never become as effective at supervision, specification, and review as they were at direct implementation.
+
+This does not erase the value of their existing experience. It means the market may reward that experience only when it can be expressed through problem framing, constraints, verification, and responsibility for the result. Manual authorship alone is unlikely to command the same premium as a handmade physical product (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 ---
 
 ## The Fallback Problem: Why System Comprehension Cannot Be Abdicated

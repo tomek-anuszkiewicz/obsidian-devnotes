@@ -336,6 +336,8 @@ The purpose would not be nostalgia or resistance to automation.
 
 It would be to develop the mental models required to supervise automation safely.
 
+That training value should not be confused with a broad production premium. An organization may require engineers to implement selected systems by hand because the exercise builds judgment, while still using agents for most commercial delivery. It is paying for the capability created by manual practice, not because customers value handwritten application code as a luxury product (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 This would be similar to other professions where people train manually even though automated systems handle much of routine operation.
 
 A possible distinction may emerge:

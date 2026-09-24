@@ -225,6 +225,8 @@ The strange result is:
 
 Human-only reasoning becomes scarce data.
 
+This would not be a general market for artisanal software. The organization would pay for an independent problem-solving trajectory that existing models have not already shaped. If a person and an agent produce the same ordinary application, manual authorship alone still gives the application little additional operational value (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 ---
 
 ## Professional Humans as Training-Data Producers

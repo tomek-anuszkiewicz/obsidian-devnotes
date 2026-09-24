@@ -76,6 +76,14 @@ This can be thought of as the first stage of AI adoption:
 
 Useful, but not necessarily defensible.
 
+## Commodity AI also changes what expertise is worth
+
+The same argument applies to engineering labor. Merely knowing how to ask a general-purpose model for a standard implementation will not remain rare when every competitor can do it. That ability may become necessary without being a meaningful differentiator.
+
+Companies will still pay for people who produce results that the common model and a generic prompt do not produce on their own. The premium moves toward choosing the right problem, bringing domain knowledge, exposing hidden constraints, rejecting plausible but unsafe output, and building a delivery and verification process that learns from production.
+
+This is different from paying for manual effort. A customer usually gains nothing merely from knowing that a person typed every line. The valuable human contribution is the judgment that makes the resulting system different from the generic baseline (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 ## Cost and speed become strategic
 
 One of the most obvious advantages is the ability to execute dramatically faster and with fewer people.

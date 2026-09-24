@@ -973,6 +973,8 @@ Today handcrafted products can already be more valuable than industrial equivale
 
 A future civilization could extend this logic to intellectual and cultural activity.
 
+The effect would not apply equally to every intellectual product. Authorship and process can be part of the experience of a novel, painting, performance, or artistic game. They are usually not part of the value of a payment service, reporting backend, or internal integration. Handwritten software may therefore retain artistic and cultural niches without gaining a broad luxury premium in ordinary production (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 When artificial production becomes universal, **authentic human effort may itself become scarce**.
 
 ---

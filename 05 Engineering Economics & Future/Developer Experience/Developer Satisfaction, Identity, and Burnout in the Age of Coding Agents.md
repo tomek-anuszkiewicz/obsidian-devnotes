@@ -57,6 +57,10 @@ For an engineer who loves writing software by hand, exclusive use of agents can 
 
 An engineer who prefers designing systems may have the opposite experience. An agent can build a low-level execution harness or scaffold a service integration in an afternoon. That leaves more time to define invariants, design tests, and probe how the system behaves. Neither reaction is a failure to adapt; the work has changed, and people value different parts of it.
 
+Preference is only one side of the transition. Agent-assisted development also rewards a different set of abilities: decomposing an unclear problem, supplying the right context, stating constraints, evaluating several plausible implementations, and finding mistakes in code you did not write. An engineer may want to adapt and still struggle with that style of work. Twenty years of implementation experience provides useful judgment, but it does not automatically make supervision and process design intuitive.
+
+The market may not preserve the old role simply because experienced engineers enjoy it. Unlike a handmade physical object, ordinary software rarely becomes more valuable to its user because every line was typed by a person. Manual implementation can remain satisfying and useful for learning or specialist work while losing its broad economic premium (see [[Handwritten Code May Not Become a Luxury Good]]).
+
 ## A conversational tool is easy to mistake for a colleague
 
 An agent writes fluent, polite replies. It apologizes, agrees, and says it understands the problem. That makes it easy to respond as though a junior engineer were sitting across the desk. The illusion becomes frustrating when you explain an architectural mistake, receive a reassuring acknowledgment, and then see the same pattern in the next diff.

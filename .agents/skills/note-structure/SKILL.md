@@ -14,6 +14,16 @@ Structure engineering notes so a reader can understand the point immediately, tr
 - **Purposeful sections**: Include context, operational details, measurements, failure modes, and trade-offs only when they clarify the core claim. Short notes do not need artificial filler sections.
 - **Revising outlines**: When updating an existing note, reorganize sections only when the current flow obscures an important dependency, constraint, or conclusion. Preserve concrete evidence and working details.
 
+## Notes as Cross-Sections
+
+Treat each note as a self-contained cross-section of a larger subject. A note should answer one reader question or present one coherent causal argument from its own point of view. It is not merely the canonical storage location for a set of isolated facts.
+
+Repeat a mechanism, constraint, or conclusion when another cross-section needs it to remain understandable on its own. Adapt the explanation to the local argument instead of replacing it with a link or avoiding useful repetition. Links connect the cross-sections; they do not substitute for the context each one needs.
+
+Create a separate note when the material supports a new reader question, causal chain, or useful point of view with its own beginning and conclusion. Parts of that material may already appear in several notes. That is not a reason to avoid the new note, and the existence of the new note is not a reason to remove those parts from their original cross-sections.
+
+Do not create a new note merely because the same topic appears in several places. The deciding question is whether the proposed note tells a distinct, useful story rather than whether its individual claims are unique.
+
 ## Durable Architectural Mechanics
 
 When explaining architecture or engineering patterns:

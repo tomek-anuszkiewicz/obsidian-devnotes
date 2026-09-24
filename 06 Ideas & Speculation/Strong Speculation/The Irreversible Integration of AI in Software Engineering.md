@@ -452,6 +452,16 @@ AI does not need to be excellent.
 
 It only needs to be better than operating without it under current market conditions.
 
+## Manual Coding Does Not Have a Protected Market
+
+Some engineers may prefer direct implementation and take real pride in code they wrote themselves. That preference does not create the same market protection as physical craftsmanship.
+
+A handmade chair can carry visible variation, material quality, authorship, and cultural meaning. For most business software, users see behavior rather than the production method. If an agent-assisted implementation is equally reliable, secure, and useful, manual authorship adds little visible value by itself.
+
+Manual work can still be justified by training, independent exploration, unusual performance requirements, or a need for close control. Those are payments for learning, evidence, or a technical result, not necessarily for software as handcrafted output (see [[Handwritten Code May Not Become a Luxury Good]]).
+
+This weakens one possible escape from organizational lock-in. A company cannot assume that a premium market for manually written software will cover the additional time and staffing required to preserve its old workflow.
+
 ## Economic Lock-In
 
 AI may replace part of fixed labor cost with variable infrastructure cost:
