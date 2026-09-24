@@ -42,7 +42,7 @@ Notes may cover code design, verification, infrastructure, model context, or eng
 
 Some notes explain practices I would use in real engineering work. Others explore a hypothesis or follow a speculative idea further than current evidence supports. The text should make that distinction clear, but the vault is still being reviewed and does not do so consistently yet.
 
-The `06 Ideas & Speculation` section keeps exploratory writing separate from the main engineering notes. `Mild Speculation` starts from current systems or observed trends but extends beyond what the available evidence can establish. `Strong Speculation` follows a scenario much further and should be read as a thought experiment rather than a forecast.
+The `06 Ideas & Speculation` section holds exploratory visions whose central scenario remains uncertain. Notes about emerging practices and plausible consequences of current AI adoption stay with their engineering, model, or economic topics, even when the details of the future are open. The notes in `Strong Speculation` should be read as thought experiments rather than forecasts.
 
 ## What belongs here
 
