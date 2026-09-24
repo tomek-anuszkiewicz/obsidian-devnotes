@@ -116,7 +116,7 @@ A check sitting in a repository does nothing until something invokes it. A hook 
 - **After an agent task or turn:** check the accumulated diff and report failures even if no commit was made. Define the boundary in the host rather than assuming the end of a conversation is a reliable event.
 - **On a schedule:** run periodic checks for drift that may appear between active tasks. This is usually a scheduled job rather than a lifecycle hook, but follows the same trigger-and-action pattern.
 
-These checks provide feedback at different times. The host can make a failed audit block completion or return the failure to the agent for repair. If a hook only logs a warning, it provides visibility but does not enforce the rule. A post-action check can detect a bad change; it cannot undo an irreversible action that already ran. Keep prohibitions that must hold before execution at a pre-action gate or permission boundary. Test the trigger itself as well as the check: a correct validator is no help if the expected file write or task completion never invokes it.
+These checks provide feedback at different times. The host can make a failed audit block completion or return the failure to the agent for repair. If a hook only logs a warning, it provides visibility but does not enforce the rule. A post-action check can detect a bad change; it cannot undo an irreversible action that already ran. Keep prohibitions that must hold before execution at a pre-action gate or permission boundary (see [[Security Boundaries for Agents, RAG, and MCP]]). Test the trigger itself as well as the check: a correct validator is no help if the expected file write or task completion never invokes it.
 
 ### Test the configuration and the audit path
 

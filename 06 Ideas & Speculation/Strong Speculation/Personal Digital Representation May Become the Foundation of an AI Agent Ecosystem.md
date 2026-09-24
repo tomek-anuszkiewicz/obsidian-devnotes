@@ -758,6 +758,8 @@ A system containing a detailed digital model of a person may become one of the m
 
 It may reveal much more than any individual service currently knows.
 
+[[Conversation History as Sensitive Data]] examines the nearer-term version of this problem: ordinary chats can already support personal inferences before anyone builds a formal lifelong model.
+
 This creates difficult questions:
 
 - Who owns the personal model?

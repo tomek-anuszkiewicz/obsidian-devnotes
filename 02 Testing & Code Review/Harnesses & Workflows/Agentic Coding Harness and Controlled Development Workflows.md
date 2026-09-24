@@ -547,7 +547,7 @@ Example instructions:
 - Ask before using GitHub, Azure or Kubernetes credentials.
 ```
 
-Sandboxing controls what the agent can technically do. Approval policy controls when it must stop and ask before doing it. These are separate controls.
+Sandboxing controls what the agent can technically do. Approval policy controls when it must stop and ask before doing it. These are separate controls (see [[Security Boundaries for Agents, RAG, and MCP]]).
 
 ## Git, commits and pull requests
 

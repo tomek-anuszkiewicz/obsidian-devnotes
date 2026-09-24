@@ -708,7 +708,7 @@ Agent platforms will therefore need:
     
 - provenance of tools and data.
 
-In operational environments, managing blast radius requires concrete runtime controls: scoped capability tokens rather than ambient authority, unprivileged execution sandboxes (such as containers or ephemeral filesystem worktrees), deterministic audit trails capturing every input and side-effect, and strict transaction rollback boundaries before state is committed.
+In operational environments, managing blast radius requires concrete runtime controls: scoped capability tokens rather than ambient authority, unprivileged execution sandboxes such as restricted containers or virtual machines, audit trails of inputs and side effects, and transaction boundaries before state is committed. A separate Git worktree keeps one task's file changes apart from another's, but does not by itself restrict the process's access to host files, credentials, or the network (see [[Security Boundaries for Agents, RAG, and MCP]]).
 
 ---
 

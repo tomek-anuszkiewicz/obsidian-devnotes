@@ -536,3 +536,4 @@ Finding a signal does not itself justify interrupting a person or acting on a sy
 
 - **[[Proactive Software — From Reactive Systems to Autonomous Agents]]** — Attention, autonomy, and coordination around proactive behavior.
 - **[[Workflow Orchestration in Agentic Systems]]** — Process state and approvals when an agent's proposal becomes a multi-step workflow.
+- **[[Continuous Security Monitoring with Agents]]** — A security-specific observe, investigate, and escalate loop.

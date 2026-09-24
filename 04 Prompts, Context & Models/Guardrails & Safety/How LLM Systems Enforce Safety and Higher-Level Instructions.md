@@ -48,7 +48,7 @@ A user can ask the model to behave differently, but lower-level instructions sho
 
 These instructions are "immutable" from the user's perspective, although they are not necessarily literally embedded as immutable code inside the neural network.
 
-Context assembly is not a flat string where every token carries equal authority. In [[How LLM Systems Build Context]], runtime input must be organized into an explicit hierarchy. Retrieved external documents (such as web search results or RAG context) must be treated as untrusted data, never as executable control instructions.
+Context assembly is not a flat string where every token carries equal authority. In [[How LLM Systems Build Context]], runtime input must be organized into an explicit hierarchy. Retrieved external documents (such as web search results or RAG context) must be treated as untrusted data, never as executable control instructions (see [[Security Boundaries for Agents, RAG, and MCP]]).
 
 When context windows are loaded with competing or contradictory constraints across different levels, models can exhibit [[Constraint Saturation and Rule Oscillation in Coding Agents]], thrashing between conflicting instructions. Keeping behavior predictable requires establishing the platform layer as authoritative and immutable from the user's perspective.
 

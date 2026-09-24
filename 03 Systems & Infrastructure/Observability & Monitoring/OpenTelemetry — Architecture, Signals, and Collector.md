@@ -1438,6 +1438,8 @@ The Collector is particularly useful for enforcing organization-wide filtering o
 
 However, sensitive values ideally should not be emitted unnecessarily in the first place.
 
+[[Agent-Assisted Sensitive Data Exposure Audits]] traces a field from an API or database into telemetry and checks whether that destination should receive it at all.
+
 The Collector can enforce sanitization rules centrally using the `transform` processor or dedicated redaction components. By configuring regex patterns to mask credit cards, tokens, or email addresses, and stripping sensitive headers like `Authorization` or `Cookie`, teams ensure compliance across all running microservices without having to rely on every developer remembering to sanitize local log outputs.
 
 ---

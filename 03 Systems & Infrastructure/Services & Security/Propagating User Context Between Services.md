@@ -135,7 +135,7 @@ userId         = original initiator
 
 They may travel together in headers, but they belong to different technical contracts.
 
-Conflating W3C trace IDs with user identity also introduces regulatory and compliance hazards. Telemetry collectors and APM systems routinely ingest trace headers without redaction; embedding user identity or tenant keys into trace state risks leaking Personally Identifiable Information (PII) across log aggregators and third-party monitoring vendors.
+Conflating W3C trace IDs with user identity also introduces regulatory and compliance hazards. Telemetry collectors and APM systems routinely ingest trace headers without redaction; embedding user identity or tenant keys into trace state risks leaking Personally Identifiable Information (PII) across log aggregators and third-party monitoring vendors (see [[Agent-Assisted Sensitive Data Exposure Audits]]).
 
 ---
 

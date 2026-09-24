@@ -527,6 +527,8 @@ A useful rule is:
 
 > **The location of the agent does not determine the privacy boundary. The location of model inference does.**
 
+That boundary also depends on what data enters the model request. [[Agent-Assisted Sensitive Data Exposure Audits]] traces sensitive fields through APIs, logs, and stores before an agent or gateway uses them.
+
 There are several important deployment levels.
 
 ### Self-hosted agent with an external model API
@@ -756,6 +758,8 @@ The ability to share an agent across a team makes centralized identity and permi
 ### Execution sandboxing and isolation boundaries
 
 Running agent-generated code and arbitrary shell commands on shared infrastructure requires defense-in-depth isolation:
+
+[[Security Boundaries for Agents, RAG, and MCP]] separates the sandbox's enforced limits from approval prompts and from a worktree's file-state isolation.
 
 - **Ephemeral sandboxing**: Execute tool calls and compilation steps inside disposable containers or microVMs (such as gVisor or Firecracker). Tearing down the environment immediately after execution prevents state poisoning, contaminated package caches, or untrusted dependencies from persisting across tasks (see [[Agentic Coding Harness and Controlled Development Workflows]]).
 - **Network egress filtering**: Restrict outbound network access from the execution runtime. Allowlist only required package registries, internal source control, and inference endpoints. Explicitly block access to cloud instance metadata endpoints (`169.254.169.254`) to prevent credentials from being extracted by untrusted dependencies.

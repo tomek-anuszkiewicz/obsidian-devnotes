@@ -70,6 +70,8 @@ People need time to read, move a pointer, and type. An agent can request dozens 
 
 An agent reads names, descriptions, and schemas to decide which tool to call. A malicious or compromised page could put instructions in that metadata, trying to make the agent disclose tokens, read data from another context, or perform an unintended action. The agent must treat descriptions supplied by a page as untrusted content.
 
+[[Security Boundaries for Agents, RAG, and MCP]] connects this metadata risk with permissions enforced before the agent can use a tool.
+
 ## How the interface works
 
 MCP commonly connects an application to external tools over transports such as `stdio` or HTTP/SSE. WebMCP places the tool interface in the browser's page runtime instead. The proposal discussed through the W3C Web Machine Learning Community Group uses `navigator.modelContext` so a page can publish actions and current context to an agent operating in the browser.

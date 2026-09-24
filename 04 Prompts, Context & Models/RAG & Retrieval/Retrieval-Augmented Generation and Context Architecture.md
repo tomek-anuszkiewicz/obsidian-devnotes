@@ -356,11 +356,15 @@ For strictly air-gapped or confidentiality-sovereign environments, production lo
 
 A production RAG system cannot simply expose all indexed enterprise chunks to every user or agent prompt.
 
+Permission-aware retrieval controls which chunks the caller may see. A permitted chunk can still contain a false claim or an instruction aimed at the agent; [[Security Boundaries for Agents, RAG, and MCP]] covers that separate trust boundary.
+
 Knowledge bases frequently index sensitive data across boundaries:
 - Source code repositories (internal vs. public)
 - Executive strategy documents
 - Human Resources & compensation records
 - Customer financial data
+
+The index is another place where sensitive fields can persist. [[Agent-Assisted Sensitive Data Exposure Audits]] examines whether copying a field into search storage follows the intended data-flow policy.
 
 ```text
 User / Agent Query

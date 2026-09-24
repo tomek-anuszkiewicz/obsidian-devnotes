@@ -93,6 +93,8 @@ Suppose an attacker hides text in an email that pretends to be a system directiv
 
 The problem is that the model processes the task instructions and the material it is supposed to analyze in the same context. Text from an outside source can therefore influence what it tries to do next. The runtime must assume that any external text may contain hostile instructions and limit which tools those instructions can reach.
 
+The same risk applies when the outside text arrives through a search index or RAG. A retrieved passage can also be simply wrong without containing an explicit command. [[Security Boundaries for Agents, RAG, and MCP]] separates those cases and connects them to tool permissions and service deployment.
+
 ---
 
 ## 6. Put Boundaries Around Tool Access
@@ -127,3 +129,4 @@ The useful work still happens in the background: gathering information, connecti
 - **[[Finding Original Knowledge in an Internet Full of Repetition]]** — Filtering technical material for information that is actually new.
 - **[[Agent Deployment and Execution Models]]** — Separating inference, orchestration state, and tool execution.
 - **[[The AI Agent as a Personal Behavioral and Communication Coach]]** — Background agents supporting communication and daily work.
+- **[[Continuous Security Monitoring with Agents]]** — Applying a persistent, bounded agent to security-event triage.

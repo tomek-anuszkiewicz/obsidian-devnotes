@@ -187,6 +187,8 @@ For example, an authenticated session makes these requests over two hours:
 
 Each returns HTTP 200 and stays below normal rate limits. A rule checking individual calls may see nothing. In sequence, especially after an unexpected session-token refresh, the calls may indicate user enumeration followed by data export.
 
+[[Continuous Security Monitoring with Agents]] extends this example into a running triage loop across identity, endpoint, cloud, and network signals, with evidence for an analyst to verify.
+
 ### Find private information from its context
 
 A scanner looking for credit card formats will not recognize every sensitive log entry. Consider this debug event:
@@ -212,6 +214,8 @@ The sensitive content is the combination of a named person, an account amount, a
   "justification": "Log event exposes explicit financial values tied to named individuals and legal proceedings within an unencrypted debug field."
 }
 ```
+
+This checks one telemetry destination. [[Agent-Assisted Sensitive Data Exposure Audits]] follows the same kind of field through API responses, logs, and storage against an explicit data-flow policy.
 
 ## Convert narrative claims into checked decisions
 
@@ -362,3 +366,4 @@ Engineers who only see generated summaries have less opportunity to learn how th
 - **[[Workflow Orchestration in Agentic Systems]]**: State machines, Sagas, and long-running workflows that consume structured proposals.
 - **[[Formal Verification and Runtime Safety Boundaries]]**: Assertions and invariant checks around model output.
 - **[[Proactive Software — From Reactive Systems to Autonomous Agents]]**: Moving from passive dashboards to operational agents that monitor production state.
+- **[[Agent-Assisted Sensitive Data Exposure Audits]]**: Tracing sensitive fields through APIs, logs, and storage against an explicit data-flow policy.

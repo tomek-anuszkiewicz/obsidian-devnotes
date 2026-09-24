@@ -78,7 +78,7 @@ The same mapping covers commit messages, docstrings parsed from ASTs, and basic 
 The gateway can make several decisions from measurable properties of the request:
 
 1. **Context size.** A prompt below **16k tokens** with small attachments is a candidate for local inference. A **64k to 128k+ token** prompt, such as a repository indexing pass or analysis of megabytes of logs, may go directly to the cloud. The KV cache for a large prompt can exhaust local GPU memory; a larger provider cluster can handle that memory demand across its infrastructure (see [[Token Optimization and Context Economics in Agentic Workflows]]).
-2. **Sensitive data.** A regex and AST scan looks for private keys, database connection strings, JWTs, and identifiable customer data. If it finds them, the gateway blocks cloud egress and restricts the request to a local, isolated endpoint.
+2. **Sensitive data.** A regex and AST scan looks for private keys, database connection strings, JWTs, and identifiable customer data. If it finds them, the gateway blocks cloud egress and restricts the request to a local, isolated endpoint. [[Agent-Assisted Sensitive Data Exposure Audits]] covers the wider data-flow review when sensitive fields move through APIs, logs, and stores.
 3. **Required output format.** When a request must satisfy a complex JSON schema, it can go to a local engine with constrained decoding, such as `vLLM` with Outlines or `llama.cpp` with GBNF grammars. The grammar restricts token generation to valid syntax and can avoid repeated cloud calls to repair malformed JSON.
 
 ### Level 3: Compare the prompt with known task types

@@ -894,7 +894,7 @@ A system that only investigates and comments requires much less trust than an au
 
 Writing code can be delegated to a separate fixer with stronger permissions.
 
-Limiting review agents to read-only repository access and write access only for comments and checks drastically limits the blast radius. If an agent is manipulated via prompt injection hidden inside untrusted pull request diffs or third-party dependencies, it cannot exfiltrate repository secrets, alter pipeline definitions, or push malicious commits to protected branches.
+Limiting review agents to read-only repository access and write access only for comments and checks reduces the changes they can make: a manipulated reviewer cannot alter pipeline definitions or push malicious commits to protected branches through those permissions. Comments and check results are still output channels. If the agent can read secrets, a prompt injection hidden in a pull request diff or dependency could cause it to copy those secrets into a comment or check result. Restrict what the reviewer can read and inspect proposed output before publication (see [[Security Boundaries for Agents, RAG, and MCP]]).
 
 ---
 
