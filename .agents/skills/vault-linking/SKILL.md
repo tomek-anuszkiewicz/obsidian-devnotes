@@ -29,6 +29,7 @@ The primary way to link notes is **inline within the body text**, right where th
 ### Finding Inline Opportunities Across Vault Folders
 
 - **Search across subfolders**: Do not limit searches to the note's immediate directory. Vault notes in `01 Architecture & Code`, `02 Testing & Code Review`, `03 Systems & Infrastructure`, `04 Prompts, Context & Models`, and `05 Engineering Economics & Future` constantly interact.
+- **Discover related ideas**: When the local `devnotes-rag` MCP server is available, try `devnotes_search` for concepts that may be phrased differently across notes. Use file search for exact titles and terms, then read likely notes before choosing a link. If RAG is unavailable or stale, continue with direct vault searches.
 - **Identify substantive assertions**: Look for sentences discussing system boundaries, failure modes, test verification, context economics, model behavior, or architectural patterns.
 - **Search existing note titles**: Check if the vault contains a note dedicated to that specific mechanism or tool.
 - **Embed at the claim**: Place `(see [[Target Note]])` immediately adjacent to the claim it supports or clarifies.

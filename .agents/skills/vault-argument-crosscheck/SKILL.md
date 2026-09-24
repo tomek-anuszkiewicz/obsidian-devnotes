@@ -34,13 +34,13 @@ Do not penalize broad coverage or deliberate repetition. The vault is a revisabl
 
 ## 3. Check the entire vault
 
-For every meaningful argument apparently absent from the target, search all vault notes, not just the same folder or notes with similar titles. Search alternate terms and related consequences, inspect plausible matches in context, and follow relevant Obsidian links. Classify the argument as:
+For every meaningful argument apparently absent from the target, search all vault notes, not just the same folder or notes with similar titles. When the local `devnotes-rag` MCP server is available, use `devnotes_search` to find conceptually similar passages under different wording. Also search alternate terms and related consequences directly in the files, inspect plausible matches in context, and follow relevant Obsidian links. If RAG is unavailable or its index may be stale, continue the whole-vault check using files. Classify the argument as:
 
 - **Present elsewhere:** the same substantive mechanism or conclusion is developed in another note.
 - **Partially present or disputed:** related material exists, but the match or implication is uncertain.
 - **New relative to this vault:** no substantive match was found after a reasonable whole-vault check.
 
-Use note paths and section or line references as evidence. A failed keyword search alone does not establish absence. "New relative to this vault" says nothing about originality in the wider world or about who first conceived the idea.
+Use note paths and section or line references from current files as evidence. Neither an empty RAG result nor a failed keyword search alone establishes absence. "New relative to this vault" says nothing about originality in the wider world or about who first conceived the idea.
 
 ## 4. Make changes and route decisions
 
