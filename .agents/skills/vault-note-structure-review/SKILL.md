@@ -17,13 +17,14 @@ Recommend a merge when notes answer substantially the same question and divide o
 
 ## When to consider a split
 
-Use length as a signal to review structure, never as an automatic split rule. Frontmatter, code blocks, tables, and examples can inflate line counts without adding another argument.
+Use length as a signal to review structure, never as an automatic split rule. Frontmatter, code blocks, tables, and examples can inflate line counts without adding another argument. A distinct topic alone is not enough to justify extracting a small section.
 
 - **Inspect:** Around 300–500 lines of note content, identify the one reader question that holds the sections together and look for independent detours. No split recommendation is required if the note still tells one coherent story.
-- **Recommend:** Around 600 lines or more, if two or more sections answer distinct reader questions and can stand on their own, propose a concrete split. Name what moves, what stays, and what context each note must retain. If the long note still has one clear argument, explain why it should stay together.
-- **Strongly recommend:** At any length, recommend restructuring when distinct sections need different context, have their own conclusions, and keeping them together makes either story difficult to find or use. The evidence is the independent arguments, not the line count.
+- **Assess:** Around 600 lines or more, look for sections that answer distinct reader questions and can stand on their own. Name what would move, what would stay, and what context each note would retain before deciding whether a split is worthwhile.
 
-At roughly 800–1000 lines, perform an explicit structural review before recommending further expansion, even if no split is ultimately justified. State the decision and its reason; do not cut a note merely to get below a threshold.
+Recommend a split only when the proposed new note or notes form coherent, independent stories **and** the original note would become at least about 40% shorter after retaining the context it still needs. Estimate this from the body text before and after the proposed split, excluding frontmatter. Do not gather unrelated small sections merely to reach the percentage. Extracting 200 lines from a 1,000-line note leaves the main story almost intact and is not a useful split under this rule. If the reduction is smaller, keep the note together; clearer headings or a concise explanation copied into another note may still help.
+
+At roughly 800–1000 lines, perform an explicit structural review before recommending further expansion, even if no split is ultimately justified. State the decision and its reason; do not cut a note merely to get below a threshold or extract a small independent section from an otherwise coherent story.
 
 Base recommendations on the notes' actual claims and sections, not similar titles, shared words, folder placement, or a preference for fewer notes. For each recommendation, name the affected notes and sections, state whether the content should be merged, moved, or copied, and explain the reader benefit and the substance that must remain intact. If the evidence is weak, say so rather than inventing a restructuring proposal.
 
