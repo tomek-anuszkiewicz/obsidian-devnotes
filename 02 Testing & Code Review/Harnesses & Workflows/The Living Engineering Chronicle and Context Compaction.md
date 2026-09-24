@@ -22,6 +22,8 @@ Coding agents can make ten substantial changes to a system in an afternoon. A fe
 
 Keep that reasoning in a chronological `DIARY.md`. The file records architectural changes, bug fixes, and structural changes as they happen. Each entry says which parts of the system changed, what changed, why, and how the result was checked. That gives a later reader more than a final diff or an initial design statement.
 
+The diary records how the system reached its current state. A current component specification has a different job: it states which behavior and boundaries must hold *now*. After each code change, record what changed and why in the diary, and check whether the current specification needs an update. A change to an accepted rule belongs in that specification before the next round of implementation. Superseded diary entries remain useful history, but they must not become instructions for the next implementation.
+
 There is a practical catch. After weeks of work, the diary may be hundreds of kilobytes long. If the agent reads the entire file to append a short entry, old history fills its context window, costs tokens, and leaves less room for the task at hand. A small CLI script can write the entry straight to disk and return a short confirmation. At completed milestones, a separate session condenses older entries while leaving recent ones in full.
 
 ```mermaid
@@ -38,6 +40,8 @@ flowchart TD
 ### Record reasoning while it is fresh
 
 Git messages are often reduced to one PR summary when work is squashed. They also seldom carry benchmark deltas, runtime measurements, or exact test results. ADRs describe an intended direction, but runtime errors, library bugs, hardware limits, and API constraints can force changes during implementation. Write down those discoveries when they happen, alongside the change they explain.
+
+This matters during repeated refactoring. A reviewer can see what the latest diff added, but an old workaround that survived several changes may no longer appear in any current diff. An agent may copy it because it already exists. Recording the reason for a change makes it possible to revisit such code; keeping the current specification updated makes it possible to rebuild without carrying the workaround forward. Before reverting a tangled implementation, compare its accepted behavior and the relevant diary entries with the current specification, and fill any gaps. Then verify the rebuilt code against that specification and independent checks (see [[In-Flight Documentation as the Primary Framework for Coding Agents]]).
 
 ### Give every entry four parts
 

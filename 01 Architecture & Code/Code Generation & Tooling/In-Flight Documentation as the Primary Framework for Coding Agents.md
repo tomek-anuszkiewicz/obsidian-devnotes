@@ -72,10 +72,18 @@ A practical sequence looks like this:
 
 1. **Explore what you do not yet know.** Give the agent small tasks, inspect its code, and run quick tests to expose behavior and edge cases.
 2. **Get the implementation working.** Check the cases you found, then run the unit and integration tests.
-3. **Write down the settled decisions.** Once the design is clear and the tests pass, ask the agent to draft an Operation Card with the rules, dependencies, and decisions discovered during implementation.
+3. **Keep the card current.** After each code change, check whether it introduces, changes, or removes a rule that the card must preserve. Add what was learned and remove rules that belonged only to an abandoned approach.
 4. **Test the card in a fresh session.** Give another agent session the card and the tests, then ask for a small change. If the agent breaks an invariant or adds a forbidden package, clarify the card and commit that revision.
 
 The third step keeps the reasoning from being stranded in a chat history the next agent may never see. Otherwise, it has to recover the rules from code and may miss an edge case that took real effort to discover. The fresh-session change tells you whether the card contains enough information to guide the next task.
+
+## Rebuild from the current decisions when the code carries old attempts
+
+Several rounds of changing the design can leave code that still works but no longer expresses the final design cleanly. An unused helper is easy to notice in a diff when it first appears. Months later, a leftover field or a roundabout data path is simply part of the existing code. An agent working on another task may treat it as intentional and build around it. Ordinary review of the latest diff will not draw attention to that old line.
+
+This is a reason to check the card after *every code change*, not merely write one when the implementation settles. The check does not require documenting every line of code. It asks whether the change revealed or altered behavior, interfaces, ownership, or constraints that the next implementation must preserve. Add those decisions to the card. When a decision changes, replace the old rule there; keep the reason for rejecting it in the engineering history if it may matter later. Before discarding the code, compare the card with the working implementation, tests, and recorded discoveries. Resolve any gaps while the code is still available. The card should describe what must be rebuilt, not the sequence of attempts that happened to produce it.
+
+Once the current card captures those decisions, a larger reset becomes possible: revert the accumulated implementation, give the agent the card and independent checks, and build the code again without the abandoned versions in view. This need not stop at one function or file. If the design changed across a whole module, the module can be rebuilt from the current rules. The fresh implementation still needs compilation, tests, and review against the card. This tests whether the recorded intent can reproduce the required behavior, rather than assuming that passing tests or a plausible note proves completeness (see [[Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification]]).
 
 ## Give the agent a short card and the relevant code
 
@@ -122,7 +130,7 @@ When the next agent changes settlement processing, the card gives it the constra
 
 ## Rules for using the cards on a team
 
-1. **Let the agent draft the card when the code settles.** Once the implementation and tests are in good shape, have it write the Operation Card. Engineers review and refine the rules instead of reconstructing the document from memory later.
+1. **Check the card after every code change.** Update it when the change alters a decision or reveals a rule that the next implementation must preserve. Engineers check that the current rules and discoveries are present before treating the card as a basis for future changes or regeneration.
 2. **State structural rules explicitly.** Record where code belongs, which dependencies it may use, and how failures must be handled.
 3. **Keep tests alongside the written rules.** Markdown says what the code is meant to do. Compilation and tests check the parts of that contract they can verify.
 4. **Choose context deliberately.** Give the agent the few cards and files it needs. A huge context window is no reason to paste the whole repository into every task.
