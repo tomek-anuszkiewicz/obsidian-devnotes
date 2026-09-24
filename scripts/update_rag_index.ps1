@@ -15,13 +15,23 @@
 param()
 
 if ($args.Count -gt 0) {
-    Write-Error "index_to_rag.ps1 accepts no arguments. Update its fixed configuration instead."
+    Write-Error "update_rag_index.ps1 accepts no arguments. Update its fixed configuration instead."
     exit 1
 }
 
-$VaultRoot = $PSScriptRoot
-if (-not $VaultRoot) {
-    $VaultRoot = (Get-Location).Path
+$ScriptDir = $PSScriptRoot
+if (-not $ScriptDir) {
+    $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+}
+if (-not $ScriptDir) {
+    $ScriptDir = (Get-Location).Path
+}
+
+$VaultRoot = Split-Path -Parent $ScriptDir
+if (-not (Test-Path -LiteralPath (Join-Path $VaultRoot '01 Architecture & Code') -PathType Container)) {
+    if (Test-Path -LiteralPath (Join-Path (Get-Location).Path '01 Architecture & Code') -PathType Container) {
+        $VaultRoot = (Get-Location).Path
+    }
 }
 
 $IndexedDirectories = @(
@@ -62,7 +72,7 @@ $UnexpectedMainDirectories = @(
 
 if ($UnexpectedMainDirectories.Count -gt 0) {
     $Names = $UnexpectedMainDirectories.Name -join ', '
-    Write-Error "Unexpected main directory/directories: $Names. Update index_to_rag.ps1 to add or intentionally ignore them."
+    Write-Error "Unexpected main directory/directories: $Names. Update update_rag_index.ps1 to add or intentionally ignore them."
     exit 1
 }
 
@@ -72,7 +82,7 @@ $MissingIndexedDirectories = @(
 
 if ($MissingIndexedDirectories.Count -gt 0) {
     $Names = $MissingIndexedDirectories -join ', '
-    Write-Error "Configured main directory/directories are missing: $Names. Update index_to_rag.ps1 before indexing."
+    Write-Error "Configured main directory/directories are missing: $Names. Update update_rag_index.ps1 before indexing."
     exit 1
 }
 
