@@ -614,6 +614,8 @@ docs(orders): document cancellation workflow
 
 A commit should represent a coherent, reviewable and preferably verified unit—not every tiny correction made during the loop.
 
+Before staging, inspect the full diff and group changes by the reason they were made. If a task changed an agent skill and also made an independent change to application code or a note, stage and commit those groups separately. That lets a reviewer understand or revert the skill change without taking the other change with it. Keep files together when they form one dependent change, such as a skill and the test that verifies its behavior. If one file contains unrelated edits, stage the relevant hunks separately rather than treating the file as an indivisible unit.
+
 ## Pull requests as an additional approval gate
 
 A useful development path is:
