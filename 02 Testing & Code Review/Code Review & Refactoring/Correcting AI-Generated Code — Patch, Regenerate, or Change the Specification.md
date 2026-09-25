@@ -105,23 +105,9 @@ and:
 
 > generating code directly from the target design.
 
-Repeated corrections can create architectural sediment.
+Repeated corrections can leave old decisions in the code. An agent may generate design `A`, patch it into `B`, then patch it again into `C`. The result may implement `C` while retaining structures from `A` and `B`. A later agent sees those structures as existing code and may copy them as an intentional pattern.
 
-For example:
-
-`A`
-
-is generated first.
-
-Then it is modified into:
-
-`B`
-
-and later into:
-
-`C`.
-
-The final implementation may technically implement C, but still contain structural remnants of A and B.
+The same problem can spread across modules. If a change in one module makes tests in others fail, adding a condition to each consumer may make the suite green without fixing a misplaced decision in the original module. Diagnose the failures before patching the consumers. A genuine contract migration may need changes in several modules; repeated conditions that compensate for the same local decision are a reason to reconsider the design.
 
 This suggests a useful heuristic:
 
@@ -159,14 +145,15 @@ A business or architectural defect may justify regeneration.
 
 - The overall component structure, layering, and domain boundaries are sound.
 - The defect is confined to a single function body, condition, or isolated calculation.
-- Applying the fix takes seconds and does not alter how other components interact with this code.
+- The fix does not change how other components interact with this code.
 
 ### When to regenerate
 
 - The agent chose the wrong abstraction (such as deep inheritance trees instead of composition).
 - State ownership is misplaced (for example, managing lifecycle state inside transport controllers instead of domain aggregates).
+- Fixing one module requires compensating conditions in several others because the original decision sits in the wrong place.
 - You find yourself writing repeated rounds of corrective prompts trying to bend awkward code into compliance.
-- Discarding the file, updating instructions with a clear boundary rule, and regenerating produces clean code without historical baggage.
+- You can preserve the discovered requirements and tests, discard the accumulated implementation, and rebuild the affected modules from a clearer design.
 
 ## 4. Architectural defects
 

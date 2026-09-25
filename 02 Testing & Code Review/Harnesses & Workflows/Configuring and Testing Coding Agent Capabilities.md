@@ -42,12 +42,12 @@ If you instruct an agent: *"Use the command pattern to handle this request"*, th
 
 A more reliable approach pairs wide implementation freedom with rigid negative boundaries (see [[Negative Knowledge and Explicit Architectural Dissents]]):
 
-1. **Grant Implementation Latitude**: Allow the agent to choose local data structures, helper functions, and algorithm details within the target module scope.
-2. **Erect 2–3 Explicit Negative Fences**: Clearly define forbidden anti-patterns:
+1. **Grant Implementation Latitude**: Allow the agent to choose local data structures, helper functions, and algorithm details within the target module. Keep the module's existing contracts fixed unless the task calls for changing them. This includes what a field or message means, not only its type or shape.
+2. **Erect 2–3 Explicit Negative Fences**: Clearly define forbidden changes for this task:
    - Forbidden: Adding external package dependencies without prior approval.
-   - Forbidden: Mutating database schemas or public API contracts in this task slice.
+   - Forbidden: Changing database schemas or public API contracts when the task is confined to an existing module contract.
    - Forbidden: Introducing heap allocations, dynamic dispatch, or blocking I/O inside synchronous hot paths.
-3. **Outcome**: The agent retains the flexibility to solve edge cases without getting stuck in brittle, over-specified prompts, while your architectural invariants remain protected against drift.
+3. **Revisit the scope when the boundary breaks**: Run the relevant tests after the local change. If tests in other modules now fail, diagnose the failures before patching each consumer. A contract change may require work in several producers and consumers; put the shared rule where it belongs and change the consumers that need to change. Minimize the number of places that define the rule, not the number of files touched. Failing tests reveal some affected modules, but an instruction naming them does not prove that every consumer was found.
 
 ## Reusable agent skills
 
