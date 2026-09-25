@@ -27,15 +27,33 @@ That arrangement would change what an AI application has to sell. An app that ma
 
 Cloud platforms have an advantage here because they already hold files, email, calendars, and photos. They can index changes close to the source. A separate application must ask the user to upload those records or keep a second copy in sync.
 
+## Why the chat application does not cover every workflow
+
+A provider's chat or coding agent usually packages its model access with a particular interface, tools, permissions, and limits. It may offer little or no choice of models from competing providers. That package works for many interactive tasks, but a developer may need to run a repeatable audit, write a custom procedure, or put an inference call between deterministic checks in their own program. Those workflows need programmatic access and control over when the model is called. An application subscription does not automatically supply that access: [OpenAI](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform) and [Anthropic](https://support.anthropic.com/en/articles/9876003-i-subscribe-to-a-paid-claude-ai-plan-why-do-i-have-to-pay-separately-for-api-usage-on-console) currently bill their application subscriptions and APIs separately.
+
+The apparent price gap needs care. A flat subscription can look cheaper than paying for the same number of API tokens because occasional users help cover heavy users, while the provider controls the application, model routing, request pace, and usage limits. An API exposes a meter that an arbitrary client can call in a loop. The provider charges for actual consumption rather than promising the same amount of compute for a fixed monthly fee. This does not mean that an API token intrinsically costs more to serve. It means that a subscription price and a metered API bill allocate usage risk differently.
+
+Other model providers can offer lower API prices for some workloads. The comparison depends on the selected model, input and output rates, context size, latency, quality, caching, and service terms; a cheaper token does not prove an equivalent result. Portability matters here: if the workflow owns its model calls, it can choose a suitable provider or route different steps to different models.
+
+## The split between subscription and API is a business decision
+
+Selling only the provider's own application lets it decide which models users reach, how much work one session can start, and which features keep users in its product. Selling a public API gives customers more freedom but also exposes the provider to workloads it cannot design in advance. Whether to include API usage in a personal subscription therefore depends on the company's pricing, capacity, and distribution strategy, as well as its ability to enforce limits. There is no technical requirement that chat and API access be billed under separate accounts.
+
+A plausible direction is for more personal subscriptions to include a small, renewable API allowance. The provider could make its models useful in many independent applications while retaining the customer relationship and charging for usage beyond the included amount. This remains a prediction. Some providers may prefer to keep usage inside their own application, sell API access separately, or restrict third-party clients.
+
 ## What changes when the subscription covers both chat and API use
 
 ### 1. One account for interactive and programmatic access
 
 The old split asks users to pay a fixed fee for chat and then configure a second account with metered billing and an API key. Products such as Google One AI Premium and bundled developer seats point toward a different arrangement: a shared identity and subscription can cover a chat interface, model routing, and a pool of programmatic usage. In the proposed arrangement, the same account also supports voice and desktop or mobile use.
 
+One limited version already exists: [Google's developer benefits](https://developers.google.com/program/plans-and-pricing) list a recurring monthly GenAI and Cloud credit with eligible Google AI subscriptions, including use in AI Studio. A credit is a bounded amount of metered usage, not unlimited API calls. Its value and eligibility can change with the plan.
+
 ### 2. Bring Your Own Brain (BYOB)
 
 A third-party tool could ask the user to provide a personal API credential or authorize access through OAuth. Model calls and embedding generation would then count against the user's subscription allowance. The tool would charge for the workflow and interface it provides, rather than including another $15–$30 per month to pay the model provider on the user's behalf.
+
+In that model, an application working with the user's documents could spend the user's model allowance to classify files, answer questions, or run an audit. The application would still need separate permission to read those documents; a model allowance is a compute budget, not authority over the user's data. The user also needs to see which application spent the allowance and be able to limit or revoke its access.
 
 The application remains responsible for domain logic, user experience, local state, deterministic checks, and integrations (see [[Applications May Shift from Fixed Features to Agent-Extensible Primitives]] and [[Unbundling of Enterprise Software]]). For example, an IDE assistant, terminal agent, task manager, CAD tool, web agent, or finance tool could build its own workflow around the same user-supplied model access.
 
@@ -151,6 +169,12 @@ A standalone model service typically starts with manual uploads into a temporary
 Google Workspace, Microsoft 365, and Apple Intelligence illustrate the kind of application and account ecosystems relevant to this argument. A model-only provider can still have a lead in reasoning, but it must solve the practical problem of getting current, authorized user context into each task. The user feels that difference every time they have to assemble context by hand.
 
 ## The hard parts of making it work
+
+### Stop a faulty client before it spends the whole allowance
+
+Suppose a custom audit retries a failed request without a stopping condition. It could send hundreds of model calls in an hour and consume a monthly allowance before the user notices. In the provider's own agent, the provider can constrain the loop and its tools. A public API must assume the caller can run any loop, so an included allowance needs limits enforced at the API gateway: a cap per request, rate and concurrency limits, and hard budgets for both the account and each application. Usage visibility and warnings help, but they cannot substitute for a stop that works when the client misbehaves.
+
+The contract must also say what happens when the budget runs out. A hard stop leaves the user without programmatic access until renewal or a deliberate top-up; automatic overage billing transfers an unexpected cost to the user. The provider risks absorbing that cost if it sells effectively unlimited API use inside a flat subscription. Separate app budgets can also keep one broken integration from consuming the person's entire allowance. These choices make limited subscription API access possible, but they do not remove the trade-off between a predictable bill and uninterrupted work.
 
 ### Limit each application's access
 
