@@ -415,7 +415,7 @@ AI generates fake human opinions
 
 Detecting such manipulation may be considerably harder than detecting classic SEO spam.
 
-Traditional link farms exhibited recognizable graph-theoretic signatures—unnatural backlink topology, shared IP blocks, or low-quality domain registration profiles. Autonomous synthetic agents, by contrast, emit linguistically diverse, contextually nuanced contributions from distinct networks with simulated account histories. When automated fleets manufacture an apparent cross-platform consensus, retrieval-augmented search engines treat that multi-source agreement as authentic signal and confidently parrot the recommendation.
+Traditional link farms exhibited recognizable graph-theoretic signatures—unnatural backlink topology, shared IP blocks, or low-quality domain registration profiles. An operator using agents could instead generate varied contributions across accounts and sites, then adjust later posts to responses. If a search or retrieval system mistakes those related posts for independent evidence, it may repeat a manufactured consensus. The scale and effectiveness of such a campaign depend on account access, distribution, ranking, and detection; [[Risks of Widespread AI Agent Use]] places this mechanism alongside impersonation and other harms.
 
 ---
 

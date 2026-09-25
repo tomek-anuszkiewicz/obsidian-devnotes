@@ -99,6 +99,8 @@ Software engineers are used to learning new languages, frameworks, and platforms
 
 Working through agents changes the division of labor. The engineer has to externalize requirements that previously stayed in their head, decide what context the model needs, design checks for work they did not personally produce, and maintain a mental model while implementation happens elsewhere. Some experienced developers may dislike that role. Others may try to adopt it but never become as effective at supervision, specification, and review as they were at direct implementation.
 
+This is a work-transition cost even in a team that keeps the same headcount. Whether companies also cut jobs depends on demand, budgets, and how they use the saved time. [[Risks of Widespread AI Agent Use]] distinguishes displacement from changes in the work people still do.
+
 This does not erase the value of their existing experience. It means the market may reward that experience only when it can be expressed through problem framing, constraints, verification, and responsibility for the result. Manual authorship alone is unlikely to command the same premium as a handmade physical product (see [[Handwritten Code May Not Become a Luxury Good]]).
 
 ---

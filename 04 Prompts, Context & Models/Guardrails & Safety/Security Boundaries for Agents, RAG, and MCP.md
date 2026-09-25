@@ -91,3 +91,4 @@ The practical review question is: **What can this agent actually do if it follow
 - **[[How AI Agents May Control Computers, Applications, and the Web]]** — Why tool access across applications needs concrete execution limits.
 - **[[Conversation History as Sensitive Data]]** — Privacy risks created by retaining and inferring from many ordinary conversations.
 - **[[Continuous Security Monitoring with Agents]]** — A bounded agent that investigates suspicious activity across security signals.
+- **[[Risks of Widespread AI Agent Use]]** — How agent access and automation connect technical failures to privacy, information, and work-related harms.

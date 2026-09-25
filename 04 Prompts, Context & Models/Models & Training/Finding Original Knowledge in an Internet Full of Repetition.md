@@ -39,6 +39,8 @@ This suggests an interesting possibility:
 
 The important distinction is between **text novelty** and **information novelty**.
 
+For a reader, this is also a discovery problem. If search results fill with fluent rewrites of the same claim, an original report may be harder to find even before anyone trains a model on those rewrites. The pressure can come from ordinary publishing incentives, without a coordinated disinformation campaign (see [[Risks of Widespread AI Agent Use]]).
+
 When training pipelines simply amass tokens without introducing new state information, the model burns compute refining redundant statistical representations of consensus claims. Worse, repeatedly training on derivative web content risks mode collapse and representational homogenization across generations.
 
 ---

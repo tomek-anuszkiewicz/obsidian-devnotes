@@ -33,6 +33,8 @@ For a conversational product, the practical design questions are concrete: Which
 
 The same boundary applies to a personal coaching agent. Keeping transcription and analysis local can reduce exposure to a remote provider, but local storage still needs access controls and a deliberate retention policy (see [[The AI Agent as a Personal Behavioral and Communication Coach]]). [[Agent-Assisted Sensitive Data Exposure Audits]] covers how to check whether conversational fields leak into APIs, logs, or stores outside the intended policy.
 
+A stolen history can also make impersonation more credible. An attacker may learn shared events, the person's writing style, and how they speak to different contacts. Protecting raw chats therefore matters even when they contain no passwords or account numbers; [[Risks of Widespread AI Agent Use]] connects this exposure to fraud and wider social harms.
+
 ## Related notes
 
 - **[[Personal AI Subscriptions and Unified Model Access]]** — Keeping retrieval over personal data near the system that owns it.
