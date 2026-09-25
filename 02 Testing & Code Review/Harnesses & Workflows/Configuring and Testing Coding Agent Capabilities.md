@@ -80,6 +80,10 @@ Example procedure:
 
 Skills remain mostly text, but they can also contain scripts, templates, examples and reference material.
 
+Before adding a skill, watch the agent perform a few real tasks in the project. Look for operations it repeatedly reconstructs: finding the right entry point, collecting evidence, applying a domain convention, or checking the result. Define the input, expected output and stopping conditions for one such operation. Put the reusable sequence in a skill and move steps with exact rules into a script or other tool. The agent can then use the result for the part of the task that still requires judgment.
+
+First check whether the agent has the means to perform the operation at all. An agent working in a graphical application may struggle because it cannot see the current screen or the effect of a click. Giving it a way to capture the application state addresses that missing observation; a skill can then describe when to inspect the screen and what to check after an action. More instructions alone cannot supply a view of an application the agent cannot access.
+
 ### Skills as Native Code Functions (Beyond Shell Commands)
 
 While agents can run terminal commands, building skills as native code functions (e.g. in Python or C#) provides:

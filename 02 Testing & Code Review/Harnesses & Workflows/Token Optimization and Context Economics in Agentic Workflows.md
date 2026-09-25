@@ -58,6 +58,8 @@ Track input, output, and billed reasoning tokens, cache hits, model calls, tool 
 
 An occasional review of available agent traces can reveal repeated file reads, oversized tool responses, broad searches that returned nothing useful, or several retries against the same failure. Ask the agent to propose a specific change, such as narrowing a query or moving a check to a script, then compare later runs. The agent can inspect only the calls and logs the host exposes; its explanation of why tokens were spent is a hypothesis to test against those records, not a substitute for usage accounting. Prefer counts and short diagnostic excerpts over routinely loading full transcripts back into a model.
 
+Some expensive runs reveal a missing capability rather than a verbose prompt. If the agent must operate an application but cannot inspect its state, give it an appropriate observation tool before writing a procedure for the interaction. When the same sequence of observations, actions and checks recurs, package it as a focused skill and let scripts perform any exact substeps. Compare the time, tokens and verified results on similar tasks; a skill saves little if its full instructions load for unrelated work or its tool returns more data than the agent needs.
+
 ### Keep permanent rules short
 
 After each agent mistake, it is tempting to append another rule to `RULES.md`. Two months later, 50 rules may occupy 6,000 tokens. Across 30 requests, that is up to `30 × 6,000 = 180,000` repeated input tokens, even before accounting for application code. Prompt caching can lower the charge for a stable prefix, but the text still occupies context.

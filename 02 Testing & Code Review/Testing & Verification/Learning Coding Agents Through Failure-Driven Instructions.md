@@ -110,6 +110,8 @@ but:
 
 Over time, repeated failures can become organizational knowledge.
 
+The diagnosis should consider more than the wording of an instruction. Ask where the agent got stuck and inspect the tools and evidence it actually had. If it cannot see the state of an application, a screenshot or another state-reading tool may solve the immediate problem. If it repeatedly follows the same long sequence, a skill can preserve that procedure; a script can perform the parts with exact rules. A new rule helps when the agent had the necessary information and capability but made the wrong choice. Compare later tasks to see whether the change reduces retries without creating new work elsewhere.
+
 ---
 
 ## Example
