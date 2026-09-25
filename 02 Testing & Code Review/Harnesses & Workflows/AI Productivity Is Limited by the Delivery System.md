@@ -34,6 +34,8 @@ idea
 
 If implementation becomes faster but the rest of the loop remains unchanged, the total improvement may be small.
 
+That makes task intake and review capacity part of project planning, not just a concern for the delivery pipeline (see [[Managing Software Projects with Coding Agents]]).
+
 ## Local Acceleration vs System Throughput
 
 Suppose implementation represents 20% of the total delivery time.

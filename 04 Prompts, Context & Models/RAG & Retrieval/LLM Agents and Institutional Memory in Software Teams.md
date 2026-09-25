@@ -156,6 +156,8 @@ Agents can generate and update descriptions of what the code currently does. The
 
 Agents are well suited to documenting **how** a system works. Humans need to remain responsible for **why it works this way** and **whether it should continue to do so** (see [[What Should Organizations Preserve from AI-Assisted Development]] and [[Why Business Logic Is the Hardest Part of Agentic Coding]]).
 
+The same distinction applies when an agent updates a project roadmap: it can maintain the text, but the team must accept substantive changes to direction (see [[Managing Software Projects with Coding Agents]]).
+
 ## Onboarding with agents
 
 An agent can help a new developer complete local tasks sooner, but local productivity is not the same as understanding the system.

@@ -20,6 +20,8 @@ aliases:
 
 On a typical project board, completed tickets stay visible. Their checkmarks and dates help people follow sprint progress. An agent's `ROADMAP.md` has a different job: it tells the agent what to do next. If it carries every completed task along with the remaining work, the agent reads old implementation details on every turn.
 
+The team's choice of which work enters that active roadmap is a separate project-planning decision (see [[Managing Software Projects with Coding Agents]]).
+
 An LLM does not retain a reliable working memory between sessions. It rebuilds its working context from the prompt and the files it reads. A completed task, a replaced interface specification, or an obsolete constraint therefore takes up room in the context window alongside the current acceptance criteria. Old text can also influence how the agent interprets the next task.
 
 The rule I use here is **Active Backlog Pruning**, or **Zero Retention**: once a step has passed verification, remove its detailed entry from the active roadmap. Record what happened in `DIARY.md` and the Git history (see [[The Living Engineering Chronicle and Context Compaction]]). Keep the roadmap focused on work still pending or in progress, with only a short summary of established capabilities.
