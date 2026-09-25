@@ -5,5 +5,5 @@ description: Keep persisted vault content in English and mirror the user's langu
 
 # Notes Language
 
-- Write public and private vault files in English: titles, frontmatter, headings, prose, tables, diagrams, wikilinks, and code comments.
+- Write files in this vault in English: titles, frontmatter, headings, prose, tables, diagrams, wikilinks, and code comments.
 - Reply in the user's language. Do not mix languages within a response.

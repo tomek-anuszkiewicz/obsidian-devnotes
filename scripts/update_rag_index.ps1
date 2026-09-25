@@ -5,7 +5,7 @@
 .DESCRIPTION
     This script has no options. It uses rag_qdrant to index only the explicitly
     listed main directories below. rag_qdrant recursively scans each supplied
-    directory and enforces its own private and system-directory exclusions.
+    directory and excludes built-in system and tool directories.
 
     A new numbered top-level directory is treated as a required script update:
     decide whether to add it to $IndexedDirectories or intentionally ignore it,
