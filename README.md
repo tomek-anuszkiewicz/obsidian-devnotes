@@ -7,6 +7,7 @@ tags:
   - public-notebook
   - llm-assisted-writing
 aliases:
+  - About This Vault
   - Preamble
   - Vault Preamble
   - About This Knowledge Base
