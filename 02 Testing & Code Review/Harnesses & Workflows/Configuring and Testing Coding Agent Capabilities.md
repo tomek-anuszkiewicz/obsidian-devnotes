@@ -26,6 +26,8 @@ Some systems package a scope as a plugin containing agents, rules, skills, workf
 
 Selection can be explicit: a task or workflow names the agent, rule or skill to use. It can also depend on descriptions that the agent matches to the current request. A good description improves the odds of selection, but does not guarantee it. Rules may be loaded for every task in a scope or only when a file or request matches; the exact controls vary by product. The configuration should make these choices inspectable rather than relying on a large shared pool and hoping the agent picks correctly.
 
+Scoping can also save context when the host actually withholds unrelated rule text, skill bodies, and tool schemas from the current model call. A plugin folder or specialist agent name alone changes nothing if the host still loads the entire shared catalog. Check the assembled prompt or usage trace for representative tasks, including one that should not activate the specialist. Keep the always-loaded routing descriptions short, then load the detailed procedure only after selection.
+
 Keep natural-language rules short enough to guide decisions the agent must make. Detailed instructions for every mechanical edge case can compete for attention and produce the rule overload described in [[Constraint Saturation and Rule Oscillation in Coding Agents]]. Short does not mean vague: a rule still needs a clear intent and scope. Put repeatable, measurable details in executable checks instead of asking the agent to remember them all.
 
 ## Steering agents via negative boundaries
@@ -117,6 +119,8 @@ A check sitting in a repository does nothing until something invokes it. A hook 
 - **On a schedule:** run periodic checks for drift that may appear between active tasks. This is usually a scheduled job rather than a lifecycle hook, but follows the same trigger-and-action pattern.
 
 These checks provide feedback at different times. The host can make a failed audit block completion or return the failure to the agent for repair. If a hook only logs a warning, it provides visibility but does not enforce the rule. A post-action check can detect a bad change; it cannot undo an irreversible action that already ran. Keep prohibitions that must hold before execution at a pre-action gate or permission boundary (see [[Security Boundaries for Agents, RAG, and MCP]]). Test the trigger itself as well as the check: a correct validator is no help if the expected file write or task completion never invokes it.
+
+Choose the trigger by the cost of finding a violation late. A cheap, local check can run after a relevant write. A broader audit can run when a roadmap step is verified, before a feature branch merges, or on a schedule. The audit itself can stay deterministic and use no model tokens; only a concise failure needs to enter the agent's context for diagnosis. Do not defer a boundary check past the action it is meant to prevent.
 
 ### Test the configuration and the audit path
 

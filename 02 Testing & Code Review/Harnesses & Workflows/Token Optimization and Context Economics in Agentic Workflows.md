@@ -52,6 +52,12 @@ Before changing inference settings, look at the habits that make an agent read o
 | Verbose subagent results | A child agent's large log consumes the parent agent's context. |
 | Repository-wide refactoring too early | A bad assumption spreads through many files before the first useful failure appears. |
 
+### Measure the whole task, then inspect expensive runs
+
+Track input, output, and billed reasoning tokens, cache hits, model calls, tool calls, and retries per task. Roll those records up by project and, where the organization needs it, by developer. Keep the task type, elapsed time, and verification result alongside the counts. A rising monthly total may reflect more work rather than a less efficient agent; compare similar tasks and look at cost per verified result before changing the workflow.
+
+An occasional review of available agent traces can reveal repeated file reads, oversized tool responses, broad searches that returned nothing useful, or several retries against the same failure. Ask the agent to propose a specific change, such as narrowing a query or moving a check to a script, then compare later runs. The agent can inspect only the calls and logs the host exposes; its explanation of why tokens were spent is a hypothesis to test against those records, not a substitute for usage accounting. Prefer counts and short diagnostic excerpts over routinely loading full transcripts back into a model.
+
 ### Keep permanent rules short
 
 After each agent mistake, it is tempting to append another rule to `RULES.md`. Two months later, 50 rules may occupy 6,000 tokens. Across 30 requests, that is up to `30 × 6,000 = 180,000` repeated input tokens, even before accounting for application code. Prompt caching can lower the charge for a stable prefix, but the text still occupies context.
@@ -107,7 +113,7 @@ This gives the agent room to reason when foundations move and keeps it focused w
 
 Running the full test suite, static analysis, linting, and security checks after every tiny edit slows the loop and fills it with output about work still in progress.
 
-Use a compiler or targeted module tests while editing. Run integration tests, broad lint checks, and architecture checks at a milestone, every chosen number of commits, or in a background job. These deeper checks still matter; they simply belong at a point where the code is stable enough to learn from their results.
+Use a compiler or targeted module tests while editing. Run integration tests, broad lint checks, and architecture checks at a roadmap milestone, before merging a feature branch, on a schedule, or in a background job. A deterministic audit can run without an LLM call; pass a short failure report to the agent only when it needs to diagnose or repair something. Running a check less often trades lower repeated cost for later detection, so keep fast checks at the boundary where a violation must be caught. [[Configuring and Testing Coding Agent Capabilities]] discusses triggers and checks that must run before an action.
 
 ### Give each task a fresh session
 
@@ -117,7 +123,7 @@ In a long conversation, old plans and discarded ideas remain in context. The age
 
 A subagent can read 20 files and run commands without putting those raw results in the parent agent's context. That benefit disappears if it returns a 3,000-word investigation.
 
-Give the subagent a target path and a precise question rather than the full project roadmap. Ask for a diff, a status, or three factual bullets. For example, a child may spend 60,000 tokens investigating Bug #402 but return a 150-token finding to a parent whose context started at 4,500 tokens. Keep the raw logs in the child's task.
+Give the subagent a target path and a precise question rather than the full project roadmap. Ask for a diff, a status, or three factual bullets. For example, a child may spend 60,000 tokens investigating Bug #402 but return a 150-token finding to a parent whose context started at 4,500 tokens. Keep the raw logs in the child's task. This protects the parent's working context; it does not by itself reduce total token use, because the child has its own model calls and may repeat discovery work. See [[Multi-Agent Software Development]] for the compute cost of parallel agents.
 
 ### Try a refactor on one piece first
 
@@ -166,6 +172,8 @@ MCP gives an agent a consistent way to call tools while the implementation can b
 This is useful for current framework APIs. When an agent uses an outdated .NET, Angular, Azure, or TypeScript example, it can spend many turns fixing compiler errors or inventing compatibility code. A targeted documentation call, such as `mcp__dotnet_docs__get_signature("DefaultAzureCredential")`, can return the relevant current signature and a short example. A tool that dumps the entire HTML page, including navigation and footer, loses that advantage.
 
 Tool descriptions themselves consume context. If ten broad integrations expose 70 or more schemas, the agent may carry thousands of tokens of tool definitions through ordinary coding turns. Keep a few basic file and terminal tools available and load database, cloud, or browser tools when the task needs them.
+
+The response size matters just as much as the tool signature. A search tool that returns hundreds of records, or an MCP server that sends a whole log or document, puts that text into the agent's next working context when the harness forwards the result. Design the server response around the decision the agent must make: filter on the server, return the relevant fields and source identifiers, and let the agent request a page or full record when needed. Return the total count or a continuation marker so a short response does not silently pretend to be complete. Keep enough evidence to check the result; truncating an arbitrary number of characters can hide the decisive error or clause.
 
 ### Consider adapters for stable company conventions
 
