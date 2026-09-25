@@ -122,6 +122,12 @@ These checks provide feedback at different times. The host can make a failed aud
 
 Choose the trigger by the cost of finding a violation late. A cheap, local check can run after a relevant write. A broader audit can run when a roadmap step is verified, before a feature branch merges, or on a schedule. The audit itself can stay deterministic and use no model tokens; only a concise failure needs to enter the agent's context for diagnosis. Do not defer a boundary check past the action it is meant to prevent.
 
+### Measure the cost of the audit
+
+An audit is work in the delivery path. A pre-commit check that grows from seconds to minutes delays every commit; several review agents can leave a change waiting longer than the implementation took. Measure elapsed time from the audit trigger to a usable result, and record the time spent in each check or reviewer. Include retries and the human time needed to sort useful findings from false alarms. Token or compute cost alone will miss a slow queue, repeated tool calls, or a reviewer that produces many comments without identifying a real defect.
+
+Compare those costs with what the audit finds, grouped by the kind and risk of change. If a costly check rarely catches relevant defects on small edits, narrow its scope or move it to a later batch. If it catches failures that must be stopped before an action, keep that gate at the boundary and make its implementation faster. Set a time budget for the routine path, investigate checks that repeatedly exceed it, and track whether moving a check leads to defects being found later. The goal is to control audit time without silently dropping the protection the check provides.
+
 ### Test the configuration and the audit path
 
 After changing an agent, rule, skill, permission or hook, run small representative tasks in an isolated workspace. For each task, record the expected selection, allowed tools, forbidden actions, expected hook events and required audit result before running the agent. Then inspect the trace, changed files and check output. The final answer alone cannot show whether the correct skill ran or whether a hook silently failed to fire.
