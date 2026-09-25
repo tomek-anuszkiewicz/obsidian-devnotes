@@ -67,6 +67,16 @@ Automation and workforce reduction should not be treated as the same automatic d
 
 ---
 
+## Faster Code Generation Is Not a Staffing Ratio
+
+Suppose an AI tool lets engineers produce a first implementation five times faster. It does not follow that the company can deliver five times as many reliable changes, or keep the same delivery rate with four fifths of its engineers gone. Writing the first version is only one part of the work. Someone still has to decide where the change belongs, check its effect across the system, review the diff, test it, deploy it, and observe what happens in production. These steps may take more effort when the volume of generated code rises.
+
+The tempting calculation can look sound on a budget sheet before it fails in the repository. If staffing cuts remove the people and time needed for review and maintenance, agents may keep fixing each reported problem in place. One feature gets its own validation rule, another copies a similar rule elsewhere, and the next fix adds a workaround rather than correcting the shared boundary. Each change can pass its local tests while making later changes harder to understand and verify. See [[AI Changes the Economics of Technical Debt]] and [[Correcting AI-Generated Code — Patch, Regenerate, or Change the Specification]].
+
+If these problems accumulate, the cost may appear gradually: more regressions, longer reviews, repeated repair attempts, and slower delivery despite faster code generation. A company might notice this after several months, perhaps around half a year in a particular case, but there is no general six-month deadline. The timing depends on release frequency, test coverage, architecture, and how much experienced review capacity remains. Savings in payroll are real; whether they exceed the later cost of rework and lost delivery capacity has to be measured across the whole delivery loop.
+
+---
+
 ## Offensive and Defensive AI Strategies
 
 A defensive organization thinks:
