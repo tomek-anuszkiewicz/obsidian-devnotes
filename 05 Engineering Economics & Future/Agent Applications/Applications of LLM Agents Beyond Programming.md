@@ -16,6 +16,8 @@ aliases:
 
 LLMs and agents can be useful far beyond code generation. Their strongest role is often in tasks that require **interpretation, semantic consistency, contextual reasoning, hypothesis generation, and working across multiple information sources**.
 
+Programming gives agents an especially useful starting point: they can often run a change and get specific feedback within minutes. Other applications need their own ways to observe outcomes and check whether an action helped (see [[Why Programming Is a Strong Fit for LLM Agents]]).
+
 ## Potential use cases
 
 - **UI analysis and testing**
