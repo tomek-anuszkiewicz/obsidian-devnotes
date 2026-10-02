@@ -135,7 +135,7 @@ Therefore some tests should behave almost like specification artifacts.
 
 The implementation agent should not freely rewrite them simply because they fail.
 
-This dynamic establishes the **Frozen Oracle Rule**: during implementation, bug fixing, and refactoring, the test suite must be strictly read-only. When an agent hits a subtle boundary failure or a difficult concurrency race, the path of least resistance is to relax or delete the failing assertion. The execution harness must enforce permissions that physically prevent the agent from modifying existing test files while it works on application code. The agent must bend the implementation to satisfy the test—never bend the test to excuse broken code.
+This dynamic establishes the **Frozen Oracle Rule**: protect accepted behavioral assertions and reference fixtures while the agent changes the implementation. Do not let a difficult failure become permission to relax an expectation or delete coverage. Test harnesses may need translation, new tests may be added, and tests tied to obsolete internal structure may need adaptation, but those changes require a separate reviewed rationale that preserves supported behavioral coverage. Where practical, enforce protection of baseline artifacts through write permissions. Check translated tests against the original implementation and deliberately incorrect variants to establish that the checks still discriminate relevant failures.
 
 ### The repro-first defect resolution mandate
 
@@ -151,9 +151,9 @@ If an agent cannot write a test that fails before the code change, it does not y
 
 ### Code disposability and the limits of test oracles
 
-When a subsystem is backed by an exhaustive, deterministic test suite, the economic equation around rewriting code changes. The test suite—not the transient implementation—becomes the true repository of domain knowledge. When an internal module becomes tangled, accumulates crippling technical debt, or requires an architectural shift, spending weeks delicately refactoring it line by line is often the wrong trade-off. With a frozen test oracle, you can wipe the implementation and instruct an agent to regenerate the module cleanly from scratch. As long as the test suite passes, every edge case and invariant remains satisfied.
+Strong deterministic tests can make replacing a well-bounded implementation more practical. They preserve important executable domain knowledge, alongside documented constraints, integration behavior, and operational requirements. Passing every test establishes agreement on the exercised cases; it does not establish that every edge case or invariant was captured. Before regeneration, identify gaps in the oracle and protect behavior that consumers depend on, including errors, effects, and performance where relevant.
 
-However, treat code disposability as an architectural release valve, not a daily habit. If a team lets agents regenerate production modules every week, human comprehension of the codebase collapses. When an incident occurs in production at 2:00 AM, the on-call engineer is forced to debug an alien system that was synthesized 48 hours earlier. Keep day-to-day work disciplined and incremental, and reserve full subsystem regeneration for major inflection points: migrating runtimes, replacing dead-end dependencies, or re-architecting for entirely new performance tiers (see [[AI May Make Aggressive Code Optimization Economically Viable]]).
+Treat regeneration as a deliberate engineering choice. Frequent replacement can make incident diagnosis and change review harder unless the team retains accepted artifacts, source mappings, and a reproducible verification process. Incremental work remains a useful default; runtime migration or a major architectural change may justify replacement (see [[Large-Scale Code Migration with AI Agents]] and [[AI May Make Aggressive Code Optimization Economically Viable]]).
 
 ---
 
@@ -266,14 +266,14 @@ Sometimes it is an API or E2E test.
 
 ### The oracle blind spot: runtime behavior
 
-An exhaustive functional test suite can verify logical output equivalence (`actual == expected`) without measuring how the implementation behaves under production load.
+Functional tests can check output equivalence (`actual == expected`) for exercised cases without measuring how the implementation behaves under production load.
 
 An agent can generate an implementation that passes every functional unit test while introducing serious runtime problems:
 - **Performance regressions:** More abstraction, allocation, or data conversion may make a frequently executed path slower without changing its output.
 - **Resource growth:** A test can finish before an unbounded queue, connection leak, or retained object becomes visible.
 - **Concurrency failures:** Unit tests rarely reproduce the timing and contention of production traffic.
 
-Functional tests prove that the code produces the right answer under clean conditions. They do not prove that the code will survive production traffic. Engineers remain responsible for memory layouts, data structures, and profiling under load.
+Functional tests provide evidence about the checked answers under the tested conditions. They do not prove that the code will survive production traffic. Engineers remain responsible for memory layouts, data structures, and profiling under load.
 
 ### External ground truth and high-performance oracles
 

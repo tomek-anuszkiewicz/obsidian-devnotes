@@ -495,6 +495,14 @@ This may especially affect libraries whose APIs have become complicated mainly b
 
 A small application may prefer a generated implementation of the 10% of functionality it actually needs.
 
+## A Port Still Needs an Update Strategy
+
+Cheap translation changes the initial cost of a port, but the next upstream release creates a new obligation. A security fix may concern a rare input absent from the port's tests; a small source change may depend on an earlier change that the fork omitted. Shared library maintenance includes discovering and resolving these cases.
+
+Choose where future changes live. A target-language implementation can become canonical, a maintained fork can adapt selected upstream changes, or the source can remain canonical while accepted revisions produce regenerated ports. Regenerating for every release is one possible workflow, not an automatic advantage: it still needs translation rules, behavior comparisons, reviewed exceptions, and retained release artifacts.
+
+Estimate continuing synchronization and verification effort alongside the initial translation. [[Large-Scale Code Migration with AI Agents]] explains these ownership models. Generating a narrow replacement does not transfer the upstream maintainers' testing and operational knowledge automatically; the team must decide which supported behavior and maintenance responsibilities it accepts.
+
 ## Open Source May Become More Valuable as Knowledge
 
 Open-source libraries may gain another role.

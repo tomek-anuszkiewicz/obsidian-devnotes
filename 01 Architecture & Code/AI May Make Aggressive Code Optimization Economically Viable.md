@@ -43,7 +43,7 @@ We accept:
 
 because they make software easier for humans to write, understand, extend, and maintain.
 
-The resulting code is often less efficient than a highly specialized implementation, but the engineering cost of maintaining that specialization usually outweighs the infrastructure savings.
+Generality can add runtime work compared with a specialized implementation. Whether that matters depends on the workload, compiler, and deployment scale; the engineering cost of maintaining specialization can outweigh the infrastructure savings.
 
 AI agents may change this tradeoff (see [[AI May Replace Some Source Generators with Explicit Generated Code]] and [[Hidden Abstractions May Become More Expensive in Agent-Maintained Code]]).
 
@@ -70,7 +70,7 @@ A developer must:
 8. maintain the optimized code afterward.
     
 
-For many business systems, reducing CPU usage by 5–10% is simply not worth several days or weeks of senior engineering work.
+For some business systems, reducing CPU usage by 5–10% is not worth several days or weeks of senior engineering work. At a sufficiently large scale, the same reduction can already justify that effort.
 
 An agent changes the economics.
 
@@ -98,13 +98,23 @@ The agent does not become tired of producing twenty implementations only to disc
 
 This makes brute-force exploration of implementation strategies much more realistic (see [[Agent Advantage — Relentless, Methodical Work]]).
 
+The work becomes cheaper only if generating alternatives is a substantial part of its cost. Profiling, representative benchmarks, correctness checks, review, deployment, and later maintenance still count. Compare the total cost per accepted improvement, including failed experiments, rather than treating a fast generation run as the whole optimization project.
+
+## Published Results Need a Workload and a Baseline
+
+Google's Gemini 4 Argon announcement reports more than 300 TiB of memory freed by deployed optimizations, with further savings estimated rather than already realized. Its libgav1 example reports a 2.7× speedup over an earlier Rust port after replacing extensive SIMD code with compiler-vectorized safe Rust, approaching the optimized C++ implementation. These are distinct results: fleet memory savings and a speed comparison against a particular port. The announcement does not establish equivalent disk savings or a general CPU reduction across Google's cloud. [Google's announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/)
+
+For any claimed gain, ask what changed: algorithm, data layout, generated specialization, process boundary, runtime, or deployment. Moving to another language may enable a different architecture; the resulting gain should not automatically be attributed to language syntax alone. [[Large-Scale Code Migration with AI Agents]] covers the engineering work required for such a move.
+
+Keep the baseline visible. A result that improves an initial port is different from one that beats a mature optimized implementation. A benchmark without model inference or network delay measures a different bottleneck from end-to-end user latency.
+
 ## Small Improvements Can Accumulate for Years
 
 Infrastructure cost is continuous.
 
-Engineering work is usually paid once.
+The initial optimization is an upfront investment, while verification and maintenance can continue throughout the service's life.
 
-Suppose an agent reduces the requirements of a service from:
+As a hypothetical example, suppose an agent reduces the sustained capacity requirements of a service from:
 
 ```text
 40 vCPU
@@ -116,13 +126,15 @@ to:
 35 vCPU
 ```
 
-The five saved virtual CPUs continue to be saved:
+If the deployment can actually release that capacity, the five saved virtual CPUs can remain unnecessary for:
 
 ```text
 24 hours
 × 365 days
 × several years
 ```
+
+Lower CPU usage does not automatically lower a bill. A fixed-size deployment may simply gain headroom; savings require fewer instances, smaller allocations, lower usage charges, or avoided capacity growth. Include minimum instance sizes, peak demand, and redundancy in that calculation.
 
 The same applies to:
 
@@ -149,11 +161,13 @@ With agents, the calculation may become:
 
 > Let the agent explore forty variants overnight and keep the one that passes all tests and reduces CPU usage.
 
+That proposal still needs a financial check. For illustration, an improvement costing $10,000 to implement and verify, saving $1,000 per month, and adding $200 per month in maintenance takes about 12.5 months to repay. Those are hypothetical amounts; the useful mechanism is recurring net savings compared with the full initial cost.
+
 This could move aggressive optimization from companies such as Google, Meta, Cloudflare, database vendors, game-engine developers, and HFT firms into ordinary business software.
 
 ## Some Performance Gains May Appear Without Explicit Optimization
 
-An even more interesting effect is that agent-generated code may become faster simply because agents have less need for human-oriented abstractions.
+An agent instructed to specialize a known operation may remove runtime generality even without a separate optimization pass. Agent-generated code is not inherently faster; the gain comes from the implementation choice.
 
 Consider a generic runtime path:
 
@@ -183,6 +197,8 @@ This creates a class of **implicit optimization**.
 The agent does not necessarily perform a sophisticated optimization pass.
 
 It simply generates more specialized code.
+
+Check that the specialization preserves supported inputs and configuration changes. Observing that a branch is unused today does not establish that it can be removed permanently.
 
 ## AI May Make Specialization Cheaper Than Abstraction
 
@@ -385,7 +401,7 @@ Compilers often cannot perform this type of optimization because they do not kno
 
 > This feature flag is disabled for every production tenant using this service.
 
-An agent connected to code, telemetry, configuration, and benchmarks can know these things.
+An agent connected to code, telemetry, configuration, and benchmarks can use these observations when their scope and freshness are established. Keep a generic fallback where the specialized assumptions do not cover all supported inputs.
 
 It can therefore perform **semantic specialization**, not merely compiler-level optimization.
 
@@ -541,6 +557,8 @@ production binary
 
 This resembles the relationship between high-level source code and machine code today.
 
+It remains a proposed workflow. Agent regeneration may produce different output on successive runs, and a passing suite covers only the behavior it checks. Preserve the accepted production artifact, its source revision and generation rules, and the evidence used to release it. Include debugging and regeneration costs when judging whether this separation helps.
+
 Humans do not maintain assembly generated by the compiler.
 
 In the future, they may also stop directly maintaining some of the highly specialized source code generated by agents.
@@ -604,3 +622,4 @@ The long-term consequence may therefore be surprisingly physical:
 - **[[Agent Advantage — Relentless, Methodical Work]]** — Leveraging tireless iterative agent loops for profiling, benchmarking, and refactoring.
 - **[[Testing in the Model, Agent, LLM Era]]** — Validating specialized optimizations with automated regression suites and performance benchmarks.
 - **[[Agentic Coding with EF Core and SQL Server]]** — Shifting from general ORM abstractions to specialized SQL projections.
+- **[[Large-Scale Code Migration with AI Agents]]** — Migration preparation, full project costs, and ownership of generated or canonical ports.
