@@ -139,7 +139,7 @@ Before changing dozens of files, apply the proposed refactor to one module, clas
 
 Models maintain key/value data for tokens in context, and providers may cache shared prompt prefixes. A cache hit can reduce input charges and time to first token; the original note cites discounts of 75–90%, which depend on the provider and its terms. Longer contexts also take more memory for this cached state. The example estimates in the original note are about 0.5 GB at 2,048 tokens, 8 GB at 32,768, and 32 GB at 131,072 for a particular FP16 setup; actual figures depend on model architecture and deployment.
 
-Prefix reuse works best when permanent instructions, tool descriptions, and stable repository information come first. Put the current diff, request, and other changing material later. A timestamp, process ID, or unstable file order near the beginning can prevent later requests from matching the cached prefix.
+Prefix reuse works best when permanent instructions, tool descriptions, and stable repository information come first. Put the current diff, request, and other changing material later. A timestamp, process ID, or unstable file order near the beginning can prevent later requests from matching the cached prefix. A different question appended at the end can therefore reuse input work even when a cache of complete responses misses; [[Caching in LLM Agents - KV Prefixes, Responses, and Workflow Results|KV cache and prefix reuse]] explains what state the server retains and how it differs from response and workflow-result caching.
 
 ### Cache identical team requests by exact content
 
@@ -149,7 +149,7 @@ An internal inference gateway, backed for example by Redis or SQLite, can reuse 
 SHA256(Model_ID + Temperature + System_Prompt + Target_File_Hash + Instruction)
 ```
 
-If the input and model settings are identical, a cached review can return quickly without another model call. Match exact bytes for code-sensitive tasks. A similarity cache might treat `if (ptr != null)` and `if (ptr == null)` as nearly the same text even though they have opposite behavior. Cache invalidation and the price of running the gateway still need to be counted; an exact hit avoids a new inference call.
+If the input and model settings are identical, a cached review can return quickly without another model call. The key must also identify the relevant dependencies and caller scope: hashing one target file does not validate a review that depends on surrounding code. Match exact bytes for code-sensitive tasks. A similarity cache might treat `if (ptr != null)` and `if (ptr == null)` as nearly the same text even though they have opposite behavior. Cache invalidation and the price of running the gateway still need to be counted; an exact hit avoids a new inference call.
 
 ### Let scripts do deterministic work
 

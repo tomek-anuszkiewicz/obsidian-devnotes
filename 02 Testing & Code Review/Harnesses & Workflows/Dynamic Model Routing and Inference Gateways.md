@@ -56,7 +56,7 @@ The cost is duplication. If agents are written in Python, Go, and TypeScript, ea
 
 OpenClaw daemons, IDE integrations such as Cursor, CI runners, and local scripts can instead call one base URL, such as `http://localhost:4000` or an internal cluster address. A proxy such as LiteLLM Proxy, Portkey, or an Envoy-based AI gateway exposes an OpenAI-compatible `/v1/chat/completions` endpoint. Clients request aliases such as `smart-code-router`, `smart-route`, `cheap`, `heavy`, or `deep-reasoning`; the gateway maps those aliases to providers.
 
-This gives the team one place for token accounting, provider credentials, connection pooling, rate limits, latency tracking, and failover. It adds a network hop, typically under a millisecond on loopback or a local subnet. It also means the router can act only on information included in the HTTP payload and headers.
+This gives the team one place for token accounting, provider credentials, connection pooling, rate limits, latency tracking, and failover. It adds a network hop, typically under a millisecond on loopback or a local subnet. It also means the router can act only on information included in the HTTP payload and headers. A gateway can additionally reuse complete responses, while the provider's prefix cache reuses input processing and still generates a new answer. [[Caching in LLM Agents - KV Prefixes, Responses, and Workflow Results]] explains the different matching rules, client integration points, and failures caused by replaying a similar response in a changing agent loop.
 
 ```text
 In-process:  agent → routing strategy → local vLLM client / cloud SDK
