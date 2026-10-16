@@ -430,7 +430,29 @@ High-velocity engineering teams avoid generic SaaS wrappers in favor of a **tail
 - **In-Tree Procedural Skills**: Reusable operational runbooks and scripts stored inside `.agents/skills/`, maintained and reviewed just like production code.
 - **Zero Overhead**: Fully model-agnostic, low-latency, and directly aligned with the engineer's existing local toolchain.
 
-An effective agent harness reflects the working cadence of the engineer driving it. Rather than an opaque corporate dashboard, it is a practical execution environment that externalizes the architect's mental model, verification standards, and operational standards.
+An effective agent harness supports the working cadence of the engineer driving it while preserving the requirements of the organization and project. One engineer may want to discuss the design before editing; another may start with a failing test or a small experiment. Those approaches can coexist within shared architectural boundaries and verification requirements.
+
+### Shared requirements and personal working styles
+
+A company can maintain a common harness without giving every developer an identical interaction model. Separate the decisions by who owns them:
+
+| Level | Shared requirements or personal choices | Who can change them |
+| --- | --- | --- |
+| Organization | Allowed model services, data access, tool permissions, spending limits, and required approvals. | The owners of those policies through the organization's change process. |
+| Team and project | Architectural boundaries, required checks, review expectations, and reusable task workflows. | The responsible team through review, within organizational requirements. |
+| Individual | Explanation depth, input method, plan presentation, and whether exploration starts with discussion, a test, or a prototype. | The developer, within the shared requirements. |
+
+The useful boundary is whether a preference changes obligations for other people or systems. Asking the agent for shorter explanations is usually personal. Skipping a required compatibility check affects everyone who depends on the resulting change. A preference for autonomous execution cannot grant deployment access or remove a required approval.
+
+Make that distinction explicit in the configuration: identify mandatory constraints, overridable defaults, and personal settings. Keep shared rules and skills under review, and document which local settings the harness actually loads. A file called `user.local.md` has no effect unless the harness reads it. A personal setting that conflicts with a mandatory requirement should produce a visible conflict instead of silently weakening that requirement.
+
+Instruction precedence alone does not enforce these boundaries. Service permissions must restrict operations, managed configuration must constrain access to approved services, and repository controls must require the agreed checks before merging. Local instructions can explain those requirements, but changing a prompt must not bypass them (see [[Security Boundaries for Agents, RAG, and MCP]]).
+
+Developers still need to agree on where the boundaries belong. Discuss concrete cases: can a teammate take over the task, can the required verification be repeated, and does a local customization change shared code conventions? Use those consequences to decide what needs a common rule. Keep the reason and owner of each shared requirement visible so disagreements can lead to a reviewed change rather than competing private instructions.
+
+A successful personal workflow can become a shared skill after teammates try it on relevant tasks. Sharing that procedure does not require adopting its author's entire interaction style (see [[The Conductor Pattern for High-Bandwidth Engineering#6. Agree on shared rules when several engineers use agents|shared rules and reusable workflows]]).
+
+There is a maintenance trade-off. Independent harnesses multiply configuration, support, and verification work; an overly rigid common setup can obstruct useful ways of thinking and experimenting. A maintained common base with documented customization points is a practical starting point. Whether that base runs locally or on a shared platform is a separate deployment decision (see [[Agent Deployment and Execution Models]]).
 
 ---
 

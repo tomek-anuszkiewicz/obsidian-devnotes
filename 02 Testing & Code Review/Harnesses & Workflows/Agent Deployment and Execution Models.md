@@ -149,20 +149,24 @@ the organization can provide:
           Developer A Developer B Developer C
 ```
 
-The shared platform can enforce the same:
+The shared platform can centrally manage:
 
 - repository instructions;
 - tools;
-- model selection;
+- allowed models and model-selection defaults;
 - permissions;
 - architecture rules;
 - workflows;
 - verification commands;
 - tracing;
 - cost policies;
-- credentials.
+- credential provisioning scoped to each identity and task.
 
-This reduces the risk that every developer maintains a slightly different local setup.
+This reduces duplicated setup work and makes required controls easier to maintain. Instructions guide the agent; permissions and required verification gates enforce the corresponding boundaries.
+
+A shared platform can still offer personal interaction settings. One developer may want design discussion before implementation, while another starts with a test or prototype. Both remain subject to the same applicable data-access limits, architecture rules, and required checks. Personal preferences can change how work proceeds within those boundaries; they cannot remove the boundaries.
+
+The organization and team need to distinguish mandatory requirements from defaults that developers may override. A common base with documented customization points can support both consistency and individual working styles. The same division can also be implemented in local harnesses: shared requirements do not, by themselves, require a centrally hosted agent (see [[Exploring Agent Harnesses#Shared requirements and personal working styles]]).
 
 A managed agent can therefore behave more like CI infrastructure than like an IDE extension.
 

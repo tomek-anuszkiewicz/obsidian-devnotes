@@ -104,13 +104,14 @@ Now imagine adding consumers for 20 more events, wiring 15 CRUD endpoints, or ro
 
 With one engineer, repository instructions can grow out of personal working habits. In a shared monorepo, that becomes a problem. If one engineer asks for functional patterns and another asks for object-oriented domain models, agents may keep rewriting the same areas to match whichever preference was expressed most recently.
 
-Separate the setup into three levels:
+Separate organizational requirements, team agreements, and personal choices. Shared skills are reusable procedures within those boundaries:
 
 | Level | Location | What belongs there |
 | :--- | :--- | :--- |
+| Organizational requirements | Managed configuration, service permissions, and required repository controls | Allowed services, data-access limits, and mandatory approvals that local preferences cannot remove. |
 | Shared repository standards | `.agents/rules/` and verification checks | Agreed architectural boundaries, structural limits, and deterministic tests. |
 | Shared skills | `.agents/skills/` | Task workflows that the team has tried and wants to reuse. |
-| Personal preferences | Local, gitignored configuration | Dictation or written briefs, editor bindings, review layout, verbosity, and confirmation settings. |
+| Personal preferences | Local, gitignored configuration loaded by the harness | Dictation or written briefs, editor bindings, review layout, verbosity, and optional confirmation settings within mandatory approval requirements. |
 
 ### Shared standards need team review
 
@@ -118,13 +119,15 @@ Keep personal style preferences out of repository rules. Use those rules for bou
 
 A change to these rules changes how future work gets written, so review it through a pull request with the same care you would give a schema migration or a breaking API change.
 
+The team also needs to agree on which choices should remain personal. Use concrete consequences: does a preference change shared code conventions, prevent someone else from taking over a task, or weaken required verification? Record which rules are mandatory, which are defaults, and who can approve changes. Organizational requirements can be challenged through their owners, but a local override is not an agreed policy change (see [[Exploring Agent Harnesses#Shared requirements and personal working styles]]).
+
 ### Share workflows that have already worked
 
 If an engineer spends half a day working out a dependable way to scaffold a service or run an end-to-end performance profile, keep that sequence in `.agents/skills/`. Teammates can then use the same steps for matching work instead of rebuilding the workflow in private.
 
 ### Keep the input method personal
 
-One engineer may dictate short voice memos; another may prefer detailed Markdown specifications. Local, ignored settings such as `.agents/user.local.md` or editor configuration can hold those choices, along with verbosity and confirmation preferences. Both engineers can still work against the same shared rules and skills.
+One engineer may dictate short voice memos; another may prefer detailed Markdown specifications. They may also think through problems differently: discussing a model first, writing a failing test, or trying a small prototype. Local, ignored settings or editor configuration can hold those preferences where the harness supports them. A custom file such as `.agents/user.local.md` must be explicitly loaded to have any effect. Both engineers can work against the same shared rules and skills; personal confirmation settings cannot bypass mandatory approvals or grant additional permissions.
 
 The repository structure also matters. Organize code into clear vertical slices and bounded modules that match team ownership. When domains are decoupled, several engineers can send agents into the same monorepo with fewer merge conflicts, changes to sibling dependencies, and unintended shared-state effects.
 
