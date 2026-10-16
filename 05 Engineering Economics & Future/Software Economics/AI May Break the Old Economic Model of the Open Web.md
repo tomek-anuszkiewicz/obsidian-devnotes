@@ -700,7 +700,7 @@ AI can summarize existing knowledge extremely efficiently.
 
 It cannot independently replace all the mechanisms through which reality produces new knowledge.
 
-This dynamic risks triggering an autophagous feedback loop. When publishers lose inbound traffic and monetizeable pageviews, engineers and researchers migrate discussions behind paywalls, private Discord servers, and authenticated networks, while blocking web scrapers. If the open web becomes saturated with derivative synthetic content, next-generation foundation models end up training on the synthetic outputs of prior generations. Without fresh, empirical telemetry from reality, training on recursive synthetic data amplifies hallucinations, degrades reasoning variance, and triggers model collapse.
+This dynamic risks triggering an autophagous feedback loop. When publishers lose inbound traffic and the chance to monetize those pageviews, engineers and researchers migrate discussions behind paywalls, private Discord servers, and authenticated networks, while blocking web scrapers. If the open web becomes saturated with derivative synthetic content, next-generation foundation models end up training on the synthetic outputs of prior generations. Without fresh, empirical telemetry from reality, training on recursive synthetic data amplifies hallucinations, degrades reasoning variance, and triggers model collapse.
 
 ---
 

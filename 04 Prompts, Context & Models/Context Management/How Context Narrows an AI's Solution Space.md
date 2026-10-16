@@ -40,15 +40,15 @@ A better process is:
 
 ```text
 user question
-    â†“
+    ↓
 determine jurisdiction
-    â†“
+    ↓
 Poland
-    â†“
+    ↓
 retrieve current Polish legal sources
-    â†“
+    ↓
 reason within Polish law
-    â†“
+    ↓
 answer
 ```
 
@@ -66,9 +66,9 @@ For example:
 
 ```text
 all technically possible solutions
-            â†“
+            ↓
 Polish law
-            â†“
+            ↓
 legally available solutions
 ```
 
@@ -129,15 +129,15 @@ Conceptually:
 
 ```text
 legal question
-    â†“
+    ↓
 identify jurisdiction
-    â†“
+    ↓
 identify relevant legal domain
-    â†“
+    ↓
 retrieve current legislation / authoritative sources
-    â†“
+    ↓
 reason
-    â†“
+    ↓
 answer
 ```
 
@@ -175,13 +175,13 @@ So the model may effectively reason over:
 
 ```text
 technically possible
-    â†“
+    ↓
 legally possible
-    â†“
+    ↓
 culturally plausible
-    â†“
+    ↓
 socially acceptable
-    â†“
+    ↓
 recommended solutions
 ```
 
@@ -226,12 +226,12 @@ The correct relationship is:
 
 ```text
 language
-â†’ useful clue about context
+→ useful clue about context
 
 not
 
 language
-â†’ automatic jurisdiction
+→ automatic jurisdiction
 ```
 
 ---
@@ -287,9 +287,9 @@ Putting information inside the model's context window does not guarantee that ev
 Long-context models often show a positional effect known as **lost in the middle**:
 
 ```text
-beginning of context  â†’ often used relatively well
-middle of context     â†’ more likely to be underused
-end of context        â†’ often used relatively well
+beginning of context  → often used relatively well
+middle of context     → more likely to be underused
+end of context        → often used relatively well
 ```
 
 The model does not literally forget the middle. The information remains present in the input, but the model may retrieve it less reliably or fail to give it enough weight while producing the answer.
@@ -310,11 +310,11 @@ The resulting answer may still look coherent and persuasive:
 
 ```text
 10 relevant constraints are present
-            â†“
+            ↓
 8 are applied correctly
-            â†“
+            ↓
 2 are underweighted or missed
-            â†“
+            ↓
 plausible but invalid solution
 ```
 
@@ -336,13 +336,13 @@ Instead, it should construct a smaller working context:
 
 ```text
 large source collection
-        â†“
+        ↓
 retrieve relevant material
-        â†“
+        ↓
 remove outdated and duplicate information
-        â†“
+        ↓
 separate hard constraints from background material
-        â†“
+        ↓
 reason over a focused working context
 ```
 
@@ -362,10 +362,10 @@ The practical lesson is:
 
 ```text
 more context
-â‰  automatically more understanding
+≠ automatically more understanding
 
 relevant, structured, and verified context
-â†’ a better constrained solution space
+→ a better constrained solution space
 ```
 
 Context engineering is therefore not only about supplying missing information. It is also about controlling its volume, position, structure, freshness, and relative importance (see [[Token Optimization and Context Economics in Agentic Workflows]] and [[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]).
@@ -382,19 +382,19 @@ Consider:
 
 ```text
 all possible solutions
-         â†“
+         ↓
 country
-         â†“
+         ↓
 law
-         â†“
+         ↓
 culture
-         â†“
+         ↓
 organization
-         â†“
+         ↓
 professional convention
-         â†“
+         ↓
 candidate solutions
-         â†“
+         ↓
 reasoning
 ```
 
@@ -517,60 +517,60 @@ Putting everything together gives a more realistic architecture:
 
 ```text
                        USER PROBLEM
-                            â”‚
-                            â–¼
+                            │
+                            ▼
                     POLICY / SAFETY
                        PRE-CHECK
-                            â”‚
-                            â–¼
+                            │
+                            ▼
                     CONTEXT PLANNING
                   What information is needed?
-                            â”‚
-       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” 
-       â–¼                    â–¼                     â–¼
+                            │
+       ┌────────────────────┼─────────────────────┐
+       ▼                    ▼                     ▼
  conversation             memory                 RAG
- history                    â”‚                     â”‚
-       â”‚                    â”‚                     â”‚
-       â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”¤
-       â–¼              â–¼                   â–¼       â–¼
+ history                    │                     │
+       │                    │                     │
+       ├──────────────┬─────┴─────────────┬───────┤
+       ▼              ▼                   ▼       ▼
      web            tools              APIs      code
-       â”‚              â”‚                   â”‚       â”‚
-       â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”˜
-                                 â–¼
+       │              │                   │       │
+       └──────────────┴──────────┬────────┴───────┘
+                                 ▼
                          CONTEXT ASSEMBLY
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                               REASON
-                                 â”‚
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” 
-                    â”‚ missing information?    â”‚
-                    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                 â”‚
+                                 │
+                    ┌────────────┴─────────────┐
+                    │ missing information?    │
+                    └───────────┬─────────────┘
+                                 │
                                yes
-                                 â†“
+                                 ↓
                            more retrieval
-                                 â”‚
-                                 â†º
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ↺
+                                 │
+                                 ▼
                       generate alternatives
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                               critique
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                             verification
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                               selection
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                          candidate answer
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                     safety / policy evaluator
-                                 â”‚
-                                 â–¼
+                                 │
+                                 ▼
                             FINAL ANSWER
 ```
 
@@ -585,30 +585,30 @@ Retrieval is targeted and iterative. If the model identifies an unresolved juris
 It is increasingly misleading to think of an AI system as:
 
 ```text
-prompt â†’ LLM â†’ answer
+prompt → LLM → answer
 ```
 
 A better model is:
 
 ```text
 prompt
-   â†“
+   ↓
 context selection
-   â†“
+   ↓
 retrieval
-   â†“
+   ↓
 reasoning
-   â†“
+   ↓
 additional retrieval
-   â†“
+   ↓
 solution-space exploration
-   â†“
+   ↓
 critique
-   â†“
+   ↓
 verification
-   â†“
+   ↓
 policy enforcement
-   â†“
+   ↓
 answer
 ```
 

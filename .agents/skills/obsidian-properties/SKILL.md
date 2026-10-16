@@ -86,5 +86,5 @@ python scripts/check_frontmatter.py --vault
 Also verify that no non-English words were introduced:
 
 ```bash
-python scripts/check_polish.py "path/to/note.md"
+python scripts/check_english.py "path/to/note.md"
 ```

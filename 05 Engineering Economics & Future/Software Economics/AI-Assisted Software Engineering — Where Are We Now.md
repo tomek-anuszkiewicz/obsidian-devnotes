@@ -11,7 +11,7 @@ aliases:
   - AI-Assisted Software Engineering - Where Are We Now
   - AI Coding Agents — Historical Perspective
   - State of AI-Assisted Programming
-  - AI Coding Agents â€” Historical Perspective
+  - AI Coding Agents — Historical Perspective
   - "AI-Assisted Software Engineering Where Are We Now"
 created: 2026-08-23
 status: evergreen
@@ -35,7 +35,7 @@ What is becoming clear is that AI does not eliminate software engineering. It mo
 - reviewing and validating changes (see [[Reviewing AI-Generated Code]]);
 - maintaining shared understanding of the system (see [[LLM Agents and Institutional Memory in Software Teams]]).
 
-The likely future is therefore not simply â€œagents write the code.â€  It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
+The likely future is therefore not simply “agents write the code.” It is a form of software engineering in which **code becomes cheaper, while judgment and verifiability become more valuable**.
 
 ## 1. Is there a historical analogy?
 
@@ -47,7 +47,7 @@ The introduction of high-level languages allowed developers to describe more of 
 
 Coding agents continue this movement toward higher-level intent. The crucial difference is that a compiler is a deterministic translator with a formal contract. An agent is a probabilistic implementer that may misunderstand the request, infer a missing business decision, or produce a convincing implementation of the wrong behavior.
 
-Consequently, an LLM agent is not yet a â€œcompiler for natural language.â€  It is closer to a very fast and broadly knowledgeable developer who lacks local business knowledge and sometimes guesses without recognizing that it is guessing.
+Consequently, an LLM agent is not yet a “compiler for natural language.” It is closer to a very fast and broadly knowledgeable developer who lacks local business knowledge and sometimes guesses without recognizing that it is guessing.
 
 ### Libraries, frameworks, open source, and Stack Overflow
 
@@ -73,7 +73,7 @@ The 2025 DORA research describes AI primarily as an **amplifier** of an organiza
 
 ### Early web adoption
 
-In terms of maturity, the present moment resembles the web around 1995â€“2000:
+In terms of maturity, the present moment resembles the web around 1995–2000:
 
 - adoption is rapid and the capability is clearly real;
 - many organizations feel forced to participate;
@@ -98,13 +98,13 @@ Today, agentic software engineering operates in an empirical vacuum:
 
 A simplified progression is:
 
-1. **2021â€“2023 â€” completion and conversation:** generating functions, tests, documentation, and explanations.
-2. **2023â€“2024 â€” repository-aware copiloting:** proposing multi-file changes and assisting with debugging.
-3. **2024â€“2026 â€” practical coding agents:** reading repositories, editing files, running commands and tests, interpreting failures, and iterating.
-4. **Current stage â€” workflow experimentation:** learning how to specify, constrain, supervise, evaluate, and integrate agent work.
-5. **Emerging stage â€” agent-oriented engineering:** designing repositories, interfaces, documentation, validation, and team processes for predictable agent participation.
+1. **2021–2023 — completion and conversation:** generating functions, tests, documentation, and explanations.
+2. **2023–2024 — repository-aware copiloting:** proposing multi-file changes and assisting with debugging.
+3. **2024–2026 — practical coding agents:** reading repositories, editing files, running commands and tests, interpreting failures, and iterating.
+4. **Current stage — workflow experimentation:** learning how to specify, constrain, supervise, evaluate, and integrate agent work.
+5. **Emerging stage — agent-oriented engineering:** designing repositories, interfaces, documentation, validation, and team processes for predictable agent participation.
 
-We are between stages four and five. Agents are capable enough to perform meaningful work, but not reliable enough for â€œgive the agent a large goal and accept the resulting systemâ€  to be a generally safe operating model.
+We are between stages four and five. Agents are capable enough to perform meaningful work, but not reliable enough for “give the agent a large goal and accept the resulting system” to be a generally safe operating model.
 
 The important transition now is therefore from **better prompting** to **better engineering of the environment in which the agent works**.
 
@@ -209,7 +209,7 @@ The more requirements are executable, the less the workflow relies on the model'
 
 ### Step 5: Make review independent
 
-Asking the generating agent â€œis your solution correct?â€  is weak verification because it may preserve the same mistaken interpretation. Better approaches include:
+Asking the generating agent “is your solution correct?” is weak verification because it may preserve the same mistaken interpretation. Better approaches include:
 
 - a fresh context or separate reviewing agent;
 - review against the specification rather than the original explanation;
@@ -228,7 +228,7 @@ The agent should stop rather than continue improvising when:
 - a destructive or externally visible action requires authorization;
 - success cannot be objectively verified.
 
-This is an important part of the harness. An unconstrained â€œkeep trying until tests passâ€  loop can make tests pass by weakening them, adding special cases, or solving a different problem.
+This is an important part of the harness. An unconstrained “keep trying until tests pass” loop can make tests pass by weakening them, adding special cases, or solving a different problem.
 
 ## 5. How will agent-assisted programming affect code quality and maintenance?
 
@@ -267,7 +267,7 @@ The most important long-term risk is probably not spectacularly broken code. It 
 
 A large 2026 preprint examining more than 300,000 verified AI-authored commits reports evidence of technical-debt issues, but this research is still new and attribution methodology is difficult. It is a useful warning, not a settled verdict. See [A Large-Scale Empirical Study of AI-Generated Code in the Wild](https://arxiv.org/html/2603.28592v1).
 
-### A likely change in the meaning of â€œmaintainabilityâ€ 
+### A likely change in the meaning of “maintainability”
 
 Historically, maintainable code meant code that another human could understand and change safely. If agents participate heavily, organizations may be tempted to treat code as maintainable whenever an agent can modify it successfully.
 
@@ -281,7 +281,7 @@ A stronger future definition may therefore be:
 
 We do not yet know them.
 
-Copilot-style assistance became widespread around 2022â€“2023. Agents capable of independently editing repositories and running feedback loops became practically significant around 2024â€“2025. That is not enough time to observe:
+Copilot-style assistance became widespread around 2022–2023. Agents capable of independently editing repositories and running feedback loops became practically significant around 2024–2025. That is not enough time to observe:
 
 - maintenance after the original team leaves;
 - major platform migrations several years later;
@@ -293,9 +293,9 @@ Copilot-style assistance became widespread around 2022â€“2023. Agents capab
 
 Reasonable expectations are:
 
-- **2026â€“2028:** stronger short-term studies of task selection, review cost, defect rates, security, and team-level delivery;
-- **2027â€“2029:** the first useful two- to four-year longitudinal comparisons of repositories and teams;
-- **2029â€“2032:** more credible conclusions about lifecycle maintenance, architectural evolution, team knowledge, and organizational design.
+- **2026–2028:** stronger short-term studies of task selection, review cost, defect rates, security, and team-level delivery;
+- **2027–2029:** the first useful two- to four-year longitudinal comparisons of repositories and teams;
+- **2029–2032:** more credible conclusions about lifecycle maintenance, architectural evolution, team knowledge, and organizational design.
 
 There is an unavoidable measurement problem: by the time a multi-year study finishes, the models and tools under study may be obsolete. Research on 2023 Copilot use cannot directly predict 2029 agents. It can still reveal durable mechanisms, such as whether lower implementation cost causes code overproduction or weakens shared ownership.
 
@@ -326,21 +326,21 @@ Practical books already exist, but there is not yet an equivalent of *Design Pat
 
 Current books mostly explain how to use today's tools and workflows:
 
-- [AI-Assisted Programming (O'Reilly)](https://www.oreilly.com/library/view/ai-assisted-programming/9781098164553/) â€” AI across requirements, design, coding, debugging, testing, and documentation.
-- [Beyond Vibe Coding (O'Reilly)](https://www.oreilly.com/library/view/beyond-vibe-coding/9798341634749/) â€” validation, debugging, failure modes, and agentic workflows.
-- [Coding with AI (Manning)](https://www.manning.com/books/coding-with-ai) â€” a systematic practical workflow for AI-assisted development.
-- [Agentic Engineering at Scale (O'Reilly)](https://www.oreilly.com/library/view/agentic-engineering-at/0642572344306/) â€” harness engineering, guardrails, spec-driven development, and scaling agentic work.
-- [Agentic Coding with Claude Code (O'Reilly)](https://www.oreilly.com/library/view/agentic-coding-with/9781806022595/) â€” concrete context and workflow techniques tied to a particular tool.
+- [AI-Assisted Programming (O'Reilly)](https://www.oreilly.com/library/view/ai-assisted-programming/9781098164553/) — AI across requirements, design, coding, debugging, testing, and documentation.
+- [Beyond Vibe Coding (O'Reilly)](https://www.oreilly.com/library/view/beyond-vibe-coding/9798341634749/) — validation, debugging, failure modes, and agentic workflows.
+- [Coding with AI (Manning)](https://www.manning.com/books/coding-with-ai) — a systematic practical workflow for AI-assisted development.
+- [Agentic Engineering at Scale (O'Reilly)](https://www.oreilly.com/library/view/agentic-engineering-at/0642572344306/) — harness engineering, guardrails, spec-driven development, and scaling agentic work.
+- [Agentic Coding with Claude Code (O'Reilly)](https://www.oreilly.com/library/view/agentic-coding-with/9781806022595/) — concrete context and workflow techniques tied to a particular tool.
 
 These can be useful, but tool-specific advice will age quickly. The durable material is likely to concern specification, context management, feedback loops, verification, permissions, architecture, and organizational design.
 
-The first strong synthesis based on several years of production experience may appear around **2027â€“2029**. A data-driven equivalent of *Accelerate*, capable of distinguishing practices that merely feel productive from those that improve delivery and maintenance, is more likely around **2029â€“2032**.
+The first strong synthesis based on several years of production experience may appear around **2027–2029**. A data-driven equivalent of *Accelerate*, capable of distinguishing practices that merely feel productive from those that improve delivery and maintenance, is more likely around **2029–2032**.
 
 Until then, annual research such as DORA, controlled studies such as METR, repository analyses, and carefully measured internal experiments are likely to be more current than books.
 
 ## 8. Probable direction of the profession
 
-The role of the software engineer is unlikely to become simply â€œmanager of several coding agents.â€  That description underestimates the continuing need for direct technical understanding.
+The role of the software engineer is unlikely to become simply “manager of several coding agents.” That description underestimates the continuing need for direct technical understanding.
 
 The role is more likely to shift toward:
 
