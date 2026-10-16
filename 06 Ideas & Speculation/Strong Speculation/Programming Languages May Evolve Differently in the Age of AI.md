@@ -135,6 +135,16 @@ toward:
 
 > Make incorrect code difficult or impossible to express.
 
+## Rust May Become More Attractive When Agents Write the Code
+
+Rust is a concrete test of this trade-off. Its ownership and borrowing rules let the compiler reject many invalid uses of memory without requiring a tracing garbage collector. That can be useful in a runtime where memory overhead or latency matters: the language does not require a collector cycle. It does not make the program pause-free. Locks, blocking I/O, allocation, and destructor work can still delay a request. [The Rust Book on ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
+
+The cost has traditionally been paid during development. A programmer has to decide who owns a value, how long a borrow lasts, and when state must be shared. An agent can write the explicit code, compile it, read borrow-checker diagnostics, and try again. This may make routine Rust implementation cheaper, especially if the design already has clear ownership boundaries. But the compiler cannot decide whether shared state belongs in a particular component or whether a change preserves business behavior. An agent can also make code compile by cloning data or adding shared ownership and locks, while increasing runtime cost or obscuring the intended design. `unsafe` code and foreign interfaces still require separate review because their memory-safety obligations are not fully checked by the compiler. [The Rust Book on unsafe code](https://doc.rust-lang.org/stable/book/ch20-01-unsafe-rust.html)
+
+There is an early example of the economic shift. GitHub reports that agents wrote most of its port of the Copilot runtime from TypeScript to Rust. Engineers still directed the migration, reviewed changes, and fixed regressions. The resulting performance gains also reflect removing Node.js, V8, and a process boundary; they cannot be assigned to Rust's lack of garbage collection alone. This shows that agents can make a large Rust migration feasible under particular conditions, not that Rust will displace other languages. [GitHub's migration account](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/) [[Large-Scale Code Migration with AI Agents]] examines that work in detail.
+
+If agents keep reducing the cost of writing and maintaining ownership-aware code, Rust could become attractive to more teams that need memory safety and predictable resource use. The case for choosing it still depends on measured workload behavior, library and deployment needs, and the cost of reviewing and maintaining the result.
+
 ## Verbosity Becomes Cheaper
 
 Historically, explicitness had a cost.
@@ -178,38 +188,11 @@ but:
 
 ## Strong Domain Types May Become Cheaper to Use
 
-Consider ordinary primitive types:
+Using `CustomerId` and `OrderId` instead of interchangeable identifiers lets the compiler reject a mistaken argument. Separating `NetAmount` from `GrossAmount` can do the same for amounts. Controlled construction and state-specific APIs can express further rules, provided their implementation actually enforces them.
 
-```csharp
-decimal price;
-Guid customerId;
-```
+Agents may lower the cost of the surrounding work: serializers, database converters, caller updates, and tests. Domain decisions and maintenance remain real costs. [[Strong Domain Types with Coding Agents]] develops these examples and distinguishes what a wrapper, a validation boundary, and an exhaustive result handler can each guarantee.
 
-A more strongly modeled system could instead use:
-
-```csharp
-Money<PLN> price;
-CustomerId customerId;
-GrossAmount total;
-```
-
-Humans often avoid this degree of modeling because it creates additional types and additional code.
-
-Agents reduce that cost.
-
-Declaring dedicated record structs, custom serializers, and validation logic for dozens of domain wrappers creates massive manual overhead, which is why codebases default to primitive obsession. When an agent can stamp out strongly typed wrappers at zero marginal cost, wrapping identifiers and currency values becomes an easy default rather than an architectural chore.
-
-The compiler can then detect entire categories of mistakes:
-
-```text
-EUR added to PLN
-OrderId passed as CustomerId
-NetAmount assigned to GrossAmount
-```
-
-This may make stronger domain modeling economically attractive in many more codebases.
-
-AI could therefore indirectly push languages and libraries toward richer type systems.
+This could make richer application types attractive in more codebases without waiting for a new programming language. It may also increase demand for language features that express those distinctions and report violations clearly.
 
 ## Implicit Behavior May Become Less Attractive
 

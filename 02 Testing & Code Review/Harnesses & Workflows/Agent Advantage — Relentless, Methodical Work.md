@@ -183,24 +183,11 @@ Examples include:
 
 A human can perform this work, but attention usually degrades as repetition increases.
 
-#### Eradicating Primitive Obsession
+#### Replacing Primitives with Domain Types
 
-A concrete example of manual typing fatigue is primitive obsession. Domain-Driven Design has long advocated wrapping raw primitive types like strings, UUIDs, and decimals in explicit domain value types:
+A concrete example is replacing interchangeable primitives with types such as `CustomerId`, `OrderId`, and `GrossAmount`. Once APIs preserve those distinctions, the compiler can reject some mistaken arguments. A separate construction policy is needed to guarantee that a value also satisfies numeric or other business rules.
 
-```text
-Primitive Obsession (low typing effort, error-prone at runtime):
-  decimal price
-  uuid customer_id
-  decimal margin_rate
-
-Strong Domain Modeling (compiler-enforced semantic invariants):
-  Money<Currency::USD> price
-  CustomerId customer_id
-  GrossAmount total_gross
-  TaxRate vat_percentage
-```
-
-Engineers understand why passing a `CustomerId` into an `OrderId` parameter is dangerous, or why adding a raw `TaxRate` to a `GrossAmount` creates subtle accounting bugs. Yet teams routinely abandon strong typing because declaring dozens of wrapper records, custom JSON serializers, ORM value converters, and validation rules requires substantial manual boilerplate. Because an agent experiences zero keystroke fatigue, generating explicit wrapper types, type-safe constructors, and serialization conversions across hundreds of models costs virtually nothing. A design practice once avoided due to typing overhead becomes a repeatable, enforceable standard.
+The repetitive work extends beyond declaring wrappers: update JSON serializers, ORM converters, callers, and tests while preserving external contracts. An agent can carry out that work across many locations once the intended rules and conversion boundaries are clear. The implementation may become cheaper, while review and later changes still have a cost. [[Strong Domain Types with Coding Agents]] explains the mechanisms, including validated values, process states, and explicit outcomes.
 
 ### Consistent Enforcement
 
