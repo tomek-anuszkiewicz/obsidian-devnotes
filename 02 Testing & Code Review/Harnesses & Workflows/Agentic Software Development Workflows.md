@@ -198,6 +198,20 @@ This approach is particularly useful for:
 
 Planning separates **understanding the problem** from **executing the change**.
 
+### The hidden cost of starting implementation too early
+
+A short instruction can produce a substantial implementation before the developer and agent have agreed on what success means. The apparent saving is the time spent discussing the task. The later cost is discovering which interpretation the agent implemented.
+
+That discovery is engineering work. The developer may need to read unfamiliar code, ask several rounds of questions, trace state changes, or debug the application before being able to judge the result. An explanation from the agent can help locate the relevant code, but its account still needs to be checked against what the system does. Correcting the result then adds another cycle of explanation, implementation, and review.
+
+The cost of a delegated task therefore includes clarification, implementation, understanding the result, verification, and rework. Fast code generation can leave most of that cost with the developer. A useful measure is **time to a result whose correctness we can assess**.
+
+Discussing the behavior before implementation moves some of that understanding work earlier. A wrong assumption can be corrected while it is still a sentence or an example, before it shapes several components and their tests. The developer also enters review with an explicit expectation to compare against the implementation.
+
+The discussion needs a concrete outcome. A plan that says "update the handler and add tests" still leaves the important decisions open. Before implementation, agree on the observable result, the scope of the change, behavior that must be preserved, representative examples, and how the result will be checked.
+
+The appropriate depth depends on uncertainty and the cost of a mistake. A small, familiar change may need only a few acceptance criteria. When the behavior is unclear, agree on a bounded experiment: the question it should answer, the evidence to collect, and the decision that evidence will inform. Trying to specify an entire unknown solution in advance can waste time too.
+
 ---
 
 ## 5. Spec-Driven Development
@@ -220,6 +234,23 @@ Example:
 WHEN an authenticated user cancels an unpaid order
 THE SYSTEM SHALL change its state to Cancelled.
 ```
+
+### Agree on examples and evidence
+
+An expected outcome becomes easier to review when it includes a concrete starting state, an action, and an observable result. Discuss unsuccessful operations and boundary cases as well as the successful path. Also identify what a proposed check cannot establish.
+
+For example, "add document saving and test it" leaves persistence behavior and the meaning of a successful test open. A more useful agreement might be:
+
+| Question | Agreed behavior or check |
+| --- | --- |
+| What should the user achieve? | Save an edited document and recover the same content after restarting the application. |
+| What triggers the operation? | The user explicitly selects Save; automatic saving is outside this change. |
+| What happens on failure? | A failed write displays an error, retains the edits in memory, and does not report a successful save. |
+| How will success be checked? | Start with known content, edit and save it through the application, close the process, reopen the application, and compare the loaded content with the expected content. |
+| How will failure be checked? | Cause the storage write to fail and verify the error indication, retained edits, and absence of a success indication. |
+| What remains unverified? | These checks alone do not establish recovery from a crash during a write or behavior under concurrent edits. |
+
+A unit test asserting that a save method was called cannot establish the restart behavior. A test that replaces storage with a mock also cannot establish that the real write and reload paths work together. Defining the evidence early exposes this gap before implementation is declared complete.
 
 ### Design
 
@@ -294,7 +325,7 @@ This separates two important activities:
 2. implementing the solution.
     
 
-If the agent misunderstood the feature, the problem becomes visible in the tests before large amounts of implementation code are generated.
+If the agent misunderstood the feature, reviewing the expected test results can reveal the problem before large amounts of implementation code are generated. Writing tests first does not by itself establish that those expectations are correct: the agent can encode the same mistaken interpretation in both tests and implementation.
 
 A particularly strong workflow is therefore:
 
@@ -302,7 +333,7 @@ A particularly strong workflow is therefore:
 
 The tests become an executable contract between the human and the agent.
 
-A critical operational rule in this workflow is that **the test oracle must be frozen**. If an agent is allowed to edit both tests and implementation simultaneously, it will frequently fall into **test negotiation**: when a complex test fails, the model simply alters or weakens the test assertions until the suite turns green. Freezing the test suite after human review creates an unyielding verification boundary that the agent is strictly forbidden to touch.
+The reviewed expected results should remain stable during implementation. If the agent changes assertions merely to accommodate its code, a green suite no longer demonstrates the agreed behavior. When implementation reveals a mistake in the requirement or test, revisit that expectation explicitly, explain why it changes, and review it before using the revised test as evidence.
 
 ---
 
@@ -343,6 +374,8 @@ This leads to an important principle of agentic development:
 > Do not depend on the quality of a single generation. Build an environment in which the agent can detect and correct its own mistakes.
 
 The better the feedback loop, the more autonomy can safely be delegated.
+
+A clear specification makes verification more focused, but confidence in the result still depends on the checks actually performed and their coverage. The completion report should connect each acceptance criterion to observed evidence and identify remaining gaps. Agreement in conversation establishes what to verify; it does not establish that the implementation works.
 
 ---
 

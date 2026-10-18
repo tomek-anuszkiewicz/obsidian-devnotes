@@ -43,6 +43,8 @@ The instruction can be as direct as: inspect the app, map its navigation, states
 
 That copy still has a boundary: it reflects what the agent can see and exercise. It does not give the competitor the hidden data, operating relationships, or reasoning behind the original team's next release.
 
+The running product also gives a competitor a partial specification and a reference for testing. An agent can send equivalent inputs to the original and a replacement, compare selected results, and use the differences to guide repairs. This reduces uncertainty about both requirements and implementation. Agreement on the tested cases does not establish full compatibility, and the cost of covering the remaining behavior may still be substantial (see [[Existing Software as a Blueprint for AI Agents]]).
+
 ## What a copy cannot take with it
 
 ### Production history and customer data

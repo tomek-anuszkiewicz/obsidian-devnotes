@@ -54,6 +54,14 @@ Examples of useful questions:
 
 The ability to cheaply reach a negative answer is extremely valuable.
 
+## A Working Prototype Changes the Client Conversation
+
+Agents can quickly prepare a presentation of a proposed workflow and a working application prototype to go with it. The prototype can include a user interface, backend, and database, so the client can try the whole flow instead of interpreting screens or slides in isolation.
+
+For example, a client describing a booking process can click through a form, save a booking, and see it appear in an admin view. They may then notice that staff need to approve some bookings or that cancellations follow different rules. Those details are easier to discover while using a concrete flow than while reviewing a specification. Because another version is relatively cheap to build, the team can test several interpretations with the client before committing to one.
+
+The demo can reveal whether the proposed workflow fits the client's process. A working database and polished screens do not, by themselves, show that the implementation is ready for real customer data or production traffic.
+
 ---
 
 ## Prototypes Will Still Reach Production
