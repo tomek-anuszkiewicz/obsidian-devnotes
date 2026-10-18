@@ -56,6 +56,10 @@ For a web application, the browser also exposes requests and responses. Watching
 
 Observation remains incomplete. A visible approval button does not reveal every permission rule, concurrent update condition, or integration failure. Screenshots reveal even less than an interactive session. The agent needs access to representative states and operations before it can turn observations into useful requirements.
 
+When source is available, alternate observation with code inspection. A conditional can reveal a customer category or configuration limit that ordinary exploration never exercised. Run those cases against the reference to check the interpretation. Trace state writers as well as readers: the same Save action may consume different values after a different sequence of edits, and a successful response may precede background work that later fails.
+
+Record what each source of evidence establishes. An observed result describes the exercised conditions; a source-derived rule may still depend on unresolved runtime configuration. Keep discrepancies and unknowns visible instead of treating the agent's explanation as a recovered specification. [[Recovering Legacy System Behavior with AI Agents]] develops this investigation for an owned legacy system before a rewrite.
+
 A familiar interface also supplies a design starting point. That can reduce experimentation, but it does not establish that the original design fits a new audience. The team still needs to decide which behavior to preserve, simplify, or deliberately change.
 
 ## The Original Can Become Part of the Test Harness

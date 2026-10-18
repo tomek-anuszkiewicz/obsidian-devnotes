@@ -64,7 +64,17 @@ Instead, use the agent as a path-slicing engine:
 
 - **Trace the relevant call graph**: Start at an entry point such as an HTTP controller or queue consumer and follow calls, state, and effects. An absent edge in a static graph does not establish that a runtime-registered callback is unused.
 - **Investigate apparent irrelevance**: Check whether adjacent services mutate the same records, whether flags vary by deployment, and whether consumers exist outside the repository. Record remaining uncertainty instead of asking the agent to declare unobserved behavior impossible.
-- **Isolate side effects**: Identify every point where the critical path touches external state—raw SQL queries, ambient singletons, filesystem writes, or third-party APIs. These boundaries become the seam for mock injection during characterization testing.
+- **Locate side effects**: Identify where the critical path touches external state—raw SQL queries, ambient singletons, filesystem writes, or third-party APIs. These boundaries can support observation and controlled substitution. Keep a real test database when the behavior being characterized lives in SQL, triggers, or transactions; mocking that dependency would remove the subject of the test.
+
+### Simplify to Answer a Specific Question
+
+Investigation can expose an obstacle that a small change would remove. Name the question first: for example, which implementation does a reflection-based factory select for an approval operation? Trace the selection source and record runtime choices before replacing the mechanism. Observing three types does not establish that configuration or external plugins cannot select a fourth. A named wrapper with diagnostics may answer the question without removing reflection.
+
+Protect the affected behavior at a boundary that can already be exercised. A test through a service entry point or desktop interface may be practical before the handler can support useful unit tests. After a small extraction, add focused tests for the exposed calculation. Avoid making a large redesign the prerequisite for the first behavioral check.
+
+For each investigative change, record the obstacle, the proposed change, the behavior it might disturb, and the comparison against the original. Retain the reference revision together with relevant configuration and data. Keep findings from that reference distinguishable from observations of the modified version; otherwise, the team can accidentally document its own cleanup as original behavior.
+
+[[Recovering Legacy System Behavior with AI Agents]] places these changes within a broader investigation: source inspection and execution produce a behavioral description, while local refactoring removes specific barriers to learning more.
 
 ---
 

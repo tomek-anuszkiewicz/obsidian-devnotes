@@ -27,6 +27,14 @@ Anthropic describes a weekend conversion of a Python library into roughly 165,00
 
 These are evidence that large translations can be accelerated. They do not establish a universal cost per line, an unattended workflow for arbitrary repositories, or a result available within any particular consumer subscription.
 
+## Recover the Behavior That the Port Must Preserve
+
+When the original has incomplete documentation or tests, dependency mapping is only part of preparation. Trace a representative operation from its entry point through state changes, external effects, and delayed work. Check initial conditions, rejection paths, partial failures, and restart or retry behavior where relevant. Reading each called method separately may still miss the consequences of their ordering.
+
+Keep three records connected: the observed or source-derived legacy behavior, the decision to preserve or change it, and the case that checks the target behavior. An odd rounding result or a partially persisted order is a finding before it is a requirement. An intentional difference needs a separate decision; an unexplained difference remains an investigation task.
+
+The resulting operation descriptions should identify evidence, configuration assumptions, and gaps. If a stored procedure is unavailable or recovery has not been exercised, record that limit in the migration task rather than silently treating the behavior as understood. [[Recovering Legacy System Behavior with AI Agents]] explains this preparation, including characterization tests and small changes that make investigation possible.
+
 ## First Make the System Divisible
 
 Consider moving an order calculator from TypeScript to Rust. Its arithmetic may look isolated, while its actual behavior depends on database reads, a mutable discount cache, currency rounding, callbacks, and the ordering of emitted events. Translating the arithmetic alone does not define a replaceable component.

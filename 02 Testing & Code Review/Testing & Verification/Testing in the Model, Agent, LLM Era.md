@@ -137,6 +137,16 @@ The implementation agent should not freely rewrite them simply because they fail
 
 This dynamic establishes the **Frozen Oracle Rule**: protect accepted behavioral assertions and reference fixtures while the agent changes the implementation. Do not let a difficult failure become permission to relax an expectation or delete coverage. Test harnesses may need translation, new tests may be added, and tests tied to obsolete internal structure may need adaptation, but those changes require a separate reviewed rationale that preserves supported behavioral coverage. Where practical, enforce protection of baseline artifacts through write permissions. Check translated tests against the original implementation and deliberately incorrect variants to establish that the checks still discriminate relevant failures.
 
+### Characterization Tests Help Discover Missing Specifications
+
+An undocumented legacy system may need investigation before anyone can write an accepted behavioral specification. Characterization tests record what the existing implementation does for selected inputs and initial states. Their purpose is discovery and protection of current behavior; they do not establish that the behavior is desirable.
+
+Characterization is a purpose, not a test level. An isolated calculation may suit a unit test, while a rule implemented in a database trigger requires a check that includes the database. A tangled form handler may first need a test through the interface. Establish protection at an accessible boundary before a large refactor, then add narrower tests when calculations or rules can be isolated.
+
+Let execution of the original check the agent's proposed expectations. Otherwise, one misunderstanding can be copied into the description, test, and replacement. Inspect the initial state, outputs, persisted changes, and relevant delayed effects. A mock verifying a scheduling call cannot establish durable storage or recovery after process restart. Record the evidence and any untested parts of that claim.
+
+Once reviewed observations become an accepted compatibility baseline, protect them while changing the implementation. A later decision to correct legacy behavior should identify the changed expectation explicitly. [[Recovering Legacy System Behavior with AI Agents]] explains how these tests participate in an investigation, rather than merely checking an already understood requirement.
+
 ### The repro-first defect resolution mandate
 
 The same discipline applies to fixing production defects. When resolving an issue, an agent should never immediately modify production code. Doing so encourages superficial patches that mask underlying state corruption without verifying root causes.

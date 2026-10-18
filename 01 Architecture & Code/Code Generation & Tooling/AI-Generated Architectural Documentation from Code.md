@@ -101,9 +101,9 @@ System Model
 Semantic Documentation
 ```
 
-Structural analysis tools such as dependency graphs, call graphs, symbol graphs, GitNexus, Graphify, or static analysis can provide reliable structural facts.
+Structural analysis tools can provide references, calls, and dependencies within the code and configuration they can resolve. A missing edge does not establish that behavior is unreachable: runtime registration, reflection, and consumers outside the repository may remain unresolved.
 
-The LLM can then interpret these facts and describe their architectural or business meaning.
+The LLM can then interpret these relationships and investigate their architectural or business meaning. A call graph alone does not establish transaction ownership, event delivery, or the history of shared state. Inspect those mechanisms before describing an operation's guarantees.
 
 For example:
 
@@ -119,7 +119,7 @@ OrderRepository
 EventPublisher
 ```
 
-can be interpreted as:
+can guide investigation of claims such as:
 
 ```text
 PlaceOrderHandler is the orchestration boundary for order creation.
@@ -131,9 +131,7 @@ The order is persisted before downstream processing begins.
 Inventory processing starts asynchronously after OrderCreated is published.
 ```
 
-The structural graph provides **relationships**.
-
-The LLM adds **meaning**.
+The structural graph provides **relationships**. The explanation of their meaning needs supporting code or execution evidence; the graph alone does not establish the claims above.
 
 ---
 
@@ -182,7 +180,9 @@ In token economics, this reconnaissance loop is brutal. An agent exploring an un
 
 A common assumption is that an exhaustive test suite makes architectural documentation redundant—if the tests pass, the system is correct.
 
-In production, test suites and architectural models solve fundamentally different problems. A test suite verifies functional input-output contracts (`assert actual == expected`), but it is structurally blind. A coding agent can implement a feature by bypassing an event-driven queue, querying a private database table of another service directly, and returning the correct response. The functional tests pass cleanly, but the architectural boundary is broken. Tests guarantee functional behavior; architectural documentation safeguards system structure, data ownership, and navigation paths.
+Tests and architectural models answer different questions. A functional test may verify an output without checking how the result was obtained. A coding agent could bypass an event-driven queue, query another service's private table, and still satisfy that assertion. Dedicated architecture or integration checks can examine those boundaries, but an ordinary output assertion does not do so automatically.
+
+Passing tests establish agreement on the exercised cases and assertions. Documentation explains intended structure, data ownership, and navigation, but does not enforce them by itself. Use it to direct source review and executable checks where practical (see [[Executable Architecture Tests for Coding Agent Guardrails]]).
 
 ---
 
@@ -811,9 +811,7 @@ Reviewing architectural diffs shifts pull request evaluation from line-by-line s
 
 # Documentation Generated from Runtime Evidence
 
-Static code analysis describes what the system **can do**.
-
-Runtime telemetry can show what the system **actually does**.
+Static code analysis helps identify possible behavior within the code and configuration it can resolve. Runtime telemetry shows behavior exercised during particular runs. Neither provides a complete account alone: a trace may omit a rare failure, while static analysis may leave a dynamically selected implementation unresolved.
 
 Useful sources include:
 
@@ -907,7 +905,7 @@ Small, structured documents are often more useful for agents than large narrativ
 
 An especially useful abstraction may be an **Operation Card**.
 
-Each important operation receives a compact description containing everything needed to understand it.
+Each important operation receives a compact description of its scope, behavior, supporting evidence, and unresolved questions.
 
 For example:
 
@@ -948,6 +946,12 @@ Failure modes:
 - persistence failure
 - publication failure
 ```
+
+The card should also record the source revision and relevant configuration, references to code and execution artifacts, and the assumptions behind individual claims. Separate source-derived findings, observed behavior, and hypotheses. For example, a call to a scheduler establishes neither durable job storage nor recovery after restart. Those claims require evidence from the scheduling and recovery paths.
+
+Track unanswered questions beside the flow: who previously wrote the state being read, which transaction covers the writes, and what happens when a delayed step fails? A shared method's summary is reusable only when its assumptions fit the current operation. An explicit missing dependency is more useful than a complete-looking sequence diagram that guesses its behavior.
+
+[[Recovering Legacy System Behavior with AI Agents]] describes how to develop these cards through alternating code inspection, observations, and characterization tests before a rewrite.
 
 From the same structured representation, the system could generate:
 
