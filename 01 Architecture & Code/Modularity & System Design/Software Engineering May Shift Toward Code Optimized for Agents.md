@@ -268,6 +268,14 @@ The repository itself does not clearly answer:
 
 > How should software be written here?
 
+### Choose which implementations should guide the next change
+
+Existing code can supply examples that would otherwise need a long prompt or a separate sample directory. That works only if the agent finds an implementation worth following and understands which parts apply. Point to reviewed code and state the limits of the example. An old handler with a compatibility workaround should not silently become the default for new handlers.
+
+Treat the first implementation as provisional. Further operations and their exceptions reveal whether its structure generalizes. After the pattern has been checked, compare a prompt that points to production code with one that includes separate examples or more detailed instructions. If the shorter version preserves quality on the tested tasks, the duplicate examples may be retired; retain explanations of intent or rare cases that production code does not convey (see [[Bootstrapping Coding Agents with a First Reference Implementation]]).
+
+This does not mean that prompts automatically get shorter as the repository grows. More code can also introduce competing conventions. Keep the code snapshot fixed while comparing prompts, and repeat the comparison when the available examples change (see [[How Much Guidance Does a Coding Agent Need]]).
+
 ## A New Form of Context Debt
 
 This suggests a new type of technical debt.

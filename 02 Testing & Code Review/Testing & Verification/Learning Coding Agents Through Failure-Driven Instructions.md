@@ -286,7 +286,7 @@ Before modifying an HTTP endpoint:
 3. keep the controller limited to transport concerns.
 ```
 
-They can be tested against a historical task suite:
+They can be tested against a historical task suite. The following numbers illustrate how to compare candidates; they are not measurements:
 
 |Instruction|Success|Avg. Attempts|Cost|
 |---|--:|--:|--:|
@@ -323,7 +323,7 @@ declare improvement
 
 This may simply encode the solution to one particular case.
 
-Tweaking instructions solely to pass the task that just failed almost always results in over-indexing on an isolated symptom. You end up with hyper-specific rules that teach the model how to solve yesterday's bug while breaking its ability to generalize across tomorrow's features.
+Tweaking instructions solely to pass the task that just failed can produce rules tied to that case. A rule may help reproduce yesterday's solution while making a different feature harder to implement. Replaying the original task and testing reusable guidance answer different questions.
 
 Instead, instruction development should resemble machine learning evaluation:
 
@@ -349,6 +349,14 @@ The instruction system itself can overfit.
 If a candidate rule improves the order management endpoints on the train set but degrades performance on identity management tasks in the validation set, it cannot be merged without refinement.
 
 ---
+
+## Recover and simplify prompts after corrective sessions
+
+A successful session may contain many small corrections absent from its original prompt. Ask an analyzing agent to read that conversation and the accepted diff, distinguish durable requirements from repairs to abandoned attempts, and propose a prompt that includes the missing decisions. Review those decisions before testing the prompt.
+
+Give a separate execution session only the candidate prompt and the permitted starting code. Keep prior conversations, later Git history, and earlier trial artifacts outside its access. Otherwise it may recover the solution without demonstrating that the new prompt was sufficient. First replay the original task, then test related tasks whose solutions were not used to prepare the prompt.
+
+As reviewed implementations accumulate, test removing explanations that the code now supplies. Compare candidates against the same repository snapshot and model configuration, then repeat the comparison after either changes. A newer model or richer codebase may allow a smaller prompt, but that is a result to establish through trials. [[How Much Guidance Does a Coding Agent Need]] describes the isolation, evaluation, and removal experiments; [[Bootstrapping Coding Agents with a First Reference Implementation]] explains when production code becomes a useful reference.
 
 ## Instructions Should Be Retrieved, Not Always Loaded
 
@@ -504,9 +512,9 @@ It becomes a potential improvement to **all future generated code**.
 
 ### The "Don't Patch in Silence" Rule
 
-A common anti-pattern in teams adopting coding agents is the silent manual fix. A developer spots an architectural boundary violation or a domain modeling error in an agent-authored branch. To save two minutes, they rewrite the code by hand, push the commit, and merge. The immediate ticket is closed, but the agent harness learned nothing. The next agent will stumble into the exact same trap tomorrow.
+A recurring problem is a manual correction whose reason is never recorded. A developer fixes an architectural boundary violation in an agent-authored branch and merges the result. The corrected code may help the next agent, but a decision that is not visible in that code can still be missed.
 
-Treating recurring mistakes as defects in the system's operational context compounds engineering velocity. Instead of quietly fixing the code in isolation, the developer spends two minutes encoding the constraint—as an explicit instruction, an example pair, or a new architectural boundary test. Every review feedback cycle then permanently prevents that entire class of regression across all future tasks.
+Record the decision where future work can use it: in an instruction, a reviewed example, or an architectural check. Then test whether the next agent avoids the mistake. A correction creates an opportunity to improve later runs; it does not guarantee that the entire class of failure has been eliminated.
 
 ---
 

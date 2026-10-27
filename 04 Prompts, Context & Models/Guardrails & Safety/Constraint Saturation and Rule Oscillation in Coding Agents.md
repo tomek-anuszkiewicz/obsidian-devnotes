@@ -117,6 +117,12 @@ Use natural-language instructions for domain decisions and architectural trade-o
 
 The check also needs a reliable trigger. A hook can run a local validator after a file write or check the accumulated diff when an agent finishes a task, even if it makes no commit. Test that trigger with a deliberately failing change; a correct validator does not help if nothing invokes it. [[Configuring and Testing Coding Agent Capabilities]] covers the different trigger points and how to test them.
 
+## Test which instructions still help
+
+Treat suspected redundancy as a hypothesis. At a fixed repository snapshot and model configuration, compare the current prompt with a version that removes one clause or replaces it with a reference to maintained code. Check the resulting behavior and architecture, the number of corrective turns, and the total work required. Include cases where the rule matters and cases where it should not apply.
+
+Test the combined prompt again after several removals: overlapping rules may each appear unnecessary while at least one is still needed. Preserve the underlying task requirements and enforced boundaries throughout the comparison. A newer model or a better set of code examples provides a reason to repeat the experiment, not an automatic reason to delete guidance. [[How Much Guidance Does a Coding Agent Need]] explains how to perform these comparisons without exposing previous solutions to the executor.
+
 ## Practical rules of thumb
 
 1. **Treat every new prompt rule as a cost.** A few rules can prevent common mistakes; a growing list can increase the chance that one of them gets lost or causes another retry.

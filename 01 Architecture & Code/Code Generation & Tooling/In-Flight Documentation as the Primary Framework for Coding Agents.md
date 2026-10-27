@@ -77,6 +77,14 @@ A practical sequence looks like this:
 
 The third step keeps the reasoning from being stranded in a chat history the next agent may never see. Otherwise, it has to recover the rules from code and may miss an edge case that took real effort to discover. The fresh-session change tells you whether the card contains enough information to guide the next task.
 
+## Let several implementations establish what is worth repeating
+
+The first working implementation is still a candidate pattern. Its card should record accepted behavior and boundaries without presenting every local choice as a permanent project convention. Use subsequent implementations and meaningful exceptions to determine which decisions should be repeated. A local state change and an operation involving a remote service may share a handler structure while needing different transaction behavior.
+
+Once reviewed production implementations express the pattern clearly, a prompt can point to them and retain only the decisions that are hard to infer. Compare that version with the fuller guidance before removing a separate example or explanation. [[Bootstrapping Coding Agents with a First Reference Implementation]] follows this transition from provisional examples to maintained code.
+
+The corrective conversation can also help recover requirements missing from the card. Let an analyzing agent inspect the history and propose a better prompt, then test it in a fresh session that cannot inspect that history or the completed solution. Reproducing the original task checks whether the decisions were captured; a different task checks their reuse (see [[How Much Guidance Does a Coding Agent Need]]).
+
 ## Rebuild from the current decisions when the code carries old attempts
 
 Several rounds of changing the design can leave code that still works but no longer expresses the final design cleanly. An unused helper is easy to notice in a diff when it first appears. Months later, a leftover field or a roundabout data path is simply part of the existing code. An agent working on another task may treat it as intentional and build around it. Ordinary review of the latest diff will not draw attention to that old line.

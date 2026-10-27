@@ -407,6 +407,12 @@ we can ask:
 
 A weaker model inside a very good harness may sometimes outperform a stronger model operating with poor tools and limited context.
 
+### Evaluate prompt changes within a recorded configuration
+
+Even when the harness is fixed, the useful amount of prompt guidance can change as the repository gains reviewed implementations. An instruction that originally had to explain a design may later be replaced by a short reference to real code. Compare those prompts with the model, harness settings, available tools, and starting code held fixed. Repeat the comparison after a model upgrade or a substantial change to the examples rather than assuming the old prompt remains necessary.
+
+Record what the harness actually loads. A short user prompt may be accompanied by repository instructions, skills, memory, and automatically retrieved code. If those inputs vary between trials, the result does not isolate the prompt change. An agent that prepares a candidate prompt may use old conversations and the final implementation, while the session testing that prompt needs an independent starting environment without access to the previous answer. [[How Much Guidance Does a Coding Agent Need]] develops this experiment while keeping prompt optimization as the main question.
+
 ---
 
 # Commercial "Work OS" vs. The In-Repository Harness
