@@ -43,7 +43,7 @@ The probabilistic output matters only if it is useful for the particular workflo
 
 ## Current boundaries and unanswered questions
 
-Jev currently takes text, not images, audio, or video. A vision system could describe an image or extract structured facts and pass that text to Jev, but then the quality of the decision would also depend on that earlier step. Direct visual classification would require a different input capability. See the [model documentation](https://docs.typesafe.ai/models).
+Other decision models have appeared that classify images and video, as well as audio (see Liquid AI's [visual](https://huggingface.co/LiquidAI/d1-2B) and [audio](https://huggingface.co/LiquidAI/d1-Omni-2B) models).
 
 TypeSafe describes a new model architecture and a training method called *Reinforcement Learning for Calibrated Decisions* (RLCD). Its [AI primer](https://docs.typesafe.ai/introduction/machine-learning-primer) places RLCD alongside ways of adapting pretrained language models. It does not disclose Jev's exact base model, internal design, parameter count, memory needs, or GPU requirements. Nor does the public description establish whether other LLMs provide training feedback. The available product is served through TypeSafe's API, so those hardware requirements are not requirements for an API client.
 
