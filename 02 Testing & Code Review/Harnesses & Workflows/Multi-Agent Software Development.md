@@ -739,6 +739,8 @@ Instead, the developer may begin the day with:
 
 The interaction becomes similar to managing a development team.
 
+An engineer can also hand off a bounded task at the end of the workday and let an agent work on it overnight. This helps when the task can progress without frequent human decisions; if the agent reaches an unclear requirement or cannot verify the result, it should stop and return the blocker for the next working day.
+
 ## 18. Humans Become Orchestrators
 
 The developer's role moves gradually from direct implementation toward orchestration.
