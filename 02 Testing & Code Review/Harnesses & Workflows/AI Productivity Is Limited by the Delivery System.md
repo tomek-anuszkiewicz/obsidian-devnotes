@@ -474,6 +474,18 @@ Without good product judgment, it can build irrelevant features more efficiently
 
 AI becomes strategically valuable when the organization can quickly convert generated changes into trustworthy feedback.
 
+## Optimize decision latency and useful feedback
+
+Automated review can remove routine findings from the human queue, but product clarification, customer feedback, architectural trade-offs, and risk acceptance can still limit throughput. Measure those waits independently from implementation. A larger backlog of generated patches is not a useful response to a saturated decision queue.
+
+Fast interactive agents can reduce the time between seeing behavior and correcting a requirement. There is no need to assume that valuable agent work must run unattended for many hours. Use interactive execution for short discovery loops, autonomous execution for well-bounded tasks, and batch execution for expensive tests or experiments.
+
+Scheduled supervision windows or an agreed on-call arrangement can help when a timely decision would unblock substantial background work. They are optional operating models. Compare the actual benefit with interruption, staffing, and coordination costs rather than infer a new work schedule from the mere availability of autonomous agents.
+
+Paying more for faster execution can be rational when it reduces valuable human waiting. For unattended work, the same speed premium may have little benefit. Track time to a verified result and time to accepted behavior, as well as execution cost (see [[Designing an Agentic SDLC for Business Software]]).
+
+The feedback loop should include business value. Schedule an evidence-based evaluation after meaningful feature activation, and feed the result into future work. Technical stability alone does not show that the feature helped users (see [[Measuring Business Outcomes After Software Delivery]]).
+
 ## Working Hypothesis
 
 > AI accelerates the production of changes, but organizational advantage comes from accelerating the complete learning loop.

@@ -893,6 +893,14 @@ This keeps agent feedback loops fast while maintaining broad system coverage.
 
 ---
 
+## Verify release compatibility and recovery as behavior
+
+Agents can help construct a matrix of application, schema, message, and client versions that the deployment strategy must support. Run the new application against its intended schema, and verify that the previous application can read the schema and data left by the new release when rollback is promised. Application-first deployment requires a different combination from schema-first deployment; make those assumptions explicit.
+
+A generated `Down` migration does not prove lossless recovery. Rehearse interruption, retry, data invariants, coexistence, and the supported recovery procedure on representative data. Preserve the evidence with the release so a recovery controller can check whether an automatic action is eligible (see [[Production Feedback and Safe Automated Recovery]]).
+
+Dataset preparation needs its own checks. A masked subset can preserve foreign keys yet remove the condition that causes a defect, while a tiny sample can miss a production query plan. Verify both the data's permitted use and the properties the test needs (see [[Production-Like Test Data for Coding Agents]]).
+
 # Resulting Testing Model
 
 The classical test pyramid does not disappear.

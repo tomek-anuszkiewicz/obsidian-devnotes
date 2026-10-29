@@ -307,6 +307,12 @@ The same regression suite should test more than the wording of a rule. When agen
 
 ## Avoid Overfitting to Individual Tasks
 
+For changes important enough to affect the shared harness, qualify a candidate over a representative series of paired tasks. Run the baseline and candidate from the same code and specification with isolated sessions and mutable environments. A shadow candidate produces evidence; it must not duplicate live comments, deployments, or other external effects.
+
+Set quality constraints, the optimization target, and the stopping procedure before examining results. A candidate does not have to win every run, but a few favorable anecdotes or a fixed number of days are insufficient evidence. Keep held-out tasks unavailable to the agent proposing instructions, and preserve independent acceptance criteria.
+
+Promote the configuration as a versioned artifact, record the evidence, and keep a rollback target. Observe it after promotion because changes in models, tools, and repositories can invalidate earlier results (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
+
 A dangerous loop would be:
 
 ```text

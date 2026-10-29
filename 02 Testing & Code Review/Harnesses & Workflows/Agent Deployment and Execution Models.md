@@ -770,6 +770,14 @@ Running agent-generated code and arbitrary shell commands on shared infrastructu
 - **Short-lived credentials**: Avoid persisting long-lived API keys or deployment credentials on disk. Use short-lived, workload-identity-federated tokens (such as OIDC) scoped strictly to the task.
 - **Clean workspace trees**: Provision each task in a fresh, isolated Git worktree. Never allow untracked build artifacts or modified scripts to leak across unrelated agent runs.
 
+## Interactive work can use centrally managed execution
+
+A developer can interact with an agent through a local client while the repository, tools, and application run in a managed remote workspace. The same environment service can provision unattended tasks. Interactive sessions benefit from low startup latency and persistence; batch tasks often benefit from disposable environments and cost controls.
+
+Separate workspace persistence, agent-session continuity, and durable workflow state. A saved VM does not ensure that the agent retains its conversation, and a resumed conversation does not ensure that files or services are unchanged. Record enough artifacts and environment information to reconstruct the work.
+
+Use containers where they fit, Windows VMs for desktop behavior that requires them, and scoped capability services for databases, logs, and cloud inspection. A VM with a production login still has production authority. Enforce host, identity, and network boundaries together (see [[Isolated Engineering Environments for Coding Agents]]).
+
 ## Choosing a deployment model
 
 A simple decision guide:

@@ -698,6 +698,18 @@ This creates a continuum rather than a replacement.
 
 ---
 
+# Enforce a shared vocabulary without erasing domain distinctions
+
+Semantic review can help keep naming consistent across modules and services. Give it the domain vocabulary, definitions, owning contexts, mappings, and accepted examples. A rule such as "use consistent names" is too weak to distinguish a genuine synonym from two different business concepts.
+
+For example, `Customer` in CRM can describe a commercial relationship while `BillingAccount` identifies the payer. Replacing both with one preferred word would reduce apparent variation while making the system less accurate. The reviewer should flag unexplained differences and missing mappings, then enforce the convention after the responsible owner settles the meaning.
+
+Mechanical conventions can be checked through AST or compiler analysis: identifier suffixes, forbidden references, required types, or access to module internals. More contextual questions remain suitable for focused semantic review: whether a service name matches its responsibility or a copied persistence structure violates a boundary despite valid dependencies.
+
+Return a structured finding with the governing rule, location, evidence, expected meaning, and whether a decision is needed. Clear violations can enter an automatic repair loop. Ambiguous vocabulary or conflicting rules need a decision rather than endless renaming (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+
+Measure the cost of that consistency. Record repeated findings, rejected recommendations, and repair rounds. A stylistic rule that repeatedly destabilizes correct code may need better examples, narrower scope, or removal. Test the change against representative tasks while preserving quality constraints (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
+
 # Review Agents Turn Human Attention Into a Scalable Resource
 
 Historically, many engineering standards were enforced simply because experienced developers watched for them.

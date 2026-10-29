@@ -475,7 +475,15 @@ fn test_golden_benchmarks_have_anti_tamper_headers() {
 }
 ```
 
-The policy calls for a human to verify changes to golden hashes.
+The policy calls for a human to verify changes to golden hashes. The example checks the presence of the policy marker and rejects a named update mechanism; it does not prove that the baseline value itself was not edited. A trusted comparison against the approved baseline and protected acceptance rules are needed to enforce that stronger property.
+
+### Develop new analyzers from recurring review work
+
+An agent can help implement repository-specific Roslyn or AST checks when ordinary dependency rules are insufficient. For example, a .NET checker can examine symbol references to prevent one module from calling another module's internal persistence API. A text search can miss aliases or generated code, while a symbol-aware check can use the compiler's resolved references.
+
+Give each new rule allowed and forbidden examples, include edge cases from the actual codebase, and validate the checker independently. Generated analyzer code can contain false positives or omit a path just as application code can. Version the rule and protect its execution path so a candidate cannot silently weaken its own gate.
+
+Test changes require similar care. Deleting an assertion, skipping a fixture, narrowing input data, or replacing an integration check with a permissive mock can weaken verification without deleting a test file. Some changes can be detected mechanically; others require a focused review of the behavior the test previously established (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
 
 ---
 

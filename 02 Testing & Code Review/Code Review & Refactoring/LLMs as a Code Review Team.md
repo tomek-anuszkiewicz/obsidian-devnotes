@@ -902,6 +902,8 @@ Limiting review agents to read-only repository access and write access only for 
 
 AI review may instead change what humans review.
 
+It can also change who receives routine findings. An orchestrator can return a substantiated defect directly to a fixer, rerun the relevant checks on the new candidate, and request a human decision only when policy requires it or the bounded repair loop cannot resolve the problem. Automatic acceptance is appropriate only within an explicitly authorized scope; the reviewer does not grant itself merge authority (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+
 Today humans often spend time checking things such as:
 
 ```text
@@ -996,6 +998,9 @@ But they can be **relentless, specialized, cheap to duplicate, able to investiga
 For code review, those properties may matter almost as much as raw intelligence (see [[Multi-Agent Software Development]] and [[Building Determinism from Unpredictable Models]]).
 
 ## Related notes
+
+- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Structured findings, protected policy, and repair before human escalation.
+- **[[Observability and Controlled Improvement of Coding Agent Harnesses]]** — Measures reviewer value, repair cost, and controlled configuration changes.
 
 - **[[Reviewing AI-Generated Code]]** — Review heuristics and inspection methods for AI-authored changes.
 - **[[AI May Make Aggressive Code Optimization Economically Viable]]** — The architectural and economic justification for eliminating unnecessary abstractions and allocations on hot paths.

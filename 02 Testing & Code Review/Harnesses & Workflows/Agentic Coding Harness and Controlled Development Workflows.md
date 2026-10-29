@@ -89,6 +89,8 @@ However, text instructions guide behavior rather than enforcing it technically. 
 
 ## A controlled plan-and-approval workflow
 
+The following is a deliberately conservative workflow for work that needs explicit step approval. An organization can authorize broader autonomous execution for bounded task classes while retaining protected acceptance rules. Interactive discovery and unattended implementation can share the same verification process (see [[Designing an Agentic SDLC for Business Software]]).
+
 For complex work, begin with a planning-only instruction:
 
 ```text
@@ -528,7 +530,7 @@ docker compose up -d
 
 A local agent can potentially access credentials, local databases, Docker, GitHub, Azure or Kubernetes. It should not receive more authority than necessary.
 
-Recommended defaults:
+Conservative defaults for an initial local setup:
 
 - restrict writes to the active workspace;
 - require approval for network access and operations outside the workspace;
@@ -548,6 +550,8 @@ Example instructions:
 ```
 
 Sandboxing controls what the agent can technically do. Approval policy controls when it must stop and ask before doing it. These are separate controls (see [[Security Boundaries for Agents, RAG, and MCP]]).
+
+A managed company environment can also grant scoped access to approved shared test services. Use task-specific identities, data isolation, quotas, and coordination where tests mutate shared state. A remote interactive workspace can preserve a fast developer loop while withholding workstation and production credentials (see [[Isolated Engineering Environments for Coding Agents]]).
 
 ## Git, commits and pull requests
 
@@ -629,7 +633,17 @@ A useful development path is:
 7. CI and independent review executed;
 8. human decides whether to merge.
 
-Branch protection, required checks and human review should remain in place even when the agent reliably creates good pull requests.
+Branch protection and required checks should remain in place even when the agent reliably creates good pull requests. Human review applies where the organization's policy requires it. A protected acceptance process can authorize low-risk merges automatically when the required evidence is complete; the implementing agent must not decide its own exemption.
+
+### Bind every acceptance to the candidate and policy
+
+Record the base and candidate commits, specification revision, policy version, check results, and approvals. A subsequent patch can invalidate earlier evidence. Recheck the integrated candidate when parallel branches can interact. A schema-valid review report is structured evidence, not proof that the review is correct.
+
+Routine findings can return directly to the repair loop. Escalate changed meaning, conflicting mandatory rules, repeated oscillation, or exhausted budgets with a concrete decision packet. Keep policy changes separate from the patch being judged (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+
+### Measure the harness independently of the code it produces
+
+Correlate native runtime events with workflow stages and findings. Separate model usage, actual billing, tool latency, and waiting for people. Test a proposed instruction, skill, reviewer, or environment change against the current configuration on comparable tasks before adopting it. Preserve protected evaluation criteria and observe the promoted version afterward (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
 
 ### Docs-as-Code Drift Prevention
 

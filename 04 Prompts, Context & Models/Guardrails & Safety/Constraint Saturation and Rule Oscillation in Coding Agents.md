@@ -131,6 +131,12 @@ Test the combined prompt again after several removals: overlapping rules may eac
 4. **Separate the work into passes.** Get correct code first, refine performance, and let tools handle formatting and other mechanical checks.
 5. **Detect repeated diffs and stop.** If the agent moves between the same two implementations, show the conflict to an engineer instead of spending more retries on it.
 
+## Use repair cost as evidence about the rule set
+
+Associate each repair attempt with the findings that triggered it, the rules and harness version, and the resulting candidate. Repeated alternation between patches can reveal conflicting rules. Rising cost without visible oscillation can instead indicate unclear examples, an unreliable reviewer, a missing tool, or a changed task mix.
+
+Investigate those causes before appending another instruction. Compare a proposed rule change, removal, or new example against the current configuration on representative tasks. Preserve the quality criteria while evaluating token usage, elapsed time, and human intervention (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
+
 ## Related notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — execution loops, retry limits, and escalation when the agent cannot converge.

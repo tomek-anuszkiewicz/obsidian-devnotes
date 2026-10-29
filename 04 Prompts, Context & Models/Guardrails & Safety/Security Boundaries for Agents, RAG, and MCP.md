@@ -84,6 +84,16 @@ For the API behind an MCP tool, apply the same engineering rules used before age
 
 The practical review question is: **What can this agent actually do if it follows a hostile retrieved paragraph or makes a mistaken decision, and which independent boundary limits the result?** If the answer is only “the prompt says not to,” the system needs a stronger boundary.
 
+## Isolate the development identity as well as the process
+
+A coding agent on a developer workstation can inherit cloud CLI sessions, browser profiles, SSH agents, shared drives, or production database access. A separate VM helps only if those resources do not cross into it. Signing into production inside the VM restores the same authority through another machine.
+
+Enforce operating-system isolation, scoped identities, and network access together. A centrally managed remote workspace can support interactive development without inheriting the workstation's credentials. Local VMs can follow the same policy. Use separate administration channels for production operations (see [[Isolated Engineering Environments for Coding Agents]]).
+
+A capability broker can expose narrow database, log, or cloud operations through MCP. Validate authorization, scope, output, and resource limits in the service, and remove alternative paths that bypass it. Wrapping a generic privileged shell in MCP does not reduce the shell's authority.
+
+Data handling is a separate boundary. A sandboxed agent can still send raw records to an external model or telemetry service. Deleting the sandbox does not delete those copies. Supply approved datasets through a protected preparation process, with privacy and test-quality checks (see [[Production-Like Test Data for Coding Agents]]).
+
 ## Related notes
 
 - **[[Always-On Autonomous Agents - The 24-7 Local Operating System]]** — External messages and feeds that can steer an agent running with persistent tool access.

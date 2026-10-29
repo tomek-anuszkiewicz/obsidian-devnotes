@@ -147,6 +147,14 @@ Cover both expected use and unwanted activation:
 
 Keep these scenarios and rerun them after configuration changes. For description-based selection, try several realistic phrasings, including ambiguous and negative cases, because one successful prompt does not establish reliable routing. An executable audit can give a deterministic answer to a defined check, but the test must also prove that the right event invokes it and that a failed result has the intended effect. A Python-based runner can automate the scenarios and collect traces; the important artifact is the expected-versus-observed behavior, not the runner's language.
 
+## Measure whether capabilities are used when they should be
+
+Record when a capability was eligible, available, invoked, and useful. A rarely invoked migration skill may be essential; a frequently skipped contract checker during API changes may indicate broken routing. Loading a skill file is evidence of availability, not proof that its instructions affected the result.
+
+Test removal as well as addition. Compare tasks with and without the capability under the same acceptance rules, including rare cases that motivated it. A lower average cost does not justify removing a safeguard whose eligible tasks were absent from the sample.
+
+Use execution traces to identify missing tools, denied operations, and avoidable serial work. A better environment or deterministic tool can resolve a repeated failure more effectively than another instruction. [[Observability and Controlled Improvement of Coding Agent Harnesses]] describes the corresponding measurement and evaluation loop.
+
 ## Related notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — The bounded implementation and review process in which this configuration runs.

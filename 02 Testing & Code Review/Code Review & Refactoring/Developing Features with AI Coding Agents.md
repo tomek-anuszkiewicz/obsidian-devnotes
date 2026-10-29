@@ -10,11 +10,13 @@ tags:
 aliases:
   - Feature Development with Agents
   - End-to-End Agentic Feature Lifecycle
+  - Progressive Specification with Coding Agents
+  - Ready for Development and Ready for Integration
 ---
 
 ## A Strong Workflow for Larger Features
 
-A useful process is:
+A useful process for consequential changes with sufficiently settled requirements is:
 
 ```text
 repository analysis
@@ -77,7 +79,7 @@ The specification should include:
 - explicit out-of-scope items.
     
 
-Free-form natural language is a fragile medium for complex business logic. Unstructured narrative leaves implicit branches that models resolve by hallucinating requirements. Defining state transitions through decision tables or explicit transition matrices forces combinatorial completeness: each row maps an initial state, an incoming event, guard conditions, the resulting state, and triggered side effects. This gives the agent a deterministic blueprint to generate tests against without missing edge cases.
+Free-form requirements can leave branches implicit, which an agent may resolve by inventing a rule. Decision tables and transition matrices make those branches easier to inspect: each row maps a state, event, guard condition, result, and side effect. They improve the review of completeness, but cannot prove that the team identified every important case.
 
 ### Step 3: Tests Before Implementation
 
@@ -96,7 +98,7 @@ The agent can prepare:
 
 New tests may initially fail. That confirms that they detect the missing behavior.
 
-At this stage, new tests must fail (red state). If an acceptance test passes before implementation code is written, it is asserting against an existing behavior, testing a trivial mock, or failing to assert observable state changes altogether. A red test proves that the test harness can actively detect the absence of the requested capability.
+For newly required behavior, confirm that the relevant test fails for the expected missing behavior before the fix. Tests preserving existing behavior may already pass. A red result caused by broken setup is not evidence that the test detects the requested capability; inspect the failure reason.
 
 ### Step 4: Human Review of Meaning
 
@@ -206,13 +208,31 @@ business decision
 + explicit implementation
 ```
 
-The agent should not be allowed to define both the implementation and the meaning of correctness without independent human review.
+The implementing agent should not be allowed to redefine both the implementation and its acceptance criteria. People settle consequential business meaning; independent checks can enforce already approved criteria according to the organization's acceptance policy.
 
 Otherwise, it can write tests that confirm its own incorrect interpretation.
 
 ---
 
 ## Practical Working Rules
+
+The staged process above is one mode of work. Interactive discovery can use shorter cycles while preserving the same acceptance boundary.
+
+### Discover reversible details through working behavior
+
+A developer may begin with a bounded sketch, inspect the first working slice, and discover that an edge case or user interaction needs to change. That can be more effective than spending days predicting every detail. Record accepted decisions in the current specification and examples as the behavior becomes clear; do not leave the next executor dependent on an old conversation.
+
+Distinguish **ready for development** from **ready for integration**. The first means that the next step has a clear objective, bounded risk, and enough context to proceed. The second requires agreed behavior and the required verification. "Good enough to start" does not waive the checks needed to merge.
+
+Settle decisions with broad consequences early: data ownership, public contracts, authorization boundaries, financial meaning, and deployment constraints. Explore reversible interface details and local workflow choices through short iterations. If exploration exposes a need to change an architectural constraint, record the new decision explicitly (see [[How AI Changes Prototyping and the Path from PoC to Production]]).
+
+### Share an integration process across working modes
+
+Interactive development and autonomous tasks can both produce a versioned specification, candidate commit, and evidence package. Submit them to the same independent acceptance process. The human's close involvement during coding does not replace the final checks; unattended execution does not require a different definition of correctness.
+
+The interactive workspace can run remotely or on a dedicated VM. The engineer can steer the agent continuously without giving it access to the engineer's production credentials (see [[Isolated Engineering Environments for Coding Agents]]).
+
+An approved feature, a bug with a reproducer, and a repair after review can reuse one implementation workflow with different inputs and outcomes. The surrounding orchestrator records the task and decides what follows. This keeps exploratory work flexible while making integration repeatable (see [[Designing an Agentic SDLC for Business Software]]).
 
 ### For feature development
 

@@ -707,6 +707,20 @@ Instead, many previously human-driven process steps can themselves become automa
 
 ---
 
+# Interactive discovery and autonomous delivery share an acceptance boundary
+
+An engineer can explore behavior with an agent, inspect a working slice, and refine requirements in short cycles. Another task can run unattended from an approved specification. These are different execution modes within one delivery process. Both should produce a candidate, current behavioral agreement, and evidence for independent acceptance.
+
+Distinguish readiness to start from readiness to integrate. A bounded experiment can start with open questions, provided its risks and intended learning are explicit. Integration requires those consequential questions to be resolved and the agreed behavior to pass the applicable checks.
+
+Record important discoveries as the work proceeds. A chat correction that changes a business rule must reach the current specification and examples before later agents or reviewers rely on them. Architectural constraints with broad consequences need deliberate decisions; reversible details can be discovered through interaction (see [[Developing Features with AI Coding Agents]]).
+
+## Reuse implementation across business triggers
+
+A feature request, production bug, and review repair can invoke the same implementation workflow with different inputs. The orchestrator owns the durable state and decides what follows: another review, a product decision, release preparation, or a completion notification. The executor should return an explicit outcome and artifacts rather than infer that its session ending completes the business task.
+
+The wider lifecycle continues after deployment through technical observation, business evaluation, flag cleanup, and recovery readiness. [[Designing an Agentic SDLC for Business Software]] connects these activities without prescribing one working style for every task.
+
 # These Workflows Are Complementary
 
 These approaches should not necessarily be treated as competing methodologies.

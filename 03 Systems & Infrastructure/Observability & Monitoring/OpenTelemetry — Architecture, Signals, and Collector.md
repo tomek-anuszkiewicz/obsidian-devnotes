@@ -1494,6 +1494,18 @@ This architecture gives several useful properties:
 
 ---
 
+## Instrumenting coding agent execution
+
+An agent workflow can combine model requests, tool calls, subagent work, CI checks, repair attempts, and waits for a person. Collect facts from their owning components and correlate them with a durable task identifier. A long workflow may span several traces; a single trace should not be the only record of the business task.
+
+The runtime reports operations and usage, while the orchestrator supplies phase, attempt, candidate commit, policy version, and the finding that triggered a repair. Native telemetry avoids rebuilding every event source, but it does not know all of the company's process meaning.
+
+Keep token usage, cost estimates, and billing mode distinct. Check whether counters are per-call or cumulative and whether cache and reasoning categories overlap other totals. Missing usage should remain missing. Aggregate duration also differs from elapsed time when child work runs in parallel.
+
+Avoid using per-task or per-customer identifiers as unbounded metric labels. Put detailed correlation in traces, logs, or an execution store, and aggregate metrics by controlled dimensions such as phase and outcome. Apply redaction, access, retention, and sampling policies to agent content as well as normal application telemetry.
+
+Record the model, runtime, instructions, tools, and evaluation versions needed to compare runs. Do not interpret an agent's explanation of its own delay as measured internal reasoning. [[Observability and Controlled Improvement of Coding Agent Harnesses]] connects these observations to controlled process experiments.
+
 # 28. Main Takeaways
 
 OpenTelemetry should not be thought of merely as:

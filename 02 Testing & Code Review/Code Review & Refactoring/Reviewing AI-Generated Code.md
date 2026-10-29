@@ -10,6 +10,8 @@ tags:
 aliases:
   - AI Code Review Practices
   - Verification of Agent Diffs
+  - Behavior-Oriented Review Evidence
+  - Human Review by Exception
 ---
 
 ## Human Attention Becomes the Critical Resource
@@ -79,7 +81,7 @@ Coding agents are remarkably adept at generating tests that pass without proving
 
 ---
 
-## Use Agents to Support Review, Not Replace It
+## Route routine findings to repair and consequential decisions to people
 
 A separate agent session can prepare:
 
@@ -118,9 +120,36 @@ Look for:
 - unnecessary abstraction.
 ```
 
-The second agent is an attention aid, not the final authority.
+The second agent supplies evidence. Acceptance authority belongs to the configured policy and the people responsible for decisions that the policy reserves for them.
 
-Because the authoring agent is biased toward justifying its own implementation choices, running an isolated session with an adversarial prompt prevents the model from rubber-stamping its own assumptions. The second agent points human focus directly toward potential landmines, but the final judgment, architectural verification, and approval remain strictly with the human engineer.
+An isolated review session can reduce anchoring on the author's explanation, but it does not guarantee independent reasoning or correct findings. Require evidence for important claims. A different model can add another perspective; it is not proof that the two reviewers have independent failure modes.
+
+When a finding describes a clear defect within the approved task, return it to the coding agent for repair and repeat the relevant verification. A person need not inspect every naming violation or missing error case. Escalate when the process cannot resolve conflicting rules, changes accepted meaning, exceeds its budget, or reaches a decision requiring human authority. Low-risk changes can be accepted by a protected process if the organization explicitly permits that autonomy (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+
+The requirement to understand a change remains important when a person is asked to approve it. It should not become a ritual human checkbox on every automatically verified change. Organizational ownership of the system also remains necessary even where individual low-risk patches are accepted automatically.
+
+## Present changed behavior before presenting the file list
+
+A diff shows edits. It leaves the reviewer to reconstruct the behavior those edits produce. Prepare a short evidence packet that starts with the user-visible or operational change, then shows the affected execution path, changed contracts, relevant tests, failure behavior, and unresolved decisions.
+
+For a fee calculation, show the old and new result for representative orders, the inputs that select each branch, and the financial rule authorizing the change. Link the explanation to the exact candidate and evidence. A sequence diagram or small decision table can reveal a missing side effect more quickly than an alphabetical list of files.
+
+The packet should answer:
+
+- What behavior changes, and why was that change requested?
+- Which invariants and contracts are preserved or intentionally revised?
+- What did independent checks establish, and what did they not exercise?
+- What specific decision remains for the reviewer?
+
+Keep access to the raw diff, logs, and tests. Generated explanations can omit a path or confidently describe behavior the code does not implement. Verify important claims against the candidate rather than treating the summary as a substitute for evidence.
+
+Existing tools can help with parts of this presentation. CodeRabbit documents [PR summaries and walkthroughs](https://docs.coderabbit.ai/), while Graphite documents [stacked pull requests and review workflows](https://graphite.com/docs/get-started). Those capabilities can reduce navigation work; the company still needs to decide what evidence and authority are required for acceptance. Product references were checked on 2026-10-29.
+
+## Measure the cost and value of review
+
+Track confirmed findings, rejected findings, repair rounds, reviewer latency, human decision time, and defects discovered after acceptance. A reviewer that emits many comments is not necessarily useful. A reviewer that passes everything cheaply may be missing important failures.
+
+Associate repeated repairs with the rules that triggered them. If one convention causes constant oscillation, investigate the convention, examples, and implementation guidance together. Improve the process through controlled comparisons rather than adding another instruction after every disagreement (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
 
 ---
 

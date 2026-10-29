@@ -289,6 +289,12 @@ An agent working in this architecture should be instructed to:
 
 Enforcing atomic changes across files is critical: whenever an agent modifies a query projection, it must update the corresponding C# result DTO and its contract test in the same pass. Leaving mapping or test updates for a subsequent prompt invites prompt drift and broken builds (see [[Agentic Coding Harness and Controlled Development Workflows]]).
 
+## Rehearse compatibility on an approved dataset
+
+A migration test should establish more than whether the new schema can be created. Check the old application against the new schema and against values written by the new release when the deployment strategy promises rollback. Verify data invariants, interruption and retry behavior, and the supported order of deployment. A `Down` method does not by itself establish that data can be restored without loss (see [[Production Feedback and Safe Automated Recovery]]).
+
+When a defect depends on a customer's production records, request a bounded dataset through a protected preparation service. Preserve the relevant relationships and failure conditions while controlling what data reach the coding environment. SQL Server Dynamic Data Masking is not equivalent to producing an anonymous database copy (see [[Production-Like Test Data for Coding Agents]]).
+
 ## Conclusion
 
 Agentic coding makes explicit SQL and database-side programming economically more attractive because it lowers the cost of repetitive implementation and maintenance (see [[AI May Make Aggressive Code Optimization Economically Viable]]). It does not remove the need for strong contracts, migrated-database tests, semantic review, or architectural discipline.

@@ -54,6 +54,12 @@ Before changing inference settings, look at the habits that make an agent read o
 
 ### Measure the whole task, then inspect expensive runs
 
+Attach usage to the task, phase, attempt, model, instruction version, and findings that caused a repair. Keep reported token usage separate from financial cost and billing mode. Cached input or reasoning tokens may be included in other reported totals, and a resumed session may expose cumulative counters; check the provider semantics before summing them.
+
+Measure cost per accepted task with failed and abandoned attempts included. Also track first-pass acceptance, repeated rule violations, rejected review findings, and time waiting for people or tools. These distinguish an expensive model call from a process that repeatedly sends a reasonable model through unnecessary work.
+
+Compare similar task classes and evaluate instruction changes from the same starting state. A lower token total achieved by weakening verification is not an improvement (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
+
 Track input, output, and billed reasoning tokens, cache hits, model calls, tool calls, and retries per task. Roll those records up by project and, where the organization needs it, by developer. Keep the task type, elapsed time, and verification result alongside the counts. A rising monthly total may reflect more work rather than a less efficient agent; compare similar tasks and look at cost per verified result before changing the workflow.
 
 An occasional review of available agent traces can reveal repeated file reads, oversized tool responses, broad searches that returned nothing useful, or several retries against the same failure. Ask the agent to propose a specific change, such as narrowing a query or moving a check to a script, then compare later runs. The agent can inspect only the calls and logs the host exposes; its explanation of why tokens were spent is a hypothesis to test against those records, not a substitute for usage accounting. Prefer counts and short diagnostic excerpts over routinely loading full transcripts back into a model.

@@ -182,6 +182,14 @@ Once those failure modes and invariants are exposed:
 
 ---
 
+## Carry interactive discovery into the delivery process
+
+Fast agents make it practical to discover requirements through a working slice and immediate correction. The accepted behavior still needs to reach the current specification, examples, and tests. Otherwise later reviewers and agents inherit the initial guess while the real decision remains in a conversation.
+
+Use separate readiness thresholds: enough context and bounded risk to start exploring, then agreed behavior and verification sufficient to integrate. Resolve consequential architecture, data ownership, and trust decisions early. Let reversible interaction details emerge through short iterations (see [[Developing Features with AI Coding Agents]]).
+
+Interactive work can run inside the same managed sandbox platform used for unattended tasks. The developer remains close to the feedback loop without the agent inheriting the developer's production credentials (see [[Isolated Engineering Environments for Coding Agents]]).
+
 ## Practical Working Rules
 
 ### For prototypes

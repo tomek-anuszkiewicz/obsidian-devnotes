@@ -1117,7 +1117,7 @@ Human involvement should not necessarily be treated as an exception.
 
 In many workflows it is simply another legitimate state.
 
-Because durable orchestrators persist workflow execution state to an append-only event log, a workflow sitting in a `waiting_for_approval` state consumes zero active CPU threads, memory allocations, or database connection pool handles. It can remain dormant for weeks until an operator triggers an approval webhook, at which point the engine reloads the workflow state and schedules the next activity.
+A durable orchestrator can persist this wait and resume after an approval event without keeping a dedicated worker blocked for the entire interval. The service still consumes storage and operational resources, and persistence mechanisms differ between engines. A long wait should be represented as durable state rather than an agent repeatedly checking for approval.
 
 ---
 
@@ -1290,6 +1290,14 @@ Local background execution
 There is no reason for one tool to own every layer.
 
 ---
+
+# Apply durable orchestration to the whole software lifecycle
+
+An issue, approved specification, failed review, and incident investigation can all invoke a shared implementation workflow. Its inputs identify the task, base commit, specification, scope, acceptance policy, environment, and budget. Its output identifies the candidate, evidence, unresolved questions, and terminal status. The surrounding business workflow decides whether to repair, request a decision, release, or close the task.
+
+A Git event must identify the candidate being submitted. Deduplicate repeated webhooks, reject stale evidence, and distinguish checkpoints from deliberate submission. When a worker resumes after failure, reconcile existing artifacts before repeating an external action.
+
+Long-running obligations also include evaluation after feature activation, rollout progression, flag cleanup, and test-data expiry. Store timers, owners, and next actions outside the agent session. Version workflow behavior so an execution waiting for a month is not silently reinterpreted by a deployment of new process code (see [[Designing an Agentic SDLC for Business Software]] and [[Measuring Business Outcomes After Software Delivery]]).
 
 # Mental Model
 
