@@ -361,7 +361,7 @@ Engineers who only see generated summaries have less opportunity to learn how th
 ## Related notes
 
 - **[[OpenTelemetry — Architecture, Signals, and Collector]]**: Trace, metric, and log context used by operational agents.
-- **[[Service-to-Service Communication — How Service A Should Call Service B]]**: Protocols, retries, and circuit breakers that shape traces across services.
+- **[[Remote Service Calls — Errors, Resilience, and Observability]]**: Errors, retries, timeouts, and communication policies that shape traces across services.
 - **[[Designing Software for AI Agents]]**: Contracts, structured tools, and isolation for operational models.
 - **[[Workflow Orchestration in Agentic Systems]]**: State machines, Sagas, and long-running workflows that consume structured proposals.
 - **[[Formal Verification and Runtime Safety Boundaries]]**: Assertions and invariant checks around model output.

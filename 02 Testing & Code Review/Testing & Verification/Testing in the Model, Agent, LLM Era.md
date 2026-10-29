@@ -10,12 +10,12 @@ tags:
 aliases:
   - Software Testing in the AI Era
   - Agent-Driven Test Strategies
-  - Disposable Implementation vs Ironclad Test Oracle
-  - Ephemeral Code and Test Oracles
-  - The Frozen Oracle Rule
-  - The Limits of Test Oracles
-  - Machine-Facing Test Diagnostics
+  - "Deterministic Test Strategy and Model Evaluations"
 ---
+
+Agents reduce the cost of authoring many kinds of tests, but execution time, diagnostic value, maintenance, and confidence still differ between them. A large generated suite can provide weak feedback if it repeats implementation detail or runs expensive checks at every edit.
+
+This article develops the testing strategy: useful unit and component checks, broader scenarios, selection frequency, deterministic agent tests, live-model evaluations, and release behavior. [[Trustworthy Test Oracles for Coding Agents]] examines why the expected result can be trusted and how failures guide repair. [[Repairing Browser Tests Without Changing Scenario Intent]] develops a narrower maintenance loop for browser automation while keeping scenario intent protected.
 
 The classical test pyramid is still useful, but it is no longer a complete description of how we should verify software in an agent-driven development process.
 
@@ -25,162 +25,19 @@ Its core economic principle remains valid:
 
 However, AI changes both the economics of test creation and the role tests play in development.
 
-## 1. Tests become part of the agentic control loop
-
-In traditional development, tests primarily served humans:
-
-- they documented behavior,
-    
-- forced developers to think through design,
-    
-- exposed edge cases,
-    
-- prevented regressions,
-    
-- helped refactoring.
-    
-
-In an agentic workflow, tests gain another important role:
-
-> They become executable constraints that the agent can use to verify its own work.
-
-A coding loop can look like:
-
-```text
-specification
-    ↓
-generate / modify code
-    ↓
-compile
-    ↓
-run deterministic tests
-    ↓
-inspect failures
-    ↓
-repair
-    ↺
-```
-
-The key advantage is that the agent does not need another model to judge every iteration.
-
-The environment can provide a cheap and deterministic signal:
-
-```text
-PASS / FAIL
-```
-
-This makes tests fundamental to reliable agentic software development.
-
-Natural language specifications are essential for establishing high-level domain context, architectural boundaries, and business rules. However, natural language is inherently ambiguous. Under deep context stacks or complex edge cases, models drift, lose track of constraints, or invent plausible-looking workarounds.
-
-Automated test suites do not negotiate. When an assertion fails with a non-zero exit code, the model cannot rationalize the failure away. The deterministic failure halts the loop and forces the agent to inspect the failure, adjust the implementation, and re-run verification until the code satisfies the specification.
-
----
-
-## 2. Some tests should exist before code generation
-
-For important behavior, tests should be created before implementation.
-
-A useful workflow is:
-
-```text
-requirement / bug / specification
-        ↓
-agent proposes behavioral scenarios
-        ↓
-human reviews important scenarios
-        ↓
-agent generates executable tests
-        ↓
-tests become part of task definition
-        ↓
-agent generates implementation
-        ↓
-automated repair loop
-```
-
-The important human responsibility is not necessarily writing test code.
-
-It is reviewing:
-
-> What must be true?
-
-For example:
-
-```text
-Invoice closing:
-
-✓ Paid invoice can be closed
-✓ Partially paid invoice cannot be closed
-✓ Unpaid invoice cannot be closed
-✓ Zero-value invoice can be closed without payment
-✓ Cancelled invoice cannot be closed
-```
-
-Once this behavioral contract is accepted, the agent can generate the actual test implementation.
-
-This avoids an important failure mode:
-
-```text
-agent misunderstands requirement
-        ↓
-agent writes incorrect test
-        ↓
-agent writes implementation matching incorrect test
-        ↓
-everything is green
-```
-
-Therefore some tests should behave almost like specification artifacts.
-
-The implementation agent should not freely rewrite them simply because they fail.
-
-This dynamic establishes the **Frozen Oracle Rule**: protect accepted behavioral assertions and reference fixtures while the agent changes the implementation. Do not let a difficult failure become permission to relax an expectation or delete coverage. Test harnesses may need translation, new tests may be added, and tests tied to obsolete internal structure may need adaptation, but those changes require a separate reviewed rationale that preserves supported behavioral coverage. Where practical, enforce protection of baseline artifacts through write permissions. Check translated tests against the original implementation and deliberately incorrect variants to establish that the checks still discriminate relevant failures.
-
-### Characterization Tests Help Discover Missing Specifications
-
-An undocumented legacy system may need investigation before anyone can write an accepted behavioral specification. Characterization tests record what the existing implementation does for selected inputs and initial states. Their purpose is discovery and protection of current behavior; they do not establish that the behavior is desirable.
-
-Characterization is a purpose, not a test level. An isolated calculation may suit a unit test, while a rule implemented in a database trigger requires a check that includes the database. A tangled form handler may first need a test through the interface. Establish protection at an accessible boundary before a large refactor, then add narrower tests when calculations or rules can be isolated.
-
-Let execution of the original check the agent's proposed expectations. Otherwise, one misunderstanding can be copied into the description, test, and replacement. Inspect the initial state, outputs, persisted changes, and relevant delayed effects. A mock verifying a scheduling call cannot establish durable storage or recovery after process restart. Record the evidence and any untested parts of that claim.
-
-Once reviewed observations become an accepted compatibility baseline, protect them while changing the implementation. A later decision to correct legacy behavior should identify the changed expectation explicitly. [[Recovering Legacy System Behavior with AI Agents]] explains how these tests participate in an investigation, rather than merely checking an already understood requirement.
-
-### The repro-first defect resolution mandate
-
-The same discipline applies to fixing production defects. When resolving an issue, an agent should never immediately modify production code. Doing so encourages superficial patches that mask underlying state corruption without verifying root causes.
-
-The bug-resolution cycle must follow an explicit four-step sequence:
-1. **Author reproduction test**: The agent writes an isolated test capturing the exact failure preconditions and asserting the correct behavior.
-2. **Confirm failure (Red)**: The test runner executes the test against the current codebase and verifies that it fails as expected.
-3. **Targeted implementation fix (Green)**: The agent modifies production code to satisfy the reproduction test without breaking existing tests.
-4. **Regression immunity**: The reproduction test is merged permanently into the regression suite, preventing future agent sessions from reintroducing the bug.
-
-If an agent cannot write a test that fails before the code change, it does not yet understand the defect.
-
-### Code disposability and the limits of test oracles
-
-Strong deterministic tests can make replacing a well-bounded implementation more practical. They preserve important executable domain knowledge, alongside documented constraints, integration behavior, and operational requirements. Passing every test establishes agreement on the exercised cases; it does not establish that every edge case or invariant was captured. Before regeneration, identify gaps in the oracle and protect behavior that consumers depend on, including errors, effects, and performance where relevant.
-
-Treat regeneration as a deliberate engineering choice. Frequent replacement can make incident diagnosis and change review harder unless the team retains accepted artifacts, source mappings, and a reproducible verification process. Incremental work remains a useful default; runtime migration or a major architectural change may justify replacement (see [[Large-Scale Code Migration with AI Agents]] and [[AI May Make Aggressive Code Optimization Economically Viable]]).
-
----
-
-## 3. We probably need fewer manually written unit tests
+## We probably need fewer manually written unit tests
 
 AI weakens some traditional reasons for manually writing unit tests.
 
 Humans no longer necessarily need to write tests in order to:
 
 - think through every implementation,
-    
+
 - discover basic design issues,
-    
+
 - generate boilerplate,
-    
+
 - cover obvious combinations.
-    
 
 Agents can do much of this.
 
@@ -212,7 +69,7 @@ The second result dramatically reduces the search space for the agent.
 
 ---
 
-## 4. Unit testing should become more selective
+## Unit testing should become more selective
 
 The agent era may finally make the weakness of many low-value unit tests more obvious.
 
@@ -233,36 +90,34 @@ These tests often encode implementation structure rather than meaningful behavio
 AI can cheaply generate thousands of them, creating:
 
 - test inflation,
-    
+
 - maintenance cost,
-    
+
 - slower pipelines,
-    
+
 - resistance to refactoring,
-    
+
 - false confidence.
-    
 
 Instead, unit tests should concentrate on:
 
 - business rules,
-    
+
 - calculations,
-    
+
 - state transitions,
-    
+
 - invariants,
-    
+
 - boundary conditions,
-    
+
 - authorization,
-    
+
 - tricky transformations,
-    
+
 - regression cases,
-    
+
 - deterministic concurrency behavior.
-    
 
 A better principle is:
 
@@ -295,33 +150,31 @@ In high-throughput, stateful, or low-level systems (such as storage engines, sim
 
 ---
 
-## 5. The classical test pyramid may flatten
+## The classical test pyramid may flatten
 
 Historically, E2E tests were kept relatively scarce because they were:
 
 - expensive to design,
-    
+
 - expensive to implement,
-    
+
 - expensive to maintain,
-    
+
 - slow,
-    
+
 - fragile.
-    
 
 AI changes especially the first three.
 
 A model can help generate:
 
 1. candidate E2E scenarios,
-    
+
 2. edge cases,
-    
+
 3. scenario descriptions,
-    
+
 4. Playwright or equivalent test code.
-    
 
 For example:
 
@@ -355,32 +208,31 @@ This is an attractive division of responsibility.
 
 ---
 
-## 6. AI can explore the E2E scenario space
+## AI can explore the E2E scenario space
 
 Models can also help generate broader sets of scenarios than humans typically write.
 
 They can explicitly explore:
 
 - happy paths,
-    
+
 - invalid sequencing,
-    
+
 - permissions,
-    
+
 - boundary values,
-    
+
 - retries,
-    
+
 - state transitions,
-    
+
 - concurrency,
-    
+
 - feature flags,
-    
+
 - unusual user behavior,
-    
+
 - historical regressions.
-    
 
 For example:
 
@@ -398,7 +250,7 @@ This may significantly increase high-level behavioral coverage.
 
 ---
 
-## 7. The pyramid may flatten in inventory, but not in execution frequency
+## The pyramid may flatten in inventory, but not in execution frequency
 
 Even if we generate many E2E tests, we should not necessarily execute all of them on every change.
 
@@ -432,236 +284,33 @@ This distinction is important.
 
 ---
 
-## 8. Browser E2E tests can become partially self-healing
-
-Browser automation remains useful through tools such as:
-
-- Playwright,
-    
-- Selenium/WebDriver,
-    
-- Cypress,
-    
-- similar browser automation frameworks.
-    
-
-A new opportunity is AI-assisted recovery when automation breaks for mechanical reasons.
-
-Example:
-
-```text
-Click "Pay now"
-```
-
-The test expects:
-
-```text
-button[name="Pay now"]
-```
-
-but the UI changes to:
-
-```text
-"Complete purchase"
-```
-
-Traditional behavior:
-
-```text
-locator fails
-→ test fails
-→ developer investigates
-```
-
-AI-assisted behavior:
-
-```text
-locator fails
-      ↓
-collect:
-- DOM
-- accessibility tree
-- screenshot
-- current URL
-- intended step
-      ↓
-model searches for likely equivalent control
-      ↓
-temporary fallback action
-      ↓
-suite continues
-```
-
-This can be very useful because a single stale locator does not need to block the remaining suite.
-
-However, the result should not silently become a normal success.
-
-A useful status model is:
-
-```text
-PASS
-PASS_WITH_HEALING
-FAIL
-```
-
-For example:
-
-```text
-Checkout scenario: PASS_WITH_HEALING
-
-Expected:
-button "Pay now"
-
-Used:
-button "Complete purchase"
-
-Suggested test patch available.
-```
-
-The generated repair can later become a normal deterministic test change.
-
----
-
-## 9. AI should heal mechanics, not semantics
-
-Self-healing must have strict boundaries.
-
-Potentially healable:
-
-```text
-selector changed
-label changed
-element moved
-navigation moved
-DOM structure changed
-```
-
-Not healable:
-
-```text
-wrong price
-payment failed
-wrong permission
-missing data
-incorrect business state
-```
-
-The model may repair:
-
-> How do I reach the intended state?
-
-It must not redefine:
-
-> What is the intended state?
-
-For example:
-
-```text
-Expected:
-Payment successful
-
-Actual:
-Payment failed
-```
-
-must remain a failure.
-
-An LLM should never reinterpret the acceptance criterion simply to make the test pass.
-
----
-
-## 10. Scenario intent may become more important than generated test code
-
-An E2E test can increasingly be viewed as three artifacts:
-
-```text
-1. Intent
-   "User can cancel an unpaid order"
-
-2. Automation
-   generated Playwright code
-
-3. Runtime evidence
-   DOM / accessibility tree / screenshots / trace
-```
-
-The stable artifact is primarily the intent.
-
-The automation can be:
-
-- regenerated,
-    
-- repaired,
-    
-- refactored,
-    
-- updated after UI changes.
-    
-
-This is an important change.
-
-Instead of treating every line of test automation as handcrafted permanent code, some E2E automation may become partially generated infrastructure.
-
----
-
-## 11. Use AI to maintain deterministic tests, not replace them
-
-A useful hierarchy is:
-
-```text
-stable deterministic locator
-        ↓
-deterministic fallback
-        ↓
-AI-assisted semantic recovery
-        ↓
-mark as healed
-        ↓
-generate permanent patch
-        ↓
-review
-        ↓
-future executions deterministic again
-```
-
-We should avoid architectures where an LLM looks at every page and decides what to click during every test run.
-
-That would convert a cheap deterministic suite into an expensive probabilistic system.
-
-A better principle is:
-
-> Use AI as a maintenance bridge around deterministic tests.
-
----
-
-## 12. Most tests should not require model inference
+## Most tests should not require model inference
 
 Even when an application contains an LLM or an agent, most of its test suite can remain deterministic.
 
 For example, we can test:
 
 - context construction,
-    
+
 - tool schemas,
-    
+
 - permission checks,
-    
+
 - parsers,
-    
+
 - action validation,
-    
+
 - retry limits,
-    
+
 - file modifications,
-    
+
 - patch application,
-    
+
 - orchestration,
-    
+
 - tool execution,
-    
+
 - state transitions.
-    
 
 Agent trajectories can also be tested with scripted model responses.
 
@@ -683,20 +332,19 @@ The model should be treated somewhat like another expensive and nondeterministic
 
 ---
 
-## 13. Live-model evals should remain a relatively small layer
+## Live-model evals should remain a relatively small layer
 
 There are still behaviors that require real model inference:
 
 - whether instructions are understood,
-    
+
 - whether a prompt change degrades behavior,
-    
+
 - whether a new model chooses the right tool,
-    
+
 - whether retrieved context is interpreted correctly,
-    
+
 - whether reasoning quality changed between model versions.
-    
 
 These tests are expensive and probabilistic.
 
@@ -722,153 +370,7 @@ The goal should be:
 
 ---
 
-## 14. Mutation testing becomes more interesting
-
-There is a particular danger when models generate both production code and tests.
-
-The implementation and tests may share the same misunderstanding.
-
-Everything passes because both artifacts encode the same error.
-
-Mutation testing can help detect weak generated tests.
-
-For example, intentionally modify:
-
-```text
-amount > 0
-```
-
-into:
-
-```text
-amount >= 0
-```
-
-If no test fails, the generated suite probably does not constrain this behavior well enough.
-
-Mutation testing therefore becomes especially useful as a quality check for AI-generated tests.
-
-When a mutation engine swaps relational operators (`>` to `>=`), inverts boolean conditions, shifts boundary values, or drops statements, the test suite must catch it. If the suite continues to pass against mutated code, the mutation survived—proving that the generated tests are merely stepping through code paths without asserting true invariants. Forcing an agent to kill mutants is the most reliable automated check against green-by-default suites.
-
-Keep the roles separate. A mutation tool such as Stryker.NET generates variants, runs the tests, restores the code and reports survivors. The agent can group survivors by business risk, propose boundary cases and implement approved tests. A human decides which survivors matter and rejects assertions tied only to implementation detail. A 100% mutation score is not the goal; the useful result is better coverage of intended behavior.
-
----
-
-## 15. Coverage becomes an even weaker metric
-
-AI makes it extremely cheap to generate tests that increase:
-
-```text
-line coverage
-branch coverage
-```
-
-without significantly increasing confidence.
-
-A model could produce thousands of shallow tests and achieve very high coverage.
-
-Therefore metrics such as these become more interesting:
-
-- meaningful behavioral coverage,
-    
-- mutation score,
-    
-- invariant coverage,
-    
-- scenario coverage,
-    
-- regression coverage.
-    
-
-A useful warning is:
-
-> AI makes coverage inflation cheap.
-
----
-
-## 16. Test provenance can become useful
-
-Generated suites may become large enough that knowing why a test exists matters.
-
-A test could be marked as originating from:
-
-```text
-requirement
-production bug
-human-reviewed scenario
-generated edge case
-security invariant
-implementation discovery
-historical regression
-```
-
-This helps determine how strongly the test should be protected.
-
-For example:
-
-```text
-Human-reviewed business rule
-→ implementation agent cannot automatically modify it
-
-Generated exploratory test
-→ agent may regenerate/refactor it more freely
-```
-
----
-
-## 17. Test diagnostics become machine-facing
-
-Historically, test failures were primarily written for humans.
-
-In an agentic workflow they are also input to another machine.
-
-Instead of:
-
-```text
-Assertion failed.
-Expected false.
-Actual true.
-```
-
-prefer:
-
-```text
-Invoice cannot be closed while payment status is Unpaid.
-
-Invoice:
-Id = 9281
-Status = Open
-PaymentStatus = Unpaid
-
-Expected CanClose = false
-Actual CanClose = true
-```
-
-Better diagnostics reduce the amount of reasoning and repository exploration required by the coding agent.
-
-Structured, machine-readable diagnostics drastically reduce the token overhead and reasoning loops an agent spends diagnosing failures. Providing the explicit domain rule violated, full aggregate state, expected versus actual values, and precise source file coordinates allows the agent to target the fix immediately without wasting turns exploring the repository.
-
----
-
-## 18. Flaky tests become more expensive
-
-Flaky tests were already harmful for human developers.
-
-They can be even worse for agents.
-
-A coding agent may interpret a random failure as evidence that its implementation is wrong and start modifying correct code.
-
-This can produce unnecessary repair loops.
-
-Therefore in agentic development:
-
-> Determinism and test reliability become more important, not less.
-
-In an autonomous loop, a single intermittent failure causes the agent to thrash: it modifies working production code to accommodate a spurious test failure, corrupting valid logic. Flaky tests cannot be tolerated in agent paths; they must be aggressively quarantined the moment non-deterministic behavior is detected.
-
----
-
-## 19. Test selection becomes important
+## Test selection becomes important
 
 AI may allow us to generate much larger test inventories.
 
@@ -901,7 +403,7 @@ A generated `Down` migration does not prove lossless recovery. Rehearse interrup
 
 Dataset preparation needs its own checks. A masked subset can preserve foreign keys yet remove the condition that causes a defect, while a tiny sample can miss a production query plan. Verify both the data's permitted use and the properties the test needs (see [[Production-Like Test Data for Coding Agents]]).
 
-# Resulting Testing Model
+## Resulting Testing Model
 
 The classical test pyramid does not disappear.
 
@@ -931,19 +433,18 @@ The biggest reduction may happen in mock-heavy, implementation-oriented unit tes
 The biggest growth may happen in:
 
 - behavioral tests,
-    
+
 - component tests,
-    
+
 - generated E2E scenarios,
-    
+
 - regression tests,
-    
+
 - invariants.
-    
 
 ---
 
-# Core Principles
+## Core Principles
 
 Several principles summarize the shift.
 

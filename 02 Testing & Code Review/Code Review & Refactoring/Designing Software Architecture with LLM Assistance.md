@@ -15,6 +15,10 @@ aliases:
   - Reversible Architectural Experimentation
 ---
 
+A fluent architecture proposal can be consistent with the prompt and still depend on assumptions the real system does not satisfy. Before selecting a database, transport, or deployment model, establish which business constraints and runtime facts make a choice acceptable.
+
+This article follows constraint discovery and the separation of facts, inferences, assumptions, and unknowns. [[Comparing and Validating Architecture Options with LLMs]] develops solution-space exploration, recommendation bias, specialist challenge, prototypes, and the transition from an experiment to a decision. Earlier discussion and implementation familiarity can narrow the options a model proposes, so discovery should preserve questions that could reverse the recommendation.
+
 ## Core idea
 
 LLMs can significantly accelerate architectural exploration, but they are not reliable guarantees of completeness.
@@ -22,32 +26,30 @@ LLMs can significantly accelerate architectural exploration, but they are not re
 They are good at:
 
 - exploring unfamiliar technologies,
-    
+
 - generating design alternatives,
-    
+
 - extracting constraints from available context,
-    
+
 - comparing trade-offs,
-    
+
 - producing prototypes,
-    
+
 - identifying common risks,
-    
+
 - reviewing an existing proposal.
-    
 
 They are weaker at:
 
 - discovering constraints that were never documented,
-    
+
 - recognizing questions that neither the user nor the model knows should be asked,
-    
+
 - distinguishing a true requirement from an accidental property of the current implementation,
-    
+
 - understanding organizational and domain knowledge that exists only in people’s heads,
-    
+
 - reliably signaling that the problem description is incomplete.
-    
 
 The main risk is not only hallucination.
 
@@ -66,19 +68,18 @@ When the description is incomplete, an LLM tends to complete the story.
 For example, it may implicitly assume that:
 
 - eventual consistency is acceptable,
-    
+
 - operations are idempotent,
-    
+
 - messages may be retried safely,
-    
+
 - status transitions are linear,
-    
+
 - no external system reads the database directly,
-    
+
 - a relational database is suitable,
-    
+
 - rolling deployments do not create compatibility problems.
-    
 
 These assumptions may be reasonable in a typical system, but they may be false in the actual one.
 
@@ -87,17 +88,16 @@ The dangerous part is that a reasonable answer can look like an evidence-based a
 A model can generate:
 
 - a clean architecture,
-    
+
 - a detailed justification,
-    
+
 - diagrams,
-    
+
 - migration steps,
-    
+
 - code,
-    
+
 - a list of advantages and disadvantages.
-    
 
 This can make the user accept the proposal without examining the assumptions behind it.
 
@@ -162,19 +162,18 @@ At the same time, a stated constraint such as “we must use SQL Server” shoul
 It may represent:
 
 - a real organizational standard,
-    
+
 - existing expertise,
-    
+
 - licensing constraints,
-    
+
 - integration dependencies,
-    
+
 - transactional requirements,
-    
+
 - direct reporting access,
-    
+
 - or only historical habit.
-    
 
 The model should ask what underlying requirement makes the constraint necessary.
 
@@ -189,17 +188,16 @@ It is useful to divide constraints into three groups.
 These are written in:
 
 - requirements,
-    
+
 - tickets,
-    
+
 - documentation,
-    
+
 - ADRs,
-    
+
 - contracts,
-    
+
 - security policies.
-    
 
 The model can usually handle them well if they are clearly provided.
 
@@ -208,21 +206,20 @@ The model can usually handle them well if they are clearly provided.
 These are not explicitly documented, but can be inferred from:
 
 - code,
-    
+
 - tests,
-    
+
 - schemas,
-    
+
 - deployment manifests,
-    
+
 - integrations,
-    
+
 - production data,
-    
+
 - telemetry,
-    
+
 - incident history.
-    
 
 Finding them requires a dedicated discovery phase.
 
@@ -231,17 +228,16 @@ Finding them requires a dedicated discovery phase.
 These exist only in:
 
 - people’s experience,
-    
+
 - manual processes,
-    
+
 - informal agreements,
-    
+
 - organizational politics,
-    
+
 - undocumented customer behavior,
-    
+
 - historical exceptions.
-    
 
 The model cannot discover them unless some trace of them is available.
 
@@ -278,17 +274,16 @@ The first phase should be constraint discovery, not solution generation.
 The model should first identify:
 
 - what is known,
-    
+
 - what is inferred,
-    
+
 - what is assumed,
-    
+
 - what is unknown,
-    
+
 - what can be interpreted in multiple ways,
-    
+
 - what information could reverse the decision.
-    
 
 Only then should it propose technologies or architecture.
 
@@ -353,19 +348,18 @@ One of the most valuable questions is:
 Other useful questions include:
 
 - Under what conditions is this solution wrong?
-    
+
 - Which assumption has the greatest effect on the decision?
-    
+
 - What did you assume even though I did not provide it?
-    
+
 - What must be true for this design to work?
-    
+
 - Which of those conditions have not been verified?
-    
+
 - What system property would make another alternative preferable?
-    
+
 - Which parts of the recommendation come from my context, and which come from generic best practices?
-    
 
 A good recommendation should be conditional.
 
@@ -377,428 +371,6 @@ This is more useful than declaring one architecture universally best.
 
 ---
 
-## Ask for the whole solution space, not only several technologies
-
-When asked for “a few options,” the model may generate several variations of the same idea.
-
-Instead, request options from different strategic categories:
-
-- the simplest solution,
-    
-- a solution using existing infrastructure,
-    
-- an incremental solution,
-    
-- a reversible experiment,
-    
-- a conservative solution,
-    
-- a long-term target architecture,
-    
-- a less obvious but realistic option,
-    
-- a non-technical process change,
-    
-- changing or removing the requirement,
-    
-- doing nothing for now.
-    
-
-For every option, require:
-
-- applicability conditions,
-    
-- assumptions,
-    
-- benefits,
-    
-- risks,
-    
-- operational cost,
-    
-- migration path,
-    
-- rollback difficulty,
-    
-- validation method,
-    
-- information that could change its evaluation.
-    
-
----
-
-## The model may prefer solutions it can implement comfortably
-
-Even when the user asks a neutral question and does not suggest an answer, the resulting recommendation is not necessarily neutral.
-
-An LLM tends to favor solutions that are:
-
-- common in its training data,
-- well documented,
-- represented by many public examples,
-- easy to explain using familiar patterns,
-- easy for the model to turn into plausible code.
-
-The model does not have to consciously decide, “I will choose this because I can implement it.” The bias arises indirectly:
-
-```text
-Familiar and high-probability approach
-→ proposed more often
-→ justified more fluently
-→ implemented more successfully by the same model
-```
-
-This correlation is useful, because implementability matters. However, it can also narrow the solution space.
-
-> The solution the model can describe and generate most confidently is not necessarily the solution that best fits the problem.
-
-### Earlier context can anchor the recommendation
-
-The bias can be triggered by merely mentioning a technology earlier in the conversation.
-
-For example, if SQL Server, Kafka, Temporal, Kubernetes, microservices, or event sourcing appeared anywhere in the preceding discussion, the model may assign that technology more importance than it deserves. It may interpret the mention as:
-
-- an implicit preference,
-- an available part of the infrastructure,
-- a constraint that should be preserved,
-- evidence that the user expects the technology to be used,
-- or the intended direction of the conversation.
-
-This can happen even when the technology was mentioned only as an example, comparison point, rejected idea, or unrelated background detail.
-
-The effect is a form of contextual anchoring:
-
-```text
-Technology appears in the context
-→ becomes more available during generation
-→ shapes the alternatives and evaluation criteria
-→ is more likely to be recommended
-```
-
-Therefore, a neutral-sounding question asked after discussing a specific technology is not fully context-neutral. The model may produce a high-quality answer to the solution space implied by the conversation rather than reconsidering the entire solution space from first principles.
-
-To reduce contextual anchoring:
-
-- state explicitly that previously mentioned technologies are examples, not requirements,
-- ask the model to solve the problem once without using any technologies already mentioned,
-- request alternatives derived only from confirmed requirements,
-- ask which recommendations would disappear if the earlier technology names were removed from the conversation,
-- use a fresh context or an independent reviewer for important decisions,
-- distinguish technologies that are required, available, preferred, merely considered, and explicitly rejected.
-
-A useful instruction is:
-
-> Treat every previously mentioned technology as non-binding unless it appears in the confirmed constraints. Derive the required system properties first, then generate alternatives without privileging technologies already present in the conversation.
-
-A particularly risky workflow is:
-
-```text
-The model selects the criteria
-→ selects the technology
-→ justifies its own selection
-→ implements it
-→ reviews its own result
-```
-
-The entire chain may be internally consistent while optimizing for an unverified interpretation of the problem. A convincing implementation can then be mistaken for evidence that the architectural choice was correct.
-
-To reduce this bias:
-
-- separate solution selection from implementation,
-- ask for alternatives from genuinely different strategic categories,
-- require the model to distinguish problem fit from its confidence in implementation,
-- explicitly include less familiar or harder-to-generate approaches when they may fit the constraints,
-- let a human define or approve the evaluation criteria,
-- use an independent review that does not inherit the original recommendation as a fact,
-- evaluate the architecture before showing how easily code can be generated for it.
-
-A useful question is:
-
-> Is this solution recommended because it best satisfies the confirmed constraints, or because it is popular, well documented, and easy for the model to implement?
-
-The model cannot perfectly inspect its own internal reasoning, so its answer should not be treated as proof. The question is still valuable because it forces an explicit comparison between problem fit, ecosystem familiarity, and implementation confidence.
-
-For important decisions, ask the model to report these dimensions separately:
-
-| Dimension | Question |
-| --- | --- |
-| Problem fit | How well does the option satisfy confirmed requirements and constraints? |
-| Evidence quality | Which parts are supported by project evidence rather than generic practice? |
-| Implementation confidence | How reliably can the model produce and test the implementation? |
-| Ecosystem familiarity | Is the recommendation favored because examples and documentation are abundant? |
-| Decision uncertainty | Which missing information could change the ranking? |
-
-Implementation confidence is a legitimate criterion, but it should be visible and weighted deliberately rather than silently determining the architecture.
-
----
-
-
-## Review the problem across multiple dimensions
-
-A model should be asked to inspect the problem from several perspectives, not only technology selection.
-
-Useful dimensions include:
-
-- business rules and invariants,
-    
-- state transitions,
-    
-- data ownership,
-    
-- consistency,
-    
-- transactions,
-    
-- concurrency,
-    
-- ordering,
-    
-- duplication and idempotency,
-    
-- retries and timeouts,
-    
-- partial failures,
-    
-- integration contracts,
-    
-- version compatibility,
-    
-- deployment strategy,
-    
-- rollback,
-    
-- migration,
-    
-- security and trust boundaries,
-    
-- privacy,
-    
-- auditability,
-    
-- retention,
-    
-- performance,
-    
-- scale,
-    
-- observability,
-    
-- diagnostics,
-    
-- operational support,
-    
-- cost,
-    
-- team expertise,
-    
-- vendor lock-in,
-    
-- reversibility.
-    
-
-The purpose is not to generate an enormous checklist for every decision.
-
-The purpose is to identify which dimensions can materially change this specific decision.
-
----
-
-## Use the model in multiple roles
-
-A single model can be prompted to perform different reviews.
-
-### Domain analyst
-
-Extracts:
-
-- business rules,
-    
-- actors,
-    
-- invariants,
-    
-- states,
-    
-- exceptions,
-    
-- ambiguous behavior.
-    
-
-### Architect
-
-Generates design alternatives and trade-offs.
-
-### Skeptic
-
-Searches for:
-
-- hidden assumptions,
-    
-- missing constraints,
-    
-- failure scenarios,
-    
-- cases that invalidate the recommendation.
-    
-
-### Operator
-
-Checks:
-
-- deployment,
-    
-- monitoring,
-    
-- rollback,
-    
-- support procedures,
-    
-- failure recovery,
-    
-- maintenance cost.
-    
-
-### Security reviewer
-
-Checks:
-
-- trust boundaries,
-    
-- sensitive data,
-    
-- authorization,
-    
-- abuse scenarios,
-    
-- compliance implications.
-    
-
-### Migration reviewer
-
-Checks:
-
-- old and new versions running together,
-    
-- schema compatibility,
-    
-- staged rollout,
-    
-- backfill,
-    
-- rollback,
-    
-- external consumers.
-    
-
-Using multiple roles does not make the model automatically correct.
-
-It forces the reasoning to be examined from different angles.
-
----
-
-## Exploration mode and commitment mode
-
-LLMs are especially valuable because they reduce the cost of experimentation.
-
-They allow teams to:
-
-- explore unfamiliar approaches,
-    
-- build prototypes quickly,
-    
-- compare several options,
-    
-- generate test harnesses,
-    
-- simulate migrations,
-    
-- investigate new libraries,
-    
-- prepare disposable proofs of concept.
-    
-
-This supports a more experimental architecture process:
-
-```text
-Hypothesis
-→ cheap prototype
-→ measurement
-→ criticism
-→ decision
-```
-
-However, fast implementation must not be confused with understanding.
-
-The model greatly reduces the cost of entering a new solution, but may not equally reduce the cost of understanding:
-
-- its failure model,
-    
-- operational complexity,
-    
-- long-term maintenance,
-    
-- migration difficulty,
-    
-- scaling behavior,
-    
-- guarantees and limitations,
-    
-- organizational impact.
-    
-
-Therefore it is useful to distinguish two modes.
-
-### Exploration mode
-
-Optimize for speed and learning.
-
-- Generate many ideas.
-    
-- Try unfamiliar technologies.
-    
-- Accept explicitly labeled temporary assumptions.
-    
-- Build disposable prototypes.
-    
-- Avoid production-level completeness.
-    
-- Prefer reversible experiments.
-    
-
-### Commitment mode
-
-Optimize for correctness and reversibility.
-
-- Confirm constraints.
-    
-- Verify primary documentation.
-    
-- Test failures and edge cases.
-    
-- Review operational requirements.
-    
-- Remove hidden assumptions.
-    
-- Plan migration and rollback.
-    
-- Record the architecture decision.
-    
-- Require human approval.
-    
-
-The dangerous transition is when an exploration prototype silently becomes production architecture.
-
----
-
-## Designing for downstream agent maintenance
-
-When designing software that will be maintained, extended, or refactored by coding agents, the system architecture itself must be structured to accommodate agent capabilities and context limits:
-
-1. **Focused 1:1 Module Boundaries**: Avoid sprawling files or "god classes" containing thousands of lines of mixed responsibilities. When an agent must ingest massive files to make a minor change, you burn context window budget and increase the risk of hallucinated regressions. Keep domain logic decomposed into cohesive, single-purpose modules.
-2. **Explicit Dependency Injection**: Avoid dynamic reflection, ambient global state, or hidden runtime auto-wiring. If an agent cannot trace where a service or repository is injected by inspecting the static Abstract Syntax Tree (AST), it cannot reliably reason about module behavior or write clean unit tests.
-3. **Automated Verification Harnesses**: Every architectural boundary requires a fast, deterministic test harness. An agent cannot safely refactor an architectural component unless it can execute a local test suite and get unambiguous, sub-second feedback on whether it broke an invariant.
-
----
-
 ## The best role of the model
 
 The model should not be treated as an authority that produces the architecture.
@@ -806,23 +378,22 @@ The model should not be treated as an authority that produces the architecture.
 It is better used as an accelerator for:
 
 - knowledge exploration,
-    
+
 - question generation,
-    
+
 - constraint discovery,
-    
+
 - option generation,
-    
+
 - trade-off analysis,
-    
+
 - prototype creation,
-    
+
 - adversarial review,
-    
+
 - documentation,
-    
+
 - verification planning.
-    
 
 The human remains responsible for confirming the model of reality on which the architecture depends.
 
@@ -833,107 +404,6 @@ The most important question is not:
 It is:
 
 > Is the solution based on confirmed properties of this system, or on plausible defaults borrowed from typical systems?
-
----
-
-## Practical conversation pattern
-
-### Phase 1: problem discovery
-
-Ask the model not to design anything yet.
-
-Request:
-
-- confirmed facts,
-    
-- inferred consequences,
-    
-- assumptions,
-    
-- unknowns,
-    
-- ambiguities,
-    
-- missing dimensions,
-    
-- questions ranked by decision impact.
-    
-
-### Phase 2: constraint verification
-
-For each important claim, identify:
-
-- its source,
-    
-- confidence,
-    
-- effect on the architecture,
-    
-- method of verification.
-    
-
-### Phase 3: option generation
-
-Generate alternatives from meaningfully different categories.
-
-Do not allow an unconditional recommendation.
-
-### Phase 4: adversarial review
-
-Assume each proposal is wrong.
-
-Search for:
-
-- domain properties that invalidate it,
-    
-- partial failure scenarios,
-    
-- hidden consumers,
-    
-- deployment problems,
-    
-- migration traps,
-    
-- operational costs,
-    
-- POC-to-production gaps.
-    
-
-### Phase 5: conditional recommendation
-
-State:
-
-- the preferred option,
-    
-- the assumptions under which it is preferred,
-    
-- the conditions that would change the recommendation,
-    
-- unresolved risks,
-    
-- required experiments or measurements.
-    
-
-### Phase 6: implementation
-
-Provide the implementing agent with:
-
-- business goal,
-    
-- global invariants,
-    
-- approved architecture,
-    
-- local module context,
-    
-- neighboring contracts,
-    
-- known assumptions,
-    
-- required tests,
-    
-- prohibited changes.
-    
 
 ---
 
@@ -981,70 +451,6 @@ Stop after the problem analysis and questions. Do not select technologies or arc
 
 ---
 
-## Reusable prompt: generating alternatives
-
-```text
-Based only on confirmed facts and explicitly stated assumptions, generate meaningfully different solution options.
-
-Include:
-
-- the simplest option,
-- an option using the current system,
-- an incremental option,
-- a reversible option,
-- a conservative option,
-- a long-term target option,
-- a less obvious but realistic option,
-- changing the requirement or avoiding a technical solution.
-
-For each option, provide:
-
-1. What it solves.
-2. The conditions it requires.
-3. Its assumptions.
-4. When it is a good choice.
-5. When it is a bad choice.
-6. Costs and risks.
-7. Operational consequences.
-8. Migration and rollback difficulty.
-9. A cheap experiment that could validate it.
-10. Missing information that could change its evaluation.
-
-Do not present any option as unconditionally best.
-```
-
----
-
-## Reusable prompt: adversarial review
-
-```text
-Assume the proposed solution is wrong.
-
-Find:
-
-- hidden assumptions,
-- missing constraints,
-- edge cases,
-- unusual domain properties,
-- concurrency problems,
-- partial failures,
-- retry and duplication issues,
-- migration and deployment risks,
-- operational costs,
-- organizational dependencies,
-- cases where the solution works in a proof of concept but fails in production.
-
-Then answer:
-
-1. What must be true for the solution to work?
-2. Which of those conditions have not been verified?
-3. What could completely reverse the recommendation?
-4. What tests, measurements, documents, code analysis, or stakeholder conversations would verify the assumptions?
-5. Which parts come from the actual context, and which come only from generic best practices?
-```
-
----
-
 ## Reusable prompt: assumption extraction protocol
 
 ```text
@@ -1064,22 +470,6 @@ For each assumption:
 
 ---
 
-## Reusable prompt: adversarial failure post-mortem
-
-```text
-Assume we adopted your recommended architecture and deployed it to multi-tenant production. 
-Six months later, during a major traffic surge, the system suffers an unrecoverable 4-hour outage.
-
-Write the post-mortem report:
-1. Document the exact cascading failure sequence (e.g., connection pool exhaustion, unhandled retry storm, distributed deadlocks, backpressure failure).
-2. Which component failed because of an unstated assumption about our workload?
-3. Why did standard health checks and observability dashboards fail to catch the root cause early?
-4. What fundamental architectural trade-off was violated?
-5. How should the architecture be modified to make this failure mode structurally impossible?
-```
-
----
-
 ## Final mental model
 
 An LLM answer is not the architecture.
@@ -1089,15 +479,14 @@ It is a proposal generated from a model of the system.
 That model contains:
 
 - facts,
-    
+
 - inferred consequences,
-    
+
 - assumptions,
-    
+
 - omissions,
-    
+
 - generic patterns.
-    
 
 The first task is therefore not to validate the proposed technology.
 

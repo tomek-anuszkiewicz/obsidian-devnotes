@@ -13,18 +13,21 @@ aliases:
   - Digital Representation in Agent Ecosystems
 ---
 
+A useful personal agent may need to distinguish an old preference from a current one, remember why a decision was made, and share only the context appropriate to a particular task. Storing conversation fragments alone does not establish that coherent personal model.
+
+This article follows the persistent knowledge layer: memory, changing claims, shared context, permissions, ownership, and portability across applications. [[Personal Agents Acting in Their Owner's Interests]] develops the agents using that layer for information, shopping, administration, finance, travel, learning, and work. Their useful specialization depends on both access to relevant context and limits on what they may disclose or do.
+
 Today, most AI assistants start almost from scratch.
 
 They may know:
 
 - the current conversation,
-    
+
 - a few saved preferences,
-    
+
 - selected documents,
-    
+
 - perhaps some connected applications.
-    
 
 This is useful, but fundamentally limited.
 
@@ -184,42 +187,41 @@ This means the runtime cannot rely solely on static index retrieval. It requires
 
 ---
 
-# The Personal Model
+## The Personal Model
 
 Above raw memory there may eventually exist something closer to a dynamic model of the person.
 
 It could contain things such as:
 
 - current preferences,
-    
+
 - long-term preferences,
-    
+
 - recurring habits,
-    
+
 - important relationships,
-    
+
 - current projects,
-    
+
 - professional knowledge,
-    
+
 - financial priorities,
-    
+
 - risk tolerance,
-    
+
 - communication style,
-    
+
 - frequently used products,
-    
+
 - possessions and devices,
-    
+
 - long-term goals,
-    
+
 - unresolved obligations,
-    
+
 - topics already understood,
-    
+
 - things the person consistently dislikes.
-    
 
 This creates a powerful distinction.
 
@@ -239,7 +241,7 @@ This is much closer to representation than simple personalization.
 
 ---
 
-# Many Agents Could Share the Same Personal Model
+## Many Agents Could Share the Same Personal Model
 
 The digital representation does not need to be an agent itself.
 
@@ -276,483 +278,7 @@ what I am trying to achieve
 
 ---
 
-# The Information Agent
-
-One particularly important agent may be responsible for filtering information.
-
-Today, the dominant model is:
-
-```text
-Internet
-    ↓
-platform recommendation algorithm
-    ↓
-user
-```
-
-The recommendation system usually optimizes partly for the platform's goals:
-
-- engagement,
-    
-- retention,
-    
-- advertising,
-    
-- watch time,
-    
-- purchases.
-    
-
-A personal information agent could reverse this relationship:
-
-```text
-Internet
-    ↓
-my agent
-    ↓
-information useful to me
-```
-
-The agent could know:
-
-- what topics matter to me,
-    
-- what I already know,
-    
-- what I have already read,
-    
-- which sources I trust,
-    
-- what level of detail I prefer,
-    
-- which developments actually affect my work or life.
-    
-
-Instead of asking:
-
-> What happened in AI this week?
-
-one could ask:
-
-> What happened in AI this week that is important to me and that I probably do not already know?
-
-This becomes increasingly valuable as generative AI makes content production almost free.
-
-When information becomes abundant, the scarce resource becomes:
-
-```text
-attention
-```
-
-AI may therefore create both the problem and the solution:
-
-```text
-cheap AI generation
-        ↓
-enormous amount of content
-        ↓
-information overload
-        ↓
-personal AI filtering
-```
-
----
-
-# The Shopping Agent
-
-Shopping is another natural domain.
-
-A normal product recommendation system knows the catalog.
-
-A personal shopping agent could additionally know:
-
-```text
-what I already own
-what I bought previously
-what I returned
-what I disliked
-how much I normally spend
-how long I keep products
-what devices must work together
-what compromises I tolerate
-```
-
-The user might simply say:
-
-> I need a new monitor.
-
-The agent could already understand:
-
-- the desk size,
-    
-- existing computer hardware,
-    
-- typical applications,
-    
-- games being played,
-    
-- previous monitor purchases,
-    
-- complaints about earlier displays,
-    
-- budget expectations.
-    
-
-Eventually it may go further:
-
-> My running shoes are worn out. Replace them.
-
-or:
-
-> Buy my usual detergent when the price is reasonable.
-
-or:
-
-> Find a better mobile plan and switch if the savings justify it.
-
-The shopping agent therefore evolves from:
-
-```text
-product search
-```
-
-into:
-
-```text
-consumer representation
-```
-
----
-
-# The Bureaucracy Agent
-
-Many interactions with institutions consist primarily of:
-
-- reading documents,
-    
-- understanding rules,
-    
-- filling forms,
-    
-- comparing previous correspondence,
-    
-- remembering deadlines,
-    
-- preparing responses.
-    
-
-These are highly compatible with personal agents.
-
-A bureaucracy agent could know the person's:
-
-```text
-contracts
-insurance policies
-subscriptions
-tax documents
-previous claims
-official correspondence
-deadlines
-applications
-```
-
-It could identify:
-
-> This contract changed compared with last year.
-
-> This charge is inconsistent with the previous agreement.
-
-> You need to respond before September 15.
-
-> The institution rejected your request, but its explanation conflicts with the attached document.
-
-The agent becomes a persistent administrative layer around the individual.
-
----
-
-# The Personal Finance Agent
-
-A finance agent could continuously understand the user's financial environment.
-
-Not merely:
-
-```text
-How much money did I spend last month?
-```
-
-but:
-
-```text
-Which recurring expenses no longer make sense?
-
-Which subscriptions have increased in price?
-
-Which insurance policies should be renegotiated?
-
-Which purchase decisions repeatedly turn out badly?
-
-How has my spending changed as my income changed?
-```
-
-Over long periods, the agent could detect patterns that are difficult to notice manually.
-
----
-
-# The Travel Agent
-
-A personal travel agent becomes much more useful when it remembers previous trips.
-
-It could know:
-
-- preferred destinations,
-    
-- disliked hotels,
-    
-- tolerance for long transfers,
-    
-- preferred flight times,
-    
-- usual luggage,
-    
-- restaurants previously enjoyed,
-    
-- preferred level of planning,
-    
-- places already visited.
-    
-
-Instead of:
-
-> Plan a trip to Japan.
-
-the user could say:
-
-> Plan Japan in the way I usually like travelling.
-
-The difference comes almost entirely from persistent personal context.
-
----
-
-# The Learning Agent
-
-A powerful personal knowledge model could also maintain an approximation of:
-
-```text
-what I know
-what I once knew
-what I am learning
-what I repeatedly misunderstand
-```
-
-This creates a very different educational system.
-
-Instead of every tutorial starting with the same assumptions, the agent could construct explanations relative to the user's existing knowledge.
-
-For example:
-
-> Explain Temporal to me using concepts I already know from Hangfire and Azure Durable Functions.
-
-At a larger scale, the agent could continuously maintain a knowledge map and identify useful gaps.
-
-The question becomes:
-
-> What should I learn next given what I already know and what I am trying to accomplish?
-
----
-
-# The Work Agent
-
-Professional life produces enormous amounts of potentially useful personal context:
-
-```text
-code
-commits
-pull requests
-tickets
-design documents
-meetings
-email
-chat
-decisions
-incidents
-experiments
-```
-
-A long-lived work agent could effectively become a memory of a person's career.
-
-It could answer:
-
-> Have I solved a similar problem before?
-
-> Why did we reject this architecture five years ago?
-
-> Which technical decisions repeatedly created problems?
-
-> How has my approach to system design changed?
-
-The value may become especially large over decades because human memory does not preserve this level of detail.
-
----
-
-# Agents Could Represent the User Against Other Agents
-
-One of the deeper consequences is that organizations will also deploy agents.
-
-The future may increasingly contain interactions such as:
-
-```text
-company agent ↔ personal agent
-
-bank agent ↔ personal finance agent
-
-shop agent ↔ personal shopping agent
-
-airline agent ↔ personal travel agent
-
-government agent ↔ bureaucracy agent
-```
-
-This matters because today the information asymmetry usually favors institutions.
-
-A company may have:
-
-- databases,
-    
-- analysts,
-    
-- pricing models,
-    
-- customer profiles,
-    
-- legal teams,
-    
-- automated systems.
-    
-
-The individual typically has only their own memory and attention.
-
-A persistent personal agent partially restores symmetry.
-
-It can remember every previous interaction.
-
-It can compare contracts.
-
-It can calculate alternatives.
-
-It can read thousands of pages.
-
-It does not become tired of bureaucracy.
-
----
-
-# Personal Agents as Cognitive and Economic Defense
-
-Most discussions of AI assistants center on consumer convenience: drafting routine emails, summarizing transcripts, or syncing calendars.
-
-A more structural motivation for running a personal agent is defensive:
-
-> **In an economy run by corporate algorithms and institutional bots, an unassisted human faces severe cognitive and economic asymmetry.**
-
-Modern enterprises operate automated extraction architectures designed to exploit human cognitive limits:
-
-- **Dynamic Surge and Margin Pricing**: Adjusting prices in real time based on observed device type, battery level, perceived urgency, and historical price elasticity.
-- **Behavioral Attention Loops**: Optimizing content feeds to capture attention and direct screen time toward high-margin actions.
-- **Contractual Obfuscation and Dark Patterns**: Structuring cancellation flows, subscription renewals, and warranty clauses to make opting out as difficult as possible.
-- **Automated Dispute Deflection**: Routing customer support issues through automated bots designed to exhaust the claimant until they drop the issue.
-
-An unassisted individual cannot manually track moving prices across global markets, read terms of service updates, or spend four hours arguing with an automated telecom bot.
-
-```text
-corporate infrastructure:
-continuous automated optimization
-+ dynamic pricing models
-+ behavioral user tracking
-+ legal automation
-
-vs.
-
-the unassisted individual:
-limited attention
-+ fatigue and cognitive load
-+ information asymmetry
-+ finite time
-```
-
-Under these conditions, a personal agent is not a lifestyle upgrade; it functions as a necessary **fiduciary shield**:
-
-```text
-corporate agent / platform
-           ▲
-           │ [negotiation, verification, defense]
-           ▼
-     personal agent
-           ▲
-           │ [strict user constraints & policies]
-           ▼
-         human
-```
-
-The personal agent manages automated negotiation, verifies contract terms, enforces budget constraints, handles subscription cancellations, and acts as an attention firewall against manipulative feed loops.
-
-Adoption will not be driven merely by the desire to save ten minutes a day. It will be driven by the fact that navigating an algorithmic economy without an automated representative leaves the user open to systematic extraction.
-
----
-
-# The Agent Becomes a Guardian of the User's Interests
-
-This may be the most important distinction between platform AI and personal AI.
-
-A recommendation algorithm owned by a platform may optimize:
-
-```text
-platform objective
-```
-
-A personal agent should optimize:
-
-```text
-user objective
-```
-
-These objectives are not always aligned.
-
-For example:
-
-```text
-YouTube:
-maximize watch time
-
-personal agent:
-show me the 20 minutes most worth watching
-```
-
-Or:
-
-```text
-shop:
-maximize purchase probability and margin
-
-personal agent:
-buy nothing unless the purchase creates enough value
-```
-
-Or:
-
-```text
-subscription provider:
-prevent cancellation
-
-personal agent:
-cancel services I no longer use
-```
-
-This suggests that one of the defining properties of a true personal agent is not intelligence.
-
-It is **alignment of economic interest**.
-
----
-
-# Privacy Becomes a Core Architectural Problem
+## Privacy Becomes a Core Architectural Problem
 
 A system containing a detailed digital model of a person may become one of the most valuable and sensitive databases that person owns.
 
@@ -763,23 +289,22 @@ It may reveal much more than any individual service currently knows.
 This creates difficult questions:
 
 - Who owns the personal model?
-    
+
 - Where is it stored?
-    
+
 - Which agents may access which parts?
-    
+
 - Can applications query it directly?
-    
+
 - Can companies use it for advertising?
-    
+
 - Can it be sold?
-    
+
 - Can an agent expose preferences during negotiation?
-    
+
 - Can an attacker reconstruct someone's life?
-    
+
 - Can parts of the model remain entirely local?
-    
 
 A likely architecture may therefore involve strong compartmentalization.
 
@@ -805,7 +330,7 @@ Crucially, external service agents should rarely receive raw context dumps or di
 
 ---
 
-# The Personal Model Could Outlive Individual Applications
+## The Personal Model Could Outlive Individual Applications
 
 Today, switching applications often means losing accumulated context.
 
@@ -833,7 +358,7 @@ This could become an important architectural principle of future personal comput
 
 ---
 
-# The Real Product May Be the Person's Digital Layer
+## The Real Product May Be the Person's Digital Layer
 
 It is tempting to think that the major products of the AI era will be:
 
@@ -896,7 +421,7 @@ The durable asset is not the assistant.
 
 ---
 
-# A Personal AI Ecosystem
+## A Personal AI Ecosystem
 
 The long-term result may therefore look less like one universal assistant and more like a personal ecosystem.
 
@@ -928,7 +453,7 @@ Together they form something close to a **digital extension of the individual**.
 
 ---
 
-# The Larger Shift
+## The Larger Shift
 
 The evolution may be:
 

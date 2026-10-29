@@ -10,13 +10,18 @@ tags:
 aliases:
   - Multi-Agent Engineering Teams
   - Collaborative Coding Agents
+  - "Collaboration Patterns for Coding Agents"
 ---
+
+Adding another agent can mean investigating an alternative, dividing independent implementation work, bringing in a specialist, or reviewing a candidate from a separate context. Those choices solve different problems even when they use similar infrastructure.
+
+This article develops collaboration patterns and the trade-off between shared context and independent judgment. [[Operating a Reliable Multi-Agent Engineering Workflow]] follows how workers are run and coordinated: workspaces, roles and skills, containment, integration, model and compute allocation, asynchronous work, and human coordination. Choose the reason for involving several agents before choosing how many workers to start.
 
 Modern agentic development is no longer limited to a single coding agent working in one loop. A new class of workflows is emerging around multiple agents working in parallel, sequentially, competitively, or as a coordinated team.
 
 This creates a new design problem: not only _what should an agent do_, but also _how many agents should be involved, how should work be divided, how independent should they be, and how should their outputs be validated and integrated_.
 
-## 1. From One Agent to Many Agents
+## From One Agent to Many Agents
 
 The simplest model is a single agent:
 
@@ -43,21 +48,20 @@ In this model, the human is still the orchestrator.
 The developer decides:
 
 - what each agent should do,
-    
+
 - what context each agent receives,
-    
+
 - whether the agents work on the same or different problems,
-    
+
 - how results are compared,
-    
+
 - which changes are accepted,
-    
+
 - how conflicts are resolved.
-    
 
 This is often the easiest way to experiment with multi-agent development because it requires almost no dedicated orchestration infrastructure.
 
-## 2. Multiple Independent Sessions
+## Multiple Independent Sessions
 
 Running several independent sessions is particularly useful for exploration.
 
@@ -92,7 +96,7 @@ implementation
 
 This is different from a system where one agent decomposes a task and immediately delegates implementation.
 
-## 3. Subagents
+## Subagents
 
 Subagents introduce another layer.
 
@@ -111,15 +115,14 @@ Main Agent
 Each subagent can have:
 
 - its own context,
-    
+
 - its own instructions,
-    
+
 - a restricted toolset,
-    
+
 - a specialized role,
-    
+
 - a limited task.
-    
 
 This is useful because large tasks often pollute a single context.
 
@@ -140,7 +143,7 @@ This is not only a performance optimization. It is also a form of context engine
 
 When a single agent attempts to reason about database schemas, API contracts, frontend components, test harnesses, and security policies inside one long context window, the model inevitably suffers from instruction drift and attention degradation. Important constraints get pushed out of active attention, and the agent begins making unforced errors across module boundaries. Partitioning the work into subagents keeps contexts small, focused, and disposable.
 
-## 4. Fleet-Style Execution
+## Fleet-Style Execution
 
 Fleet-style systems automate decomposition and parallel execution.
 
@@ -172,17 +175,16 @@ This works best when the problem contains independent or loosely coupled subtask
 Examples include:
 
 - updating many independent modules,
-    
+
 - migrating multiple components,
-    
+
 - creating tests for many handlers,
-    
+
 - updating documentation,
-    
+
 - analyzing several failures,
-    
+
 - modifying independent APIs.
-    
 
 Fleet-style execution provides little benefit when the task is fundamentally sequential:
 
@@ -208,7 +210,7 @@ A
 └── D
 ```
 
-## 5. Persistent Agent Teams
+## Persistent Agent Teams
 
 A persistent agent team goes beyond temporary subagents.
 
@@ -227,17 +229,16 @@ Team
 Each agent may have its own:
 
 - instructions,
-    
+
 - responsibilities,
-    
+
 - tools,
-    
+
 - skills,
-    
+
 - context,
-    
+
 - conventions.
-    
 
 This starts to resemble an organizational structure rather than a simple task execution mechanism.
 
@@ -255,7 +256,7 @@ This gives agents a form of organizational memory.
 
 The codebase increasingly contains not only source code, but also instructions describing how autonomous workers should operate on it.
 
-## 6. Parallelism Has Several Different Meanings
+## Parallelism Has Several Different Meanings
 
 "Multi-agent" should not be understood only as "do things faster."
 
@@ -306,7 +307,7 @@ Agent C ─┘
 
 The objective is to avoid premature convergence on one solution.
 
-## 7. Competitive Solution Search
+## Competitive Solution Search
 
 An especially interesting pattern is to let several agents solve the same problem.
 
@@ -347,7 +348,7 @@ Agent D → long-term maintainability
 
 Then another stage compares trade-offs.
 
-## 8. Role Pipelines
+## Role Pipelines
 
 Multiple agents do not need to work simultaneously.
 
@@ -387,7 +388,7 @@ This reduces anchoring and makes the review more independent.
 
 When an implementer reviews its own code, it suffers from self-confirmation bias—routinely glossing over its own logic flaws and rationalizing edge-case omissions. Passing only the raw diff and the specification to an independent reviewer agent, with zero chain-of-thought inheritance from the implementer, forces the reviewer to evaluate the solution strictly on its own merits.
 
-## 9. Shared Context vs Independent Context
+## Shared Context vs Independent Context
 
 Multi-agent systems introduce an important tension.
 
@@ -422,500 +423,6 @@ Others benefit from deliberate information isolation.
 For debugging, architecture review, risk analysis, and security review, independent reasoning can be especially valuable.
 
 If an early agent makes an incorrect assumption in a fully shared context, that hallucination cascades across the entire fleet. On the other hand, complete isolation risks duplicate token spend as multiple agents rediscover the same codebase layout or type contracts. The practical heuristic is simple: collaborative implementation of known interfaces benefits from shared context, whereas adversarial review, root-cause debugging, and security sweeps demand hard context isolation.
-
-## 10. Workspace Isolation
-
-Parallel coding introduces a practical problem: filesystem conflicts.
-
-This is dangerous:
-
-```text
-Agent A → Service.cs
-Agent B → Service.cs
-Agent C → Service.cs
-```
-
-when all agents modify the same checkout.
-
-A safer model is:
-
-```text
-main
-├── worktree-agent-auth
-├── worktree-agent-tests
-├── worktree-agent-db
-└── worktree-agent-docs
-```
-
-Each agent gets its own:
-
-- Git worktree,
-    
-- branch,
-    
-- container,
-    
-- VM,
-    
-- sandbox.
-    
-
-Changes can later be reviewed and merged.
-
-Git therefore becomes more than version control.
-
-It becomes a transactional isolation layer for autonomous workers.
-
-In practice, Git worktrees provide the cleanest, lowest-overhead primitive for this. The orchestrator provisions a dedicated worktree and isolated branch for each agent. The worker reads, edits, runs tests, and commits inside its private sandbox without interfering with concurrent runs. Only when changes pass verification gates are the branches rebased and integrated back into the mainline.
-
-## 11. Failure Containment
-
-Isolation also limits the blast radius of agent mistakes.
-
-A safe workflow looks like:
-
-```text
-Agent
-  ↓
-isolated environment
-  ↓
-tests
-  ↓
-review
-  ↓
-merge
-```
-
-Instead of:
-
-```text
-many agents
-    ↓
-shared workspace
-    ↓
-main branch
-```
-
-Multi-agent development therefore needs many ideas already familiar from distributed systems:
-
-- isolation,
-    
-- retries,
-    
-- idempotency,
-    
-- ownership,
-    
-- conflict resolution,
-    
-- validation,
-    
-- rollback.
-
-Containing the blast radius of autonomous workers requires concrete operational guardrails:
-
-- **Deterministic verification gates**: Compilers, linters, and unit test suites must act as non-negotiable ground-truth oracles rather than relying on LLM self-assessment.
-- **Fail-stop and rollback semantics**: If an agent gets stuck in a loop or fails tests after a fixed retry budget, the harness terminates the worker and prunes its worktree. Main remains untouched.
-- **Atomic commit checkpoints**: Requiring agents to commit intermediate working states allows the harness to roll back failed experiments without throwing away the entire task.
-
-## 12. Specialized Agents
-
-Repositories may increasingly define reusable agents such as:
-
-```text
-architecture-agent
-security-agent
-database-agent
-performance-agent
-test-agent
-migration-agent
-documentation-agent
-```
-
-Each can have dedicated instructions and skills.
-
-For example:
-
-```text
-security-agent
-
-- never modify production code
-- inspect authentication and authorization
-- inspect secret handling
-- inspect dependency vulnerabilities
-- return findings with severity
-```
-
-or:
-
-```text
-performance-agent
-
-- inspect allocations
-- inspect database round trips
-- inspect unnecessary abstractions
-- benchmark before proposing changes
-```
-
-This avoids repeatedly explaining domain-specific expectations in every prompt.
-
-## 13. Skills as Agent Capabilities
-
-Agents can also load reusable skills.
-
-A skill may contain:
-
-- instructions,
-    
-- scripts,
-    
-- examples,
-    
-- domain knowledge,
-    
-- validation procedures,
-    
-- tool usage conventions.
-    
-
-This creates a useful separation:
-
-```text
-Agent = role
-Skill = capability
-Task = current objective
-```
-
-For example:
-
-```text
-Database Agent
-+
-PostgreSQL optimization skill
-+
-migration task
-```
-
-This makes the agent system more composable.
-
-## 14. Heterogeneous Agent Teams
-
-A multi-agent system does not require identical models.
-
-A possible system could use:
-
-```text
-Orchestrator
-   |
-   ├── strong reasoning model → architecture
-   ├── coding model → implementation
-   ├── large-context model → repository analysis
-   ├── cheap model → repetitive transformations
-   └── deterministic tools → tests/static analysis
-```
-
-This may be economically more efficient than running the strongest available model for every task.
-
-It creates a new optimization problem:
-
-> Which model should handle which kind of work?
-
-The best agent may not be the best worker for every subtask.
-
-Routing tasks to the appropriate model tier keeps costs and latency under control. Burning frontier reasoning tokens on localized boilerplate or import cleanup wastes budget for negligible gain. Conversely, assigning a lightweight coding model to design an architectural migration will lead to broken invariants and subtle bugs. Model tiering matches the reasoning profile to the cognitive difficulty of each step.
-
-## 15. Compute Scheduling
-
-Multi-agent systems create another important problem: cost.
-
-One agent means approximately:
-
-```text
-one context
-one reasoning loop
-one tool stream
-```
-
-Ten agents may mean:
-
-```text
-10 contexts
-10 reasoning loops
-10 environments
-+ orchestration
-+ synthesis
-+ validation
-```
-
-Parallelism can reduce wall-clock time while dramatically increasing total compute.
-
-Therefore the system needs a scheduler.
-
-Conceptually:
-
-```text
-if task.is_simple:
-    run_single_agent()
-
-elif task.is_parallelizable:
-    spawn_parallel_workers()
-
-elif task.is_ambiguous:
-    spawn_independent_explorers()
-
-elif task.is_high_risk:
-    spawn_implementer()
-    spawn_independent_reviewers()
-```
-
-The interesting optimization question becomes:
-
-> Is additional compute worth purchasing for this task?
-
-## 16. Adaptive Agent Count
-
-The number of agents does not need to be fixed.
-
-A system may begin with one agent.
-
-If uncertainty remains high:
-
-```text
-1 agent
-  ↓
-uncertain result
-  ↓
-spawn 3 investigators
-```
-
-If investigators disagree:
-
-```text
-3 hypotheses
-  ↓
-spawn verifier
-```
-
-If verification still fails:
-
-```text
-spawn additional specialist
-```
-
-This resembles adaptive search.
-
-The system increases compute only when confidence is insufficient.
-
-Static agent topologies are inherently wasteful—allocating five agents to fix a typo burns budget, while tackling a subtle concurrency bug with a single agent almost guarantees failure. An adaptive harness uses deterministic feedback from compilers and tests as the escalation trigger: spend minimal compute on straightforward problems, and scale up competitive debugging agents only when deterministic feedback signals high ambiguity or repeated test failures.
-
-## 17. Asynchronous Agent Workforce
-
-Agents also do not need to operate interactively.
-
-A future development workflow can look like:
-
-```text
-GitHub / Jira / monitoring
-          ↓
-      task queue
-          ↓
-    agent scheduler
-     /    |    \
-Agent A Agent B Agent C
-   ↓       ↓       ↓
-  PR     report    fix
-```
-
-The developer does not necessarily watch agents while they work.
-
-Instead, the developer may begin the day with:
-
-```text
-3 prepared PRs
-2 bug analyses
-1 failed task
-4 review findings
-```
-
-The interaction becomes similar to managing a development team.
-
-An engineer can also hand off a bounded task at the end of the workday and let an agent work on it overnight. This helps when the task can progress without frequent human decisions; if the agent reaches an unclear requirement or cannot verify the result, it should stop and return the blocker for the next working day.
-
-## 18. Humans Become Orchestrators
-
-The developer's role moves gradually from direct implementation toward orchestration.
-
-Instead of:
-
-```text
-write this code
-```
-
-the work becomes:
-
-```text
-define the problem
-define constraints
-choose exploration strategy
-decide what can run in parallel
-choose required reviewers
-evaluate competing solutions
-approve integration
-```
-
-This resembles the work of a technical lead more than the traditional work of an individual contributor.
-
-The difference is that the "team" can be created on demand.
-
-The engineer's leverage shifts away from typing boilerplate or memorizing library syntax toward specifying invariant boundaries, designing deterministic test oracles, and evaluating architectural trade-offs across competing agent implementations.
-
-## 19. A Possible End-to-End Workflow
-
-A mature workflow may look like this:
-
-```text
-                   HUMAN
-                     │
-          define problem / constraints
-                     │
-              planning agent
-                     │
-          ┌──────────┴──────────┐
-          │                     │
-     exploration          implementation
-          │                     │
-    ┌─────┼─────┐          orchestrator
-    │     │     │          /   |   \
-   A      B     C          D    E    F
-    │     │     │          │    │    │
-    └─────┼─────┘          └────┼────┘
-          │                     │
-      synthesis             integration
-          └──────────┬──────────┘
-                     │
-                reviewer team
-            ┌────────┼────────┐
-         security architecture tests
-            └────────┼────────┘
-                     │
-                   HUMAN
-                     │
-                   merge
-```
-
-Different stages use different forms of multi-agent collaboration.
-
-Exploration favors independence.
-
-Implementation favors decomposition.
-
-Review favors specialization and separation of responsibility.
-
-## 20. Multi-Agent Development as a New Scaling Dimension
-
-Historically, model capability was increased through:
-
-```text
-larger model
-better training
-more context
-better tools
-```
-
-Multi-agent systems introduce another dimension:
-
-```text
-more agents
-```
-
-Instead of:
-
-```text
-one extremely capable agent
-```
-
-we may sometimes prefer:
-
-```text
-many moderately capable agents
-+
-good orchestration
-+
-verification
-```
-
-For some problems:
-
-```text
-1 × expensive model
-```
-
-may be worse than:
-
-```text
-10 × cheaper model
-+
-independent exploration
-+
-voting
-+
-review
-+
-synthesis
-```
-
-The optimum is not yet obvious.
-
-This resembles earlier changes in computing:
-
-```text
-single CPU
-   ↓
-multicore
-   ↓
-distributed systems
-```
-
-except that the workers are not deterministic processors.
-
-They are autonomous reasoning systems.
-
-## 21. Multi-Agent Development Is a Systems Problem
-
-Once multiple agents become involved, the core difficulty changes.
-
-The challenge is no longer simply:
-
-> Can the model write good code?
-
-It becomes:
-
-> Can we build a reliable system in which many imperfect reasoning agents cooperate effectively?
-
-This introduces questions such as:
-
-- How should tasks be decomposed?
-    
-- How much context should be shared?
-    
-- When should agents work independently?
-    
-- How are conflicting conclusions resolved?
-    
-- Which agent is allowed to modify which files?
-    
-- How are failures detected?
-    
-- How are results validated?
-    
-- How much compute should be allocated?
-    
-- Which model should handle each task?
-    
-- When should a human intervene?
-    
-
-The problem therefore increasingly resembles distributed systems and organizational design rather than classical IDE assistance.
 
 ## Conclusion
 

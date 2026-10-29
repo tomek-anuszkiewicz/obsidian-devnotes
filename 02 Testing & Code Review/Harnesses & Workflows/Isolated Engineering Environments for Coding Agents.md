@@ -11,6 +11,7 @@ aliases:
   - Secure Coding Agent Workspaces
   - Capability Brokers for Engineering Agents
   - Persistent Remote Agent Development
+  - Sandbox Provisioning and Task Isolation
 ---
 
 # Isolated Engineering Environments for Coding Agents
@@ -107,6 +108,221 @@ If an agent needs a tool it does not have, it should report the operation and wh
 The agent should not solve missing access by searching the host for credentials or installing an arbitrary privileged service. Record denied and missing operations: repeated requests may reveal an environment design problem worth fixing centrally.
 
 Telemetry can show whether most time is spent waiting for Windows VMs, downloading dependencies, or reconstructing database fixtures. Improve those bottlenecks through the same controlled evaluation process used for instructions (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
+
+Provisioning an environment is itself part of the task lifecycle. The workflow must distinguish the agent deciding what to try from the sandbox supplying a place to execute it. [[Composing Agent Platforms from Orchestrators, Runtimes, and Tools]] places that boundary alongside business orchestration, tools, and telemetry.
+
+### Agent Execution Environments and Sandboxes
+
+Another class of infrastructure becomes important when an agent needs to do more than call a small set of predefined APIs.
+
+A coding or computer-use agent may need capabilities such as:
+
+- a filesystem;
+- a shell;
+- Git;
+- package managers;
+- compilers and runtimes;
+- long-running processes;
+- development servers;
+- network access;
+- temporary credentials;
+- isolated CPU, memory, and disk.
+
+Giving an LLM direct access to the machine hosting the application is usually a poor security boundary.
+
+Instead, the agent can operate inside an isolated execution environment.
+
+Examples of this category include systems such as **Daytona**.
+
+Daytona's main abstraction is a programmatically managed sandbox: an isolated runtime that behaves much more like a disposable computer than a single `run_code` function.
+
+Conceptually:
+
+```text
+Agent framework:
+decides what the agent should do
+
+Agent sandbox/runtime:
+provides an isolated computer in which the agent can do it
+```
+
+For example, a coding-agent loop might look like:
+
+```text
+Receive task
+    ↓
+Create sandbox
+    ↓
+Clone repository
+    ↓
+Agent inspects code
+    ↓
+Modify files
+    ↓
+Build / run tests
+    ↓
+Inspect result
+    ↓
+Modify again if necessary
+    ↓
+Produce commit / patch / pull request
+    ↓
+Destroy or retain sandbox
+```
+
+The sandbox does **not** normally decide that this is the correct sequence.
+
+That responsibility belongs to the agent framework, coding agent, or outer workflow.
+
+The sandbox provides the environment in which those actions can safely execute.
+
+This creates another important distinction:
+
+```text
+Workflow orchestrator:
+coordinates the overall process
+
+Agent framework:
+coordinates model reasoning and tool usage
+
+Agent sandbox/runtime:
+executes broad computer operations inside an isolation boundary
+```
+
+#### Why Sandboxes Matter Especially for Coding Agents
+
+For many business agents, the safest interface is a narrow set of explicit capabilities:
+
+```text
+find_customer
+create_support_ticket
+prepare_refund_request
+request_deployment
+```
+
+A coding agent is different.
+
+Software development inherently requires a very broad operation space:
+
+```text
+read arbitrary repository files
+write files
+run shell commands
+install dependencies
+compile code
+run tests
+start applications
+inspect processes
+use developer tools
+```
+
+Trying to represent every possible development operation as a predefined business tool would be impractical.
+
+Therefore the security boundary can move from **restricting every operation** to **restricting the environment in which broad operations are allowed**.
+
+For example:
+
+```text
+Business agent
+    ↓
+Restricted business capabilities
+    ↓
+Production systems
+```
+
+versus:
+
+```text
+Coding agent
+    ↓
+Broad computer capabilities
+    ↓
+Isolated sandbox
+    ↓
+Controlled artifact / commit / pull request
+    ↓
+Review and validation
+    ↓
+Real system
+```
+
+This is an important agent architecture pattern.
+
+The agent may be highly capable inside the sandbox while still having tightly controlled ways of affecting external systems.
+
+#### Sandboxes Are Not Orchestrators
+
+It is easy to confuse a sandbox platform with an agent platform because both may appear in the same system.
+
+But they solve different problems.
+
+A sandbox primarily answers:
+
+> Where can this generated or agent-directed computation safely run?
+
+An agent framework primarily answers:
+
+> What should the model do next?
+
+A workflow orchestrator primarily answers:
+
+> Why is this step happening, what preceded it, and what should happen afterward?
+
+These layers can be combined.
+
+For example:
+
+```text
+GitHub issue
+    ↓
+Workflow orchestrator
+    ↓
+Coding agent / agent framework
+    ↓
+Create Daytona sandbox
+    ↓
+Clone repository
+    ↓
+Investigate → edit → build → test loop
+    ↓
+Produce pull request
+    ↓
+Review agent
+    ↓
+Human approval
+    ↓
+Merge / deployment workflow
+```
+
+Daytona owns mainly the isolated execution environment in this picture.
+
+The surrounding workflow still needs something else to own process state, decisions, approvals, retries, and business policy.
+
+#### Sandboxes and Parallel Agents
+
+Sandbox infrastructure also becomes useful when many agents work concurrently.
+
+Instead of multiple agents modifying the same workspace, each task can receive its own isolated environment:
+
+```text
+Task A → Agent A → Sandbox A → branch A
+Task B → Agent B → Sandbox B → branch B
+Task C → Agent C → Sandbox C → branch C
+```
+
+This provides a natural boundary for:
+
+- filesystem state;
+- dependencies;
+- running processes;
+- experiments;
+- credentials;
+- resource limits;
+- cleanup.
+
+The orchestration problem then becomes deciding which tasks should exist, how they depend on one another, and how their outputs should be reviewed or combined.
+
+The sandbox solves a different problem: giving every task a disposable execution environment.
 
 ## Clean up by ownership and verified lifecycle
 

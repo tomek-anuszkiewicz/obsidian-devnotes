@@ -12,6 +12,10 @@ aliases:
   - Product Ambition in AI Era
 ---
 
+A company that can build its current product with less implementation effort has several choices. It can reduce cost, attempt more capabilities, improve reliability, or pursue harder customer problems. Competitors receive similar tools, so the expected product can move while the team is becoming faster.
+
+This article follows that moving competitive frontier and its implications for product ambition. [[AI May Create a New Market for Small, Custom Business Software]] develops the complementary effect: previously uneconomic projects become affordable, including narrow custom software. [[How Should Companies Use the Productivity Gains from AI]] examines staffing assumptions, team composition, direction, and investment in research. These are different uses of the same productivity gain, with different consequences for an organization.
+
 A common assumption about AI in software development is:
 
 > If every engineer becomes more productive, companies will need fewer engineers.
@@ -51,285 +55,6 @@ When deciding [[How Should Companies Use the Productivity Gains from AI|how to r
 
 ---
 
-## Software Demand Is Not Fixed
-
-The simplest automation model assumes a fixed amount of work:
-
-```text
-fixed product scope
-÷
-higher productivity
-=
-fewer engineers
-```
-
-But software organizations rarely have a fixed and complete list of useful work.
-
-They usually have:
-
-- features that were never prioritized;
-    
-- weak user experiences;
-    
-- missing integrations;
-    
-- manual internal processes;
-    
-- unsupported customer cases;
-    
-- insufficient observability;
-    
-- technical debt;
-    
-- products that were previously too expensive to build;
-    
-- ideas that were never tested because implementation cost was too high.
-    
-
-When development becomes cheaper, more of this work becomes economically viable.
-
-The likely effect is therefore not only:
-
-```text
-same demand
-+ higher productivity
-→ less labor
-```
-
-It may also be:
-
-```text
-lower development cost
-→ more viable projects
-→ more experiments
-→ more functionality
-→ higher user expectations
-→ continued demand for engineering work
-```
-
-This distinction matters because software demand is highly elastic.
-
-There is an enormous amount of useful software that is not built today simply because the expected value does not justify the development cost.
-
----
-
-## The Long Tail of Software That Does Not Exist Yet
-
-A large amount of organizational work is still performed using:
-
-- spreadsheets;
-    
-- email;
-    
-- manual copying;
-    
-- disconnected SaaS tools;
-    
-- paper workflows;
-    
-- ad hoc scripts;
-    
-- undocumented operational knowledge;
-    
-- people manually coordinating processes between systems.
-    
-
-This is not necessarily because nobody could automate these processes.
-
-Often the economics are simply unfavorable.
-
-A custom application might solve the problem, but building and maintaining it may cost more than the inefficiency it removes.
-
-AI can change that threshold.
-
-Custom software may become economically reasonable for:
-
-- small manufacturers;
-    
-- clinics;
-    
-- property managers;
-    
-- logistics companies;
-    
-- restaurants;
-    
-- small wholesalers;
-    
-- local service businesses;
-    
-- small professional firms;
-    
-- individual departments inside larger organizations;
-    
-- specialized workflows serving only a few dozen users.
-    
-
-This can create a very large long tail of narrow, highly customized systems.
-
-Instead of:
-
-```text
-one generic SaaS product
-serving thousands of organizations
-through extensive configuration
-```
-
-we may increasingly see:
-
-```text
-shared infrastructure
-+ reusable capabilities
-+ AI-assisted development
-→ thousands of slightly different applications
-```
-
-Some of these systems may be temporary.
-
-Some may serve only one company.
-
-Some may serve only one department.
-
-Some may exist only as long as a particular business process exists.
-
-Historically, such software would often have been too expensive to justify.
-
-With agents, much of it may become ordinary.
-
-This economic shift opens up [[AI May Create a New Market for Small, Custom Business Software|a massive market for small, custom business software]]. When the labor overhead of writing boilerplate, basic API integrations, and database schemas drops, building an internal tool for a single department or twenty specialized operators becomes viable. Software no longer has to be a venture-scale SaaS product to justify its existence.
-
----
-
-## Previous Productivity Improvements Did Not Eliminate Software Work
-
-Software development has already experienced major increases in productivity.
-
-Examples include:
-
-- high-level programming languages;
-    
-- managed runtimes;
-    
-- databases;
-    
-- open-source libraries;
-    
-- web frameworks;
-    
-- cloud infrastructure;
-    
-- container platforms;
-    
-- infrastructure as code;
-    
-- continuous integration;
-    
-- software-as-a-service components.
-    
-
-Each reduced the amount of manual work required to build a given capability.
-
-A modern development team does not normally implement:
-
-- its own operating system;
-    
-- networking stack;
-    
-- database engine;
-    
-- cryptographic primitives;
-    
-- authentication system;
-    
-- payment infrastructure;
-    
-- deployment scheduler.
-    
-
-Yet demand for software engineers continued to grow for long periods.
-
-The productivity gains were used to create:
-
-- more applications;
-    
-- more specialized systems;
-    
-- better user interfaces;
-    
-- more integrations;
-    
-- faster delivery;
-    
-- larger product portfolios;
-    
-- software for smaller markets and narrower business problems.
-    
-
-AI may continue this historical pattern at a much higher level of abstraction.
-
-The difference is that AI may reduce not only the cost of individual technical components, but the cost of translating an idea into an entire working system.
-
----
-
-## AI Changes the Cost of Attempting an Idea
-
-Many software ideas are not rejected because they are impossible.
-
-They are rejected because they are too expensive relative to their expected value.
-
-AI may lower the cost of:
-
-- prototyping;
-    
-- testing a product hypothesis;
-    
-- entering an unfamiliar codebase;
-    
-- integrating systems;
-    
-- building internal tools;
-    
-- maintaining small niche products;
-    
-- supporting specialized customer workflows;
-    
-- preparing migrations;
-    
-- creating experimental products.
-    
-
-As the cost of trying an idea decreases, organizations can test more ideas.
-
-Most experiments will still fail.
-
-But the total amount of experimentation can increase substantially.
-
-```text
-cheaper implementation
-→ more experiments
-→ more discovered opportunities
-→ more follow-up development
-```
-
-This can create additional engineering demand rather than merely compressing the existing workload.
-
-The relevant economic unit changes from:
-
-```text
-How expensive is this project?
-```
-
-toward:
-
-```text
-Is the expected value even slightly higher
-than the now much lower implementation cost?
-```
-
-That can move a huge number of previously marginal ideas into the viable category.
-
----
-
 ## AI Can Increase Product Ambition
 
 Lower development cost does not only create more projects.
@@ -359,21 +84,20 @@ A business maintaining a conventional internal system may reduce the required te
 A company competing in a fast-moving product market may reinvest productivity gains into:
 
 - higher quality;
-    
+
 - stronger differentiation;
-    
+
 - deeper integrations;
-    
+
 - new capabilities;
-    
+
 - more experiments;
-    
+
 - faster iteration;
-    
+
 - better reliability;
-    
+
 - better personalization.
-    
 
 This is why higher productivity does not mechanically translate into proportional reductions in employment.
 
@@ -390,23 +114,22 @@ A product that appears sophisticated today may look basic after AI-assisted expe
 Users may increasingly expect:
 
 - natural-language interaction;
-    
+
 - personalization;
-    
+
 - proactive assistance;
-    
+
 - automation of repetitive work;
-    
+
 - immediate integration with other systems;
-    
+
 - support for unusual cases;
-    
+
 - faster responses to feedback;
-    
+
 - accessibility by default;
-    
+
 - rapid product evolution.
-    
 
 Features that are currently premium may become baseline expectations.
 
@@ -437,108 +160,6 @@ It moves toward a more ambitious target.
 
 ---
 
-## Commodity Software Will Require Smaller Teams
-
-Some categories of software are likely to become highly commoditized.
-
-Examples include:
-
-- standard CRUD applications;
-    
-- simple workflow systems;
-    
-- conventional websites;
-    
-- basic mobile applications;
-    
-- common platform integrations;
-    
-- lightweight reporting tools;
-    
-- disposable prototypes;
-    
-- simple model-based assistants.
-    
-
-A small team may assemble such a product from:
-
-```text
-foundation model
-+ standard components
-+ common integrations
-+ interface
-+ billing
-```
-
-The technical entry barrier will fall.
-
-There will likely be a large market of inexpensive, similar, rapidly created applications.
-
-In this part of the market, team sizes may shrink substantially.
-
-But this does not imply less software.
-
-It may instead mean:
-
-```text
-much smaller team per application
-×
-much larger number of applications
-```
-
----
-
-## Custom Software May Compete More Strongly With SaaS
-
-One important consequence may be a change in the boundary between buying software and building it.
-
-Today companies often purchase broad SaaS products because custom development is too expensive.
-
-They accept:
-
-- unused functionality;
-    
-- awkward workflows;
-    
-- complicated configuration;
-    
-- compromises imposed by a generic data model;
-    
-- integration work;
-    
-- licensing costs.
-    
-
-If custom development becomes cheap enough, the calculation changes.
-
-Instead of asking:
-
-> Which existing product is closest to our process?
-
-organizations may increasingly ask:
-
-> Why not generate or build something that matches our process directly?
-
-This does not mean shared platforms disappear.
-
-More likely, the market separates into layers:
-
-```text
-durable systems of record
-shared infrastructure
-identity
-payments
-communication
-data platforms
-foundation models
-```
-
-with increasingly custom software built on top.
-
-The application layer may become much more fluid.
-
----
-
 ## Frontier Products Will Continue to Consume Talent
 
 At the competitive frontier, organizations will try to build products that cannot be reproduced by connecting the same public model to a standard interface.
@@ -546,42 +167,40 @@ At the competitive frontier, organizations will try to build products that canno
 Differentiation may depend on:
 
 - proprietary data;
-    
+
 - domain knowledge;
-    
+
 - original product design;
-    
+
 - specialized models;
-    
+
 - new interaction patterns;
-    
+
 - difficult integrations;
-    
+
 - exceptional reliability;
-    
+
 - security;
-    
+
 - operational scale;
-    
+
 - research and experimentation.
-    
 
 These products will still require human:
 
 - judgment;
-    
+
 - invention;
-    
+
 - taste;
-    
+
 - domain understanding;
-    
+
 - system design;
-    
+
 - risk assessment;
-    
+
 - product leadership.
-    
 
 AI can accelerate execution, but it does not eliminate uncertainty about what should be built.
 
@@ -608,19 +227,18 @@ But leading organizations receive the same tools.
 They can combine AI with:
 
 - experienced engineers;
-    
+
 - strong product judgment;
-    
+
 - proprietary knowledge;
-    
+
 - large datasets;
-    
+
 - efficient delivery systems;
-    
+
 - significant capital;
-    
+
 - research capacity.
-    
 
 This raises the ceiling:
 
@@ -631,181 +249,6 @@ the best teams can attempt much more difficult products
 AI therefore does not necessarily equalize competition.
 
 It may expand the entire range of what teams can build.
-
----
-
-## Human Inventiveness Remains Scarce
-
-Implementation may become cheaper while good direction remains limited.
-
-Organizations still need to decide:
-
-- which problem is worth solving;
-    
-- which users matter;
-    
-- which behavior creates real value;
-    
-- which ideas should be rejected;
-    
-- when a familiar pattern is insufficient;
-    
-- which risks are acceptable;
-    
-- how a product should differ from alternatives.
-    
-
-AI can generate many plausible implementations and product variants.
-
-Generating possibilities is not the same as selecting a meaningful direction.
-
-As execution becomes cheaper, the relative importance of product judgment may increase.
-
-A company may build the wrong product faster than before.
-
-And if organizations can afford to attempt ten times more ideas, deciding which ideas deserve attention may become even more important.
-
-When code creation becomes cheap, the risk of accumulating unmaintainable architectural chaos rises. As teams ship faster with generative tools, preventing [[Software Decay and the Hidden Costs of Frictionless AI Code|software entropy and codebase decay]] becomes a critical engineering discipline. Scaffolding unvetted abstractions or building the wrong architecture ten times faster simply accelerates technical bankruptcy unless grounded system design keeps domain boundaries clean.
-
----
-
-## Research and Development Still Matter
-
-AI can accelerate R&D by helping with:
-
-- literature analysis;
-    
-- hypothesis generation;
-    
-- prototyping;
-    
-- experiment preparation;
-    
-- data analysis;
-    
-- comparison of alternatives.
-    
-
-But R&D exists because the answer is not known in advance.
-
-The organization may not know:
-
-- whether a capability is technically possible;
-    
-- whether users will value it;
-    
-- which approach will work;
-    
-- which metric represents success;
-    
-- whether the result is reliable;
-    
-- whether it can be scaled safely.
-    
-
-Cheaper experiments do not remove this uncertainty.
-
-They make it possible to explore more of it.
-
-```text
-faster experimentation
-→ more hypotheses tested
-→ more opportunities discovered
-→ more ambitious research
-```
-
-AI may therefore increase the amount of R&D organizations can justify.
-
-In production systems, these unknowns are concrete: discovering whether a storage engine balances write throughput against query latency under real-world workloads, how an agent handles downstream transient rate limits and network partitions, or whether tail-latency SLOs hold under degraded conditions. Cheaper code generation allows teams to build automated test harnesses, run benchmark simulations, and probe these operational failure boundaries much earlier in the product lifecycle.
-
----
-
-## Teams May Change Composition More Than Size
-
-Even when the number of people remains similar, their work may change.
-
-There may be less demand for:
-
-- repetitive implementation;
-    
-- boilerplate;
-    
-- manual translation of specifications into standard code;
-    
-- memorizing framework APIs;
-    
-- routine configuration work.
-    
-
-There may be more demand for:
-
-- domain expertise;
-    
-- product engineering;
-    
-- system design;
-    
-- evaluation;
-    
-- data engineering;
-    
-- security;
-    
-- reliability;
-    
-- observability;
-    
-- experimentation;
-    
-- agent orchestration.
-    
-
-A team may manually write much less code while producing a much more capable product.
-
-The scarce resource may gradually move from:
-
-```text
-ability to implement software
-```
-
-toward:
-
-```text
-ability to understand a problem,
-design the right system,
-and judge whether the result is good
-```
-
-This transition drives a shift toward [[From AI-Assisted Teams to Cross-System Feature Ownership|cross-system feature ownership]]. Instead of developers maintaining narrow vertical silos—writing routine controller endpoints or standard UI layouts—engineers increasingly own end-to-end distributed capabilities. They spend less time manually writing boilerplate and more time defining API contracts, designing multi-agent tool routing with fallback boundaries, profiling query performance, and implementing continuous automated evaluation harnesses to prevent regression.
-
----
-
-## Smaller Technical Teams Do Not Always Mean Smaller Companies
-
-AI may allow fewer developers to implement and maintain a technical system.
-
-But successful products may redirect resources into:
-
-- research;
-    
-- design;
-    
-- customer discovery;
-    
-- operations;
-    
-- safety;
-    
-- compliance;
-    
-- support;
-    
-- domain expertise.
-    
-
-The engineering organization may become more compact while the total organization continues to grow.
-
-Productivity gains can change the allocation of labor without simply eliminating it.
 
 ---
 
@@ -836,13 +279,12 @@ Better tools move that point outward.
 This has happened repeatedly in software:
 
 - websites became richer rather than merely cheaper;
-    
+
 - cloud systems became more distributed rather than simply requiring fewer administrators;
-    
+
 - mobile applications gained more capabilities rather than remaining simple;
-    
+
 - analytics systems processed more data rather than only reducing reporting teams.
-    
 
 AI may create the same effect across a broader range of engineering work.
 
@@ -855,19 +297,18 @@ The market may become increasingly divided.
 At one end:
 
 - very small teams;
-    
+
 - low development costs;
-    
+
 - huge numbers of niche applications;
-    
+
 - highly customized internal systems;
-    
+
 - rapid imitation;
-    
+
 - disposable software;
-    
+
 - weak technical differentiation.
-    
 
 This is where the long tail may expand dramatically.
 
@@ -876,17 +317,16 @@ A system serving one warehouse, clinic, department, restaurant chain, or special
 At the other end:
 
 - deeply integrated systems;
-    
+
 - proprietary data and workflows;
-    
+
 - substantial research;
-    
+
 - high reliability requirements;
-    
+
 - strong product differentiation;
-    
+
 - significant human and computational investment.
-    
 
 The middle may face the greatest pressure.
 
