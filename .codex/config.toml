@@ -1,0 +1,5 @@
+[mcp_servers.devnotes-rag]
+command = "python"
+args = ["scripts/devnotes_rag_mcp_server.py"]
+startup_timeout_sec = 30
+tool_timeout_sec = 150

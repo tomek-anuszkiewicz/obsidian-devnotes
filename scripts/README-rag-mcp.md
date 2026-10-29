@@ -52,6 +52,12 @@ relative to the client's project directory. Restart the client after adding
 the server. Startup requires FastMCP; individual tools report a missing CLI,
 missing `.env` setting, timeout, or malformed CLI response as MCP errors.
 
+Codex registration for this vault is in `.codex/config.toml`. Codex loads that
+file for trusted projects; run it from the vault root so the configured script
+path resolves. Check the registration with `codex mcp get devnotes-rag`. The
+server uses stdio and runs for the lifetime of its client connection, so open
+a new Codex session after changing the configuration.
+
 ## Use for vault work
 
 Use `devnotes_search` to discover notes about a concept when the wording may differ
