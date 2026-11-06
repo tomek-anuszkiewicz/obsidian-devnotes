@@ -608,5 +608,4 @@ Keep the decision conditional on the properties actually verified. Preserve reje
 ## Related Notes
 
 - [[Designing Software Architecture with LLM Assistance]] — Discovering business constraints and distinguishing facts from plausible defaults.
-- [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]] — Testing a consequential architectural path with a small running slice.
 - [[Negative Knowledge and Explicit Architectural Dissents]] — Keeping rejected assumptions and alternatives available to later work.

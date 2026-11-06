@@ -350,4 +350,4 @@ Record the result being checked, the candidate that produced the evidence, and t
 
 - [[Agentic Software Development Workflows]] — Choosing an issue, feature, specification, investigation, or exploration contract.
 - [[Developing Features with AI Coding Agents]] — Progressive specification and practical feature delivery.
-- [[Acceptance Policies and Automated Repair in Agentic SDLC]] — Protected acceptance rules and bounded repair before escalation.
+- [[When Is an AI Agent’s Code Ready to Merge]] — Protected acceptance rules and bounded repair before escalation.

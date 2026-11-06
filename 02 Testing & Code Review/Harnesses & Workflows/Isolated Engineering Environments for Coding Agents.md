@@ -332,6 +332,14 @@ Preserve enough information to reproduce a failure: image and tool versions, tas
 
 Deleting the VM does not delete data previously sent to a hosted model, telemetry service, or backup system. Model processing and data preparation remain separate trust decisions (see [[Production-Like Test Data for Coding Agents]]).
 
+## Reject publication from a previous assignment
+
+A worker can lose its connection and come back after the coordinator has reassigned the repair. A lease recorded in the workflow can block future writes only if the component that writes to Git or updates the pull request checks it. Keep the write credential in that component and verify the task, branch, and current assignment before accepting a publication request. At handoff, account for writes that already started and check the repository before the new worker continues. If a worker has its own write credential, revoke it or otherwise remove its ability to publish before handing over the branch. See [[Coordinating Coding Agents in the SDLC]] for how this fits into cancellation and recovery.
+
+## Compare isolation across coding tools
+
+Open investigation: compare NVIDIA OpenShell, Codex, Claude Code, Gemini or Antigravity, and GitHub Copilot. For each tool, identify where commands and model requests run, which controls enforce filesystem and network access, how credentials are delivered and revoked, and what survives stopping or replacing a worker. Separate documented capabilities from behavior verified in a disposable test repository.
+
 ## Related notes
 
 - **[[Agent Deployment and Execution Models]]** — Compares hosting and model-serving arrangements.

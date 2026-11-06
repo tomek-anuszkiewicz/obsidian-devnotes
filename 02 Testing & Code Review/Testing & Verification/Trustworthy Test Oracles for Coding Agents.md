@@ -315,4 +315,4 @@ Keep the expected business behavior and the candidate implementation distinguish
 
 - [[Testing in the Model, Agent, LLM Era]] — Test layers, selection, deterministic execution, and live-model evaluations.
 - [[Repairing Browser Tests Without Changing Scenario Intent]] — Repairing interaction code without changing the accepted scenario.
-- [[Acceptance Policies and Automated Repair in Agentic SDLC]] — Protected rules, candidate-specific evidence, and controlled repair decisions.
+- [[When Is an AI Agent’s Code Ready to Merge]] — Protected rules, candidate-specific evidence, and controlled repair decisions.

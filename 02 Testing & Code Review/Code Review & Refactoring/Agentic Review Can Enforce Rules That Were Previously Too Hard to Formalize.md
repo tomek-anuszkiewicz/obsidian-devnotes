@@ -706,7 +706,7 @@ For example, `Customer` in CRM can describe a commercial relationship while `Bil
 
 Mechanical conventions can be checked through AST or compiler analysis: identifier suffixes, forbidden references, required types, or access to module internals. More contextual questions remain suitable for focused semantic review: whether a service name matches its responsibility or a copied persistence structure violates a boundary despite valid dependencies.
 
-Return a structured finding with the governing rule, location, evidence, expected meaning, and whether a decision is needed. Clear violations can enter an automatic repair loop. Ambiguous vocabulary or conflicting rules need a decision rather than endless renaming (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+Return a structured finding with the governing rule, location, evidence, expected meaning, and whether a decision is needed. Clear violations can enter an automatic repair loop. Ambiguous vocabulary or conflicting rules need a decision rather than endless renaming (see [[When Is an AI Agent’s Code Ready to Merge]]).
 
 Measure the cost of that consistency. Record repeated findings, rejected recommendations, and repair rounds. A stylistic rule that repeatedly destabilizes correct code may need better examples, narrower scope, or removal. Test the change against representative tasks while preserving quality constraints (see [[Observability and Controlled Improvement of Coding Agent Harnesses]]).
 

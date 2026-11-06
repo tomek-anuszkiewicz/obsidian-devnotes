@@ -639,7 +639,7 @@ Branch protection and required checks should remain in place even when the agent
 
 Record the base and candidate commits, specification revision, policy version, check results, and approvals. A subsequent patch can invalidate earlier evidence. Recheck the integrated candidate when parallel branches can interact. A schema-valid review report is structured evidence, not proof that the review is correct.
 
-Routine findings can return directly to the repair loop. Escalate changed meaning, conflicting mandatory rules, repeated oscillation, or exhausted budgets with a concrete decision packet. Keep policy changes separate from the patch being judged (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+Routine findings can return directly to the repair loop. Escalate changed meaning, conflicting mandatory rules, repeated oscillation, or exhausted budgets with a concrete decision packet. Keep policy changes separate from the patch being judged (see [[When Is an AI Agent’s Code Ready to Merge]]).
 
 ### Measure the harness independently of the code it produces
 

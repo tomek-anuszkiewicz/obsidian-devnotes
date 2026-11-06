@@ -1,5 +1,5 @@
 ---
-title: Acceptance Policies and Automated Repair in Agentic SDLC
+title: "When Is an AI Agent’s Code Ready to Merge?"
 tags:
   - ai-agents
   - code-review
@@ -7,12 +7,13 @@ tags:
   - agentic-workflows
   - safety
 aliases:
+  - Acceptance Policies and Automated Repair in Agentic SDLC
   - Deterministic Acceptance for Agent Changes
   - Policy-Driven Agent Repair Loops
   - Protected Acceptance Criteria
 ---
 
-# Acceptance Policies and Automated Repair in Agentic SDLC
+# When Is an AI Agent’s Code Ready to Merge?
 
 An agent changes a billing rule, rewrites the failing test, and reports success. Every command may have completed correctly while the accepted business behavior disappeared. The acceptance process needs a protected reference, evidence about the candidate, and authority separate from the implementer.
 

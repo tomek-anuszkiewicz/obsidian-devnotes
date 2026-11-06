@@ -210,7 +210,6 @@ The agent needs the verified state of the system and a clear next task. It does 
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]** — File responsibilities, state transitions, and the broader execution loop.
 - **[[The Living Engineering Chronicle and Context Compaction]]** — Where the removed history goes and how to consult it without loading the entire diary into the prompt.
-- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]** — Verifying small roadmap steps before expanding them.
 - **[[Context Attractors and Recency Bias in Long-Horizon Agent Sessions]]** — How old prompt text can affect later decisions.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Checks for repository rules, file limits, and hygiene.
 - **[[How Context Narrows an AI's Solution Space]]** — How large prompts affect what the agent considers.

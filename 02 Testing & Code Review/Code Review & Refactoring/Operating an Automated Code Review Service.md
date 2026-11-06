@@ -491,5 +491,5 @@ Treat routing rules, reviewer instructions, confidence policies, publication beh
 ## Related Notes
 
 - [[LLMs as a Code Review Team]] — Specialist investigation, reproducible findings, and independent review contexts.
-- [[Acceptance Policies and Automated Repair in Agentic SDLC]] — Using substantiated findings in repair and acceptance workflows.
+- [[When Is an AI Agent’s Code Ready to Merge]] — Using substantiated findings in repair and acceptance workflows.
 - [[Observability and Controlled Improvement of Coding Agent Harnesses]] — Versioning and evaluating changes to agent instructions and execution policy.

@@ -166,5 +166,5 @@ Start small: collect task outcomes and runtime events, identify one costly repea
 - **[[Learning Coding Agents Through Failure-Driven Instructions]]** — Uses failures to propose better instructions.
 - **[[Token Optimization and Context Economics in Agentic Workflows]]** — Explains concrete sources of execution cost.
 - **[[Constraint Saturation and Rule Oscillation in Coding Agents]]** — Describes conflicting instructions and repeated repair.
-- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Defines the evidence the improvement process must preserve.
+- **[[When Is an AI Agent’s Code Ready to Merge]]** — Defines the evidence the improvement process must preserve.
 - **[[Conversation History as Sensitive Data]]** — Explains why telemetry content needs access and retention controls.

@@ -483,7 +483,7 @@ An agent can help implement repository-specific Roslyn or AST checks when ordina
 
 Give each new rule allowed and forbidden examples, include edge cases from the actual codebase, and validate the checker independently. Generated analyzer code can contain false positives or omit a path just as application code can. Version the rule and protect its execution path so a candidate cannot silently weaken its own gate.
 
-Test changes require similar care. Deleting an assertion, skipping a fixture, narrowing input data, or replacing an integration check with a permissive mock can weaken verification without deleting a test file. Some changes can be detected mechanically; others require a focused review of the behavior the test previously established (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+Test changes require similar care. Deleting an assertion, skipping a fixture, narrowing input data, or replacing an integration check with a permissive mock can weaken verification without deleting a test file. Some changes can be detected mechanically; others require a focused review of the behavior the test previously established (see [[When Is an AI Agent’s Code Ready to Merge]]).
 
 ---
 
@@ -532,7 +532,6 @@ Instructions tell an agent how to work; executable checks verify what it leaves 
 ### Related notes
 
 - **[[Agentic Coding Harness and Controlled Development Workflows]]**: Tool permissions, sandboxing, and verification loops in the wider harness.
-- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]**: Testing the system's shape on small vertical slices before generating more code.
 - **[[Testing in the Model, Agent, LLM Era]]**: Keeping test baselines out of reach of changes made only to satisfy failing tests.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]**: Limiting stale context and instruction drift.
 - **[[AI May Replace Some Source Generators with Explicit Generated Code]]**: Choosing code that people and agents can read and debug over complex metaprogramming.

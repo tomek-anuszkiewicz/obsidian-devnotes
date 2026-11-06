@@ -46,7 +46,7 @@ flowchart TD
 2. **The repository teaches the agent your standards.** Conway's Law says that a system reflects how its builders communicate. For an engineer working with agents, repository rules, tests, and reusable workflows are part of that communication (see [[Agentic Coding Harness and Controlled Development Workflows]]). Loose prompts invite inconsistent implementations; explicit constraints and checks help keep them aligned.
 3. **Reviewing a concrete result is often easier than specifying everything in advance.** Starting with an empty document and trying to cover every edge case can stall the work. Looking at an implementation makes an unindexed query, a missing timeout, or a poor abstraction much easier to point out. The original comparison of $O(N)$ generation with $O(1)$ recognition describes that difference in effort, not a literal complexity guarantee.
 4. **Do not let a useful correction stay in your head.** When an agent violates a boundary, fixing that one diff by hand leaves the reason for the mistake unstated. Turn the correction into a repository rule, a reusable skill, or an automated check, and have the agent apply it.
-5. **Review the first example closely; reuse the proven workflow.** The first implementation of a pattern deserves a line-by-line review. Once the approach is captured in a skill and checked by tests, later instances can be delegated with more attention on the checks and a focused diff review (leveraging [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]).
+5. **Review the first example closely; reuse the proven workflow.** The first implementation of a pattern deserves a line-by-line review. Once the approach is captured in a skill and checked by tests, later instances can be delegated with more attention on the checks and a focused diff review.
 
 ## 1. What changes when typing stops being the bottleneck
 
@@ -151,7 +151,6 @@ When the agent misses a type check, uses a deprecated API, or fails a build, let
 
 ## Related notes
 
-- **[[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]]** — Check system boundaries on a small working slice before repeating the pattern.
 - **[[Active Backlog Pruning and Context Hygiene in Agentic Roadmaps]]** — Remove completed work from the active roadmap so it does not crowd the agent's context.
 - **[[The Living Engineering Chronicle and Context Compaction]]** — Keep architectural decisions available across long-running work.
 - **[[Executable Architecture Tests for Coding Agent Guardrails]]** — Enforce architectural boundaries with tests.

@@ -34,7 +34,7 @@ Three kinds of correctness need different evidence. Technical checks establish p
 | Environment and capability services | Allocate workspaces and enforce resource access | Leases, identities, tool permissions |
 | Trusted delivery controllers | Merge, release, deploy, and perform permitted recovery actions | Deployment and release state |
 
-The implementing agent must not be able to silently change its acceptance rules. Conversely, the orchestrator need not understand every implementation detail. It needs reliable contracts for starting work and interpreting its result (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+The implementing agent must not be able to silently change its acceptance rules. Conversely, the orchestrator need not understand every implementation detail. It needs reliable contracts for starting work and interpreting its result (see [[When Is an AI Agent’s Code Ready to Merge]]).
 
 ```mermaid
 flowchart TD
@@ -82,6 +82,8 @@ Persist the input and output of each meaningful transition. A person waiting to 
 Retries need idempotent effects. If a worker creates a pull request and crashes before reporting success, retrying should find the existing pull request using the task and candidate identifiers. The same principle applies to environment creation, notifications, and deployment requests. Workflow durability does not make arbitrary external actions execute exactly once.
 
 Pin workflow and policy versions for an execution, and define how long-running executions move to newer versions. Otherwise a rule edit can change the meaning of an approval halfway through a task. [[Workflow Orchestration in Agentic Systems]] explains the general mechanics. Temporal's [task documentation](https://docs.temporal.io/tasks) describes reconstruction from event history and the separate execution of activities; this is one implementation of durable orchestration, not a requirement to choose Temporal.
+
+A repair may span several tickets, worker sessions, and candidate commits. Keep its identity stable as the coordinator routes new evidence, orders dependent repairs, or transfers ownership. [[Coordinating Coding Agents in the SDLC]] follows those decisions through review and tests how the coordinator handles late events.
 
 ## Support interactive discovery and autonomous delivery
 
@@ -164,7 +166,7 @@ These sources address different questions. Use them alongside concrete tests of 
 
 ## Related notes
 
-- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Protect acceptance criteria and route failures to repair or a decision.
+- **[[When Is an AI Agent’s Code Ready to Merge]]** — Protect acceptance criteria and route failures to repair or a decision.
 - **[[Observability and Controlled Improvement of Coding Agent Harnesses]]** — Measure execution and qualify changes to the process.
 - **[[Isolated Engineering Environments for Coding Agents]]** — Supply useful tools within enforced resource boundaries.
 - **[[Production Feedback and Safe Automated Recovery]]** — Connect incidents and recovery to normal delivery.

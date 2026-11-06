@@ -136,6 +136,6 @@ Over time, repeated requests can become reusable scenario profiles. If agents re
 ## Related notes
 
 - **[[Production Feedback and Safe Automated Recovery]]** — Moves from a production incident to a verified repair.
-- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Protects the gates and evidence used to release artifacts.
+- **[[When Is an AI Agent’s Code Ready to Merge]]** — Protects the gates and evidence used to release artifacts.
 - **[[Agentic Coding with EF Core and SQL Server]]** — Applies agent workflows to concrete database behavior.
 - **[[Conversation History as Sensitive Data]]** — Covers information retained beyond the working environment.

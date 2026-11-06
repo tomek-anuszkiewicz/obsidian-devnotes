@@ -32,6 +32,12 @@ Do not apply one cleanup rule to all of these. A kill switch can be intentionall
 
 A flag also needs an evaluation context: user, tenant, request, device, or another stable unit. Select a unit that matches the behavior being changed. A tenant-level accounting feature can behave inconsistently if different requests within the same transaction take different paths.
 
+## Deploy agent changes before exposing them
+
+A coding agent that adds a new checkout flow can also register a release flag, wire it into the existing flag client, and add tests for both paths. Start with the flag off in production. Put one flag around behavior you may want to expose or withdraw independently. Several code changes that must take effect together can share that flag.
+
+For low-risk changes, the acceptance policy can allow a merge and deployment after automated checks without waiting for a manual code review. Exposure is a separate decision. For checkout, CI can verify that the flag-off path still calls the old handler and that the flag-on path passes the new acceptance tests. Check what the deployment does before the flag is evaluated, too. A startup migration can affect all tenants while the flag is off. The policy can route those changes to review before deployment.
+
 ## Give rollout an explicit state model
 
 ```text
@@ -79,7 +85,15 @@ Missing telemetry is not a healthy signal. A flag can look successful because ev
 
 Record the actual variation served with relevant outcomes. Stable cohort assignment and exposure data are necessary to interpret results. Check dependencies between flags and services; reverting one flag may not revert a dependent flag or undo a side effect already performed.
 
-LaunchDarkly distinguishes [percentage, progressive, and guarded rollouts](https://launchdarkly.com/docs/fed-docs/home/releases/releasing). Guarded rollouts can monitor selected metrics and perform configured rollback. Its [management documentation](https://launchdarkly.com/docs/home/releases/managing-guarded-rollouts) also describes behavior for insufficient samples and dependent flags. Availability and exact behavior should be checked against the installed service and plan; these references were checked on 2026-10-29.
+Use a guarded rollout to answer whether it is safe to give the new path more traffic. Start with a small share of tenants, watch payment failures and latency, and pause or restore the previous setting if the configured limits are breached. Use an A/B test to answer a product question, such as whether the new checkout increases completed orders. Assign eligible tenants to control and treatment, record the variant actually served, and evaluate the result against the chosen metric and sample requirements. Both use traffic splits, but they serve different decisions. A red/black deployment, also called blue/green, switches traffic between two deployed versions of the application. [LaunchDarkly release options](https://launchdarkly.com/docs/home/releases/releasing), [Spinnaker rollout strategies](https://spinnaker.io/docs/guides/user/kubernetes/rollout-strategies/)
+
+### What feature management platforms can take over
+
+- **LaunchDarkly** can advance a guarded rollout, monitor selected metrics, and roll back when configured to do so. Its MCP server can also check flag removal readiness across environments, which gives the coding agent evidence to use when preparing a cleanup change. [Guarded rollouts](https://launchdarkly.com/docs/home/releases/managing-guarded-rollouts), [LaunchDarkly MCP](https://launchdarkly.com/docs/home/getting-started/mcp)
+- **Unleash** tracks expected flag lifetimes and surfaces stale candidates. Through MCP, an agent can check where a flag is enabled, when an SDK last reported it, and which other flags depend on it. With change requests enabled for production, the agent submits a request and a human approves and applies it. [Flag lifecycle](https://docs.getunleash.io/concepts/feature-flags), [Unleash MCP](https://docs.getunleash.io/integrate/mcp)
+- **Statsig** gives an agent access to feature gates, experiments, and metrics through MCP. **PostHog** supports flag management through MCP and connects exposure to product events and errors. These integrations let the agent bring experiment or release evidence into the same workflow as the code change. [Statsig MCP](https://docs.statsig.com/integrations/mcp/overview), [PostHog feature flags](https://posthog.com/docs/feature-flags)
+
+The same release pattern can control the behavior of an agent in production. For example, serve a new model or prompt to a small share of tenants and record the configuration version with task completion, latency, and cost. LaunchDarkly AgentControl and Statsig Agent Experimentation support serving model and prompt configurations at runtime. [LaunchDarkly AgentControl](https://launchdarkly.com/docs/home/agentcontrol/quickstart), [Statsig Agent Experimentation](https://docs.statsig.com/ai-evals/setup)
 
 [OpenFeature](https://openfeature.dev/docs/reference/intro/) provides a vendor-neutral API specification for flag evaluation. That interface can reduce application coupling to a provider, but it does not supply the organization's ownership, rollout, or cleanup policy by itself.
 
@@ -122,6 +136,8 @@ Removing old tests is still a change to evidence. Route it through the acceptanc
 
 Submit the cleanup candidate to normal review, integration tests, and deployment. Confirm that the deployed consumers no longer need the flag before archiving it. Retain the flag record and decision history according to policy. Deleting configuration too early can change the behavior of an old client that falls back to a different value.
 
+DoorDash reports a cleanup workflow that links Jira tickets to live flag data queried through MCP. An engineer confirms which flag value to keep, then agents edit the code, run tests, and open a pull request. Engineers approved removal PRs for 45 of the 50 stale flags in the evaluation. [DoorDash cleanup case study](https://arxiv.org/abs/2610.31351)
+
 ## Keep cleanup compatible with recovery
 
 Once the old branch is gone, disabling the flag may no longer restore the old behavior. Once the flag is archived, an old application release may use a fallback. Record how cleanup changes the recovery procedure.
@@ -141,6 +157,6 @@ Repeated cleanup failures are process evidence. They may justify a better refere
 ## Related notes
 
 - **[[Designing an Agentic SDLC for Business Software]]** — Places flag work in a durable product lifecycle.
-- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Governs code and test changes during cleanup.
+- **[[When Is an AI Agent’s Code Ready to Merge]]** — Governs code and test changes during cleanup.
 - **[[Measuring Business Outcomes After Software Delivery]]** — Evaluates the value of the activated behavior.
 - **[[Production Feedback and Safe Automated Recovery]]** — Connects flags to containment and release compatibility.

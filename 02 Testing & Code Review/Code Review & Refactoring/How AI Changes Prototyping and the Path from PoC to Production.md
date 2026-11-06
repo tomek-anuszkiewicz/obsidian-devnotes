@@ -218,11 +218,10 @@ Interactive work can run inside the same managed sandbox platform used for unatt
 
 - If code is explicitly marked as evolutionary from day one, establish production foundations immediately: database migrations, integration testing harnesses, explicit error domains, and structured telemetry in the very first commit.
 
-- Never promote an evolutionary prototype into a production service without subjecting it to standard architectural review, security scanning, and load testing (see [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]] and [[Developing Features with AI Coding Agents]]).
+- Never promote an evolutionary prototype into a production service without subjecting it to standard architectural review, security scanning, and load testing (see [[Developing Features with AI Coding Agents]]).
 
 ## Related Notes
 
-- [[The Minimal Frame Pattern - Proving System Topology on Atomic Slices]] — Validating system architecture and data plumbing before scaling prototypes.
 - [[Developing Features with AI Coding Agents]] — Transitioning from prototype exploration to verified production features.
 - [[Software Decay and the Hidden Costs of Frictionless AI Code]] — Why unreviewed prototype shortcuts accelerate structural rot.
 - [[Building Determinism from Unpredictable Models]] — Verification asymmetry and gates when moving from prototype to main branch.

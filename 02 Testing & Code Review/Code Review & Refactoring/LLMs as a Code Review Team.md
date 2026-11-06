@@ -430,7 +430,7 @@ The analogy is similar to having another engineer examine the change without fir
 
 AI review may instead change what humans review.
 
-It can also change who receives routine findings. An orchestrator can return a substantiated defect directly to a fixer, rerun the relevant checks on the new candidate, and request a human decision only when policy requires it or the bounded repair loop cannot resolve the problem. Automatic acceptance is appropriate only within an explicitly authorized scope; the reviewer does not grant itself merge authority (see [[Acceptance Policies and Automated Repair in Agentic SDLC]]).
+It can also change who receives routine findings. An orchestrator can return a substantiated defect directly to a fixer, rerun the relevant checks on the new candidate, and request a human decision only when policy requires it or the bounded repair loop cannot resolve the problem. Automatic acceptance is appropriate only within an explicitly authorized scope; the reviewer does not grant itself merge authority (see [[When Is an AI Agent’s Code Ready to Merge]]).
 
 Today humans often spend time checking things such as:
 
@@ -526,7 +526,7 @@ For code review, those properties may matter almost as much as raw intelligence 
 
 ## Related notes
 
-- **[[Acceptance Policies and Automated Repair in Agentic SDLC]]** — Structured findings, protected policy, and repair before human escalation.
+- **[[When Is an AI Agent’s Code Ready to Merge]]** — Structured findings, protected policy, and repair before human escalation.
 - **[[Observability and Controlled Improvement of Coding Agent Harnesses]]** — Measures reviewer value, repair cost, and controlled configuration changes.
 
 - **[[Reviewing AI-Generated Code]]** — Review heuristics and inspection methods for AI-authored changes.
