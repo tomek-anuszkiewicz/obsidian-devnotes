@@ -28,27 +28,26 @@ Many engineering failures do not happen because nobody knew the correct practice
 Teams usually know that they should:
 
 - add compatibility tests;
-    
+
 - inspect all consumers;
-    
+
 - document the decision;
-    
+
 - plan rollback;
-    
+
 - add telemetry;
-    
+
 - remove temporary code;
-    
+
 - update examples;
-    
+
 - verify configuration;
-    
+
 - split a migration into safe stages;
-    
+
 - check edge cases;
-    
+
 - clean up after deployment.
-    
 
 The problem is that each additional step has a small cost.
 
@@ -101,25 +100,24 @@ A good agent can be methodical to an extent that would be exhausting for a human
 It can repeatedly ask:
 
 - What happens with the old client?
-    
+
 - What happens with the new client?
-    
+
 - What happens during rolling deployment?
-    
+
 - What happens after rollback?
-    
+
 - What if both fields are present?
-    
+
 - What if neither field is present?
-    
+
 - What if the message is duplicated?
-    
+
 - What if it arrives late?
-    
+
 - What if the queue still contains the old format?
-    
+
 - What temporary code must be removed later?
-    
 
 To a human, this may feel pedantic.
 
@@ -136,27 +134,26 @@ An agent can be stronger than a human when the work rewards consistency more tha
 An agent can inspect:
 
 - source code;
-    
+
 - tests;
-    
+
 - configuration;
-    
+
 - infrastructure definitions;
-    
+
 - database scripts;
-    
+
 - serialized examples;
-    
+
 - documentation;
-    
+
 - dashboards;
-    
+
 - alerts;
-    
+
 - deployment manifests;
-    
+
 - related repositories.
-    
 
 A developer may stop when the most obvious references are found. The agent can continue until the defined search space is exhausted.
 
@@ -167,25 +164,24 @@ An agent can apply the same migration pattern across dozens or hundreds of locat
 Examples include:
 
 - replacing obsolete APIs;
-    
+
 - adding cancellation support;
-    
+
 - updating logging conventions;
-    
+
 - migrating configuration keys;
-    
+
 - changing serialization attributes;
-    
+
 - adding validation;
-    
+
 - converting tests;
-    
+
 - introducing typed identifiers;
-    
+
 - updating documentation examples;
-    
+
 - generating and benchmarking dozens of specialized hot-path optimization variants (see [[AI May Make Aggressive Code Optimization Economically Viable]]).
-    
 
 A human can perform this work, but attention usually degrades as repetition increases.
 
@@ -200,15 +196,14 @@ The repetitive work extends beyond declaring wrappers: update JSON serializers, 
 An agent can apply one rule everywhere:
 
 - every public operation must have telemetry;
-    
+
 - every temporary flag must have an owner and removal condition;
-    
+
 - every event change must include compatibility tests;
-    
+
 - every migration must include rollback instructions;
-    
+
 - every API example must match the current schema.
-    
 
 Humans are often consistent in intent and inconsistent in execution.
 
@@ -219,21 +214,20 @@ Humans are motivated by adding capabilities. Cleanup offers little immediate rew
 Agents can be assigned to remove:
 
 - deprecated fields;
-    
+
 - unused feature flags;
-    
+
 - compatibility branches;
-    
+
 - temporary metrics;
-    
+
 - obsolete tests;
-    
+
 - old configuration;
-    
+
 - dead endpoints;
-    
+
 - abandoned abstractions.
-    
 
 This work is usually simple, but only after someone reconstructs the context. An agent can preserve that context from the original migration and prepare cleanup in advance.
 
@@ -244,23 +238,22 @@ Developers frequently postpone documentation because the code already works.
 An agent can generate or update:
 
 - architectural decision records;
-    
+
 - migration guides;
-    
+
 - runbooks;
-    
+
 - rollback instructions;
-    
+
 - troubleshooting notes;
-    
+
 - examples;
-    
+
 - changelogs;
-    
+
 - diagrams;
-    
+
 - PR descriptions.
-    
 
 The documentation can be derived from the actual diff, tests, and deployment plan rather than written later from memory.
 
@@ -288,19 +281,18 @@ Without explicit instructions, it may also take shortcuts, produce a plausible p
 Its advantage appears when it is given:
 
 - a defined scope;
-    
+
 - explicit invariants;
-    
+
 - a checklist;
-    
+
 - access to the relevant repositories and tools;
-    
+
 - test and validation commands;
-    
+
 - clear stopping conditions;
-    
+
 - a requirement to report uncertainty.
-    
 
 The useful property is not that the agent always knows what matters.
 
@@ -311,74 +303,70 @@ The useful property is that once the discipline is defined, it can execute it re
 Humans often fail because of:
 
 - fatigue;
-    
+
 - interruptions;
-    
+
 - boredom;
-    
+
 - time pressure;
-    
+
 - incomplete memory;
-    
+
 - reluctance to perform repetitive work;
-    
+
 - overconfidence after checking a few examples;
-    
+
 - avoidance of low-status maintenance work.
-    
 
 Agents often fail because of:
 
 - missing context;
-    
+
 - false assumptions;
-    
+
 - weak understanding of business meaning;
-    
+
 - inability to distinguish an intentional exception from an inconsistency;
-    
+
 - confidently completing an underspecified pattern;
-    
+
 - optimizing for local correctness instead of system behavior.
-    
 
 This suggests a useful division of responsibility.
 
 Humans should define:
 
 - intent;
-    
+
 - business meaning;
-    
+
 - acceptable risk;
-    
+
 - compatibility guarantees;
-    
+
 - architectural constraints;
-    
+
 - exceptions;
-    
+
 - stopping conditions.
-    
 
 Agents should execute:
 
 - search;
-    
+
 - enumeration;
-    
+
 - transformation;
-    
+
 - test generation;
-    
+
 - consistency checks;
-    
+
 - documentation;
-    
+
 - staged preparation;
-    
+
 - cleanup.
-    
 
 ## The Agent as a Force Multiplier for Discipline
 
@@ -405,25 +393,24 @@ The agent makes the second request economically realistic.
 Agents are especially useful for tasks described with phrases such as:
 
 - “Someone should eventually clean this up.”
-    
+
 - “We should probably check all services.”
-    
+
 - “This needs tests before we touch it.”
-    
+
 - “We should document why this works this way.”
-    
+
 - “There are likely more places using this.”
-    
+
 - “We should verify that nobody still uses it.”
-    
+
 - “We need to update all examples.”
-    
+
 - “We should prepare rollback instructions.”
-    
+
 - “This flag was supposed to be temporary.”
-    
+
 - “It is simple, but there are many cases.”
-    
 
 These statements identify work that is valuable but repeatedly postponed.
 
@@ -446,23 +433,22 @@ This does not eliminate tradeoffs. It changes where the boundary lies.
 Practices that were once reserved for high-risk migrations may become normal for ordinary changes:
 
 - compatibility matrices;
-    
+
 - staged commits;
-    
+
 - generated characterization tests;
-    
+
 - complete dependency scans;
-    
+
 - automatic documentation updates;
-    
+
 - temporary telemetry;
-    
+
 - prepared cleanup PRs;
-    
+
 - architecture checks;
-    
+
 - systematic rollback analysis.
-    
 
 The result is not necessarily more sophisticated software.
 
@@ -477,36 +463,34 @@ Methodical work can also become wasteful.
 An agent can generate:
 
 - unnecessary tests;
-    
+
 - excessive documentation;
-    
+
 - low-value edge cases;
-    
+
 - redundant abstractions;
-    
+
 - huge reports;
-    
+
 - cleanup for code that does not matter;
-    
+
 - perfect consistency where variation is harmless.
-    
 
 Because an agent does not become tired, it also lacks the natural stopping pressure that humans experience.
 
 Therefore, the team must define proportionality:
 
 - What is the risk of the change?
-    
+
 - Which systems are affected?
-    
+
 - What level of evidence is required?
-    
+
 - Which compatibility guarantees matter?
-    
+
 - Which checks are mandatory?
-    
+
 - When is the analysis sufficient?
-    
 
 The agent should be relentless inside a bounded scope, not unlimited in every direction.
 
@@ -521,17 +505,16 @@ It can be treated as a persistent execution engine for engineering practices.
 It is particularly valuable when the task is:
 
 - known but tedious;
-    
+
 - large but repetitive;
-    
+
 - distributed but searchable;
-    
+
 - important but not urgent;
-    
+
 - easy to start but difficult to finish;
-    
+
 - dependent on consistency rather than creativity.
-    
 
 The human advantage is judgment.
 
