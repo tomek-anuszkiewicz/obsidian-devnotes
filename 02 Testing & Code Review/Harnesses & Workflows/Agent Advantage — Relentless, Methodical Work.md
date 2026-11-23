@@ -88,6 +88,12 @@ The important effect is not merely faster coding.
 
 The agent can make thoroughness cheaper than taking shortcuts (unlocking methodical migration workflows detailed in [[Refactoring Legacy Systems with AI Agents]]).
 
+### When a Small Trial Pays Off
+
+Ask an agent to move every test in a suite to a shared helper, and it may update four tests, run them, and ask whether to continue. For an engineer facing two days of manual edits, a trial can save substantial rework. If the agent can make the full set of changes in minutes and the edits are easy to undo, stopping for approval saves a few minutes of agent work at the cost of another interruption. The engineer has to recall the task and confirm a scope they already approved.
+
+A trial earns its place when the result can change how the agent handles the rest of the suite. For example, a test that uses a custom fixture might show that the helper needs a way to override the default setup. The agent can check that case, use the result to guide the remaining edits, and run the relevant suite against the agreed expectations. If the trial exposes an unresolved choice about what a test should assert, the engineer has a decision to make. When the edit is clear across the suite, the agent can finish the requested work and report what it checked.
+
 ## Methodical to the Point of Irritation
 
 A good agent can be methodical to an extent that would be exhausting for a human reviewer.
